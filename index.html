@@ -650,6 +650,156 @@
     opacity:0;
   }
 }
+/* ===== Retro Camera (Overlay内だけに限定) ===== */
+#vfOverlay .vf-stage{
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  padding: 8px 16px 22px;
+  height: calc(100vh - 64px); /* 上部バー分を避ける */
+}
+
+#vfOverlay .rc-camera-body{
+  position:relative;
+  width:min(86vw, 520px);
+  aspect-ratio:1/1;
+  background:#1a1a1c;
+  box-shadow: inset 0 0 50px #000;
+  border-radius:6px;
+  overflow:hidden;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+#vfOverlay .rc-viewfinder{
+  position:absolute;
+  inset: 8.5%;
+  background:#050505;
+  box-shadow: inset 0 0 80px rgba(0,0,0,1);
+  overflow:hidden;
+  perspective: 1000px;
+  border-radius:4px;
+}
+
+#vfOverlay .rc-photo-layer{
+  position:absolute;
+  inset:0;
+  z-index:10;
+}
+
+#vfOverlay .rc-polaroid{
+  position:absolute;
+  background:#fdfbf7;
+  padding:10px 10px 35px 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+  transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+  width: 140px;
+  will-change: transform, opacity, filter;
+}
+#vfOverlay .rc-polaroid img{
+  display:block;
+  width:100%;
+  height:140px;
+  object-fit:cover;
+  filter: grayscale(0.2) contrast(1.1);
+  user-select:none;
+  -webkit-user-drag:none;
+}
+
+/* age states */
+#vfOverlay .rc-age-0{
+  top:50%; left:50%;
+  transform: translate(-50%, -50%) rotate(2deg) scale(1.08);
+  z-index:50; opacity:1;
+  filter: contrast(1.1) brightness(1.1);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+}
+#vfOverlay .rc-age-1{
+  top: 8%; left: 6%;
+  transform: rotate(-6deg) scale(0.95);
+  z-index:40; opacity:0.95;
+  filter: sepia(0.2) contrast(1);
+}
+#vfOverlay .rc-age-2{
+  top: 6%; right: 6%;
+  transform: rotate(4deg) scale(0.90);
+  z-index:30; opacity:0.85;
+  filter: sepia(0.4) brightness(0.9);
+}
+#vfOverlay .rc-age-3{
+  bottom: 10%; left: 7%;
+  transform: rotate(8deg) scale(0.85);
+  z-index:20; opacity:0.7;
+  filter: sepia(0.6) grayscale(0.5) brightness(0.8);
+}
+#vfOverlay .rc-age-4{
+  bottom: 7%; right: 5%;
+  transform: rotate(-5deg) scale(0.80);
+  z-index:10; opacity:0.4;
+  filter: sepia(0.8) grayscale(0.8) blur(2px);
+}
+
+/* overlays */
+#vfOverlay .rc-overlay-texture{
+  position:absolute; inset:0;
+  pointer-events:none;
+  z-index:100;
+  mix-blend-mode:overlay;
+  opacity:0.5;
+  background: radial-gradient(circle, transparent 30%, #000 130%);
+}
+#vfOverlay .rc-dust{
+  position:absolute;
+  background: rgba(255,255,255,0.4);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:101;
+}
+#vfOverlay .rc-lens-reflection{
+  position:absolute;
+  bottom:-80px; left:50%;
+  transform:translateX(-50%);
+  width:80%; height:150px;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%);
+  border-radius:50%;
+  z-index:110;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  filter: blur(2px);
+  pointer-events:none;
+}
+
+#vfOverlay .rc-controls{
+  text-align:center;
+  display:grid;
+  gap:10px;
+}
+#vfOverlay .rc-snap{
+  background:#cc3333;
+  color:#fff;
+  border:none;
+  padding:12px 24px;
+  font-size:16px;
+  border-radius:30px;
+  cursor:pointer;
+  box-shadow:0 4px 10px rgba(204, 51, 51, 0.4);
+  font-family: var(--font-en), var(--font-ja);
+  font-weight:800;
+  letter-spacing:0.08em;
+}
+#vfOverlay .rc-snap:active{ transform: scale(0.97); background:#aa2222; }
+#vfOverlay .rc-hint{
+  font-size:12px;
+  opacity:0.75;
+  color: rgba(255,255,255,0.75);
+}
+@media (max-width:768px){
+  #vfOverlay .rc-polaroid{ width: 120px; }
+  #vfOverlay .rc-polaroid img{ height: 120px; }
+}
+
 
   </style>
 </head>
@@ -726,27 +876,7 @@
 
     <div class="wave-divider"></div>
 
-    <section class="section center">
-      <div class="container reveal">
-        <h2>「5枚」の理由</h2>
-        <p class="lead">たくさんじゃなくて、ちゃんと選べる。</p>
 
-        <div class="grid-3 reveal delay-200">
-          <div class="card">
-            <h3>選ぶ</h3>
-            <p>無限じゃないから、迷わない。</p>
-          </div>
-          <div class="card">
-            <h3>覗く</h3>
-            <p>ファインダーで“残した5枚”が見える。</p>
-          </div>
-          <div class="card">
-            <h3>入れ替わる</h3>
-            <p>6枚目は、いちばん古い1枚と交代。</p>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <div class="wave-divider bottom"></div>
 
@@ -803,45 +933,56 @@
 </section>
 
 <!-- Viewfinder Overlay -->
+<!-- Viewfinder Overlay (Retro Camera) -->
 <div id="vfOverlay" class="vf" aria-hidden="true">
   <div class="vf-top">
     <div class="vf-meta">
-      <div class="vf-counter" id="vfCounter">1 / 5</div>
-      <div class="vf-sub">いっぱい残せない。だから、残るのは今の5つだけ。</div>
+      <div class="vf-counter" id="vfCounter">5 / 5</div>
+      <div class="vf-sub">新しい写真を撮ると、古い写真は隅へ。いちばん古い1枚は消える。</div>
     </div>
     <button class="btn btn-ghost vf-close" id="vfClose" type="button" aria-label="閉じる">×</button>
   </div>
 
   <div class="vf-backdrop" id="vfBackdrop"></div>
 
-  <!-- 覗き穴 -->
-  <div class="vf-hole" id="vfHole" role="application" aria-label="Viewfinder">
-    <div class="vf-rim"></div>
-
-    <!-- 覗き穴の中だけ表示 -->
-    <div class="vf-content">
-      <div class="vf-strip" id="vfStrip">
-        <!-- 5枚：とりあえず既存画像で代用（後で差し替えOK） -->
-        <img src="mobby_pink.jpg"   alt="photo 1" draggable="false">
-        <img src="mobby_purple.jpg" alt="photo 2" draggable="false">
-        <img src="mobby_blue.jpg"   alt="photo 3" draggable="false">
-        <img src="mobby_orange.jpg" alt="photo 4" draggable="false">
-        <img src="mobby_pink.jpg"   alt="photo 5" draggable="false">
+  <!-- ★ Retro Camera 本体 -->
+  <div class="vf-stage" role="application" aria-label="Retro Camera Demo">
+    <div class="rc-camera-body">
+      <div class="rc-viewfinder" id="rcViewfinder">
+        <div class="rc-photo-layer" id="rcPhotoContainer"></div>
+        <div class="rc-overlay-texture"></div>
+        <div class="rc-lens-reflection"></div>
       </div>
     </div>
-  </div>
 
-  <!-- 十字キー風 -->
-  <div class="vf-controls">
-    <button class="btn btn-secondary vf-ctl" id="vfPrev" type="button" aria-label="前の写真">←</button>
-    <button class="btn btn-secondary vf-ctl" id="vfNext" type="button" aria-label="次の写真">→</button>
-  </div>
-
-  <div class="vf-footer">
-    <span class="vf-tip">覗き穴をドラッグ / 左右スワイプで切替</span>
+    <div class="rc-controls">
+      <button class="rc-snap" id="rcSnap" type="button" aria-label="シャッター">SNAP SHUTTER</button>
+      <div class="rc-hint">いっぱい残せない。だから、残るのは今の5つだけ。</div>
+    </div>
   </div>
 </div>
 
+<section class="section center">
+  <div class="container reveal">
+    <h2>「5枚」の理由</h2>
+    <p class="lead">たくさんじゃなくて、ちゃんと選べる。</p>
+
+    <div class="grid-3 reveal delay-200">
+      <div class="card">
+        <h3>選ぶ</h3>
+        <p>無限じゃないから、迷わない。</p>
+      </div>
+      <div class="card">
+        <h3>覗く</h3>
+        <p>ファインダーで“残した5枚”が見える。</p>
+      </div>
+      <div class="card">
+        <h3>入れ替わる</h3>
+        <p>6枚目は、いちばん古い1枚と交代。</p>
+      </div>
+    </div>
+  </div>
+</section>
 
     <!-- COLORS -->
     <section id="colors" class="section center">
@@ -1376,6 +1517,8 @@ window.addEventListener('resize', () => {
 }, { passive:true });
 /* ===== Viewfinder Demo (FIX) ===== */
 
+/* ===== Retro Camera Demo (Overlay) ===== */
+
 const eyeHotspot = document.getElementById('eyeHotspot');
 const eyeShutter = document.getElementById('eyeShutter');
 
@@ -1384,43 +1527,123 @@ const eyeShutter = document.getElementById('eyeShutter');
   const closeBtn = document.getElementById('vfClose');
   const backdrop = document.getElementById('vfBackdrop');
 
-  const hole    = document.getElementById('vfHole');
-  const strip   = document.getElementById('vfStrip');
-  const counter = document.getElementById('vfCounter');
-  const prevBtn = document.getElementById('vfPrev');
-  const nextBtn = document.getElementById('vfNext');
+  const viewfinder = document.getElementById('rcViewfinder');
+  const container  = document.getElementById('rcPhotoContainer');
+  const snapBtn    = document.getElementById('rcSnap');
+  const counterEl  = document.getElementById('vfCounter');
 
-  // openボタン(vfOpen)が無くても動くようにする
-  if(!overlay || !closeBtn || !backdrop || !hole || !strip || !counter || !prevBtn || !nextBtn) return;
+  if(!overlay || !closeBtn || !backdrop || !viewfinder || !container || !snapBtn || !counterEl) return;
 
-  const total = 5;
-  let index = 0;
-
-  // スクロール状態を復元するため保持
+  // スクロール復元
   let prevBodyOverflow = '';
   let prevBodyOverflowY = '';
   let prevHtmlOverflow = '';
 
-  const update = () => {
-    strip.style.transform = `translateX(${-20 * index}%)`;
-    counter.textContent = `${index + 1} / ${total}`;
-  };
+  // 画像はローカルに統一（外部URLだと環境で詰みやすい）
+  const SEED = [
+    "mobby_pink.jpg",
+    "mobby_purple.jpg",
+    "mobby_blue.jpg",
+    "mobby_orange.jpg",
+    "mobby_pink.jpg"
+  ];
 
-  const setIndex = (n) => {
-    index = (n + total) % total;
-    update();
-  };
+  // 最大5枚
+  let photos = SEED.map((url, i) => ({ id: i + 1, url }));
 
-  const centerHole = () => {
-    const rect = hole.getBoundingClientRect();
-    const left = (window.innerWidth  - rect.width) / 2;
-    const top  = (window.innerHeight - rect.height) / 2;
-    hole.style.left = left + 'px';
-    hole.style.top  = top  + 'px';
-    hole.style.transform = 'none';
-  };
+  let dustMade = false;
 
-  const open = () => {
+  function updateCounter(){
+    counterEl.textContent = `${photos.length} / 5`;
+  }
+
+  function renderPhotos(){
+    const existing = Array.from(container.children);
+
+    photos.forEach((photo, index) => {
+      let el = document.getElementById(`rc-p-${photo.id}`);
+
+      if(!el){
+        el = document.createElement('div');
+        el.id = `rc-p-${photo.id}`;
+        el.className = 'rc-polaroid rc-age-0';
+        el.style.opacity = '0';
+
+        const img = document.createElement('img');
+        img.src = photo.url;
+        img.alt = `photo ${index + 1}`;
+        img.draggable = false;
+
+        el.appendChild(img);
+        container.appendChild(el);
+
+        setTimeout(() => { el.style.opacity = '1'; }, 50);
+      }
+
+      el.classList.remove('rc-age-0','rc-age-1','rc-age-2','rc-age-3','rc-age-4');
+      el.classList.add(`rc-age-${index}`);
+    });
+
+    const currentIds = photos.map(p => `rc-p-${p.id}`);
+    existing.forEach(el => {
+      if(!currentIds.includes(el.id)){
+        el.style.opacity = '0';
+        el.style.transform = 'scale(0.5)';
+        setTimeout(() => el.remove(), 800);
+      }
+    });
+
+    updateCounter();
+  }
+
+  function addFlashEffect(){
+    const flash = document.createElement('div');
+    flash.style.position = 'absolute';
+    flash.style.inset = '0';
+    flash.style.backgroundColor = '#fff';
+    flash.style.opacity = '0.8';
+    flash.style.zIndex = '200';
+    flash.style.pointerEvents = 'none';
+    flash.style.transition = 'opacity 0.2s ease-out';
+
+    viewfinder.appendChild(flash);
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => { flash.style.opacity = '0'; });
+    });
+    setTimeout(() => flash.remove(), 300);
+  }
+
+  function createDust(){
+    if(dustMade) return;
+    dustMade = true;
+    for(let i=0;i<40;i++){
+      const d = document.createElement('div');
+      d.className = 'rc-dust';
+      d.style.left = `${Math.random()*100}%`;
+      d.style.top  = `${Math.random()*100}%`;
+      const size = Math.random() * 2;
+      d.style.width = `${size}px`;
+      d.style.height = `${size}px`;
+      d.style.opacity = String(Math.random() * 0.5);
+      viewfinder.appendChild(d);
+    }
+  }
+
+  function takePhoto(){
+    const newId = Date.now();
+    // 画像は4色からランダム（デモなので）
+    const pool = ["mobby_pink.jpg","mobby_purple.jpg","mobby_blue.jpg","mobby_orange.jpg"];
+    const url = pool[Math.floor(Math.random()*pool.length)];
+
+    photos.unshift({ id: newId, url });
+    if(photos.length > 5) photos.pop();
+
+    renderPhotos();
+    addFlashEffect();
+  }
+
+  function open(){
     overlay.classList.add('is-open');
     overlay.setAttribute('aria-hidden', 'false');
 
@@ -1432,104 +1655,41 @@ const eyeShutter = document.getElementById('eyeShutter');
     document.body.style.overflowY = 'hidden';
     document.documentElement.style.overflow = 'hidden';
 
-    centerHole();
-    update();
-  };
+    createDust();
+    renderPhotos();
+  }
 
-  const close = () => {
+  function close(){
     overlay.classList.remove('is-open');
     overlay.setAttribute('aria-hidden', 'true');
 
     document.body.style.overflow  = prevBodyOverflow;
     document.body.style.overflowY = prevBodyOverflowY;
     document.documentElement.style.overflow = prevHtmlOverflow;
-  };
+  }
 
-  // ===== open: 右目タップ =====
+  // open: 右目タップ
   if(eyeHotspot){
     eyeHotspot.addEventListener('click', () => {
       if(eyeShutter){
         eyeShutter.classList.remove('play');
-        void eyeShutter.offsetWidth; // reflow
+        void eyeShutter.offsetWidth;
         eyeShutter.classList.add('play');
       }
       setTimeout(open, 180);
     });
   }
 
-  // ===== close handlers =====
+  // snap
+  snapBtn.addEventListener('click', takePhoto);
+
+  // close
   closeBtn.addEventListener('click', close);
   backdrop.addEventListener('click', close);
-
-  // ボタンで写真切替
-  prevBtn.addEventListener('click', () => setIndex(index - 1));
-  nextBtn.addEventListener('click', () => setIndex(index + 1));
-
-  // pointer: ドラッグ（覗き穴移動）＋ 横フリック（写真切替）
-  let pDown = false;
-  let startX = 0, startY = 0;
-  let offsetX = 0, offsetY = 0;
-
-  hole.addEventListener('pointerdown', (e) => {
-    pDown = true;
-    startX = e.clientX;
-    startY = e.clientY;
-
-    const rect = hole.getBoundingClientRect();
-    offsetX = e.clientX - rect.left;
-    offsetY = e.clientY - rect.top;
-
-    hole.setPointerCapture(e.pointerId);
-  });
-
-  hole.addEventListener('pointermove', (e) => {
-    if(!pDown) return;
-
-    const w = hole.offsetWidth;
-    const h = hole.offsetHeight;
-    const maxLeft = window.innerWidth  - w;
-    const maxTop  = window.innerHeight - h;
-
-    const targetLeft = Math.max(8,  Math.min(maxLeft - 8,  e.clientX - offsetX));
-    const targetTop  = Math.max(60, Math.min(maxTop  - 60, e.clientY - offsetY));
-
-    const currentLeft = parseFloat(hole.style.left || targetLeft);
-    const currentTop  = parseFloat(hole.style.top  || targetTop);
-
-    hole.style.left = (currentLeft + (targetLeft - currentLeft) * 0.28) + 'px';
-    hole.style.top  = (currentTop  + (targetTop  - currentTop ) * 0.28) + 'px';
-  });
-
-  hole.addEventListener('pointerup', (e) => {
-    if(!pDown) return;
-    pDown = false;
-
-    const dx = e.clientX - startX;
-    const dy = e.clientY - startY;
-
-    // 横フリックで写真切替（縦より横が大きい時だけ）
-    if(Math.abs(dx) > 42 && Math.abs(dx) > Math.abs(dy)){
-      if(dx < 0) setIndex(index + 1);
-      else setIndex(index - 1);
-    }
-
-    hole.releasePointerCapture(e.pointerId);
-  });
-
-  hole.addEventListener('pointercancel', () => { pDown = false; });
-
-  // キーボード
   window.addEventListener('keydown', (e) => {
     if(!overlay.classList.contains('is-open')) return;
     if(e.key === 'Escape') close();
-    if(e.key === 'ArrowLeft') setIndex(index - 1);
-    if(e.key === 'ArrowRight') setIndex(index + 1);
   });
-
-  window.addEventListener('resize', () => {
-    if(overlay.classList.contains('is-open')) centerHole();
-  }, { passive:true });
-
 })();
 
 
