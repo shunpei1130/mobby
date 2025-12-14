@@ -3,931 +3,655 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mobby - 先行予約</title>
+  <title>Mobby - 1月末入荷分 購入</title>
   <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-    /* --- 1. Base Settings & Variables --- */
-    :root {
-      --color-cream: #FFF8E7;
-      --color-forest: #2F4F4F;
-      --color-sky: #AEC6CF;
-      --color-earth: #8B4513;
-      --color-accent-red: #D2691E;
-      --color-soft-yellow: #F0E68C;
+    :root{
+      --color-cream:#FFF8E7;
+      --color-forest:#2F4F4F;
+      --color-sky:#AEC6CF;
+      --color-earth:#8B4513;
+      --color-accent-red:#D2691E;
+      --color-soft-yellow:#F0E68C;
 
-      --font-ja: 'Kosugi Maru', sans-serif;
-      --font-en: 'Nunito', sans-serif;
+      --font-ja:'Kosugi Maru', sans-serif;
+      --font-en:'Nunito', sans-serif;
+      --ease-soft:cubic-bezier(0.4, 0.0, 0.2, 1);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
 
-      --ease-soft: cubic-bezier(0.4, 0.0, 0.2, 1);
+    body{
+      font-family:var(--font-ja);
+      background-color:var(--color-cream);
+      color:var(--color-forest);
+      overflow-x:hidden;
+      line-height:1.7;
+      background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHZpZXdCb3g9IjAgMCA0IDQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmOGU3Ii8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmM2YwZTAiLz4KPC9zdmc+');
+      overflow-y:hidden; /* splash中 */
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* Splash */
+    #splash-screen{
+      position:fixed;top:0;left:0;width:100vw;height:100vh;
+      z-index:9999;
+      cursor:pointer;
+      transition:opacity 1.2s ease-out, visibility 1.2s ease-out;
+      overflow:hidden;
 
-    body {
-      font-family: var(--font-ja);
-      background-color: var(--color-cream);
-      color: var(--color-forest);
-      overflow-x: hidden;
-      line-height: 1.8;
+      /* ★拡大しすぎを防ぐ：contain に変更 */
+      background: var(--color-forest) url('favicon/背景.jpg') center / contain no-repeat;
+    }
+    #splash-screen.hidden{opacity:0;visibility:hidden;pointer-events:none;}
 
-      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHZpZXdCb3g9IjAgMCA0IDQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmOGU3Ii8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmM2YwZTAiLz4KPC9zdmc+');
-
-      /* 初期状態はスクロール禁止（スプラッシュ中） */
-      overflow-y: hidden;
+    #splash-screen::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: rgba(47,79,79,0.55);
+      z-index:0;
+      pointer-events:none;
+    }
+    #splash-screen canvas{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:1;
     }
 
-    /* --- 2. Splash Screen (Matter.js Icons) --- */
-    #splash-screen {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 9999;
-      background-color: var(--color-forest);
+    .instruction{
+      position:absolute;top:18px;left:50%;transform:translateX(-50%);
+      color:rgba(255,255,255,0.9);pointer-events:none;
+      font-family:var(--font-en), var(--font-ja);font-weight:700;font-size:1rem;
+      letter-spacing:0.04em;padding:10px 14px;border-radius:999px;
+      background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);
+      user-select:none;white-space:nowrap;
+      z-index:3;
+    }
+
+    #main-content{opacity:0;transition:opacity 1.5s ease;}
+    #main-content.visible{opacity:1;}
+
+    h1,h2,h3{
+      font-family:var(--font-en), var(--font-ja);
+      font-weight:700;letter-spacing:0.05em;line-height:1.2;
+      color:var(--color-earth);
+    }
+    p{font-weight:400;letter-spacing:0.02em;}
+    .container{max-width:1050px;margin:0 auto;padding:0 30px;}
+
+    .btn{
+      display:inline-block;padding:12px 35px;border-radius:255px 15px 225px 15px / 15px 225px 15px 255px;
+      text-decoration:none;font-size:16px;font-weight:700;font-family:var(--font-en);
+      transition:all 0.4s var(--ease-soft);border:2px solid transparent;
+      box-shadow:3px 3px 0 rgba(0,0,0,0.1);cursor:pointer;
+    }
+    .btn-secondary{background-color:var(--color-cream);color:var(--color-forest);border-color:var(--color-forest);}
+    .btn-secondary:hover{background-color:var(--color-sky);color:#fff;border-color:transparent;transform:translateY(-2px) rotate(-1deg);}
+    .btn-primary{background-color:var(--color-accent-red);color:var(--color-cream);}
+    .btn-primary:hover{background-color:var(--color-earth);transform:translateY(-2px) rotate(1deg);}
+    .btn-ghost{background:rgba(255,255,255,0);color:var(--color-forest);border-color:rgba(47,79,79,0.35);}
+    .btn-ghost:hover{background:rgba(174,198,207,0.35);border-color:transparent;transform:translateY(-2px);}
+
+    .tag{
+      display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;
+      font-weight:700;letter-spacing:.04em;font-family:var(--font-en), var(--font-ja);
+      background:rgba(174,198,207,0.35);color:var(--color-forest);
+      border:1px solid rgba(47,79,79,0.18);
+    }
+    .trust-row{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:16px;}
+    .trust-pill{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,0.7);border:1px solid rgba(47,79,79,0.12);font-weight:700;font-size:0.9rem;}
+
+    .wave-divider{
+      width:100%;height:50px;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.25' fill='%23AEC6CF'/%3E%3Cpath d='M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z' opacity='.5' fill='%23AEC6CF'/%3E%3Cpath d='M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z' fill='%23AEC6CF'/%3E%3C/svg%3E");
+      background-size:cover;background-repeat:no-repeat;
+    }
+    .wave-divider.bottom{transform:rotate(180deg);}
+
+    .reveal{opacity:0;transform:translateY(30px);transition:opacity 1s var(--ease-soft), transform 1s var(--ease-soft);}
+    .reveal.active{opacity:1;transform:translateY(0);}
+    .delay-200{transition-delay:0.2s;}
+    .delay-400{transition-delay:0.4s;}
+
+    /* Hero */
+    .hero{
+      min-height:94vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+      text-align:center;position:relative;padding-top:92px;padding-bottom:52px;
+    }
+    .hero-bg-illustration{
+      position:absolute;bottom:0;left:0;width:100%;height:44%;
+      background-color:#C2D8B9;border-radius:50% 50% 0 0 / 30% 30% 0 0;z-index:-1;
+    }
+    .headline{font-size:clamp(2.2rem, 3.9vw, 3.2rem);margin-top:12px;}
+    .subhead{margin-top:12px;font-size:1.02rem;opacity:0.92;}
+
+    @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+    .floating{animation:float 4s ease-in-out infinite;}
+
+    .cta-row{margin-top:20px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;}
+    .status-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px;}
+    .status-chip{
+      display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:18px;
+      background:rgba(255,255,255,0.78);border:1px solid rgba(47,79,79,0.12);
+      box-shadow:3px 3px 0 rgba(0,0,0,0.06);font-family:var(--font-en), var(--font-ja);font-weight:700;
+    }
+    .status-chip strong{color:var(--color-earth);}
+
+    /* ★ Creator message: 大きく、最初に読ませる */
+    .hero-quote{
+      width:min(920px, 100%);
+      margin:0 auto 14px;
+      text-align:left;
+      border-radius:30px;
+      padding:26px 22px;
+      background:rgba(255,255,255,0.86);
+      border:1px solid rgba(47,79,79,0.14);
+      box-shadow:0 18px 45px rgba(0,0,0,0.10);
+    }
+    .hero-quote .label{
+      font-weight:800;
+      color:var(--color-earth);
+      font-family:var(--font-en), var(--font-ja);
+      margin-bottom:12px;
+      letter-spacing:0.08em;
+      font-size:1.15rem;
+    }
+    .hero-quote .creator-text{
+      font-size:1.15rem;
+      line-height:1.95;
+      opacity:0.96;
+    }
+    @media (max-width: 768px){
+      .hero-quote{padding:20px 16px;border-radius:26px;}
+      .hero-quote .label{font-size:1.05rem;}
+      .hero-quote .creator-text{font-size:1.02rem;line-height:1.9;}
+    }
+
+    /* ===== Hero Carousel (3D Rotating Ring) ===== */
+    .hero-carousel{
+      width:min(460px, 96vw);
+      margin:14px auto 10px;
+      position:relative;
+      user-select:none;
+      touch-action: pan-y;
+      perspective: 1300px;
+    }
+    .carousel-viewport{
+      position:relative;
+      height:330px;
+      overflow: visible;
+    }
+    .carousel-track{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform-style: preserve-3d;
+      transition: transform 0.7s var(--ease-soft);
+      will-change: transform;
+    }
+    .carousel-slide{
+      position:absolute;
+      left:0;
+      top:0;
+      width:330px;
+      height:330px;
+      transform-style: preserve-3d;
+      transition: opacity 0.35s var(--ease-soft), filter 0.35s var(--ease-soft);
       cursor: pointer;
-      transition: opacity 1.2s ease-out, visibility 1.2s ease-out;
+    }
+    .carousel-slide.dim{opacity: 0.55;filter: blur(0.6px);}
+
+    .hero-illustration{
+      width:100%;
+      height:100%;
+      background: transparent;
+      border: none;
+      border-radius: 20px;
       overflow: hidden;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.14);
     }
+    .hero-illustration img{width:100%;height:100%;object-fit: cover;}
 
-    #splash-screen.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
+    .carousel-btn{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      width:44px;height:44px;
+      border-radius:999px;
+      border:1px solid rgba(47,79,79,0.18);
+      background:rgba(255,255,255,0.75);
+      color:var(--color-forest);
+      font-size:26px;font-weight:700;
+      cursor:pointer;
+      z-index:10;
+      display:flex;align-items:center;justify-content:center;
+      transition:transform .2s var(--ease-soft), background .2s var(--ease-soft);
+      box-shadow:3px 3px 0 rgba(0,0,0,0.06);
     }
+    .carousel-btn:hover{transform:translateY(-50%) scale(1.04);background:rgba(255,255,255,0.88);}
+    .carousel-btn.prev{left:-10px;}
+    .carousel-btn.next{right:-10px;}
 
-    /* 説明テキスト（クリックを邪魔しない） */
-    .instruction {
-      position: absolute;
-      top: 18px;
-      left: 50%;
-      transform: translateX(-50%);
-      color: rgba(255,255,255,0.9);
-      pointer-events: none;
-      font-family: var(--font-en), var(--font-ja);
-      font-weight: 700;
-      font-size: 1rem;
-      letter-spacing: 0.04em;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.12);
-      backdrop-filter: blur(8px);
-      user-select: none;
-      white-space: nowrap;
+    .carousel-caption{
+      margin-top:10px;
+      display:inline-block;
+      font-family:var(--font-en), var(--font-ja);
+      font-weight:700;
+      color:var(--color-forest);
+      background:rgba(255,255,255,0.78);
+      border:1px solid rgba(47,79,79,0.12);
+      box-shadow:3px 3px 0 rgba(0,0,0,0.04);
+      padding:6px 10px;
+      border-radius:999px;
     }
-
-    /* --- 3. Main Content Wrapper --- */
-    #main-content {
-      opacity: 0;
-      transition: opacity 1.5s ease;
+    .carousel-dots{display:flex;justify-content:center;gap:8px;margin-top:10px;}
+    .carousel-dot{
+      width:10px;height:10px;border-radius:999px;
+      border:1px solid rgba(47,79,79,0.18);
+      background:rgba(255,255,255,0.55);
+      cursor:pointer;
     }
-    #main-content.visible { opacity: 1; }
-
-    /* --- 4. LP Styling (Moomin-ish / Soft Nordic) --- */
-    h1, h2, h3 {
-      font-family: var(--font-en), var(--font-ja);
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      line-height: 1.25;
-      color: var(--color-earth);
+    .carousel-dot.active{
+      background:rgba(240,230,140,0.75);
+      border-color:rgba(240,230,140,0.95);
     }
-
-    p { font-weight: 400; letter-spacing: 0.03em; }
-
-    .container {
-      max-width: 1050px;
-      margin: 0 auto;
-      padding: 0 30px;
+    @media (max-width: 768px){
+      .carousel-viewport{height:250px;}
+      .carousel-slide{width:250px;height:250px;}
+      .carousel-btn{width:40px;height:40px;font-size:24px;}
     }
-
-    .btn {
-      display: inline-block;
-      padding: 12px 35px;
-      border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-      text-decoration: none;
-      font-size: 16px;
-      font-weight: 700;
-      font-family: var(--font-en);
-      transition: all 0.4s var(--ease-soft);
-      border: 2px solid transparent;
-      box-shadow: 3px 3px 0px rgba(0,0,0,0.1);
-      cursor: pointer;
-    }
-
-    .btn-secondary {
-      background-color: var(--color-cream);
-      color: var(--color-forest);
-      border-color: var(--color-forest);
-    }
-    .btn-secondary:hover {
-      background-color: var(--color-sky);
-      color: #fff;
-      border-color: transparent;
-      transform: translateY(-2px) rotate(-1deg);
-    }
-    .btn-primary {
-      background-color: var(--color-accent-red);
-      color: var(--color-cream);
-    }
-    .btn-primary:hover {
-      background-color: var(--color-earth);
-      transform: translateY(-2px) rotate(1deg);
-    }
-
-    .btn-ghost {
-      background: rgba(255,255,255,0.0);
-      color: var(--color-forest);
-      border-color: rgba(47,79,79,0.35);
-    }
-    .btn-ghost:hover {
-      background: rgba(174,198,207,0.35);
-      border-color: transparent;
-      transform: translateY(-2px);
-    }
-
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-weight: 700;
-      letter-spacing: .04em;
-      font-family: var(--font-en), var(--font-ja);
-      background: rgba(174, 198, 207, 0.35);
-      color: var(--color-forest);
-      border: 1px solid rgba(47, 79, 79, 0.18);
-    }
-
-    .trust-row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 18px;
-    }
-    .trust-pill {
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.7);
-      border: 1px solid rgba(47,79,79,0.12);
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
-
-    .wave-divider {
-      width: 100%;
-      height: 50px;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.25' fill='%23AEC6CF'/%3E%3Cpath d='M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z' opacity='.5' fill='%23AEC6CF'/%3E%3Cpath d='M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z' fill='%23AEC6CF'/%3E%3C/svg%3E");
-      background-size: cover;
-      background-repeat: no-repeat;
-    }
-    .wave-divider.bottom { transform: rotate(180deg); }
-
-    /* --- Hero --- */
-    .hero {
-      min-height: 92vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      position: relative;
-      padding-top: 90px;
-      padding-bottom: 50px;
-    }
-    .hero-bg-illustration {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 42%;
-      background-color: #C2D8B9;
-      border-radius: 50% 50% 0 0 / 30% 30% 0 0;
-      z-index: -1;
-    }
-
-    .hero-illustration-container {
-      width: 330px;
-      height: 330px;
-      margin: 18px auto 18px;
-      position: relative;
-    }
-    .hero-illustration {
-      width: 100%;
-      height: 100%;
-      background-color: #fff;
-      border-radius: 50%;
-      border: 5px dashed var(--color-sky);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 10px 30px rgba(174, 198, 207, 0.4);
-    }
-    .hero-illustration img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.08) sepia(0.18); }
-
-    .headline {
-      font-size: clamp(2.1rem, 3.7vw, 3.1rem);
-      margin-top: 8px;
-    }
-    .subhead {
-      margin-top: 14px;
-      font-size: 1.05rem;
-      opacity: 0.92;
-    }
-
-    .cta-row {
-      margin-top: 22px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-    }
-
-    .price-row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 18px;
-    }
-    .price-chip {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.72);
-      border: 1px solid rgba(47,79,79,0.12);
-      box-shadow: 3px 3px 0px rgba(0,0,0,0.06);
-      font-family: var(--font-en), var(--font-ja);
-      font-weight: 700;
-    }
-    .price-chip strong {
-      font-size: 1.15rem;
-      color: var(--color-earth);
-    }
-    .price-chip .muted {
-      font-size: 0.9rem;
-      opacity: 0.8;
-      font-weight: 700;
-    }
-
-    /* reveal */
-    .reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 1s var(--ease-soft), transform 1s var(--ease-soft);
-    }
-    .reveal.active { opacity: 1; transform: translateY(0); }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-    .floating { animation: float 4s ease-in-out infinite; }
-    .delay-200 { transition-delay: 0.2s; }
-    .delay-400 { transition-delay: 0.4s; }
 
     /* Sections */
-    .section {
-      padding: 95px 0;
-      background: #fff;
-    }
-    .section.soft {
-      background: linear-gradient(to bottom, var(--color-cream), #fff);
-    }
-    .section.center { text-align: center; }
+    .section{padding:86px 0;background:#fff;}
+    .section.soft{background:linear-gradient(to bottom, var(--color-cream), #fff);}
+    .section.center{text-align:center;}
+    .lead{margin-top:14px;font-size:1.0rem;opacity:0.92;}
 
-    .lead {
-      margin-top: 18px;
-      font-size: 1.03rem;
-      opacity: 0.92;
+    .grid-3{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:18px;margin-top:24px;}
+    .card{
+      background:rgba(255,255,255,0.85);border:1px solid rgba(47,79,79,0.12);
+      border-radius:26px;padding:18px 16px;box-shadow:3px 3px 0 rgba(0,0,0,0.06);text-align:left;
     }
+    .card h3{font-size:1.1rem;margin-bottom:6px;}
+    .card p{font-size:0.95rem;opacity:0.92;}
 
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 28px;
+    /* Colors */
+    #colors{scroll-margin-top:90px;}
+    .colors-grid{
+      display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:14px;margin-top:18px;text-align:left;
     }
-    .card {
-      background: rgba(255,255,255,0.85);
-      border: 1px solid rgba(47,79,79,0.12);
-      border-radius: 26px;
-      padding: 20px 18px;
-      box-shadow: 3px 3px 0px rgba(0,0,0,0.06);
+    .color-card{
+      border-radius:26px;padding:16px 14px;border:1px solid rgba(47,79,79,0.14);
+      background:rgba(255,255,255,0.86);box-shadow:3px 3px 0 rgba(0,0,0,0.06);
+      cursor:pointer;transition:transform .25s var(--ease-soft), box-shadow .25s var(--ease-soft), border-color .25s var(--ease-soft);
+      position:relative;user-select:none;outline:none;
     }
-    .card h3 { font-size: 1.15rem; margin-bottom: 6px; }
-    .card p { font-size: 0.98rem; opacity: 0.92; }
+    .color-card:hover{transform:translateY(-2px);}
+    .color-card.selected{
+      border-color:rgba(210,105,30,0.55);
+      box-shadow:0 14px 30px rgba(0,0,0,0.12);
+      transform:translateY(-3px);
+    }
+    .selected-badge{
+      position:absolute;top:12px;right:12px;padding:6px 10px;border-radius:999px;
+      font-weight:700;font-size:.85rem;background:rgba(240,230,140,0.55);
+      border:1px solid rgba(139,69,19,0.18);color:var(--color-earth);display:none;
+    }
+    .color-card.selected .selected-badge{display:inline-block;}
+    .swatch{
+      width:44px;height:44px;border-radius:999px;border:2px solid rgba(47,79,79,0.18);
+      box-shadow:inset 0 0 0 3px rgba(255,255,255,0.65);margin-bottom:10px;
+    }
+    .color-title{
+      font-weight:700;font-family:var(--font-en), var(--font-ja);color:var(--color-earth);
+      display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    }
+    .mini-tag{
+      display:inline-block;padding:5px 9px;border-radius:999px;font-size:.85rem;font-weight:700;
+      background:rgba(174,198,207,0.25);border:1px solid rgba(47,79,79,0.12);
+      color:var(--color-forest);white-space:nowrap;
+    }
+    .color-desc{margin-top:8px;font-size:.92rem;opacity:.9;}
 
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 30px;
-      text-align: left;
-    }
-    .step {
-      position: relative;
-      overflow: hidden;
-    }
-    .step .num {
-      font-family: var(--font-en);
-      font-size: 2.2rem;
-      font-weight: 700;
-      opacity: 0.18;
-      position: absolute;
-      top: 8px;
-      right: 14px;
-    }
-    .step .title {
-      font-weight: 700;
-      font-family: var(--font-en), var(--font-ja);
-      color: var(--color-earth);
-      margin-bottom: 6px;
-      font-size: 1.05rem;
-    }
-    .step .mini {
-      font-size: 0.95rem;
-      opacity: 0.92;
+    .product-thumb{
+      width:100%;aspect-ratio:1/1;border-radius:18px;margin:10px 0 6px;
+      border:1px solid rgba(47,79,79,0.12);
+      box-shadow:0 10px 25px rgba(0,0,0,0.06);
+      object-fit:cover;background:#fff;
     }
 
-    .quote {
-      margin-top: 26px;
-      padding: 18px 18px;
-      border-radius: 22px;
-      background: rgba(174,198,207,0.22);
-      border: 1px dashed rgba(47,79,79,0.25);
-      text-align: left;
+    .steps{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:18px;margin-top:26px;text-align:left;}
+    .step{position:relative;overflow:hidden;}
+    .step .num{font-family:var(--font-en);font-size:2.1rem;font-weight:700;opacity:0.18;position:absolute;top:8px;right:14px;}
+    .step .title{font-weight:700;font-family:var(--font-en), var(--font-ja);color:var(--color-earth);margin-bottom:6px;font-size:1.05rem;}
+    .step .mini{font-size:0.95rem;opacity:0.92;}
+
+    .pricing{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px;text-align:left;}
+    .price-card{
+      border-radius:26px;padding:18px 16px;border:1px solid rgba(47,79,79,0.12);
+      background:rgba(255,255,255,0.86);box-shadow:3px 3px 0 rgba(0,0,0,0.06);
     }
-    .quote p {
-      font-size: 0.98rem;
-      opacity: 0.95;
+    .price-card .label{
+      font-weight:700;font-family:var(--font-en), var(--font-ja);color:var(--color-earth);
+      display:flex;align-items:center;gap:10px;
     }
-    .quote .qtitle {
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: var(--color-earth);
-      font-family: var(--font-en), var(--font-ja);
+    .price-card .value{font-size:1.6rem;font-weight:700;margin-top:10px;color:var(--color-forest);font-family:var(--font-en), var(--font-ja);}
+    .badge{
+      display:inline-block;padding:6px 10px;border-radius:999px;font-weight:700;font-size:0.85rem;
+      background:rgba(240,230,140,0.45);border:1px solid rgba(139,69,19,0.18);
+      color:var(--color-earth);white-space:nowrap;
     }
 
-    .two-col {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 24px;
-      align-items: start;
-      margin-top: 26px;
+    .notice{
+      margin-top:14px;padding:12px 14px;border-radius:18px;background:rgba(255,248,231,0.75);
+      border:1px dashed rgba(139,69,19,0.25);font-size:0.92rem;text-align:left;
     }
 
-    .pricing {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-top: 22px;
-      text-align: left;
+    .buy-preview{
+      max-width:820px;margin:14px auto 0;
+      display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;
     }
-    .price-card {
-      border-radius: 26px;
-      padding: 18px 16px;
-      border: 1px solid rgba(47,79,79,0.12);
-      background: rgba(255,255,255,0.86);
-      box-shadow: 3px 3px 0px rgba(0,0,0,0.06);
-    }
-    .price-card .label {
-      font-weight: 700;
-      font-family: var(--font-en), var(--font-ja);
-      color: var(--color-earth);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .price-card .value {
-      font-size: 1.6rem;
-      font-weight: 700;
-      margin-top: 10px;
-      color: var(--color-forest);
-      font-family: var(--font-en), var(--font-ja);
-    }
-    .price-card .note {
-      margin-top: 10px;
-      font-size: 0.92rem;
-      opacity: 0.88;
-    }
-    .badge {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      background: rgba(240,230,140,0.45);
-      border: 1px solid rgba(139,69,19,0.18);
-      color: var(--color-earth);
-      white-space: nowrap;
-    }
-
-    /* Reserve form */
-    #reserve { scroll-margin-top: 90px; }
-    .form {
-      margin-top: 18px;
-      text-align: left;
-    }
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 12px;
-    }
-    label {
-      display: block;
-      font-weight: 700;
-      margin-bottom: 6px;
-      font-family: var(--font-en), var(--font-ja);
-      color: var(--color-earth);
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(47,79,79,0.18);
-      background: rgba(255,255,255,0.82);
-      outline: none;
-      font-family: var(--font-ja);
-      color: var(--color-forest);
-    }
-    input:focus, select:focus, textarea:focus {
-      border-color: rgba(174,198,207,0.85);
-      box-shadow: 0 0 0 4px rgba(174,198,207,0.25);
-    }
-    .form-help {
-      margin-top: 10px;
-      font-size: 0.92rem;
-      opacity: 0.9;
-    }
-    .small {
-      font-size: 0.9rem;
-      opacity: 0.85;
-    }
-    .inline {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-    .checkbox {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .checkbox input { width: 18px; height: 18px; }
-
-    .notice {
-      margin-top: 14px;
-      padding: 12px 14px;
-      border-radius: 18px;
-      background: rgba(255,248,231,0.75);
-      border: 1px dashed rgba(139,69,19,0.25);
-      font-size: 0.92rem;
-    }
-
-    .result {
-      margin-top: 14px;
-      padding: 14px 14px;
-      border-radius: 18px;
-      background: rgba(194,216,185,0.35);
-      border: 1px solid rgba(47,79,79,0.12);
-      display: none;
+    .buy-preview img{
+      width:140px;height:140px;border-radius:22px;object-fit:cover;
+      border:1px solid rgba(47,79,79,0.12);
+      box-shadow:0 12px 25px rgba(0,0,0,0.08);
+      background:#fff;
     }
 
     /* FAQ */
-    .faq {
-      margin-top: 18px;
-      text-align: left;
+    .faq{margin-top:18px;text-align:left;}
+    details.faq-item{
+      background:rgba(255,255,255,0.84);border:1px solid rgba(47,79,79,0.12);
+      border-radius:18px;padding:14px 14px;margin-top:10px;box-shadow:3px 3px 0 rgba(0,0,0,0.04);
     }
-    details {
-      background: rgba(255,255,255,0.84);
-      border: 1px solid rgba(47,79,79,0.12);
-      border-radius: 18px;
-      padding: 14px 14px;
-      margin-top: 10px;
-      box-shadow: 3px 3px 0px rgba(0,0,0,0.04);
-    }
-    summary {
-      cursor: pointer;
-      font-weight: 700;
-      color: var(--color-earth);
-      font-family: var(--font-en), var(--font-ja);
-      list-style: none;
-    }
-    summary::-webkit-details-marker { display: none; }
-    details p { margin-top: 10px; opacity: 0.92; }
+    details.faq-item summary{cursor:pointer;font-weight:700;color:var(--color-earth);font-family:var(--font-en), var(--font-ja);list-style:none;}
+    details.faq-item summary::-webkit-details-marker{display:none;}
+    details.faq-item p{margin-top:10px;opacity:0.92;}
 
     /* Sticky CTA */
-    .sticky-cta {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 12px;
-      z-index: 50;
-      display: none; /* splash後にJSで表示 */
-      pointer-events: none;
+    .sticky-cta{
+      position:fixed;left:0;right:0;bottom:12px;z-index:50;display:none;pointer-events:none;
     }
-    .sticky-cta .inner {
-      max-width: 1050px;
-      margin: 0 auto;
-      padding: 0 16px;
-      display: flex;
-      justify-content: center;
+    .sticky-cta .inner{max-width:1050px;margin:0 auto;padding:0 16px;display:flex;justify-content:center;}
+    .sticky-cta .bar{
+      pointer-events:auto;width:min(900px, 100%);background:rgba(255,255,255,0.82);
+      border:1px solid rgba(47,79,79,0.16);backdrop-filter:blur(10px);border-radius:999px;
+      padding:10px 12px;box-shadow:0 12px 30px rgba(0,0,0,0.12);
+      display:flex;gap:10px;align-items:center;justify-content:space-between;
     }
-    .sticky-cta .bar {
-      pointer-events: auto;
-      width: min(820px, 100%);
-      background: rgba(255,255,255,0.82);
-      border: 1px solid rgba(47,79,79,0.16);
-      backdrop-filter: blur(10px);
-      border-radius: 999px;
-      padding: 10px 12px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .sticky-cta .txt {
-      font-weight: 700;
-      font-family: var(--font-en), var(--font-ja);
-      color: var(--color-forest);
-      padding-left: 6px;
-      font-size: 0.95rem;
-    }
-    .sticky-cta .btn { padding: 10px 18px; font-size: 0.95rem; }
+    .sticky-cta .txt{font-weight:700;font-family:var(--font-en), var(--font-ja);color:var(--color-forest);padding-left:6px;font-size:0.95rem;}
+    .sticky-cta .btn{padding:10px 18px;font-size:0.95rem;}
 
-    footer {
-      background-color: var(--color-forest);
-      padding: 60px 0;
-      text-align: center;
-      color: var(--color-cream);
-    }
-    .footer-links a { color: var(--color-sky); text-decoration: none; margin: 0 15px; font-weight: 700; }
+    footer{background-color:var(--color-forest);padding:56px 0;text-align:center;color:var(--color-cream);}
+    .footer-links a{color:var(--color-sky);text-decoration:none;margin:0 12px;font-weight:700;}
 
-    @media (max-width: 900px) {
-      .two-col { grid-template-columns: 1fr; }
-      .pricing { grid-template-columns: 1fr; }
+    @media (max-width: 900px){
+      .pricing{grid-template-columns:1fr;}
+      .colors-grid{grid-template-columns:repeat(2, minmax(0, 1fr));}
     }
-    @media (max-width: 768px) {
-      .hero-illustration-container { width: 250px; height: 250px; }
-      .grid-3, .steps { grid-template-columns: 1fr; }
-      .form-row { grid-template-columns: 1fr; }
-      .sticky-cta .txt { display: none; }
-      .sticky-cta .bar { justify-content: center; }
+    @media (max-width: 768px){
+      .hero-carousel{width:min(320px, 92vw);}
+      .grid-3,.steps{grid-template-columns:1fr;}
+      .sticky-cta .txt{display:none;}
+      .sticky-cta .bar{justify-content:center;}
+      .carousel-btn{width:40px;height:40px;font-size:24px;}
     }
   </style>
 </head>
 
 <body>
-  <!-- 置換後スプラッシュ（Matter.js） -->
+  <!-- Splash -->
   <div id="splash-screen">
     <div class="instruction">画面がいっぱいになったらタップ！</div>
   </div>
 
-  <!-- ここから下が統合後のMobby LP -->
   <div id="main-content">
     <section class="hero">
       <div class="hero-bg-illustration"></div>
       <div class="container reveal">
-        <span class="tag">Keychain Camera ・ Mobby</span>
 
-        <div class="hero-illustration-container floating">
-          <div class="hero-illustration">
-            <!-- 画像は差し替えOK -->
-            <img src="https://images.unsplash.com/photo-1523294521727-242e945a5974?q=80&w=1200&auto=format&fit=crop" alt="Mobby keychain camera mood">
-          </div>
+        <!-- ★ creator message: 大きく最初に -->
+        <div class="hero-quote reveal">
+          <div class="label">message from the creator</div>
+          <p class="creator-text">
+            水溜りに移り込んだ空は、やがて小さくなっていき、消えてゆく。窓の中の小さな夜を、いつまでも閉じ込めてしまいたいと、どれだけ強く願ってみても、そこに永遠はない。あなたが幸せな時に、あなたが苦しい時に、あなたが頑張りたい時に、いつもそばにいるのは、モビー。
+          </p>
         </div>
 
-        <h1 class="headline">5枚だけ、残せる。</h1>
-        <p class="subhead reveal delay-200">
-          卒業式に間に合う。<strong>1月中発送</strong>（予定）<br>
-          撮りすぎないから、1枚が宝物になる。
-        </p>
+        <div style="margin-top:10px;" class="reveal delay-200">
+          <span class="tag">モビー・Mobby</span>
+        </div>
 
-        <div class="price-row reveal delay-200">
-          <div class="price-chip"><span class="muted">通常予定</span> <strong>¥8,000</strong></div>
-          <div class="price-chip"><span class="muted">卒業応援 学割</span> <strong>¥4,000</strong> <span class="badge">初回ロット限定</span></div>
+        <!-- 4色カルーセル -->
+        <div class="hero-carousel floating reveal delay-200" id="heroCarousel" aria-label="Mobby カラーギャラリー">
+          <button class="carousel-btn prev" type="button" aria-label="前の色">‹</button>
+
+          <div class="carousel-viewport">
+            <div class="carousel-track" id="heroTrack">
+              <div class="carousel-slide" data-color="pink">
+                <div class="hero-illustration"><img src="mobby_pink.jpg" alt="Mobby Peach Pink"></div>
+              </div>
+              <div class="carousel-slide" data-color="purple">
+                <div class="hero-illustration"><img src="mobby_purple.jpg" alt="Mobby Twilight Violet"></div>
+              </div>
+              <div class="carousel-slide" data-color="blue">
+                <div class="hero-illustration"><img src="mobby_blue.jpg" alt="Mobby Aqua Sky"></div>
+              </div>
+              <div class="carousel-slide" data-color="orange">
+                <div class="hero-illustration"><img src="mobby_orange.jpg" alt="Mobby Sunny Orange"></div>
+              </div>
+            </div>
+          </div>
+
+          <button class="carousel-btn next" type="button" aria-label="次の色">›</button>
+
+          <div class="carousel-caption" id="heroCaption">Peach Pink</div>
+          <div class="carousel-dots" id="heroDots" role="tablist" aria-label="カラーを選ぶ"></div>
+        </div>
+
+        <h1 class="headline reveal delay-200">5枚だけ、残せる。</h1>
+        <p class="subhead reveal delay-200">キーホルダー型カメラ <strong>Mobby</strong></p>
+
+        <div class="status-row reveal delay-200">
+          <div class="status-chip"><strong>いま：</strong>完売</div>
+          <div class="status-chip"><strong>次：</strong>1月末 入荷分</div>
         </div>
 
         <div class="cta-row reveal delay-400">
-          <a href="#reserve" class="btn btn-primary">デポジットで先行枠を確保</a>
-          <a href="#student" class="btn btn-secondary">学割の条件を見る</a>
-          <a href="#concept" class="btn btn-ghost">まずは世界観を読む</a>
+          <a href="#colors" class="btn btn-primary">色を選ぶ</a>
+          <a href="#buy" class="btn btn-secondary">今買う</a>
         </div>
 
         <div class="trust-row reveal delay-400">
-          <div class="trust-pill">デポジットは発送時に差し引き</div>
-          <div class="trust-pill">キャンセル可（期限あり）</div>
-          <div class="trust-pill">国内発送</div>
-          <div class="trust-pill">保証あり（詳細はFAQ）</div>
+          <div class="trust-pill">支払い完了＝確保</div>
+          <div class="trust-pill">用意できない時は全額返金</div>
         </div>
       </div>
     </section>
 
     <div class="wave-divider"></div>
 
-    <!-- Concept -->
-    <section id="concept" class="section center">
+    <section class="section center">
       <div class="container reveal">
-        <h2>永遠はない。だから、残したい。</h2>
-        <p class="lead">Mobbyは「5枚だけ」しか保存できないキーホルダー型カメラです。<br>制限は不便じゃなくて、思い出を強くするためのデザイン。</p>
+        <h2>「5枚」の理由</h2>
+        <p class="lead">たくさんじゃなくて、ちゃんと選べる。</p>
 
         <div class="grid-3 reveal delay-200">
           <div class="card">
-            <h3>撮りすぎない</h3>
-            <p>本当に大事な瞬間だけを選ぶ。<br>スマホと真逆のカメラ。</p>
+            <h3>選ぶ</h3>
+            <p>無限じゃないから、迷わない。</p>
           </div>
           <div class="card">
-            <h3>覗くと、そこにいる</h3>
-            <p>ファインダーを覗くと保存された写真が見える。<br>思い出を“持ち歩く”。</p>
+            <h3>覗く</h3>
+            <p>ファインダーで“残した5枚”が見える。</p>
           </div>
           <div class="card">
-            <h3>6枚目で、最初が消える</h3>
-            <p>新しく撮ると古い順に消えていく。<br>今の気持ちで“選び直す”。</p>
+            <h3>入れ替わる</h3>
+            <p>6枚目は、いちばん古い1枚と交代。</p>
           </div>
-        </div>
-
-        <div class="quote reveal delay-200">
-          <div class="qtitle">CMで使われている言葉</div>
-          <p>
-            水溜りに移り込んだ空は、やがて小さくなっていき、消えてゆく。窓の中の小さな夜を、いつまでも閉じ込めてしまいたいと、どれだけ強く願ってみても、そこに永遠はない。あなたが幸せな時に、あなたが苦しい時に、あなたが頑張りたい時に、いつもそばにいるのは、モビー。
-          </p>
         </div>
       </div>
     </section>
 
     <div class="wave-divider bottom"></div>
 
-    <!-- How it works -->
-    <section class="section soft center">
+    <section id="how" class="section soft center">
       <div class="container reveal">
-        <h2>How it works</h2>
-        <p class="lead">説明しなくても、使えばわかる。だけど、3ステップなら一瞬で伝わる。</p>
+        <h2>使い方</h2>
+        <p class="lead">3つだけ。</p>
 
         <div class="steps reveal delay-200">
           <div class="card step">
             <div class="num">01</div>
             <div class="title">撮る</div>
-            <div class="mini">キーホルダーのまま、ふとした瞬間を撮れる。</div>
+            <div class="mini">さっと撮れる。</div>
           </div>
           <div class="card step">
             <div class="num">02</div>
             <div class="title">覗く</div>
-            <div class="mini">ファインダーを覗くと、保存された写真が見える。</div>
+            <div class="mini">5枚が見える。</div>
           </div>
           <div class="card step">
             <div class="num">03</div>
-            <div class="title">横に送る</div>
-            <div class="mini">十字キー横操作で、5枚をスライドして確認。</div>
+            <div class="title">送る</div>
+            <div class="mini">左右で切り替える。</div>
           </div>
-        </div>
-
-        <div class="notice reveal delay-200">
-          <strong>仕様：</strong>保存は最大5枚。6枚目を撮ると古い順に自動で削除されます。
         </div>
       </div>
     </section>
 
-    <!-- Graduation use -->
-    <section class="section center">
+    <!-- COLORS -->
+    <section id="colors" class="section center">
       <div class="container reveal">
-        <h2>卒業式は、5枚で足りる。</h2>
-        <p class="lead">あの一瞬は、撮り散らかすより“選んで残す”方が、ずっと強い。</p>
+        <h2>4色</h2>
+        <p class="lead">雰囲気で選べる。</p>
 
-        <div class="two-col reveal delay-200">
-          <div class="card">
-            <h3>おすすめの「卒業5枚」</h3>
-            <p class="small" style="margin-top:10px;">
-              ① 校門の前<br>
-              ② 教室の黒板メッセージ<br>
-              ③ 友達の泣き笑いの顔<br>
-              ④ 花束と制服（手元もあり）<br>
-              ⑤ 帰り道の空
-            </p>
-            <div class="inline" style="margin-top:14px;">
-              <a href="#reserve" class="btn btn-primary">卒業に間に合う先行枠を確保</a>
-              <a href="#faq" class="btn btn-secondary">不安をFAQで消す</a>
-            </div>
+        <div class="colors-grid reveal delay-200" role="list">
+          <div class="color-card selected" role="listitem" tabindex="0" data-color="pink">
+            <div class="selected-badge">選択中</div>
+            <div class="swatch" style="background:#F7A7C6;"></div>
+            <div class="color-title">Peach Pink <span class="mini-tag">直感</span></div>
+            <img class="product-thumb" src="mobby_pink.jpg" alt="Mobby Peach Pink">
+            <div class="color-desc">好きに正直。</div>
           </div>
 
-          <div class="card">
-            <h3>友達と一緒に買われやすい</h3>
-            <p class="small" style="margin-top:10px;">
-              卒業式は「みんなで同じものを持つ」体験が強い。<br>
-              Mobbyはキーホルダーだから、制服やカバンに自然に馴染む。
-            </p>
-            <div class="notice">
-              <strong>コツ：</strong>「卒業の日に一緒に撮る」前提で予約が動きます。<br>
-              だからHPでは <strong>“卒業に間に合う”</strong> を最上段で約束します。
-            </div>
+          <div class="color-card" role="listitem" tabindex="0" data-color="purple">
+            <div class="selected-badge">選択中</div>
+            <div class="swatch" style="background:#9C7BFF;"></div>
+            <div class="color-title">Twilight Violet <span class="mini-tag">世界観</span></div>
+            <img class="product-thumb" src="mobby_purple.jpg" alt="Mobby Twilight Violet">
+            <div class="color-desc">こだわり強め。</div>
           </div>
+
+          <div class="color-card" role="listitem" tabindex="0" data-color="blue">
+            <div class="selected-badge">選択中</div>
+            <div class="swatch" style="background:#8FD7FF;"></div>
+            <div class="color-title">Aqua Sky <span class="mini-tag">冒険</span></div>
+            <img class="product-thumb" src="mobby_blue.jpg" alt="Mobby Aqua Sky">
+            <div class="color-desc">フッ軽。</div>
+          </div>
+
+          <div class="color-card" role="listitem" tabindex="0" data-color="orange">
+            <div class="selected-badge">選択中</div>
+            <div class="swatch" style="background:#FFA24A;"></div>
+            <div class="color-title">Sunny Orange <span class="mini-tag">勇気</span></div>
+            <img class="product-thumb" src="mobby_orange.jpg" alt="Mobby Sunny Orange">
+            <div class="color-desc">前に進める。</div>
+          </div>
+        </div>
+
+        <div class="notice reveal delay-200">
+          <strong>選択中：</strong><span id="selectedColorText">Peach Pink</span>
+        </div>
+
+        <div class="cta-row reveal delay-200" style="margin-top:16px;">
+          <a href="#buy" class="btn btn-primary">この色で買う</a>
+          <a href="#price" class="btn btn-ghost">値段</a>
         </div>
       </div>
     </section>
 
     <div class="wave-divider"></div>
 
-    <!-- Student discount -->
-    <section id="student" class="section soft center">
+    <!-- PRICE -->
+    <section id="price" class="section soft center">
       <div class="container reveal">
-        <h2>卒業応援 学割</h2>
-        <p class="lead">学割は“ズルい”じゃなく、“卒業のための枠”として設計。</p>
+        <h2>値段</h2>
+        <p class="lead">学生は安く。</p>
 
         <div class="pricing reveal delay-200">
           <div class="price-card">
-            <div class="label">一般販売予定 <span class="badge">通常</span></div>
+            <div class="label">通常 <span class="badge">¥8,000</span></div>
             <div class="value">¥8,000</div>
-            <div class="note">一般販売（通常価格）。</div>
           </div>
           <div class="price-card">
-            <div class="label">卒業応援 学割 <span class="badge">初回ロット限定</span></div>
+            <div class="label">学生 <span class="badge">¥4,000</span></div>
             <div class="value">¥4,000</div>
-            <div class="note">
-              学割条件：学生証 / 学校メール などで確認（どれか1つ）。<br>
-              学割枠は初回ロットの範囲で先着。
-            </div>
           </div>
         </div>
 
         <div class="notice reveal delay-200">
-          <strong>注意：</strong>学割は「卒業・新生活応援（初回ロット限定）」として運用すると、納得感が出て荒れにくいです。
+          <strong>支払い完了＝確保。</strong> 1月末に順番に発送。
         </div>
       </div>
     </section>
 
-    <!-- Reserve / Deposit -->
-    <section id="reserve" class="section center">
+    <!-- BUY -->
+    <section id="buy" class="section center">
       <div class="container reveal">
-        <h2>デポジットで “先行枠” を確保</h2>
-        <p class="lead">
-          発売前でも迷わないように、予約の仕組みをシンプルにしました。<br>
-          <strong>1月中発送（予定）</strong>／デポジットは発送時に差し引き。
-        </p>
+        <h2>今買う（1月末発送）</h2>
+        <p class="lead">色を選んで、押すだけ。</p>
 
-        <div class="two-col reveal delay-200">
-          <div class="card">
-            <h3>予約の流れ</h3>
-            <p class="small" style="margin-top:10px;">
-              1) 下のフォーム送信（連絡先）<br>
-              2) デポジット決済（先行枠確保）<br>
-              3) 発送時：商品代金からデポジット分を差し引き
-            </p>
-
-            <div class="notice">
-              <strong>デポジット：</strong><span id="deposit-amount-text">¥1,000</span>（※ここは変更可）<br>
-              <strong>キャンセル：</strong>期限内なら全額返金（※下のポリシー参照）
-            </div>
-
-            <div class="inline">
-              <a href="#reserve-form" class="btn btn-primary">今すぐ先行枠を取る</a>
-              <a href="#faq" class="btn btn-secondary">キャンセル/返金を確認</a>
-            </div>
-          </div>
-
-          <div class="card">
-            <h3>ポリシー（短く・安心）</h3>
-            <p class="small" style="margin-top:10px;">
-              ・発送予定：<strong>1月中</strong>（天候/製造都合で前後する可能性あり）<br>
-              ・遅延時：希望者はデポジット全額返金<br>
-              ・デポジットは発送時に差し引き（重複請求なし）
-            </p>
-            <div class="notice">
-              <strong>重要：</strong>ここに書くことが、そのまま信頼になります。<br>
-              不明瞭にしないほど予約が増えます。
-            </div>
+        <div class="buy-preview reveal delay-200">
+          <img id="selectedPreviewImg" src="mobby_pink.jpg" alt="Selected Mobby">
+          <div class="notice" style="margin:0;max-width:560px;">
+            <strong>選択中：</strong><span id="selectedColorText2">Peach Pink</span><br>
+            <span style="opacity:.85;">ボタンが切り替わります。</span>
           </div>
         </div>
 
-        <div id="reserve-form" class="card form reveal delay-200">
-          <h3>先行予約フォーム</h3>
-          <p class="small">※デモ実装：送信後に「決済導線（URL）」へ繋げる想定です（下のJSで設定可能）。</p>
+        <div class="cta-row reveal delay-200">
+          <a href="#" id="buyRegular" class="btn btn-primary">今すぐ買う（¥8,000）</a>
+          <a href="#" id="buyStudent" class="btn btn-secondary">学生（¥4,000）</a>
+        </div>
 
-          <form id="preorderForm" novalidate>
-            <div class="form-row">
-              <div>
-                <label for="name">お名前（任意）</label>
-                <input id="name" name="name" type="text" placeholder="例）Mobby 花子">
-              </div>
-              <div>
-                <label for="contact">連絡先（必須）</label>
-                <input id="contact" name="contact" type="text" required placeholder="メール or LINE ID（どちらか）">
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div>
-                <label for="contactType">連絡方法</label>
-                <select id="contactType" name="contactType">
-                  <option value="email">メール</option>
-                  <option value="line">LINE</option>
-                  <option value="other">その他</option>
-                </select>
-              </div>
-              <div>
-                <label for="plan">価格</label>
-                <select id="plan" name="plan">
-                  <option value="student">学割 ¥4,000（卒業応援枠）</option>
-                  <option value="regular">通常 ¥8,000</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="checkbox">
-              <input id="isStudent" name="isStudent" type="checkbox" checked>
-              <label for="isStudent" style="margin:0;">学生です（学割を希望）</label>
-            </div>
-
-            <div class="form-row">
-              <div>
-                <label for="school">学校名（任意）</label>
-                <input id="school" name="school" type="text" placeholder="例）○○高校">
-              </div>
-              <div>
-                <label for="memo">一言（任意）</label>
-                <input id="memo" name="memo" type="text" placeholder="例）卒業式で友達と撮りたい！">
-              </div>
-            </div>
-
-            <div class="form-help">
-              <strong>次のステップ：</strong>フォーム送信後、デポジット決済へ進みます（設定された場合）。
-            </div>
-
-            <div class="inline" style="margin-top:14px;">
-              <button type="submit" class="btn btn-primary">送信してデポジットへ</button>
-              <a href="#faq" class="btn btn-secondary">先にFAQを見る</a>
-            </div>
-
-            <div class="notice">
-              <strong>プライバシー：</strong>スパムは送りません。いつでも解除できます。<br>
-              <span class="small">（実運用ではプライバシーポリシーへのリンクをフッターに置いてください）</span>
-            </div>
-
-            <div id="formResult" class="result"></div>
-          </form>
+        <div class="notice reveal delay-200" style="max-width:820px;margin-left:auto;margin-right:auto;">
+          用意できない場合は <strong>全額返金</strong>します。
         </div>
       </div>
     </section>
 
-    <!-- FAQ -->
+    <!-- ★ FAQ：元に戻す -->
     <section id="faq" class="section soft center">
       <div class="container reveal">
         <h2>よくある質問</h2>
-        <p class="lead">迷いはここで終わらせる。</p>
+        <p class="lead">不安はここで消す。</p>
 
         <div class="faq reveal delay-200">
-          <details>
-            <summary>本当に1月中に届きますか？</summary>
-            <p>発送予定は1月中です（製造/物流の事情で前後する可能性があります）。万一遅延した場合、希望者にはデポジット全額返金など、明確な対応を用意します。</p>
+          <details class="faq-item">
+            <summary>いつ届くの？</summary>
+            <p>次回入荷（1月末）後、順番にお届けします。支払いが完了した分は必ず用意します。</p>
           </details>
-
-          <details>
-            <summary>デポジットはいくらですか？</summary>
-            <p>現在は <strong><span id="deposit-amount-text-2">¥1,000</span></strong> を想定しています（コード内で変更できます）。発送時に商品代金から差し引かれます。</p>
+          <details class="faq-item">
+            <summary>本当に届くの？</summary>
+            <p>はい。支払いが完了した時点で、あなたの分を確保します。もしこちらの都合で用意できない場合は全額返金します。</p>
           </details>
-
-          <details>
-            <summary>キャンセル/返金はできますか？</summary>
-            <p>期限内なら全額返金できる設計にしてください（例：発送予定日の14日前まで）。このページの文言がそのままルールになるので、運用に合わせて確定させましょう。</p>
+          <details class="faq-item">
+            <summary>学生さんの値段ってどうやって？</summary>
+            <p>学生向けリンク（クーポン適用済み）から購入します。</p>
           </details>
-
-          <details>
-            <summary>学割の条件は？</summary>
-            <p>学生証の提示、学校メールでの確認など「どれか1つ」でOKにすると摩擦が減ります。学割は卒業/新生活応援の初回ロット枠として用意します。</p>
-          </details>
-
-          <details>
-            <summary>6枚目を撮ったらどうなりますか？</summary>
-            <p>新しく撮ると、古い写真から順に自動で消えていきます（最大5枚保存）。</p>
-          </details>
-
-          <details>
-            <summary>保証はありますか？</summary>
-            <p>あります（例：6ヶ月〜1年）。ここは実際の方針が決まり次第、期間と対象範囲（自然故障/破損など）を明記してください。</p>
-          </details>
-
-          <details>
-            <summary>送料はいくらですか？</summary>
-            <p>未確定の場合でも「全国一律」「◯円」「◯円以上で無料」など、購入前にわかる形にしてください。送料が曖昧だと予約が落ちます。</p>
-          </details>
-
-          <details>
-            <summary>問い合わせ先は？</summary>
-            <p>運用開始後は、メールアドレス/公式LINE/フォームのいずれかを必ず置いてください。フッターにもリンクを置くのがおすすめです。</p>
+          <details class="faq-item">
+            <summary>6枚目を撮るとどうなる？</summary>
+            <p>新しく撮ると、いちばん古い写真から順に自動で消えていきます（最大5枚）。</p>
           </details>
         </div>
 
         <div class="cta-row reveal delay-200" style="margin-top:22px;">
-          <a href="#reserve" class="btn btn-primary">先行枠を確保する</a>
-          <a href="#concept" class="btn btn-secondary">コンセプトに戻る</a>
+          <a href="#colors" class="btn btn-primary">色を選ぶ</a>
+          <a href="#buy" class="btn btn-secondary">買う</a>
         </div>
       </div>
     </section>
@@ -935,23 +659,24 @@
     <footer>
       <div class="container">
         <div class="footer-links">
-          <a href="#concept">世界観</a>
-          <a href="#student">学割</a>
-          <a href="#reserve">先行予約</a>
+          <a href="#how">使い方</a>
+          <a href="#colors">色</a>
+          <a href="#price">値段</a>
+          <a href="#buy">買う</a>
           <a href="#faq">FAQ</a>
         </div>
-        <p style="margin-top:20px; font-size:0.8rem; opacity:0.7;">© 2025 Mobby.</p>
+        <p style="margin-top:18px;font-size:0.8rem;opacity:0.7;">© 2025 Mobby.</p>
       </div>
     </footer>
   </div>
 
-  <!-- Sticky CTA (splash後に表示) -->
+  <!-- Sticky CTA -->
   <div class="sticky-cta" id="stickyCta">
     <div class="inner">
       <div class="bar">
-        <div class="txt">卒業に間に合う：1月中発送（予定）</div>
-        <a href="#reserve" class="btn btn-primary">デポジットで先行枠</a>
-        <a href="#student" class="btn btn-secondary">学割</a>
+        <div class="txt">完売 → 1月末入荷分を購入</div>
+        <a href="#colors" class="btn btn-primary">色</a>
+        <a href="#buy" class="btn btn-secondary">買う</a>
       </div>
     </div>
   </div>
@@ -960,45 +685,255 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 
   <script>
-/************************************************************
- * 1. スクロール監視（reveal）
- ************************************************************/
-function initScrollObserver() {
+/* reveal */
+function initScrollObserver(){
   const revealElements = document.querySelectorAll('.reveal');
-  const options = { root: null, rootMargin: '0px', threshold: 0.15 };
-
+  const options = { root:null, rootMargin:'0px', threshold:0.15 };
   const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
+      if(entry.isIntersecting){
         entry.target.classList.add('active');
         observer.unobserve(entry.target);
       }
     });
   }, options);
-
   revealElements.forEach(el => observer.observe(el));
 }
 
-/************************************************************
- * 2. スプラッシュ（Matter.js / icon1,2,3）
- *    - 画像のbroken state対策：事前プリロードして、失敗したら代替描画
- ************************************************************/
+/* ★ Stripeリンク（色ごと）ここに入れる */
+const STRIPE_URLS = {
+  regular: { pink:"", purple:"", blue:"", orange:"" },
+  student: { pink:"", purple:"", blue:"", orange:"" }
+};
 
-// ===== 設定（必要に応じて変更） =====
-const ICON_URLS   = ['icon1.png', 'icon2.png', 'icon3.png'];
+/* 色メタ（名前＋画像） */
+const COLOR_META = {
+  pink:   { name:"Peach Pink",      img:"mobby_pink.jpg"   },
+  purple: { name:"Twilight Violet", img:"mobby_purple.jpg" },
+  blue:   { name:"Aqua Sky",        img:"mobby_blue.jpg"   },
+  orange: { name:"Sunny Orange",    img:"mobby_orange.jpg" }
+};
+
+const ORDER = ["pink","purple","blue","orange"];
+
+let selectedColor = "pink";
+let syncing = false;
+
+/* DOM */
+const colorCards = document.querySelectorAll('.color-card');
+const selectedText1 = document.getElementById('selectedColorText');
+const selectedText2 = document.getElementById('selectedColorText2');
+const buyRegularBtn = document.getElementById('buyRegular');
+const buyStudentBtn = document.getElementById('buyStudent');
+const selectedPreviewImg = document.getElementById('selectedPreviewImg');
+
+/* ===== Hero Carousel (3D Rotating Ring) ===== */
+const heroCarousel = document.getElementById("heroCarousel");
+const heroTrack = document.getElementById("heroTrack");
+const heroDots = document.getElementById("heroDots");
+const heroCaption = document.getElementById("heroCaption");
+const prevBtn = heroCarousel.querySelector(".carousel-btn.prev");
+const nextBtn = heroCarousel.querySelector(".carousel-btn.next");
+
+const heroSlides = [...heroTrack.querySelectorAll(".carousel-slide")];
+const n = heroSlides.length;
+const angle = 360 / n;
+
+let heroIndex = ORDER.indexOf(selectedColor);
+let currentRot = -heroIndex * angle;
+let ringRadius = 220;
+
+function mod(a, m){ return ((a % m) + m) % m; }
+function degToRad(d){ return d * Math.PI / 180; }
+
+function renderHeroDots(){
+  heroDots.innerHTML = "";
+  ORDER.forEach((key, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "carousel-dot" + (i === heroIndex ? " active" : "");
+    b.setAttribute("aria-label", `${COLOR_META[key].name} を表示`);
+    b.addEventListener("click", () => setHeroIndex(i, true));
+    heroDots.appendChild(b);
+  });
+}
+
+function layoutRing(){
+  const slide = heroSlides[0];
+  const w = slide ? slide.getBoundingClientRect().width : 330;
+  ringRadius = Math.round((w/2) / Math.tan(Math.PI / n) + (w * 0.25));
+
+  heroSlides.forEach((s, i) => {
+    const h = s.getBoundingClientRect().height || w;
+    s.style.transform =
+      `translate(${-w/2}px, ${-h/2}px) rotateY(${i * angle}deg) translateZ(${ringRadius}px)`;
+  });
+
+  updateRing(true);
+}
+
+function updateRing(skipTransition=false){
+  const key = ORDER[heroIndex];
+
+  if(skipTransition) heroTrack.style.transition = "none";
+  else heroTrack.style.transition = "transform 0.7s var(--ease-soft)";
+
+  currentRot = -heroIndex * angle;
+  heroTrack.style.transform = `translate(-50%, -50%) rotateY(${currentRot}deg)`;
+
+  heroSlides.forEach((s, i) => {
+    const world = i * angle + currentRot;
+    const frontness = Math.cos(degToRad(world));
+    s.classList.toggle("dim", frontness < 0.4);
+    s.style.zIndex = String(Math.round(1000 * (frontness + 1)));
+  });
+
+  if(heroDots.children.length){
+    [...heroDots.children].forEach((d, i) => d.classList.toggle("active", i === heroIndex));
+  }
+  if(heroCaption) heroCaption.textContent = COLOR_META[key].name;
+
+  if(skipTransition){
+    requestAnimationFrame(() => { heroTrack.style.transition = "transform 0.7s var(--ease-soft)"; });
+  }
+}
+
+function setHeroIndex(i, fromUser){
+  heroIndex = mod(i, n);
+  updateRing(false);
+
+  if(fromUser){
+    syncing = true;
+    setSelectedColor(ORDER[heroIndex]);
+    syncing = false;
+  }
+}
+
+function setHeroByColor(colorKey){
+  const idx = ORDER.indexOf(colorKey);
+  if(idx < 0) return;
+  heroIndex = idx;
+  updateRing(false);
+}
+
+prevBtn.addEventListener("click", () => setHeroIndex(heroIndex - 1, true));
+nextBtn.addEventListener("click", () => setHeroIndex(heroIndex + 1, true));
+
+heroSlides.forEach((slide, i) => {
+  slide.addEventListener("click", () => setHeroIndex(i, true));
+});
+
+let startX = 0, startRot = 0, dragging = false, isDragged = false;
+
+heroCarousel.addEventListener("pointerdown", (e) => {
+  if(e.target.closest('.carousel-btn')) return;
+  dragging = true; isDragged = false;
+  startX = e.clientX;
+  startRot = currentRot;
+  heroTrack.style.transition = "none";
+  if(heroCarousel.setPointerCapture) heroCarousel.setPointerCapture(e.pointerId);
+  e.preventDefault();
+});
+
+heroCarousel.addEventListener("pointermove", (e) => {
+  if(!dragging) return;
+  const dx = e.clientX - startX;
+  if(Math.abs(dx) > 5) isDragged = true;
+
+  const rot = startRot + dx * 0.2;
+  currentRot = rot;
+  heroTrack.style.transform = `translate(-50%, -50%) rotateY(${rot}deg)`;
+  e.preventDefault();
+});
+
+heroCarousel.addEventListener("pointerup", (e) => {
+  if(!dragging) return;
+  dragging = false;
+
+  if(isDragged){
+    const snapped = mod(Math.round((-currentRot) / angle), n);
+    setHeroIndex(snapped, true);
+  }
+  isDragged = false;
+  if(heroCarousel.releasePointerCapture) heroCarousel.releasePointerCapture(e.pointerId);
+});
+
+/* 初期化 */
+renderHeroDots();
+layoutRing();
+window.addEventListener("resize", () => layoutRing(), { passive:true });
+
+/* 選択色の反映 */
+function setSelectedColor(key){
+  if(!COLOR_META[key]) return;
+  selectedColor = key;
+
+  colorCards.forEach(card => {
+    card.classList.toggle('selected', card.dataset.color === key);
+  });
+
+  const meta = COLOR_META[key];
+  selectedText1.textContent = meta.name;
+  selectedText2.textContent = meta.name;
+
+  selectedPreviewImg.src = meta.img;
+  selectedPreviewImg.alt = `Mobby ${meta.name}`;
+
+  if(!syncing) setHeroByColor(key);
+}
+
+function goBuy(url){
+  if(!url || url.trim().length === 0){
+    alert('Stripeの購入リンク（STRIPE_URLS）をコードに入れてください。');
+    return;
+  }
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+buyRegularBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  goBuy(STRIPE_URLS.regular[selectedColor]);
+});
+
+buyStudentBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  goBuy(STRIPE_URLS.student[selectedColor] || STRIPE_URLS.regular[selectedColor]);
+});
+
+colorCards.forEach(card => {
+  card.addEventListener('click', () => setSelectedColor(card.dataset.color));
+  card.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      setSelectedColor(card.dataset.color);
+    }
+  });
+});
+
+/* 初期描画 */
+setHeroByColor(selectedColor);
+syncing = true;
+setSelectedColor(selectedColor);
+syncing = false;
+
+/* smooth scroll */
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a[href^="#"]');
+  if(!a) return;
+  const id = a.getAttribute('href');
+  if(id.length <= 1) return;
+  const el = document.querySelector(id);
+  if(!el) return;
+  e.preventDefault();
+  el.scrollIntoView({ behavior:'smooth', block:'start' });
+});
+
+/* Splash (Matter.js) */
+const ICON_URLS   = ['icon1.png','icon2.png','icon3.png','icon4.png'];
 const ICON_SIZE   = 150;
-const SPAWN_RATE  = 100; // ms
+const SPAWN_RATE  = 100;
 const TOTAL_ICONS = 50;
 
-// デポジット（表示にも使う）
-const DEPOSIT_AMOUNT = 1000; // ←ここを変更（例：500 / 2000）
-const PAYMENT_URL = "";      // ←Stripe等の決済URLを入れる（空なら送信完了表示のみ）
-
-// 表示に反映
-document.getElementById('deposit-amount-text').textContent = `¥${DEPOSIT_AMOUNT.toLocaleString()}`;
-document.getElementById('deposit-amount-text-2').textContent = `¥${DEPOSIT_AMOUNT.toLocaleString()}`;
-
-// Matter.js aliases
 const Engine    = Matter.Engine;
 const Render    = Matter.Render;
 const Runner    = Matter.Runner;
@@ -1006,131 +941,86 @@ const Bodies    = Matter.Bodies;
 const Composite = Matter.Composite;
 const Body      = Matter.Body;
 
-// DOM
 const splashElement = document.getElementById('splash-screen');
 const mainContent   = document.getElementById('main-content');
 const stickyCta     = document.getElementById('stickyCta');
 
-// Engine / World
 const engine = Engine.create();
 const world  = engine.world;
 
-// サイズ
 let width  = window.innerWidth;
 let height = window.innerHeight;
 
-// Renderer
 const render = Render.create({
   element: splashElement,
   engine: engine,
-  options: {
-    width,
-    height,
-    background: 'transparent',
-    wireframes: false
-  }
+  options: { width, height, background: 'transparent', wireframes: false }
 });
 
-// ===== 壁 & 床 =====
-const wallOptions = { isStatic: true, render: { visible: false } };
-
-const floor = Bodies.rectangle(width / 2, height + 50, width + 200, 100, wallOptions);
-const leftWall = Bodies.rectangle(-60, height / 2, 120, height + 200, wallOptions);
-const rightWall = Bodies.rectangle(width + 60, height / 2, 120, height + 200, wallOptions);
-
+const wallOptions = { isStatic:true, render:{ visible:false } };
+const floor = Bodies.rectangle(width/2, height+50, width+200, 100, wallOptions);
+const leftWall = Bodies.rectangle(-60, height/2, 120, height+200, wallOptions);
+const rightWall = Bodies.rectangle(width+60, height/2, 120, height+200, wallOptions);
 Composite.add(world, [floor, leftWall, rightWall]);
 
-// ===== 画像プリロード =====
-function preloadImages(urls) {
+function preloadImages(urls){
   const tasks = urls.map(url => new Promise(resolve => {
     const img = new Image();
-    img.onload = () => resolve({ url, ok: true });
-    img.onerror = () => resolve({ url, ok: false });
+    img.onload  = () => resolve({ url, ok:true });
+    img.onerror = () => resolve({ url, ok:false });
     img.src = url;
   }));
   return Promise.all(tasks);
 }
 
 let AVAILABLE_ICON_URLS = [];
-
-/************************************************************
- * 3. アイコン生成（3色ランダム）
- ************************************************************/
 let count = 0;
 let dropTimer = null;
 
-function startDropping() {
+function startDropping(){
   dropTimer = setInterval(() => {
-    if (count >= TOTAL_ICONS) {
-      clearInterval(dropTimer);
-      return;
-    }
+    if(count >= TOTAL_ICONS){ clearInterval(dropTimer); return; }
 
     const xPos = Math.random() * (width - 120) + 60;
-
-    // 画像が読めていればsprite、ダメなら簡易circle
     const hasSprite = AVAILABLE_ICON_URLS.length > 0;
-    const texture = hasSprite
-      ? AVAILABLE_ICON_URLS[Math.floor(Math.random() * AVAILABLE_ICON_URLS.length)]
-      : null;
+    const texture = hasSprite ? AVAILABLE_ICON_URLS[Math.floor(Math.random()*AVAILABLE_ICON_URLS.length)] : null;
 
-    const opts = {
-      restitution: 0.55,
-      friction: 0.08,
-      frictionAir: 0.03,
-      render: {}
-    };
+    const opts = { restitution:0.55, friction:0.08, frictionAir:0.03, render:{} };
 
-    if (hasSprite) {
-      opts.render.sprite = {
-        texture: texture,
-        xScale: ICON_SIZE / 512,
-        yScale: ICON_SIZE / 512
-      };
-    } else {
-      // 代替：見えるように色付き（wireframes=falseなのでfillStyle有効）
-      const fallbackColors = ['#AEC6CF', '#F0E68C', '#D2691E'];
-      opts.render.fillStyle = fallbackColors[Math.floor(Math.random() * fallbackColors.length)];
+    if(hasSprite){
+      opts.render.sprite = { texture, xScale: ICON_SIZE/512, yScale: ICON_SIZE/512 };
+    }else{
+      const fallbackColors = ['#8FD7FF', '#F7A7C6', '#FFA24A', '#9C7BFF'];
+      opts.render.fillStyle = fallbackColors[Math.floor(Math.random()*fallbackColors.length)];
       opts.render.strokeStyle = 'rgba(255,255,255,0.35)';
       opts.render.lineWidth = 2;
     }
 
-    const icon = Bodies.circle(xPos, -60, ICON_SIZE / 2, opts);
+    const icon = Bodies.circle(xPos, -60, ICON_SIZE/2, opts);
     Composite.add(world, icon);
     count++;
   }, SPAWN_RATE);
 }
 
-/************************************************************
- * 4. 実行開始
- ************************************************************/
 Render.run(render);
 const runner = Runner.create();
 Runner.run(runner, engine);
 
-// プリロードしてから落とし始める（broken state対策）
 preloadImages(ICON_URLS).then(results => {
   AVAILABLE_ICON_URLS = results.filter(r => r.ok).map(r => r.url);
   startDropping();
 });
 
-/************************************************************
- * 5. タップ後の挙動
- *    ・爆発
- *    ・フェードアウト
- *    ・LP表示 & scroll observer開始
- ************************************************************/
 splashElement.addEventListener('click', () => {
-  if (dropTimer) clearInterval(dropTimer);
+  if(dropTimer) clearInterval(dropTimer);
 
-  // 爆発
   const bodies = Composite.allBodies(world);
   bodies.forEach(body => {
-    if (!body.isStatic) {
+    if(!body.isStatic){
       const force = 0.5 * body.mass;
       Body.applyForce(body, body.position, {
-        x: (Math.random() - 0.5) * force,
-        y: (Math.random() - 1.5) * force
+        x:(Math.random()-0.5)*force,
+        y:(Math.random()-1.5)*force
       });
     }
   });
@@ -1138,11 +1028,8 @@ splashElement.addEventListener('click', () => {
   setTimeout(() => {
     splashElement.classList.add('hidden');
     mainContent.classList.add('visible');
-
     document.body.style.overflowY = 'auto';
     initScrollObserver();
-
-    // sticky CTA 表示
     stickyCta.style.display = 'block';
 
     setTimeout(() => {
@@ -1154,80 +1041,19 @@ splashElement.addEventListener('click', () => {
   }, 500);
 });
 
-/************************************************************
- * 6. リサイズ対応
- ************************************************************/
 window.addEventListener('resize', () => {
   width  = window.innerWidth;
   height = window.innerHeight;
 
-  render.canvas.width  = width;
+  render.canvas.width = width;
   render.canvas.height = height;
-  render.options.width  = width;
+  render.options.width = width;
   render.options.height = height;
 
-  Body.setPosition(floor,     { x: width / 2, y: height + 50 });
-  Body.setPosition(leftWall,  { x: -60,       y: height / 2 });
-  Body.setPosition(rightWall, { x: width + 60, y: height / 2 });
-}, { passive: true });
-
-/************************************************************
- * 7. スムーススクロール（アンカー）
- ************************************************************/
-document.addEventListener('click', (e) => {
-  const a = e.target.closest('a[href^="#"]');
-  if (!a) return;
-  const id = a.getAttribute('href');
-  if (id.length <= 1) return;
-  const el = document.querySelector(id);
-  if (!el) return;
-  e.preventDefault();
-  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-});
-
-/************************************************************
- * 8. 先行予約フォーム（デモ）
- *    - 実運用：ここでサーバーに送信→PAYMENT_URLへリダイレクト等
- ************************************************************/
-const form = document.getElementById('preorderForm');
-const resultBox = document.getElementById('formResult');
-
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-
-  const contact = document.getElementById('contact').value.trim();
-  if (!contact) {
-    alert('連絡先（メール or LINE ID）を入力してください。');
-    return;
-  }
-
-  const name = document.getElementById('name').value.trim();
-  const plan = document.getElementById('plan').value;
-  const isStudent = document.getElementById('isStudent').checked;
-
-  const planText = (plan === 'student' || isStudent) ? '学割 ¥4,000' : '通常 ¥8,000';
-
-  // 送信完了表示（デモ）
-  const orderId = `MBY-${Date.now().toString(36).toUpperCase()}`;
-  resultBox.style.display = 'block';
-  resultBox.innerHTML = `
-    <strong>仮予約を受け付けました。</strong><br>
-    注文ID：<strong>${orderId}</strong><br>
-    プラン：<strong>${planText}</strong><br>
-    デポジット：<strong>¥${DEPOSIT_AMOUNT.toLocaleString()}</strong>（発送時に差し引き）<br>
-    <span class="small">※この後、決済へ進みます（設定されている場合）。</span>
-  `;
-
-  // 決済URLが設定されていれば遷移（別タブ）
-  if (PAYMENT_URL && PAYMENT_URL.trim().length > 0) {
-    window.open(PAYMENT_URL, '_blank', 'noopener,noreferrer');
-  } else {
-    // 運用前の仮：ここで「決済リンクを送る」等の表示にしてもOK
-  }
-
-  // 入力を軽く残すならリセットしない。完全リセットしたいなら↓をON
-  // form.reset();
-});
+  Body.setPosition(floor, { x: width/2, y: height+50 });
+  Body.setPosition(leftWall, { x: -60, y: height/2 });
+  Body.setPosition(rightWall, { x: width+60, y: height/2 });
+}, { passive:true });
   </script>
 </body>
 </html>
