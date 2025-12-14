@@ -30,25 +30,33 @@
     overflow-y:hidden; /* splash中 */
   }
   
-  /* Splash */
-  #splash-screen{
-    position:fixed;top:0;left:0;width:100vw;height:100vh;
-    z-index:9999;
-    cursor:pointer;
-    transition:opacity 1.2s ease-out, visibility 1.2s ease-out;
-    overflow:hidden;
-    background: var(--color-forest) url('favicon/背景.jpg') center / contain no-repeat;
-  }
   #splash-screen.hidden{opacity:0;visibility:hidden;pointer-events:none;}
   
-  #splash-screen::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background: rgba(47,79,79,0.55);
-    z-index:0;
-    pointer-events:none;
-  }
+/* Splash */
+#splash-screen{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  cursor:pointer;
+  transition:opacity 1.2s ease-out, visibility 1.2s ease-out;
+  overflow:hidden;
+
+  /* ▼ 小さく表示＋余白は白 */
+  background-color:#f9f5f4;                 /* 余白を白に */
+  background-image:url('favicon/背景.jpg');
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size: 50% auto;   /* 横幅70%で固定 */
+         /* 拡大しない・必ず収まる */
+}
+
+/* 暗くするforest色オーバーレイは完全に不要 */
+#splash-screen::before{
+  display:none;
+}
+
+
+
   #splash-screen canvas{
     position:absolute;
     inset:0;
@@ -58,7 +66,7 @@
   }
   
   .instruction{
-    position:absolute;top:18px;left:50%;transform:translateX(-50%);
+    position:absolute;top:60%;left:50%;transform:translateX(-50%);
     color:rgba(255,255,255,0.9);pointer-events:none;
     font-family:var(--font-en), var(--font-ja);font-weight:700;font-size:1rem;
     letter-spacing:0.04em;padding:10px 14px;border-radius:999px;
@@ -114,7 +122,7 @@
   
   /* Hero */
   .hero{
-    min-height:94vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
     text-align:center;position:relative;padding-top:92px;padding-bottom:52px;
   }
   .hero-bg-illustration{
@@ -716,7 +724,7 @@
 <body>
   <!-- Splash -->
   <div id="splash-screen">
-    <div class="instruction">画面がいっぱいになったらタップ！</div>
+    <div class="instruction">TAP！！</div>
   </div>
 
   <div id="main-content">
@@ -764,7 +772,7 @@
         </div>
 
         <h1 class="headline reveal delay-200">5枚だけ、残せる。</h1>
-        <p class="subhead reveal delay-200">キーホルダー型カメラ <strong>Mobby</strong></p>
+        <!--<p class="subhead reveal delay-200">キーホルダー型カメラ <strong>Mobby</strong></p>
 
         <div class="status-row reveal delay-200">
           <div class="status-chip"><strong>いま：</strong>完売</div>
@@ -780,6 +788,7 @@
           <div class="trust-pill">支払い完了＝確保</div>
           <div class="trust-pill">用意できない時は全額返金</div>
         </div>
+        -->
       </div>
     </section>
 
