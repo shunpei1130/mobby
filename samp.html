@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Splash Screen Demo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* スプラッシュ中はスクロール禁止 */
+            font-family: sans-serif;
+        }
+
+        /* スプラッシュスクリーン（キャンバス）のスタイル */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            background-color: #f0f0f0; /* 背景色 */
+            cursor: pointer;
+            transition: opacity 0.8s ease; /* フェードアウト用 */
+        }
+
+        /* メインコンテンツ（最初は隠れているか、後ろにある） */
+        #main-content {
+            padding: 2rem;
+            text-align: center;
+            opacity: 0; /* 最初は透明 */
+            transition: opacity 1s ease;
+        }
+        
+        /* 説明テキスト */
+        .instruction {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #888;
+            pointer-events: none; /* クリックを邪魔しない */
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="splash-screen">
+        <div class="instruction">画面がいっぱいになったらクリック！</div>
+    </div>
+
+    <div id="main-content">
+        <h1>ようこそ！</h1>
+        <p>これがHPの中身です。</p>
+        <p>ゆっくりしていってください。</p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+
+    <script>
+        // 設定
+        const ICON_URL = 'icon.png'; // ★ここにアイコン画像のパスを指定
+        const ICON_SIZE = 150;        // アイコンの表示サイズ(直径)
+        const SPAWN_RATE = 100;      // 何ミリ秒ごとにアイコンを落とすか
+        const TOTAL_ICONS = 50;     // 画面に落とすアイコンの総数
+
+        // Matter.jsのモジュール別名定義
+        const Engine = Matter.Engine,
+              Render = Matter.Render,
+              Runner = Matter.Runner,
+              Bodies = Matter.Bodies,
+              Composite = Matter.Composite,
+              Events = Matter.Events,
+              Body = Matter.Body;
+
+        // エンジンの作成
+        const engine = Engine.create();
+        const world = engine.world;
+
+        // スプラッシュスクリーンの要素を取得
+        const splashElement = document.getElementById('splash-screen');
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        // レンダラーの作成
+        const render = Render.create({
+            element: splashElement,
+            engine: engine,
+            options: {
+                width: width,
+                height: height,
+                background: 'transparent', // CSSで背景色を指定するので透明に
+                wireframes: false // 画像を表示するためにワイヤーフレームをオフ
+            }
+        });
+
+        // 壁と床を作成（画面外に出ないようにする）
+        const wallOptions = { isStatic: true, render: { visible: false } }; // 壁は見えないようにする
+        const floor = Bodies.rectangle(width / 2, height + 50, width, 100, wallOptions);
+        const leftWall = Bodies.rectangle(-50, height / 2, 100, height, wallOptions);
+        const rightWall = Bodies.rectangle(width + 50, height / 2, 100, height, wallOptions);
+        
+        Composite.add(world, [floor, leftWall, rightWall]);
+
+        // アイコンを落とす関数
+        let count = 0;
+        const dropIcon = setInterval(() => {
+            if (count >= TOTAL_ICONS) {
+                clearInterval(dropIcon);
+                return;
+            }
+
+            // ランダムなX位置から落とす
+            const xPos = Math.random() * (width - 100) + 50;
+            
+            // 円形のボディを作成（ツムツムっぽく転がるように）
+            const icon = Bodies.circle(xPos, -50, ICON_SIZE / 2, {
+                restitution: 0.5, // 弾力（0〜1）
+                friction: 0.1,    // 摩擦
+                render: {
+                    sprite: {
+                        texture: ICON_URL,
+                        xScale: ICON_SIZE / 512, // ★画像の元サイズに合わせて調整が必要（例: 元が512pxならこれで約60pxに縮小）
+                        yScale: ICON_SIZE / 512
+                    }
+                }
+            });
+
+            Composite.add(world, icon);
+            count++;
+        }, SPAWN_RATE);
+
+        // クリックイベント：弾けて消える処理
+        splashElement.addEventListener('click', () => {
+            // 落ちてくるループを止める
+            clearInterval(dropIcon);
+
+            // すべての物体に爆発的な力を加える
+            const bodies = Composite.allBodies(world);
+            bodies.forEach(body => {
+                if (!body.isStatic) {
+                    // ランダムな方向に強い力を加える
+                    const forceMagnitude = 0.5 * body.mass;
+                    Body.applyForce(body, body.position, {
+                        x: (Math.random() - 0.5) * forceMagnitude,
+                        y: (Math.random() - 1.5) * forceMagnitude // 上方向に強く
+                    });
+                }
+            });
+
+            // 少し待ってから画面をフェードアウト
+            setTimeout(() => {
+                splashElement.style.opacity = '0';
+                document.getElementById('main-content').style.opacity = '1';
+                document.body.style.overflow = 'auto'; // スクロール許可
+
+                // 完全に消えたら物理演算を停止して要素を削除（メモリ節約）
+                setTimeout(() => {
+                    Render.stop(render);
+                    Runner.stop(runner);
+                    splashElement.remove();
+                }, 800);
+            }, 500); // 爆発を見てから0.5秒後にフェード開始
+        });
+
+        // 実行開始
+        Render.run(render);
+        const runner = Runner.create();
+        Runner.run(runner, engine);
+
+        // リサイズ対応（簡易版）
+        window.addEventListener('resize', () => {
+            render.canvas.width = window.innerWidth;
+            render.canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>

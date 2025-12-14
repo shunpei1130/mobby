@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nordic Tales - Welcome</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* --- 1. Base Settings & Variables --- */
+    :root {
+      --color-cream: #FFF8E7;
+      --color-forest: #2F4F4F;
+      --color-sky: #AEC6CF;
+      --color-earth: #8B4513;
+      --color-accent-red: #D2691E;
+      --color-soft-yellow: #F0E68C;
+
+      --font-ja: 'Kosugi Maru', sans-serif;
+      --font-en: 'Nunito', sans-serif;
+
+      --ease-soft: cubic-bezier(0.4, 0.0, 0.2, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-ja);
+      background-color: var(--color-cream);
+      color: var(--color-forest);
+      overflow-x: hidden;
+      line-height: 1.8;
+
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHZpZXdCb3g9IjAgMCA0IDQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmOGU3Ii8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmM2YwZTAiLz4KPC9zdmc+');
+
+      /* 初期状態はスクロール禁止（スプラッシュ中） */
+      overflow-y: hidden;
+    }
+
+    /* --- 2. Splash Screen (Matter.js Icons) --- */
+    #splash-screen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9999;
+      background-color: var(--color-forest);
+      cursor: pointer;
+      transition: opacity 1.2s ease-out, visibility 1.2s ease-out;
+      overflow: hidden;
+    }
+
+    #splash-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    /* 説明テキスト（クリックを邪魔しない） */
+    .instruction {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.9);
+      pointer-events: none;
+      font-family: var(--font-en), var(--font-ja);
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.04em;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(8px);
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    /* --- 3. Main Content Wrapper --- */
+    #main-content {
+      opacity: 0;
+      transition: opacity 1.5s ease;
+    }
+    #main-content.visible { opacity: 1; }
+
+    /* --- 4. LP Styling (Moomin Style) --- */
+    h1, h2, h3 {
+      font-family: var(--font-en), var(--font-ja);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      line-height: 1.3;
+      color: var(--color-earth);
+    }
+
+    p { font-weight: 400; letter-spacing: 0.03em; }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 30px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 35px;
+      border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: var(--font-en);
+      transition: all 0.4s var(--ease-soft);
+      border: 2px solid transparent;
+      box-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+    }
+
+    .btn-secondary {
+      background-color: var(--color-cream);
+      color: var(--color-forest);
+      border-color: var(--color-forest);
+    }
+    .btn-secondary:hover {
+      background-color: var(--color-sky);
+      color: #fff;
+      border-color: transparent;
+      transform: translateY(-2px) rotate(-1deg);
+    }
+    .btn-primary {
+      background-color: var(--color-accent-red);
+      color: var(--color-cream);
+    }
+    .btn-primary:hover {
+      background-color: var(--color-earth);
+      transform: translateY(-2px) rotate(1deg);
+    }
+
+    .wave-divider {
+      width: 100%;
+      height: 50px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.25' fill='%23AEC6CF'/%3E%3Cpath d='M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z' opacity='.5' fill='%23AEC6CF'/%3E%3Cpath d='M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z' fill='%23AEC6CF'/%3E%3C/svg%3E");
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+    .wave-divider.bottom { transform: rotate(180deg); }
+
+    .hero {
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      padding-top: 80px;
+    }
+    .hero-bg-illustration {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 40%;
+      background-color: #C2D8B9;
+      border-radius: 50% 50% 0 0 / 30% 30% 0 0;
+      z-index: -1;
+    }
+
+    .hero-illustration-container {
+      width: 350px;
+      height: 350px;
+      margin-bottom: 30px;
+      position: relative;
+    }
+    .hero-illustration {
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      border-radius: 50%;
+      border: 5px dashed var(--color-sky);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(174, 198, 207, 0.4);
+    }
+    .hero-illustration img { width: 90%; height: auto; filter: contrast(1.1) sepia(0.2); }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 1s var(--ease-soft), transform 1s var(--ease-soft);
+    }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .floating { animation: float 4s ease-in-out infinite; }
+    .delay-200 { transition-delay: 0.2s; }
+    .delay-400 { transition-delay: 0.4s; }
+
+    .showcase { padding: 100px 0; background: linear-gradient(to bottom, var(--color-cream), #fff); }
+    .feature-block { display: flex; align-items: center; gap: 60px; margin-bottom: 120px; }
+    .feature-block.reverse { flex-direction: row-reverse; }
+    .feature-text { flex: 1; }
+    .feature-image-container { flex: 1; position: relative; }
+    .feature-image {
+      height: 400px;
+      background-color: #fff;
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      overflow: hidden;
+      border: 4px dotted var(--color-sky);
+    }
+    .feature-image img { width: 100%; height: 100%; object-fit: cover; }
+
+    footer { background-color: var(--color-forest); padding: 60px 0; text-align: center; color: var(--color-cream); }
+    .footer-links a { color: var(--color-sky); text-decoration: none; margin: 0 15px; font-weight: 700; }
+
+    @media (max-width: 768px) {
+      .feature-block, .feature-block.reverse { flex-direction: column; gap: 40px; }
+      .hero-illustration-container { width: 250px; height: 250px; }
+      .feature-image { height: 300px; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 置換後スプラッシュ（Matter.js） -->
+  <div id="splash-screen">
+    <div class="instruction">画面がいっぱいになったらタップ！</div>
+  </div>
+
+  <!-- ここから下は元コードそのまま -->
+  <div id="main-content">
+    <section class="hero">
+      <div class="hero-bg-illustration"></div>
+      <div class="container reveal">
+        <div class="hero-illustration-container floating">
+          <div class="hero-illustration">
+            <img src="https://images.unsplash.com/photo-1547531455-c20b6120e660?q=80&w=1974&auto=format&fit=crop" alt="Cozy Illustration">
+          </div>
+        </div>
+        <h1>ようこそ、<br>穏やかな時間の中へ。</h1>
+        <p class="reveal delay-200">忙しい日々を少し忘れて、<br>深呼吸できる場所がここにあります。</p>
+        <a href="#" class="btn btn-secondary reveal delay-400">物語をひらく</a>
+      </div>
+    </section>
+
+    <div class="wave-divider"></div>
+
+    <section style="padding: 100px 0; text-align: center; background:#fff;">
+      <div class="container reveal">
+        <h2>森の奥で見つけた、<br>小さな宝物。</h2>
+        <p style="margin-top:20px;">世界はいつも少し騒がしくて、<br>本当に大切なものは、見えにくくなっています。</p>
+      </div>
+    </section>
+
+    <div class="wave-divider bottom"></div>
+
+    <section class="showcase">
+      <div class="container">
+        <div class="feature-block">
+          <div class="feature-image-container reveal">
+            <div class="feature-image">
+              <img src="https://images.unsplash.com/photo-1523294521727-242e945a5974?q=80&w=2070&auto=format&fit=crop" alt="Natural">
+            </div>
+          </div>
+          <div class="feature-text reveal delay-200">
+            <h3>自然体のままで。</h3>
+            <p>無理に飾る必要はありません。<br>手に取った瞬間、馴染む心地よさ。</p>
+          </div>
+        </div>
+
+        <div class="feature-block reverse">
+          <div class="feature-image-container reveal">
+            <div class="feature-image">
+              <img src="https://images.unsplash.com/photo-1499914348894-90050a2343b1?q=80&w=2071&auto=format&fit=crop" alt="Light">
+            </div>
+          </div>
+          <div class="feature-text reveal delay-200">
+            <h3>心に寄り添うやさしさ。</h3>
+            <p>まるで古い友人のように、<br>そっとあなたの直感に応えます。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <div class="footer-links">
+          <a href="#">おはなし</a>
+          <a href="#">わたしたちのこと</a>
+        </div>
+        <p style="margin-top:20px; font-size:0.8rem; opacity:0.7;">© 2025 Nordic Tales.</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Matter.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+
+  <script>
+ /************************************************************
+ * 1. 元コード：スクロール監視（そのまま）
+ ************************************************************/
+function initScrollObserver() {
+  const revealElements = document.querySelectorAll('.reveal');
+  const options = { root: null, rootMargin: '0px', threshold: 0.15 };
+
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, options);
+
+  revealElements.forEach(el => observer.observe(el));
+}
+
+/************************************************************
+ * 2. スプラッシュ（Matter.js / icon1,2,3）
+ ************************************************************/
+
+// ===== 設定 =====
+const ICON_URLS   = ['icon1.png', 'icon2.png', 'icon3.png'];
+const ICON_SIZE   = 150;
+const SPAWN_RATE  = 100; // ms
+const TOTAL_ICONS = 50;
+
+// Matter.js aliases
+const Engine   = Matter.Engine;
+const Render   = Matter.Render;
+const Runner   = Matter.Runner;
+const Bodies   = Matter.Bodies;
+const Composite= Matter.Composite;
+const Body     = Matter.Body;
+
+// DOM
+const splashElement = document.getElementById('splash-screen');
+const mainContent   = document.getElementById('main-content');
+
+// Engine / World
+const engine = Engine.create();
+const world  = engine.world;
+
+// サイズ
+let width  = window.innerWidth;
+let height = window.innerHeight;
+
+// Renderer
+const render = Render.create({
+  element: splashElement,
+  engine: engine,
+  options: {
+    width,
+    height,
+    background: 'transparent',
+    wireframes: false
+  }
+});
+
+// ===== 壁 & 床 =====
+const wallOptions = { isStatic: true, render: { visible: false } };
+
+const floor = Bodies.rectangle(
+  width / 2,
+  height + 50,
+  width + 200,
+  100,
+  wallOptions
+);
+
+const leftWall = Bodies.rectangle(
+  -60,
+  height / 2,
+  120,
+  height + 200,
+  wallOptions
+);
+
+const rightWall = Bodies.rectangle(
+  width + 60,
+  height / 2,
+  120,
+  height + 200,
+  wallOptions
+);
+
+Composite.add(world, [floor, leftWall, rightWall]);
+
+/************************************************************
+ * 3. アイコン生成（3色ランダム）
+ ************************************************************/
+let count = 0;
+
+const dropIcon = setInterval(() => {
+  if (count >= TOTAL_ICONS) {
+    clearInterval(dropIcon);
+    return;
+  }
+
+  const xPos = Math.random() * (width - 120) + 60;
+
+  // ★ 3色からランダム選択
+  const texture =
+    ICON_URLS[Math.floor(Math.random() * ICON_URLS.length)];
+
+  const icon = Bodies.circle(xPos, -60, ICON_SIZE / 2, {
+    restitution: 0.55,
+    friction: 0.08,
+    frictionAir: 0.03, // ふわふわ感
+    render: {
+      sprite: {
+        texture: texture,
+        // 元画像512px想定（違う場合は調整）
+        xScale: ICON_SIZE / 512,
+        yScale: ICON_SIZE / 512
+      }
+    }
+  });
+
+  Composite.add(world, icon);
+  count++;
+}, SPAWN_RATE);
+
+/************************************************************
+ * 4. 実行開始
+ ************************************************************/
+Render.run(render);
+const runner = Runner.create();
+Runner.run(runner, engine);
+
+/************************************************************
+ * 5. タップ後の挙動
+ *    ・爆発
+ *    ・フェードアウト
+ *    ・元LP表示 & scroll observer開始
+ ************************************************************/
+splashElement.addEventListener('click', () => {
+  clearInterval(dropIcon);
+
+  // 爆発
+  const bodies = Composite.allBodies(world);
+  bodies.forEach(body => {
+    if (!body.isStatic) {
+      const force = 0.5 * body.mass;
+      Body.applyForce(body, body.position, {
+        x: (Math.random() - 0.5) * force,
+        y: (Math.random() - 1.5) * force
+      });
+    }
+  });
+
+  // 少し演出を見せてから遷移
+  setTimeout(() => {
+    splashElement.classList.add('hidden');
+    mainContent.classList.add('visible');
+
+    // 元コード通り
+    document.body.style.overflowY = 'auto';
+    initScrollObserver();
+
+    // 物理停止 & DOM削除
+    setTimeout(() => {
+      Render.stop(render);
+      Runner.stop(runner);
+      engine.enabled = false;
+      splashElement.remove();
+    }, 1200);
+  }, 500);
+});
+
+/************************************************************
+ * 6. リサイズ対応
+ ************************************************************/
+window.addEventListener('resize', () => {
+  width  = window.innerWidth;
+  height = window.innerHeight;
+
+  render.canvas.width  = width;
+  render.canvas.height = height;
+  render.options.width  = width;
+  render.options.height = height;
+
+  Body.setPosition(floor,    { x: width / 2, y: height + 50 });
+  Body.setPosition(leftWall,{ x: -60,        y: height / 2 });
+  Body.setPosition(rightWall,{ x: width + 60, y: height / 2 });
+}, { passive: true });
+
+
+  </script>
+</body>
+</html>
