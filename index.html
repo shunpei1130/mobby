@@ -399,6 +399,258 @@
       .sticky-cta .bar{justify-content:center;}
       .carousel-btn{width:40px;height:40px;font-size:24px;}
     }
+    /* ===== TRY DEMO ===== */
+.try-wrap{max-width:860px;margin:18px auto 0;}
+.try-card{
+  width:100%;
+  border:1px solid rgba(47,79,79,0.12);
+  background:rgba(255,255,255,0.86);
+  border-radius:26px;
+  padding:14px;
+  box-shadow:3px 3px 0 rgba(0,0,0,0.06);
+  cursor:pointer;
+  text-align:left;
+  transition:transform .25s var(--ease-soft), box-shadow .25s var(--ease-soft);
+  position:relative;
+}
+.try-card:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(0,0,0,0.12);}
+.try-img{
+  width:100%;
+  height:auto;
+  border-radius:18px;
+  display:block;
+  border:1px solid rgba(47,79,79,0.10);
+  box-shadow:0 12px 25px rgba(0,0,0,0.08);
+  background:#fff;
+}
+.try-badge{
+  position:absolute;top:24px;right:24px;
+  padding:6px 10px;border-radius:999px;
+  font-weight:800;font-family:var(--font-en), var(--font-ja);
+  background:rgba(0,0,0,0.45);color:#fff;
+  border:1px solid rgba(255,255,255,0.18);
+}
+.try-text{margin-top:12px;}
+.try-title{font-weight:800;color:var(--color-earth);font-family:var(--font-en), var(--font-ja);}
+.try-sub{font-size:.95rem;opacity:.85;margin-top:4px;}
+
+/* ===== Viewfinder ===== */
+.vf{
+  position:fixed;inset:0;z-index:99999;
+  display:none;color:var(--color-cream);
+}
+.vf.is-open{display:block;}
+.vf-backdrop{
+  position:absolute;inset:0;
+  background:rgba(47,79,79,0.78);
+  backdrop-filter: blur(2px);
+}
+#vfOverlay { z-index: 99999; }
+#vfBackdrop { z-index: 1; }
+.vf-top, .vf-hole, .vf-controls, .vf-footer { position: relative; z-index: 2; }
+
+.vf-top{
+  position:relative;z-index:2;
+  display:flex;justify-content:space-between;gap:12px;
+  padding:14px 16px;
+}
+.vf-meta{display:grid;gap:4px;}
+.vf-counter{
+  font-weight:900;letter-spacing:.04em;
+  font-family:var(--font-en), var(--font-ja);
+  color:var(--color-soft-yellow);
+}
+.vf-sub{font-size:12px;opacity:.85;max-width:72ch;}
+.vf-close{min-width:52px;min-height:44px;display:flex;align-items:center;justify-content:center;}
+
+.vf-hole{
+  position:absolute;
+  left:50%; top:52%;
+  transform:translate(-50%,-50%);
+  width:min(78vw, 520px);
+  aspect-ratio:1/1;
+  border-radius:999px;
+  z-index:2;
+  touch-action:none;
+}
+.vf-rim{
+  position:absolute;inset:0;border-radius:999px;
+  box-shadow:
+    0 0 0 10px rgba(255,255,255,.07) inset,
+    0 0 0 2px rgba(255,255,255,.16) inset,
+    0 30px 80px rgba(0,0,0,.45);
+  pointer-events:none;
+}
+.vf-content{
+  position:absolute;inset:0;border-radius:999px;overflow:hidden;
+  background:#000;
+}
+.vf-strip{
+  height:100%;
+  width:500%;
+  display:flex;
+  transform:translateX(0%);
+  transition: transform 260ms var(--ease-soft);
+}
+.vf-strip img{
+  width:20%;
+  height:100%;
+  object-fit:cover;
+  user-select:none;
+  -webkit-user-drag:none;
+  filter:saturate(1.06) contrast(1.02);
+}
+
+.vf-controls{
+  position:absolute;left:50%;bottom:92px;
+  transform:translateX(-50%);
+  z-index:2;display:flex;gap:10px;
+}
+.vf-ctl{padding:10px 18px;}
+.vf-footer{
+  position:absolute;left:50%;bottom:26px;
+  transform:translateX(-50%);
+  z-index:2;
+}
+.vf-tip{
+  display:inline-block;
+  padding:8px 12px;border-radius:999px;
+  background:rgba(255,255,255,0.12);
+  border:1px solid rgba(255,255,255,0.14);
+  font-size:12px;opacity:.95;
+  backdrop-filter: blur(10px);
+  white-space:nowrap;
+}
+
+@media (max-width:768px){
+  .vf-controls{bottom:84px;}
+  .vf-tip{white-space:normal;text-align:center;}
+}
+
+
+.eye-tap-wrap{
+  position:relative;
+  width:260px;            /* サイズは自由 */
+  margin:0 auto;
+}
+
+.eye-tap-img{
+  width:100%;
+  height:auto;
+  display:block;
+}
+
+/* 右目ホットスポット */
+.eye-hotspot{
+  position:absolute;
+  /* ▼ 右目の位置（要微調整） */
+  top:25%;
+  left:58%;
+  width:22%;
+  aspect-ratio:1/1;
+
+  border-radius:50%;
+  background:rgba(255,255,255,0.01); /* ほぼ透明 */
+  border:none;
+  cursor:pointer;
+  z-index:3;
+}
+
+/* 押せる感（ホバー・タップ） */
+.eye-hotspot:hover{
+  outline:2px solid rgba(255,255,255,0.4);
+}
+
+/* ヒント：脈動リング */
+.eye-hotspot::before{
+  content:"";
+  position:absolute;
+  inset:-18%;
+  border-radius:50%;
+  border:2px dashed rgba(255,255,255,0.65);
+  animation:pulse 2.2s ease-in-out infinite;
+}
+
+/* 「ここをタップ」テキスト */
+.eye-hint{
+  position:absolute;
+  top:26%;
+  left:58%;
+  transform:translate(-50%, -100%);
+  font-size:0.8rem;
+  font-weight:700;
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(0,0,0,0.55);
+  color:#fff;
+  white-space:nowrap;
+  z-index:4;
+}
+
+/* アニメーション */
+@keyframes pulse{
+  0%{transform:scale(0.9);opacity:0.2;}
+  50%{transform:scale(1.05);opacity:0.8;}
+  100%{transform:scale(0.9);opacity:0.2;}
+}
+
+/* ===== Eye Shutter ===== */
+.eye-shutter{
+  position:absolute;
+  /* 右目位置（ホットスポットと同じ） */
+  top:34%;
+  left:58%;
+  width:22%;
+  aspect-ratio:1/1;
+
+  border-radius:50%;
+  pointer-events:none;
+  z-index:5;
+
+  /* シャッター羽根っぽく見せる */
+  background:
+    conic-gradient(
+      from 0deg,
+      #111 0 10%,
+      #222 10% 20%,
+      #111 20% 30%,
+      #222 30% 40%,
+      #111 40% 50%,
+      #222 50% 60%,
+      #111 60% 70%,
+      #222 70% 80%,
+      #111 80% 90%,
+      #222 90% 100%
+    );
+
+  transform:scale(0);
+  opacity:0;
+}
+
+/* 再生トリガ */
+.eye-shutter.play{
+  animation: shutter 220ms ease-in-out forwards;
+}
+
+@keyframes shutter{
+  0%{
+    transform:scale(0.1);
+    opacity:0;
+  }
+  40%{
+    transform:scale(1.05);
+    opacity:1;
+  }
+  70%{
+    transform:scale(0.95);
+    opacity:1;
+  }
+  100%{
+    transform:scale(0);
+    opacity:0;
+  }
+}
+
   </style>
 </head>
 
@@ -522,6 +774,74 @@
         </div>
       </div>
     </section>
+
+    <!-- TRY DEMO -->
+<section id="try" class="section center">
+  <div class="container reveal">
+    <h2>体験してみる</h2>
+    <p class="lead">タップして、“覗く”をそのまま。</p>
+
+    <div class="eye-tap-wrap">
+      <img src="icon2.png" alt="Mobby" class="eye-tap-img">
+    
+      <!-- 右目（レンズ）ホットスポット -->
+      <button
+        class="eye-hotspot"
+        id="eyeHotspot"
+        aria-label="右目をタップして覗く"
+      ></button>
+      <!-- シャッター演出（右目の上に被せる） -->
+<div class="eye-shutter" id="eyeShutter" aria-hidden="true"></div>
+
+    
+      <!-- ユーザーへのヒント -->
+      <div class="eye-hint">
+        ここをタップ
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Viewfinder Overlay -->
+<div id="vfOverlay" class="vf" aria-hidden="true">
+  <div class="vf-top">
+    <div class="vf-meta">
+      <div class="vf-counter" id="vfCounter">1 / 5</div>
+      <div class="vf-sub">いっぱい残せない。だから、残るのは今の5つだけ。</div>
+    </div>
+    <button class="btn btn-ghost vf-close" id="vfClose" type="button" aria-label="閉じる">×</button>
+  </div>
+
+  <div class="vf-backdrop" id="vfBackdrop"></div>
+
+  <!-- 覗き穴 -->
+  <div class="vf-hole" id="vfHole" role="application" aria-label="Viewfinder">
+    <div class="vf-rim"></div>
+
+    <!-- 覗き穴の中だけ表示 -->
+    <div class="vf-content">
+      <div class="vf-strip" id="vfStrip">
+        <!-- 5枚：とりあえず既存画像で代用（後で差し替えOK） -->
+        <img src="mobby_pink.jpg"   alt="photo 1" draggable="false">
+        <img src="mobby_purple.jpg" alt="photo 2" draggable="false">
+        <img src="mobby_blue.jpg"   alt="photo 3" draggable="false">
+        <img src="mobby_orange.jpg" alt="photo 4" draggable="false">
+        <img src="mobby_pink.jpg"   alt="photo 5" draggable="false">
+      </div>
+    </div>
+  </div>
+
+  <!-- 十字キー風 -->
+  <div class="vf-controls">
+    <button class="btn btn-secondary vf-ctl" id="vfPrev" type="button" aria-label="前の写真">←</button>
+    <button class="btn btn-secondary vf-ctl" id="vfNext" type="button" aria-label="次の写真">→</button>
+  </div>
+
+  <div class="vf-footer">
+    <span class="vf-tip">覗き穴をドラッグ / 左右スワイプで切替</span>
+  </div>
+</div>
+
 
     <!-- COLORS -->
     <section id="colors" class="section center">
@@ -1054,6 +1374,165 @@ window.addEventListener('resize', () => {
   Body.setPosition(leftWall, { x: -60, y: height/2 });
   Body.setPosition(rightWall, { x: width+60, y: height/2 });
 }, { passive:true });
+/* ===== Viewfinder Demo (FIX) ===== */
+
+const eyeHotspot = document.getElementById('eyeHotspot');
+const eyeShutter = document.getElementById('eyeShutter');
+
+(() => {
+  const overlay  = document.getElementById('vfOverlay');
+  const closeBtn = document.getElementById('vfClose');
+  const backdrop = document.getElementById('vfBackdrop');
+
+  const hole    = document.getElementById('vfHole');
+  const strip   = document.getElementById('vfStrip');
+  const counter = document.getElementById('vfCounter');
+  const prevBtn = document.getElementById('vfPrev');
+  const nextBtn = document.getElementById('vfNext');
+
+  // openボタン(vfOpen)が無くても動くようにする
+  if(!overlay || !closeBtn || !backdrop || !hole || !strip || !counter || !prevBtn || !nextBtn) return;
+
+  const total = 5;
+  let index = 0;
+
+  // スクロール状態を復元するため保持
+  let prevBodyOverflow = '';
+  let prevBodyOverflowY = '';
+  let prevHtmlOverflow = '';
+
+  const update = () => {
+    strip.style.transform = `translateX(${-20 * index}%)`;
+    counter.textContent = `${index + 1} / ${total}`;
+  };
+
+  const setIndex = (n) => {
+    index = (n + total) % total;
+    update();
+  };
+
+  const centerHole = () => {
+    const rect = hole.getBoundingClientRect();
+    const left = (window.innerWidth  - rect.width) / 2;
+    const top  = (window.innerHeight - rect.height) / 2;
+    hole.style.left = left + 'px';
+    hole.style.top  = top  + 'px';
+    hole.style.transform = 'none';
+  };
+
+  const open = () => {
+    overlay.classList.add('is-open');
+    overlay.setAttribute('aria-hidden', 'false');
+
+    prevBodyOverflow  = document.body.style.overflow;
+    prevBodyOverflowY = document.body.style.overflowY;
+    prevHtmlOverflow  = document.documentElement.style.overflow;
+
+    document.body.style.overflow = 'hidden';
+    document.body.style.overflowY = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+
+    centerHole();
+    update();
+  };
+
+  const close = () => {
+    overlay.classList.remove('is-open');
+    overlay.setAttribute('aria-hidden', 'true');
+
+    document.body.style.overflow  = prevBodyOverflow;
+    document.body.style.overflowY = prevBodyOverflowY;
+    document.documentElement.style.overflow = prevHtmlOverflow;
+  };
+
+  // ===== open: 右目タップ =====
+  if(eyeHotspot){
+    eyeHotspot.addEventListener('click', () => {
+      if(eyeShutter){
+        eyeShutter.classList.remove('play');
+        void eyeShutter.offsetWidth; // reflow
+        eyeShutter.classList.add('play');
+      }
+      setTimeout(open, 180);
+    });
+  }
+
+  // ===== close handlers =====
+  closeBtn.addEventListener('click', close);
+  backdrop.addEventListener('click', close);
+
+  // ボタンで写真切替
+  prevBtn.addEventListener('click', () => setIndex(index - 1));
+  nextBtn.addEventListener('click', () => setIndex(index + 1));
+
+  // pointer: ドラッグ（覗き穴移動）＋ 横フリック（写真切替）
+  let pDown = false;
+  let startX = 0, startY = 0;
+  let offsetX = 0, offsetY = 0;
+
+  hole.addEventListener('pointerdown', (e) => {
+    pDown = true;
+    startX = e.clientX;
+    startY = e.clientY;
+
+    const rect = hole.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+
+    hole.setPointerCapture(e.pointerId);
+  });
+
+  hole.addEventListener('pointermove', (e) => {
+    if(!pDown) return;
+
+    const w = hole.offsetWidth;
+    const h = hole.offsetHeight;
+    const maxLeft = window.innerWidth  - w;
+    const maxTop  = window.innerHeight - h;
+
+    const targetLeft = Math.max(8,  Math.min(maxLeft - 8,  e.clientX - offsetX));
+    const targetTop  = Math.max(60, Math.min(maxTop  - 60, e.clientY - offsetY));
+
+    const currentLeft = parseFloat(hole.style.left || targetLeft);
+    const currentTop  = parseFloat(hole.style.top  || targetTop);
+
+    hole.style.left = (currentLeft + (targetLeft - currentLeft) * 0.28) + 'px';
+    hole.style.top  = (currentTop  + (targetTop  - currentTop ) * 0.28) + 'px';
+  });
+
+  hole.addEventListener('pointerup', (e) => {
+    if(!pDown) return;
+    pDown = false;
+
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    // 横フリックで写真切替（縦より横が大きい時だけ）
+    if(Math.abs(dx) > 42 && Math.abs(dx) > Math.abs(dy)){
+      if(dx < 0) setIndex(index + 1);
+      else setIndex(index - 1);
+    }
+
+    hole.releasePointerCapture(e.pointerId);
+  });
+
+  hole.addEventListener('pointercancel', () => { pDown = false; });
+
+  // キーボード
+  window.addEventListener('keydown', (e) => {
+    if(!overlay.classList.contains('is-open')) return;
+    if(e.key === 'Escape') close();
+    if(e.key === 'ArrowLeft') setIndex(index - 1);
+    if(e.key === 'ArrowRight') setIndex(index + 1);
+  });
+
+  window.addEventListener('resize', () => {
+    if(overlay.classList.contains('is-open')) centerHole();
+  }, { passive:true });
+
+})();
+
+
   </script>
 </body>
 </html>

@@ -1,581 +1,350 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mobby - 1月末入荷分 購入</title>
-  <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Camera - Memory Stack</title>
+    <style>
+        /* --- 基本設定 --- */
+        :root {
+            --bg-color: #0f0f11;
+            --frame-color: #1a1a1c;
+            --photo-border: #fdfbf7;
+        }
 
-  <style>
-    :root{
-      --color-cream:#FFF8E7;
-      --color-forest:#2F4F4F;
-      --color-sky:#AEC6CF;
-      --color-earth:#8B4513;
-      --color-accent-red:#D2691E;
-      --font-ja:'Kosugi Maru', sans-serif;
-      --font-en:'Nunito', sans-serif;
-      --ease-soft:cubic-bezier(0.4, 0.0, 0.2, 1);
-    }
-    *{margin:0;padding:0;box-sizing:border-box;}
+        body {
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            color: #555;
+        }
 
-    body{
-      font-family:var(--font-ja);
-      background-color:var(--color-cream);
-      color:var(--color-forest);
-      overflow-x:hidden;
-      line-height:1.6; /* 行間も少し詰めました */
-      background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHZpZXdCb3g9IjAgMCA0IDQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmOGU3Ii8+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmM2YwZTAiLz4KPC9zdmc+');
-      overflow-y:hidden;
-    }
+        /* --- カメラ本体 --- */
+        .camera-body {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            background-color: var(--frame-color);
+            box-shadow: inset 0 0 50px #000;
+            border-radius: 4px;
+            overflow: hidden;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            margin-bottom: 20px;
+        }
 
-    /* Splash & Basic Layout (変更なし) */
-    #splash-screen{
-      position:fixed;top:0;left:0;width:100vw;height:100vh;
-      z-index:9999;cursor:pointer;
-      transition:opacity 1.2s ease-out, visibility 1.2s ease-out;
-      overflow:hidden;
-      background: url('favicon/背景.jpg') center / cover no-repeat;
-      background-color: var(--color-forest);
-    }
-    #splash-screen.hidden{opacity:0;visibility:hidden;pointer-events:none;}
-    #splash-screen::before{content:"";position:absolute;inset:0;background: rgba(47,79,79,0.55);z-index:0;pointer-events:none;}
-    #splash-screen canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;}
-    .instruction{
-      position:absolute;top:18px;left:50%;transform:translateX(-50%);
-      color:rgba(255,255,255,0.9);pointer-events:none;
-      font-family:var(--font-en), var(--font-ja);font-weight:700;font-size:1rem;
-      letter-spacing:0.04em;padding:10px 14px;border-radius:999px;
-      background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);
-      z-index:3;
-    }
+        /* --- ファインダー（暗室） --- */
+        .viewfinder {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            right: 50px;
+            bottom: 50px;
+            background-color: #050505;
+            box-shadow: inset 0 0 80px rgba(0,0,0,1);
+            overflow: hidden;
+            perspective: 1000px; /* 奥行き */
+        }
 
-    #main-content{opacity:0;transition:opacity 1.5s ease;}
-    #main-content.visible{opacity:1;}
+        /* --- 写真コンテナ --- */
+        .photo-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+        }
 
-    h1,h2,h3{
-      font-family:var(--font-en), var(--font-ja);
-      font-weight:700;letter-spacing:0.05em;line-height:1.25;
-      color:var(--color-earth);
-    }
-    .container{max-width:1050px;margin:0 auto;padding:0 24px;}
+        /* --- ポラロイド共通スタイル --- */
+        .polaroid {
+            position: absolute;
+            background-color: var(--photo-border);
+            padding: 10px 10px 35px 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            /* 位置とスタイルの変化を滑らかにする */
+            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+            width: 140px;
+            will-change: transform, opacity, filter;
+        }
 
-    .btn{
-      display:inline-block;padding:12px 30px;border-radius:255px 15px 225px 15px / 15px 225px 15px 255px;
-      text-decoration:none;font-size:15px;font-weight:700;font-family:var(--font-en);
-      transition:all 0.4s var(--ease-soft);border:2px solid transparent;
-      box-shadow:3px 3px 0 rgba(0,0,0,0.1);cursor:pointer;
-    }
-    .btn-secondary{background-color:var(--color-cream);color:var(--color-forest);border-color:var(--color-forest);}
-    .btn-secondary:hover{background-color:var(--color-sky);color:#fff;border-color:transparent;transform:translateY(-2px);}
-    .btn-primary{background-color:var(--color-accent-red);color:var(--color-cream);}
-    .btn-primary:hover{background-color:var(--color-earth);transform:translateY(-2px);}
-    .btn-ghost{background:rgba(255,255,255,0);color:var(--color-forest);border-color:rgba(47,79,79,0.35);}
-    .btn-ghost:hover{background:rgba(174,198,207,0.35);border-color:transparent;transform:translateY(-2px);}
+        .polaroid img {
+            display: block;
+            width: 100%;
+            height: 140px; /* 正方形にトリミング */
+            object-fit: cover;
+            filter: grayscale(0.2) contrast(1.1);
+        }
 
-    .tag{
-      display:inline-flex;align-items:center;gap:8px;padding:4px 10px;border-radius:999px;
-      font-weight:700;font-size:0.85rem;background:rgba(174,198,207,0.35);color:var(--color-forest);
-      border:1px solid rgba(47,79,79,0.18);
-    }
+        /* === 年齢（新旧）による状態変化 === */
 
-    .wave-divider{
-      width:100%;height:40px;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.25' fill='%23AEC6CF'/%3E%3Cpath d='M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z' opacity='.5' fill='%23AEC6CF'/%3E%3Cpath d='M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z' fill='%23AEC6CF'/%3E%3C/svg%3E");
-      background-size:cover;background-repeat:no-repeat;
-    }
-    .wave-divider.bottom{transform:rotate(180deg);}
+        /* Age 0: 最新 (中央、鮮やか、一番手前) */
+        .age-0 {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(2deg) scale(1.1);
+            z-index: 50;
+            opacity: 1;
+            filter: contrast(1.1) brightness(1.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+        }
 
-    .reveal{opacity:0;transform:translateY(20px);transition:opacity 0.8s var(--ease-soft), transform 0.8s var(--ease-soft);}
-    .reveal.active{opacity:1;transform:translateY(0);}
-    .delay-200{transition-delay:0.2s;}
+        /* Age 1: 少し前 (左上、少し傾く) */
+        .age-1 {
+            top: 40px;
+            left: 30px;
+            transform: rotate(-6deg) scale(0.95);
+            z-index: 40;
+            opacity: 0.95;
+            filter: sepia(0.2) contrast(1);
+        }
 
-    /* Hero */
-    .hero{
-      min-height:92vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
-      text-align:center;position:relative;padding-top:80px;padding-bottom:40px;
-    }
-    .hero-bg-illustration{
-      position:absolute;bottom:0;left:0;width:100%;height:40%;
-      background-color:#C2D8B9;border-radius:50% 50% 0 0 / 30% 30% 0 0;z-index:-1;
-    }
-    .headline{font-size:clamp(2rem, 3.5vw, 2.8rem);margin-top:10px;}
-    .subhead{margin-top:10px;font-size:1rem;opacity:0.92;}
+        /* Age 2: もう少し前 (右上、セピアが強まる) */
+        .age-2 {
+            top: 30px;
+            right: 30px;
+            transform: rotate(4deg) scale(0.9);
+            z-index: 30;
+            opacity: 0.85;
+            filter: sepia(0.4) brightness(0.9);
+        }
 
-    .hero-illustration{
-      width:100%;height:100%;background:#fff;border-radius:50%;
-      border:4px dashed var(--color-sky);overflow:hidden;
-      display:flex;align-items:center;justify-content:center;
-      box-shadow:0 8px 25px rgba(174,198,207,0.4);
-    }
-    .hero-illustration img{width:100%;height:100%;object-fit:cover;}
-    @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
-    .floating{animation:float 4s ease-in-out infinite;}
+        /* Age 3: 古い (左下、暗くなる) */
+        .age-3 {
+            bottom: 60px;
+            left: 40px;
+            transform: rotate(8deg) scale(0.85);
+            z-index: 20;
+            opacity: 0.7;
+            filter: sepia(0.6) grayscale(0.5) brightness(0.8);
+        }
 
-    .cta-row{margin-top:20px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
-    .status-chip{
-      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:18px;
-      background:rgba(255,255,255,0.78);border:1px solid rgba(47,79,79,0.12);
-      box-shadow:2px 2px 0 rgba(0,0,0,0.06);font-size:0.9rem;font-weight:700;margin-top:14px;
-    }
+        /* Age 4: 最古 (右下、消えそう、ボケる) */
+        .age-4 {
+            bottom: 40px;
+            right: 20px;
+            transform: rotate(-5deg) scale(0.8);
+            z-index: 10;
+            opacity: 0.4; /* 半透明 */
+            filter: sepia(0.8) grayscale(0.8) blur(2px); /* ぼやける */
+        }
 
-    /* Carousel */
-    .hero-carousel{width:min(340px, 90vw);margin:10px auto;position:relative;user-select:none;touch-action:pan-y;}
-    .carousel-viewport{overflow:hidden;border-radius:26px;}
-    .carousel-track{display:flex;transition:transform 0.35s var(--ease-soft);will-change:transform;}
-    .carousel-slide{min-width:100%;display:flex;align-items:center;justify-content:center;}
-    .carousel-btn{
-      position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;
-      border-radius:50%;border:1px solid rgba(47,79,79,0.18);
-      background:rgba(255,255,255,0.75);color:var(--color-forest);font-size:24px;font-weight:700;
-      cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center;
-    }
-    .carousel-btn.prev{left:-10px;}
-    .carousel-btn.next{right:-10px;}
-    .carousel-caption{
-      margin-top:8px;display:inline-block;font-size:0.9rem;font-weight:700;
-      background:rgba(255,255,255,0.78);padding:4px 10px;border-radius:20px;
-    }
+        /* --- エフェクト類（オーバーレイ） --- */
+        .overlay-texture {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            mix-blend-mode: overlay;
+            opacity: 0.5;
+            background: radial-gradient(circle, transparent 30%, #000 130%);
+        }
 
-    /* Sections */
-    .section{padding:70px 0;background:#fff;}
-    .section.soft{background:linear-gradient(to bottom, var(--color-cream), #fff);}
-    .section.center{text-align:center;}
-    .lead{margin-top:12px;font-size:1rem;opacity:0.92;}
+        .dust {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 101;
+        }
 
-    .grid-3{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:14px;margin-top:24px;}
-    .card{
-      background:rgba(255,255,255,0.85);border:1px solid rgba(47,79,79,0.12);
-      border-radius:22px;padding:18px 16px;box-shadow:3px 3px 0 rgba(0,0,0,0.06);text-align:center;
-    }
-    .card h3{font-size:1.1rem;margin-bottom:6px;}
-    .card p{font-size:0.9rem;opacity:0.92;}
+        .lens-reflection {
+            position: absolute;
+            bottom: -80px; left: 50%; transform: translateX(-50%);
+            width: 80%; height: 150px;
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            z-index: 110;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            filter: blur(2px);
+            pointer-events: none;
+        }
 
-    /* Colors */
-    #colors{scroll-margin-top:80px;}
-    .colors-grid{display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:12px;margin-top:20px;text-align:left;}
-    .color-card{
-      border-radius:22px;padding:14px;border:1px solid rgba(47,79,79,0.14);
-      background:rgba(255,255,255,0.86);cursor:pointer;position:relative;
-      transition:transform 0.2s;
-    }
-    .color-card.selected{border-color:var(--color-accent-red);box-shadow:0 8px 20px rgba(0,0,0,0.1);transform:translateY(-2px);}
-    .swatch{width:36px;height:36px;border-radius:50%;margin-bottom:8px;border:1px solid rgba(0,0,0,0.1);}
-    .color-title{font-weight:700;font-size:0.95rem;color:var(--color-earth);}
-    .color-desc{margin-top:6px;font-size:0.85rem;opacity:0.9;}
-    .product-thumb{width:100%;aspect-ratio:1/1;border-radius:14px;margin:8px 0;object-fit:cover;}
+        /* --- コントロールボタン --- */
+        .controls {
+            margin-top: 20px;
+            text-align: center;
+        }
 
-    .pricing-simple{
-      margin-top:20px;padding:20px;border-radius:22px;
-      background:rgba(255,255,255,0.86);border:1px solid rgba(47,79,79,0.12);
-      display:inline-block;text-align:center;
-    }
-    .price-big{font-size:1.4rem;font-weight:700;color:var(--color-earth);}
+        button {
+            background: #cc3333;
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(204, 51, 51, 0.4);
+            font-family: sans-serif;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: transform 0.1s;
+        }
 
-    .notice{
-      margin-top:14px;padding:10px 14px;border-radius:14px;background:rgba(255,248,231,0.75);
-      border:1px dashed rgba(139,69,19,0.25);font-size:0.85rem;text-align:left;display:inline-block;
-    }
-
-    /* Buy Preview */
-    .buy-preview{max-width:600px;margin:14px auto 0;display:flex;gap:14px;align-items:center;justify-content:center;}
-    .buy-preview img{width:80px;height:80px;border-radius:14px;object-fit:cover;border:1px solid rgba(0,0,0,0.1);}
-
-    /* FAQ */
-    .faq{margin-top:18px;text-align:left;max-width:700px;margin-left:auto;margin-right:auto;}
-    details.faq-item{
-      background:rgba(255,255,255,0.84);border:1px solid rgba(47,79,79,0.12);
-      border-radius:14px;padding:10px 14px;margin-top:8px;
-    }
-    details.faq-item summary{cursor:pointer;font-weight:700;color:var(--color-earth);list-style:none;}
-    details.faq-item p{margin-top:6px;opacity:0.9;font-size:0.9rem;}
-
-    /* Sticky CTA */
-    .sticky-cta{position:fixed;left:0;right:0;bottom:12px;z-index:50;display:none;pointer-events:none;}
-    .sticky-cta .bar{
-      pointer-events:auto;width:min(900px, 94%);margin:0 auto;background:rgba(255,255,255,0.9);
-      border:1px solid rgba(47,79,79,0.16);backdrop-filter:blur(8px);border-radius:999px;
-      padding:8px 10px;box-shadow:0 8px 20px rgba(0,0,0,0.1);
-      display:flex;gap:10px;align-items:center;justify-content:space-between;
-    }
-    .sticky-cta .txt{font-weight:700;color:var(--color-forest);padding-left:10px;font-size:0.9rem;}
-
-    footer{background-color:var(--color-forest);padding:40px 0;text-align:center;color:var(--color-cream);font-size:0.85rem;}
-    .footer-links a{color:var(--color-sky);text-decoration:none;margin:0 10px;font-weight:700;}
-
-    @media (max-width: 768px){
-      .grid-3,.colors-grid{grid-template-columns:1fr;}
-      .colors-grid{grid-template-columns:repeat(2, 1fr);}
-      .sticky-cta .txt{display:none;}
-      .sticky-cta .bar{justify-content:center;}
-    }
-  </style>
-</head>
-
-<body>
-  <div id="splash-screen">
-    <div class="instruction">画面がいっぱいになったらタップ</div>
-  </div>
-
-  <div id="main-content">
-    <section class="hero">
-      <div class="hero-bg-illustration"></div>
-      <div class="container reveal">
-
-        <div style="margin-bottom:10px;">
-          <span class="tag">5枚だけのカメラ Mobby</span>
-        </div>
-
-        <div class="hero-carousel floating" id="heroCarousel">
-          <button class="carousel-btn prev" type="button">‹</button>
-          <div class="carousel-viewport">
-            <div class="carousel-track" id="heroTrack">
-              <div class="carousel-slide" data-color="pink">
-                <div class="hero-illustration" style="width:300px;height:300px;">
-                  <img src="mobby_pink.jpg" alt="Pink">
-                </div>
-              </div>
-              <div class="carousel-slide" data-color="purple">
-                <div class="hero-illustration" style="width:300px;height:300px;">
-                  <img src="mobby_purple.jpg" alt="Purple">
-                </div>
-              </div>
-              <div class="carousel-slide" data-color="blue">
-                <div class="hero-illustration" style="width:300px;height:300px;">
-                  <img src="mobby_blue.jpg" alt="Blue">
-                </div>
-              </div>
-              <div class="carousel-slide" data-color="orange">
-                <div class="hero-illustration" style="width:300px;height:300px;">
-                  <img src="mobby_orange.jpg" alt="Orange">
-                </div>
-              </div>
-            </div>
-          </div>
-          <button class="carousel-btn next" type="button">›</button>
-          <div class="carousel-caption" id="heroCaption">Peach Pink</div>
-          <div class="carousel-dots" id="heroDots" style="margin-top:6px;display:flex;justify-content:center;gap:6px;"></div>
-        </div>
-
-        <h1 class="headline reveal delay-200">5枚だけ、残せる。</h1>
-        <p class="subhead reveal delay-200">
-          撮りすぎない。選ぶ。残す。<br>
-          キーホルダー型カメラ
-        </p>
-
-        <div class="status-chip reveal delay-200">
-          次回入荷：1月末（予約受付中）
-        </div>
-
-        <div class="cta-row reveal delay-200">
-          <a href="#colors" class="btn btn-primary">色を選ぶ</a>
-          <a href="#how" class="btn btn-secondary">使い方</a>
-        </div>
-      </div>
-    </section>
-
-    <div class="wave-divider"></div>
-
-    <section class="section center">
-      <div class="container reveal">
-        <h2>なぜ「5枚」？</h2>
-        <p class="lead">無限に撮れる時代だから、あえて制限を。</p>
-
-        <div class="grid-3 reveal delay-200">
-          <div class="card">
-            <h3>① 撮りすぎない</h3>
-            <p>残り枚数を気にするから、1枚が特別になる。</p>
-          </div>
-          <div class="card">
-            <h3>② 覗くと見える</h3>
-            <p>ファインダーの中に、撮った写真が見える。</p>
-          </div>
-          <div class="card">
-            <h3>③ 上書きされる</h3>
-            <p>6枚目を撮ると、一番古い写真が消える。</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="wave-divider bottom"></div>
-
-    <section id="how" class="section soft center">
-      <div class="container reveal">
-        <h2>3ステップ</h2>
-        <div class="grid-3 reveal delay-200" style="margin-top:14px;">
-          <div class="card">
-            <h3>撮る</h3>
-            <p>キーホルダーのままパシャリ。</p>
-          </div>
-          <div class="card">
-            <h3>覗く</h3>
-            <p>ファインダーで写真を確認。</p>
-          </div>
-          <div class="card">
-            <h3>送る</h3>
-            <p>ボタンで5枚を見返す。</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="colors" class="section center">
-      <div class="container reveal">
-        <h2>4つのカラー</h2>
-        <p class="lead">直感でどうぞ。</p>
-
-        <div class="colors-grid reveal delay-200">
-          <div class="color-card selected" data-color="pink" tabindex="0">
-            <div class="swatch" style="background:#F7A7C6;"></div>
-            <div class="color-title">Peach Pink</div>
-            <img class="product-thumb" src="mobby_pink.jpg" alt="Pink">
-            <div class="color-desc">ときめき・直感・可愛い</div>
-          </div>
-          <div class="color-card" data-color="purple" tabindex="0">
-            <div class="swatch" style="background:#9C7BFF;"></div>
-            <div class="color-title">Twilight Violet</div>
-            <img class="product-thumb" src="mobby_purple.jpg" alt="Purple">
-            <div class="color-desc">夜・秘密・マイペース</div>
-          </div>
-          <div class="color-card" data-color="blue" tabindex="0">
-            <div class="swatch" style="background:#8FD7FF;"></div>
-            <div class="color-title">Aqua Sky</div>
-            <img class="product-thumb" src="mobby_blue.jpg" alt="Blue">
-            <div class="color-desc">透明感・旅行・自由</div>
-          </div>
-          <div class="color-card" data-color="orange" tabindex="0">
-            <div class="swatch" style="background:#FFA24A;"></div>
-            <div class="color-title">Sunny Orange</div>
-            <img class="product-thumb" src="mobby_orange.jpg" alt="Orange">
-            <div class="color-desc">陽だまり・元気・勇気</div>
-          </div>
-        </div>
-
-        <div class="cta-row reveal delay-200" style="margin-top:24px;">
-          <a href="#buy" class="btn btn-primary">この色にする</a>
-        </div>
-      </div>
-    </section>
-
-    <div class="wave-divider"></div>
-
-    <section id="buy" class="section soft center">
-      <div class="container reveal">
-        <h2>購入（1月末お届け）</h2>
+        button:active {
+            transform: scale(0.95);
+            background: #aa2222;
+        }
         
-        <div class="buy-preview">
-          <img id="selectedPreviewImg" src="mobby_pink.jpg" alt="Selected">
-          <div style="text-align:left;">
-            <div style="font-weight:700;color:var(--color-earth);">選択中：<span id="selectedColorText">Peach Pink</span></div>
-            <div style="font-size:0.85rem;opacity:0.8;">※支払完了で確保されます</div>
-          </div>
-        </div>
+        .hint {
+            margin-top: 10px;
+            font-size: 12px;
+            opacity: 0.6;
+        }
 
-        <div class="pricing-simple reveal delay-200">
-          <div class="price-big">¥8,000</div>
-          <p style="font-size:0.9rem;margin-bottom:14px;">（学生の方は ¥4,000）</p>
-          
-          <div style="display:flex;flex-direction:column;gap:10px;">
-            <a href="#" id="buyRegular" class="btn btn-primary">¥8,000で購入</a>
-            <a href="#" id="buyStudent" class="btn btn-secondary">学生価格（¥4,000）で購入</a>
-          </div>
-        </div>
+    </style>
+</head>
+<body>
 
-        <div style="margin-top:14px;">
-           <span class="notice">万が一お届けできない場合は<strong>全額返金</strong>します。</span>
-        </div>
-      </div>
-    </section>
+    <div class="camera-body">
+        <div class="viewfinder" id="viewfinder">
+            <div class="photo-layer" id="photoContainer"></div>
 
-    <section id="faq" class="section center">
-      <div class="container reveal">
-        <h2>よくある質問</h2>
-        <div class="faq reveal delay-200">
-          <details class="faq-item">
-            <summary>いつ届く？</summary>
-            <p>1月末の入荷後、順次お届けします。</p>
-          </details>
-          <details class="faq-item">
-            <summary>本当に届く？</summary>
-            <p>はい。支払完了分は必ず確保します。（在庫切れ等の場合は全額返金）</p>
-          </details>
-          <details class="faq-item">
-            <summary>学生価格の買い方は？</summary>
-            <p>「学生価格」ボタンから進んでください。クーポン適用済みの画面になります。</p>
-          </details>
+            <div class="overlay-texture"></div>
+            <div class="lens-reflection"></div>
         </div>
-      </div>
-    </section>
-
-    <footer>
-      <div class="container">
-        <div class="footer-links">
-          <a href="#how">使い方</a>
-          <a href="#colors">色</a>
-          <a href="#buy">購入</a>
-        </div>
-        <p style="margin-top:20px;opacity:0.6;">© 2025 Mobby.</p>
-      </div>
-    </footer>
-  </div>
-
-  <div class="sticky-cta" id="stickyCta">
-    <div class="bar">
-      <div class="txt">1月末入荷分・予約受付中</div>
-      <a href="#colors" class="btn btn-primary">色を選ぶ</a>
     </div>
-  </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
-  <script>
-    /* 変更なし：そのまま利用 */
-    function initScrollObserver(){
-      const revealElements = document.querySelectorAll('.reveal');
-      const observer = new IntersectionObserver((entries, obs) => {
-        entries.forEach(entry => {
-          if(entry.isIntersecting){
-            entry.target.classList.add('active');
-            obs.unobserve(entry.target);
-          }
-        });
-      }, { threshold:0.15 });
-      revealElements.forEach(el => observer.observe(el));
-    }
+    <div class="controls">
+        <button onclick="takePhoto()">SNAP SHUTTER</button>
+        <div class="hint">新しい写真を撮ると、古い写真は隅へ追いやられ、やがて消えます。</div>
+    </div>
 
-    const STRIPE_URLS = {
-      regular: { pink: "", purple: "", blue: "", orange: "" },
-      student: { pink: "", purple: "", blue: "", orange: "" }
-    };
+    <script>
+        // 画像データの管理（最大5枚）
+        let photos = [
+            { id: 1, url: 'https://picsum.photos/id/64/200/200' },
+            { id: 2, url: 'https://picsum.photos/id/16/200/200' },
+            { id: 3, url: 'https://picsum.photos/id/338/200/200' },
+            { id: 4, url: 'https://picsum.photos/id/40/200/200' },
+            { id: 5, url: 'https://picsum.photos/id/250/200/200' }
+        ];
 
-    const COLOR_META = {
-      pink:   { name:"Peach Pink",      img:"mobby_pink.jpg"   },
-      purple: { name:"Twilight Violet", img:"mobby_purple.jpg" },
-      blue:   { name:"Aqua Sky",        img:"mobby_blue.jpg"   },
-      orange: { name:"Sunny Orange",    img:"mobby_orange.jpg" }
-    };
+        const container = document.getElementById('photoContainer');
 
-    const ORDER = ["pink","purple","blue","orange"];
-    let selectedColor = "pink";
-    let syncing = false;
+        // 写真を描画する関数
+        function renderPhotos() {
+            // 現在のDOMをクリア（※アニメーションを維持するため、実際はReact/VueのようなDiff更新が理想ですが、
+            // ここではシンプルにID管理で既存要素のクラスを書き換える方式をとります）
+            
+            // 既存の要素を取得
+            const existingElements = Array.from(container.children);
+            
+            photos.forEach((photo, index) => {
+                let el = document.getElementById(`p-${photo.id}`);
+                
+                // 新しい写真の場合、要素を作成
+                if (!el) {
+                    el = document.createElement('div');
+                    el.id = `p-${photo.id}`;
+                    el.classList.add('polaroid');
+                    
+                    // 初期位置（画面外または中央からふわっと出る演出）
+                    // ここでは中央（age-0と同じ位置）からスタートさせると自然
+                    el.classList.add('age-0'); 
+                    el.style.opacity = '0'; // 最初は透明
+                    
+                    const img = document.createElement('img');
+                    img.src = photo.url;
+                    el.appendChild(img);
+                    container.appendChild(el);
 
-    const colorCards = document.querySelectorAll('.color-card');
-    const selectedText = document.getElementById('selectedColorText');
-    const buyRegularBtn = document.getElementById('buyRegular');
-    const buyStudentBtn = document.getElementById('buyStudent');
-    const selectedPreviewImg = document.getElementById('selectedPreviewImg');
+                    // 少し待ってから不透明度を上げる（フェードイン）
+                    setTimeout(() => el.style.opacity = '1', 50);
+                }
 
-    /* Hero Carousel Logic */
-    const heroCarousel = document.getElementById("heroCarousel");
-    const heroTrack = document.getElementById("heroTrack");
-    const heroDots = document.getElementById("heroDots");
-    const heroCaption = document.getElementById("heroCaption");
-    let heroIndex = 0;
+                // クラス（位置・スタイル）を更新
+                // index 0 = 最新, index 4 = 最古
+                // すべてのageクラスを削除してから、新しいageクラスを付与
+                el.classList.remove('age-0', 'age-1', 'age-2', 'age-3', 'age-4');
+                el.classList.add(`age-${index}`);
+            });
 
-    function renderHeroDots(){
-      heroDots.innerHTML = "";
-      ORDER.forEach((key, i) => {
-        const d = document.createElement("div");
-        d.style.cssText = "width:8px;height:8px;border-radius:50%;background:rgba(47,79,79,0.2);cursor:pointer;";
-        if(i === heroIndex) d.style.background = "var(--color-earth)";
-        d.onclick = () => setHeroIndex(i, true);
-        heroDots.appendChild(d);
-      });
-    }
+            // 配列に含まれなくなった（古すぎて消えた）DOM要素を削除
+            const currentIds = photos.map(p => `p-${p.id}`);
+            existingElements.forEach(el => {
+                if (!currentIds.includes(el.id)) {
+                    // 消えるアニメーション
+                    el.style.opacity = '0';
+                    el.style.transform = 'scale(0.5)';
+                    setTimeout(() => el.remove(), 800); // 遷移時間後にDOM削除
+                }
+            });
+        }
 
-    function updateHeroUI(){
-      heroTrack.style.transform = `translateX(${-heroIndex * 100}%)`;
-      heroCaption.textContent = COLOR_META[ORDER[heroIndex]].name;
-      renderHeroDots();
-    }
+        // 新しい写真を追加する関数
+        function takePhoto() {
+            const newId = Date.now(); // ユニークID
+            const randomNum = Math.floor(Math.random() * 1000);
+            
+            const newPhoto = {
+                id: newId,
+                url: `https://picsum.photos/seed/${randomNum}/200/200`
+            };
 
-    function setHeroIndex(i, fromUser){
-      heroIndex = Math.max(0, Math.min(ORDER.length - 1, i));
-      updateHeroUI();
-      if(fromUser){
-        syncing = true;
-        setSelectedColor(ORDER[heroIndex]);
-        syncing = false;
-      }
-    }
-    
-    heroCarousel.querySelector('.next').onclick = () => setHeroIndex(heroIndex + 1, true);
-    heroCarousel.querySelector('.prev').onclick = () => setHeroIndex(heroIndex - 1, true);
+            // 配列の先頭に追加
+            photos.unshift(newPhoto);
 
-    function setSelectedColor(key){
-      selectedColor = key;
-      colorCards.forEach(c => c.classList.toggle('selected', c.dataset.color === key));
-      const meta = COLOR_META[key];
-      selectedText.textContent = meta.name;
-      selectedPreviewImg.src = meta.img;
-      if(!syncing) setHeroIndex(ORDER.indexOf(key));
-    }
+            // 5枚を超えたら末尾を削除
+            if (photos.length > 5) {
+                photos.pop();
+            }
 
-    function goBuy(url){
-      if(!url) return alert('URL未設定');
-      window.open(url, '_blank');
-    }
+            renderPhotos();
+            addFlashEffect();
+        }
 
-    buyRegularBtn.onclick = (e) => { e.preventDefault(); goBuy(STRIPE_URLS.regular[selectedColor]); };
-    buyStudentBtn.onclick = (e) => { e.preventDefault(); goBuy(STRIPE_URLS.student[selectedColor]); };
+        // シャッターを切ったときのフラッシュ演出
+        function addFlashEffect() {
+            const flash = document.createElement('div');
+            flash.style.position = 'absolute';
+            flash.style.top = '0';
+            flash.style.left = '0';
+            flash.style.width = '100%';
+            flash.style.height = '100%';
+            flash.style.backgroundColor = '#fff';
+            flash.style.opacity = '0.8';
+            flash.style.zIndex = '200';
+            flash.style.pointerEvents = 'none';
+            flash.style.transition = 'opacity 0.2s ease-out';
+            
+            document.getElementById('viewfinder').appendChild(flash);
+            
+            // 次のフレームで透明にする
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    flash.style.opacity = '0';
+                });
+            });
 
-    colorCards.forEach(c => c.onclick = () => setSelectedColor(c.dataset.color));
+            setTimeout(() => flash.remove(), 300);
+        }
 
-    /* Initialize */
-    renderHeroDots();
-    setSelectedColor("pink");
+        // --- 埃（ダスト）生成 (前回のコードから流用) ---
+        function createDust() {
+            const viewfinder = document.getElementById('viewfinder');
+            for (let i = 0; i < 40; i++) {
+                const dust = document.createElement('div');
+                dust.classList.add('dust');
+                dust.style.left = `${Math.random() * 100}%`;
+                dust.style.top = `${Math.random() * 100}%`;
+                const size = Math.random() * 2;
+                dust.style.width = `${size}px`;
+                dust.style.height = `${size}px`;
+                dust.style.opacity = Math.random() * 0.5;
+                viewfinder.appendChild(dust);
+            }
+        }
 
-    /* Smooth Scroll */
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.onclick = function(e){
-        e.preventDefault();
-        document.querySelector(this.getAttribute('href'))?.scrollIntoView({behavior:'smooth'});
-      };
-    });
+        // 初期化
+        createDust();
+        renderPhotos();
 
-    /* Splash (Matter.js) - 簡略化して記述 */
-    const { Engine, Render, Runner, Bodies, Composite, Body } = Matter;
-    const splash = document.getElementById('splash-screen');
-    const engine = Engine.create();
-    const render = Render.create({
-      element: splash, engine: engine,
-      options: { width: window.innerWidth, height: window.innerHeight, wireframes: false, background: 'transparent' }
-    });
-    
-    /* Wall & Icons logic (簡略化のためパラメータ等は維持) */
-    const w = window.innerWidth, h = window.innerHeight;
-    const walls = [
-      Bodies.rectangle(w/2, h+50, w+200, 100, {isStatic:true, render:{visible:false}}),
-      Bodies.rectangle(-60, h/2, 120, h+200, {isStatic:true, render:{visible:false}}),
-      Bodies.rectangle(w+60, h/2, 120, h+200, {isStatic:true, render:{visible:false}})
-    ];
-    Composite.add(engine.world, walls);
-
-    // アイコン落下
-    let count = 0;
-    const drop = setInterval(() => {
-      if(count > 40) return clearInterval(drop);
-      const color = ['#8FD7FF','#F7A7C6','#FFA24A','#9C7BFF'][Math.floor(Math.random()*4)];
-      const b = Bodies.circle(Math.random()*(w-100)+50, -50, 20 + Math.random()*30, {
-        restitution:0.6, render:{fillStyle:color}
-      });
-      Composite.add(engine.world, b);
-      count++;
-    }, 80);
-
-    Render.run(render);
-    const runner = Runner.create();
-    Runner.run(runner, engine);
-
-    splash.onclick = () => {
-      clearInterval(drop);
-      splash.classList.add('hidden');
-      document.getElementById('main-content').classList.add('visible');
-      document.body.style.overflowY = 'auto';
-      document.getElementById('stickyCta').style.display = 'block';
-      initScrollObserver();
-      setTimeout(() => { Render.stop(render); Runner.stop(runner); splash.remove(); }, 1200);
-    };
-  </script>
+    </script>
 </body>
 </html>
