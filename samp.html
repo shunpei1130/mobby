@@ -1,180 +1,622 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Splash Screen Demo</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden; /* スプラッシュ中はスクロール禁止 */
-            font-family: sans-serif;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mobby - 5枚だけのカメラ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Zen+Kurenaido&display=swap" rel="stylesheet">
 
-        /* スプラッシュスクリーン（キャンバス）のスタイル */
-        #splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 9999;
-            background-color: #f0f0f0; /* 背景色 */
-            cursor: pointer;
-            transition: opacity 0.8s ease; /* フェードアウト用 */
-        }
+  <style>
+    /* --- 1. Base Settings --- */
+    :root {
+      --color-bg: #F0F2F5;       /* 優しいグレー */
+      --color-primary: #333333;  /* 文字色 */
+      --color-accent: #FF6B6B;   /* 警告・注目色 */
+      --color-sky: #E0F7FA;      /* 空の色 */
+      --color-ground: #FAFAFA;   /* 地面 */
+      --font-base: 'Noto Sans JP', sans-serif;
+      --font-hand: 'Zen Kurenaido', sans-serif; /* 手書き風（エモさ） */
+    }
 
-        /* メインコンテンツ（最初は隠れているか、後ろにある） */
-        #main-content {
-            padding: 2rem;
-            text-align: center;
-            opacity: 0; /* 最初は透明 */
-            transition: opacity 1s ease;
-        }
-        
-        /* 説明テキスト */
-        .instruction {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #888;
-            pointer-events: none; /* クリックを邪魔しない */
-            font-size: 1.2rem;
-        }
-    </style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-base);
+      background-color: var(--color-sky);
+      color: var(--color-primary);
+      overflow-x: hidden;
+      overflow-y: hidden; /* スプラッシュ後 auto になる */
+      height: 100vh;
+    }
+
+    /* --- 2. Splash Screen (Matter.js) --- */
+    #splash-screen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 9999;
+      background-color: #333;
+      cursor: pointer;
+      transition: opacity 1.2s ease-out, visibility 1.2s ease-out;
+    }
+    #splash-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    
+    .instruction {
+      position: absolute; top: 20%; left: 50%;
+      transform: translateX(-50%);
+      color: #fff; font-weight: bold;
+      pointer-events: none;
+      text-align: center;
+    }
+
+    /* --- 3. 3D World Settings --- */
+    #scroll-container {
+      height: 20000px; /* LPの内容が多いので長めに */
+      width: 100%;
+      display: none;
+    }
+
+    #viewport {
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      perspective: 1000px;
+      overflow: hidden;
+      opacity: 0; transition: opacity 2s ease;
+    }
+    #viewport.visible { opacity: 1; }
+
+    #world {
+      position: absolute; width: 100%; height: 100%;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    /* 背景装飾 */
+    .ground {
+      position: absolute; top: 50%; left: 50%;
+      width: 6000px; height: 25000px;
+      background: linear-gradient(to bottom, #fff 0%, #f0f0f0 100%);
+      transform: translate(-50%, 0) rotateX(90deg);
+      transform-origin: top center;
+      z-index: -1;
+    }
+    .path {
+      position: absolute; top: 0; left: 50%;
+      width: 600px; height: 100%;
+      background: #fff;
+      transform: translateX(-50%);
+      box-shadow: 0 0 50px rgba(0,0,0,0.05);
+    }
+    
+    /* 霧 */
+    .fog {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(to bottom, var(--color-sky) 0%, transparent 40%);
+      pointer-events: none; z-index: 50;
+    }
+    .fog-depth {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(circle at 50% 50%, transparent 20%, var(--color-sky) 90%);
+      pointer-events: none; z-index: 50;
+    }
+
+    /* --- 4. 3D Objects (LP Content Cards) --- */
+    .obj {
+      position: absolute; top: 50%; left: 50%;
+      transform-style: preserve-3d;
+      display: flex; justify-content: center; align-items: center;
+    }
+
+    /* 共通カードスタイル */
+    .lp-card {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 12px;
+      width: 500px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      border: 1px solid rgba(0,0,0,0.05);
+      text-align: center;
+      /* 重要：3D空間でもクリックできるように */
+      pointer-events: auto; 
+    }
+
+    /* タイポグラフィ */
+    h2 { font-size: 2rem; margin-bottom: 1rem; color: #111; letter-spacing: 0.05em; }
+    h3 { font-size: 1.4rem; margin-bottom: 0.8rem; color: #444; }
+    p { line-height: 1.8; color: #666; margin-bottom: 1rem; font-size: 1rem; }
+    .accent { color: var(--color-accent); font-weight: bold; }
+    .hand-font { font-family: var(--font-hand); font-size: 1.5rem; color: #555; }
+
+    /* ファーストビュー特別スタイル */
+    .hero-card {
+      width: 600px;
+      padding: 50px;
+      border-top: 5px solid var(--color-accent);
+    }
+    .hero-h1 {
+      font-size: 3.5rem; font-weight: 900; margin-bottom: 10px;
+      background: linear-gradient(45deg, #333, #666);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: 1.2rem; font-weight: bold; color: var(--color-accent); margin-bottom: 20px;
+    }
+    .price-tag {
+      background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;
+    }
+    .price-main { font-size: 1.8rem; font-weight: bold; }
+    .price-student { color: var(--color-accent); font-weight: bold; font-size: 1.2rem; }
+
+    /* CTAボタン */
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 15px; margin: 5px 0;
+      border-radius: 8px;
+      text-decoration: none; font-weight: bold;
+      transition: transform 0.2s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: #333; color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    .btn-secondary { background: #fff; color: var(--color-accent); border: 2px solid var(--color-accent); }
+
+    /* 安心バッジ */
+    .badges { display: flex; justify-content: center; gap: 10px; font-size: 0.8rem; color: #888; margin-top: 15px; }
+    .badge { background: #eee; padding: 4px 8px; border-radius: 4px; }
+
+    /* GIFプレースホルダー */
+    .gif-placeholder {
+      width: 100%; height: 200px;
+      background: #000;
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      margin: 20px 0;
+      border-radius: 8px;
+      font-family: monospace;
+    }
+
+    /* デポジット図解 */
+    .deposit-flow {
+      display: flex; align-items: center; justify-content: space-between;
+      margin: 20px 0; font-size: 0.9rem;
+    }
+    .flow-step {
+      background: #f0f0f0; padding: 10px; border-radius: 8px; width: 30%; position: relative;
+    }
+    .flow-arrow { font-size: 1.5rem; color: #ccc; }
+
+    /* 浮遊する写真（装飾） */
+    .floating-photo {
+      width: 120px; height: 140px;
+      background: #fff;
+      padding: 8px 8px 25px 8px; /* ポラロイド風 */
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      transform: rotate(var(--rot));
+    }
+    .photo-inner { width: 100%; height: 100%; background: #ddd; overflow: hidden; }
+    .photo-inner img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* --- 5. Character (Camera User) --- */
+    #hero {
+      position: absolute; bottom: 10%; left: 50%;
+      transform: translateX(-50%);
+      width: 60px; height: 100px; z-index: 100;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .hero-head {
+      width: 30px; height: 30px; background: #333; border-radius: 50%; z-index: 2;
+    }
+    .hero-body {
+      margin-top: -5px; width: 40px; height: 50px; background: #555; border-radius: 10px; position: relative;
+    }
+    /* カメラを提げている */
+    .hero-body::after {
+      content: ''; position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+      width: 20px; height: 15px; background: #ccc; border-radius: 2px; border: 2px solid #333;
+    }
+    
+    @keyframes walk {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-5px) rotate(-2deg); }
+      75% { transform: translateY(-5px) rotate(2deg); }
+    }
+    #hero.walking .hero-head, #hero.walking .hero-body { animation: walk 0.4s infinite; }
+
+    /* --- 6. Fixed UI (Right Bottom) --- */
+    #fixed-cta {
+      position: fixed; bottom: 20px; right: 20px; z-index: 200;
+      opacity: 0; transform: translateY(20px); transition: all 0.5s;
+    }
+    #fixed-cta.visible { opacity: 1; transform: translateY(0); }
+    .fab {
+      display: block; background: var(--color-accent); color: #fff;
+      padding: 15px 30px; border-radius: 50px; text-decoration: none;
+      font-weight: bold; box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      .lp-card, .hero-card { width: 90vw; padding: 20px; }
+      .hero-h1 { font-size: 2.5rem; }
+      .deposit-flow { flex-direction: column; gap: 10px; }
+      .flow-step { width: 100%; }
+      .flow-arrow { transform: rotate(90deg); }
+    }
+  </style>
 </head>
+
 <body>
-
-    <div id="splash-screen">
-        <div class="instruction">画面がいっぱいになったらクリック！</div>
+  <div id="splash-screen">
+    <div class="instruction">
+      <p style="font-size:3rem; margin-bottom:10px;">📷</p>
+      画面がいっぱいになったらタップ
     </div>
+  </div>
 
-    <div id="main-content">
-        <h1>ようこそ！</h1>
-        <p>これがHPの中身です。</p>
-        <p>ゆっくりしていってください。</p>
+  <div id="fixed-cta">
+    <a href="#form" class="fab">先行枠を確保する</a>
+  </div>
+
+  <div id="scroll-container"></div>
+
+  <div id="viewport">
+    <div class="fog"></div>
+    <div class="fog-depth"></div>
+    
+    <div id="world">
+      <div class="ground">
+        <div class="path"></div>
+      </div>
+      
+      </div>
+
+    <div id="hero">
+      <div class="hero-head"></div>
+      <div class="hero-body"></div>
     </div>
+  </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 
-    <script>
-        // 設定
-        const ICON_URL = 'icon.png'; // ★ここにアイコン画像のパスを指定
-        const ICON_SIZE = 150;        // アイコンの表示サイズ(直径)
-        const SPAWN_RATE = 100;      // 何ミリ秒ごとにアイコンを落とすか
-        const TOTAL_ICONS = 50;     // 画面に落とすアイコンの総数
+  <script>
+    /* =========================================
+       A. Matter.js スプラッシュ (カメラアイコン)
+       ========================================= */
+    const ICON_SIZE = 60;
+    
+    const Engine = Matter.Engine, Render = Matter.Render, Runner = Matter.Runner, Bodies = Matter.Bodies, Composite = Matter.Composite, Body = Matter.Body;
+    const splashElement = document.getElementById('splash-screen');
+    const viewport = document.getElementById('viewport');
+    const scrollContainer = document.getElementById('scroll-container');
+    const engine = Engine.create();
+    const world = engine.world;
+    let width = window.innerWidth;
+    let height = window.innerHeight;
 
-        // Matter.jsのモジュール別名定義
-        const Engine = Matter.Engine,
-              Render = Matter.Render,
-              Runner = Matter.Runner,
-              Bodies = Matter.Bodies,
-              Composite = Matter.Composite,
-              Events = Matter.Events,
-              Body = Matter.Body;
+    const render = Render.create({
+      element: splashElement, engine: engine,
+      options: { width, height, background: '#333', wireframes: false }
+    });
 
-        // エンジンの作成
-        const engine = Engine.create();
-        const world = engine.world;
+    // 枠
+    const wallOpts = { isStatic: true, render: { visible: false } };
+    Composite.add(world, [
+      Bodies.rectangle(width/2, height+50, width, 100, wallOpts),
+      Bodies.rectangle(-50, height/2, 100, height, wallOpts),
+      Bodies.rectangle(width+50, height/2, 100, height, wallOpts)
+    ]);
 
-        // スプラッシュスクリーンの要素を取得
-        const splashElement = document.getElementById('splash-screen');
-        const width = window.innerWidth;
-        const height = window.innerHeight;
+    // カメラっぽいアイコンを降らせる
+    let count = 0;
+    const drop = setInterval(() => {
+      if(count > 40) { clearInterval(drop); return; }
+      const x = Math.random() * (width - 100) + 50;
+      const box = Bodies.rectangle(x, -50, 50, 40, {
+        render: { fillStyle: Math.random()>0.5 ? '#fff' : '#ccc' },
+        restitution: 0.5
+      });
+      // レンズ
+      const circle = Bodies.circle(x, -50, 15, {
+        render: { fillStyle: '#333' }
+      });
+      // 結合（簡易的に別々で落とす）
+      Composite.add(world, [box]);
+      count++;
+    }, 100);
 
-        // レンダラーの作成
-        const render = Render.create({
-            element: splashElement,
-            engine: engine,
-            options: {
-                width: width,
-                height: height,
-                background: 'transparent', // CSSで背景色を指定するので透明に
-                wireframes: false // 画像を表示するためにワイヤーフレームをオフ
-            }
-        });
+    Render.run(render);
+    const runner = Runner.create();
+    Runner.run(runner, engine);
 
-        // 壁と床を作成（画面外に出ないようにする）
-        const wallOptions = { isStatic: true, render: { visible: false } }; // 壁は見えないようにする
-        const floor = Bodies.rectangle(width / 2, height + 50, width, 100, wallOptions);
-        const leftWall = Bodies.rectangle(-50, height / 2, 100, height, wallOptions);
-        const rightWall = Bodies.rectangle(width + 50, height / 2, 100, height, wallOptions);
+    /* =========================================
+       B. メイン開始処理
+       ========================================= */
+    splashElement.addEventListener('click', () => {
+      clearInterval(drop);
+      // 爆発
+      Composite.allBodies(world).forEach(b => {
+        if(!b.isStatic) Body.applyForce(b, b.position, {x:(Math.random()-.5)*0.2, y:-0.2});
+      });
+      setTimeout(() => {
+        splashElement.classList.add('hidden');
+        viewport.classList.add('visible');
+        scrollContainer.style.display = 'block';
+        document.body.style.overflowY = 'auto';
         
-        Composite.add(world, [floor, leftWall, rightWall]);
+        // ワールド生成
+        initMobbyWorld();
+        
+        // 物理停止
+        setTimeout(() => { Render.stop(render); Runner.stop(runner); splashElement.remove(); }, 1200);
+      }, 500);
+    });
 
-        // アイコンを落とす関数
-        let count = 0;
-        const dropIcon = setInterval(() => {
-            if (count >= TOTAL_ICONS) {
-                clearInterval(dropIcon);
-                return;
-            }
+    /* =========================================
+       C. Mobby LP コンテンツデータ
+       ========================================= */
+    // z: -500 からスタートし、奥へ進む
+    const SCENE_DATA = [
+      // ① ファーストビュー
+      {
+        type: 'hero', z: -600, x: 0,
+        html: `
+          <h1 class="hero-h1">5枚だけ、<br>残せる。</h1>
+          <p class="hero-sub">卒業式に間に合う。1月中発送。</p>
+          <div class="gif-placeholder">[ここに覗く動画/GIF]</div>
+          <p style="font-size:0.8rem; opacity:0.7;">※先行ロットは数量限定</p>
+          <div class="price-tag">
+            <div style="text-decoration:line-through; font-size:0.9rem; color:#888;">通常 ¥8,000</div>
+            <div class="price-main">先行枠デポジット</div>
+            <div class="price-student">学割で ¥4,000</div>
+          </div>
+          <a href="#" class="btn btn-primary">デポジットで先行枠を確保</a>
+          <a href="#" class="btn btn-secondary">学割で確保する</a>
+          <div class="badges">
+            <span class="badge">キャンセルOK</span>
+            <span class="badge">国内発送</span>
+            <span class="badge">保証あり</span>
+          </div>
+        `
+      },
 
-            // ランダムなX位置から落とす
-            const xPos = Math.random() * (width - 100) + 50;
-            
-            // 円形のボディを作成（ツムツムっぽく転がるように）
-            const icon = Bodies.circle(xPos, -50, ICON_SIZE / 2, {
-                restitution: 0.5, // 弾力（0〜1）
-                friction: 0.1,    // 摩擦
-                render: {
-                    sprite: {
-                        texture: ICON_URL,
-                        xScale: ICON_SIZE / 512, // ★画像の元サイズに合わせて調整が必要（例: 元が512pxならこれで約60pxに縮小）
-                        yScale: ICON_SIZE / 512
-                    }
-                }
-            });
+      // ② なぜ5枚だけ？
+      {
+        type: 'card', z: -1800, x: 0,
+        html: `
+          <h2 class="hand-font">消えていくから、<br>1枚が宝物になる。</h2>
+          <p>水溜りに映った空みたいに、<br>きれいな瞬間はすぐに消えてしまいます。</p>
+          <p>だからMobbyは、5枚だけ。<br>撮りすぎない。選ぶ。残す。</p>
+          <hr style="margin:20px 0; border:none; border-top:1px dashed #ccc;">
+          <ul style="text-align:left; list-style:none; padding-left:20px;">
+            <li>✨ 撮りすぎないから、大事な瞬間がわかる</li>
+            <li>👀 覗くと、思い出がそこにいる</li>
+            <li>🎞 5枚しかないから、何度も見返したくなる</li>
+          </ul>
+        `
+      },
 
-            Composite.add(world, icon);
-            count++;
-        }, SPAWN_RATE);
+      // 装飾：空中の写真
+      { type: 'photo', z: -2200, x: -400, img: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=500' },
+      { type: 'photo', z: -2400, x: 450, img: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=500' },
 
-        // クリックイベント：弾けて消える処理
-        splashElement.addEventListener('click', () => {
-            // 落ちてくるループを止める
-            clearInterval(dropIcon);
+      // ③ How it works
+      {
+        type: 'card', z: -3000, x: 0,
+        html: `
+          <h2>How it works</h2>
+          <div style="display:flex; flex-direction:column; gap:15px; text-align:left;">
+            <div>
+              <h3>1. 撮る</h3>
+              <p>キーホルダーのまま、直感的にシャッターを切る。</p>
+            </div>
+            <div>
+              <h3>2. 覗く</h3>
+              <p>ファインダーを覗くと、撮った写真が光って見えます。</p>
+            </div>
+            <div>
+              <h3>3. 横に送る</h3>
+              <p>十字キーで5枚をスライド確認。<br><small>※6枚目を撮ると、一番古い1枚が消えます。</small></p>
+            </div>
+          </div>
+        `
+      },
 
-            // すべての物体に爆発的な力を加える
-            const bodies = Composite.allBodies(world);
-            bodies.forEach(body => {
-                if (!body.isStatic) {
-                    // ランダムな方向に強い力を加える
-                    const forceMagnitude = 0.5 * body.mass;
-                    Body.applyForce(body, body.position, {
-                        x: (Math.random() - 0.5) * forceMagnitude,
-                        y: (Math.random() - 1.5) * forceMagnitude // 上方向に強く
-                    });
-                }
-            });
+      // ④ 卒業式ユースケース
+      {
+        type: 'card', z: -4200, x: 0,
+        html: `
+          <h2 class="hand-font">卒業式は、<br>5枚で足りる。</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:20px 0;">
+             <div style="background:#eee; padding:10px;">校門の前</div>
+             <div style="background:#eee; padding:10px;">教室の黒板</div>
+             <div style="background:#eee; padding:10px;">友達の変顔</div>
+             <div style="background:#eee; padding:10px;">帰り道の空</div>
+          </div>
+          <p>何百枚ものデータより、<br>手元に残る5枚を。</p>
+          <a href="#" class="btn btn-primary" style="margin-top:20px;">卒業に間に合う枠を確保</a>
+        `
+      },
 
-            // 少し待ってから画面をフェードアウト
-            setTimeout(() => {
-                splashElement.style.opacity = '0';
-                document.getElementById('main-content').style.opacity = '1';
-                document.body.style.overflow = 'auto'; // スクロール許可
+      // 装飾
+      { type: 'photo', z: -4800, x: -300, img: 'https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?w=500' },
 
-                // 完全に消えたら物理演算を停止して要素を削除（メモリ節約）
-                setTimeout(() => {
-                    Render.stop(render);
-                    Runner.stop(runner);
-                    splashElement.remove();
-                }, 800);
-            }, 500); // 爆発を見てから0.5秒後にフェード開始
-        });
+      // ⑤ 学割
+      {
+        type: 'card', z: -5500, x: 0,
+        html: `
+          <h2 style="color:var(--color-accent);">卒業応援 学割</h2>
+          <p class="price-main">¥4,000 <span style="font-size:1rem; font-weight:normal;">(50% OFF)</span></p>
+          <div style="background:#fff3cd; padding:15px; border-radius:8px; margin:15px 0; text-align:left;">
+            <strong>条件：</strong><br>
+            ・学生証の提示 / 学校メールアドレス<br>
+            ・2025年3月31日まで<br>
+            <strong style="color:red;">・初回ロット限定</strong>
+          </div>
+          <p>「枠」が埋まり次第終了します。</p>
+        `
+      },
 
-        // 実行開始
-        Render.run(render);
-        const runner = Runner.create();
-        Runner.run(runner, engine);
+      // ⑥ 予約の仕組み（図解）
+      {
+        type: 'card', z: -6800, x: 0,
+        html: `
+          <h2>デポジットで<br>“先行枠”を確保</h2>
+          <p>今はお金がかかりません。</p>
+          
+          <div class="deposit-flow">
+            <div class="flow-step">
+              <strong>今すぐ</strong><br>
+              予約枠確保<br>
+              <small>¥500 (例)</small>
+            </div>
+            <div class="flow-arrow">➡</div>
+            <div class="flow-step">
+              <strong>1月中</strong><br>
+              発送・決済<br>
+              <small>残金を支払い</small>
+            </div>
+            <div class="flow-arrow">➡</div>
+            <div class="flow-step">
+              <strong>卒業式</strong><br>
+              手元に届く<br>
+              <small>キャンセル可</small>
+            </div>
+          </div>
+          <p style="font-size:0.9rem; color:#888;">
+            ※万一の発送遅延時は、希望者に全額返金いたします。
+          </p>
+        `
+      },
 
-        // リサイズ対応（簡易版）
-        window.addEventListener('resize', () => {
-            render.canvas.width = window.innerWidth;
-            render.canvas.height = window.innerHeight;
-        });
-    </script>
+      // ⑦ 実物スペック
+      {
+        type: 'card', z: -8000, x: 0,
+        html: `
+          <h2>Product Spec</h2>
+          <div class="gif-placeholder">[実物の手持ち写真]</div>
+          <ul style="text-align:left; margin-top:10px; line-height:2;">
+            <li>サイズ：手のひらに収まる45mm</li>
+            <li>カラー：スノーホワイト / フィルムグレー</li>
+            <li>保証：1年間の自然故障保証</li>
+            <li>同梱物：本体、ストラップ、充電ケーブル</li>
+          </ul>
+        `
+      },
+
+      // ⑧ FAQ
+      {
+        type: 'card', z: -9200, x: 0,
+        html: `
+          <h3>よくある質問</h3>
+          <dl style="text-align:left;">
+            <dt><strong>Q. 1月中のいつ届きますか？</strong></dt>
+            <dd>A. 1月下旬より順次発送予定です。</dd>
+            <br>
+            <dt><strong>Q. 5枚以上保存できますか？</strong></dt>
+            <dd>A. できません。6枚目を撮ると古い順に消えます。</dd>
+            <br>
+            <dt><strong>Q. デポジットは返金されますか？</strong></dt>
+            <dd>A. 発送の◯日前までならマイページから全額返金可能です。</dd>
+          </dl>
+        `
+      },
+
+      // ⑨ 最終CTA
+      {
+        type: 'card', z: -10500, x: 0,
+        html: `
+          <h2 class="hero-h1">思い出を、<br>選ぼう。</h2>
+          <p>Mobby Initial Lot.</p>
+          <div style="background:#f9f9f9; padding:20px; border-radius:8px; margin-top:20px;">
+             <input type="email" placeholder="メールアドレスを入力" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ddd; border-radius:4px;">
+             <a href="#" class="btn btn-primary">先行枠を確保する</a>
+             <p style="font-size:0.8rem; margin-top:10px;">友達と一緒に買うと送料がお得になります。</p>
+          </div>
+        `
+      }
+    ];
+
+    /* =========================================
+       D. ワールド生成とスクロール制御
+       ========================================= */
+    const worldDiv = document.getElementById('world');
+    const hero = document.getElementById('hero');
+    const fixedCta = document.getElementById('fixed-cta');
+
+    function initMobbyWorld() {
+      // 1. 道の横に木を配置（ランダム）
+      for(let z = -500; z > -11000; z -= 400) {
+        // 木
+        const tree = document.createElement('div');
+        tree.style.cssText = `
+          position:absolute; bottom:0; width:20px; height:150px; background:#ccc;
+          transform-origin: bottom center;
+        `;
+        // 木の葉
+        const leaf = document.createElement('div');
+        leaf.style.cssText = `
+          position:absolute; bottom:100px; left:-40px; width:100px; height:100px; 
+          background:#aaddaa; border-radius:50%; opacity:0.8;
+        `;
+        tree.appendChild(leaf);
+
+        const el = document.createElement('div');
+        el.className = 'obj';
+        const side = Math.random() > 0.5 ? 1 : -1;
+        const x = (400 + Math.random()*200) * side; 
+        el.style.transform = `translate3d(${x}px, -150px, ${z}px)`; // 少し浮かせて配置
+        el.appendChild(tree);
+        worldDiv.appendChild(el);
+      }
+
+      // 2. SCENE_DATA の配置
+      SCENE_DATA.forEach(item => {
+        const el = document.createElement('div');
+        el.className = 'obj';
+        
+        // カード（看板）配置
+        if(item.type === 'hero' || item.type === 'card') {
+          el.innerHTML = `<div class="${item.type === 'hero' ? 'lp-card hero-card' : 'lp-card'}">${item.html}</div>`;
+          el.style.transform = `translate3d(${item.x}px, -100px, ${item.z}px)`; // -100pxで視線の高さに
+        }
+        // 写真装飾配置
+        else if (item.type === 'photo') {
+          el.innerHTML = `
+            <div class="floating-photo" style="--rot:${(Math.random()-0.5)*30}deg">
+              <div class="photo-inner"><img src="${item.img}" alt="memory"></div>
+            </div>`;
+          el.style.transform = `translate3d(${item.x}px, -300px, ${item.z}px)`; // 高い位置に浮かす
+        }
+
+        worldDiv.appendChild(el);
+      });
+    }
+
+    // スクロール制御
+    let isWalkingTimer = null;
+    window.addEventListener('scroll', () => {
+      const scrollY = window.pageYOffset;
+      const zMove = scrollY; 
+
+      // カメラ移動
+      worldDiv.style.transform = `
+        rotateX(5deg) 
+        translateY(-50px) 
+        translateZ(${zMove}px)
+      `;
+
+      // 歩行アニメーション
+      if (!hero.classList.contains('walking')) { hero.classList.add('walking'); }
+      clearTimeout(isWalkingTimer);
+      isWalkingTimer = setTimeout(() => { hero.classList.remove('walking'); }, 100);
+
+      // 固定CTAの表示制御（少し進んだら出る）
+      if(scrollY > 500) {
+        fixedCta.classList.add('visible');
+      } else {
+        fixedCta.classList.remove('visible');
+      }
+    });
+
+  </script>
 </body>
 </html>

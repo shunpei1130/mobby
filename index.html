@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nordic Tales - Welcome</title>
+  <title>Mobby - 先行予約</title>
   <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
@@ -83,19 +83,19 @@
     }
     #main-content.visible { opacity: 1; }
 
-    /* --- 4. LP Styling (Moomin Style) --- */
+    /* --- 4. LP Styling (Moomin-ish / Soft Nordic) --- */
     h1, h2, h3 {
       font-family: var(--font-en), var(--font-ja);
       font-weight: 700;
       letter-spacing: 0.05em;
-      line-height: 1.3;
+      line-height: 1.25;
       color: var(--color-earth);
     }
 
     p { font-weight: 400; letter-spacing: 0.03em; }
 
     .container {
-      max-width: 1000px;
+      max-width: 1050px;
       margin: 0 auto;
       padding: 0 30px;
     }
@@ -111,6 +111,7 @@
       transition: all 0.4s var(--ease-soft);
       border: 2px solid transparent;
       box-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+      cursor: pointer;
     }
 
     .btn-secondary {
@@ -133,6 +134,47 @@
       transform: translateY(-2px) rotate(1deg);
     }
 
+    .btn-ghost {
+      background: rgba(255,255,255,0.0);
+      color: var(--color-forest);
+      border-color: rgba(47,79,79,0.35);
+    }
+    .btn-ghost:hover {
+      background: rgba(174,198,207,0.35);
+      border-color: transparent;
+      transform: translateY(-2px);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      font-family: var(--font-en), var(--font-ja);
+      background: rgba(174, 198, 207, 0.35);
+      color: var(--color-forest);
+      border: 1px solid rgba(47, 79, 79, 0.18);
+    }
+
+    .trust-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .trust-pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(47,79,79,0.12);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
     .wave-divider {
       width: 100%;
       height: 50px;
@@ -142,31 +184,33 @@
     }
     .wave-divider.bottom { transform: rotate(180deg); }
 
+    /* --- Hero --- */
     .hero {
-      min-height: 90vh;
+      min-height: 92vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
       position: relative;
-      padding-top: 80px;
+      padding-top: 90px;
+      padding-bottom: 50px;
     }
     .hero-bg-illustration {
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 40%;
+      height: 42%;
       background-color: #C2D8B9;
       border-radius: 50% 50% 0 0 / 30% 30% 0 0;
       z-index: -1;
     }
 
     .hero-illustration-container {
-      width: 350px;
-      height: 350px;
-      margin-bottom: 30px;
+      width: 330px;
+      height: 330px;
+      margin: 18px auto 18px;
       position: relative;
     }
     .hero-illustration {
@@ -181,8 +225,56 @@
       justify-content: center;
       box-shadow: 0 10px 30px rgba(174, 198, 207, 0.4);
     }
-    .hero-illustration img { width: 90%; height: auto; filter: contrast(1.1) sepia(0.2); }
+    .hero-illustration img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.08) sepia(0.18); }
 
+    .headline {
+      font-size: clamp(2.1rem, 3.7vw, 3.1rem);
+      margin-top: 8px;
+    }
+    .subhead {
+      margin-top: 14px;
+      font-size: 1.05rem;
+      opacity: 0.92;
+    }
+
+    .cta-row {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .price-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .price-chip {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(47,79,79,0.12);
+      box-shadow: 3px 3px 0px rgba(0,0,0,0.06);
+      font-family: var(--font-en), var(--font-ja);
+      font-weight: 700;
+    }
+    .price-chip strong {
+      font-size: 1.15rem;
+      color: var(--color-earth);
+    }
+    .price-chip .muted {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      font-weight: 700;
+    }
+
+    /* reveal */
     .reveal {
       opacity: 0;
       transform: translateY(30px);
@@ -198,27 +290,299 @@
     .delay-200 { transition-delay: 0.2s; }
     .delay-400 { transition-delay: 0.4s; }
 
-    .showcase { padding: 100px 0; background: linear-gradient(to bottom, var(--color-cream), #fff); }
-    .feature-block { display: flex; align-items: center; gap: 60px; margin-bottom: 120px; }
-    .feature-block.reverse { flex-direction: row-reverse; }
-    .feature-text { flex: 1; }
-    .feature-image-container { flex: 1; position: relative; }
-    .feature-image {
-      height: 400px;
-      background-color: #fff;
-      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-      overflow: hidden;
-      border: 4px dotted var(--color-sky);
+    /* Sections */
+    .section {
+      padding: 95px 0;
+      background: #fff;
     }
-    .feature-image img { width: 100%; height: 100%; object-fit: cover; }
+    .section.soft {
+      background: linear-gradient(to bottom, var(--color-cream), #fff);
+    }
+    .section.center { text-align: center; }
 
-    footer { background-color: var(--color-forest); padding: 60px 0; text-align: center; color: var(--color-cream); }
+    .lead {
+      margin-top: 18px;
+      font-size: 1.03rem;
+      opacity: 0.92;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 28px;
+    }
+    .card {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid rgba(47,79,79,0.12);
+      border-radius: 26px;
+      padding: 20px 18px;
+      box-shadow: 3px 3px 0px rgba(0,0,0,0.06);
+    }
+    .card h3 { font-size: 1.15rem; margin-bottom: 6px; }
+    .card p { font-size: 0.98rem; opacity: 0.92; }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 30px;
+      text-align: left;
+    }
+    .step {
+      position: relative;
+      overflow: hidden;
+    }
+    .step .num {
+      font-family: var(--font-en);
+      font-size: 2.2rem;
+      font-weight: 700;
+      opacity: 0.18;
+      position: absolute;
+      top: 8px;
+      right: 14px;
+    }
+    .step .title {
+      font-weight: 700;
+      font-family: var(--font-en), var(--font-ja);
+      color: var(--color-earth);
+      margin-bottom: 6px;
+      font-size: 1.05rem;
+    }
+    .step .mini {
+      font-size: 0.95rem;
+      opacity: 0.92;
+    }
+
+    .quote {
+      margin-top: 26px;
+      padding: 18px 18px;
+      border-radius: 22px;
+      background: rgba(174,198,207,0.22);
+      border: 1px dashed rgba(47,79,79,0.25);
+      text-align: left;
+    }
+    .quote p {
+      font-size: 0.98rem;
+      opacity: 0.95;
+    }
+    .quote .qtitle {
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--color-earth);
+      font-family: var(--font-en), var(--font-ja);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+      align-items: start;
+      margin-top: 26px;
+    }
+
+    .pricing {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 22px;
+      text-align: left;
+    }
+    .price-card {
+      border-radius: 26px;
+      padding: 18px 16px;
+      border: 1px solid rgba(47,79,79,0.12);
+      background: rgba(255,255,255,0.86);
+      box-shadow: 3px 3px 0px rgba(0,0,0,0.06);
+    }
+    .price-card .label {
+      font-weight: 700;
+      font-family: var(--font-en), var(--font-ja);
+      color: var(--color-earth);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .price-card .value {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-top: 10px;
+      color: var(--color-forest);
+      font-family: var(--font-en), var(--font-ja);
+    }
+    .price-card .note {
+      margin-top: 10px;
+      font-size: 0.92rem;
+      opacity: 0.88;
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      background: rgba(240,230,140,0.45);
+      border: 1px solid rgba(139,69,19,0.18);
+      color: var(--color-earth);
+      white-space: nowrap;
+    }
+
+    /* Reserve form */
+    #reserve { scroll-margin-top: 90px; }
+    .form {
+      margin-top: 18px;
+      text-align: left;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 6px;
+      font-family: var(--font-en), var(--font-ja);
+      color: var(--color-earth);
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(47,79,79,0.18);
+      background: rgba(255,255,255,0.82);
+      outline: none;
+      font-family: var(--font-ja);
+      color: var(--color-forest);
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(174,198,207,0.85);
+      box-shadow: 0 0 0 4px rgba(174,198,207,0.25);
+    }
+    .form-help {
+      margin-top: 10px;
+      font-size: 0.92rem;
+      opacity: 0.9;
+    }
+    .small {
+      font-size: 0.9rem;
+      opacity: 0.85;
+    }
+    .inline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .checkbox {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .checkbox input { width: 18px; height: 18px; }
+
+    .notice {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(255,248,231,0.75);
+      border: 1px dashed rgba(139,69,19,0.25);
+      font-size: 0.92rem;
+    }
+
+    .result {
+      margin-top: 14px;
+      padding: 14px 14px;
+      border-radius: 18px;
+      background: rgba(194,216,185,0.35);
+      border: 1px solid rgba(47,79,79,0.12);
+      display: none;
+    }
+
+    /* FAQ */
+    .faq {
+      margin-top: 18px;
+      text-align: left;
+    }
+    details {
+      background: rgba(255,255,255,0.84);
+      border: 1px solid rgba(47,79,79,0.12);
+      border-radius: 18px;
+      padding: 14px 14px;
+      margin-top: 10px;
+      box-shadow: 3px 3px 0px rgba(0,0,0,0.04);
+    }
+    summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--color-earth);
+      font-family: var(--font-en), var(--font-ja);
+      list-style: none;
+    }
+    summary::-webkit-details-marker { display: none; }
+    details p { margin-top: 10px; opacity: 0.92; }
+
+    /* Sticky CTA */
+    .sticky-cta {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 12px;
+      z-index: 50;
+      display: none; /* splash後にJSで表示 */
+      pointer-events: none;
+    }
+    .sticky-cta .inner {
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 0 16px;
+      display: flex;
+      justify-content: center;
+    }
+    .sticky-cta .bar {
+      pointer-events: auto;
+      width: min(820px, 100%);
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(47,79,79,0.16);
+      backdrop-filter: blur(10px);
+      border-radius: 999px;
+      padding: 10px 12px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .sticky-cta .txt {
+      font-weight: 700;
+      font-family: var(--font-en), var(--font-ja);
+      color: var(--color-forest);
+      padding-left: 6px;
+      font-size: 0.95rem;
+    }
+    .sticky-cta .btn { padding: 10px 18px; font-size: 0.95rem; }
+
+    footer {
+      background-color: var(--color-forest);
+      padding: 60px 0;
+      text-align: center;
+      color: var(--color-cream);
+    }
     .footer-links a { color: var(--color-sky); text-decoration: none; margin: 0 15px; font-weight: 700; }
 
+    @media (max-width: 900px) {
+      .two-col { grid-template-columns: 1fr; }
+      .pricing { grid-template-columns: 1fr; }
+    }
     @media (max-width: 768px) {
-      .feature-block, .feature-block.reverse { flex-direction: column; gap: 40px; }
       .hero-illustration-container { width: 250px; height: 250px; }
-      .feature-image { height: 300px; }
+      .grid-3, .steps { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .sticky-cta .txt { display: none; }
+      .sticky-cta .bar { justify-content: center; }
     }
   </style>
 </head>
@@ -229,57 +593,341 @@
     <div class="instruction">画面がいっぱいになったらタップ！</div>
   </div>
 
-  <!-- ここから下は元コードそのまま -->
+  <!-- ここから下が統合後のMobby LP -->
   <div id="main-content">
     <section class="hero">
       <div class="hero-bg-illustration"></div>
       <div class="container reveal">
+        <span class="tag">Keychain Camera ・ Mobby</span>
+
         <div class="hero-illustration-container floating">
           <div class="hero-illustration">
-            <img src="https://images.unsplash.com/photo-1547531455-c20b6120e660?q=80&w=1974&auto=format&fit=crop" alt="Cozy Illustration">
+            <!-- 画像は差し替えOK -->
+            <img src="https://images.unsplash.com/photo-1523294521727-242e945a5974?q=80&w=1200&auto=format&fit=crop" alt="Mobby keychain camera mood">
           </div>
         </div>
-        <h1>ようこそ、<br>穏やかな時間の中へ。</h1>
-        <p class="reveal delay-200">忙しい日々を少し忘れて、<br>深呼吸できる場所がここにあります。</p>
-        <a href="#" class="btn btn-secondary reveal delay-400">物語をひらく</a>
+
+        <h1 class="headline">5枚だけ、残せる。</h1>
+        <p class="subhead reveal delay-200">
+          卒業式に間に合う。<strong>1月中発送</strong>（予定）<br>
+          撮りすぎないから、1枚が宝物になる。
+        </p>
+
+        <div class="price-row reveal delay-200">
+          <div class="price-chip"><span class="muted">通常予定</span> <strong>¥8,000</strong></div>
+          <div class="price-chip"><span class="muted">卒業応援 学割</span> <strong>¥4,000</strong> <span class="badge">初回ロット限定</span></div>
+        </div>
+
+        <div class="cta-row reveal delay-400">
+          <a href="#reserve" class="btn btn-primary">デポジットで先行枠を確保</a>
+          <a href="#student" class="btn btn-secondary">学割の条件を見る</a>
+          <a href="#concept" class="btn btn-ghost">まずは世界観を読む</a>
+        </div>
+
+        <div class="trust-row reveal delay-400">
+          <div class="trust-pill">デポジットは発送時に差し引き</div>
+          <div class="trust-pill">キャンセル可（期限あり）</div>
+          <div class="trust-pill">国内発送</div>
+          <div class="trust-pill">保証あり（詳細はFAQ）</div>
+        </div>
       </div>
     </section>
 
     <div class="wave-divider"></div>
 
-    <section style="padding: 100px 0; text-align: center; background:#fff;">
+    <!-- Concept -->
+    <section id="concept" class="section center">
       <div class="container reveal">
-        <h2>森の奥で見つけた、<br>小さな宝物。</h2>
-        <p style="margin-top:20px;">世界はいつも少し騒がしくて、<br>本当に大切なものは、見えにくくなっています。</p>
+        <h2>永遠はない。だから、残したい。</h2>
+        <p class="lead">Mobbyは「5枚だけ」しか保存できないキーホルダー型カメラです。<br>制限は不便じゃなくて、思い出を強くするためのデザイン。</p>
+
+        <div class="grid-3 reveal delay-200">
+          <div class="card">
+            <h3>撮りすぎない</h3>
+            <p>本当に大事な瞬間だけを選ぶ。<br>スマホと真逆のカメラ。</p>
+          </div>
+          <div class="card">
+            <h3>覗くと、そこにいる</h3>
+            <p>ファインダーを覗くと保存された写真が見える。<br>思い出を“持ち歩く”。</p>
+          </div>
+          <div class="card">
+            <h3>6枚目で、最初が消える</h3>
+            <p>新しく撮ると古い順に消えていく。<br>今の気持ちで“選び直す”。</p>
+          </div>
+        </div>
+
+        <div class="quote reveal delay-200">
+          <div class="qtitle">CMで使われている言葉</div>
+          <p>
+            水溜りに移り込んだ空は、やがて小さくなっていき、消えてゆく。窓の中の小さな夜を、いつまでも閉じ込めてしまいたいと、どれだけ強く願ってみても、そこに永遠はない。あなたが幸せな時に、あなたが苦しい時に、あなたが頑張りたい時に、いつもそばにいるのは、モビー。
+          </p>
+        </div>
       </div>
     </section>
 
     <div class="wave-divider bottom"></div>
 
-    <section class="showcase">
-      <div class="container">
-        <div class="feature-block">
-          <div class="feature-image-container reveal">
-            <div class="feature-image">
-              <img src="https://images.unsplash.com/photo-1523294521727-242e945a5974?q=80&w=2070&auto=format&fit=crop" alt="Natural">
-            </div>
+    <!-- How it works -->
+    <section class="section soft center">
+      <div class="container reveal">
+        <h2>How it works</h2>
+        <p class="lead">説明しなくても、使えばわかる。だけど、3ステップなら一瞬で伝わる。</p>
+
+        <div class="steps reveal delay-200">
+          <div class="card step">
+            <div class="num">01</div>
+            <div class="title">撮る</div>
+            <div class="mini">キーホルダーのまま、ふとした瞬間を撮れる。</div>
           </div>
-          <div class="feature-text reveal delay-200">
-            <h3>自然体のままで。</h3>
-            <p>無理に飾る必要はありません。<br>手に取った瞬間、馴染む心地よさ。</p>
+          <div class="card step">
+            <div class="num">02</div>
+            <div class="title">覗く</div>
+            <div class="mini">ファインダーを覗くと、保存された写真が見える。</div>
+          </div>
+          <div class="card step">
+            <div class="num">03</div>
+            <div class="title">横に送る</div>
+            <div class="mini">十字キー横操作で、5枚をスライドして確認。</div>
           </div>
         </div>
 
-        <div class="feature-block reverse">
-          <div class="feature-image-container reveal">
-            <div class="feature-image">
-              <img src="https://images.unsplash.com/photo-1499914348894-90050a2343b1?q=80&w=2071&auto=format&fit=crop" alt="Light">
+        <div class="notice reveal delay-200">
+          <strong>仕様：</strong>保存は最大5枚。6枚目を撮ると古い順に自動で削除されます。
+        </div>
+      </div>
+    </section>
+
+    <!-- Graduation use -->
+    <section class="section center">
+      <div class="container reveal">
+        <h2>卒業式は、5枚で足りる。</h2>
+        <p class="lead">あの一瞬は、撮り散らかすより“選んで残す”方が、ずっと強い。</p>
+
+        <div class="two-col reveal delay-200">
+          <div class="card">
+            <h3>おすすめの「卒業5枚」</h3>
+            <p class="small" style="margin-top:10px;">
+              ① 校門の前<br>
+              ② 教室の黒板メッセージ<br>
+              ③ 友達の泣き笑いの顔<br>
+              ④ 花束と制服（手元もあり）<br>
+              ⑤ 帰り道の空
+            </p>
+            <div class="inline" style="margin-top:14px;">
+              <a href="#reserve" class="btn btn-primary">卒業に間に合う先行枠を確保</a>
+              <a href="#faq" class="btn btn-secondary">不安をFAQで消す</a>
             </div>
           </div>
-          <div class="feature-text reveal delay-200">
-            <h3>心に寄り添うやさしさ。</h3>
-            <p>まるで古い友人のように、<br>そっとあなたの直感に応えます。</p>
+
+          <div class="card">
+            <h3>友達と一緒に買われやすい</h3>
+            <p class="small" style="margin-top:10px;">
+              卒業式は「みんなで同じものを持つ」体験が強い。<br>
+              Mobbyはキーホルダーだから、制服やカバンに自然に馴染む。
+            </p>
+            <div class="notice">
+              <strong>コツ：</strong>「卒業の日に一緒に撮る」前提で予約が動きます。<br>
+              だからHPでは <strong>“卒業に間に合う”</strong> を最上段で約束します。
+            </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="wave-divider"></div>
+
+    <!-- Student discount -->
+    <section id="student" class="section soft center">
+      <div class="container reveal">
+        <h2>卒業応援 学割</h2>
+        <p class="lead">学割は“ズルい”じゃなく、“卒業のための枠”として設計。</p>
+
+        <div class="pricing reveal delay-200">
+          <div class="price-card">
+            <div class="label">一般販売予定 <span class="badge">通常</span></div>
+            <div class="value">¥8,000</div>
+            <div class="note">一般販売（通常価格）。</div>
+          </div>
+          <div class="price-card">
+            <div class="label">卒業応援 学割 <span class="badge">初回ロット限定</span></div>
+            <div class="value">¥4,000</div>
+            <div class="note">
+              学割条件：学生証 / 学校メール などで確認（どれか1つ）。<br>
+              学割枠は初回ロットの範囲で先着。
+            </div>
+          </div>
+        </div>
+
+        <div class="notice reveal delay-200">
+          <strong>注意：</strong>学割は「卒業・新生活応援（初回ロット限定）」として運用すると、納得感が出て荒れにくいです。
+        </div>
+      </div>
+    </section>
+
+    <!-- Reserve / Deposit -->
+    <section id="reserve" class="section center">
+      <div class="container reveal">
+        <h2>デポジットで “先行枠” を確保</h2>
+        <p class="lead">
+          発売前でも迷わないように、予約の仕組みをシンプルにしました。<br>
+          <strong>1月中発送（予定）</strong>／デポジットは発送時に差し引き。
+        </p>
+
+        <div class="two-col reveal delay-200">
+          <div class="card">
+            <h3>予約の流れ</h3>
+            <p class="small" style="margin-top:10px;">
+              1) 下のフォーム送信（連絡先）<br>
+              2) デポジット決済（先行枠確保）<br>
+              3) 発送時：商品代金からデポジット分を差し引き
+            </p>
+
+            <div class="notice">
+              <strong>デポジット：</strong><span id="deposit-amount-text">¥1,000</span>（※ここは変更可）<br>
+              <strong>キャンセル：</strong>期限内なら全額返金（※下のポリシー参照）
+            </div>
+
+            <div class="inline">
+              <a href="#reserve-form" class="btn btn-primary">今すぐ先行枠を取る</a>
+              <a href="#faq" class="btn btn-secondary">キャンセル/返金を確認</a>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>ポリシー（短く・安心）</h3>
+            <p class="small" style="margin-top:10px;">
+              ・発送予定：<strong>1月中</strong>（天候/製造都合で前後する可能性あり）<br>
+              ・遅延時：希望者はデポジット全額返金<br>
+              ・デポジットは発送時に差し引き（重複請求なし）
+            </p>
+            <div class="notice">
+              <strong>重要：</strong>ここに書くことが、そのまま信頼になります。<br>
+              不明瞭にしないほど予約が増えます。
+            </div>
+          </div>
+        </div>
+
+        <div id="reserve-form" class="card form reveal delay-200">
+          <h3>先行予約フォーム</h3>
+          <p class="small">※デモ実装：送信後に「決済導線（URL）」へ繋げる想定です（下のJSで設定可能）。</p>
+
+          <form id="preorderForm" novalidate>
+            <div class="form-row">
+              <div>
+                <label for="name">お名前（任意）</label>
+                <input id="name" name="name" type="text" placeholder="例）Mobby 花子">
+              </div>
+              <div>
+                <label for="contact">連絡先（必須）</label>
+                <input id="contact" name="contact" type="text" required placeholder="メール or LINE ID（どちらか）">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div>
+                <label for="contactType">連絡方法</label>
+                <select id="contactType" name="contactType">
+                  <option value="email">メール</option>
+                  <option value="line">LINE</option>
+                  <option value="other">その他</option>
+                </select>
+              </div>
+              <div>
+                <label for="plan">価格</label>
+                <select id="plan" name="plan">
+                  <option value="student">学割 ¥4,000（卒業応援枠）</option>
+                  <option value="regular">通常 ¥8,000</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="checkbox">
+              <input id="isStudent" name="isStudent" type="checkbox" checked>
+              <label for="isStudent" style="margin:0;">学生です（学割を希望）</label>
+            </div>
+
+            <div class="form-row">
+              <div>
+                <label for="school">学校名（任意）</label>
+                <input id="school" name="school" type="text" placeholder="例）○○高校">
+              </div>
+              <div>
+                <label for="memo">一言（任意）</label>
+                <input id="memo" name="memo" type="text" placeholder="例）卒業式で友達と撮りたい！">
+              </div>
+            </div>
+
+            <div class="form-help">
+              <strong>次のステップ：</strong>フォーム送信後、デポジット決済へ進みます（設定された場合）。
+            </div>
+
+            <div class="inline" style="margin-top:14px;">
+              <button type="submit" class="btn btn-primary">送信してデポジットへ</button>
+              <a href="#faq" class="btn btn-secondary">先にFAQを見る</a>
+            </div>
+
+            <div class="notice">
+              <strong>プライバシー：</strong>スパムは送りません。いつでも解除できます。<br>
+              <span class="small">（実運用ではプライバシーポリシーへのリンクをフッターに置いてください）</span>
+            </div>
+
+            <div id="formResult" class="result"></div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="section soft center">
+      <div class="container reveal">
+        <h2>よくある質問</h2>
+        <p class="lead">迷いはここで終わらせる。</p>
+
+        <div class="faq reveal delay-200">
+          <details>
+            <summary>本当に1月中に届きますか？</summary>
+            <p>発送予定は1月中です（製造/物流の事情で前後する可能性があります）。万一遅延した場合、希望者にはデポジット全額返金など、明確な対応を用意します。</p>
+          </details>
+
+          <details>
+            <summary>デポジットはいくらですか？</summary>
+            <p>現在は <strong><span id="deposit-amount-text-2">¥1,000</span></strong> を想定しています（コード内で変更できます）。発送時に商品代金から差し引かれます。</p>
+          </details>
+
+          <details>
+            <summary>キャンセル/返金はできますか？</summary>
+            <p>期限内なら全額返金できる設計にしてください（例：発送予定日の14日前まで）。このページの文言がそのままルールになるので、運用に合わせて確定させましょう。</p>
+          </details>
+
+          <details>
+            <summary>学割の条件は？</summary>
+            <p>学生証の提示、学校メールでの確認など「どれか1つ」でOKにすると摩擦が減ります。学割は卒業/新生活応援の初回ロット枠として用意します。</p>
+          </details>
+
+          <details>
+            <summary>6枚目を撮ったらどうなりますか？</summary>
+            <p>新しく撮ると、古い写真から順に自動で消えていきます（最大5枚保存）。</p>
+          </details>
+
+          <details>
+            <summary>保証はありますか？</summary>
+            <p>あります（例：6ヶ月〜1年）。ここは実際の方針が決まり次第、期間と対象範囲（自然故障/破損など）を明記してください。</p>
+          </details>
+
+          <details>
+            <summary>送料はいくらですか？</summary>
+            <p>未確定の場合でも「全国一律」「◯円」「◯円以上で無料」など、購入前にわかる形にしてください。送料が曖昧だと予約が落ちます。</p>
+          </details>
+
+          <details>
+            <summary>問い合わせ先は？</summary>
+            <p>運用開始後は、メールアドレス/公式LINE/フォームのいずれかを必ず置いてください。フッターにもリンクを置くのがおすすめです。</p>
+          </details>
+        </div>
+
+        <div class="cta-row reveal delay-200" style="margin-top:22px;">
+          <a href="#reserve" class="btn btn-primary">先行枠を確保する</a>
+          <a href="#concept" class="btn btn-secondary">コンセプトに戻る</a>
         </div>
       </div>
     </section>
@@ -287,20 +935,33 @@
     <footer>
       <div class="container">
         <div class="footer-links">
-          <a href="#">おはなし</a>
-          <a href="#">わたしたちのこと</a>
+          <a href="#concept">世界観</a>
+          <a href="#student">学割</a>
+          <a href="#reserve">先行予約</a>
+          <a href="#faq">FAQ</a>
         </div>
-        <p style="margin-top:20px; font-size:0.8rem; opacity:0.7;">© 2025 Nordic Tales.</p>
+        <p style="margin-top:20px; font-size:0.8rem; opacity:0.7;">© 2025 Mobby.</p>
       </div>
     </footer>
+  </div>
+
+  <!-- Sticky CTA (splash後に表示) -->
+  <div class="sticky-cta" id="stickyCta">
+    <div class="inner">
+      <div class="bar">
+        <div class="txt">卒業に間に合う：1月中発送（予定）</div>
+        <a href="#reserve" class="btn btn-primary">デポジットで先行枠</a>
+        <a href="#student" class="btn btn-secondary">学割</a>
+      </div>
+    </div>
   </div>
 
   <!-- Matter.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 
   <script>
- /************************************************************
- * 1. 元コード：スクロール監視（そのまま）
+/************************************************************
+ * 1. スクロール監視（reveal）
  ************************************************************/
 function initScrollObserver() {
   const revealElements = document.querySelectorAll('.reveal');
@@ -320,25 +981,35 @@ function initScrollObserver() {
 
 /************************************************************
  * 2. スプラッシュ（Matter.js / icon1,2,3）
+ *    - 画像のbroken state対策：事前プリロードして、失敗したら代替描画
  ************************************************************/
 
-// ===== 設定 =====
+// ===== 設定（必要に応じて変更） =====
 const ICON_URLS   = ['icon1.png', 'icon2.png', 'icon3.png'];
 const ICON_SIZE   = 150;
 const SPAWN_RATE  = 100; // ms
 const TOTAL_ICONS = 50;
 
+// デポジット（表示にも使う）
+const DEPOSIT_AMOUNT = 1000; // ←ここを変更（例：500 / 2000）
+const PAYMENT_URL = "";      // ←Stripe等の決済URLを入れる（空なら送信完了表示のみ）
+
+// 表示に反映
+document.getElementById('deposit-amount-text').textContent = `¥${DEPOSIT_AMOUNT.toLocaleString()}`;
+document.getElementById('deposit-amount-text-2').textContent = `¥${DEPOSIT_AMOUNT.toLocaleString()}`;
+
 // Matter.js aliases
-const Engine   = Matter.Engine;
-const Render   = Matter.Render;
-const Runner   = Matter.Runner;
-const Bodies   = Matter.Bodies;
-const Composite= Matter.Composite;
-const Body     = Matter.Body;
+const Engine    = Matter.Engine;
+const Render    = Matter.Render;
+const Runner    = Matter.Runner;
+const Bodies    = Matter.Bodies;
+const Composite = Matter.Composite;
+const Body      = Matter.Body;
 
 // DOM
 const splashElement = document.getElementById('splash-screen');
 const mainContent   = document.getElementById('main-content');
+const stickyCta     = document.getElementById('stickyCta');
 
 // Engine / World
 const engine = Engine.create();
@@ -363,66 +1034,72 @@ const render = Render.create({
 // ===== 壁 & 床 =====
 const wallOptions = { isStatic: true, render: { visible: false } };
 
-const floor = Bodies.rectangle(
-  width / 2,
-  height + 50,
-  width + 200,
-  100,
-  wallOptions
-);
-
-const leftWall = Bodies.rectangle(
-  -60,
-  height / 2,
-  120,
-  height + 200,
-  wallOptions
-);
-
-const rightWall = Bodies.rectangle(
-  width + 60,
-  height / 2,
-  120,
-  height + 200,
-  wallOptions
-);
+const floor = Bodies.rectangle(width / 2, height + 50, width + 200, 100, wallOptions);
+const leftWall = Bodies.rectangle(-60, height / 2, 120, height + 200, wallOptions);
+const rightWall = Bodies.rectangle(width + 60, height / 2, 120, height + 200, wallOptions);
 
 Composite.add(world, [floor, leftWall, rightWall]);
+
+// ===== 画像プリロード =====
+function preloadImages(urls) {
+  const tasks = urls.map(url => new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => resolve({ url, ok: true });
+    img.onerror = () => resolve({ url, ok: false });
+    img.src = url;
+  }));
+  return Promise.all(tasks);
+}
+
+let AVAILABLE_ICON_URLS = [];
 
 /************************************************************
  * 3. アイコン生成（3色ランダム）
  ************************************************************/
 let count = 0;
+let dropTimer = null;
 
-const dropIcon = setInterval(() => {
-  if (count >= TOTAL_ICONS) {
-    clearInterval(dropIcon);
-    return;
-  }
+function startDropping() {
+  dropTimer = setInterval(() => {
+    if (count >= TOTAL_ICONS) {
+      clearInterval(dropTimer);
+      return;
+    }
 
-  const xPos = Math.random() * (width - 120) + 60;
+    const xPos = Math.random() * (width - 120) + 60;
 
-  // ★ 3色からランダム選択
-  const texture =
-    ICON_URLS[Math.floor(Math.random() * ICON_URLS.length)];
+    // 画像が読めていればsprite、ダメなら簡易circle
+    const hasSprite = AVAILABLE_ICON_URLS.length > 0;
+    const texture = hasSprite
+      ? AVAILABLE_ICON_URLS[Math.floor(Math.random() * AVAILABLE_ICON_URLS.length)]
+      : null;
 
-  const icon = Bodies.circle(xPos, -60, ICON_SIZE / 2, {
-    restitution: 0.55,
-    friction: 0.08,
-    frictionAir: 0.03, // ふわふわ感
-    render: {
-      sprite: {
+    const opts = {
+      restitution: 0.55,
+      friction: 0.08,
+      frictionAir: 0.03,
+      render: {}
+    };
+
+    if (hasSprite) {
+      opts.render.sprite = {
         texture: texture,
-        // 元画像512px想定（違う場合は調整）
         xScale: ICON_SIZE / 512,
         yScale: ICON_SIZE / 512
-      }
+      };
+    } else {
+      // 代替：見えるように色付き（wireframes=falseなのでfillStyle有効）
+      const fallbackColors = ['#AEC6CF', '#F0E68C', '#D2691E'];
+      opts.render.fillStyle = fallbackColors[Math.floor(Math.random() * fallbackColors.length)];
+      opts.render.strokeStyle = 'rgba(255,255,255,0.35)';
+      opts.render.lineWidth = 2;
     }
-  });
 
-  Composite.add(world, icon);
-  count++;
-}, SPAWN_RATE);
+    const icon = Bodies.circle(xPos, -60, ICON_SIZE / 2, opts);
+    Composite.add(world, icon);
+    count++;
+  }, SPAWN_RATE);
+}
 
 /************************************************************
  * 4. 実行開始
@@ -431,14 +1108,20 @@ Render.run(render);
 const runner = Runner.create();
 Runner.run(runner, engine);
 
+// プリロードしてから落とし始める（broken state対策）
+preloadImages(ICON_URLS).then(results => {
+  AVAILABLE_ICON_URLS = results.filter(r => r.ok).map(r => r.url);
+  startDropping();
+});
+
 /************************************************************
  * 5. タップ後の挙動
  *    ・爆発
  *    ・フェードアウト
- *    ・元LP表示 & scroll observer開始
+ *    ・LP表示 & scroll observer開始
  ************************************************************/
 splashElement.addEventListener('click', () => {
-  clearInterval(dropIcon);
+  if (dropTimer) clearInterval(dropTimer);
 
   // 爆発
   const bodies = Composite.allBodies(world);
@@ -452,16 +1135,16 @@ splashElement.addEventListener('click', () => {
     }
   });
 
-  // 少し演出を見せてから遷移
   setTimeout(() => {
     splashElement.classList.add('hidden');
     mainContent.classList.add('visible');
 
-    // 元コード通り
     document.body.style.overflowY = 'auto';
     initScrollObserver();
 
-    // 物理停止 & DOM削除
+    // sticky CTA 表示
+    stickyCta.style.display = 'block';
+
     setTimeout(() => {
       Render.stop(render);
       Runner.stop(runner);
@@ -483,12 +1166,68 @@ window.addEventListener('resize', () => {
   render.options.width  = width;
   render.options.height = height;
 
-  Body.setPosition(floor,    { x: width / 2, y: height + 50 });
-  Body.setPosition(leftWall,{ x: -60,        y: height / 2 });
-  Body.setPosition(rightWall,{ x: width + 60, y: height / 2 });
+  Body.setPosition(floor,     { x: width / 2, y: height + 50 });
+  Body.setPosition(leftWall,  { x: -60,       y: height / 2 });
+  Body.setPosition(rightWall, { x: width + 60, y: height / 2 });
 }, { passive: true });
 
+/************************************************************
+ * 7. スムーススクロール（アンカー）
+ ************************************************************/
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a) return;
+  const id = a.getAttribute('href');
+  if (id.length <= 1) return;
+  const el = document.querySelector(id);
+  if (!el) return;
+  e.preventDefault();
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
 
+/************************************************************
+ * 8. 先行予約フォーム（デモ）
+ *    - 実運用：ここでサーバーに送信→PAYMENT_URLへリダイレクト等
+ ************************************************************/
+const form = document.getElementById('preorderForm');
+const resultBox = document.getElementById('formResult');
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const contact = document.getElementById('contact').value.trim();
+  if (!contact) {
+    alert('連絡先（メール or LINE ID）を入力してください。');
+    return;
+  }
+
+  const name = document.getElementById('name').value.trim();
+  const plan = document.getElementById('plan').value;
+  const isStudent = document.getElementById('isStudent').checked;
+
+  const planText = (plan === 'student' || isStudent) ? '学割 ¥4,000' : '通常 ¥8,000';
+
+  // 送信完了表示（デモ）
+  const orderId = `MBY-${Date.now().toString(36).toUpperCase()}`;
+  resultBox.style.display = 'block';
+  resultBox.innerHTML = `
+    <strong>仮予約を受け付けました。</strong><br>
+    注文ID：<strong>${orderId}</strong><br>
+    プラン：<strong>${planText}</strong><br>
+    デポジット：<strong>¥${DEPOSIT_AMOUNT.toLocaleString()}</strong>（発送時に差し引き）<br>
+    <span class="small">※この後、決済へ進みます（設定されている場合）。</span>
+  `;
+
+  // 決済URLが設定されていれば遷移（別タブ）
+  if (PAYMENT_URL && PAYMENT_URL.trim().length > 0) {
+    window.open(PAYMENT_URL, '_blank', 'noopener,noreferrer');
+  } else {
+    // 運用前の仮：ここで「決済リンクを送る」等の表示にしてもOK
+  }
+
+  // 入力を軽く残すならリセットしない。完全リセットしたいなら↓をON
+  // form.reset();
+});
   </script>
 </body>
 </html>
