@@ -222,7 +222,7 @@
     margin:14px auto 10px;
     position:relative;
     user-select:none;
-    touch-action: pan-x pan-y;
+    touch-action: pan-y pinch-zoom; /* 横スワイプのみカルーセルで処理 */
     perspective: 1300px;
   }
   .carousel-viewport{position:relative;height:276px;overflow: visible;}
@@ -231,6 +231,7 @@
     transform-style: preserve-3d;
     transition: transform 0.7s var(--ease-soft);
     will-change: transform;
+    backface-visibility: hidden;
   }
   .carousel-slide{
     position:absolute;left:0;top:0;
@@ -238,6 +239,8 @@
     transform-style: preserve-3d;
     transition: opacity 0.35s var(--ease-soft), filter 0.35s var(--ease-soft);
     cursor: pointer;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
   }
   .carousel-slide.dim{opacity: 0.55;filter: blur(0.6px);}
   .hero-illustration{
@@ -1666,10 +1669,18 @@ heroSlides.forEach((slide, i) => {
 
 let startX = 0, startRot = 0, dragging = false, isDragged = false;
 let activePointerId = null;
+let rafId = null; // requestAnimationFrameのID
 
 // ドラッグを終了する関数
 function endDrag(e) {
   if(!dragging) return;
+  
+  // RAFをキャンセル
+  if(rafId) {
+    cancelAnimationFrame(rafId);
+    rafId = null;
+  }
+  
   dragging = false;
   activePointerId = null;
 
@@ -1679,15 +1690,28 @@ function endDrag(e) {
     const normalizedRot = currentRot;
     const snapped = mod(Math.round((-normalizedRot) / angle), n);
     setHeroIndex(snapped, true);
+  } else {
+    // ドラッグしていない場合はトランジションを復元
+    heroTrack.style.transition = "transform 0.7s var(--ease-soft)";
   }
+  
   isDragged = false;
+  
+  // キャプチャを確実に解放
   if(heroCarousel.releasePointerCapture && e && e.pointerId !== undefined) {
-    heroCarousel.releasePointerCapture(e.pointerId);
+    try {
+      heroCarousel.releasePointerCapture(e.pointerId);
+    } catch(err) {
+      console.warn('Pointer release failed:', err);
+    }
   }
 }
 
 heroCarousel.addEventListener("pointerdown", (e) => {
   console.log('[DEBUG] heroCarousel pointerdown:', e.target, e.clientX, e.clientY);
+  
+  // 既存のドラッグ中なら無視
+  if(dragging) return;
   
   // クリック位置からホットスポットを検出（3D変換の影響を回避）
   const allHotspots = heroCarousel.querySelectorAll('.carousel-eye-hotspot');
@@ -1736,23 +1760,23 @@ heroCarousel.addEventListener("pointerdown", (e) => {
     return;
   }
   
-  dragging = true; 
-  isDragged = false;
+  e.preventDefault(); // デフォルト動作を確実に防止
+  dragging = true;
   activePointerId = e.pointerId;
   startX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
   // ドラッグ開始時の角度を正規化して保存
   startRot = normalizeAngle(currentRot);
+  isDragged = false;
   heroTrack.style.transition = "none";
   
-  // pointer captureを試みる（失敗しても続行）
-  try {
-    if(heroCarousel.setPointerCapture) {
+  // キャプチャを確実に設定
+  if(heroCarousel.setPointerCapture) {
+    try {
       heroCarousel.setPointerCapture(e.pointerId);
+    } catch(err) {
+      console.warn('Pointer capture failed:', err);
     }
-  } catch(err) {
-    console.warn('[DEBUG] setPointerCapture failed:', err);
   }
-  e.preventDefault();
 });
 
 // pointermoveはグローバルにリスニング（pointer captureが失敗した場合のフォールバック）
@@ -1761,15 +1785,32 @@ function handlePointerMove(e) {
   // アクティブなポインターIDと一致するか確認
   if(activePointerId !== null && e.pointerId !== activePointerId) return;
   
-  const currentX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : startX);
-  const dx = currentX - startX;
-  if(Math.abs(dx) > 3) isDragged = true;
-
-  const rot = startRot + dx * 0.2;
-  // ドラッグ中は角度をそのまま使用（スナップ時に正規化）
-  currentRot = rot;
-  displayedRot = rot;
-  heroTrack.style.transform = `translate(-50%, -50%) rotateY(${rot}deg)`;
+  // RAF内で処理をバッチ化
+  if(rafId) return; // 既にRAFが予約されていたらスキップ
+  
+  rafId = requestAnimationFrame(() => {
+    rafId = null;
+    
+    const currentX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : startX);
+    const dx = currentX - startX;
+    
+    if(Math.abs(dx) > 3) isDragged = true;
+    
+    const rot = startRot + dx * 0.2;
+    currentRot = rot;
+    displayedRot = rot;
+    
+    heroTrack.style.transform = `translate(-50%, -50%) rotateY(${rot}deg)`;
+    
+    // スライドの更新も同じRAF内で
+    heroSlides.forEach((s, i) => {
+      const world = i * angle + rot;
+      const frontness = Math.cos(degToRad(world));
+      s.classList.toggle("dim", frontness < 0.4);
+      s.style.zIndex = String(Math.round(1000 * (frontness + 1)));
+    });
+  });
+  
   e.preventDefault();
 }
 
@@ -1798,11 +1839,30 @@ function handlePointerCancel(e) {
 heroCarousel.addEventListener("pointercancel", handlePointerCancel);
 document.addEventListener("pointercancel", handlePointerCancel);
 
+// ポインターが失われた場合の処理
+heroCarousel.addEventListener("lostpointercapture", endDrag);
+
+// ビューポート外に出た場合の処理
+document.addEventListener("pointerup", (e) => {
+  if(dragging && e.pointerId === activePointerId) {
+    endDrag(e);
+  }
+});
+
 /* 初期化 */
 renderHeroDots();
 // layoutRing()はビューファインダー初期化後に呼ぶ（ホットスポットのクリックイベント設定のため）
 // 初期レイアウトは後で実行
-window.addEventListener("resize", () => layoutRing(), { passive:true });
+
+// デバウンス付きリサイズ処理
+let resizeTimer = null;
+window.addEventListener("resize", () => {
+  if(resizeTimer) clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    layoutRing();
+    updateRing(true);
+  }, 150); // 150msのデバウンス
+}, { passive:true });
 
 /* 選択色の反映 */
 function setSelectedColor(key){
