@@ -623,6 +623,156 @@
     }
   }
   
+  /* ===== Image Gallery (Apple-style) ===== */
+  .image-gallery-popup{
+    padding:0;
+    max-width:95vw;
+    max-height:95vh;
+    overflow:hidden;
+    background:rgba(0,0,0,0.95);
+    border-radius:20px;
+  }
+  .image-gallery-container{
+    position:relative;
+    width:100%;
+    height:100%;
+    min-height:70vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+  }
+  .image-gallery-viewport{
+    position:relative;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    touch-action:pan-y pinch-zoom;
+  }
+  .image-gallery-track{
+    display:flex;
+    height:100%;
+    transition:transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change:transform;
+  }
+  .image-gallery-slide{
+    min-width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:60px 40px;
+    box-sizing:border-box;
+  }
+  .gallery-image{
+    max-width:100%;
+    max-height:100%;
+    width:auto;
+    height:auto;
+    object-fit:contain;
+    border-radius:12px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.5);
+    user-select:none;
+    -webkit-user-drag:none;
+    transition:transform 0.3s ease;
+  }
+  .gallery-image:hover{
+    transform:scale(1.02);
+  }
+  .image-gallery-controls{
+    position:absolute;
+    top:50%;
+    left:0;
+    right:0;
+    transform:translateY(-50%);
+    display:flex;
+    justify-content:space-between;
+    padding:0 20px;
+    pointer-events:none;
+    z-index:10;
+  }
+  .gallery-nav-btn{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    border:none;
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(20px);
+    color:#fff;
+    font-size:28px;
+    font-weight:300;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    pointer-events:auto;
+    box-shadow:0 4px 20px rgba(0,0,0,0.2);
+  }
+  .gallery-nav-btn:hover{
+    background:rgba(255,255,255,0.25);
+    transform:scale(1.1);
+  }
+  .gallery-nav-btn:active{
+    transform:scale(0.95);
+  }
+  .image-gallery-indicator{
+    position:absolute;
+    bottom:30px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:10px;
+    z-index:10;
+    padding:8px 16px;
+    background:rgba(0,0,0,0.4);
+    backdrop-filter:blur(20px);
+    border-radius:999px;
+  }
+  .indicator-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.4);
+    cursor:pointer;
+    transition:all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .indicator-dot.active{
+    background:rgba(255,255,255,0.95);
+    width:24px;
+    border-radius:4px;
+  }
+  .indicator-dot:hover{
+    background:rgba(255,255,255,0.7);
+  }
+  @media (max-width: 768px){
+    .image-gallery-popup{
+      max-width:100vw;
+      max-height:100vh;
+      border-radius:0;
+    }
+    .image-gallery-container{
+      min-height:100vh;
+    }
+    .image-gallery-slide{
+      padding:80px 20px 100px;
+    }
+    .gallery-nav-btn{
+      width:44px;
+      height:44px;
+      font-size:24px;
+    }
+    .image-gallery-controls{
+      padding:0 10px;
+    }
+    .image-gallery-indicator{
+      bottom:20px;
+    }
+    .gallery-image{
+      border-radius:8px;
+    }
+  }
+  
   @media (max-width: 900px){
     .pricing{grid-template-columns:1fr;}
     .colors-grid{grid-template-columns:repeat(2, minmax(0, 1fr));}
@@ -1286,13 +1436,30 @@
 
     <!-- 画像ポップアップ -->
     <div id="imagePopup" class="popup-overlay" aria-hidden="true">
-      <div class="popup-content">
+      <div class="popup-content image-gallery-popup">
         <button class="popup-close" id="closeImagePopup" aria-label="閉じる">×</button>
-        <div class="container">
-          <h2>画像</h2>
-          <p class="lead">モビィの画像を確認できます。</p>
-          <div class="reveal delay-200" style="margin-top:24px;">
-            <p style="text-align:center;opacity:0.85;">画像コンテンツをここに追加してください</p>
+        <div class="image-gallery-container">
+          <div class="image-gallery-viewport" id="imageGalleryViewport">
+            <div class="image-gallery-track" id="imageGalleryTrack">
+              <div class="image-gallery-slide">
+                <img src="img/1.jpg" alt="Mobby 画像 1" class="gallery-image" loading="lazy">
+              </div>
+              <div class="image-gallery-slide">
+                <img src="img/2.jpg" alt="Mobby 画像 2" class="gallery-image" loading="lazy">
+              </div>
+              <div class="image-gallery-slide">
+                <img src="img/3.jpg" alt="Mobby 画像 3" class="gallery-image" loading="lazy">
+              </div>
+            </div>
+          </div>
+          <div class="image-gallery-controls">
+            <button class="gallery-nav-btn gallery-prev" id="imageGalleryPrev" aria-label="前の画像">‹</button>
+            <button class="gallery-nav-btn gallery-next" id="imageGalleryNext" aria-label="次の画像">›</button>
+          </div>
+          <div class="image-gallery-indicator" id="imageGalleryIndicator">
+            <span class="indicator-dot active" data-index="0"></span>
+            <span class="indicator-dot" data-index="1"></span>
+            <span class="indicator-dot" data-index="2"></span>
           </div>
         </div>
       </div>
@@ -2098,6 +2265,12 @@ window.addEventListener('resize', () => {
   Body.setPosition(floor, { x: width/2, y: height+50 });
   Body.setPosition(leftWall, { x: -60, y: height/2 });
   Body.setPosition(rightWall, { x: width+60, y: height/2 });
+  
+  // 画像ギャラリーが開いている場合は更新
+  const imagePopup = document.getElementById('imagePopup');
+  if(imagePopup && imagePopup.classList.contains('is-open')){
+    updateImageGallery();
+  }
 }, { passive:true });
 
 /* ===== Retro Camera Demo (Overlay) ===== */
@@ -2367,6 +2540,13 @@ function openPopup(popupId){
       }, 300);
     }
   }
+  
+  // imagePopupの場合、ギャラリーを初期化
+  if(popupId === 'imagePopup'){
+    setTimeout(() => {
+      initImageGallery();
+    }, 100);
+  }
 }
 
 function closePopup(popupId){
@@ -2402,6 +2582,202 @@ function closePopup(popupId){
   }
 }
 
+/* ===== Image Gallery (Apple-style) ===== */
+let imageGalleryIndex = 0;
+let imageGalleryTranslateX = 0;
+let imageGalleryIsDragging = false;
+let imageGalleryStartX = 0;
+let imageGalleryStartTime = 0;
+let imageGalleryVelocity = 0;
+let imageGalleryLastX = 0;
+let imageGalleryLastTime = 0;
+let imageGalleryTotalSlides = 0;
+
+function initImageGallery(){
+  const track = document.getElementById('imageGalleryTrack');
+  const viewport = document.getElementById('imageGalleryViewport');
+  const prevBtn = document.getElementById('imageGalleryPrev');
+  const nextBtn = document.getElementById('imageGalleryNext');
+  const indicators = document.querySelectorAll('.indicator-dot');
+  const slides = document.querySelectorAll('.image-gallery-slide');
+  
+  if(!track || !viewport) return;
+  
+  imageGalleryTotalSlides = slides.length;
+  
+  // インデックスをリセット
+  imageGalleryIndex = 0;
+  imageGalleryTranslateX = 0;
+  updateImageGallery();
+  
+  // 前へボタン
+  if(prevBtn){
+    prevBtn.addEventListener('click', () => {
+      if(imageGalleryIndex > 0){
+        imageGalleryIndex--;
+        updateImageGallery();
+      }
+    });
+  }
+  
+  // 次へボタン
+  if(nextBtn){
+    nextBtn.addEventListener('click', () => {
+      if(imageGalleryIndex < imageGalleryTotalSlides - 1){
+        imageGalleryIndex++;
+        updateImageGallery();
+      }
+    });
+  }
+  
+  // インジケーター
+  indicators.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      imageGalleryIndex = index;
+      updateImageGallery();
+    });
+  });
+  
+  // スワイプ機能（滑らかな動作）
+  viewport.addEventListener('pointerdown', (e) => {
+    if(imageGalleryIsDragging) return;
+    imageGalleryIsDragging = true;
+    imageGalleryStartX = e.clientX;
+    imageGalleryStartTime = Date.now();
+    imageGalleryLastX = e.clientX;
+    imageGalleryLastTime = imageGalleryStartTime;
+    imageGalleryVelocity = 0;
+    
+    const slideWidth = viewport.offsetWidth;
+    imageGalleryTranslateX = -imageGalleryIndex * slideWidth;
+    
+    viewport.style.cursor = 'grabbing';
+    track.style.transition = 'none';
+    e.preventDefault();
+  });
+  
+  viewport.addEventListener('pointermove', (e) => {
+    if(!imageGalleryIsDragging) return;
+    
+    const currentX = e.clientX;
+    const currentTime = Date.now();
+    const slideWidth = viewport.offsetWidth;
+    const diff = currentX - imageGalleryStartX;
+    
+    // 速度を計算（スムーズなスワイプ判定のため）
+    if(currentTime - imageGalleryLastTime > 0){
+      imageGalleryVelocity = (currentX - imageGalleryLastX) / (currentTime - imageGalleryLastTime);
+      imageGalleryLastX = currentX;
+      imageGalleryLastTime = currentTime;
+    }
+    
+    // 境界チェック（最初と最後のスライドで越えないように）
+    const targetTranslate = imageGalleryTranslateX + diff;
+    const minTranslate = -(imageGalleryTotalSlides - 1) * slideWidth;
+    const maxTranslate = 0;
+    
+    // 境界を超えた場合の抵抗効果
+    if(targetTranslate > maxTranslate){
+      imageGalleryTranslateX = maxTranslate + (targetTranslate - maxTranslate) * 0.3;
+    } else if(targetTranslate < minTranslate){
+      imageGalleryTranslateX = minTranslate + (targetTranslate - minTranslate) * 0.3;
+    } else {
+      imageGalleryTranslateX = targetTranslate;
+    }
+    
+    track.style.transform = `translateX(${imageGalleryTranslateX}px)`;
+    e.preventDefault();
+  });
+  
+  viewport.addEventListener('pointerup', (e) => {
+    if(!imageGalleryIsDragging) return;
+    imageGalleryIsDragging = false;
+    viewport.style.cursor = 'grab';
+    
+    const slideWidth = viewport.offsetWidth;
+    const diff = imageGalleryTranslateX - (-imageGalleryIndex * slideWidth);
+    const threshold = slideWidth * 0.25; // 25%の閾値
+    const speedThreshold = 0.3; // 速度の閾値（px/ms）
+    
+    // 速度ベースの判定（高速スワイプ時）
+    if(Math.abs(imageGalleryVelocity) > speedThreshold){
+      if(imageGalleryVelocity < 0 && imageGalleryIndex < imageGalleryTotalSlides - 1){
+        imageGalleryIndex++;
+      } else if(imageGalleryVelocity > 0 && imageGalleryIndex > 0){
+        imageGalleryIndex--;
+      }
+    } 
+    // 距離ベースの判定（低速スワイプ時）
+    else if(Math.abs(diff) > threshold){
+      if(diff < 0 && imageGalleryIndex < imageGalleryTotalSlides - 1){
+        imageGalleryIndex++;
+      } else if(diff > 0 && imageGalleryIndex > 0){
+        imageGalleryIndex--;
+      }
+    }
+    
+    updateImageGallery();
+  });
+  
+  viewport.addEventListener('pointercancel', () => {
+    if(!imageGalleryIsDragging) return;
+    imageGalleryIsDragging = false;
+    viewport.style.cursor = 'grab';
+    updateImageGallery();
+  });
+  
+  // キーボードナビゲーション
+  const handleKeyDown = (e) => {
+    if(e.key === 'ArrowLeft' && imageGalleryIndex > 0){
+      imageGalleryIndex--;
+      updateImageGallery();
+      e.preventDefault();
+    } else if(e.key === 'ArrowRight' && imageGalleryIndex < imageGalleryTotalSlides - 1){
+      imageGalleryIndex++;
+      updateImageGallery();
+      e.preventDefault();
+    }
+  };
+  
+  viewport.addEventListener('keydown', handleKeyDown);
+  // ポップアップが開いている時はdocumentでもキーイベントをリッスン
+  document.addEventListener('keydown', handleKeyDown);
+}
+
+function updateImageGallery(){
+  const viewport = document.getElementById('imageGalleryViewport');
+  const track = document.getElementById('imageGalleryTrack');
+  const indicators = document.querySelectorAll('.indicator-dot');
+  const prevBtn = document.getElementById('imageGalleryPrev');
+  const nextBtn = document.getElementById('imageGalleryNext');
+  
+  if(!viewport || !track) return;
+  
+  const slideWidth = viewport.offsetWidth;
+  imageGalleryTranslateX = -imageGalleryIndex * slideWidth;
+  
+  // トランジションを有効にして滑らかに移動
+  if(!imageGalleryIsDragging){
+    track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+  }
+  track.style.transform = `translateX(${imageGalleryTranslateX}px)`;
+  
+  // インジケーターを更新
+  indicators.forEach((dot, index) => {
+    dot.classList.toggle('active', index === imageGalleryIndex);
+  });
+  
+  // ボタンの有効/無効を更新
+  if(prevBtn){
+    prevBtn.style.opacity = imageGalleryIndex === 0 ? '0.5' : '1';
+    prevBtn.style.pointerEvents = imageGalleryIndex === 0 ? 'none' : 'auto';
+  }
+  if(nextBtn){
+    nextBtn.style.opacity = imageGalleryIndex === imageGalleryTotalSlides - 1 ? '0.5' : '1';
+    nextBtn.style.pointerEvents = imageGalleryIndex === imageGalleryTotalSlides - 1 ? 'none' : 'auto';
+  }
+}
+
 // ポップアップボタンのイベント
 document.getElementById('openMessagePopup')?.addEventListener('click', () => openPopup('messagePopup'));
 document.getElementById('openColorsPopup')?.addEventListener('click', () => openPopup('colorsPopup'));
@@ -2432,6 +2808,8 @@ document.getElementById('faqPopup')?.addEventListener('click', (e) => {
   if(e.target.id === 'faqPopup') closePopup('faqPopup');
 });
 document.getElementById('imagePopup')?.addEventListener('click', (e) => {
+  // ギャラリーコンテナ内のクリックは無視
+  if(e.target.closest('.image-gallery-container')) return;
   if(e.target.id === 'imagePopup') closePopup('imagePopup');
 });
 document.getElementById('videoPopup')?.addEventListener('click', (e) => {
