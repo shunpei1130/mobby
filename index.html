@@ -52,9 +52,10 @@
   background-image:url('favicon/背景.jpg');
   background-repeat:no-repeat;
   background-position:center;
-  background-size: 50% auto;   /* 横幅70%で固定 */
+  background-size: 50% auto;   /* 横幅50%で固定 */
          /* 拡大しない・必ず収まる */
 }
+
 
 /* 暗くするforest色オーバーレイは完全に不要 */
 #splash-screen::before{
@@ -193,14 +194,14 @@
   
   /* ===== Hero Carousel (3D Rotating Ring) ===== */
   .hero-carousel{
-    width:min(460px, 96vw);
+    width:min(380px, 96vw);
     margin:14px auto 10px;
     position:relative;
     user-select:none;
-    touch-action: pan-y;
+    touch-action: pan-x pan-y;
     perspective: 1300px;
   }
-  .carousel-viewport{position:relative;height:330px;overflow: visible;}
+  .carousel-viewport{position:relative;height:276px;overflow: visible;}
   .carousel-track{
     position:absolute;left:50%;top:50%;
     transform-style: preserve-3d;
@@ -209,7 +210,7 @@
   }
   .carousel-slide{
     position:absolute;left:0;top:0;
-    width:330px;height:330px;
+    width:276px;height:276px;
     transform-style: preserve-3d;
     transition: opacity 0.35s var(--ease-soft), filter 0.35s var(--ease-soft);
     cursor: pointer;
@@ -294,6 +295,39 @@
   .carousel-btn.prev{left:-10px;}
   .carousel-btn.next{right:-10px;}
   
+  /* カルーセル右上のタップヒント */
+  .carousel-tap-hint{
+    position:absolute;
+    top:8px;
+    right:8px;
+    font-size:0.75rem;
+    font-weight:700;
+    color:var(--color-forest);
+    background:rgba(255,255,255,0.85);
+    border:1px solid rgba(47,79,79,0.15);
+    padding:4px 10px;
+    border-radius:12px;
+    box-shadow:2px 2px 0 rgba(0,0,0,0.05);
+    z-index:20;
+    pointer-events:none;
+    font-family:var(--font-ja);
+    letter-spacing:0.05em;
+    animation: tapHintPulse 2s ease-in-out infinite;
+    opacity:0.9;
+  }
+  @keyframes tapHintPulse{
+    0%, 100%{transform:scale(1);opacity:0.9;}
+    50%{transform:scale(1.05);opacity:1;}
+  }
+  @media (max-width: 768px){
+    .carousel-tap-hint{
+      font-size:0.7rem;
+      padding:3px 8px;
+      top: 12%;
+      right: 12%;
+    }
+  }
+  
   .carousel-caption{
     margin-top:10px;display:inline-block;
     font-family:var(--font-en), var(--font-ja);
@@ -312,8 +346,8 @@
   }
   .carousel-dot.active{background:rgba(240,230,140,0.75);border-color:rgba(240,230,140,0.95);}
   @media (max-width: 768px){
-    .carousel-viewport{height:250px;}
-    .carousel-slide{width:250px;height:250px;}
+    .carousel-viewport{height:209px;}
+    .carousel-slide{width:209px;height:209px;}
     .carousel-btn{width:40px;height:40px;font-size:24px;}
   }
   
@@ -433,6 +467,17 @@
     box-shadow:0 0 0 3px rgba(210,105,30,0.1);
   }
   
+  /* 値段ポップアップの抽選予約フォーム */
+  .price-reservation-form{
+    background:rgba(255,255,255,0.88);border:1px solid rgba(47,79,79,0.14);
+    border-radius:22px;padding:24px 20px;box-shadow:3px 3px 0 rgba(0,0,0,0.05);
+  }
+  .price-reservation-form input:focus,
+  .price-reservation-form textarea:focus{
+    border-color:rgba(210,105,30,0.4);
+    box-shadow:0 0 0 3px rgba(210,105,30,0.1);
+  }
+  
   /* Sticky CTA */
   .sticky-cta{
     position:fixed;left:0;right:0;bottom:12px;z-index:50;display:none;pointer-events:none;
@@ -460,17 +505,33 @@
     flex-wrap:nowrap;
     gap:12px;
     justify-content:center;
-    align-items:center;
+    align-items:flex-start;
+    padding:20px 0;
   }
   .popup-buttons .btn{
-    width:80px;
-    height:80px;
+    width:50px;
+    height:50px;
     padding:0;
     display:flex;
     align-items:center;
     justify-content:center;
     aspect-ratio:1/1;
     border-radius:18px;
+    position:relative;
+    transition:transform 0.3s var(--ease-soft);
+  }
+  /* ギザギザ配置：奇数番目を上に、偶数番目を下に */
+  .popup-buttons .btn:nth-child(odd){
+    transform:translateY(-12px);
+  }
+  .popup-buttons .btn:nth-child(even){
+    transform:translateY(12px);
+  }
+  .popup-buttons .btn:hover{
+    transform:translateY(-2px) scale(1.05);
+  }
+  .popup-buttons .btn:nth-child(even):hover{
+    transform:translateY(10px) scale(1.05);
   }
   
   /* ポップアップオーバーレイ */
@@ -532,11 +593,19 @@
     .popup-buttons{
       flex-wrap:wrap;
       gap:10px;
+      padding:15px 0;
     }
     .popup-buttons .btn{
-      width:70px;
-      height:70px;
+      width:50px;
+      height:50px;
       max-width:none;
+    }
+    /* モバイルでもギザギザ配置を維持（少し小さく） */
+    .popup-buttons .btn:nth-child(odd){
+      transform:translateY(-8px);
+    }
+    .popup-buttons .btn:nth-child(even){
+      transform:translateY(8px);
     }
   }
   
@@ -545,8 +614,9 @@
     .colors-grid{grid-template-columns:repeat(2, minmax(0, 1fr));}
   }
   @media (max-width: 768px){
-    .hero-carousel{width:min(320px, 92vw);}
+    .hero-carousel{width:min(266px, 92vw);}
     .grid-3,.steps{grid-template-columns:1fr;}
+    .colors-grid{grid-template-columns:1fr;}
     .sticky-cta .txt{display:none;}
     .sticky-cta .bar{justify-content:center;}
   }
@@ -766,17 +836,18 @@
   #vfOverlay .rc-polaroid{
     position:absolute;
     background:#fdfbf7;
-    padding:10px 10px 35px 10px;
+    padding:10px 10px 10px 10px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.6);
     transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
-    width: 140px;
+    width: 30%;
+    height: 30%;
     will-change: transform, opacity, filter;
     border-radius: 2px 3px 4px 2px;
   }
   #vfOverlay .rc-polaroid img{
     display:block;
     width:100%;
-    height:140px;
+    height:100%;
     object-fit:cover;
     user-select:none;
     -webkit-user-drag:none;
@@ -907,6 +978,7 @@
 
         <!-- 4色カルーセル -->
         <div class="hero-carousel floating reveal delay-200" id="heroCarousel" aria-label="Mobby カラーギャラリー">
+          <div class="carousel-tap-hint">タップ</div>
           <button class="carousel-btn prev" type="button" aria-label="前の色">‹</button>
 
           <div class="carousel-viewport">
@@ -929,7 +1001,6 @@
           <button class="carousel-btn next" type="button" aria-label="次の色">›</button>
 
           <div class="carousel-caption" id="heroCaption">Peach Pink</div>
-          <div class="carousel-dots" id="heroDots" role="tablist" aria-label="カラーを選ぶ"></div>
         </div>
 
         <h1 class="headline reveal delay-200">5枚だけ、残せる。</h1>
@@ -943,7 +1014,7 @@
   <div class="vf-top">
     <div class="vf-meta">
       <div class="vf-counter" id="vfCounter">5 / 5</div>
-      <div class="vf-sub">新しい写真を撮ると、古い写真は隅へ。いちばん古い1枚は消える。</div>
+      <div class="vf-sub">新しい写真を撮ると、古い写真は隅へ。いっぱいになったら選んで削除するビィ</div>
     </div>
     <button class="btn btn-ghost vf-close" id="vfClose" type="button" aria-label="閉じる">×</button>
   </div>
@@ -1029,13 +1100,82 @@
         <button class="popup-close" id="closePricePopup" aria-label="閉じる">×</button>
         <div class="container">
           <h2>値段</h2>
-          <p class="lead">学生は安く。</p>
+          <p class="lead">卒業式までセール！ビィ</p>
 
           <div class="pricing reveal delay-200">
             <div class="price-card">
               <div class="label">通常 <span class="badge">¥8,000</span></div>
-              <div class="value">¥8,000</div>
+              <div class="value">¥5,000</div>
             </div>
+          </div>
+
+          <!-- 抽選予約フォーム -->
+          <div class="price-reservation-form reveal delay-200" style="margin-top:32px;">
+            <h3 style="font-size:1.2rem;margin-bottom:12px;color:var(--color-forest);">購入の抽選予約</h3>
+            <p style="font-size:0.9rem;opacity:0.85;margin-bottom:20px;line-height:1.6;">
+              抽選に当たったら、当選の手紙を送るビィ。<br>
+              住所を入力して予約してビィ。
+            </p>
+            <form id="priceReservationForm">
+              <div class="form-group">
+                <label for="reservationAddress" style="display:block;margin-bottom:6px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">住所 <span style="color:rgba(47,79,79,0.6);font-size:0.85rem;">（必須）</span></label>
+                <textarea 
+                  id="reservationAddress" 
+                  name="address" 
+                  required 
+                  rows="4"
+                  placeholder="郵便番号、都道府県、市区町村、番地、建物名などをご記入ください"
+                  style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;resize:vertical;transition:border-color 0.2s;"
+                ></textarea>
+              </div>
+              
+              <div style="margin-top:20px;padding-top:20px;border-top:1px dashed rgba(47,79,79,0.15);">
+                <p style="font-size:0.85rem;opacity:0.75;margin-bottom:16px;">住所が間違えてたら連絡するビィ</p>
+                <p style="font-size:0.85rem;opacity:0.75;margin-bottom:16px;">入力してくれたら嬉しいビィ</p>
+                
+                <div class="form-group" style="margin-top:16px;">
+                  <label for="reservationName" style="display:block;margin-bottom:6px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">名前 <span style="color:rgba(47,79,79,0.5);font-size:0.85rem;">（任意）</span></label>
+                  <input 
+                    type="text" 
+                    id="reservationName" 
+                    name="name" 
+                    placeholder="お名前"
+                    style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;transition:border-color 0.2s;"
+                  />
+                </div>
+                
+                <div class="form-group" style="margin-top:16px;">
+                  <label for="reservationEmail" style="display:block;margin-bottom:6px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">メールアドレス <span style="color:rgba(47,79,79,0.5);font-size:0.85rem;">（任意）</span></label>
+                  <input 
+                    type="email" 
+                    id="reservationEmail" 
+                    name="email" 
+                    placeholder="your.email@example.com"
+                    style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;transition:border-color 0.2s;"
+                  />
+                </div>
+                
+                <div class="form-group" style="margin-top:16px;">
+                  <label for="reservationPhone" style="display:block;margin-bottom:6px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">電話番号 <span style="color:rgba(47,79,79,0.5);font-size:0.85rem;">（任意）</span></label>
+                  <input 
+                    type="tel" 
+                    id="reservationPhone" 
+                    name="phone" 
+                    placeholder="090-1234-5678"
+                    style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;transition:border-color 0.2s;"
+                  />
+                </div>
+              </div>
+              
+              <button 
+                type="submit" 
+                class="btn btn-primary" 
+                style="margin-top:18px;width:100%;"
+              >
+                予約する
+              </button>
+              <div id="priceFormMessage" style="margin-top:12px;display:none;padding:10px 14px;border-radius:12px;font-size:0.9rem;"></div>
+            </form>
           </div>
 
         </div>
@@ -1129,6 +1269,34 @@
       </div>
     </div>
 
+    <!-- 画像ポップアップ -->
+    <div id="imagePopup" class="popup-overlay" aria-hidden="true">
+      <div class="popup-content">
+        <button class="popup-close" id="closeImagePopup" aria-label="閉じる">×</button>
+        <div class="container">
+          <h2>画像</h2>
+          <p class="lead">モビィの画像を確認できます。</p>
+          <div class="reveal delay-200" style="margin-top:24px;">
+            <p style="text-align:center;opacity:0.85;">画像コンテンツをここに追加してください</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 動画ポップアップ -->
+    <div id="videoPopup" class="popup-overlay" aria-hidden="true">
+      <div class="popup-content">
+        <button class="popup-close" id="closeVideoPopup" aria-label="閉じる">×</button>
+        <div class="container">
+          <h2>動画</h2>
+          <p class="lead">モビィの動画を確認できます。</p>
+          <div class="reveal delay-200" style="margin-top:24px;">
+            <p style="text-align:center;opacity:0.85;">動画コンテンツをここに追加してください</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     
     <!-- ポップアップボタン（最下部） -->
     <div class="popup-buttons-bar">
@@ -1138,6 +1306,8 @@
           <button class="btn btn-secondary" id="openColorsPopup">4色</button>
           <button class="btn btn-secondary" id="openPricePopup">値段</button>
           <button class="btn btn-secondary" id="openFaqPopup">FAQ</button>
+          <button class="btn btn-secondary" id="openImagePopup">画像</button>
+          <button class="btn btn-secondary" id="openVideoPopup">動画</button>
         </div>
       </div>
     </div>
@@ -1195,7 +1365,7 @@ const selectedPreviewImg = document.getElementById('selectedPreviewImg');
 /* ===== Hero Carousel (3D Rotating Ring) ===== */
 const heroCarousel = document.getElementById("heroCarousel");
 const heroTrack = document.getElementById("heroTrack");
-const heroDots = document.getElementById("heroDots");
+// const heroDots = document.getElementById("heroDots"); // 削除されたためコメントアウト
 const heroCaption = document.getElementById("heroCaption");
 const prevBtn = heroCarousel.querySelector(".carousel-btn.prev");
 const nextBtn = heroCarousel.querySelector(".carousel-btn.next");
@@ -1208,7 +1378,7 @@ let heroIndex = ORDER.indexOf(selectedColor);
 let prevHeroIndex = heroIndex; // 前回のインデックスを保持（初期値は現在のインデックス）
 let currentRot = -heroIndex * angle;
 let displayedRot = currentRot; // 実際にCSS transformに適用されている角度を保持
-let ringRadius = 220;
+let ringRadius = 190;
 
 function mod(a, m){ return ((a % m) + m) % m; }
 function degToRad(d){ return d * Math.PI / 180; }
@@ -1241,20 +1411,21 @@ function getShortestRotationAngle(fromIndex, toIndex, angleStep, currentAngle){
 const hotspotHandlers = new Map();
 
 function renderHeroDots(){
-  heroDots.innerHTML = "";
-  ORDER.forEach((key, i) => {
-    const b = document.createElement("button");
-    b.type = "button";
-    b.className = "carousel-dot" + (i === heroIndex ? " active" : "");
-    b.setAttribute("aria-label", `${COLOR_META[key].name} を表示`);
-    b.addEventListener("click", () => setHeroIndex(i, true));
-    heroDots.appendChild(b);
-  });
+  // 色ボタンは削除されたため、この関数は何もしない
+  // heroDots.innerHTML = "";
+  // ORDER.forEach((key, i) => {
+  //   const b = document.createElement("button");
+  //   b.type = "button";
+  //   b.className = "carousel-dot" + (i === heroIndex ? " active" : "");
+  //   b.setAttribute("aria-label", `${COLOR_META[key].name} を表示`);
+  //   b.addEventListener("click", () => setHeroIndex(i, true));
+  //   heroDots.appendChild(b);
+  // });
 }
 
 function layoutRing(){
   const slide = heroSlides[0];
-  const w = slide ? slide.getBoundingClientRect().width : 330;
+  const w = slide ? slide.getBoundingClientRect().width : 276;
   ringRadius = Math.round((w/2) / Math.tan(Math.PI / n) + (w * 0.25));
 
   heroSlides.forEach((s, i) => {
@@ -1400,9 +1571,10 @@ function updateRing(skipTransition=false){
     s.style.zIndex = String(Math.round(1000 * (frontness + 1)));
   });
 
-  if(heroDots.children.length){
-    [...heroDots.children].forEach((d, i) => d.classList.toggle("active", i === heroIndex));
-  }
+  // heroDotsは削除されたため、更新処理をスキップ
+  // if(heroDots.children.length){
+  //   [...heroDots.children].forEach((d, i) => d.classList.toggle("active", i === heroIndex));
+  // }
   if(heroCaption) heroCaption.textContent = COLOR_META[key].name;
 
   if(skipTransition){
@@ -1441,12 +1613,63 @@ heroSlides.forEach((slide, i) => {
       console.log('[DEBUG] スライドクリック: ホットスポットまたはボタンがクリックされたため無視');
       return;
     }
-    console.log('[DEBUG] スライドクリック: スライドを切り替えます');
-    setHeroIndex(i, true);
+    
+    // クリック位置からホットスポットを検出（3D変換の影響を考慮）
+    const allHotspots = slide.querySelectorAll('.carousel-eye-hotspot');
+    let isHotspotClick = false;
+    
+    for(const hotspot of allHotspots) {
+      const rect = hotspot.getBoundingClientRect();
+      const x = e.clientX;
+      const y = e.clientY;
+      
+      // ホットスポットの領域内かチェック
+      if(x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+        // 円形の領域をチェック
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const radius = Math.max(rect.width, rect.height) / 2;
+        const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
+        
+        if(distance <= radius) {
+          isHotspotClick = true;
+          console.log('[DEBUG] スライドクリック: ホットスポット領域内のため無視');
+          break;
+        }
+      }
+    }
+    
+    if(isHotspotClick) {
+      return;
+    }
+    
+    // スライドをクリックしたらcolorポップアップを開く
+    console.log('[DEBUG] スライドクリック: colorポップアップを開きます');
+    openPopup('colorsPopup');
   });
 });
 
 let startX = 0, startRot = 0, dragging = false, isDragged = false;
+let activePointerId = null;
+
+// ドラッグを終了する関数
+function endDrag(e) {
+  if(!dragging) return;
+  dragging = false;
+  activePointerId = null;
+
+  if(isDragged){
+    // スナップ計算前に角度を正規化（-360〜0度の範囲に収める）
+    currentRot = normalizeAngle(currentRot);
+    const normalizedRot = currentRot;
+    const snapped = mod(Math.round((-normalizedRot) / angle), n);
+    setHeroIndex(snapped, true);
+  }
+  isDragged = false;
+  if(heroCarousel.releasePointerCapture && e && e.pointerId !== undefined) {
+    heroCarousel.releasePointerCapture(e.pointerId);
+  }
+}
 
 heroCarousel.addEventListener("pointerdown", (e) => {
   console.log('[DEBUG] heroCarousel pointerdown:', e.target, e.clientX, e.clientY);
@@ -1498,19 +1721,34 @@ heroCarousel.addEventListener("pointerdown", (e) => {
     return;
   }
   
-  dragging = true; isDragged = false;
-  startX = e.clientX;
+  dragging = true; 
+  isDragged = false;
+  activePointerId = e.pointerId;
+  startX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
   // ドラッグ開始時の角度を正規化して保存
   startRot = normalizeAngle(currentRot);
   heroTrack.style.transition = "none";
-  if(heroCarousel.setPointerCapture) heroCarousel.setPointerCapture(e.pointerId);
+  
+  // pointer captureを試みる（失敗しても続行）
+  try {
+    if(heroCarousel.setPointerCapture) {
+      heroCarousel.setPointerCapture(e.pointerId);
+    }
+  } catch(err) {
+    console.warn('[DEBUG] setPointerCapture failed:', err);
+  }
   e.preventDefault();
 });
 
-heroCarousel.addEventListener("pointermove", (e) => {
+// pointermoveはグローバルにリスニング（pointer captureが失敗した場合のフォールバック）
+function handlePointerMove(e) {
   if(!dragging) return;
-  const dx = e.clientX - startX;
-  if(Math.abs(dx) > 5) isDragged = true;
+  // アクティブなポインターIDと一致するか確認
+  if(activePointerId !== null && e.pointerId !== activePointerId) return;
+  
+  const currentX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : startX);
+  const dx = currentX - startX;
+  if(Math.abs(dx) > 3) isDragged = true;
 
   const rot = startRot + dx * 0.2;
   // ドラッグ中は角度をそのまま使用（スナップ時に正規化）
@@ -1518,22 +1756,32 @@ heroCarousel.addEventListener("pointermove", (e) => {
   displayedRot = rot;
   heroTrack.style.transform = `translate(-50%, -50%) rotateY(${rot}deg)`;
   e.preventDefault();
-});
+}
 
-heroCarousel.addEventListener("pointerup", (e) => {
+heroCarousel.addEventListener("pointermove", handlePointerMove);
+// グローバルにもリスニング（pointer captureが失敗した場合のフォールバック）
+document.addEventListener("pointermove", handlePointerMove);
+
+// pointerupもグローバルにリスニング
+function handlePointerUp(e) {
   if(!dragging) return;
-  dragging = false;
+  // アクティブなポインターIDと一致するか確認
+  if(activePointerId !== null && e.pointerId !== activePointerId) return;
+  endDrag(e);
+}
 
-  if(isDragged){
-    // スナップ計算前に角度を正規化（-360〜0度の範囲に収める）
-    currentRot = normalizeAngle(currentRot);
-    const normalizedRot = currentRot;
-    const snapped = mod(Math.round((-normalizedRot) / angle), n);
-    setHeroIndex(snapped, true);
-  }
-  isDragged = false;
-  if(heroCarousel.releasePointerCapture) heroCarousel.releasePointerCapture(e.pointerId);
-});
+heroCarousel.addEventListener("pointerup", handlePointerUp);
+document.addEventListener("pointerup", handlePointerUp);
+
+// pointercancelイベント（タッチが中断された場合）
+function handlePointerCancel(e) {
+  if(!dragging) return;
+  if(activePointerId !== null && e.pointerId !== activePointerId) return;
+  endDrag(e);
+}
+
+heroCarousel.addEventListener("pointercancel", handlePointerCancel);
+document.addEventListener("pointercancel", handlePointerCancel);
 
 /* 初期化 */
 renderHeroDots();
@@ -1612,7 +1860,8 @@ document.addEventListener('click', (e) => {
 
 /* Splash (Matter.js) */
 const ICON_URLS   = ['icon1.png','icon2.png','icon3.png','icon4.png'];
-const ICON_SIZE   = 150;
+// スマホの時は半分のサイズにする
+const ICON_SIZE   = window.innerWidth <= 768 ? 75 : 150;
 const SPAWN_RATE  = 100;
 const TOTAL_ICONS = 50;
 
@@ -1961,12 +2210,16 @@ document.getElementById('openMessagePopup')?.addEventListener('click', () => ope
 document.getElementById('openColorsPopup')?.addEventListener('click', () => openPopup('colorsPopup'));
 document.getElementById('openPricePopup')?.addEventListener('click', () => openPopup('pricePopup'));
 document.getElementById('openFaqPopup')?.addEventListener('click', () => openPopup('faqPopup'));
+document.getElementById('openImagePopup')?.addEventListener('click', () => openPopup('imagePopup'));
+document.getElementById('openVideoPopup')?.addEventListener('click', () => openPopup('videoPopup'));
 
 // 閉じるボタンのイベント
 document.getElementById('closeMessagePopup')?.addEventListener('click', () => closePopup('messagePopup'));
 document.getElementById('closeColorsPopup')?.addEventListener('click', () => closePopup('colorsPopup'));
 document.getElementById('closePricePopup')?.addEventListener('click', () => closePopup('pricePopup'));
 document.getElementById('closeFaqPopup')?.addEventListener('click', () => closePopup('faqPopup'));
+document.getElementById('closeImagePopup')?.addEventListener('click', () => closePopup('imagePopup'));
+document.getElementById('closeVideoPopup')?.addEventListener('click', () => closePopup('videoPopup'));
 
 // オーバーレイクリックで閉じる
 document.getElementById('messagePopup')?.addEventListener('click', (e) => {
@@ -1981,6 +2234,12 @@ document.getElementById('pricePopup')?.addEventListener('click', (e) => {
 document.getElementById('faqPopup')?.addEventListener('click', (e) => {
   if(e.target.id === 'faqPopup') closePopup('faqPopup');
 });
+document.getElementById('imagePopup')?.addEventListener('click', (e) => {
+  if(e.target.id === 'imagePopup') closePopup('imagePopup');
+});
+document.getElementById('videoPopup')?.addEventListener('click', (e) => {
+  if(e.target.id === 'videoPopup') closePopup('videoPopup');
+});
 
 // ESCキーで閉じる
 window.addEventListener('keydown', (e) => {
@@ -1989,6 +2248,8 @@ window.addEventListener('keydown', (e) => {
     if(document.getElementById('colorsPopup')?.classList.contains('is-open')) closePopup('colorsPopup');
     if(document.getElementById('pricePopup')?.classList.contains('is-open')) closePopup('pricePopup');
     if(document.getElementById('faqPopup')?.classList.contains('is-open')) closePopup('faqPopup');
+    if(document.getElementById('imagePopup')?.classList.contains('is-open')) closePopup('imagePopup');
+    if(document.getElementById('videoPopup')?.classList.contains('is-open')) closePopup('videoPopup');
   }
 });
 
@@ -2005,6 +2266,95 @@ document.getElementById('openColorsFromFaq')?.addEventListener('click', () => {
 // EmailJS初期化（実際の使用時はPublic Keyを設定する必要があります）
 // 注意: 本番環境では、EmailJSの設定（Service ID、Template ID、Public Key）が必要です
 // ここではmailto:リンクを使用するフォールバック方式を実装します
+
+// 値段ポップアップの抽選予約フォーム送信
+document.getElementById('priceReservationForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const form = e.target;
+  const address = document.getElementById('reservationAddress').value;
+  const name = document.getElementById('reservationName').value;
+  const email = document.getElementById('reservationEmail').value;
+  const phone = document.getElementById('reservationPhone').value;
+  const messageDiv = document.getElementById('priceFormMessage');
+  const submitBtn = form.querySelector('button[type="submit"]');
+  
+  // バリデーション（住所は必須）
+  if(!address || address.trim() === '') {
+    messageDiv.style.display = 'block';
+    messageDiv.style.background = 'rgba(255,0,0,0.1)';
+    messageDiv.style.border = '1px solid rgba(255,0,0,0.3)';
+    messageDiv.style.color = 'var(--color-earth)';
+    messageDiv.textContent = '住所を入力してください。';
+    return;
+  }
+  
+  // 送信ボタンを無効化
+  submitBtn.disabled = true;
+  submitBtn.textContent = '送信中...';
+  messageDiv.style.display = 'none';
+  
+  try {
+    // EmailJSを使用する場合（設定が必要）
+    // emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
+    //   to_email: 'info.mobbymobbymobby@gmail.com',
+    //   subject: '購入の抽選予約',
+    //   address: address,
+    //   name: name,
+    //   email: email,
+    //   phone: phone
+    // }, 'YOUR_PUBLIC_KEY');
+    
+    // フォールバック: mailto:リンクを使用
+    const subject = encodeURIComponent('購入の抽選予約');
+    
+    // メール本文を作成
+    let bodyText = '購入の抽選予約を希望します。\n\n';
+    bodyText += '【住所】\n' + address + '\n\n';
+    
+    if(name && name.trim() !== '') {
+      bodyText += '【名前】\n' + name + '\n\n';
+    }
+    if(email && email.trim() !== '') {
+      bodyText += '【メールアドレス】\n' + email + '\n\n';
+    }
+    if(phone && phone.trim() !== '') {
+      bodyText += '【電話番号】\n' + phone + '\n\n';
+    }
+    
+    bodyText += '抽選に当たったら、モビィから当選の手紙が届くことを確認しました。';
+    
+    const body = encodeURIComponent(bodyText);
+    const mailtoLink = `mailto:info.mobbymobbymobby@gmail.com?subject=${subject}&body=${body}`;
+    
+    // メールクライアントを開く
+    window.location.href = mailtoLink;
+    
+    // 成功メッセージを表示
+    messageDiv.style.display = 'block';
+    messageDiv.style.background = 'rgba(0,255,0,0.1)';
+    messageDiv.style.border = '1px solid rgba(0,255,0,0.3)';
+    messageDiv.style.color = 'var(--color-earth)';
+    messageDiv.textContent = 'メールクライアントが開きます。メールを送信してください。';
+    
+    // フォームをリセット
+    setTimeout(() => {
+      form.reset();
+      submitBtn.disabled = false;
+      submitBtn.textContent = '予約する';
+    }, 2000);
+    
+  } catch (error) {
+    console.error('送信エラー:', error);
+    messageDiv.style.display = 'block';
+    messageDiv.style.background = 'rgba(255,0,0,0.1)';
+    messageDiv.style.border = '1px solid rgba(255,0,0,0.3)';
+    messageDiv.style.color = 'var(--color-earth)';
+    messageDiv.textContent = '送信に失敗しました。もう一度お試しください。';
+    submitBtn.disabled = false;
+    submitBtn.textContent = '予約する';
+  }
+});
 
 // FAQお問い合わせフォーム送信
 document.getElementById('faqContactForm')?.addEventListener('submit', async (e) => {
