@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mobby - 1月末入荷分 購入</title>
+  <title>Mobby（モビィ）</title>
   <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -108,13 +108,6 @@
   .trust-row{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:16px;}
   .trust-pill{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,0.7);border:1px solid rgba(47,79,79,0.12);font-weight:700;font-size:0.9rem;}
   
-  .wave-divider{
-    width:100%;height:50px;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.25' fill='%23AEC6CF'/%3E%3Cpath d='M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z' opacity='.5' fill='%23AEC6CF'/%3E%3Cpath d='M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z' fill='%23AEC6CF'/%3E%3C/svg%3E");
-    background-size:cover;background-repeat:no-repeat;
-  }
-  .wave-divider.bottom{transform:rotate(180deg);}
-  
   .reveal{opacity:0;transform:translateY(30px);transition:opacity 1s var(--ease-soft), transform 1s var(--ease-soft);}
   .reveal.active{opacity:1;transform:translateY(0);}
   .delay-200{transition-delay:0.2s;}
@@ -203,8 +196,64 @@
     background: transparent;border: none;border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 18px 45px rgba(0,0,0,0.14);
+    position: relative;
   }
   .hero-illustration img{width:100%;height:100%;object-fit: cover;}
+  
+  /* カルーセル内のホットスポット */
+  .carousel-eye-hotspot{
+    position:absolute;
+    top:25%;
+    left:58%;
+    width:22%;
+    min-width:52px;
+    height:auto;
+    min-height:52px;
+    aspect-ratio:1/1;
+    border-radius:50%;
+    background:rgba(255,255,255,0.01);
+    border:none;
+    cursor:pointer;
+    z-index:15;
+    pointer-events:auto;
+    transform:translateZ(0);
+  }
+  .carousel-eye-hotspot:hover{outline:2px solid rgba(255,255,255,0.4);}
+  .carousel-eye-hotspot::before{
+    content:"";
+    position:absolute;
+    inset:-18%;
+    border-radius:50%;
+    border:2px dashed rgba(255,255,255,0.65);
+    animation:pulse 2.2s ease-in-out infinite;
+  }
+  .carousel-eye-shutter{
+    position:absolute;
+    top:34%;
+    left:58%;
+    width:22%;
+    aspect-ratio:1/1;
+    border-radius:50%;
+    pointer-events:none;
+    z-index:16;
+    background:
+      conic-gradient(
+        from 0deg,
+        #111 0 10%,
+        #222 10% 20%,
+        #111 20% 30%,
+        #222 30% 40%,
+        #111 40% 50%,
+        #222 50% 60%,
+        #111 60% 70%,
+        #222 70% 80%,
+        #111 80% 90%,
+        #222 90% 100%
+      );
+    transform:scale(0);
+    opacity:0;
+  }
+  .carousel-eye-shutter.play{animation: shutter 220ms ease-in-out forwards;}
   
   .carousel-btn{
     position:absolute;top:50%;transform:translateY(-50%);
@@ -772,31 +821,8 @@
         </div>
 
         <h1 class="headline reveal delay-200">5枚だけ、残せる。</h1>
-        <!--<p class="subhead reveal delay-200">キーホルダー型カメラ <strong>Mobby</strong></p>
-
-        <div class="status-row reveal delay-200">
-          <div class="status-chip"><strong>いま：</strong>完売</div>
-          <div class="status-chip"><strong>次：</strong>1月末 入荷分</div>
-        </div>
-
-        <div class="cta-row reveal delay-400">
-          <a href="#colors" class="btn btn-primary">色を選ぶ</a>
-          <a href="#buy" class="btn btn-secondary">今買う</a>
-        </div>
-
-        <div class="trust-row reveal delay-400">
-          <div class="trust-pill">支払い完了＝確保</div>
-          <div class="trust-pill">用意できない時は全額返金</div>
-        </div>
-        -->
       </div>
     </section>
-
-    <div class="wave-divider"></div>
-
-
-
-    <div class="wave-divider bottom"></div>
 
     <section id="how" class="section soft center">
       <div class="container reveal">
@@ -822,33 +848,6 @@
         </div>
       </div>
     </section>
-
-    <!-- TRY DEMO -->
-<section id="try" class="section center">
-  <div class="container reveal">
-    <h2>体験してみる</h2>
-    <p class="lead">タップして、“覗く”をそのまま。</p>
-
-    <div class="eye-tap-wrap">
-      <img src="icon2.png" alt="Mobby" class="eye-tap-img">
-    
-      <!-- 右目（レンズ）ホットスポット -->
-      <button
-        class="eye-hotspot"
-        id="eyeHotspot"
-        aria-label="右目をタップして覗く"
-      ></button>
-      <!-- シャッター演出（右目の上に被せる） -->
-<div class="eye-shutter" id="eyeShutter" aria-hidden="true"></div>
-
-    
-      <!-- ユーザーへのヒント -->
-      <div class="eye-hint">
-        ここをタップ
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- Viewfinder Overlay -->
 
@@ -953,7 +952,6 @@
       </div>
     </section>
 
-    <div class="wave-divider"></div>
 
     <!-- PRICE -->
     <section id="price" class="section soft center">
@@ -1124,6 +1122,9 @@ let ringRadius = 220;
 function mod(a, m){ return ((a % m) + m) % m; }
 function degToRad(d){ return d * Math.PI / 180; }
 
+// ホットスポットのハンドラーをグローバルに保存
+const hotspotHandlers = new Map();
+
 function renderHeroDots(){
   heroDots.innerHTML = "";
   ORDER.forEach((key, i) => {
@@ -1145,6 +1146,85 @@ function layoutRing(){
     const h = s.getBoundingClientRect().height || w;
     s.style.transform =
       `translate(${-w/2}px, ${-h/2}px) rotateY(${i * angle}deg) translateZ(${ringRadius}px)`;
+    
+    // ホットスポットとシャッターを追加（まだない場合）
+    const illustration = s.querySelector('.hero-illustration');
+    if(illustration && !illustration.querySelector('.carousel-eye-hotspot')){
+      console.log('[DEBUG] ホットスポットを追加します, slide index:', i);
+      const hotspot = document.createElement('button');
+      hotspot.className = 'carousel-eye-hotspot';
+      hotspot.setAttribute('aria-label', '右目をタップして覗く');
+      hotspot.type = 'button';
+      
+      const shutter = document.createElement('div');
+      shutter.className = 'carousel-eye-shutter';
+      shutter.setAttribute('aria-hidden', 'true');
+      
+      illustration.appendChild(hotspot);
+      illustration.appendChild(shutter);
+      console.log('[DEBUG] ホットスポットとシャッターを追加しました, hotspot:', hotspot, 'shutter:', shutter);
+      
+      // pointerdownで直接処理（clickイベントに頼らない）
+      const handleHotspotPointerDown = (e) => {
+        console.log('[DEBUG] カルーセルホットスポットがpointerdownされました', e.target);
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        
+        // シャッターアニメーション
+        shutter.classList.remove('play');
+        void shutter.offsetWidth;
+        shutter.classList.add('play');
+        console.log('[DEBUG] シャッターアニメーション開始');
+        
+        // ビューファインダーを開く
+        setTimeout(() => {
+          console.log('[DEBUG] openViewfinderを呼び出します, type:', typeof window.openViewfinder);
+          if(typeof window.openViewfinder === 'function'){
+            console.log('[DEBUG] openViewfinder実行');
+            window.openViewfinder(shutter);
+          } else {
+            console.error('[DEBUG] openViewfinderが関数ではありません:', window.openViewfinder);
+          }
+        }, 180);
+      };
+      
+      // ハンドラーをマップに保存（heroCarouselのpointerdownから呼び出せるように）
+      hotspotHandlers.set(hotspot, handleHotspotPointerDown);
+      
+      // pointerdownで直接処理（capture phaseで先に処理）
+      hotspot.addEventListener('pointerdown', handleHotspotPointerDown, true);
+      // clickも一応ハンドリング（ブラウザ差異対策）
+      hotspot.addEventListener('click', (e) => {
+        console.log('[DEBUG] カルーセルホットスポットがclickされました');
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        handleHotspotPointerDown(e);
+      }, true);
+      
+      // タッチイベントも追加（モバイル対応）
+      hotspot.addEventListener('touchend', (e) => {
+        console.log('[DEBUG] カルーセルホットスポットがタッチされました');
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        
+        shutter.classList.remove('play');
+        void shutter.offsetWidth;
+        shutter.classList.add('play');
+        
+        setTimeout(() => {
+          if(typeof window.openViewfinder === 'function'){
+            window.openViewfinder(shutter);
+          }
+        }, 180);
+      }, true);
+      
+      // テスト用：ホットスポットがクリック可能か確認
+      console.log('[DEBUG] ホットスポットのスタイル:', window.getComputedStyle(hotspot).pointerEvents);
+      console.log('[DEBUG] ホットスポットの位置:', hotspot.getBoundingClientRect());
+    }
   });
 
   updateRing(true);
@@ -1196,12 +1276,72 @@ function setHeroByColor(colorKey){
 
 prevBtn.addEventListener("click", () => setHeroIndex(heroIndex - 1, true));
 nextBtn.addEventListener("click", () => setHeroIndex(heroIndex + 1, true));
-heroSlides.forEach((slide, i) => slide.addEventListener("click", () => setHeroIndex(i, true)));
+heroSlides.forEach((slide, i) => {
+  slide.addEventListener("click", (e) => {
+    // ホットスポットやボタンのクリックは無視
+    const clickedHotspot = e.target.closest('.carousel-eye-hotspot');
+    const clickedBtn = e.target.closest('.carousel-btn');
+    if(clickedHotspot || clickedBtn) {
+      console.log('[DEBUG] スライドクリック: ホットスポットまたはボタンがクリックされたため無視');
+      return;
+    }
+    console.log('[DEBUG] スライドクリック: スライドを切り替えます');
+    setHeroIndex(i, true);
+  });
+});
 
 let startX = 0, startRot = 0, dragging = false, isDragged = false;
 
 heroCarousel.addEventListener("pointerdown", (e) => {
-  if(e.target.closest('.carousel-btn')) return;
+  console.log('[DEBUG] heroCarousel pointerdown:', e.target, e.clientX, e.clientY);
+  
+  // クリック位置からホットスポットを検出（3D変換の影響を回避）
+  const allHotspots = heroCarousel.querySelectorAll('.carousel-eye-hotspot');
+  let clickedHotspot = null;
+  
+  for(const hotspot of allHotspots) {
+    const rect = hotspot.getBoundingClientRect();
+    const x = e.clientX;
+    const y = e.clientY;
+    
+    // ホットスポットの領域内かチェック
+    if(x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+      // 円形の領域をチェック
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const radius = Math.max(rect.width, rect.height) / 2;
+      const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
+      
+      if(distance <= radius) {
+        clickedHotspot = hotspot;
+        console.log('[DEBUG] ホットスポットが検出されました:', hotspot, 'distance:', distance.toFixed(1), 'radius:', radius.toFixed(1));
+        break;
+      }
+    }
+  }
+  
+  if(clickedHotspot) {
+    console.log('[DEBUG] heroCarousel pointerdown: ホットスポットがクリックされました', clickedHotspot);
+    e.stopPropagation();
+    e.preventDefault();
+    
+    // ホットスポットのハンドラーを直接呼び出す
+    const handler = hotspotHandlers.get(clickedHotspot);
+    if(handler) {
+      handler(e);
+    } else {
+      console.warn('[DEBUG] ホットスポットのハンドラーが見つかりません');
+    }
+    return;
+  }
+  
+  // ボタンのクリックは無視
+  const isBtn = e.target.closest('.carousel-btn');
+  if(isBtn) {
+    console.log('[DEBUG] pointerdown: ボタンがクリックされたため無視');
+    return;
+  }
+  
   dragging = true; isDragged = false;
   startX = e.clientX;
   startRot = currentRot;
@@ -1235,7 +1375,8 @@ heroCarousel.addEventListener("pointerup", (e) => {
 
 /* 初期化 */
 renderHeroDots();
-layoutRing();
+// layoutRing()はビューファインダー初期化後に呼ぶ（ホットスポットのクリックイベント設定のため）
+// 初期レイアウトは後で実行
 window.addEventListener("resize", () => layoutRing(), { passive:true });
 
 /* 選択色の反映 */
@@ -1433,8 +1574,8 @@ window.addEventListener('resize', () => {
 }, { passive:true });
 
 /* ===== Retro Camera Demo (Overlay) ===== */
-const eyeHotspot = document.getElementById('eyeHotspot');
-const eyeShutter = document.getElementById('eyeShutter');
+// ビューファインダーを開く関数をグローバルに公開（先に定義）
+window.openViewfinder = null;
 
 (() => {
   const overlay  = document.getElementById('vfOverlay');
@@ -1598,17 +1739,27 @@ function takePhoto(){
     document.documentElement.style.overflow = prevHtmlOverflow;
   }
 
-  // open: 右目タップ
-  if(eyeHotspot){
-    eyeHotspot.addEventListener('click', () => {
-      if(eyeShutter){
-        eyeShutter.classList.remove('play');
-        void eyeShutter.offsetWidth;
-        eyeShutter.classList.add('play');
-      }
-      setTimeout(open, 180);
-    });
-  }
+  // ビューファインダーを開く関数をグローバルに公開
+  window.openViewfinder = function(shutterElement = null){
+    console.log('[DEBUG] openViewfinderが呼ばれました, shutterElement:', shutterElement);
+    // シャッターアニメーション（指定された要素またはデフォルトのeyeShutter）
+    const shutter = shutterElement || eyeShutter;
+    console.log('[DEBUG] 使用するshutter:', shutter);
+    if(shutter){
+      shutter.classList.remove('play');
+      void shutter.offsetWidth;
+      shutter.classList.add('play');
+      console.log('[DEBUG] シャッターアニメーション実行');
+    } else {
+      console.warn('[DEBUG] shutter要素が見つかりません');
+    }
+    setTimeout(() => {
+      console.log('[DEBUG] open関数を呼び出します');
+      open();
+    }, 180);
+  };
+  console.log('[DEBUG] window.openViewfinderが定義されました:', typeof window.openViewfinder);
+
 
   // snap / close
   snapBtn.addEventListener('click', takePhoto);
@@ -1620,6 +1771,10 @@ function takePhoto(){
   });
 })();
 
+// ビューファインダー初期化後にカルーセルのレイアウトを実行（ホットスポットのクリックイベント設定のため）
+console.log('[DEBUG] layoutRingを実行します, openViewfinder:', typeof window.openViewfinder);
+layoutRing();
+console.log('[DEBUG] layoutRing実行完了');
 
   </script>
 </body>
