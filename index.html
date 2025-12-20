@@ -1528,13 +1528,13 @@ function updateRing(skipTransition=false){
   if(skipTransition) heroTrack.style.transition = "none";
   else heroTrack.style.transition = "transform 0.7s var(--ease-soft)";
 
+  // 目標角度を計算（常に正確な角度を設定）
+  const targetRot = -heroIndex * angle;
+  
   if(!skipTransition && prevHeroIndex !== heroIndex){
-    // 現在の角度を正規化（計算前に正規化して正確なdeltaを計算）
-    currentRot = normalizeAngle(currentRot);
-    
     // インデックスの変化量を計算（最短経路）
     let delta = heroIndex - prevHeroIndex;
-    console.log('[DEBUG] updateRing: prevIndex=', prevHeroIndex, 'newIndex=', heroIndex, 'delta=', delta, 'currentRot=', currentRot);
+    console.log('[DEBUG] updateRing: prevIndex=', prevHeroIndex, 'newIndex=', heroIndex, 'delta=', delta, 'currentRot=', currentRot, 'displayedRot=', displayedRot);
     
     // 最短経路を選択（-2から+2の範囲に調整）
     if(delta > n / 2) {
@@ -1547,34 +1547,33 @@ function updateRing(skipTransition=false){
     }
     
     console.log('[DEBUG] 回転前 currentRot=', currentRot, 'delta=', delta, 'angle=', angle);
-    // 角度を変化量に基づいて更新
+    // 角度を変化量に基づいて更新（正規化せずに直接加算することで、累積的な回転を維持）
     currentRot = currentRot - (delta * angle);
+    displayedRot = currentRot;
     console.log('[DEBUG] 回転後 currentRot=', currentRot);
+    
+    // インデックス変化時は、deltaに基づく計算結果をそのまま使用し、正規化による再計算は行わない
   } else if(skipTransition){
     // 初期化時は直接設定
-    currentRot = -heroIndex * angle;
-    displayedRot = currentRot;
+    currentRot = targetRot;
+    displayedRot = targetRot;
     console.log('[DEBUG] 初期化: currentRot=', currentRot);
-  }
-  
-  // currentRotを正規化（-360〜0の範囲に収める、-360は0に）
-  const beforeNormalize = currentRot;
-  const normalizedRot = normalizeAngle(currentRot);
-  
-  // 正規化後の角度と現在の表示角度の差を計算（最短経路を選択）
-  let diff = normalizedRot - displayedRot;
-  // -180度から180度の範囲に調整（最短経路）
-  while(diff > 180) diff -= 360;
-  while(diff < -180) diff += 360;
-  
-  // 最短経路で更新
-  currentRot = displayedRot + diff;
-  displayedRot = currentRot;
-  
-  // -0を0に統一
-  if(currentRot === 0) currentRot = 0;
-  if(beforeNormalize !== normalizedRot) {
-    console.log('[DEBUG] 正規化: ', beforeNormalize, '→', normalizedRot, '最短経路調整後:', currentRot);
+  } else {
+    // インデックスが変わっていない場合のみ、正規化と最短経路の計算を行う
+    displayedRot = normalizeAngle(displayedRot);
+    let diff = targetRot - displayedRot;
+    // -180度から180度の範囲に調整（最短経路）
+    while(diff > 180) diff -= 360;
+    while(diff < -180) diff += 360;
+    
+    // 差が小さい場合（1度以内）は正確に目標角度に設定
+    if(Math.abs(diff) < 1) {
+      currentRot = targetRot;
+      displayedRot = targetRot;
+    } else {
+      currentRot = displayedRot + diff;
+      displayedRot = currentRot;
+    }
   }
   
   // 前回のインデックスを更新
@@ -1686,10 +1685,50 @@ function endDrag(e) {
 
   if(isDragged){
     // スナップ計算前に角度を正規化（-360〜0度の範囲に収める）
-    currentRot = normalizeAngle(currentRot);
-    const normalizedRot = currentRot;
-    const snapped = mod(Math.round((-normalizedRot) / angle), n);
-    setHeroIndex(snapped, true);
+    const normalizedCurrentRot = normalizeAngle(currentRot);
+    const normalizedDisplayedRot = normalizeAngle(displayedRot);
+    
+    // 正規化された角度からスナップ先を計算
+    const snapped = mod(Math.round((-normalizedCurrentRot) / angle), n);
+    
+    // スナップ先の正確な角度を計算
+    const targetRot = -snapped * angle;
+    const normalizedTargetRot = normalizeAngle(targetRot);
+    
+    // 正規化されたdisplayedRotから正規化されたtargetRotへの最短経路を計算
+    let diff = normalizedTargetRot - normalizedDisplayedRot;
+    while(diff > 180) diff -= 360;
+    while(diff < -180) diff += 360;
+    
+    // displayedRotを基準に最短経路で更新
+    // これにより、正規化時に逆向きの回転が発生しない
+    currentRot = normalizedDisplayedRot + diff;
+    displayedRot = currentRot;
+    
+    // インデックスを設定
+    prevHeroIndex = heroIndex;
+    heroIndex = snapped;
+    
+    // トランジションを有効にして、正確な角度にスナップ
+    heroTrack.style.transition = "transform 0.7s var(--ease-soft)";
+    heroTrack.style.transform = `translate(-50%, -50%) rotateY(${currentRot}deg)`;
+    
+    // スライドの状態を更新
+    heroSlides.forEach((s, i) => {
+      const world = i * angle + currentRot;
+      const frontness = Math.cos(degToRad(world));
+      s.classList.toggle("dim", frontness < 0.4);
+      s.style.zIndex = String(Math.round(1000 * (frontness + 1)));
+    });
+    
+    // キャプションを更新
+    const key = ORDER[heroIndex];
+    if(heroCaption) heroCaption.textContent = COLOR_META[key].name;
+    
+    // 色の同期
+    syncing = true;
+    setSelectedColor(key);
+    syncing = false;
   } else {
     // ドラッグしていない場合はトランジションを復元
     heroTrack.style.transition = "transform 0.7s var(--ease-soft)";
@@ -1797,6 +1836,7 @@ function handlePointerMove(e) {
     if(Math.abs(dx) > 3) isDragged = true;
     
     const rot = startRot + dx * 0.2;
+    // ドラッグ中は角度をそのまま使用（スナップ時に正規化）
     currentRot = rot;
     displayedRot = rot;
     
