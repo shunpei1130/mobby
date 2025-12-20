@@ -2587,6 +2587,7 @@ let imageGalleryIndex = 0;
 let imageGalleryTranslateX = 0;
 let imageGalleryIsDragging = false;
 let imageGalleryStartX = 0;
+let imageGalleryStartTranslateX = 0; // pointerdown時の初期translateXを保存
 let imageGalleryStartTime = 0;
 let imageGalleryVelocity = 0;
 let imageGalleryLastX = 0;
@@ -2649,7 +2650,8 @@ function initImageGallery(){
     imageGalleryVelocity = 0;
     
     const slideWidth = viewport.offsetWidth;
-    imageGalleryTranslateX = -imageGalleryIndex * slideWidth;
+    imageGalleryStartTranslateX = -imageGalleryIndex * slideWidth; // 初期位置を保存
+    imageGalleryTranslateX = imageGalleryStartTranslateX;
     
     viewport.style.cursor = 'grabbing';
     track.style.transition = 'none';
@@ -2662,7 +2664,7 @@ function initImageGallery(){
     const currentX = e.clientX;
     const currentTime = Date.now();
     const slideWidth = viewport.offsetWidth;
-    const diff = currentX - imageGalleryStartX;
+    const diff = currentX - imageGalleryStartX; // 開始位置からの移動量
     
     // 速度を計算（スムーズなスワイプ判定のため）
     if(currentTime - imageGalleryLastTime > 0){
@@ -2672,7 +2674,8 @@ function initImageGallery(){
     }
     
     // 境界チェック（最初と最後のスライドで越えないように）
-    const targetTranslate = imageGalleryTranslateX + diff;
+    // 初期位置に移動量を加算
+    const targetTranslate = imageGalleryStartTranslateX + diff;
     const minTranslate = -(imageGalleryTotalSlides - 1) * slideWidth;
     const maxTranslate = 0;
     
@@ -2695,11 +2698,12 @@ function initImageGallery(){
     viewport.style.cursor = 'grab';
     
     const slideWidth = viewport.offsetWidth;
-    const diff = imageGalleryTranslateX - (-imageGalleryIndex * slideWidth);
-    const threshold = slideWidth * 0.25; // 25%の閾値
-    const speedThreshold = 0.3; // 速度の閾値（px/ms）
+    const initialTranslateX = -imageGalleryIndex * slideWidth; // 開始時の位置
+    const diff = imageGalleryTranslateX - initialTranslateX; // 実際の移動距離
+    const threshold = slideWidth * 0.01; // 1%の閾値（少しのスワイプで反応）
+    const speedThreshold = 0.01; // 速度の閾値（px/ms）- より敏感に
     
-    // 速度ベースの判定（高速スワイプ時）
+    // 速度ベースの判定（高速スワイプ時）- 優先度を上げる
     if(Math.abs(imageGalleryVelocity) > speedThreshold){
       if(imageGalleryVelocity < 0 && imageGalleryIndex < imageGalleryTotalSlides - 1){
         imageGalleryIndex++;
