@@ -1836,6 +1836,7 @@ heroSlides.forEach((slide, i) => {
 let startX = 0, startRot = 0, dragging = false, isDragged = false;
 let activePointerId = null;
 let rafId = null; // requestAnimationFrameのID
+let lastX = 0; // 最後のX位置を保存
 
 // ドラッグを終了する関数
 function endDrag(e) {
@@ -1851,15 +1852,37 @@ function endDrag(e) {
   activePointerId = null;
 
   if(isDragged){
-    // スナップ計算前に角度を正規化（-360〜0度の範囲に収める）
-    const normalizedCurrentRot = normalizeAngle(currentRot);
-    const normalizedDisplayedRot = normalizeAngle(displayedRot);
+    // スワイプ方向を検出（lastXが確実に取得できるように）
+    const endX = (e && e.clientX) ? e.clientX : (lastX || startX);
+    const dx = endX - startX;
+    const minSwipeDistance = 20; // 最小スワイプ距離（誤操作防止）
     
-    // 正規化された角度からスナップ先を計算
-    const snapped = mod(Math.round((-normalizedCurrentRot) / angle), n);
+    // スワイプ方向に応じてインデックスを決定
+    let targetIndex = heroIndex;
+    if(Math.abs(dx) > minSwipeDistance){
+      if(dx > 0){
+        // 右にスワイプ → 前のスライド（インデックスを減らす）
+        if(heroIndex > 0){
+          targetIndex = heroIndex - 1;
+        }
+      } else {
+        // 左にスワイプ → 次のスライド（インデックスを増やす）
+        if(heroIndex < n - 1){
+          targetIndex = heroIndex + 1;
+        }
+      }
+    }
+    // 最小距離未満の場合は現在のインデックスのまま
+    
+    // インデックスが変わらない場合でも、現在の位置に確実にスナップ
+    prevHeroIndex = heroIndex;
+    heroIndex = targetIndex;
     
     // スナップ先の正確な角度を計算
-    const targetRot = -snapped * angle;
+    const targetRot = -targetIndex * angle;
+    
+    // 現在の角度を正規化（ドラッグ中の角度を使う）
+    const normalizedDisplayedRot = normalizeAngle(displayedRot);
     const normalizedTargetRot = normalizeAngle(targetRot);
     
     // 正規化されたdisplayedRotから正規化されたtargetRotへの最短経路を計算
@@ -1871,10 +1894,6 @@ function endDrag(e) {
     // これにより、正規化時に逆向きの回転が発生しない
     currentRot = normalizedDisplayedRot + diff;
     displayedRot = currentRot;
-    
-    // インデックスを設定
-    prevHeroIndex = heroIndex;
-    heroIndex = snapped;
     
     // トランジションを有効にして、正確な角度にスナップ
     heroTrack.style.transition = "transform 0.7s var(--ease-soft)";
@@ -1970,6 +1989,7 @@ heroCarousel.addEventListener("pointerdown", (e) => {
   dragging = true;
   activePointerId = e.pointerId;
   startX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+  lastX = startX; // 最後の位置を初期化
   // ドラッグ開始時の角度を正規化して保存
   startRot = normalizeAngle(currentRot);
   isDragged = false;
@@ -1998,6 +2018,7 @@ function handlePointerMove(e) {
     rafId = null;
     
     const currentX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : startX);
+    lastX = currentX; // 最後の位置を保存
     const dx = currentX - startX;
     
     if(Math.abs(dx) > 3) isDragged = true;
