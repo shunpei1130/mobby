@@ -5,19 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mobby（モビィ）</title>
   <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Yomogi&display=swap');
+    </style>
+    
 <style>
   :root{
-    --color-cream:#FFF8E7;
-    --color-forest:#2F4F4F;
-    --color-sky:#AEC6CF;
-    --color-earth:#8B4513;
-    --color-accent-red:#D2691E;
-    --color-soft-yellow:#F0E68C;
-  
-    --font-ja:'Kosugi Maru', sans-serif;
-    --font-en:'Nunito', sans-serif;
-    --ease-soft:cubic-bezier(0.4, 0.0, 0.2, 1);
-  }
+  --color-cream:#FFF8E7;
+  --color-forest:#2F4F4F;
+  --color-sky:#AEC6CF;
+  --color-earth:#8B4513;
+  --color-accent-red:#D2691E;
+  --color-soft-yellow:#F0E68C;
+
+  /* ここを変更 */
+  --font-ja:'Yomogi', cursive;
+  --font-en:'Yomogi', cursive;
+
+  --ease-soft:cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
   *{margin:0;padding:0;box-sizing:border-box;}
   
   body{
@@ -1027,10 +1034,6 @@
               <p>はい。支払いが完了した時点で、あなたの分を確保します。もしこちらの都合で用意できない場合は全額返金します。</p>
             </details>
             <details class="faq-item">
-              <summary>学生さんの値段ってどうやって？</summary>
-              <p>学生向けリンク（クーポン適用済み）から購入します。</p>
-            </details>
-            <details class="faq-item">
               <summary>6枚目を撮るとどうなる？</summary>
               <p>新しく撮ると、いちばん古い写真から順に自動で消えていきます（最大5枚）。</p>
             </details>
@@ -1133,16 +1136,20 @@ const n = heroSlides.length;
 const angle = 360 / n;
 
 let heroIndex = ORDER.indexOf(selectedColor);
+let prevHeroIndex = heroIndex; // 前回のインデックスを保持（初期値は現在のインデックス）
 let currentRot = -heroIndex * angle;
+let displayedRot = currentRot; // 実際にCSS transformに適用されている角度を保持
 let ringRadius = 220;
 
 function mod(a, m){ return ((a % m) + m) % m; }
 function degToRad(d){ return d * Math.PI / 180; }
 
-// 角度を-360度から0度の範囲に正規化
+// 角度を-360度から0度の範囲に正規化（-360は0に）
 function normalizeAngle(deg){
   deg = deg % 360;
   if(deg > 0) deg -= 360;
+  // -360を0に、-0を0に統一
+  if(deg === -360 || Object.is(deg, -0)) deg = 0;
   return deg;
 }
 
@@ -1189,7 +1196,6 @@ function layoutRing(){
     // ホットスポットとシャッターを追加（まだない場合）
     const illustration = s.querySelector('.hero-illustration');
     if(illustration && !illustration.querySelector('.carousel-eye-hotspot')){
-      console.log('[DEBUG] ホットスポットを追加します, slide index:', i);
       const hotspot = document.createElement('button');
       hotspot.className = 'carousel-eye-hotspot';
       hotspot.setAttribute('aria-label', '右目をタップして覗く');
@@ -1201,11 +1207,9 @@ function layoutRing(){
       
       illustration.appendChild(hotspot);
       illustration.appendChild(shutter);
-      console.log('[DEBUG] ホットスポットとシャッターを追加しました, hotspot:', hotspot, 'shutter:', shutter);
-      
+
       // pointerdownで直接処理（clickイベントに頼らない）
       const handleHotspotPointerDown = (e) => {
-        console.log('[DEBUG] カルーセルホットスポットがpointerdownされました', e.target);
         e.stopPropagation();
         e.stopImmediatePropagation();
         e.preventDefault();
@@ -1214,13 +1218,10 @@ function layoutRing(){
         shutter.classList.remove('play');
         void shutter.offsetWidth;
         shutter.classList.add('play');
-        console.log('[DEBUG] シャッターアニメーション開始');
         
         // ビューファインダーを開く
         setTimeout(() => {
-          console.log('[DEBUG] openViewfinderを呼び出します, type:', typeof window.openViewfinder);
           if(typeof window.openViewfinder === 'function'){
-            console.log('[DEBUG] openViewfinder実行');
             window.openViewfinder(shutter);
           } else {
             console.error('[DEBUG] openViewfinderが関数ではありません:', window.openViewfinder);
@@ -1235,7 +1236,6 @@ function layoutRing(){
       hotspot.addEventListener('pointerdown', handleHotspotPointerDown, true);
       // clickも一応ハンドリング（ブラウザ差異対策）
       hotspot.addEventListener('click', (e) => {
-        console.log('[DEBUG] カルーセルホットスポットがclickされました');
         e.stopPropagation();
         e.stopImmediatePropagation();
         e.preventDefault();
@@ -1244,7 +1244,6 @@ function layoutRing(){
       
       // タッチイベントも追加（モバイル対応）
       hotspot.addEventListener('touchend', (e) => {
-        console.log('[DEBUG] カルーセルホットスポットがタッチされました');
         e.stopPropagation();
         e.stopImmediatePropagation();
         e.preventDefault();
@@ -1275,27 +1274,57 @@ function updateRing(skipTransition=false){
   if(skipTransition) heroTrack.style.transition = "none";
   else heroTrack.style.transition = "transform 0.7s var(--ease-soft)";
 
-  // 目標角度を計算
-  const targetAngle = -heroIndex * angle;
-  
-  if(!skipTransition){
-    // 最短経路で回転（逆向きの1回転を防ぐ）
-    let diff = targetAngle - currentRot;
+  if(!skipTransition && prevHeroIndex !== heroIndex){
+    // 現在の角度を正規化（計算前に正規化して正確なdeltaを計算）
+    currentRot = normalizeAngle(currentRot);
     
-    // -180度から180度の範囲に調整（最短経路）
-    while(diff > 180) diff -= 360;
-    while(diff < -180) diff += 360;
+    // インデックスの変化量を計算（最短経路）
+    let delta = heroIndex - prevHeroIndex;
+    console.log('[DEBUG] updateRing: prevIndex=', prevHeroIndex, 'newIndex=', heroIndex, 'delta=', delta, 'currentRot=', currentRot);
     
-    currentRot = currentRot + diff;
-  } else {
+    // 最短経路を選択（-2から+2の範囲に調整）
+    if(delta > n / 2) {
+      delta -= n;
+      console.log('[DEBUG] delta調整: +', delta + n, '→', delta);
+    }
+    if(delta < -n / 2) {
+      delta += n;
+      console.log('[DEBUG] delta調整: ', delta - n, '→', delta);
+    }
+    
+    console.log('[DEBUG] 回転前 currentRot=', currentRot, 'delta=', delta, 'angle=', angle);
+    // 角度を変化量に基づいて更新
+    currentRot = currentRot - (delta * angle);
+    console.log('[DEBUG] 回転後 currentRot=', currentRot);
+  } else if(skipTransition){
     // 初期化時は直接設定
-    currentRot = targetAngle;
+    currentRot = -heroIndex * angle;
+    displayedRot = currentRot;
+    console.log('[DEBUG] 初期化: currentRot=', currentRot);
   }
   
-  // ★ 修正：currentRotを正規化（-360〜0の範囲に収める）
-  // 念のため-360〜0の範囲に正規化
-  while(currentRot < -360) currentRot += 360;
-  while(currentRot > 0) currentRot -= 360;
+  // currentRotを正規化（-360〜0の範囲に収める、-360は0に）
+  const beforeNormalize = currentRot;
+  const normalizedRot = normalizeAngle(currentRot);
+  
+  // 正規化後の角度と現在の表示角度の差を計算（最短経路を選択）
+  let diff = normalizedRot - displayedRot;
+  // -180度から180度の範囲に調整（最短経路）
+  while(diff > 180) diff -= 360;
+  while(diff < -180) diff += 360;
+  
+  // 最短経路で更新
+  currentRot = displayedRot + diff;
+  displayedRot = currentRot;
+  
+  // -0を0に統一
+  if(currentRot === 0) currentRot = 0;
+  if(beforeNormalize !== normalizedRot) {
+    console.log('[DEBUG] 正規化: ', beforeNormalize, '→', normalizedRot, '最短経路調整後:', currentRot);
+  }
+  
+  // 前回のインデックスを更新
+  prevHeroIndex = heroIndex;
   
   heroTrack.style.transform = `translate(-50%, -50%) rotateY(${currentRot}deg)`;
 
@@ -1330,6 +1359,8 @@ function setHeroIndex(i, fromUser){
 function setHeroByColor(colorKey){
   const idx = ORDER.indexOf(colorKey);
   if(idx < 0) return;
+  // prevHeroIndexを現在の値に更新してからインデックスを変更
+  prevHeroIndex = heroIndex;
   heroIndex = idx;
   updateRing(false);
 }
@@ -1419,6 +1450,7 @@ heroCarousel.addEventListener("pointermove", (e) => {
   const rot = startRot + dx * 0.2;
   // ドラッグ中は角度をそのまま使用（スナップ時に正規化）
   currentRot = rot;
+  displayedRot = rot;
   heroTrack.style.transform = `translate(-50%, -50%) rotateY(${rot}deg)`;
   e.preventDefault();
 });
@@ -1494,6 +1526,8 @@ colorCards.forEach(card => {
 });
 
 /* 初期描画 */
+// 初期化時にprevHeroIndexを確実に設定
+prevHeroIndex = heroIndex;
 setHeroByColor(selectedColor);
 syncing = true;
 setSelectedColor(selectedColor);
