@@ -1561,8 +1561,9 @@ const angle = 360 / n;
 
 let heroIndex = ORDER.indexOf(selectedColor);
 let prevHeroIndex = heroIndex; // 前回のインデックスを保持（初期値は現在のインデックス）
-let currentRot = -heroIndex * angle;
-let displayedRot = currentRot; // 実際にCSS transformに適用されている角度を保持
+let currdeg = -heroIndex * angle; // シンプルな角度管理
+let currentRot = currdeg; // 後方互換性のため保持
+let displayedRot = currdeg; // 実際にCSS transformに適用されている角度を保持
 let ringRadius = 190;
 
 function mod(a, m){ return ((a % m) + m) % m; }
@@ -1570,10 +1571,14 @@ function degToRad(d){ return d * Math.PI / 180; }
 
 // 角度を-360度から0度の範囲に正規化（-360は0に）
 function normalizeAngle(deg){
+  const original = deg;
   deg = deg % 360;
   if(deg > 0) deg -= 360;
   // -360を0に、-0を0に統一
   if(deg === -360 || Object.is(deg, -0)) deg = 0;
+  if(original !== deg){
+    console.log('[CAROUSEL] normalizeAngle:', original, '→', deg);
+  }
   return deg;
 }
 
@@ -1609,9 +1614,11 @@ function renderHeroDots(){
 }
 
 function layoutRing(){
+  console.log('[CAROUSEL] layoutRing: 開始, n=', n, 'angle=', angle);
   const slide = heroSlides[0];
   const w = slide ? slide.getBoundingClientRect().width : 276;
   ringRadius = Math.round((w/2) / Math.tan(Math.PI / n) + (w * 0.25));
+  console.log('[CAROUSEL] layoutRing: ringRadius=', ringRadius, 'slideWidth=', w);
 
   heroSlides.forEach((s, i) => {
     const h = s.getBoundingClientRect().height || w;
@@ -1690,6 +1697,7 @@ function layoutRing(){
 }
 
 function updateRing(skipTransition=false){
+  console.log('[CAROUSEL] updateRing: 開始, heroIndex=', heroIndex, 'prevHeroIndex=', prevHeroIndex, 'skipTransition=', skipTransition, 'currentRot=', currentRot, 'displayedRot=', displayedRot);
   const key = ORDER[heroIndex];
 
   if(skipTransition) heroTrack.style.transition = "none";
@@ -1697,59 +1705,22 @@ function updateRing(skipTransition=false){
 
   // 目標角度を計算（常に正確な角度を設定）
   const targetRot = -heroIndex * angle;
+  console.log('[CAROUSEL] updateRing: targetRot=', targetRot);
   
-  if(!skipTransition && prevHeroIndex !== heroIndex){
-    // インデックスの変化量を計算（最短経路）
-    let delta = heroIndex - prevHeroIndex;
-    console.log('[DEBUG] updateRing: prevIndex=', prevHeroIndex, 'newIndex=', heroIndex, 'delta=', delta, 'currentRot=', currentRot, 'displayedRot=', displayedRot);
-    
-    // 最短経路を選択（-2から+2の範囲に調整）
-    if(delta > n / 2) {
-      delta -= n;
-      console.log('[DEBUG] delta調整: +', delta + n, '→', delta);
-    }
-    if(delta < -n / 2) {
-      delta += n;
-      console.log('[DEBUG] delta調整: ', delta - n, '→', delta);
-    }
-    
-    console.log('[DEBUG] 回転前 currentRot=', currentRot, 'delta=', delta, 'angle=', angle);
-    // 角度を変化量に基づいて更新（正規化せずに直接加算することで、累積的な回転を維持）
-    currentRot = currentRot - (delta * angle);
-    displayedRot = currentRot;
-    console.log('[DEBUG] 回転後 currentRot=', currentRot);
-    
-    // インデックス変化時は、deltaに基づく計算結果をそのまま使用し、正規化による再計算は行わない
-  } else if(skipTransition){
-    // 初期化時は直接設定
-    currentRot = targetRot;
-    displayedRot = targetRot;
-    console.log('[DEBUG] 初期化: currentRot=', currentRot);
-  } else {
-    // インデックスが変わっていない場合のみ、正規化と最短経路の計算を行う
-    displayedRot = normalizeAngle(displayedRot);
-    let diff = targetRot - displayedRot;
-    // -180度から180度の範囲に調整（最短経路）
-    while(diff > 180) diff -= 360;
-    while(diff < -180) diff += 360;
-    
-    // 差が小さい場合（1度以内）は正確に目標角度に設定
-    if(Math.abs(diff) < 1) {
-      currentRot = targetRot;
-      displayedRot = targetRot;
-    } else {
-      currentRot = displayedRot + diff;
-      displayedRot = currentRot;
-    }
-  }
+  // 常に正確な角度（90度の倍数）を設定
+  currdeg = targetRot;
+  currentRot = targetRot;
+  displayedRot = targetRot;
   
   // 前回のインデックスを更新
   prevHeroIndex = heroIndex;
   
-  heroTrack.style.transform = `translate(-50%, -50%) rotateY(${currentRot}deg)`;
+  console.log('[CAROUSEL] updateRing: 適用前 currdeg=', currdeg, 'currentRot=', currentRot, 'displayedRot=', displayedRot);
+  heroTrack.style.transform = `translate(-50%, -50%) rotateY(${currdeg}deg)`;
+  console.log('[CAROUSEL] updateRing: transform適用完了');
 
   heroSlides.forEach((s, i) => {
-    const world = i * angle + currentRot;
+    const world = i * angle + currdeg;
     const frontness = Math.cos(degToRad(world));
     s.classList.toggle("dim", frontness < 0.4);
     s.style.zIndex = String(Math.round(1000 * (frontness + 1)));
@@ -1764,10 +1735,13 @@ function updateRing(skipTransition=false){
   if(skipTransition){
     requestAnimationFrame(() => { heroTrack.style.transition = "transform 0.7s var(--ease-soft)"; });
   }
+  console.log('[CAROUSEL] updateRing: 完了, heroIndex=', heroIndex, 'prevHeroIndex=', prevHeroIndex, 'currentRot=', currentRot);
 }
 
 function setHeroIndex(i, fromUser){
+  const oldIndex = heroIndex;
   heroIndex = mod(i, n);
+  console.log('[CAROUSEL] setHeroIndex: i=', i, 'oldIndex=', oldIndex, 'newIndex=', heroIndex, 'fromUser=', fromUser);
   updateRing(false);
 
   if(fromUser){
@@ -1778,16 +1752,69 @@ function setHeroIndex(i, fromUser){
 }
 
 function setHeroByColor(colorKey){
+  console.log('[CAROUSEL] setHeroByColor: colorKey=', colorKey, 'currentIndex=', heroIndex);
   const idx = ORDER.indexOf(colorKey);
-  if(idx < 0) return;
+  if(idx < 0) {
+    console.log('[CAROUSEL] setHeroByColor: 色が見つかりませんでした');
+    return;
+  }
   // prevHeroIndexを現在の値に更新してからインデックスを変更
   prevHeroIndex = heroIndex;
   heroIndex = idx;
+  console.log('[CAROUSEL] setHeroByColor: prevHeroIndex=', prevHeroIndex, 'newIndex=', heroIndex);
   updateRing(false);
 }
 
-prevBtn.addEventListener("click", () => setHeroIndex(heroIndex - 1, true));
-nextBtn.addEventListener("click", () => setHeroIndex(heroIndex + 1, true));
+// シンプルな回転関数（バグを減らすためのロジック）
+function rotate(direction) {
+  const fromIndex = heroIndex;
+  let targetIndex = heroIndex;
+  if (direction === "n") {
+    // next: 次のスライド
+    targetIndex = mod(heroIndex + 1, n);
+  } else if (direction === "p") {
+    // prev: 前のスライド
+    targetIndex = mod(heroIndex - 1, n);
+  }
+
+  // 現在角度(displayedRot)を基準に最短経路で目標角度へ（境界での逆回転/長回転を防ぐ）
+  const nextDeg = getShortestRotationAngle(fromIndex, targetIndex, angle, displayedRot);
+  prevHeroIndex = fromIndex;
+  heroIndex = targetIndex;
+  currdeg = nextDeg;
+  currentRot = nextDeg;
+  displayedRot = nextDeg;
+  
+  // CSS transformを適用
+  heroTrack.style.transition = "transform 0.7s var(--ease-soft)";
+  heroTrack.style.transform = `translate(-50%, -50%) rotateY(${currdeg}deg)`;
+  
+  // スライドの表示状態を更新
+  heroSlides.forEach((s, i) => {
+    const world = i * angle + currdeg;
+    const frontness = Math.cos(degToRad(world));
+    s.classList.toggle("dim", frontness < 0.4);
+    s.style.zIndex = String(Math.round(1000 * (frontness + 1)));
+  });
+  
+  // キャプションを更新
+  const key = ORDER[heroIndex];
+  if(heroCaption) heroCaption.textContent = COLOR_META[key].name;
+  
+  // 色を同期
+  syncing = true;
+  setSelectedColor(key);
+  syncing = false;
+  
+  console.log('[CAROUSEL] rotate: direction=', direction, 'heroIndex=', heroIndex, 'currdeg=', currdeg);
+}
+
+prevBtn.addEventListener("click", () => {
+  rotate("p");
+});
+nextBtn.addEventListener("click", () => {
+  rotate("n");
+});
 heroSlides.forEach((slide, i) => {
   slide.addEventListener("click", (e) => {
     // ホットスポットやボタンのクリックは無視
@@ -1840,68 +1867,81 @@ let lastX = 0; // 最後のX位置を保存
 
 // ドラッグを終了する関数
 function endDrag(e) {
+  console.log('[CAROUSEL] endDrag: 開始, dragging=', dragging, 'isDragged=', isDragged);
   if(!dragging) return;
   
   // RAFをキャンセル
   if(rafId) {
     cancelAnimationFrame(rafId);
     rafId = null;
+    console.log('[CAROUSEL] endDrag: RAFをキャンセル');
   }
   
   dragging = false;
   activePointerId = null;
 
   if(isDragged){
+    // ドラッグ中の角度をcurrdegに同期
+    currdeg = displayedRot;
+    currentRot = displayedRot;
+    
+    console.log('[CAROUSEL] endDrag: ドラッグあり, heroIndex=', heroIndex, 'currdeg=', currdeg, 'displayedRot=', displayedRot, 'startRot=', startRot);
     // スワイプ方向を検出（lastXが確実に取得できるように）
     const endX = (e && e.clientX) ? e.clientX : (lastX || startX);
     const dx = endX - startX;
-    const minSwipeDistance = 20; // 最小スワイプ距離（誤操作防止）
+    const minSwipeDistance = 10; // 最小スワイプ距離（誤操作防止）
+    console.log('[CAROUSEL] endDrag: startX=', startX, 'endX=', endX, 'lastX=', lastX, 'dx=', dx, 'minSwipeDistance=', minSwipeDistance);
     
-    // スワイプ方向に応じてインデックスを決定
+    // スワイプ方向に応じてインデックスを決定（ループ可能）
     let targetIndex = heroIndex;
     if(Math.abs(dx) > minSwipeDistance){
       if(dx > 0){
         // 右にスワイプ → 前のスライド（インデックスを減らす）
-        if(heroIndex > 0){
-          targetIndex = heroIndex - 1;
-        }
+        targetIndex = mod(heroIndex - 1, n);
+        console.log('[CAROUSEL] endDrag: 右スワイプ検出, targetIndex=', targetIndex);
       } else {
         // 左にスワイプ → 次のスライド（インデックスを増やす）
-        if(heroIndex < n - 1){
-          targetIndex = heroIndex + 1;
-        }
+        targetIndex = mod(heroIndex + 1, n);
+        console.log('[CAROUSEL] endDrag: 左スワイプ検出, targetIndex=', targetIndex);
       }
+    } else {
+      console.log('[CAROUSEL] endDrag: 最小距離未満のためインデックス変更なし');
     }
     // 最小距離未満の場合は現在のインデックスのまま
     
-    // インデックスが変わらない場合でも、現在の位置に確実にスナップ
-    prevHeroIndex = heroIndex;
-    heroIndex = targetIndex;
+    console.log('[CAROUSEL] endDrag: prevHeroIndex=', prevHeroIndex, 'heroIndex=', heroIndex, 'targetIndex=', targetIndex);
     
-    // スナップ先の正確な角度を計算
-    const targetRot = -targetIndex * angle;
-    
-    // 現在の角度を正規化（ドラッグ中の角度を使う）
-    const normalizedDisplayedRot = normalizeAngle(displayedRot);
-    const normalizedTargetRot = normalizeAngle(targetRot);
-    
-    // 正規化されたdisplayedRotから正規化されたtargetRotへの最短経路を計算
-    let diff = normalizedTargetRot - normalizedDisplayedRot;
-    while(diff > 180) diff -= 360;
-    while(diff < -180) diff += 360;
-    
-    // displayedRotを基準に最短経路で更新
-    // これにより、正規化時に逆向きの回転が発生しない
-    currentRot = normalizedDisplayedRot + diff;
-    displayedRot = currentRot;
+    // インデックスが変わらない場合の処理
+    if(targetIndex === heroIndex){
+      // インデックスが変わらない場合は、ドラッグ開始時の角度（startRot）に戻す
+      console.log('[CAROUSEL] endDrag: インデックス変更なし、開始位置に戻す, startRot=', startRot);
+      currdeg = startRot;
+      currentRot = startRot;
+      displayedRot = startRot;
+      // prevHeroIndexは変更しない（実際には変わっていないため）
+    } else {
+      // インデックスが変わる場合
+      // ドラッグで得た現在角度(displayedRot)から、最短経路でターゲットへスナップ
+      const fromIndex = heroIndex;
+      const nextDeg = getShortestRotationAngle(fromIndex, targetIndex, angle, displayedRot);
+
+      prevHeroIndex = fromIndex;
+      heroIndex = targetIndex;
+      currdeg = nextDeg;
+      currentRot = nextDeg;
+      displayedRot = nextDeg;
+
+      console.log('[CAROUSEL] endDrag: 角度更新後 currdeg=', currdeg, 'heroIndex=', heroIndex, 'fromIndex=', fromIndex);
+    }
     
     // トランジションを有効にして、正確な角度にスナップ
     heroTrack.style.transition = "transform 0.7s var(--ease-soft)";
-    heroTrack.style.transform = `translate(-50%, -50%) rotateY(${currentRot}deg)`;
+    heroTrack.style.transform = `translate(-50%, -50%) rotateY(${currdeg}deg)`;
+    console.log('[CAROUSEL] endDrag: transform適用完了, currdeg=', currdeg);
     
     // スライドの状態を更新
     heroSlides.forEach((s, i) => {
-      const world = i * angle + currentRot;
+      const world = i * angle + currdeg;
       const frontness = Math.cos(degToRad(world));
       s.classList.toggle("dim", frontness < 0.4);
       s.style.zIndex = String(Math.round(1000 * (frontness + 1)));
@@ -1910,17 +1950,21 @@ function endDrag(e) {
     // キャプションを更新
     const key = ORDER[heroIndex];
     if(heroCaption) heroCaption.textContent = COLOR_META[key].name;
+    console.log('[CAROUSEL] endDrag: キャプション更新, key=', key);
     
     // 色の同期
     syncing = true;
     setSelectedColor(key);
     syncing = false;
+    console.log('[CAROUSEL] endDrag: 色同期完了, heroIndex=', heroIndex);
   } else {
     // ドラッグしていない場合はトランジションを復元
+    console.log('[CAROUSEL] endDrag: ドラッグなし、トランジション復元');
     heroTrack.style.transition = "transform 0.7s var(--ease-soft)";
   }
   
   isDragged = false;
+  console.log('[CAROUSEL] endDrag: 完了');
   
   // キャプチャを確実に解放
   if(heroCarousel.releasePointerCapture && e && e.pointerId !== undefined) {
@@ -1933,10 +1977,13 @@ function endDrag(e) {
 }
 
 heroCarousel.addEventListener("pointerdown", (e) => {
-  console.log('[DEBUG] heroCarousel pointerdown:', e.target, e.clientX, e.clientY);
+  console.log('[CAROUSEL] pointerdown: 開始, target=', e.target, 'clientX=', e.clientX, 'clientY=', e.clientY, 'pointerId=', e.pointerId);
   
   // 既存のドラッグ中なら無視
-  if(dragging) return;
+  if(dragging) {
+    console.log('[CAROUSEL] pointerdown: 既にドラッグ中のため無視');
+    return;
+  }
   
   // クリック位置からホットスポットを検出（3D変換の影響を回避）
   const allHotspots = heroCarousel.querySelectorAll('.carousel-eye-hotspot');
@@ -1990,17 +2037,23 @@ heroCarousel.addEventListener("pointerdown", (e) => {
   activePointerId = e.pointerId;
   startX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
   lastX = startX; // 最後の位置を初期化
-  // ドラッグ開始時の角度を正規化して保存
-  startRot = normalizeAngle(currentRot);
+  // ドラッグ開始時の角度を正確な角度（90度の倍数）として保存
+  // currdegを正確な角度にリセット（累積誤差を防ぐ）
+  currdeg = -heroIndex * angle;
+  currentRot = currdeg;
+  displayedRot = currdeg;
+  startRot = currdeg;
   isDragged = false;
   heroTrack.style.transition = "none";
+  console.log('[CAROUSEL] pointerdown: ドラッグ開始, startX=', startX, 'startRot=', startRot, 'currentRot=', currentRot, 'heroIndex=', heroIndex);
   
   // キャプチャを確実に設定
   if(heroCarousel.setPointerCapture) {
     try {
       heroCarousel.setPointerCapture(e.pointerId);
+      console.log('[CAROUSEL] pointerdown: pointer capture成功');
     } catch(err) {
-      console.warn('Pointer capture failed:', err);
+      console.warn('[CAROUSEL] pointerdown: Pointer capture failed:', err);
     }
   }
 });
@@ -2009,7 +2062,10 @@ heroCarousel.addEventListener("pointerdown", (e) => {
 function handlePointerMove(e) {
   if(!dragging) return;
   // アクティブなポインターIDと一致するか確認
-  if(activePointerId !== null && e.pointerId !== activePointerId) return;
+  if(activePointerId !== null && e.pointerId !== activePointerId) {
+    console.log('[CAROUSEL] pointermove: ポインターID不一致, activePointerId=', activePointerId, 'e.pointerId=', e.pointerId);
+    return;
+  }
   
   // RAF内で処理をバッチ化
   if(rafId) return; // 既にRAFが予約されていたらスキップ
@@ -2021,10 +2077,15 @@ function handlePointerMove(e) {
     lastX = currentX; // 最後の位置を保存
     const dx = currentX - startX;
     
+    const wasDragged = isDragged;
     if(Math.abs(dx) > 3) isDragged = true;
+    if(!wasDragged && isDragged) {
+      console.log('[CAROUSEL] pointermove: ドラッグ検出, dx=', dx);
+    }
     
     const rot = startRot + dx * 0.2;
     // ドラッグ中は角度をそのまま使用（スナップ時に正規化）
+    currdeg = rot;
     currentRot = rot;
     displayedRot = rot;
     
@@ -2048,9 +2109,14 @@ document.addEventListener("pointermove", handlePointerMove);
 
 // pointerupもグローバルにリスニング
 function handlePointerUp(e) {
+  console.log('[CAROUSEL] pointerup: 開始, dragging=', dragging, 'pointerId=', e.pointerId, 'activePointerId=', activePointerId);
   if(!dragging) return;
   // アクティブなポインターIDと一致するか確認
-  if(activePointerId !== null && e.pointerId !== activePointerId) return;
+  if(activePointerId !== null && e.pointerId !== activePointerId) {
+    console.log('[CAROUSEL] pointerup: ポインターID不一致のため無視');
+    return;
+  }
+  console.log('[CAROUSEL] pointerup: endDrag呼び出し');
   endDrag(e);
 }
 
@@ -2059,8 +2125,13 @@ document.addEventListener("pointerup", handlePointerUp);
 
 // pointercancelイベント（タッチが中断された場合）
 function handlePointerCancel(e) {
+  console.log('[CAROUSEL] pointercancel: 開始, dragging=', dragging, 'pointerId=', e.pointerId, 'activePointerId=', activePointerId);
   if(!dragging) return;
-  if(activePointerId !== null && e.pointerId !== activePointerId) return;
+  if(activePointerId !== null && e.pointerId !== activePointerId) {
+    console.log('[CAROUSEL] pointercancel: ポインターID不一致のため無視');
+    return;
+  }
+  console.log('[CAROUSEL] pointercancel: endDrag呼び出し');
   endDrag(e);
 }
 
