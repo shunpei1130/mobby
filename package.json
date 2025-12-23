@@ -1,0 +1,8 @@
+{
+    "name": "mobby-site",
+    "private": true,
+    "dependencies": {
+      "resend": "^4.0.0"
+    }
+  }
+  

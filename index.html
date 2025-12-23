@@ -1513,8 +1513,6 @@
   <!-- Matter.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <!-- EmailJS -->
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
   <script>
 /* reveal */
 function initScrollObserver(){
@@ -2961,163 +2959,131 @@ document.getElementById('openColorsFromFaq')?.addEventListener('click', () => {
 // EmailJS初期化（実際の使用時はPublic Keyを設定する必要があります）
 // 注意: 本番環境では、EmailJSの設定（Service ID、Template ID、Public Key）が必要です
 // ここではmailto:リンクを使用するフォールバック方式を実装します
+// 共通：JSON POST helper
+async function postJSON(url, data) {
+  const r = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
 
-// 値段ポップアップの抽選予約フォーム送信
-document.getElementById('priceReservationForm')?.addEventListener('submit', async (e) => {
+  const j = await r.json().catch(() => ({}));
+
+  // APIが {ok:true} を返す想定
+  if (!r.ok || !j.ok) {
+    const msg = j?.error || "Request failed";
+    throw new Error(msg);
+  }
+  return j;
+}
+
+// 共通：メッセージ表示 helper
+function showMsg(div, { ok, text }) {
+  div.style.display = "block";
+  div.style.background = ok ? "rgba(0,255,0,0.1)" : "rgba(255,0,0,0.1)";
+  div.style.border = ok ? "1px solid rgba(0,255,0,0.3)" : "1px solid rgba(255,0,0,0.3)";
+  div.style.color = "var(--color-earth)";
+  div.textContent = text;
+}
+
+// 値段ポップアップの抽選予約フォーム送信（mailto → /api/reservation）
+document.getElementById("priceReservationForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
-  
+
   const form = e.target;
-  const address = document.getElementById('reservationAddress').value;
-  const name = document.getElementById('reservationName').value;
-  const email = document.getElementById('reservationEmail').value;
-  const phone = document.getElementById('reservationPhone').value;
-  const messageDiv = document.getElementById('priceFormMessage');
+  const address = document.getElementById("reservationAddress")?.value ?? "";
+  const name = document.getElementById("reservationName")?.value ?? "";
+  const email = document.getElementById("reservationEmail")?.value ?? "";
+  const phone = document.getElementById("reservationPhone")?.value ?? "";
+  const messageDiv = document.getElementById("priceFormMessage");
   const submitBtn = form.querySelector('button[type="submit"]');
-  
+
+  if (!messageDiv || !submitBtn) return;
+
   // バリデーション（住所は必須）
-  if(!address || address.trim() === '') {
-    messageDiv.style.display = 'block';
-    messageDiv.style.background = 'rgba(255,0,0,0.1)';
-    messageDiv.style.border = '1px solid rgba(255,0,0,0.3)';
-    messageDiv.style.color = 'var(--color-earth)';
-    messageDiv.textContent = '住所を入力してください。';
+  if (!address || address.trim() === "") {
+    showMsg(messageDiv, { ok: false, text: "住所を入力してください。" });
     return;
   }
-  
+
   // 送信ボタンを無効化
   submitBtn.disabled = true;
-  submitBtn.textContent = '送信中...';
-  messageDiv.style.display = 'none';
-  
+  const originalText = submitBtn.textContent;
+  submitBtn.textContent = "送信中...";
+  messageDiv.style.display = "none";
+
   try {
-    // EmailJSを使用する場合（設定が必要）
-    // emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
-    //   to_email: 'info.mobbymobbymobby@gmail.com',
-    //   subject: '購入の抽選予約',
-    //   address: address,
-    //   name: name,
-    //   email: email,
-    //   phone: phone
-    // }, 'YOUR_PUBLIC_KEY');
-    
-    // フォールバック: mailto:リンクを使用
-    const subject = encodeURIComponent('購入の抽選予約');
-    
-    // メール本文を作成
-    let bodyText = '購入の抽選予約を希望します。\n\n';
-    bodyText += '【住所】\n' + address + '\n\n';
-    
-    if(name && name.trim() !== '') {
-      bodyText += '【名前】\n' + name + '\n\n';
-    }
-    if(email && email.trim() !== '') {
-      bodyText += '【メールアドレス】\n' + email + '\n\n';
-    }
-    if(phone && phone.trim() !== '') {
-      bodyText += '【電話番号】\n' + phone + '\n\n';
-    }
-    
-    bodyText += '抽選に当たったら、モビィから当選の手紙が届くことを確認しました。';
-    
-    const body = encodeURIComponent(bodyText);
-    const mailtoLink = `mailto:info.mobbymobbymobby@gmail.com?subject=${subject}&body=${body}`;
-    
-    // メールクライアントを開く
-    window.location.href = mailtoLink;
-    
-    // 成功メッセージを表示
-    messageDiv.style.display = 'block';
-    messageDiv.style.background = 'rgba(0,255,0,0.1)';
-    messageDiv.style.border = '1px solid rgba(0,255,0,0.3)';
-    messageDiv.style.color = 'var(--color-earth)';
-    messageDiv.textContent = 'メールクライアントが開きます。メールを送信してください。';
-    
+    await postJSON("/api/reservation", {
+      address: address.trim(),
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      hp: "" // honeypot（サーバ側で弾く用。フォームにhiddenを足すならここも拾う）
+    });
+
+    showMsg(messageDiv, { ok: true, text: "送信しました。抽選結果を待ってね。" });
+
     // フォームをリセット
     setTimeout(() => {
       form.reset();
       submitBtn.disabled = false;
-      submitBtn.textContent = '予約する';
-    }, 2000);
-    
+      submitBtn.textContent = originalText || "予約する";
+    }, 1200);
   } catch (error) {
-    console.error('送信エラー:', error);
-    messageDiv.style.display = 'block';
-    messageDiv.style.background = 'rgba(255,0,0,0.1)';
-    messageDiv.style.border = '1px solid rgba(255,0,0,0.3)';
-    messageDiv.style.color = 'var(--color-earth)';
-    messageDiv.textContent = '送信に失敗しました。もう一度お試しください。';
+    console.error("送信エラー:", error);
+    showMsg(messageDiv, { ok: false, text: "送信に失敗しました。時間をおいて再度お試しください。" });
     submitBtn.disabled = false;
-    submitBtn.textContent = '予約する';
+    submitBtn.textContent = originalText || "予約する";
   }
 });
 
-// FAQお問い合わせフォーム送信
-document.getElementById('faqContactForm')?.addEventListener('submit', async (e) => {
+// FAQお問い合わせフォーム送信（mailto → /api/contact）
+document.getElementById("faqContactForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
-  
+
   const form = e.target;
-  const email = document.getElementById('faqEmail').value;
-  const message = document.getElementById('faqMessage').value;
-  const messageDiv = document.getElementById('faqFormMessage');
+  const email = document.getElementById("faqEmail")?.value ?? "";
+  const message = document.getElementById("faqMessage")?.value ?? "";
+  const messageDiv = document.getElementById("faqFormMessage");
   const submitBtn = form.querySelector('button[type="submit"]');
-  
+
+  if (!messageDiv || !submitBtn) return;
+
   // バリデーション
-  if(!email || !message) {
-    messageDiv.style.display = 'block';
-    messageDiv.style.background = 'rgba(255,0,0,0.1)';
-    messageDiv.style.border = '1px solid rgba(255,0,0,0.3)';
-    messageDiv.style.color = 'var(--color-earth)';
-    messageDiv.textContent = 'メールアドレスとお問い合わせ内容を入力してください。';
+  if (!email.trim() || !message.trim()) {
+    showMsg(messageDiv, { ok: false, text: "メールアドレスとお問い合わせ内容を入力してください。" });
     return;
   }
-  
+
   // 送信ボタンを無効化
   submitBtn.disabled = true;
-  submitBtn.textContent = '送信中...';
-  messageDiv.style.display = 'none';
-  
+  const originalText = submitBtn.textContent;
+  submitBtn.textContent = "送信中...";
+  messageDiv.style.display = "none";
+
   try {
-    // EmailJSを使用する場合（設定が必要）
-    // emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
-    //   to_email: 'info.mobbymobbymobby@gmail.com',
-    //   from_email: email,
-    //   message: message
-    // }, 'YOUR_PUBLIC_KEY');
-    
-    // フォールバック: mailto:リンクを使用
-    const subject = encodeURIComponent('Mobby お問い合わせ');
-    const body = encodeURIComponent(`メールアドレス: ${email}\n\nお問い合わせ内容:\n${message}`);
-    const mailtoLink = `mailto:info.mobbymobbymobby@gmail.com?subject=${subject}&body=${body}`;
-    
-    // メールクライアントを開く
-    window.location.href = mailtoLink;
-    
-    // 成功メッセージを表示
-    messageDiv.style.display = 'block';
-    messageDiv.style.background = 'rgba(0,255,0,0.1)';
-    messageDiv.style.border = '1px solid rgba(0,255,0,0.3)';
-    messageDiv.style.color = 'var(--color-earth)';
-    messageDiv.textContent = 'メールクライアントが開きます。メールを送信してください。';
-    
+    await postJSON("/api/contact", {
+      email: email.trim(),
+      message: message.trim(),
+      hp: ""
+    });
+
+    showMsg(messageDiv, { ok: true, text: "送信しました。返信まで少し待ってね。" });
+
     // フォームをリセット
     setTimeout(() => {
       form.reset();
       submitBtn.disabled = false;
-      submitBtn.textContent = '送信';
-    }, 2000);
-    
+      submitBtn.textContent = originalText || "送信";
+    }, 1200);
   } catch (error) {
-    console.error('送信エラー:', error);
-    messageDiv.style.display = 'block';
-    messageDiv.style.background = 'rgba(255,0,0,0.1)';
-    messageDiv.style.border = '1px solid rgba(255,0,0,0.3)';
-    messageDiv.style.color = 'var(--color-earth)';
-    messageDiv.textContent = '送信に失敗しました。もう一度お試しください。';
+    console.error("送信エラー:", error);
+    showMsg(messageDiv, { ok: false, text: "送信に失敗しました。時間をおいて再度お試しください。" });
     submitBtn.disabled = false;
-    submitBtn.textContent = '送信';
+    submitBtn.textContent = originalText || "送信";
   }
 });
 
-  </script>
+</script>
 </body>
 </html>
