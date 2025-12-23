@@ -89,11 +89,10 @@
   /* モビィタイトル */
   .mobby-title{
     text-align:center;
-    font-size:clamp(3.2rem, 5vw, 4.5rem);
+    font-size:clamp(6.2rem, 5vw, 4.5rem);
     font-weight:900;
     font-family:'Montserrat', sans-serif;
     color:var(--color-forest);
-    letter-spacing:0.15em;
     padding-top:32px;
     padding-bottom:8px;
     opacity:0.95;
@@ -101,7 +100,7 @@
   }
   @media (max-width: 768px){
     .mobby-title{
-      font-size:clamp(3.2rem, 6vw, 3.5rem);
+      font-size:clamp(4.2rem, 6vw, 3.5rem);
       padding-top:24px;
       padding-bottom:6px;
     }
@@ -121,8 +120,14 @@
     transition:all 0.4s var(--ease-soft);border:2px solid transparent;
     box-shadow:3px 3px 0 rgba(0,0,0,0.1);cursor:pointer;
   }
-  .btn-secondary{background-color:var(--color-cream);color:var(--color-forest);border-color:var(--color-forest);}
-  .btn-secondary:hover{background-color:var(--color-sky);color:#fff;border-color:transparent;transform:translateY(-2px) rotate(-1deg);}
+  .btn-secondary{border:none;box-shadow:3px 3px 0 rgba(0,0,0,0.15);}
+  .btn-secondary:hover{transform:translateY(-2px) rotate(-1deg);opacity:0.9;}
+  #openMessagePopup{background-color:#b2bfb3;color:#fff;}
+  #openColorsPopup{background-color:#f0b99f;color:#fff;}
+  #openPricePopup{background-color:#f6d49c;color:#fff;}
+  #openImagePopup{background-color:#9bb5ae;color:#fff;}
+  #openFaqPopup{background-color:#fdeed7;color:#827b6a;}
+  #openVideoPopup{background-color:#fdeed7;color:#827b6a;}
   .btn-primary{background-color:var(--color-accent-red);color:var(--color-cream);}
   .btn-primary:hover{background-color:var(--color-earth);transform:translateY(-2px) rotate(1deg);}
   .btn-ghost{background:rgba(255,255,255,0);color:var(--color-forest);border-color:rgba(47,79,79,0.35);}
@@ -145,10 +150,10 @@
   /* Hero */
   .hero{
     display:flex;flex-direction:column;justify-content:center;align-items:center;
-    text-align:center;position:relative;padding-top:10%;padding-bottom:52px;
+    text-align:center;position:relative;padding-top:10%;
   }
 
-  .headline{font-size:clamp(2.2rem, 3.9vw, 3.2rem);margin-top:12px;}
+  .headline{font-size:clamp(1.1rem, 2.8vw, 2.4rem);margin-top:8px;text-align:center;}
   .subhead{margin-top:12px;font-size:1.02rem;opacity:0.92;}
   
   @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
@@ -226,7 +231,7 @@
     touch-action: pan-y pinch-zoom; /* 横スワイプのみカルーセルで処理 */
     perspective: 1300px;
   }
-  .carousel-viewport{position:relative;height:276px;overflow: visible;}
+  .carousel-viewport{position:relative;height:300px;overflow: visible;}
   .carousel-track{
     position:absolute;left:50%;top:50%;
     transform-style: preserve-3d;
@@ -236,7 +241,7 @@
   }
   .carousel-slide{
     position:absolute;left:0;top:0;
-    width:276px;height:276px;
+    width:300px;height:300px;
     transform-style: preserve-3d;
     transition: opacity 0.35s var(--ease-soft), filter 0.35s var(--ease-soft);
     cursor: pointer;
@@ -374,8 +379,8 @@
   }
   .carousel-dot.active{background:rgba(240,230,140,0.75);border-color:rgba(240,230,140,0.95);}
   @media (max-width: 768px){
-    .carousel-viewport{height:209px;}
-    .carousel-slide{width:209px;height:209px;}
+    .carousel-viewport{height:230px;}
+    .carousel-slide{width:230px;height:230px;}
     .carousel-btn{width:40px;height:40px;font-size:24px;}
   }
   
@@ -1136,6 +1141,7 @@
 
   <div id="main-content">
     <div class="mobby-title">Mobby</div>
+    <h1 class="headline reveal delay-200">閉じ込めたい５つの思い出</h1>
     <section class="hero">
       <div class="container reveal">
 
@@ -1167,8 +1173,6 @@
 
           <div class="carousel-caption" id="heroCaption">Peach Pink</div>
         </div>
-
-        <h1 class="headline reveal delay-200">閉じ込めたい<br>５つの思い出</h1>
       </div>
     </section>
 
