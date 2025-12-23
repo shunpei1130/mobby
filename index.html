@@ -150,11 +150,15 @@
   /* Hero */
   .hero{
     display:flex;flex-direction:column;justify-content:center;align-items:center;
-    text-align:center;position:relative;padding-top:10%;
+    text-align:center;position:relative;padding-top:0;
   }
 
   .headline{font-size:clamp(0.9rem, 2.8vw, 2.4rem);margin-top:8px;text-align:center;}
   .subhead{margin-top:12px;font-size:1.02rem;opacity:0.92;}
+  
+  @media (max-width: 768px){
+    .hero{padding-top:10%;}
+  }
   
   @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
   .floating{animation:float 4s ease-in-out infinite;}
@@ -260,8 +264,8 @@
   /* カルーセル内のホットスポット */
   .carousel-eye-hotspot{
     position:absolute;
-    top:21%;
-    left:51%;
+    top:23%;
+    left:52%;
     width:22%;
     min-width:52px;
     height:auto;
@@ -1009,8 +1013,8 @@
     padding:10px 10px 10px 10px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.6);
     transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
-    width: 30%;
-    height: 30%;
+    width: 35%;
+    height: 35%;
     will-change: transform, opacity, filter;
     border-radius: 2px 3px 4px 2px;
   }
@@ -1158,7 +1162,7 @@
                 <div class="hero-illustration"><img src="t1.jpg" alt="Mobby Peach Pink"></div>
               </div>
               <div class="carousel-slide" data-color="purple">
-                <div class="hero-illustration"><img src="t2.png" alt="Mobby Twilight Violet"></div>
+                <div class="hero-illustration"><img src="t2.jpg" alt="Mobby Twilight Violet"></div>
               </div>
               <div class="carousel-slide" data-color="blue">
                 <div class="hero-illustration"><img src="t3.jpg" alt="Mobby Aqua Sky"></div>
@@ -1182,7 +1186,6 @@
 <div id="vfOverlay" class="vf" aria-hidden="true">
   <div class="vf-top">
     <div class="vf-meta">
-      <div class="vf-counter" id="vfCounter">5 / 5</div>
       <div class="vf-sub">新しい写真を撮ると、古い写真は隅へ。いっぱいになったら選んで削除するビィ</div>
     </div>
     <button class="btn btn-ghost vf-close" id="vfClose" type="button" aria-label="閉じる">×</button>
@@ -1221,7 +1224,7 @@
               <div class="selected-badge">選択中</div>
               <div class="swatch" style="background:#F7A7C6;"></div>
               <div class="color-card-content">
-                <img class="product-thumb" src="mobby_pink.jpg" alt="Mobby Peach Pink">
+                <img class="product-thumb" src="t1.jpg" alt="Mobby Peach Pink">
                 <div class="color-title">Peach Pink <span class="mini-tag">直感</span></div>
               </div>
               <div class="color-desc">好きに正直。</div>
@@ -1231,7 +1234,7 @@
               <div class="selected-badge">選択中</div>
               <div class="swatch" style="background:#9C7BFF;"></div>
               <div class="color-card-content">
-                <img class="product-thumb" src="mobby_purple.jpg" alt="Mobby Twilight Violet">
+                <img class="product-thumb" src="t2.jpg" alt="Mobby Twilight Violet">
                 <div class="color-title">Twilight Violet <span class="mini-tag">世界観</span></div>
               </div>
               <div class="color-desc">こだわり強め。</div>
@@ -1241,7 +1244,7 @@
               <div class="selected-badge">選択中</div>
               <div class="swatch" style="background:#8FD7FF;"></div>
               <div class="color-card-content">
-                <img class="product-thumb" src="mobby_blue.jpg" alt="Mobby Aqua Sky">
+                <img class="product-thumb" src="t3.jpg" alt="Mobby Aqua Sky">
                 <div class="color-title">Aqua Sky <span class="mini-tag">冒険</span></div>
               </div>
               <div class="color-desc">フッ軽。</div>
@@ -1251,7 +1254,7 @@
               <div class="selected-badge">選択中</div>
               <div class="swatch" style="background:#FFA24A;"></div>
               <div class="color-card-content">
-                <img class="product-thumb" src="mobby_orange.jpg" alt="Mobby Sunny Orange">
+                <img class="product-thumb" src="t4.jpg" alt="Mobby Sunny Orange">
                 <div class="color-title">Sunny Orange <span class="mini-tag">勇気</span></div>
               </div>
               <div class="color-desc">前に進める。</div>
@@ -1453,6 +1456,9 @@
               </div>
               <div class="image-gallery-slide">
                 <img src="img/3.jpg" alt="Mobby 画像 3" class="gallery-image" loading="lazy">
+              </div>
+              <div class="image-gallery-slide">
+                <img src="img/4.jpg" alt="Mobby 画像 4" class="gallery-image" loading="lazy">
               </div>
             </div>
           </div>
@@ -2392,9 +2398,8 @@ window.openViewfinder = null;
   const viewfinder = document.getElementById('rcViewfinder');
   const container  = document.getElementById('rcPhotoContainer');
   const snapBtn    = document.getElementById('rcSnap');
-  const counterEl  = document.getElementById('vfCounter');
 
-  if(!overlay || !closeBtn || !backdrop || !viewfinder || !container || !snapBtn || !counterEl) return;
+  if(!overlay || !closeBtn || !backdrop || !viewfinder || !container || !snapBtn) return;
 
   // スクロール復元
   let prevBodyOverflow = '';
@@ -2416,14 +2421,11 @@ window.openViewfinder = null;
 
   let dustMade = false;
 
-  function updateCounter(){
-    counterEl.textContent = `${photos.length} / 5`;
-  }
-
   function renderPhotos(){
     const existing = Array.from(container.children);
+    const photosToShow = photos.slice(0, 5);
 
-    photos.forEach((photo, index) => {
+    photosToShow.forEach((photo, index) => {
       let el = document.getElementById(`rc-p-${photo.id}`);
 
       if(!el){
@@ -2447,7 +2449,7 @@ window.openViewfinder = null;
       el.classList.add(`rc-age-${index}`);
     });
 
-    const currentIds = photos.map(p => `rc-p-${p.id}`);
+    const currentIds = photosToShow.map(p => `rc-p-${p.id}`);
     existing.forEach(el => {
       if(!currentIds.includes(el.id)){
         el.style.opacity = '0';
@@ -2455,8 +2457,6 @@ window.openViewfinder = null;
         setTimeout(() => el.remove(), 800);
       }
     });
-
-    updateCounter();
   }
 
   // “エモ”フラッシュ（やわらかい光漏れ）
@@ -2498,10 +2498,16 @@ window.openViewfinder = null;
 
 // ▼ 追加：デモ用の画像プール（毎回ここから回す）
 const DEMO_POOL = [
-  "mobby_pink.jpg",
-  "mobby_purple.jpg",
-  "mobby_blue.jpg",
-  "mobby_orange.jpg",
+  "img/shutter/1.jpg",
+  "img/shutter/2.jpg",
+  "img/shutter/3.jpg",
+  "img/shutter/4.jpg",
+  "img/shutter/5.jpg",
+  "img/shutter/6.jpg",
+  "img/shutter/7.jpg",
+  "img/shutter/8.jpg",
+  "img/shutter/9.jpg",
+  "img/shutter/10.jpg",
 ];
 let demoCursor = 0;
 
