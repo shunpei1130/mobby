@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mobby（モビィ）</title>
   <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Yomogi&display=swap');
     </style>
@@ -89,8 +90,8 @@
   .mobby-title{
     text-align:center;
     font-size:clamp(3.2rem, 5vw, 4.5rem);
-    font-weight:700;
-    font-family:var(--font-ja);
+    font-weight:900;
+    font-family:'Montserrat', sans-serif;
     color:var(--color-forest);
     letter-spacing:0.15em;
     padding-top:32px;
@@ -254,8 +255,8 @@
   /* カルーセル内のホットスポット */
   .carousel-eye-hotspot{
     position:absolute;
-    top:25%;
-    left:58%;
+    top:21%;
+    left:51%;
     width:22%;
     min-width:52px;
     height:auto;
@@ -1134,7 +1135,7 @@
   </div>
 
   <div id="main-content">
-    <div class="mobby-title">モビィ</div>
+    <div class="mobby-title">Mobby</div>
     <section class="hero">
       <div class="container reveal">
 
@@ -1148,16 +1149,16 @@
           <div class="carousel-viewport">
             <div class="carousel-track" id="heroTrack">
               <div class="carousel-slide" data-color="pink">
-                <div class="hero-illustration"><img src="mobby_pink.jpg" alt="Mobby Peach Pink"></div>
+                <div class="hero-illustration"><img src="mobby_pink2.jpg" alt="Mobby Peach Pink"></div>
               </div>
               <div class="carousel-slide" data-color="purple">
-                <div class="hero-illustration"><img src="mobby_purple.jpg" alt="Mobby Twilight Violet"></div>
+                <div class="hero-illustration"><img src="mobby_purple2.jpg" alt="Mobby Twilight Violet"></div>
               </div>
               <div class="carousel-slide" data-color="blue">
-                <div class="hero-illustration"><img src="mobby_blue.jpg" alt="Mobby Aqua Sky"></div>
+                <div class="hero-illustration"><img src="mobby_blue2.jpg" alt="Mobby Aqua Sky"></div>
               </div>
               <div class="carousel-slide" data-color="orange">
-                <div class="hero-illustration"><img src="mobby_orange.jpg" alt="Mobby Sunny Orange"></div>
+                <div class="hero-illustration"><img src="mobby_yellow.jpg" alt="Mobby Sunny Orange"></div>
               </div>
             </div>
           </div>
@@ -2233,7 +2234,17 @@ document.addEventListener('click', (e) => {
 });
 
 /* Splash (Matter.js) */
-const ICON_URLS   = ['icon1.png','icon2.png','icon3.png','icon4.png'];
+// 8種類すべての画像を使用
+const ICON_URLS   = [
+  "mobby_pink.jpg",
+  "mobby_purple.jpg",
+  "mobby_blue.jpg",
+  "mobby_orange.jpg",
+  "mobby_pink2.jpg",
+  "mobby_yellow.jpg",
+  "mobby_purple2.jpg",
+  "mobby_blue2.jpg"
+];
 // スマホの時は半分のサイズにする
 const ICON_SIZE   = window.innerWidth <= 768 ? 75 : 150;
 const SPAWN_RATE  = 100;
@@ -2250,6 +2261,7 @@ const splashElement = document.getElementById('splash-screen');
 const mainContent   = document.getElementById('main-content');
 
 const engine = Engine.create();
+engine.world.gravity.y = 1.5; // 落下速度を上げる（デフォルト1.0）
 const world  = engine.world;
 
 let width  = window.innerWidth;
@@ -2392,7 +2404,10 @@ window.openViewfinder = null;
     "mobby_purple.jpg",
     "mobby_blue.jpg",
     "mobby_orange.jpg",
-    "mobby_pink.jpg"
+    "mobby_pink2.jpg",
+    "mobby_yellow.jpg",
+    "mobby_purple2.jpg",
+    "mobby_blue2.jpg"
   ];
   let photos = SEED.map((url, i) => ({ id: i + 1, url }));
 
