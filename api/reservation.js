@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { address, name, email, phone, hp } = req.body || {};
+    const { address, name, email, phone, purchaseReason, hp } = req.body || {};
 
     if (hp) {
       res.status(200).json({ ok: true });
@@ -20,10 +20,17 @@ module.exports = async (req, res) => {
       return;
     }
 
+    // 名前は必須
+    if (!name || typeof name !== "string" || name.trim().length === 0 || name.length > 200) {
+      res.status(400).json({ ok: false, error: "Invalid name" });
+      return;
+    }
+
     // 任意項目の軽い制限
-    const safeName = (typeof name === "string" ? name : "").slice(0, 200);
+    const safeName = name.trim().slice(0, 200);
     const safeEmail = (typeof email === "string" ? email : "").slice(0, 200);
     const safePhone = (typeof phone === "string" ? phone : "").slice(0, 50);
+    const safePurchaseReason = Array.isArray(purchaseReason) ? purchaseReason : (purchaseReason ? [purchaseReason] : []);
 
     const resend = new Resend(process.env.RESEND_API_KEY);
     const to = process.env.TO_EMAIL;
@@ -34,6 +41,10 @@ module.exports = async (req, res) => {
       return;
     }
 
+    const purchaseReasonText = safePurchaseReason.length > 0 
+      ? safePurchaseReason.join("、") 
+      : "(未入力)";
+
     await resend.emails.send({
       from,
       to: [to],
@@ -41,9 +52,10 @@ module.exports = async (req, res) => {
       text:
         `抽選予約が届きました。\n\n` +
         `住所:\n${address}\n\n` +
-        `名前: ${safeName || "(未入力)"}\n` +
+        `名前: ${safeName}\n` +
         `メール: ${safeEmail || "(未入力)"}\n` +
-        `電話: ${safePhone || "(未入力)"}\n`
+        `電話: ${safePhone || "(未入力)"}\n` +
+        `購入理由: ${purchaseReasonText}\n`
     });
 
     res.status(200).json({ ok: true });
