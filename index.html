@@ -3089,7 +3089,21 @@ document.getElementById("priceReservationForm")?.addEventListener("submit", asyn
     }, 1200);
   } catch (error) {
     console.error("送信エラー:", error);
-    showMsg(messageDiv, { ok: false, text: "送信に失敗しました。時間をおいて再度お試しください。" });
+    const errorMessage = error.message || "送信に失敗しました。時間をおいて再度お試しください。";
+    // エラーメッセージを日本語に変換
+    let userMessage = errorMessage;
+    if (errorMessage.includes("Address is required") || errorMessage.includes("Invalid address")) {
+      userMessage = "住所を入力してください。";
+    } else if (errorMessage.includes("Name is required") || errorMessage.includes("Invalid name") || errorMessage.includes("cannot be empty")) {
+      userMessage = "名前を入力してください。";
+    } else if (errorMessage.includes("at least 5 characters")) {
+      userMessage = "住所は5文字以上入力してください。";
+    } else if (errorMessage.includes("at most")) {
+      userMessage = "入力文字数が多すぎます。";
+    } else if (errorMessage.includes("Request failed")) {
+      userMessage = "送信に失敗しました。時間をおいて再度お試しください。";
+    }
+    showMsg(messageDiv, { ok: false, text: userMessage });
     submitBtn.disabled = false;
     submitBtn.textContent = originalText || "予約する";
   }
