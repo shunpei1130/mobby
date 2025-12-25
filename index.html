@@ -1312,11 +1312,12 @@
                 <p style="font-size:0.85rem;opacity:0.75;margin-bottom:16px;">住所が間違えてたら連絡するビィ</p>
                 
                 <div class="form-group" style="margin-top:16px;">
-                  <label for="reservationName" style="display:block;margin-bottom:6px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">名前 <span style="color:rgba(47,79,79,0.5);font-size:0.85rem;">（任意）</span></label>
+                  <label for="reservationName" style="display:block;margin-bottom:6px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">名前 <span style="color:rgba(47,79,79,0.6);font-size:0.85rem;">（必須）</span></label>
                   <input 
                     type="text" 
                     id="reservationName" 
                     name="name" 
+                    required
                     placeholder="お名前"
                     style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;transition:border-color 0.2s;"
                   />
@@ -3052,9 +3053,13 @@ document.getElementById("priceReservationForm")?.addEventListener("submit", asyn
 
   if (!messageDiv || !submitBtn) return;
 
-  // バリデーション（住所は必須）
+  // バリデーション（住所と名前は必須）
   if (!address || address.trim() === "") {
     showMsg(messageDiv, { ok: false, text: "住所を入力してください。" });
+    return;
+  }
+  if (!name || name.trim() === "") {
+    showMsg(messageDiv, { ok: false, text: "名前を入力してください。" });
     return;
   }
 
