@@ -1343,6 +1343,57 @@
                     style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;transition:border-color 0.2s;"
                   />
                 </div>
+                
+                <div class="form-group" style="margin-top:16px;">
+                  <label style="display:block;margin-bottom:8px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">なぜ購入しましたか？ <span style="color:rgba(47,79,79,0.5);font-size:0.85rem;">（任意・複数選択可）</span></label>
+                  <div style="display:flex;flex-direction:column;gap:10px;">
+                    <label style="display:flex;align-items:center;cursor:pointer;font-size:0.95rem;color:var(--color-earth);">
+                      <input 
+                        type="checkbox" 
+                        name="purchaseReason" 
+                        value="見た目がかわいいから"
+                        style="margin-right:8px;width:18px;height:18px;cursor:pointer;accent-color:var(--color-forest);"
+                      />
+                      見た目がかわいいから
+                    </label>
+                    <label style="display:flex;align-items:center;cursor:pointer;font-size:0.95rem;color:var(--color-earth);">
+                      <input 
+                        type="checkbox" 
+                        name="purchaseReason" 
+                        value="５枚しか残せない機能が面白いから"
+                        style="margin-right:8px;width:18px;height:18px;cursor:pointer;accent-color:var(--color-forest);"
+                      />
+                      ５枚しか残せない機能が面白いから
+                    </label>
+                    <label style="display:flex;align-items:center;cursor:pointer;font-size:0.95rem;color:var(--color-earth);">
+                      <input 
+                        type="checkbox" 
+                        name="purchaseReason" 
+                        value="プレゼント用"
+                        style="margin-right:8px;width:18px;height:18px;cursor:pointer;accent-color:var(--color-forest);"
+                      />
+                      プレゼント用
+                    </label>
+                    <label style="display:flex;align-items:center;cursor:pointer;font-size:0.95rem;color:var(--color-earth);">
+                      <input 
+                        type="checkbox" 
+                        name="purchaseReason" 
+                        value="キーホルダーとして使いたいから"
+                        style="margin-right:8px;width:18px;height:18px;cursor:pointer;accent-color:var(--color-forest);"
+                      />
+                      キーホルダーとして使いたいから
+                    </label>
+                    <label style="display:flex;align-items:center;cursor:pointer;font-size:0.95rem;color:var(--color-earth);">
+                      <input 
+                        type="checkbox" 
+                        name="purchaseReason" 
+                        value="カメラとして使いたいから"
+                        style="margin-right:8px;width:18px;height:18px;cursor:pointer;accent-color:var(--color-forest);"
+                      />
+                      カメラとして使いたいから
+                    </label>
+                  </div>
+                </div>
               </div>
               
               <button 
@@ -2995,6 +3046,7 @@ document.getElementById("priceReservationForm")?.addEventListener("submit", asyn
   const name = document.getElementById("reservationName")?.value ?? "";
   const email = document.getElementById("reservationEmail")?.value ?? "";
   const phone = document.getElementById("reservationPhone")?.value ?? "";
+  const purchaseReasons = Array.from(form.querySelectorAll('input[name="purchaseReason"]:checked')).map(cb => cb.value);
   const messageDiv = document.getElementById("priceFormMessage");
   const submitBtn = form.querySelector('button[type="submit"]');
 
@@ -3018,6 +3070,7 @@ document.getElementById("priceReservationForm")?.addEventListener("submit", asyn
       name: name.trim(),
       email: email.trim(),
       phone: phone.trim(),
+      purchaseReason: purchaseReasons, // 購入理由（複数選択可）
       hp: "" // honeypot（サーバ側で弾く用。フォームにhiddenを足すならここも拾う）
     });
 
