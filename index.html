@@ -515,7 +515,7 @@
     box-shadow:0 0 0 3px rgba(210,105,30,0.1);
   }
   
-  /* 値段ポップアップの抽選予約フォーム */
+  /* 購入権の予約ポップアップの抽選予約フォーム */
   .price-reservation-form{
     background:rgba(255,255,255,0.88);border:1px solid rgba(47,79,79,0.14);
     border-radius:22px;padding:24px 20px;box-shadow:3px 3px 0 rgba(0,0,0,0.05);
@@ -1266,7 +1266,7 @@
           </div>
 
           <div class="cta-row reveal delay-200" style="margin-top:16px;">
-            <button class="btn btn-ghost" id="openPriceFromColors">値段</button>
+            <button class="btn btn-ghost" id="openPriceFromColors">購入権の予約</button>
           </div>
         </div>
       </div>
@@ -1278,19 +1278,11 @@
       <div class="popup-content">
         <button class="popup-close" id="closePricePopup" aria-label="閉じる">×</button>
         <div class="container">
-          <h2>値段</h2>
-          <p class="lead">卒業式までセール！</p>
-
-          <div class="pricing reveal delay-200">
-            <div class="price-card">
-              <div class="label">通常 <span class="badge">¥8,000</span></div>
-              <div class="value">¥5,000</div>
-            </div>
-          </div>
+          <h2>購入権の予約</h2>
 
           <!-- 抽選予約フォーム -->
           <div class="price-reservation-form reveal delay-200" style="margin-top:32px;">
-            <h3 style="font-size:1.2rem;margin-bottom:12px;color:var(--color-forest);">購入の抽選予約</h3>
+            <h3 style="font-size:1.2rem;margin-bottom:12px;color:var(--color-forest);">抽選予約</h3>
             <p style="font-size:0.9rem;opacity:0.85;margin-bottom:20px;line-height:1.6;">
               抽選に当たったら、当選の手紙を送るビィ。<br>
               住所を入力して予約してビィ。
@@ -1346,7 +1338,7 @@
                 </div>
                 
                 <div class="form-group" style="margin-top:16px;">
-                  <label style="display:block;margin-bottom:8px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">なぜ購入しましたか？ <span style="color:rgba(47,79,79,0.5);font-size:0.85rem;">（任意・複数選択可）</span></label>
+                  <label style="display:block;margin-bottom:8px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">なぜ予約しましたか？ <span style="color:rgba(47,79,79,0.5);font-size:0.85rem;">（任意・複数選択可）</span></label>
                   <div style="display:flex;flex-direction:column;gap:10px;">
                     <label style="display:flex;align-items:center;cursor:pointer;font-size:0.95rem;color:var(--color-earth);">
                       <input 
@@ -1551,7 +1543,7 @@
         <div class="popup-buttons">
           <button class="btn btn-secondary" id="openMessagePopup">文章</button>
           <button class="btn btn-secondary" id="openColorsPopup">4色</button>
-          <button class="btn btn-secondary" id="openPricePopup">値段</button>
+          <button class="btn btn-secondary" id="openPricePopup">予約</button>
           <button class="btn btn-secondary" id="openFaqPopup">FAQ</button>
           <button class="btn btn-secondary" id="openImagePopup">画像</button>
           <button class="btn btn-secondary" id="openVideoPopup">動画</button>
@@ -3038,7 +3030,7 @@ function showMsg(div, { ok, text }) {
   div.textContent = text;
 }
 
-// 値段ポップアップの抽選予約フォーム送信（mailto → /api/reservation）
+// 購入権の予約ポップアップの抽選予約フォーム送信（mailto → /api/reservation）
 document.getElementById("priceReservationForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
