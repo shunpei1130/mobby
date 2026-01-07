@@ -701,6 +701,31 @@
     pointer-events:none;
     z-index:10;
   }
+  /* 予約ボタンの上に予約数を“浮かせる” */
+.btn-with-counter{
+  position: relative;
+  display: inline-block;  /* ボタンの幅に合わせる */
+}
+
+/* これが上に出るテキスト */
+.btn-with-counter .reservation-counter{
+  position: absolute;
+  left: 50%;
+  top: -14px;             /* 上の出方：ここだけ調整すればOK */
+  transform: translateX(-50%);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  color: rgba(47,79,79,0.85);
+  pointer-events: none;   /* クリックを邪魔しない */
+}
+
+.btn-with-counter .reservation-counter span{
+  font-weight: 900;
+  color: var(--color-earth);
+}
+
   .gallery-nav-btn{
     width:50px;
     height:50px;
@@ -1278,11 +1303,11 @@
       <div class="popup-content">
         <button class="popup-close" id="closePricePopup" aria-label="閉じる">×</button>
         <div class="container">
-          <h2>購入権の予約</h2>
+          <h2>購入権の予約（無料）</h2>
 
           <!-- 抽選予約フォーム -->
           <div class="price-reservation-form reveal delay-200" style="margin-top:32px;">
-            <h3 style="font-size:1.2rem;margin-bottom:12px;color:var(--color-forest);">抽選予約</h3>
+            <h3 style="font-size:1.2rem;margin-bottom:12px;color:var(--color-forest);">無料抽選予約</h3>
             <p style="font-size:0.9rem;opacity:0.85;margin-bottom:20px;line-height:1.6;">
               抽選に当たったら、当選の手紙を送るビィ。<br>
               住所を入力して予約してビィ。
@@ -1543,7 +1568,13 @@
         <div class="popup-buttons">
           <button class="btn btn-secondary" id="openMessagePopup">文章</button>
           <button class="btn btn-secondary" id="openColorsPopup">4色</button>
-          <button class="btn btn-secondary" id="openPricePopup">予約</button>
+          <div class="btn-with-counter">
+            <div class="reservation-counter" id="reservationCounter" aria-live="polite">
+              現在の予約数：<span id="reservationCount">72</span>
+            </div>
+            <button class="btn btn-secondary" id="openPricePopup">予約</button>
+          </div>
+          
           <button class="btn btn-secondary" id="openFaqPopup">FAQ</button>
           <button class="btn btn-secondary" id="openImagePopup">画像</button>
           <button class="btn btn-secondary" id="openVideoPopup">動画</button>
@@ -3147,6 +3178,55 @@ document.getElementById("faqContactForm")?.addEventListener("submit", async (e) 
     submitBtn.textContent = originalText || "送信";
   }
 });
+/* ===== Reservation counter: start 72, +1 every 3 days from 2026-01-07 ===== */
+(() => {
+  const COUNT_KEY = "mobby_reservation_count_v1";
+  const LAST_KEY  = "mobby_reservation_last_update_v1";
+
+  const BASE_COUNT = 72;
+  const START_DATE = new Date("2026-01-07T00:00:00+09:00"); // 今日から
+  const INTERVAL_DAYS = 3;
+
+  const countEl = document.getElementById("reservationCount");
+
+  if (!countEl) return;
+
+  function floorDayJST(d){
+    // JST前提で“日”単位に丸める（時刻ズレ対策）
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  }
+
+  function daysBetween(a, b){
+    const ms = 24 * 60 * 60 * 1000;
+    const da = floorDayJST(a).getTime();
+    const db = floorDayJST(b).getTime();
+    return Math.floor((db - da) / ms);
+  }
+
+  function load(){
+    const storedCount = Number(localStorage.getItem(COUNT_KEY));
+    const storedLast  = localStorage.getItem(LAST_KEY);
+
+    const now = new Date();
+    const daysFromStart = Math.max(0, daysBetween(START_DATE, now));
+    const shouldBe = BASE_COUNT + Math.floor(daysFromStart / INTERVAL_DAYS);
+
+    // 初回 or 破損時は理論値を採用
+    let count = Number.isFinite(storedCount) && storedCount > 0 ? storedCount : shouldBe;
+
+    // 最終更新日が古い場合、理論値に追いつかせる（下がることはさせない）
+    count = Math.max(count, shouldBe);
+
+    localStorage.setItem(COUNT_KEY, String(count));
+    localStorage.setItem(LAST_KEY, now.toISOString());
+
+    return count;
+  }
+
+  const count = load();
+  countEl.textContent = String(count);
+})();
+
 
 </script>
 </body>

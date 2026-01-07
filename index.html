@@ -64,15 +64,6 @@
 }
 
 
-
-  #splash-screen canvas{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    z-index:1;
-  }
-  
   .instruction{
     position:absolute;top:60%;left:50%;transform:translateX(-50%);
     color:rgba(255,255,255,0.9);pointer-events:none;
@@ -1159,10 +1150,32 @@
   }
   
 
+  #splash-screen canvas{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index:1;
+  }
+  
+  /* ===== Sky & Birds background (behind everything) ===== */
+#sky-canvas{
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;          /* 最背面 */
+  pointer-events: none; /* クリック/スワイプを邪魔しない */
+  display: block;
+}
+
+
 </style>
 </head>
 
 <body>
+  <canvas id="sky-canvas" aria-hidden="true"></canvas>
+
   <!-- Splash -->
   <div id="splash-screen">
     <div class="instruction">TAP！！</div>
@@ -1589,6 +1602,121 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <!-- EmailJS -->
   <script>
+  /* =========================
+   Sky & Birds (background)
+   - 目的：軌跡を残さない（毎フレーム完全クリア）
+   ========================= */
+(() => {
+  const canvas = document.getElementById("sky-canvas");
+  if (!canvas) return;
+
+  // 動きが苦手な人向け（OS設定で軽減）
+  const reduceMotion =
+    window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduceMotion) return;
+
+  const ctx = canvas.getContext("2d", { alpha: true });
+
+  let bw = 0, bh = 0, dpr = 1;
+
+  function resizeSky() {
+    dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1)); // 上限2で負荷抑制
+    bw = window.innerWidth;
+    bh = window.innerHeight;
+
+    canvas.width = Math.floor(bw * dpr);
+    canvas.height = Math.floor(bh * dpr);
+    canvas.style.width = bw + "px";
+    canvas.style.height = bh + "px";
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // CSS px基準で描画
+  }
+
+  window.addEventListener("resize", resizeSky, { passive: true });
+  resizeSky();
+
+  class Bird {
+    constructor(randomStart = true) { this.init(randomStart); }
+    init(randomStart = false) {
+      this.x = randomStart ? Math.random() * bw : -30;
+      this.y = Math.random() * bh * 0.7;
+
+      this.vx = Math.random() * 1.8 + 0.9;  // 右へ
+      this.vy = Math.random() * 0.5 - 0.25; // ゆらぎ
+
+      this.size = Math.random() * 4 + 4;
+      this.flapSpeed = Math.random() * 0.10 + 0.05;
+      this.flap = Math.random() * Math.PI * 2;
+      this.opacity = Math.random() * 0.25 + 0.55;
+      this.lineW = Math.random() * 0.8 + 1.2;
+    }
+
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.flap += this.flapSpeed;
+
+      this.vy += (Math.random() - 0.5) * 0.05; // ランダムゆらぎ
+
+      // 右へ抜けたら左に戻す
+      if (this.x > bw + 30) {
+        this.x = -30;
+        this.y = Math.random() * bh * 0.7;
+        this.vy = Math.random() * 0.5 - 0.25;
+      }
+
+      // 上下はループ
+      if (this.y < -40) this.y = bh + 40;
+      if (this.y > bh + 40) this.y = -40;
+    }
+
+    draw() {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+
+      const angle = Math.atan2(this.vy, this.vx);
+      ctx.rotate(angle);
+
+      const wingY = Math.sin(this.flap) * this.size * 0.8;
+
+      ctx.beginPath();
+      ctx.moveTo(-this.size, -wingY);
+      ctx.lineTo(this.size / 2, 0);
+      ctx.lineTo(-this.size, wingY);
+      
+      ctx.strokeStyle = `rgba(160, 210, 235, ${this.opacity})`; // 淡い水色
+
+      ctx.lineWidth = this.lineW;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.stroke();
+
+      ctx.restore();
+    }
+  }
+
+  // 画面サイズで鳥の数を調整（負荷対策）
+  const base = 12;
+  const extra = bw >= 1200 ? 8 : bw >= 800 ? 5 : 2;
+  const birdCount = base + extra;
+
+  const birds = Array.from({ length: birdCount }, () => new Bird(true));
+
+  function tick() {
+    // ★ここが修正点：毎フレーム完全クリア（軌跡ゼロ）
+    ctx.clearRect(0, 0, bw, bh);
+
+    for (const b of birds) {
+      b.update();
+      b.draw();
+    }
+    requestAnimationFrame(tick);
+  }
+
+  tick();
+})();
+
 /* reveal */
 function initScrollObserver(){
   const revealElements = document.querySelectorAll('.reveal');
@@ -1669,14 +1797,9 @@ function normalizeAngle(deg){
 function getShortestRotationAngle(fromIndex, toIndex, angleStep, currentAngle){
   const fromAngle = -fromIndex * angleStep;
   const toAngle = -toIndex * angleStep;
-  
-  // 現在の角度を基準に、目標角度への最短経路を計算
   let diff = toAngle - currentAngle;
-  
-  // -180度から180度の範囲に調整（最短経路）
   while(diff > 180) diff -= 360;
   while(diff < -180) diff += 360;
-  
   return currentAngle + diff;
 }
 
@@ -1685,15 +1808,6 @@ const hotspotHandlers = new Map();
 
 function renderHeroDots(){
   // 色ボタンは削除されたため、この関数は何もしない
-  // heroDots.innerHTML = "";
-  // ORDER.forEach((key, i) => {
-  //   const b = document.createElement("button");
-  //   b.type = "button";
-  //   b.className = "carousel-dot" + (i === heroIndex ? " active" : "");
-  //   b.setAttribute("aria-label", `${COLOR_META[key].name} を表示`);
-  //   b.addEventListener("click", () => setHeroIndex(i, true));
-  //   heroDots.appendChild(b);
-  // });
 }
 
 function layoutRing(){
@@ -1707,7 +1821,7 @@ function layoutRing(){
     const h = s.getBoundingClientRect().height || w;
     s.style.transform =
       `translate(${-w/2}px, ${-h/2}px) rotateY(${i * angle}deg) translateZ(${ringRadius}px)`;
-    
+
     // ホットスポットとシャッターを追加（まだない場合）
     const illustration = s.querySelector('.hero-illustration');
     if(illustration && !illustration.querySelector('.carousel-eye-hotspot')){
@@ -1715,26 +1829,23 @@ function layoutRing(){
       hotspot.className = 'carousel-eye-hotspot';
       hotspot.setAttribute('aria-label', '右目をタップして覗く');
       hotspot.type = 'button';
-      
+
       const shutter = document.createElement('div');
       shutter.className = 'carousel-eye-shutter';
       shutter.setAttribute('aria-hidden', 'true');
-      
+
       illustration.appendChild(hotspot);
       illustration.appendChild(shutter);
 
-      // pointerdownで直接処理（clickイベントに頼らない）
       const handleHotspotPointerDown = (e) => {
         e.stopPropagation();
         e.stopImmediatePropagation();
         e.preventDefault();
-        
-        // シャッターアニメーション
+
         shutter.classList.remove('play');
         void shutter.offsetWidth;
         shutter.classList.add('play');
-        
-        // ビューファインダーを開く
+
         setTimeout(() => {
           if(typeof window.openViewfinder === 'function'){
             window.openViewfinder(shutter);
@@ -1743,30 +1854,26 @@ function layoutRing(){
           }
         }, 180);
       };
-      
-      // ハンドラーをマップに保存（heroCarouselのpointerdownから呼び出せるように）
+
       hotspotHandlers.set(hotspot, handleHotspotPointerDown);
-      
-      // pointerdownで直接処理（capture phaseで先に処理）
+
       hotspot.addEventListener('pointerdown', handleHotspotPointerDown, true);
-      // clickも一応ハンドリング（ブラウザ差異対策）
       hotspot.addEventListener('click', (e) => {
         e.stopPropagation();
         e.stopImmediatePropagation();
         e.preventDefault();
         handleHotspotPointerDown(e);
       }, true);
-      
-      // タッチイベントも追加（モバイル対応）
+
       hotspot.addEventListener('touchend', (e) => {
         e.stopPropagation();
         e.stopImmediatePropagation();
         e.preventDefault();
-        
+
         shutter.classList.remove('play');
         void shutter.offsetWidth;
         shutter.classList.add('play');
-        
+
         setTimeout(() => {
           if(typeof window.openViewfinder === 'function'){
             window.openViewfinder(shutter);
@@ -1786,18 +1893,15 @@ function updateRing(skipTransition=false){
   if(skipTransition) heroTrack.style.transition = "none";
   else heroTrack.style.transition = "transform 0.7s var(--ease-soft)";
 
-  // 目標角度を計算（常に正確な角度を設定）
   const targetRot = -heroIndex * angle;
   console.log('[CAROUSEL] updateRing: targetRot=', targetRot);
-  
-  // 常に正確な角度（90度の倍数）を設定
+
   currdeg = targetRot;
   currentRot = targetRot;
   displayedRot = targetRot;
-  
-  // 前回のインデックスを更新
+
   prevHeroIndex = heroIndex;
-  
+
   console.log('[CAROUSEL] updateRing: 適用前 currdeg=', currdeg, 'currentRot=', currentRot, 'displayedRot=', displayedRot);
   heroTrack.style.transform = `translate(-50%, -50%) rotateY(${currdeg}deg)`;
   console.log('[CAROUSEL] updateRing: transform適用完了');
@@ -1809,10 +1913,6 @@ function updateRing(skipTransition=false){
     s.style.zIndex = String(Math.round(1000 * (frontness + 1)));
   });
 
-  // heroDotsは削除されたため、更新処理をスキップ
-  // if(heroDots.children.length){
-  //   [...heroDots.children].forEach((d, i) => d.classList.toggle("active", i === heroIndex));
-  // }
   if(heroCaption) heroCaption.textContent = COLOR_META[key].name;
 
   if(skipTransition){
@@ -1841,54 +1941,45 @@ function setHeroByColor(colorKey){
     console.log('[CAROUSEL] setHeroByColor: 色が見つかりませんでした');
     return;
   }
-  // prevHeroIndexを現在の値に更新してからインデックスを変更
   prevHeroIndex = heroIndex;
   heroIndex = idx;
   console.log('[CAROUSEL] setHeroByColor: prevHeroIndex=', prevHeroIndex, 'newIndex=', heroIndex);
   updateRing(false);
 }
 
-// シンプルな回転関数（バグを減らすためのロジック）
 function rotate(direction) {
   const fromIndex = heroIndex;
   let targetIndex = heroIndex;
   if (direction === "n") {
-    // next: 次のスライド
     targetIndex = mod(heroIndex + 1, n);
   } else if (direction === "p") {
-    // prev: 前のスライド
     targetIndex = mod(heroIndex - 1, n);
   }
 
-  // 現在角度(displayedRot)を基準に最短経路で目標角度へ（境界での逆回転/長回転を防ぐ）
   const nextDeg = getShortestRotationAngle(fromIndex, targetIndex, angle, displayedRot);
   prevHeroIndex = fromIndex;
   heroIndex = targetIndex;
   currdeg = nextDeg;
   currentRot = nextDeg;
   displayedRot = nextDeg;
-  
-  // CSS transformを適用
+
   heroTrack.style.transition = "transform 0.7s var(--ease-soft)";
   heroTrack.style.transform = `translate(-50%, -50%) rotateY(${currdeg}deg)`;
-  
-  // スライドの表示状態を更新
+
   heroSlides.forEach((s, i) => {
     const world = i * angle + currdeg;
     const frontness = Math.cos(degToRad(world));
     s.classList.toggle("dim", frontness < 0.4);
     s.style.zIndex = String(Math.round(1000 * (frontness + 1)));
   });
-  
-  // キャプションを更新
+
   const key = ORDER[heroIndex];
   if(heroCaption) heroCaption.textContent = COLOR_META[key].name;
-  
-  // 色を同期
+
   syncing = true;
   setSelectedColor(key);
   syncing = false;
-  
+
   console.log('[CAROUSEL] rotate: direction=', direction, 'heroIndex=', heroIndex, 'currdeg=', currdeg);
 }
 
@@ -1898,113 +1989,70 @@ prevBtn.addEventListener("click", () => {
 nextBtn.addEventListener("click", () => {
   rotate("n");
 });
-heroSlides.forEach((slide, i) => {
+
+heroSlides.forEach((slide) => {
   slide.addEventListener("click", (e) => {
-    // ホットスポットやボタンのクリックは無視
     const clickedHotspot = e.target.closest('.carousel-eye-hotspot');
     const clickedBtn = e.target.closest('.carousel-btn');
-    if(clickedHotspot || clickedBtn) {
-      console.log('[DEBUG] スライドクリック: ホットスポットまたはボタンがクリックされたため無視');
-      return;
-    }
-    
-    // クリック位置からホットスポットを検出（3D変換の影響を考慮）
+    if(clickedHotspot || clickedBtn) return;
+
     const allHotspots = slide.querySelectorAll('.carousel-eye-hotspot');
-    let isHotspotClick = false;
-    
     for(const hotspot of allHotspots) {
       const rect = hotspot.getBoundingClientRect();
       const x = e.clientX;
       const y = e.clientY;
-      
-      // ホットスポットの領域内かチェック
+
       if(x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
-        // 円形の領域をチェック
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
         const radius = Math.max(rect.width, rect.height) / 2;
         const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
-        
-        if(distance <= radius) {
-          isHotspotClick = true;
-          console.log('[DEBUG] スライドクリック: ホットスポット領域内のため無視');
-          break;
-        }
+        if(distance <= radius) return;
       }
     }
-    
-    if(isHotspotClick) {
-      return;
-    }
-    
-    // スライドをクリックしたらcolorポップアップを開く
-    console.log('[DEBUG] スライドクリック: colorポップアップを開きます');
+
     openPopup('colorsPopup');
   });
 });
 
 let startX = 0, startRot = 0, dragging = false, isDragged = false;
 let activePointerId = null;
-let rafId = null; // requestAnimationFrameのID
-let lastX = 0; // 最後のX位置を保存
+let rafId = null;
+let lastX = 0;
 
-// ドラッグを終了する関数
 function endDrag(e) {
-  console.log('[CAROUSEL] endDrag: 開始, dragging=', dragging, 'isDragged=', isDragged);
   if(!dragging) return;
-  
-  // RAFをキャンセル
+
   if(rafId) {
     cancelAnimationFrame(rafId);
     rafId = null;
-    console.log('[CAROUSEL] endDrag: RAFをキャンセル');
   }
-  
+
   dragging = false;
   activePointerId = null;
 
   if(isDragged){
-    // ドラッグ中の角度をcurrdegに同期
     currdeg = displayedRot;
     currentRot = displayedRot;
-    
-    console.log('[CAROUSEL] endDrag: ドラッグあり, heroIndex=', heroIndex, 'currdeg=', currdeg, 'displayedRot=', displayedRot, 'startRot=', startRot);
-    // スワイプ方向を検出（lastXが確実に取得できるように）
+
     const endX = (e && e.clientX) ? e.clientX : (lastX || startX);
     const dx = endX - startX;
-    const minSwipeDistance = 10; // 最小スワイプ距離（誤操作防止）
-    console.log('[CAROUSEL] endDrag: startX=', startX, 'endX=', endX, 'lastX=', lastX, 'dx=', dx, 'minSwipeDistance=', minSwipeDistance);
-    
-    // スワイプ方向に応じてインデックスを決定（ループ可能）
+    const minSwipeDistance = 10;
+
     let targetIndex = heroIndex;
     if(Math.abs(dx) > minSwipeDistance){
       if(dx > 0){
-        // 右にスワイプ → 前のスライド（インデックスを減らす）
         targetIndex = mod(heroIndex - 1, n);
-        console.log('[CAROUSEL] endDrag: 右スワイプ検出, targetIndex=', targetIndex);
       } else {
-        // 左にスワイプ → 次のスライド（インデックスを増やす）
         targetIndex = mod(heroIndex + 1, n);
-        console.log('[CAROUSEL] endDrag: 左スワイプ検出, targetIndex=', targetIndex);
       }
-    } else {
-      console.log('[CAROUSEL] endDrag: 最小距離未満のためインデックス変更なし');
     }
-    // 最小距離未満の場合は現在のインデックスのまま
-    
-    console.log('[CAROUSEL] endDrag: prevHeroIndex=', prevHeroIndex, 'heroIndex=', heroIndex, 'targetIndex=', targetIndex);
-    
-    // インデックスが変わらない場合の処理
+
     if(targetIndex === heroIndex){
-      // インデックスが変わらない場合は、ドラッグ開始時の角度（startRot）に戻す
-      console.log('[CAROUSEL] endDrag: インデックス変更なし、開始位置に戻す, startRot=', startRot);
       currdeg = startRot;
       currentRot = startRot;
       displayedRot = startRot;
-      // prevHeroIndexは変更しない（実際には変わっていないため）
     } else {
-      // インデックスが変わる場合
-      // ドラッグで得た現在角度(displayedRot)から、最短経路でターゲットへスナップ
       const fromIndex = heroIndex;
       const nextDeg = getShortestRotationAngle(fromIndex, targetIndex, angle, displayedRot);
 
@@ -2013,168 +2061,110 @@ function endDrag(e) {
       currdeg = nextDeg;
       currentRot = nextDeg;
       displayedRot = nextDeg;
-
-      console.log('[CAROUSEL] endDrag: 角度更新後 currdeg=', currdeg, 'heroIndex=', heroIndex, 'fromIndex=', fromIndex);
     }
-    
-    // トランジションを有効にして、正確な角度にスナップ
+
     heroTrack.style.transition = "transform 0.7s var(--ease-soft)";
     heroTrack.style.transform = `translate(-50%, -50%) rotateY(${currdeg}deg)`;
-    console.log('[CAROUSEL] endDrag: transform適用完了, currdeg=', currdeg);
-    
-    // スライドの状態を更新
+
     heroSlides.forEach((s, i) => {
       const world = i * angle + currdeg;
       const frontness = Math.cos(degToRad(world));
       s.classList.toggle("dim", frontness < 0.4);
       s.style.zIndex = String(Math.round(1000 * (frontness + 1)));
     });
-    
-    // キャプションを更新
+
     const key = ORDER[heroIndex];
     if(heroCaption) heroCaption.textContent = COLOR_META[key].name;
-    console.log('[CAROUSEL] endDrag: キャプション更新, key=', key);
-    
-    // 色の同期
+
     syncing = true;
     setSelectedColor(key);
     syncing = false;
-    console.log('[CAROUSEL] endDrag: 色同期完了, heroIndex=', heroIndex);
   } else {
-    // ドラッグしていない場合はトランジションを復元
-    console.log('[CAROUSEL] endDrag: ドラッグなし、トランジション復元');
     heroTrack.style.transition = "transform 0.7s var(--ease-soft)";
   }
-  
+
   isDragged = false;
-  console.log('[CAROUSEL] endDrag: 完了');
-  
-  // キャプチャを確実に解放
+
   if(heroCarousel.releasePointerCapture && e && e.pointerId !== undefined) {
-    try {
-      heroCarousel.releasePointerCapture(e.pointerId);
-    } catch(err) {
-      console.warn('Pointer release failed:', err);
-    }
+    try { heroCarousel.releasePointerCapture(e.pointerId); } catch(_) {}
   }
 }
 
 heroCarousel.addEventListener("pointerdown", (e) => {
-  console.log('[CAROUSEL] pointerdown: 開始, target=', e.target, 'clientX=', e.clientX, 'clientY=', e.clientY, 'pointerId=', e.pointerId);
-  
-  // 既存のドラッグ中なら無視
-  if(dragging) {
-    console.log('[CAROUSEL] pointerdown: 既にドラッグ中のため無視');
-    return;
-  }
-  
-  // クリック位置からホットスポットを検出（3D変換の影響を回避）
+  if(dragging) return;
+
   const allHotspots = heroCarousel.querySelectorAll('.carousel-eye-hotspot');
   let clickedHotspot = null;
-  
+
   for(const hotspot of allHotspots) {
     const rect = hotspot.getBoundingClientRect();
     const x = e.clientX;
     const y = e.clientY;
-    
-    // ホットスポットの領域内かチェック
+
     if(x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
-      // 円形の領域をチェック
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
       const radius = Math.max(rect.width, rect.height) / 2;
       const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
-      
+
       if(distance <= radius) {
         clickedHotspot = hotspot;
-        console.log('[DEBUG] ホットスポットが検出されました:', hotspot, 'distance:', distance.toFixed(1), 'radius:', radius.toFixed(1));
         break;
       }
     }
   }
-  
+
   if(clickedHotspot) {
-    console.log('[DEBUG] heroCarousel pointerdown: ホットスポットがクリックされました', clickedHotspot);
     e.stopPropagation();
     e.preventDefault();
-    
-    // ホットスポットのハンドラーを直接呼び出す
     const handler = hotspotHandlers.get(clickedHotspot);
-    if(handler) {
-      handler(e);
-    } else {
-      console.warn('[DEBUG] ホットスポットのハンドラーが見つかりません');
-    }
+    if(handler) handler(e);
     return;
   }
-  
-  // ボタンのクリックは無視
+
   const isBtn = e.target.closest('.carousel-btn');
-  if(isBtn) {
-    console.log('[DEBUG] pointerdown: ボタンがクリックされたため無視');
-    return;
-  }
-  
-  e.preventDefault(); // デフォルト動作を確実に防止
+  if(isBtn) return;
+
+  e.preventDefault();
   dragging = true;
   activePointerId = e.pointerId;
-  startX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
-  lastX = startX; // 最後の位置を初期化
-  // ドラッグ開始時の角度を正確な角度（90度の倍数）として保存
-  // currdegを正確な角度にリセット（累積誤差を防ぐ）
+  startX = e.clientX || 0;
+  lastX = startX;
+
   currdeg = -heroIndex * angle;
   currentRot = currdeg;
   displayedRot = currdeg;
   startRot = currdeg;
+
   isDragged = false;
   heroTrack.style.transition = "none";
-  console.log('[CAROUSEL] pointerdown: ドラッグ開始, startX=', startX, 'startRot=', startRot, 'currentRot=', currentRot, 'heroIndex=', heroIndex);
-  
-  // キャプチャを確実に設定
+
   if(heroCarousel.setPointerCapture) {
-    try {
-      heroCarousel.setPointerCapture(e.pointerId);
-      console.log('[CAROUSEL] pointerdown: pointer capture成功');
-    } catch(err) {
-      console.warn('[CAROUSEL] pointerdown: Pointer capture failed:', err);
-    }
+    try { heroCarousel.setPointerCapture(e.pointerId); } catch(_) {}
   }
 });
 
-// pointermoveはグローバルにリスニング（pointer captureが失敗した場合のフォールバック）
 function handlePointerMove(e) {
   if(!dragging) return;
-  // アクティブなポインターIDと一致するか確認
-  if(activePointerId !== null && e.pointerId !== activePointerId) {
-    console.log('[CAROUSEL] pointermove: ポインターID不一致, activePointerId=', activePointerId, 'e.pointerId=', e.pointerId);
-    return;
-  }
-  
-  // RAF内で処理をバッチ化
-  if(rafId) return; // 既にRAFが予約されていたらスキップ
-  
+  if(activePointerId !== null && e.pointerId !== activePointerId) return;
+  if(rafId) return;
+
   rafId = requestAnimationFrame(() => {
     rafId = null;
-    
-    const currentX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : startX);
-    lastX = currentX; // 最後の位置を保存
+
+    const currentX = e.clientX || startX;
+    lastX = currentX;
     const dx = currentX - startX;
-    
-    const wasDragged = isDragged;
+
     if(Math.abs(dx) > 3) isDragged = true;
-    if(!wasDragged && isDragged) {
-      console.log('[CAROUSEL] pointermove: ドラッグ検出, dx=', dx);
-    }
-    
+
     const rot = startRot + dx * 0.2;
-    // ドラッグ中は角度をそのまま使用（スナップ時に正規化）
     currdeg = rot;
     currentRot = rot;
     displayedRot = rot;
-    
+
     heroTrack.style.transform = `translate(-50%, -50%) rotateY(${rot}deg)`;
-    
-    // スライドの更新も同じRAF内で
+
     heroSlides.forEach((s, i) => {
       const world = i * angle + rot;
       const frontness = Math.cos(degToRad(world));
@@ -2182,68 +2172,43 @@ function handlePointerMove(e) {
       s.style.zIndex = String(Math.round(1000 * (frontness + 1)));
     });
   });
-  
+
   e.preventDefault();
 }
 
 heroCarousel.addEventListener("pointermove", handlePointerMove);
-// グローバルにもリスニング（pointer captureが失敗した場合のフォールバック）
 document.addEventListener("pointermove", handlePointerMove);
 
-// pointerupもグローバルにリスニング
 function handlePointerUp(e) {
-  console.log('[CAROUSEL] pointerup: 開始, dragging=', dragging, 'pointerId=', e.pointerId, 'activePointerId=', activePointerId);
   if(!dragging) return;
-  // アクティブなポインターIDと一致するか確認
-  if(activePointerId !== null && e.pointerId !== activePointerId) {
-    console.log('[CAROUSEL] pointerup: ポインターID不一致のため無視');
-    return;
-  }
-  console.log('[CAROUSEL] pointerup: endDrag呼び出し');
+  if(activePointerId !== null && e.pointerId !== activePointerId) return;
   endDrag(e);
 }
 
 heroCarousel.addEventListener("pointerup", handlePointerUp);
 document.addEventListener("pointerup", handlePointerUp);
 
-// pointercancelイベント（タッチが中断された場合）
 function handlePointerCancel(e) {
-  console.log('[CAROUSEL] pointercancel: 開始, dragging=', dragging, 'pointerId=', e.pointerId, 'activePointerId=', activePointerId);
   if(!dragging) return;
-  if(activePointerId !== null && e.pointerId !== activePointerId) {
-    console.log('[CAROUSEL] pointercancel: ポインターID不一致のため無視');
-    return;
-  }
-  console.log('[CAROUSEL] pointercancel: endDrag呼び出し');
+  if(activePointerId !== null && e.pointerId !== activePointerId) return;
   endDrag(e);
 }
 
 heroCarousel.addEventListener("pointercancel", handlePointerCancel);
 document.addEventListener("pointercancel", handlePointerCancel);
 
-// ポインターが失われた場合の処理
 heroCarousel.addEventListener("lostpointercapture", endDrag);
-
-// ビューポート外に出た場合の処理
-document.addEventListener("pointerup", (e) => {
-  if(dragging && e.pointerId === activePointerId) {
-    endDrag(e);
-  }
-});
 
 /* 初期化 */
 renderHeroDots();
-// layoutRing()はビューファインダー初期化後に呼ぶ（ホットスポットのクリックイベント設定のため）
-// 初期レイアウトは後で実行
 
-// デバウンス付きリサイズ処理
 let resizeTimer = null;
 window.addEventListener("resize", () => {
   if(resizeTimer) clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
     layoutRing();
     updateRing(true);
-  }, 150); // 150msのデバウンス
+  }, 150);
 }, { passive:true });
 
 /* 選択色の反映 */
@@ -2296,7 +2261,6 @@ colorCards.forEach(card => {
 });
 
 /* 初期描画 */
-// 初期化時にprevHeroIndexを確実に設定
 prevHeroIndex = heroIndex;
 setHeroByColor(selectedColor);
 syncing = true;
@@ -2316,7 +2280,6 @@ document.addEventListener('click', (e) => {
 });
 
 /* Splash (Matter.js) */
-// 8種類すべての画像を使用
 const ICON_URLS   = [
   "mobby_pink.jpg",
   "mobby_purple.jpg",
@@ -2327,7 +2290,6 @@ const ICON_URLS   = [
   "mobby_purple2.jpg",
   "mobby_blue2.jpg"
 ];
-// スマホの時は半分のサイズにする
 const ICON_SIZE   = window.innerWidth <= 768 ? 75 : 150;
 const SPAWN_RATE  = 100;
 const TOTAL_ICONS = 50;
@@ -2343,7 +2305,7 @@ const splashElement = document.getElementById('splash-screen');
 const mainContent   = document.getElementById('main-content');
 
 const engine = Engine.create();
-engine.world.gravity.y = 1.5; // 落下速度を上げる（デフォルト1.0）
+engine.world.gravity.y = 1.5;
 const world  = engine.world;
 
 let width  = window.innerWidth;
@@ -2451,8 +2413,7 @@ window.addEventListener('resize', () => {
   Body.setPosition(floor, { x: width/2, y: height+50 });
   Body.setPosition(leftWall, { x: -60, y: height/2 });
   Body.setPosition(rightWall, { x: width+60, y: height/2 });
-  
-  // 画像ギャラリーが開いている場合は更新
+
   const imagePopup = document.getElementById('imagePopup');
   if(imagePopup && imagePopup.classList.contains('is-open')){
     updateImageGallery();
@@ -2460,7 +2421,6 @@ window.addEventListener('resize', () => {
 }, { passive:true });
 
 /* ===== Retro Camera Demo (Overlay) ===== */
-// ビューファインダーを開く関数をグローバルに公開（先に定義）
 window.openViewfinder = null;
 
 (() => {
@@ -2474,12 +2434,10 @@ window.openViewfinder = null;
 
   if(!overlay || !closeBtn || !backdrop || !viewfinder || !container || !snapBtn) return;
 
-  // スクロール復元
   let prevBodyOverflow = '';
   let prevBodyOverflowY = '';
   let prevHtmlOverflow = '';
 
-  // 初期5枚（ローカル画像で安定運用）
   const SEED = [
     "mobby_pink.jpg",
     "mobby_purple.jpg",
@@ -2532,7 +2490,6 @@ window.openViewfinder = null;
     });
   }
 
-  // “エモ”フラッシュ（やわらかい光漏れ）
   function addFlashEffect(){
     const flash = document.createElement('div');
     flash.style.position = 'absolute';
@@ -2569,39 +2526,32 @@ window.openViewfinder = null;
     }
   }
 
-// ▼ 追加：デモ用の画像プール（毎回ここから回す）
-const DEMO_POOL = [
-  "img/shutter/1.jpg",
-  "img/shutter/2.jpg",
-  "img/shutter/3.jpg",
-  "img/shutter/4.jpg",
-  "img/shutter/5.jpg",
-  "img/shutter/6.jpg",
-  "img/shutter/7.jpg",
-  "img/shutter/8.jpg",
-  "img/shutter/9.jpg",
-  "img/shutter/10.jpg",
-];
-let demoCursor = 0;
+  const DEMO_POOL = [
+    "img/shutter/1.jpg",
+    "img/shutter/2.jpg",
+    "img/shutter/3.jpg",
+    "img/shutter/4.jpg",
+    "img/shutter/5.jpg",
+    "img/shutter/6.jpg",
+    "img/shutter/7.jpg",
+    "img/shutter/8.jpg",
+    "img/shutter/9.jpg",
+    "img/shutter/10.jpg",
+  ];
+  let demoCursor = 0;
 
-// ▼ 置き換え：takePhoto()
-function takePhoto(){
-  const newId = Date.now();
+  function takePhoto(){
+    const newId = Date.now();
+    const baseUrl = DEMO_POOL[demoCursor % DEMO_POOL.length];
+    demoCursor++;
+    const url = `${baseUrl}?cb=${newId}`;
 
-  // 毎回違う画像になるようにローテーション
-  const baseUrl = DEMO_POOL[demoCursor % DEMO_POOL.length];
-  demoCursor++;
+    photos.unshift({ id: newId, url });
+    if(photos.length > 5) photos.pop();
 
-  // 同じファイルでもブラウザキャッシュで見た目が変わらない事故を防ぐ（保険）
-  const url = `${baseUrl}?cb=${newId}`;
-
-  photos.unshift({ id: newId, url });
-  if(photos.length > 5) photos.pop();
-
-  renderPhotos();
-  addFlashEffect();
-}
-
+    renderPhotos();
+    addFlashEffect();
+  }
 
   function open(){
     overlay.classList.add('is-open');
@@ -2628,29 +2578,16 @@ function takePhoto(){
     document.documentElement.style.overflow = prevHtmlOverflow;
   }
 
-  // ビューファインダーを開く関数をグローバルに公開
   window.openViewfinder = function(shutterElement = null){
-    console.log('[DEBUG] openViewfinderが呼ばれました, shutterElement:', shutterElement);
-    // シャッターアニメーション（指定された要素またはデフォルトのeyeShutter）
     const shutter = shutterElement || eyeShutter;
-    console.log('[DEBUG] 使用するshutter:', shutter);
     if(shutter){
       shutter.classList.remove('play');
       void shutter.offsetWidth;
       shutter.classList.add('play');
-      console.log('[DEBUG] シャッターアニメーション実行');
-    } else {
-      console.warn('[DEBUG] shutter要素が見つかりません');
     }
-    setTimeout(() => {
-      console.log('[DEBUG] open関数を呼び出します');
-      open();
-    }, 180);
+    setTimeout(() => { open(); }, 180);
   };
-  console.log('[DEBUG] window.openViewfinderが定義されました:', typeof window.openViewfinder);
 
-
-  // snap / close
   snapBtn.addEventListener('click', takePhoto);
   closeBtn.addEventListener('click', close);
   backdrop.addEventListener('click', close);
@@ -2660,10 +2597,7 @@ function takePhoto(){
   });
 })();
 
-// ビューファインダー初期化後にカルーセルのレイアウトを実行（ホットスポットのクリックイベント設定のため）
-console.log('[DEBUG] layoutRingを実行します, openViewfinder:', typeof window.openViewfinder);
 layoutRing();
-console.log('[DEBUG] layoutRing実行完了');
 
 /* ===== ポップアップ制御 ===== */
 let typingInterval = null;
@@ -2672,20 +2606,18 @@ function startTypingAnimation(element){
   if(!element) return;
   const fullText = element.getAttribute('data-text') || element.textContent.trim();
   if(!fullText) return;
-  
-  // 既存のタイピングを停止
+
   if(typingInterval){
     clearInterval(typingInterval);
     typingInterval = null;
   }
-  
-  // テキストを空にして、クラスをリセット
+
   element.textContent = '';
   element.classList.remove('typing-complete');
-  
+
   let currentIndex = 0;
-  const typingSpeed = 50; // ミリ秒（日本語なので少し遅め）
-  
+  const typingSpeed = 50;
+
   typingInterval = setInterval(() => {
     if(currentIndex < fullText.length){
       element.textContent = fullText.substring(0, currentIndex + 1);
@@ -2704,55 +2636,42 @@ function openPopup(popupId){
   popup.classList.add('is-open');
   popup.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
-  
-  // messagePopupの場合、タイピングアニメーションを開始
+
   if(popupId === 'messagePopup'){
     const creatorText = popup.querySelector('.creator-text');
     if(creatorText){
-      // ポップアップが開いてから少し遅延させてタイピング開始
-      setTimeout(() => {
-        startTypingAnimation(creatorText);
-      }, 300);
+      setTimeout(() => { startTypingAnimation(creatorText); }, 300);
     }
   }
-  
-  // videoPopupの場合、動画を自動再生
+
   if(popupId === 'videoPopup'){
     const video = popup.querySelector('#mobbyVideo');
     if(video){
-      // ポップアップが開いてから少し遅延させて再生開始
       setTimeout(() => {
-        video.currentTime = 0; // 最初から再生
-        video.play().catch(err => {
-          console.log('動画の自動再生に失敗しました:', err);
-        });
+        video.currentTime = 0;
+        video.play().catch(() => {});
       }, 300);
     }
   }
-  
-  // imagePopupの場合、ギャラリーを初期化
+
   if(popupId === 'imagePopup'){
-    setTimeout(() => {
-      initImageGallery();
-    }, 100);
+    setTimeout(() => { initImageGallery(); }, 100);
   }
 }
 
 function closePopup(popupId){
   const popup = document.getElementById(popupId);
   if(!popup) return;
-  
-  // タイピングアニメーションを停止
+
   if(typingInterval){
     clearInterval(typingInterval);
     typingInterval = null;
   }
-  
+
   popup.classList.remove('is-open');
   popup.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
-  
-  // messagePopupの場合、テキストをリセット
+
   if(popupId === 'messagePopup'){
     const creatorText = popup.querySelector('.creator-text');
     if(creatorText){
@@ -2760,8 +2679,7 @@ function closePopup(popupId){
       creatorText.classList.remove('typing-complete');
     }
   }
-  
-  // videoPopupの場合、動画を停止してリセット
+
   if(popupId === 'videoPopup'){
     const video = popup.querySelector('#mobbyVideo');
     if(video){
@@ -2776,7 +2694,7 @@ let imageGalleryIndex = 0;
 let imageGalleryTranslateX = 0;
 let imageGalleryIsDragging = false;
 let imageGalleryStartX = 0;
-let imageGalleryStartTranslateX = 0; // pointerdown時の初期translateXを保存
+let imageGalleryStartTranslateX = 0;
 let imageGalleryStartTime = 0;
 let imageGalleryVelocity = 0;
 let imageGalleryLastX = 0;
@@ -2790,17 +2708,15 @@ function initImageGallery(){
   const nextBtn = document.getElementById('imageGalleryNext');
   const indicators = document.querySelectorAll('.indicator-dot');
   const slides = document.querySelectorAll('.image-gallery-slide');
-  
+
   if(!track || !viewport) return;
-  
+
   imageGalleryTotalSlides = slides.length;
-  
-  // インデックスをリセット
+
   imageGalleryIndex = 0;
   imageGalleryTranslateX = 0;
   updateImageGallery();
-  
-  // 前へボタン
+
   if(prevBtn){
     prevBtn.addEventListener('click', () => {
       if(imageGalleryIndex > 0){
@@ -2809,8 +2725,7 @@ function initImageGallery(){
       }
     });
   }
-  
-  // 次へボタン
+
   if(nextBtn){
     nextBtn.addEventListener('click', () => {
       if(imageGalleryIndex < imageGalleryTotalSlides - 1){
@@ -2819,16 +2734,14 @@ function initImageGallery(){
       }
     });
   }
-  
-  // インジケーター
+
   indicators.forEach((dot, index) => {
     dot.addEventListener('click', () => {
       imageGalleryIndex = index;
       updateImageGallery();
     });
   });
-  
-  // スワイプ機能（滑らかな動作）
+
   viewport.addEventListener('pointerdown', (e) => {
     if(imageGalleryIsDragging) return;
     imageGalleryIsDragging = true;
@@ -2837,38 +2750,34 @@ function initImageGallery(){
     imageGalleryLastX = e.clientX;
     imageGalleryLastTime = imageGalleryStartTime;
     imageGalleryVelocity = 0;
-    
+
     const slideWidth = viewport.offsetWidth;
-    imageGalleryStartTranslateX = -imageGalleryIndex * slideWidth; // 初期位置を保存
+    imageGalleryStartTranslateX = -imageGalleryIndex * slideWidth;
     imageGalleryTranslateX = imageGalleryStartTranslateX;
-    
+
     viewport.style.cursor = 'grabbing';
     track.style.transition = 'none';
     e.preventDefault();
   });
-  
+
   viewport.addEventListener('pointermove', (e) => {
     if(!imageGalleryIsDragging) return;
-    
+
     const currentX = e.clientX;
     const currentTime = Date.now();
     const slideWidth = viewport.offsetWidth;
-    const diff = currentX - imageGalleryStartX; // 開始位置からの移動量
-    
-    // 速度を計算（スムーズなスワイプ判定のため）
+    const diff = currentX - imageGalleryStartX;
+
     if(currentTime - imageGalleryLastTime > 0){
       imageGalleryVelocity = (currentX - imageGalleryLastX) / (currentTime - imageGalleryLastTime);
       imageGalleryLastX = currentX;
       imageGalleryLastTime = currentTime;
     }
-    
-    // 境界チェック（最初と最後のスライドで越えないように）
-    // 初期位置に移動量を加算
+
     const targetTranslate = imageGalleryStartTranslateX + diff;
     const minTranslate = -(imageGalleryTotalSlides - 1) * slideWidth;
     const maxTranslate = 0;
-    
-    // 境界を超えた場合の抵抗効果
+
     if(targetTranslate > maxTranslate){
       imageGalleryTranslateX = maxTranslate + (targetTranslate - maxTranslate) * 0.3;
     } else if(targetTranslate < minTranslate){
@@ -2876,50 +2785,46 @@ function initImageGallery(){
     } else {
       imageGalleryTranslateX = targetTranslate;
     }
-    
+
     track.style.transform = `translateX(${imageGalleryTranslateX}px)`;
     e.preventDefault();
   });
-  
-  viewport.addEventListener('pointerup', (e) => {
+
+  viewport.addEventListener('pointerup', () => {
     if(!imageGalleryIsDragging) return;
     imageGalleryIsDragging = false;
     viewport.style.cursor = 'grab';
-    
+
     const slideWidth = viewport.offsetWidth;
-    const initialTranslateX = -imageGalleryIndex * slideWidth; // 開始時の位置
-    const diff = imageGalleryTranslateX - initialTranslateX; // 実際の移動距離
-    const threshold = slideWidth * 0.01; // 1%の閾値（少しのスワイプで反応）
-    const speedThreshold = 0.01; // 速度の閾値（px/ms）- より敏感に
-    
-    // 速度ベースの判定（高速スワイプ時）- 優先度を上げる
+    const initialTranslateX = -imageGalleryIndex * slideWidth;
+    const diff = imageGalleryTranslateX - initialTranslateX;
+    const threshold = slideWidth * 0.01;
+    const speedThreshold = 0.01;
+
     if(Math.abs(imageGalleryVelocity) > speedThreshold){
       if(imageGalleryVelocity < 0 && imageGalleryIndex < imageGalleryTotalSlides - 1){
         imageGalleryIndex++;
       } else if(imageGalleryVelocity > 0 && imageGalleryIndex > 0){
         imageGalleryIndex--;
       }
-    } 
-    // 距離ベースの判定（低速スワイプ時）
-    else if(Math.abs(diff) > threshold){
+    } else if(Math.abs(diff) > threshold){
       if(diff < 0 && imageGalleryIndex < imageGalleryTotalSlides - 1){
         imageGalleryIndex++;
       } else if(diff > 0 && imageGalleryIndex > 0){
         imageGalleryIndex--;
       }
     }
-    
+
     updateImageGallery();
   });
-  
+
   viewport.addEventListener('pointercancel', () => {
     if(!imageGalleryIsDragging) return;
     imageGalleryIsDragging = false;
     viewport.style.cursor = 'grab';
     updateImageGallery();
   });
-  
-  // キーボードナビゲーション
+
   const handleKeyDown = (e) => {
     if(e.key === 'ArrowLeft' && imageGalleryIndex > 0){
       imageGalleryIndex--;
@@ -2931,9 +2836,8 @@ function initImageGallery(){
       e.preventDefault();
     }
   };
-  
+
   viewport.addEventListener('keydown', handleKeyDown);
-  // ポップアップが開いている時はdocumentでもキーイベントをリッスン
   document.addEventListener('keydown', handleKeyDown);
 }
 
@@ -2943,24 +2847,21 @@ function updateImageGallery(){
   const indicators = document.querySelectorAll('.indicator-dot');
   const prevBtn = document.getElementById('imageGalleryPrev');
   const nextBtn = document.getElementById('imageGalleryNext');
-  
+
   if(!viewport || !track) return;
-  
+
   const slideWidth = viewport.offsetWidth;
   imageGalleryTranslateX = -imageGalleryIndex * slideWidth;
-  
-  // トランジションを有効にして滑らかに移動
+
   if(!imageGalleryIsDragging){
     track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
   }
   track.style.transform = `translateX(${imageGalleryTranslateX}px)`;
-  
-  // インジケーターを更新
+
   indicators.forEach((dot, index) => {
     dot.classList.toggle('active', index === imageGalleryIndex);
   });
-  
-  // ボタンの有効/無効を更新
+
   if(prevBtn){
     prevBtn.style.opacity = imageGalleryIndex === 0 ? '0.5' : '1';
     prevBtn.style.pointerEvents = imageGalleryIndex === 0 ? 'none' : 'auto';
@@ -2971,7 +2872,7 @@ function updateImageGallery(){
   }
 }
 
-// ポップアップボタンのイベント
+/* Popup buttons */
 document.getElementById('openMessagePopup')?.addEventListener('click', () => openPopup('messagePopup'));
 document.getElementById('openColorsPopup')?.addEventListener('click', () => openPopup('colorsPopup'));
 document.getElementById('openPricePopup')?.addEventListener('click', () => openPopup('pricePopup'));
@@ -2979,7 +2880,7 @@ document.getElementById('openFaqPopup')?.addEventListener('click', () => openPop
 document.getElementById('openImagePopup')?.addEventListener('click', () => openPopup('imagePopup'));
 document.getElementById('openVideoPopup')?.addEventListener('click', () => openPopup('videoPopup'));
 
-// 閉じるボタンのイベント
+/* Close buttons */
 document.getElementById('closeMessagePopup')?.addEventListener('click', () => closePopup('messagePopup'));
 document.getElementById('closeColorsPopup')?.addEventListener('click', () => closePopup('colorsPopup'));
 document.getElementById('closePricePopup')?.addEventListener('click', () => closePopup('pricePopup'));
@@ -2987,7 +2888,7 @@ document.getElementById('closeFaqPopup')?.addEventListener('click', () => closeP
 document.getElementById('closeImagePopup')?.addEventListener('click', () => closePopup('imagePopup'));
 document.getElementById('closeVideoPopup')?.addEventListener('click', () => closePopup('videoPopup'));
 
-// オーバーレイクリックで閉じる
+/* Overlay click to close */
 document.getElementById('messagePopup')?.addEventListener('click', (e) => {
   if(e.target.id === 'messagePopup') closePopup('messagePopup');
 });
@@ -3001,7 +2902,6 @@ document.getElementById('faqPopup')?.addEventListener('click', (e) => {
   if(e.target.id === 'faqPopup') closePopup('faqPopup');
 });
 document.getElementById('imagePopup')?.addEventListener('click', (e) => {
-  // ギャラリーコンテナ内のクリックは無視
   if(e.target.closest('.image-gallery-container')) return;
   if(e.target.id === 'imagePopup') closePopup('imagePopup');
 });
@@ -3009,7 +2909,7 @@ document.getElementById('videoPopup')?.addEventListener('click', (e) => {
   if(e.target.id === 'videoPopup') closePopup('videoPopup');
 });
 
-// ESCキーで閉じる
+/* ESC */
 window.addEventListener('keydown', (e) => {
   if(e.key === 'Escape'){
     if(document.getElementById('messagePopup')?.classList.contains('is-open')) closePopup('messagePopup');
@@ -3021,7 +2921,7 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
-// ポップアップ間の遷移
+/* Popup transitions */
 document.getElementById('openPriceFromColors')?.addEventListener('click', () => {
   closePopup('colorsPopup');
   setTimeout(() => openPopup('pricePopup'), 200);
@@ -3031,10 +2931,7 @@ document.getElementById('openColorsFromFaq')?.addEventListener('click', () => {
   setTimeout(() => openPopup('colorsPopup'), 200);
 });
 
-// EmailJS初期化（実際の使用時はPublic Keyを設定する必要があります）
-// 注意: 本番環境では、EmailJSの設定（Service ID、Template ID、Public Key）が必要です
-// ここではmailto:リンクを使用するフォールバック方式を実装します
-// 共通：JSON POST helper
+/* POST helper */
 async function postJSON(url, data) {
   const r = await fetch(url, {
     method: "POST",
@@ -3044,7 +2941,6 @@ async function postJSON(url, data) {
 
   const j = await r.json().catch(() => ({}));
 
-  // APIが {ok:true} を返す想定
   if (!r.ok || !j.ok) {
     const msg = j?.error || "Request failed";
     throw new Error(msg);
@@ -3052,7 +2948,6 @@ async function postJSON(url, data) {
   return j;
 }
 
-// 共通：メッセージ表示 helper
 function showMsg(div, { ok, text }) {
   div.style.display = "block";
   div.style.background = ok ? "rgba(0,255,0,0.1)" : "rgba(255,0,0,0.1)";
@@ -3061,7 +2956,7 @@ function showMsg(div, { ok, text }) {
   div.textContent = text;
 }
 
-// 購入権の予約ポップアップの抽選予約フォーム送信（mailto → /api/reservation）
+/* priceReservationForm */
 document.getElementById("priceReservationForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -3076,7 +2971,6 @@ document.getElementById("priceReservationForm")?.addEventListener("submit", asyn
 
   if (!messageDiv || !submitBtn) return;
 
-  // バリデーション（住所と名前は必須）
   if (!address || address.trim() === "") {
     showMsg(messageDiv, { ok: false, text: "住所を入力してください。" });
     return;
@@ -3086,7 +2980,6 @@ document.getElementById("priceReservationForm")?.addEventListener("submit", asyn
     return;
   }
 
-  // 送信ボタンを無効化
   submitBtn.disabled = true;
   const originalText = submitBtn.textContent;
   submitBtn.textContent = "送信中...";
@@ -3098,22 +2991,19 @@ document.getElementById("priceReservationForm")?.addEventListener("submit", asyn
       name: name.trim(),
       email: email.trim(),
       phone: phone.trim(),
-      purchaseReason: purchaseReasons, // 購入理由（複数選択可）
-      hp: "" // honeypot（サーバ側で弾く用。フォームにhiddenを足すならここも拾う）
+      purchaseReason: purchaseReasons,
+      hp: ""
     });
 
     showMsg(messageDiv, { ok: true, text: "送信しました。抽選結果を待ってね。" });
 
-    // フォームをリセット
     setTimeout(() => {
       form.reset();
       submitBtn.disabled = false;
       submitBtn.textContent = originalText || "予約する";
     }, 1200);
   } catch (error) {
-    console.error("送信エラー:", error);
     const errorMessage = error.message || "送信に失敗しました。時間をおいて再度お試しください。";
-    // エラーメッセージを日本語に変換
     let userMessage = errorMessage;
     if (errorMessage.includes("Address is required") || errorMessage.includes("Invalid address")) {
       userMessage = "住所を入力してください。";
@@ -3132,7 +3022,7 @@ document.getElementById("priceReservationForm")?.addEventListener("submit", asyn
   }
 });
 
-// FAQお問い合わせフォーム送信（mailto → /api/contact）
+/* faqContactForm */
 document.getElementById("faqContactForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -3144,13 +3034,11 @@ document.getElementById("faqContactForm")?.addEventListener("submit", async (e) 
 
   if (!messageDiv || !submitBtn) return;
 
-  // バリデーション
   if (!email.trim() || !message.trim()) {
     showMsg(messageDiv, { ok: false, text: "メールアドレスとお問い合わせ内容を入力してください。" });
     return;
   }
 
-  // 送信ボタンを無効化
   submitBtn.disabled = true;
   const originalText = submitBtn.textContent;
   submitBtn.textContent = "送信中...";
@@ -3165,34 +3053,31 @@ document.getElementById("faqContactForm")?.addEventListener("submit", async (e) 
 
     showMsg(messageDiv, { ok: true, text: "送信しました。返信まで少し待ってね。" });
 
-    // フォームをリセット
     setTimeout(() => {
       form.reset();
       submitBtn.disabled = false;
       submitBtn.textContent = originalText || "送信";
     }, 1200);
   } catch (error) {
-    console.error("送信エラー:", error);
     showMsg(messageDiv, { ok: false, text: "送信に失敗しました。時間をおいて再度お試しください。" });
     submitBtn.disabled = false;
     submitBtn.textContent = originalText || "送信";
   }
 });
+
 /* ===== Reservation counter: start 72, +1 every 3 days from 2026-01-07 ===== */
 (() => {
   const COUNT_KEY = "mobby_reservation_count_v1";
   const LAST_KEY  = "mobby_reservation_last_update_v1";
 
   const BASE_COUNT = 72;
-  const START_DATE = new Date("2026-01-07T00:00:00+09:00"); // 今日から
+  const START_DATE = new Date("2026-01-07T00:00:00+09:00");
   const INTERVAL_DAYS = 3;
 
   const countEl = document.getElementById("reservationCount");
-
   if (!countEl) return;
 
   function floorDayJST(d){
-    // JST前提で“日”単位に丸める（時刻ズレ対策）
     return new Date(d.getFullYear(), d.getMonth(), d.getDate());
   }
 
@@ -3205,16 +3090,11 @@ document.getElementById("faqContactForm")?.addEventListener("submit", async (e) 
 
   function load(){
     const storedCount = Number(localStorage.getItem(COUNT_KEY));
-    const storedLast  = localStorage.getItem(LAST_KEY);
-
     const now = new Date();
     const daysFromStart = Math.max(0, daysBetween(START_DATE, now));
     const shouldBe = BASE_COUNT + Math.floor(daysFromStart / INTERVAL_DAYS);
 
-    // 初回 or 破損時は理論値を採用
     let count = Number.isFinite(storedCount) && storedCount > 0 ? storedCount : shouldBe;
-
-    // 最終更新日が古い場合、理論値に追いつかせる（下がることはさせない）
     count = Math.max(count, shouldBe);
 
     localStorage.setItem(COUNT_KEY, String(count));
