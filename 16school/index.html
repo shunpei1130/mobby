@@ -1,0 +1,1448 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>学校キャラ診断</title>
+  <link rel="icon" type="image/jpeg" href="fav.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Fonts */
+      --font-ja: 'Yomogi', cursive;
+      --font-en: 'Yomogi', cursive;
+      
+      /* Apple-esque Palette */
+      --bg: #fff8e8; /* 背景：温かみのあるクリーム色 */
+      --surface: #ffffff; /* カード背景：純白 */
+      --text-main: #1d1d1f; /* メインテキスト：ほぼ黒 */
+      --text-sub: #86868b; /* サブテキスト：グレー */
+      --accent: #0071e3; /* アクセント：Apple Blue */
+      --accent-soft: #e8f2ff; /* 薄い青 */
+      --line: #d2d2d7; /* 境界線 */
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+      --shadow-lg: 0 12px 30px rgba(0,0,0,0.08);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --danger: #ff3b30;
+    }
+
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    
+    body {
+      margin: 0;
+      font-family: var(--font-en), var(--font-ja);
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+
+    .wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .logo {
+      width: 40px; height: 40px; border-radius: 10px;
+      background-image: url('logo.jpg');
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 4px 10px rgba(0,113,227,0.3);
+      cursor: pointer;
+    }
+    .title h1 { font-size: 18px; margin: 0; font-weight: 600; cursor: pointer; }
+    .title p { margin: 0; color: var(--text-sub); font-size: 12px; }
+    .nav {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .nav a {
+      color: var(--text-main);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .nav a:hover {
+      background: rgba(0,0,0,0.05);
+    }
+    .nav a.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    @media (max-width: 600px) {
+      header { flex-direction: column; align-items: flex-start; }
+      .nav { width: 100%; justify-content: flex-start; }
+    }
+
+    /* Buttons */
+    button {
+      border: 1px solid transparent;
+      background: rgba(0,0,0,0.05);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 999px; /* Pill shape */
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    button:hover { background: rgba(0,0,0,0.08); transform: translateY(-1px); }
+    button:active { transform: scale(0.98); }
+    
+    button.primary {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,113,227,0.25);
+    }
+    button.primary:hover { background: #0077ed; box-shadow: 0 6px 16px rgba(0,113,227,0.35); }
+    
+    button.danger { color: var(--danger); background: rgba(255,59,48,0.05); }
+    button.danger:hover { background: rgba(255,59,48,0.1); }
+    button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+    @media (max-width: 600px) {
+      button.danger {
+        white-space: nowrap;
+        min-width: 80px;
+        font-size: 12px !important;
+        padding: 10px 16px;
+      }
+    }
+
+    /* Panels & Cards */
+    .panel {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      padding: 32px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255,255,255,0.8);
+    }
+    @media (max-width: 600px) {
+      .panel { padding: 24px 16px; }
+    }
+
+    .kicker {
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0 0 8px;
+    }
+    .big {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 16px;
+      letter-spacing: -0.01em;
+      color: var(--text-main);
+    }
+    .text-body { font-size: 15px; color: var(--text-sub); }
+
+    /* Progress Bar */
+    .progress-wrap { margin: 20px 0; }
+    .progress-track {
+      height: 6px;
+      background: #f0f0f5;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .progress-meta {
+      display: flex; justify-content: space-between;
+      font-size: 11px; color: var(--text-sub); margin-bottom: 6px; font-weight: 500;
+    }
+
+    /* Questions (4 Options) */
+    .qCard {
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid #f0f0f5;
+    }
+    .qCard:last-child { border-bottom: none; margin-bottom: 10px; }
+    .qText { font-size: 16px; font-weight: 600; margin: 0 0 16px; }
+    
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* 7択に変更 */
+      gap: 10px;
+    }
+    @media (max-width: 500px) {
+      .options-grid { grid-template-columns: 1fr 1fr; gap: 8px; } /* スマホは2列x2行 */
+    }
+
+    .opt-btn {
+      position: relative;
+    }
+    .opt-btn input { display: none; }
+    .opt-btn label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 4px;
+      background: #f5f5f7;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      height: 100%;
+      min-height: 64px;
+      text-align: center;
+    }
+    .opt-btn label .t { font-size: 12px; font-weight: 600; color: var(--text-sub); line-height: 1.2; }
+    
+    /* Checked State */
+    .opt-btn input:checked + label {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .opt-btn input:checked + label .t { color: var(--accent); }
+
+    /* Results */
+    .result-hero {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .char-image-placeholder {
+      width: 100%;
+      max-width: 320px;
+      aspect-ratio: 1 / 1;
+      background: #f0f0f5;
+      border-radius: 24px;
+      margin: 20px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-sub);
+      font-size: 13px;
+      border: 1px dashed #d2d2d7;
+      overflow: hidden; /* 画像が入った時にはみ出さないように */
+    }
+    .char-image-placeholder img {
+        width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 24px;
+    }
+    @media (max-width: 700px) { .card-grid { grid-template-columns: 1fr; } }
+
+    .info-card {
+      background: #f5f5f7;
+      padding: 20px;
+      border-radius: 16px;
+    }
+    .info-card h3 { margin: 0 0 12px; font-size: 15px; color: var(--text-main); }
+    .info-card ul { margin: 0; padding-left: 20px; font-size: 13px; color: var(--text-main); }
+    .info-card li { margin-bottom: 6px; }
+
+    /* Axis Bars */
+    /* Axis Indicator */
+    .axis-row { margin-bottom: 18px; }
+    .axis-name { font-size: 13px; font-weight: 600; margin-bottom: 6px; display: block; }
+    .axis-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-sub); margin-bottom: 6px; }
+    .axis-meta { display:flex; justify-content: space-between; gap: 10px; font-size: 11px; color: var(--text-sub); margin-top: 6px; }
+    .axis-track {
+      height: 10px;
+      background: #e5e5ea;
+      border-radius: 999px;
+      position: relative;
+      overflow: visible;
+    }
+    .axis-center {
+      position:absolute;
+      left:50%;
+      top:50%;
+      width: 2px;
+      height: 14px;
+      background: rgba(0,0,0,0.10);
+      transform: translate(-50%, -50%);
+      border-radius: 2px;
+    }
+    .axis-dot {
+      position:absolute;
+      top:50%;
+      width: 14px;
+      height: 14px;
+      background: var(--accent);
+      border: 3px solid #fff;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+    }
+    details.axis-details { margin-top: 8px; }
+    details.axis-details summary { cursor:pointer; color: var(--accent); font-size: 12px; font-weight: 600; }
+    .axis-breakdown {
+      margin-top: 10px;
+      background: #f5f5f7;
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 12px;
+      color: var(--text-main);
+    }
+    .axis-breakdown .row {
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .axis-breakdown .row:last-child { border-bottom: none; }
+    .axis-breakdown .q { flex: 1; color: var(--text-main); }
+    .axis-breakdown .a { width: 108px; text-align:right; color: var(--text-sub); white-space: nowrap; }
+    .axis-breakdown .dir { width: 44px; text-align:right; font-weight: 700; }
+
+
+    /* Utility */
+    .hidden { display: none; }
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+    footer {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-sub);
+      margin-top: 40px;
+    }
+  
+    /* 7択サークルUI */
+    .likert7{
+      display:flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px 0 6px;
+    }
+    .likert-labels{
+      display:flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 0 4px;
+    }
+    .likert-labels .left{ color:#2f9e73; }
+    .likert-labels .right{ color:#7b5aa6; }
+    .likert-buttons{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      flex-wrap: nowrap;
+      width: 100%;
+    }
+
+    .likert-btn{
+      appearance:none;
+      -webkit-appearance:none;
+      border: 3px solid rgba(0,0,0,0.25);
+      background: transparent;
+      border-radius: 999px;
+      cursor: pointer;
+      padding: 0;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      transition: transform 80ms ease, border-color 180ms ease, box-shadow 180ms ease;
+      flex-shrink: 0;
+    }
+    .likert-btn[data-i="1"], .likert-btn[data-i="7"] { width: 76px; height: 76px; }
+    .likert-btn[data-i="2"], .likert-btn[data-i="6"] { width: 58px; height: 58px; }
+    .likert-btn[data-i="3"], .likert-btn[data-i="5"] { width: 44px; height: 44px; }
+    .likert-btn[data-i="4"] { width: 30px; height: 30px; }
+
+    .likert-btn.left  { border-color: rgba(47,158,115,0.85); }
+    .likert-btn.mid   { border-color: rgba(140,140,148,0.65); }
+    .likert-btn.right { border-color: rgba(123,90,166,0.85); }
+
+    .likert-btn.selected{
+      box-shadow: 0 0 0 6px rgba(0,113,227,0.12);
+      border-color: rgba(0,113,227,0.65);
+    }
+    .likert-btn:active{ transform: scale(0.98); }
+
+    @media (max-width: 420px){
+      .likert7{ gap: 6px; }
+      .likert-labels{ font-size: 9px; padding: 0 2px; }
+      .likert-buttons{ gap: 4px; }
+      .likert-btn[data-i="1"], .likert-btn[data-i="7"] { width: 48px; height: 48px; }
+      .likert-btn[data-i="2"], .likert-btn[data-i="6"] { width: 40px; height: 40px; }
+      .likert-btn[data-i="3"], .likert-btn[data-i="5"] { width: 32px; height: 32px; }
+      .likert-btn[data-i="4"] { width: 24px; height: 24px; }
+    }
+    @media (max-width: 360px){
+      .likert7{ gap: 4px; }
+      .likert-labels{ font-size: 8px; }
+      .likert-buttons{ gap: 2px; }
+      .likert-btn[data-i="1"], .likert-btn[data-i="7"] { width: 42px; height: 42px; }
+      .likert-btn[data-i="2"], .likert-btn[data-i="6"] { width: 36px; height: 36px; }
+      .likert-btn[data-i="3"], .likert-btn[data-i="5"] { width: 28px; height: 28px; }
+      .likert-btn[data-i="4"] { width: 22px; height: 22px; }
+    }
+
+    /* Character List Page */
+    .char-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+    @media (max-width: 600px) {
+      .char-grid { 
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+    }
+    .char-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      padding: 24px;
+      border: 1px solid rgba(255,255,255,0.8);
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    @media (max-width: 600px) {
+      .char-card {
+        padding: 8px;
+        border-radius: 12px;
+      }
+    }
+    .char-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+    .char-card-image {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      background: #f0f0f5;
+    }
+    @media (max-width: 600px) {
+      .char-card-image {
+        border-radius: 8px;
+        margin-bottom: 6px;
+      }
+    }
+    .char-card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .char-card-name {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0 0 8px;
+      color: var(--text-main);
+      min-height: 54px;
+      display: flex;
+      align-items: flex-start;
+    }
+    @media (max-width: 600px) {
+      .char-card-name {
+        font-size: 10px;
+        margin: 0 0 4px;
+        line-height: 1.3;
+        min-height: 26px;
+      }
+    }
+    .char-card-type {
+      display: inline-block;
+      background: #f0f0f5;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-family: monospace;
+      color: var(--text-sub);
+      margin-bottom: 12px;
+    }
+    @media (max-width: 600px) {
+      .char-card-type {
+        padding: 2px 4px;
+        border-radius: 6px;
+        font-size: 8px;
+        margin-bottom: 4px;
+        display: block;
+      }
+    }
+    .char-card-desc {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-main);
+      margin: 0 0 12px;
+      flex-grow: 1;
+    }
+    @media (max-width: 600px) {
+      .char-card-desc {
+        font-size: 9px;
+        line-height: 1.4;
+        display: none; /* スマホでは説明文を非表示 */
+        margin: 0;
+      }
+    }
+    .char-card-detail-btn {
+      margin-top: auto;
+      padding: 8px 16px;
+      font-size: 12px;
+      width: 100%;
+    }
+    @media (max-width: 600px) {
+      .char-card-detail-btn {
+        margin-top: 4px;
+        padding: 4px 8px;
+        font-size: 9px;
+      }
+    }
+
+    /* Character Detail Modal */
+    .char-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+      opacity: 0;
+      animation: fadeIn 0.2s ease forwards;
+    }
+    .char-modal {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 32px;
+      position: relative;
+      transform: scale(0.95);
+      animation: modalSlideIn 0.2s ease forwards;
+    }
+    @media (max-width: 600px) {
+      .char-modal {
+        padding: 24px 16px;
+        max-height: 85vh;
+      }
+    }
+    @keyframes modalSlideIn {
+      to {
+        transform: scale(1);
+      }
+    }
+    .char-modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: rgba(0,0,0,0.05);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--text-main);
+      transition: background 0.2s;
+    }
+    .char-modal-close:hover {
+      background: rgba(0,0,0,0.1);
+    }
+    .char-modal-image {
+      width: 200px;
+      height: 200px;
+      border-radius: 16px;
+      overflow: hidden;
+      margin: 0 auto 24px;
+      background: #f0f0f5;
+    }
+    .char-modal-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .char-modal-type {
+      display: inline-block;
+      background: #f0f0f5;
+      padding: 6px 16px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-family: monospace;
+      color: var(--text-sub);
+      margin-bottom: 16px;
+    }
+    .char-modal-name {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 16px;
+      color: var(--text-main);
+      text-align: center;
+    }
+    .char-modal-desc {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--text-main);
+      margin: 0;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <a href="../index.html?skipSplash=1" class="back-btn" style="text-decoration:none;">
+          <button style="margin-right:12px; font-size:15px; padding:6px 18px; border-radius:20px; border:1px solid #e0e0e0; background:#fff8e8; color:#0071e3; cursor:pointer;">&lt; トップに戻る</button>
+        </a>
+        <div class="logo" id="logoHome"></div>
+        <div class="title">
+          <h1 id="titleHome">学校キャラ診断</h1>
+          <p>あなたのキャラクターを16タイプで診断</p>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <nav class="nav">
+          <a href="#" id="navDiagnosis" class="active">診断</a>
+          <a href="#" id="navCharacters">キャラ一覧</a>
+        </nav>
+        <button class="danger" id="btnReset" style="font-size:11px;">リセット</button>
+      </div>
+    </header>
+
+    <main id="app"></main>
+
+    <footer>
+      <p>※結果は端末にのみ保存されます。</p>
+    </footer>
+  </div>
+
+  <script>
+    function isQuizCompleted(){
+  return Object.keys(state.answers || {}).length >= QUESTIONS.length;
+}
+function isRegistered(){
+  return !!(state.profile && state.profile.name && state.profile.email);
+}
+function gotoDiagnosisHome(){
+  // 完了&登録済みなら結果へ、それ以外はintroへ
+  state.step = (isQuizCompleted() && isRegistered()) ? "result" : "intro";
+  render();
+}
+
+    /***********************
+     * Data & Logic
+     ***********************/
+    const AXES = {
+      A: { key:"A", name:"キャラタイプ", left:"陽キャラ", right:"陰キャラ", leftCode:"O", rightCode:"Q" },
+      B: { key:"B", name:"雰囲気", left:"やんちゃ", right:"真面目", leftCode:"R", rightCode:"J" },
+      C: { key:"C", name:"行動スタイル", left:"仲間重視", right:"個人行動重視", leftCode:"T", rightCode:"L" },
+      D: { key:"D", name:"評価基準", left:"外（他者評価）", right:"内（自己基準）", leftCode:"P", rightCode:"I" }
+    };
+
+    // 学校版では直接コードを使用（変換マッピング不要）
+
+    const ANS_LABEL = {1:"そう思う", 2:"ややそう思う", 3:"少しそう思う", 4:"どちらでもない", 5:"少しそう思わない", 6:"ややそう思わない", 7:"そう思わない"};
+
+
+    const QUESTIONS = [
+  // A：陽キャラ vs 陰キャラ
+  {id:"A1", axis:"A", text:"クラスで何かを決める場面では、自然と自分から意見を出すことが多い", reverse:false},
+  {id:"A2", axis:"A", text:"人が集まって盛り上がっている場所には、つい行きたくなる", reverse:false},
+  {id:"A3", axis:"A", text:"初対面の人とも、自分から話しかけることが多い", reverse:false},
+  {id:"A4", axis:"A", text:"授業中に先生と目が合っても、特に気にならない", reverse:false},
+  {id:"A5", axis:"A", text:"行事やイベントでは、中心にいることが多い", reverse:false},
+  {id:"A6", axis:"A", text:"みんなが黙っていると、何か話したくなる", reverse:false},
+  {id:"A7", axis:"A", text:"クラスの雰囲気は、自分の言動で多少変わると思う", reverse:false},
+  {id:"A8", axis:"A", text:"注目される場面は、わりと好きだ", reverse:false},
+  {id:"A9", axis:"A", text:"何か起きたとき、まず動く側だと思う", reverse:false},
+  {id:"A10", axis:"A", text:"目立たない日が続くと、少し物足りなく感じる", reverse:false},
+
+  // B：やんちゃ vs 真面目
+  {id:"B1", axis:"B", text:"服や持ち物は、実用性よりも見た目を重視しがちだ", reverse:false},
+  {id:"B2", axis:"B", text:"人からどう見られているかは、わりと気になる", reverse:false},
+  {id:"B3", axis:"B", text:"新しい服や靴を買うと、誰かに気づいてほしいと思う", reverse:false},
+  {id:"B4", axis:"B", text:"校則は、工夫すれば少し崩してもいいと思う", reverse:false},
+  {id:"B5", axis:"B", text:"色やデザインで物を選ぶことが多い", reverse:false},
+  {id:"B6", axis:"B", text:"写真を撮るとき、写りを意識する", reverse:false},
+  {id:"B7", axis:"B", text:"服装が変わると、テンションも結構変わる", reverse:false},
+  {id:"B8", axis:"B", text:"目立つアイテムを見ると、ちょっと惹かれる", reverse:false},
+  {id:"B9", axis:"B", text:"周りと違う格好をするのは楽しい", reverse:false},
+  {id:"B10", axis:"B", text:"『オシャレだね』と言われると素直にうれしい", reverse:false},
+
+  // C：仲間重視 vs 個人行動重視
+  {id:"C1", axis:"C", text:"学校では、基本的に誰かと一緒にいることが多い", reverse:false},
+  {id:"C2", axis:"C", text:"行動するときは、周りと合わせるほうだ", reverse:false},
+  {id:"C3", axis:"C", text:"休み時間は、誰かと話して過ごすことが多い", reverse:false},
+  {id:"C4", axis:"C", text:"放課後の予定は、誰かと一緒に決まることが多い", reverse:false},
+  {id:"C5", axis:"C", text:"グループから外れると、少し不安になる", reverse:false},
+  {id:"C6", axis:"C", text:"友達と同じ行動を取ることが多い", reverse:false},
+  {id:"C7", axis:"C", text:"何かを決めるとき、周りの意見をよく聞く", reverse:false},
+  {id:"C8", axis:"C", text:"一人で行動する日が続くと、少し寂しい", reverse:false},
+  {id:"C9", axis:"C", text:"チームでやるほうが力を出せる", reverse:false},
+  {id:"C10", axis:"C", text:"集団の一部でいる感覚は心地いい", reverse:false},
+
+  // D：評価基準が外 vs 内
+  {id:"D1", axis:"D", text:"頑張る理由は、周りに結果を見てもらえるからだ", reverse:false},
+  {id:"D2", axis:"D", text:"褒められると、次も頑張ろうと思える", reverse:false},
+  {id:"D3", axis:"D", text:"周りの反応は、自分の行動の基準になりやすい", reverse:false},
+  {id:"D4", axis:"D", text:"成果は、つい人と比べてしまう", reverse:false},
+  {id:"D5", axis:"D", text:"誰にも見られていないと、モチベーションは下がりやすい", reverse:false},
+  {id:"D6", axis:"D", text:"評価されないことは、正直つらい", reverse:false},
+  {id:"D7", axis:"D", text:"『すごい』と言われるとかなりうれしい", reverse:false},
+  {id:"D8", axis:"D", text:"人に見せる前提で行動することが多い", reverse:false},
+  {id:"D9", axis:"D", text:"結果が出ないと、あまり意味がないと感じる", reverse:false},
+  {id:"D10", axis:"D", text:"周りにどう思われるかは、判断材料の一つだ", reverse:false},
+];
+
+    const CHARACTERS = {
+      "ORTP": {name:"文化祭センターステージモビィ", summary:"場の空気を読むのが早く、自然と前に立っているタイプ。<br>目立つこと自体が目的というより、「今ここを回さないと空気が止まる」という感覚で動いている。周囲の反応がエネルギー源で、盛り上がりや称賛があるほどギアが上がる。", description:"場の空気を読むのが早く、自然と前に立っているタイプ。目立つこと自体が目的というより、「今ここを回さないと空気が止まる」という感覚で動いている。周囲の反応がエネルギー源で、盛り上がりや称賛があるほどギアが上がる。", strength:"瞬時に場を温める力があり、人を巻き込むスピードが速い。外向けの発信や初対面の場面に強く、全体を動かす起点になれる。", weakness:"反応が薄いと一気にモチベーションが下がりやすい。盛り上げを優先するあまり、細部の詰めや後処理が甘くなることがある。"},
+      "ORTI": {name:"体育祭モビィ", summary:"熱量で先頭に立つタイプ。<br>評価や称賛よりも「本気でやったか」「燃え切れたか」を自分の中で大事にしている。仲間のテンションを引き上げることに自然と喜びを感じる。", description:"熱量で先頭に立つタイプ。評価や称賛よりも「本気でやったか」「燃え切れたか」を自分の中で大事にしている。仲間のテンションを引き上げることに自然と喜びを感じる。", strength:"逆境や勝負どころで強く、周囲の士気を一気に引き上げられる。チームに火をつける役割を無意識に担える。", weakness:"熱量の差で周囲とズレが生じることがある。燃え尽きた後に急にエネルギーが落ちる。"},
+      "ORLP": {name:"廊下ランウェイモビィ", summary:"集団よりも単独で存在感を出すタイプ。<br>注目されることに抵抗はなく、見られる場面ほど整う。自分が勝てる土俵を直感的に選ぶ。", description:"集団よりも単独で存在感を出すタイプ。注目されることに抵抗はなく、見られる場面ほど整う。自分が勝てる土俵を直感的に選ぶ。", strength:"セルフプロデュース力が高く、勝負所で結果を出せる。一人で突破する強さがある。", weakness:"協調性が低いと誤解されやすい。評価が得られない環境では集中力が落ちる。"},
+      "ORLI": {name:"屋上自由時間モビィ", summary:"人前に出ることは嫌いではないが、群れに依存しないタイプ。<br>自分のペースと基準を大切にしている。表では陽気でも、内側はかなりマイペース。", description:"人前に出ることは嫌いではないが、群れに依存しないタイプ。自分のペースと基準を大切にしている。表では陽気でも、内側はかなりマイペース。", strength:"自分軸が強く、人に流されにくい。独自のセンスや判断を持っている。", weakness:"気分屋だと思われやすい。説明不足で誤解を招くことがある。"},
+      "OJTP": {name:"応援団長モビィ", summary:"人前で引っ張りながら、ルールや秩序も守れるリーダータイプ。<br>責任を引き受けることを避けない。外からの信頼や称賛があるほど力を発揮する。", description:"人前で引っ張りながら、ルールや秩序も守れるリーダータイプ。責任を引き受けることを避けない。外からの信頼や称賛があるほど力を発揮する。", strength:"リーダーシップが安定しており、集団を安心して任せられる。対外的な信用が高い。", weakness:"プレッシャーを抱え込みやすい。人に頼るタイミングが遅くなりがち。"},
+      "OJTI": {name:"学級委員モビィ", summary:"目立つよりも、全体がきちんと回っている状態に価値を感じるタイプ。<br>公平さや納得感を重視し、評価がなくても役割を果たす。", description:"目立つよりも、全体がきちんと回っている状態に価値を感じるタイプ。公平さや納得感を重視し、評価がなくても役割を果たす。", strength:"調整力が高く、安定した運用ができる。信頼が積み上がりやすい。", weakness:"融通が利かないと思われることがある。自分の頑張りが可視化されにくい。"},
+      "OJLP": {name:"成績掲示板モビィ", summary:"一人で結果を出し、分かりやすい形で評価されたいタイプ。<br>努力と同時に、報われ方も重視している。", description:"一人で結果を出し、分かりやすい形で評価されたいタイプ。努力と同時に、報われ方も重視している。", strength:"目標達成力が高く、競争環境で強い。自己管理ができる。", weakness:"他人との比較で気持ちが揺れやすい。チーム作業で温度差が出やすい。"},
+      "OJLI": {name:"理科室研究モビィ", summary:"外では堂々としているが、内側は探究心が強い研究者タイプ。<br>結果よりも納得できる過程を重視する。", description:"外では堂々としているが、内側は探究心が強い研究者タイプ。結果よりも納得できる過程を重視する。", strength:"探究心と継続力があり、深い理解に到達できる。", weakness:"興味のない話題では集中が切れやすい。完璧を求めすぎる。"},
+      "QRTP": {name:"裏アカ拡散モビィ", summary:"表では静かだが、裏で流れを作るタイプ。<br>仲間内の反応がエネルギー源で、前に出るより裏方が楽。", description:"表では静かだが、裏で流れを作るタイプ。仲間内の反応がエネルギー源で、前に出るより裏方が楽。", strength:"状況把握力が高く、裏方としての実行力がある。", weakness:"誤解されやすい。反応待ちで動けなくなることがある。"},
+      "QRTI": {name:"部室たまり場モビィ", summary:"仲間を大事にするが、範囲は狭く深い。<br>自分の居場所があると安定する。", description:"仲間を大事にするが、範囲は狭く深い。自分の居場所があると安定する。", strength:"身内への忠誠心が高く、安心できる空間を作れる。", weakness:"新しい環境に入りにくい。内輪ノリが外でズレることがある。"},
+      "QRLP": {name:"制服アレンジモビィ", summary:"言葉より見た目で自己表現するタイプ。<br>直接アピールせず、評価は欲しいという距離感。", description:"言葉より見た目で自己表現するタイプ。直接アピールせず、評価は欲しいという距離感。", strength:"一貫したセンスがあり、独自性が強い。", weakness:"近寄りがたいと思われることがある。評価がないとモヤモヤしやすい。"},
+      "QRLI": {name:"教科書裏落書きモビィ", summary:"一人で世界を作り込むタイプ。<br>外には出さないが、内側は熱量が高い。", description:"一人で世界を作り込むタイプ。外には出さないが、内側は熱量が高い。", strength:"創造性と没頭力が高い。独自の発想を持つ。", weakness:"周囲に伝わりにくい。評価されにくいと孤立しやすい。"},
+      "QJTP": {name:"舞台袖実行委員モビィ", summary:"前に出ず、成功を成立させる側。<br>仲間の動きを整理し、結果としての評価も気にしている。", description:"前に出ず、成功を成立させる側。仲間の動きを整理し、結果としての評価も気にしている。", strength:"実務力と調整力が高く、トラブルに強い。", weakness:"抱え込みやすい。感情が見えにくい。"},
+      "QJTI": {name:"図書委員モビィ", summary:"静かな秩序を好み、淡々と続けられるタイプ。<br>評価がなくてもやる。", description:"静かな秩序を好み、淡々と続けられるタイプ。評価がなくてもやる。", strength:"継続力と誠実さがある。環境を整えるのが得意。", weakness:"変化に弱い。自分の気持ちを後回しにしがち。"},
+      "QJLP": {name:"模試ランキングモビィ", summary:"静かに燃える競争者。<br>結果が安定すると安心し、崩れると内心焦る。", description:"静かに燃える競争者。結果が安定すると安心し、崩れると内心焦る。", strength:"分析力と自己管理能力が高い。", weakness:"他人比較で疲れやすい。協働を遠回りに感じる。"},
+      "QJLI": {name:"自習室モビィ", summary:"誰も見ていなくても積み上げるタイプ。<br>評価より自分の基準を優先する。", description:"誰も見ていなくても積み上げるタイプ。評価より自分の基準を優先する。", strength:"粘り強く、深い集中ができる。信頼できる安定感がある。", weakness:"完璧主義になりやすい。人に頼るのが苦手。"},
+    };
+
+    const STORAGE_KEY = "school_char_diag_v1";
+    const PAGE_SIZE = 5; // 40問 ÷ 5問 = 8ページ
+
+    const state = {
+  step: "intro", // intro | quiz | gate | result | characters
+  page: 0,
+  answers: {},
+  profile: { name: "", email: "" }, // 追加
+  questionOrder: null, // 質問の順番（シャッフル済みインデックス配列）
+};
+
+
+    /***********************
+     * Functions
+     ***********************/
+    function shuffleArray(array) {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
+
+    function getQuestionOrder() {
+      // 既にシャッフル済みの順番があればそれを使用
+      if (state.questionOrder && state.questionOrder.length === QUESTIONS.length) {
+        return state.questionOrder;
+      }
+      // 初回のみシャッフル
+      const indices = Array.from({ length: QUESTIONS.length }, (_, i) => i);
+      state.questionOrder = shuffleArray(indices);
+      saveState();
+      return state.questionOrder;
+    }
+
+    function getShuffledQuestions() {
+      const order = getQuestionOrder();
+      return order.map(index => QUESTIONS[index]);
+    }
+
+    function loadState(){
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(raw) Object.assign(state, JSON.parse(raw));
+      } catch(e){}
+    }
+    function saveState(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+    function resetState(){
+      state.step = "intro";
+      state.page = 0;
+      state.answers = {};
+      state.questionOrder = null;
+      localStorage.removeItem(STORAGE_KEY);
+      render();
+    }
+
+    
+    function computeResult(){
+      // 7択: 1..7（左=そう思う(強) 〜 右=そう思わない(強)）
+      // スコアリング方針:
+      // - 端の回答(1/7)は「確信が強い」とみなし、重みを上げる
+      // - 非線形変換で中間(3/5)の影響を圧縮し、端が相対的に効きやすくする
+      // - reverse:true（右側を肯定する文）は (8-ans) で反転し、「左寄り=プラス」に統一
+      // - 軸内で回答が割れている（相殺）場合は、過剰に断定しないよう少しだけ中立へ寄せる
+      const SCALE = 7;
+      const MID = 4;          // 中央
+      const MAX_DEV = 3;      // MIDからの最大偏差（1 or 7）
+      const GAMMA = 1.35;     // 非線形：大きいほど中間が弱まり、端が相対的に強くなる
+      const EXTREME_BONUS = 0.35; // 端(1/7)の重み +35%
+      const COHERENCE_SHRINK = 0.20; // 相殺が強い軸は最大20%だけ中立へ
+
+
+      const raw = {A:0, B:0, C:0, D:0};        // 左(+)/右(-)
+      const absRaw = {A:0, B:0, C:0, D:0};     // 絶対値（相殺の計算）
+      const maxRaw = {A:0, B:0, C:0, D:0};     // 正規化用
+      const coherenceByAxis = {A:0, B:0, C:0, D:0};
+      const breakdown = {A:[], B:[], C:[], D:[]};
+      const allAnswers = [];
+
+      
+      const weightOf = (ansRaw) => {
+        const isExtreme = (ansRaw === 1 || ansRaw === 7);
+        return isExtreme ? (1 + EXTREME_BONUS) : 1;
+      };
+
+      const shapeAns = (ansAdj) => {
+        // ansAdj: 1..7（左=1, 右=7） / 返り値: -1..+1（左=+）
+        const centered = (MID - ansAdj);     // -3..+3（左=+）
+        const t = centered / MAX_DEV;        // -1..+1
+        const mag = Math.min(1, Math.abs(t));
+        const shaped = Math.sign(t) * Math.pow(mag, GAMMA);
+        return shaped; // -1..+1
+      };
+
+      for(const q of QUESTIONS){
+        const ansRaw = state.answers[q.id];  // 1..7
+        if(!ansRaw) continue;
+
+        allAnswers.push(ansRaw);
+
+        // reverse:true（右側を肯定する文）は反転（8-ans）
+        const ansAdj = q.reverse ? (SCALE + 1 - ansRaw) : ansRaw;
+
+        const shaped = shapeAns(ansAdj);
+        const w = weightOf(ansRaw) * (q.importance ?? 1);
+
+        const contrib = w * shaped;          // 左寄り:+ / 右寄り:-
+        raw[q.axis] += contrib;
+        absRaw[q.axis] += Math.abs(contrib);
+        maxRaw[q.axis] += w;                 // shapedの最大が1なので w を積む
+
+        breakdown[q.axis].push({ id:q.id, text:q.text, ans: ansRaw, contrib });
+      }
+
+const means = {};
+      const hard = {};
+      const norm = {};     // -1..1（+が左寄り）
+      const pos = {};      // 0..100（左=0, 中央=50, 右=100）
+      const leftPct = {};  // 0..100（左の強さ）
+      const decisiveness = {}; // 0..1（中立からどれだけ離れているか）
+
+      ["A","B","C","D"].forEach(k => {
+        const denom = maxRaw[k] || 1;
+
+        // coherence: 1=一貫、0=左右が拮抗（相殺）
+        const coherence = absRaw[k] ? (Math.abs(raw[k]) / absRaw[k]) : 0;
+        coherenceByAxis[k] = coherence;
+
+        // 相殺が強いほど少し中立へ（両方の良さを持つケースを尊重）
+        const adjusted = raw[k] * (1 - COHERENCE_SHRINK * (1 - coherence));
+
+        norm[k] = Math.max(-1, Math.min(1, adjusted / denom));
+        means[k] = MID + norm[k] * MAX_DEV; // 1..4に戻す
+        hard[k] = norm[k] > 0 ? "L" : "R";
+
+        pos[k] = Math.max(0, Math.min(100, 50 - norm[k] * 50));
+        leftPct[k] = Math.round((norm[k] + 1) * 50);
+        decisiveness[k] = Math.min(1, Math.abs(norm[k]));
+      });
+
+      // 直線回答（同じ選択肢に偏る）検知：精度が落ちやすい
+      let straightLine = false;
+      if(allAnswers.length){
+        const freq = {1:0,2:0,3:0,4:0,5:0,6:0,7:0};
+        allAnswers.forEach(a => freq[a]++);
+        const maxF = Math.max(freq[1],freq[2],freq[3],freq[4]);
+        straightLine = (maxF / allAnswers.length) >= 0.80;
+      }
+
+      // コード生成（例: ORTP）
+      const code = AXES.A.leftCode + (hard.A === "L" ? "" : AXES.A.rightCode) + 
+                   AXES.B.leftCode + (hard.B === "L" ? "" : AXES.B.rightCode) + 
+                   AXES.C.leftCode + (hard.C === "L" ? "" : AXES.C.rightCode) + 
+                   AXES.D.leftCode + (hard.D === "L" ? "" : AXES.D.rightCode);
+      // 実際には hard.A が "L" なら leftCode、"R" なら rightCode を使う
+      const actualCode = (hard.A === "L" ? AXES.A.leftCode : AXES.A.rightCode) +
+                         (hard.B === "L" ? AXES.B.leftCode : AXES.B.rightCode) +
+                         (hard.C === "L" ? AXES.C.leftCode : AXES.C.rightCode) +
+                         (hard.D === "L" ? AXES.D.leftCode : AXES.D.rightCode);
+      return { means, hard, code: actualCode, norm, pos, leftPct, coherenceByAxis, breakdown, decisiveness, straightLine, char: CHARACTERS[actualCode] };
+    }
+
+    // --- Rendering ---
+
+
+    const app = document.getElementById("app");
+    document.getElementById("btnReset").onclick = () => {
+      if(confirm("最初からやり直しますか？")) resetState();
+    };
+
+    // Navigation handlers
+    document.getElementById("logoHome").onclick = () => {
+      state.step = "intro";
+      render();
+    };
+    document.getElementById("titleHome").onclick = () => {
+      state.step = "intro";
+      render();
+    };
+    document.getElementById("navDiagnosis").onclick = (e) => {
+      e.preventDefault();
+      // 回答が完了している場合は結果画面を表示
+      const answered = Object.keys(state.answers).length;
+      if(answered >= QUESTIONS.length) {
+        state.step = "result";
+        render();
+      } else {
+        gotoDiagnosisHome();
+      }
+    };
+
+    document.getElementById("navCharacters").onclick = (e) => {
+      e.preventDefault();
+      state.step = "characters";
+      render();
+    };
+
+    function updateNavActive() {
+      const isDiagnosis = ["intro", "quiz", "gate", "result"].includes(state.step);
+      document.getElementById("navDiagnosis").classList.toggle("active", isDiagnosis);
+      document.getElementById("navCharacters").classList.toggle("active", state.step === "characters");
+    }
+
+    function render(){
+      window.scrollTo(0,0);
+      updateNavActive();
+      if(state.step === "intro") renderIntro();
+      else if(state.step === "quiz") renderQuiz();
+      else if(state.step === "gate") renderGate();
+      else if(state.step === "characters") renderCharacters();
+      else renderResult();
+    }
+
+    function renderIntro(){
+      const count = Object.keys(state.answers).length;
+      app.innerHTML = `
+        <div class="panel fade-in" style="text-align:center; padding: 60px 20px;">
+          <p class="kicker">学校キャラ診断</p>
+          <h2 class="big">あなたのキャラクターを<br>4つの軸で診断します。</h2>
+          <p class="text-body" style="max-width:400px; margin:0 auto 30px;">
+            直感で選ぶ40問の質問から、あなたの学校でのキャラクタータイプを16種類から診断します。
+          </p>
+          <button class="primary" id="btnStart" style="padding:16px 32px; font-size:16px;">
+            ${count > 0 ? "診断を再開する" : "診断をはじめる"}
+          </button>
+          ${count > 0 ? `<p style="font-size:12px; color:#86868b; margin-top:16px;">${count} / 40問 回答済み</p>` : ""}
+        </div>
+        
+        <div class="card-grid">
+          <div class="info-card">
+            <h3>キャラタイプ</h3>
+            <div class="text-body" style="font-size:12px;">陽キャラ vs 陰キャラ</div>
+          </div>
+          <div class="info-card">
+            <h3>雰囲気</h3>
+            <div class="text-body" style="font-size:12px;">やんちゃ vs 真面目</div>
+          </div>
+          <div class="info-card">
+            <h3>行動スタイル</h3>
+            <div class="text-body" style="font-size:12px;">仲間重視 vs 個人行動重視</div>
+          </div>
+          <div class="info-card">
+            <h3>評価基準</h3>
+            <div class="text-body" style="font-size:12px;">外（他者評価） vs 内（自己基準）</div>
+          </div>
+        </div>
+      `;
+      document.getElementById("btnStart").onclick = () => {
+        state.step = "quiz";
+        // 質問の順番を確定（初回のみシャッフル）
+        getQuestionOrder();
+        // 未回答の最初のページへ
+        const shuffledQs = getShuffledQuestions();
+        const idx = shuffledQs.findIndex(q => !state.answers[q.id]);
+        state.page = idx >= 0 ? Math.floor(idx / PAGE_SIZE) : 0;
+        render();
+      };
+    }
+
+    function renderQuiz(){
+      const shuffledQs = getShuffledQuestions();
+      const start = state.page * PAGE_SIZE;
+      const currentQs = shuffledQs.slice(start, start + PAGE_SIZE);
+      const totalPage = Math.ceil(shuffledQs.length / PAGE_SIZE);
+      const progress = Math.round((Object.keys(state.answers).length / shuffledQs.length) * 100);
+
+      const qHtml = currentQs.map((q, i) => {
+        const val = state.answers[q.id];
+        return `
+          <div class="qCard fade-in" style="animation-delay: ${i*0.05}s">
+            <div class="kicker" style="color:#86868b; margin-bottom:4px;">Q${start+i+1}</div>
+            <p class="qText">${q.text}</p>
+            <div class="likert7">
+              <div class="likert-labels">
+                <span class="left">そう思う</span>
+                <span class="right">そう思わない</span>
+              </div>
+              <div class="likert-buttons">
+                ${[1,2,3,4,5,6,7].map(n => {
+                  const side = n<=3 ? "left" : (n===4 ? "mid" : "right");
+                  const sel = (val === n) ? "selected" : "";
+                  return `<button type="button" class="likert-btn ${side} ${sel}" data-i="${n}" data-qid="${q.id}" data-val="${n}" aria-label="選択肢 ${n}"></button>`;
+                }).join("")}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      app.innerHTML = `
+        <div class="panel">
+          <div class="progress-wrap">
+            <div class="progress-meta">
+              <span>進行状況</span>
+              <span>${progress}%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" style="width:${progress}%"></div>
+            </div>
+          </div>
+
+          <div style="margin-top:30px;">
+            ${qHtml}
+          </div>
+
+          <div style="display:flex; justify-content:space-between; margin-top:30px;">
+            <button id="btnPrev" ${state.page===0 ? "disabled":""}>戻る</button>
+            <button class="primary" id="btnNext">
+              ${state.page === totalPage - 1 ? "結果を見る" : "次へ"}
+            </button>
+          </div>
+        </div>
+      `;
+
+      // Event Listeners
+      currentQs.forEach(q => {
+        document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(btn => {
+          btn.onclick = (e) => {
+            const val = parseInt(btn.dataset.val);
+            state.answers[q.id] = val;
+
+            // 選択状態の見た目更新
+            document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(b => b.classList.remove("selected"));
+            btn.classList.add("selected");
+
+            saveState();
+
+            // プログレスバーだけ更新
+            const shuffledQs = getShuffledQuestions();
+            const p = Math.round((Object.keys(state.answers).length / shuffledQs.length) * 100);
+            document.querySelector(".progress-fill").style.width = p + "%";
+            document.querySelector(".progress-meta span:last-child").innerText = p + "%";
+          };
+        });
+      });
+document.getElementById("btnPrev").onclick = () => {
+        state.page--;
+        render();
+      };
+
+      document.getElementById("btnNext").onclick = () => {
+        // Validation
+        const missing = currentQs.find(q => !state.answers[q.id]);
+        if(missing){
+          alert("まだ回答していない項目があります");
+          return;
+        }
+        if(state.page < totalPage - 1){
+          state.page++;
+          render();
+        } else {
+          state.step = "gate";
+          render();
+        }
+      };
+    }
+    async function submitLead(payload){
+  console.log("[Frontend] Submitting lead:", payload);
+  try {
+    const r = await fetch("/api/lead", {
+      method: "POST",
+      headers: { "Content-Type":"application/json" },
+      body: JSON.stringify(payload)
+    });
+    console.log("[Frontend] Response status:", r.status, r.statusText);
+    console.log("[Frontend] Response headers:", Object.fromEntries(r.headers.entries()));
+    const data = await r.json().catch(()=> ({}));
+    console.log("[Frontend] Response data:", data);
+    if(!r.ok) {
+      console.error("[Frontend] Request failed:", {
+        status: r.status,
+        statusText: r.statusText,
+        data: data
+      });
+      throw new Error(data?.error || "送信に失敗しました");
+    }
+    console.log("[Frontend] Lead submitted successfully");
+    return data;
+  } catch (error) {
+    console.error("[Frontend] Error in submitLead:", error);
+    throw error;
+  }
+}
+
+function renderGate(){
+  // 回答が揃ってる前提だが、念のため
+  const answered = Object.keys(state.answers).length;
+  const shuffledQs = getShuffledQuestions();
+  if(answered < shuffledQs.length){
+    state.step = "quiz";
+    saveState();
+    render();
+    return;
+  }
+
+  const res = computeResult(); // 結果はここで計算（表示はまだしない）
+
+  app.innerHTML = `
+    <div class="panel fade-in">
+      <p class="kicker">結果の閲覧には登録が必要です</p>
+      <h2 class="big">名前とメールアドレスを入力してください</h2>
+      <p class="text-body" style="margin-top:-6px;">
+        入力後すぐにあなたのキャラクタータイプを表示します。
+      </p>
+
+      <div style="margin-top:22px; display:grid; gap:12px; max-width:520px;">
+        <div>
+          <div style="font-size:12px; color:var(--text-sub); margin-bottom:6px;">お名前</div>
+          <input id="regName" type="text" placeholder="例）山田 太郎"
+            style="width:100%; padding:14px 14px; border-radius:14px; border:1px solid var(--line); background:#fff; font-size:14px;">
+        </div>
+        <div>
+          <div style="font-size:12px; color:var(--text-sub); margin-bottom:6px;">メールアドレス</div>
+          <input id="regEmail" type="email" placeholder="example@gmail.com"
+            style="width:100%; padding:14px 14px; border-radius:14px; border:1px solid var(--line); background:#fff; font-size:14px;">
+        </div>
+
+        <label style="display:flex; gap:10px; align-items:flex-start; font-size:12px; color:var(--text-sub);">
+          <input id="regConsent" type="checkbox" style="margin-top:3px;">
+          <span>入力した情報を連絡・改善のために保存することに同意します。</span>
+        </label>
+
+        <div id="regErr" style="display:none; color:var(--danger); font-size:12px;"></div>
+
+        <div style="display:flex; gap:10px; margin-top:8px;">
+          <button id="btnGateBack" style="background:transparent; color:#86868b;">戻る</button>
+          <button class="primary" id="btnGateGo" style="flex:1; padding:14px 18px;">結果を見る</button>
+        </div>
+
+        <div style="margin-top:10px; font-size:11px; color:var(--text-sub);">
+          送信される内容：名前、メール、診断TYPE（${res.code}）、各軸の比率（A〜D）
+        </div>
+      </div>
+    </div>
+  `;
+
+  // 既に入力があれば反映
+  const nameEl = document.getElementById("regName");
+  const emailEl = document.getElementById("regEmail");
+  nameEl.value = state.profile?.name || "";
+  emailEl.value = state.profile?.email || "";
+
+  document.getElementById("btnGateBack").onclick = () => {
+    state.step = "quiz";
+    saveState();
+    render();
+  };
+
+  document.getElementById("btnGateGo").onclick = async () => {
+    const errEl = document.getElementById("regErr");
+    errEl.style.display = "none";
+
+    const name = (nameEl.value || "").trim();
+    const email = (emailEl.value || "").trim();
+    const consent = document.getElementById("regConsent").checked;
+
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    if(!name){ errEl.textContent = "名前を入力してください"; errEl.style.display="block"; return; }
+    if(!emailOk){ errEl.textContent = "メールアドレスを正しく入力してください"; errEl.style.display="block"; return; }
+    if(!consent){ errEl.textContent = "同意にチェックしてください"; errEl.style.display="block"; return; }
+
+    const btn = document.getElementById("btnGateGo");
+    btn.disabled = true;
+    btn.textContent = "送信中…";
+
+    try{
+      // 送信データ（必要に応じて増減）
+      const payload = {
+        name,
+        email,
+        type: res.code,
+        axes: res.leftPct,   // A,B,C,Dが0..100
+        createdAt: new Date().toISOString(),
+      };
+
+      await submitLead(payload);
+
+      // 登録情報保存（次回スキップ用）
+      state.profile = { name, email };
+      state.step = "result";
+      saveState();
+      render();
+    }catch(e){
+      errEl.textContent = e?.message || "送信に失敗しました";
+      errEl.style.display="block";
+      btn.disabled = false;
+      btn.textContent = "結果を見る";
+    }
+  };
+}
+
+    function renderCharacters(){
+      const charKeys = Object.keys(CHARACTERS).sort();
+      const charHtml = charKeys.map(code => {
+        const char = CHARACTERS[code];
+        // 画像ファイル名は新コードの小文字版を使用
+        return `
+          <div class="char-card fade-in">
+            <div class="char-card-image">
+              <img src="cha/${code.toLowerCase()}.jpg" alt="${char.name}" onerror="this.parentElement.style.background='#f0f0f5'; this.parentElement.innerHTML='<div style=\\'display:flex;align-items:center;justify-content:center;height:100%;color:#86868b;font-size:12px;\\'>画像なし</div>';">
+            </div>
+            <div class="char-card-type">TYPE: ${code}</div>
+            <h3 class="char-card-name">${char.name}</h3>
+            <p class="char-card-desc">${char.description}</p>
+            <button class="char-card-detail-btn primary" data-char-code="${code}">詳細</button>
+          </div>
+        `;
+      }).join("");
+
+      app.innerHTML = `
+        <div class="panel fade-in">
+          <p class="kicker">全16タイプ</p>
+          <h2 class="big">キャラクター一覧</h2>
+          <p class="text-body" style="margin-bottom:0;">
+            4つの軸の組み合わせで生まれる、16種類のキャラクタータイプをご紹介します。
+          </p>
+        </div>
+        <div class="char-grid">
+          ${charHtml}
+        </div>
+      `;
+
+      // 詳細ボタンのイベントリスナー
+      document.querySelectorAll('.char-card-detail-btn').forEach(btn => {
+        btn.onclick = () => {
+          const code = btn.dataset.charCode;
+          showCharDetail(code);
+        };
+      });
+    }
+
+    function showCharDetail(code) {
+      const char = CHARACTERS[code];
+      // 画像ファイル名は新コードの小文字版を使用
+      const modalHtml = `
+        <div class="char-modal-overlay" id="charModalOverlay">
+          <div class="char-modal">
+            <button class="char-modal-close" id="charModalClose">×</button>
+            <div class="char-modal-image">
+              <img src="cha/${code.toLowerCase()}.jpg" alt="${char.name}" onerror="this.parentElement.style.background='#f0f0f5'; this.parentElement.innerHTML='<div style=\\'display:flex;align-items:center;justify-content:center;height:100%;color:#86868b;\\'>画像なし</div>';">
+            </div>
+            <div style="text-align:center;">
+              <div class="char-modal-type">TYPE: ${code}</div>
+              <h2 class="char-modal-name">${char.name}</h2>
+            </div>
+            <p class="char-modal-desc">${char.description}</p>
+          </div>
+        </div>
+      `;
+      
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+      
+      const overlay = document.getElementById('charModalOverlay');
+      const closeBtn = document.getElementById('charModalClose');
+      
+      closeBtn.onclick = () => {
+        overlay.style.animation = 'fadeOut 0.2s ease forwards';
+        setTimeout(() => overlay.remove(), 200);
+      };
+      
+      overlay.onclick = (e) => {
+        if (e.target === overlay) {
+          overlay.style.animation = 'fadeOut 0.2s ease forwards';
+          setTimeout(() => overlay.remove(), 200);
+        }
+      };
+    }
+
+    function renderResult(){
+      const res = computeResult();
+      const char = res.char;
+      
+      // 学校生活アドバイスの生成
+      const isL = (k) => res.hard[k] === "L";
+      const situationTip = isL("A") 
+        ? "大勢で盛り上がる場面で力を発揮しやすい。イベントやグループ活動で輝ける。"
+        : "少人数での深い関わりや一人の時間を大切にすると良い。無理に前に出なくても大丈夫。";
+        
+      const styleTip = isL("B")
+        ? "見た目や印象を大切にし、自分らしさを表現することでより楽しめる。"
+        : "ルールや秩序を守り、計画的に行動することで信頼を得られる。";
+
+      const teamTip = isL("C")
+        ? "友達と一緒に行動することで安心感が得られ、力を発揮しやすい。"
+        : "一人の時間を確保し、自分のペースで行動することが大切。";
+
+      const motivationTip = isL("D")
+        ? "周りからの評価や反応がモチベーションになる。結果を見せる場面を作ると良い。"
+        : "自分の基準で納得できることを優先する。人の評価に左右されすぎないことが強み。";
+
+      app.innerHTML = `
+        <div class="panel fade-in">
+          <div class="result-hero">
+            <p class="kicker">診断結果</p>
+            <h2 class="big" style="font-size:28px;">${char.name}</h2>
+            <p class="text-body" style="color:var(--text-main); font-weight:500;">${char.summary}</p>
+            ${res.straightLine ? `<p class="text-body" style="margin-top:10px; color:#6e6e73; font-size:13px;">
+              ※回答が同じ選択肢に偏っているため、傾向が測りにくい可能性があります。迷ったら直感で選び直すと精度が上がります。
+            </p>` : ``}
+
+            
+             <div class="char-image-placeholder">
+                <img src="cha/${res.code.toLowerCase()}.jpg" alt="${char.name}" onerror="this.style.display='none'; this.parentElement.querySelector('span').style.display='block';">
+                <span style="display:none;">ここにキャラクター画像が入ります</span> 
+             </div>
+             
+             <div style="display:inline-block; background:#f0f0f5; padding:6px 16px; border-radius:20px; font-size:12px; font-family:monospace; color:#86868b;">
+               TYPE: ${res.code}
+             </div>
+          </div>
+
+          <div style="margin-top:40px;">
+            <p class="kicker" style="margin-bottom:16px;">4つの軸の傾向</p>
+            ${["A","B","C","D"].map(k => {
+              const ax = AXES[k];
+              const left = res.leftPct[k];
+              const right = 100 - left;
+              const coh = Math.round((res.coherenceByAxis[k] || 0) * 100);
+              const rows = (res.breakdown[k] || []).map(it => {
+                const dir = it.contrib > 0.06 ? "←" : (it.contrib < -0.06 ? "→" : "・");
+                return `<div class="row"><div class="q">${it.id}. ${it.text}</div><div class="dir">${dir}</div><div class="a">${ANS_LABEL[it.ans] || it.ans}</div></div>`;
+              }).join("");
+              return `
+                <div class="axis-row">
+                  <span class="axis-name">${ax.name}</span>
+                  <div class="axis-labels">
+                    <span>${ax.left}</span>
+                    <span>${ax.right}</span>
+                  </div>
+                  <div class="axis-track">
+                    <div class="axis-center"></div>
+                    <div class="axis-dot" style="left:${res.pos[k]}%;"></div>
+                  </div>
+                  <div class="axis-meta">
+                    <span>${ax.left} ${left}%</span>
+                    <span>一貫度 ${coh}%</span>
+                    <span>${ax.right} ${right}%</span>
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+
+        <div style="margin-top:40px;">
+          <div class="panel fade-in" style="animation-delay:0.1s;">
+            <p class="kicker" style="margin-bottom:16px;">あなたの長所</p>
+            <p class="text-body" style="font-size:15px; line-height:1.8; margin:0;">${char.strength}</p>
+          </div>
+          <div class="panel fade-in" style="animation-delay:0.15s; margin-top:24px;">
+            <p class="kicker" style="margin-bottom:16px;">あなたの短所</p>
+            <p class="text-body" style="font-size:15px; line-height:1.8; margin:0;">${char.weakness}</p>
+          </div>
+        </div>
+
+        <div class="card-grid fade-in" style="animation-delay:0.2s;">
+          <div class="info-card">
+            <h3>🎭 活躍する場面</h3>
+            <p class="text-body">${situationTip}</p>
+          </div>
+          <div class="info-card">
+            <h3>✨ スタイルの特徴</h3>
+            <p class="text-body">${styleTip}</p>
+          </div>
+          <div class="info-card">
+            <h3>👥 人との関わり方</h3>
+            <p class="text-body">${teamTip}</p>
+          </div>
+          <div class="info-card">
+            <h3>💪 モチベーション</h3>
+            <p class="text-body">${motivationTip}</p>
+          </div>
+        </div>
+        
+        <div style="text-align:center; margin-top:40px;">
+           <button id="btnBack" style="color:#86868b; background:transparent;">回答を見直す</button>
+        </div>
+      `;
+
+      document.getElementById("btnBack").onclick = () => {
+        state.step = "quiz";
+        state.page = 0;
+        render();
+      };
+    }
+
+    // Start
+    loadState();
+    render();
+
+  </script>
+</body>
+</html>
