@@ -1,5 +1,6 @@
 {
   "rewrites": [
-    { "source": "/16school/((?!api).*)", "destination": "/16school/index.html" }
+    { "source": "/16school/((?!api).*)", "destination": "/16school/index.html" },
+    { "source": "/((?!api|16school).*)", "destination": "/index.html" }
   ]
 }
