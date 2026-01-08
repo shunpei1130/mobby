@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mobby（モビィ）</title>
+  <link rel="icon" type="image/jpeg" href="fav.jpg">
   <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
   <style>
@@ -1181,6 +1182,21 @@
     <div class="instruction">TAP！！</div>
   </div>
 
+  <script>
+    // スプラッシュスキップ処理（URLにskipSplash=1があれば即座に非表示）
+    (function(){
+      const params = new URLSearchParams(window.location.search);
+      if(params.get('skipSplash') === '1'){
+        const splash = document.getElementById('splash-screen');
+        if(splash) {
+          splash.style.display = 'none';
+          splash.remove();
+        }
+        document.body.style.overflowY = 'auto';
+      }
+    })();
+  </script>
+
   <div id="main-content">
     <div class="mobby-title">Mobby</div>
     <h1 class="headline reveal delay-200">閉じ込めたい５つの思い出</h1>
@@ -1594,12 +1610,20 @@
         </div>
       </div>
     </div>
+    <!-- ▼▼▼ ここにモビィ診断ボタンを追加 ▼▼▼ -->
+    <div style="width:100%;text-align:center;margin-top:20px;">
+      <button class="btn btn-primary" id="goMobbyDiagnosis" style="font-size:18px;padding:16px 40px;margin-top:10px;">モビィ診断</button>
+    </div>
   </div>
 
 
 
   <!-- Matter.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js">// モビィ診断ボタンで16school/index.htmlへ遷移
+document.getElementById('goMobbyDiagnosis')?.addEventListener('click', () => {
+  window.location.href = '16school/index.html';
+});
+</script>
   <!-- EmailJS -->
   <script>
   /* =========================
@@ -2303,7 +2327,20 @@ const Body      = Matter.Body;
 
 const splashElement = document.getElementById('splash-screen');
 const mainContent   = document.getElementById('main-content');
+const stickyCta     = document.querySelector('.sticky-cta');
 
+// skipSplash=1の場合はスプラッシュアニメーションをスキップ
+const shouldSkipSplash = new URLSearchParams(window.location.search).get('skipSplash') === '1';
+
+if(shouldSkipSplash){
+  // スプラッシュをスキップする場合は即座にメイン表示
+  if(mainContent) mainContent.classList.add('visible');
+  document.body.style.overflowY = 'auto';
+  if(stickyCta) stickyCta.style.display = 'block';
+  initScrollObserver();
+}
+
+if(!shouldSkipSplash && splashElement){
 const engine = Engine.create();
 engine.world.gravity.y = 1.5;
 const world  = engine.world;
@@ -2371,7 +2408,7 @@ preloadImages(ICON_URLS).then(results => {
   startDropping();
 });
 
-splashElement && splashElement.addEventListener('click', () => {
+splashElement?.addEventListener('click', () => {
   if(dropTimer) clearInterval(dropTimer);
 
   const bodies = Composite.allBodies(world);
@@ -2400,19 +2437,22 @@ splashElement && splashElement.addEventListener('click', () => {
     }, 1200);
   }, 500);
 });
+} // end if(!shouldSkipSplash)
 
 window.addEventListener('resize', () => {
-  width  = window.innerWidth;
-  height = window.innerHeight;
+  if(!shouldSkipSplash && typeof render !== 'undefined'){
+    width  = window.innerWidth;
+    height = window.innerHeight;
 
-  render.canvas.width = width;
-  render.canvas.height = height;
-  render.options.width = width;
-  render.options.height = height;
+    render.canvas.width = width;
+    render.canvas.height = height;
+    render.options.width = width;
+    render.options.height = height;
 
-  Body.setPosition(floor, { x: width/2, y: height+50 });
-  Body.setPosition(leftWall, { x: -60, y: height/2 });
-  Body.setPosition(rightWall, { x: width+60, y: height/2 });
+    Body.setPosition(floor, { x: width/2, y: height+50 });
+    Body.setPosition(leftWall, { x: -60, y: height/2 });
+    Body.setPosition(rightWall, { x: width+60, y: height/2 });
+  }
 
   const imagePopup = document.getElementById('imagePopup');
   if(imagePopup && imagePopup.classList.contains('is-open')){
@@ -3108,6 +3148,10 @@ document.getElementById("faqContactForm")?.addEventListener("submit", async (e) 
 })();
 
 
+// モビィ診断ボタンで16school/index.htmlへ遷移
+document.getElementById('goMobbyDiagnosis')?.addEventListener('click', () => {
+  window.location.href = '16school/index.html';
+});
 </script>
 </body>
 </html>
