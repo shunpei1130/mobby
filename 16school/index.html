@@ -1111,7 +1111,7 @@ document.getElementById("btnPrev").onclick = () => {
     async function submitLead(payload){
   console.log("[Frontend] Submitting lead:", payload);
   try {
-    const r = await fetch("/api/lead", {
+    const r = await fetch("/16school/api/lead", {
       method: "POST",
       headers: { "Content-Type":"application/json" },
       body: JSON.stringify(payload)
