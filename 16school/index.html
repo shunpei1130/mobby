@@ -1383,6 +1383,8 @@ function gotoDiagnosisHome(){
       state.answers = {};
       state.questionOrder = null;
       state.gender = null;
+      state.profile = { name: "", email: "" };  // プロフィール情報もクリア
+      state.interested = false;  // 興味フラグもクリア
       localStorage.removeItem(STORAGE_KEY);
       render();
     }
