@@ -2146,6 +2146,19 @@ function renderGate(){
           <div id="interestFeedback" style="display:none; margin-top:16px; padding:12px; background:#e8f5e9; border-radius:12px; color:#2e7d32; font-size:13px; font-weight:600;">
             ✓ ありがとうございます！あなたの興味を記録しました。
           </div>
+          
+          <!-- 興味を示した人にだけ表示される抽選予約ボタン -->
+          <div id="reservationButtonArea" style="display:${state.interested ? 'block' : 'none'}; margin-top:24px; padding-top:24px; border-top:1px solid rgba(0,0,0,0.08);">
+            <p class="text-body" style="font-size:14px; margin-bottom:16px; color:var(--text-main); font-weight:600;">
+              🎉 無料抽選に参加しませんか？
+            </p>
+            <p class="text-body" style="font-size:12px; margin-bottom:20px; color:var(--text-sub);">
+              抽選に当たったら、当選の手紙を送ります。<br>住所を登録して予約してください。
+            </p>
+            <button id="btnReservation" class="primary" style="padding:14px 28px; font-size:15px; background:linear-gradient(135deg, #f6d49c 0%, #f0c87f 100%); border-color:#f0c87f; color:#6b5d3f;">
+              📝 抽選予約ページへ
+            </button>
+          </div>
         </div>
         
         <div style="text-align:center; margin-top:40px;">
@@ -2161,6 +2174,7 @@ function renderGate(){
         
         const btn = document.getElementById("btnInterest");
         const feedback = document.getElementById("interestFeedback");
+        const reservationArea = document.getElementById("reservationButtonArea");
         
         btn.disabled = true;
         btn.textContent = "送信中...";
@@ -2180,6 +2194,12 @@ function renderGate(){
           feedback.style.display = "block";
           feedback.style.animation = "fadeIn 0.4s ease forwards";
           
+          // 予約ボタンエリアを表示
+          if(reservationArea){
+            reservationArea.style.display = "block";
+            reservationArea.style.animation = "fadeIn 0.6s ease forwards";
+          }
+          
           // 3秒後にフィードバックをフェードアウト
           setTimeout(() => {
             feedback.style.animation = "fadeOut 0.4s ease forwards";
@@ -2194,6 +2214,15 @@ function renderGate(){
           btn.textContent = "🎁 このモビィが欲しい！";
         }
       };
+      
+      // 抽選予約ボタンのイベントリスナー
+      const reservationBtn = document.getElementById("btnReservation");
+      if(reservationBtn){
+        reservationBtn.onclick = () => {
+          // ルートページの抽選予約ポップアップを開くためにパラメータ付きでページ遷移
+          window.location.href = "../index.html?openPricePopup=true#price";
+        };
+      }
 
       document.getElementById("btnBack").onclick = () => {
         state.step = "quiz";

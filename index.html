@@ -3259,6 +3259,24 @@ document.getElementById("faqContactForm")?.addEventListener("submit", async (e) 
 document.getElementById('goMobbyDiagnosis')?.addEventListener('click', () => {
   window.location.href = '16school/index.html';
 });
+
+// URLパラメータで抽選予約ポップアップを自動的に開く
+(() => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const shouldOpenPricePopup = urlParams.get('openPricePopup') === 'true';
+  
+  if (shouldOpenPricePopup) {
+    console.log('[Auto-open] 抽選予約ポップアップを開きます');
+    // ページ読み込み後少し待ってからポップアップを開く（アニメーションのため）
+    setTimeout(() => {
+      openPopup('pricePopup');
+      
+      // URLパラメータをクリーンアップ（履歴を汚さないため）
+      const newUrl = window.location.pathname + window.location.hash;
+      window.history.replaceState({}, document.title, newUrl);
+    }, 300);
+  }
+})();
 </script>
 </body>
 </html>
