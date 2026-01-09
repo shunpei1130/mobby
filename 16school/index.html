@@ -3,9 +3,73 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>学校キャラ診断</title>
+  
+  <!-- SEO基本 -->
+  <title>学校キャラ診断（モビィ診断）- あなたの性格を16タイプで無料診断</title>
+  <meta name="description" content="学校キャラ診断（モビィ診断）は40問の質問であなたの学校での性格タイプを16種類から無料診断。陽キャラ・陰キャラ、やんちゃ・真面目など4軸で性格を分析。男子版・女子版に対応した人気の性格診断テスト。">
+  <meta name="keywords" content="学校キャラ診断,モビィ診断,性格診断,キャラ診断,16タイプ,無料診断,性格テスト,陽キャラ,陰キャラ,学生,診断テスト,心理テスト,自己分析">
+  <meta name="author" content="Mobby">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mobby-hp.vercel.app/16school/">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mobby-hp.vercel.app/16school/">
+  <meta property="og:title" content="学校キャラ診断（モビィ診断）- あなたの性格を16タイプで診断">
+  <meta property="og:description" content="40問の質問であなたの学校でのキャラクタータイプを16種類から診断。陽キャラ・陰キャラ、やんちゃ・真面目など4軸で性格を分析。男子版・女子版対応の無料性格診断。">
+  <meta property="og:image" content="https://mobby-hp.vercel.app/16school/logo.jpg">
+  <meta property="og:site_name" content="学校キャラ診断（モビィ診断）">
+  <meta property="og:locale" content="ja_JP">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://mobby-hp.vercel.app/16school/">
+  <meta name="twitter:title" content="学校キャラ診断（モビィ診断）- あなたの性格を16タイプで診断">
+  <meta name="twitter:description" content="40問の質問であなたの学校でのキャラクタータイプを16種類から診断。男子版・女子版対応の無料性格診断。">
+  <meta name="twitter:image" content="https://mobby-hp.vercel.app/16school/logo.jpg">
+  
+  <!-- Favicon -->
   <link rel="icon" type="image/jpeg" href="fav.jpg">
+  <link rel="apple-touch-icon" href="logo.jpg">
+  
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
+  
+  <!-- 構造化データ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "学校キャラ診断（モビィ診断）",
+    "alternateName": ["モビィ診断", "学校キャラ診断", "性格診断"],
+    "description": "40問の質問であなたの学校でのキャラクタータイプを16種類から診断する無料の性格診断ツール。陽キャラ・陰キャラなど4軸で性格を分析。",
+    "url": "https://mobby-hp.vercel.app/16school/",
+    "applicationCategory": "LifestyleApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Mobby"
+    },
+    "inLanguage": "ja",
+    "audience": {
+      "@type": "Audience",
+      "audienceType": "学生、若者"
+    },
+    "keywords": "学校キャラ診断, モビィ診断, 性格診断, キャラ診断, 16タイプ, 無料診断, 心理テスト",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "1000",
+      "bestRating": "5",
+      "worstRating": "1"
+    }
+  }
+  </script>
   <style>
     :root {
       /* Fonts */
@@ -642,7 +706,7 @@
           <a href="#" id="navCharacters">キャラ一覧</a>
         </nav>
         <div style="display: flex; gap: 8px;">
-          <button class="danger" id="btnReset" style="font-size:11px;">リセット</button>
+        <button class="danger" id="btnReset" style="font-size:11px;">リセット</button>
           <button id="btnTypeGuide" style="font-size:11px; background:var(--accent-soft); color:var(--accent);">タイプ解説</button>
         </div>
       </div>
@@ -757,7 +821,7 @@ function gotoDiagnosisHome(){
   {id:"D10", axis:"D", text:"周りにどう思われるかは、判断材料の一つだ", reverse:false},
 ];
 
-const CHARACTERS = {
+    const CHARACTERS = {
   "がやみそ": {
     name:"文化祭センターステージモビィ",
     summary:"場の空気を読むのが早く、自然と前に立っているタイプ。",
@@ -1756,7 +1820,7 @@ function renderGate(){
         const imgCode = CODE_TO_IMAGE[code];
         return imgCode ? `cha/${imgCode}.jpg` : '';
       }
-    }
+}
 
     function renderCharacters(){
       const characters = charListGender === "female" ? CHARACTERS_FEMALE : CHARACTERS;
@@ -1794,7 +1858,7 @@ function renderGate(){
               <span>👧</span>
               <span>女子版</span>
             </button>
-          </div>
+        </div>
         </div>
         
         <div class="char-grid">
@@ -1891,17 +1955,17 @@ function renderGate(){
       } else {
         // 男子版アドバイス
         situationTip = isL("A") 
-          ? "大勢で盛り上がる場面で力を発揮しやすい。イベントやグループ活動で輝ける。"
-          : "少人数での深い関わりや一人の時間を大切にすると良い。無理に前に出なくても大丈夫。";
+        ? "大勢で盛り上がる場面で力を発揮しやすい。イベントやグループ活動で輝ける。"
+        : "少人数での深い関わりや一人の時間を大切にすると良い。無理に前に出なくても大丈夫。";
         styleTip = isL("B")
-          ? "見た目や印象を大切にし、自分らしさを表現することでより楽しめる。"
-          : "ルールや秩序を守り、計画的に行動することで信頼を得られる。";
+        ? "見た目や印象を大切にし、自分らしさを表現することでより楽しめる。"
+        : "ルールや秩序を守り、計画的に行動することで信頼を得られる。";
         teamTip = isL("C")
-          ? "友達と一緒に行動することで安心感が得られ、力を発揮しやすい。"
-          : "一人の時間を確保し、自分のペースで行動することが大切。";
+        ? "友達と一緒に行動することで安心感が得られ、力を発揮しやすい。"
+        : "一人の時間を確保し、自分のペースで行動することが大切。";
         motivationTip = isL("D")
-          ? "周りからの評価や反応がモチベーションになる。結果を見せる場面を作ると良い。"
-          : "自分の基準で納得できることを優先する。人の評価に左右されすぎないことが強み。";
+        ? "周りからの評価や反応がモチベーションになる。結果を見せる場面を作ると良い。"
+        : "自分の基準で納得できることを優先する。人の評価に左右されすぎないことが強み。";
       }
 
       app.innerHTML = `

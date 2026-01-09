@@ -3,10 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mobby（モビィ）</title>
+  
+  <!-- SEO基本 -->
+  <title>Mobby（モビィ）- かわいいカメラ型キーホルダー公式サイト</title>
+  <meta name="description" content="Mobby（モビィ）はあなたの思い出を撮影できるカメラ型キーホルダー。持ち歩けるかわいいデザインで、いつでもどこでも大切な瞬間を記録。学生から大人まで人気のカメラアクセサリー。">
+  <meta name="keywords" content="Mobby,モビィ,カメラ型キーホルダー,キーホルダーカメラ,ミニカメラ,かわいいキーホルダー,写真撮影,アクセサリー,学生グッズ,プレゼント">
+  <meta name="author" content="Mobby">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mobby-hp.vercel.app/">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mobby-hp.vercel.app/">
+  <meta property="og:title" content="Mobby（モビィ）- かわいいカメラ型キーホルダー">
+  <meta property="og:description" content="思い出を撮影できるカメラ型キーホルダー。持ち歩けるかわいいデザインで、いつでもどこでも大切な瞬間を記録。">
+  <meta property="og:image" content="https://mobby-hp.vercel.app/Mobby.png">
+  <meta property="og:site_name" content="Mobby（モビィ）">
+  <meta property="og:locale" content="ja_JP">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://mobby-hp.vercel.app/">
+  <meta name="twitter:title" content="Mobby（モビィ）- かわいいカメラ型キーホルダー">
+  <meta name="twitter:description" content="思い出を撮影できるカメラ型キーホルダー。持ち歩けるかわいいデザイン。">
+  <meta name="twitter:image" content="https://mobby-hp.vercel.app/Mobby.png">
+  
+  <!-- Favicon -->
   <link rel="icon" type="image/jpeg" href="fav.jpg">
+  <link rel="apple-touch-icon" href="Mobby.png">
+  
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+  
+  <!-- 構造化データ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "Mobby（モビィ）",
+    "description": "思い出を撮影できるカメラ型キーホルダー。かわいいデザインで持ち歩けるミニカメラアクセサリー。",
+    "image": "https://mobby-hp.vercel.app/Mobby.png",
+    "brand": {
+      "@type": "Brand",
+      "name": "Mobby"
+    },
+    "category": "カメラ型キーホルダー",
+    "keywords": "Mobby, モビィ, カメラ型キーホルダー, ミニカメラ, キーホルダー",
+    "audience": {
+      "@type": "Audience",
+      "audienceType": "学生、カメラ愛好家"
+    }
+  }
+  </script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Yomogi&display=swap');
     </style>
@@ -124,6 +173,17 @@
   .btn-primary:hover{background-color:var(--color-earth);transform:translateY(-2px) rotate(1deg);}
   .btn-ghost{background:rgba(255,255,255,0);color:var(--color-forest);border-color:rgba(47,79,79,0.35);}
   .btn-ghost:hover{background:rgba(174,198,207,0.35);border-color:transparent;transform:translateY(-2px);}
+  
+  /* モビィ診断ボタンのスマホ対応 */
+  @media (max-width: 768px) {
+    #goMobbyDiagnosis {
+      font-size: 16px !important;
+      padding: 12px 28px !important;
+    }
+    #mobbyDiagnosisWrapper {
+      margin-top: 0px !important;
+    }
+  }
   
   .tag{
     display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;
@@ -1611,8 +1671,8 @@
       </div>
     </div>
     <!-- ▼▼▼ ここにモビィ診断ボタンを追加 ▼▼▼ -->
-    <div style="width:100%;text-align:center;margin-top:20px;">
-      <button class="btn btn-primary" id="goMobbyDiagnosis" style="font-size:18px;padding:16px 40px;margin-top:10px;">モビィ診断</button>
+    <div id="mobbyDiagnosisWrapper" style="width:100%;text-align:center;margin-top:20px;">
+      <button class="btn btn-primary" id="goMobbyDiagnosis" style="font-size:18px;padding:16px 40px;">モビィ診断</button>
     </div>
   </div>
 
