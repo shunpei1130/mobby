@@ -740,7 +740,7 @@ function isRegistered(){
     return true; // ローカル環境では登録画面をスキップ
   }
   
-  const hasProfile = !!(state.profile && state.profile.name && state.profile.email);
+  const hasProfile = !!(state.profile && state.profile.name && state.profile.email && state.profile.age);
   console.log('[DEBUG] プロフィール確認:', hasProfile, state.profile);
   return hasProfile;
 }
@@ -1319,7 +1319,7 @@ function gotoDiagnosisHome(){
   step: "intro", // intro | genderSelect | quiz | gate | result | characters
   page: 0,
   answers: {},
-  profile: { name: "", email: "" }, // 追加
+  profile: { name: "", email: "", age: "" }, // 名前、メール、年齢
   questionOrder: null, // 質問の順番（シャッフル済みインデックス配列）
   gender: null, // "male" | "female"
   interested: false, // モビィが欲しい！ボタンが押されたか
@@ -1383,7 +1383,7 @@ function gotoDiagnosisHome(){
       state.answers = {};
       state.questionOrder = null;
       state.gender = null;
-      state.profile = { name: "", email: "" };  // プロフィール情報もクリア
+      state.profile = { name: "", email: "", age: "" };  // プロフィール情報もクリア
       state.interested = false;  // 興味フラグもクリア
       localStorage.removeItem(STORAGE_KEY);
       render();
@@ -2081,6 +2081,7 @@ async function submitInterest(){
 
   const payload = {
     name: state.profile.name,
+    age: state.profile.age,
     email: state.profile.email,
     type: res.code,
     axes: res.leftPct,
@@ -2119,7 +2120,7 @@ function renderGate(){
   app.innerHTML = `
     <div class="panel fade-in">
       <p class="kicker">結果の閲覧には登録が必要です</p>
-      <h2 class="big">名前とメールアドレスを入力してください</h2>
+      <h2 class="big">あと少しで結果が見れます！</h2>
       <p class="text-body" style="margin-top:-6px;">
         入力後すぐにあなたのキャラクタータイプを表示します。
       </p>
@@ -2129,6 +2130,24 @@ function renderGate(){
           <div style="font-size:12px; color:var(--text-sub); margin-bottom:6px;">お名前</div>
           <input id="regName" type="text" placeholder="例）山田 太郎"
             style="width:100%; padding:14px 14px; border-radius:14px; border:1px solid var(--line); background:#fff; font-size:14px;">
+        </div>
+        <div>
+          <div style="font-size:12px; color:var(--text-sub); margin-bottom:6px;">年齢</div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button type="button" class="age-btn" data-age="12" style="padding:10px 16px; border-radius:12px; border:2px solid var(--line); background:#fff; font-size:13px; cursor:pointer; transition:all 0.2s;">13歳</button>
+            <button type="button" class="age-btn" data-age="13" style="padding:10px 16px; border-radius:12px; border:2px solid var(--line); background:#fff; font-size:13px; cursor:pointer; transition:all 0.2s;">14歳</button>
+            <button type="button" class="age-btn" data-age="14" style="padding:10px 16px; border-radius:12px; border:2px solid var(--line); background:#fff; font-size:13px; cursor:pointer; transition:all 0.2s;">15歳</button>
+            <button type="button" class="age-btn" data-age="15" style="padding:10px 16px; border-radius:12px; border:2px solid var(--line); background:#fff; font-size:13px; cursor:pointer; transition:all 0.2s;">16歳</button>
+            <button type="button" class="age-btn" data-age="16" style="padding:10px 16px; border-radius:12px; border:2px solid var(--line); background:#fff; font-size:13px; cursor:pointer; transition:all 0.2s;">17歳</button>
+            <button type="button" class="age-btn" data-age="17" style="padding:10px 16px; border-radius:12px; border:2px solid var(--line); background:#fff; font-size:13px; cursor:pointer; transition:all 0.2s;">18歳</button>
+            <button type="button" class="age-btn" data-age="18" style="padding:10px 16px; border-radius:12px; border:2px solid var(--line); background:#fff; font-size:13px; cursor:pointer; transition:all 0.2s;">19歳</button>
+            <button type="button" class="age-btn" data-age="18" style="padding:10px 16px; border-radius:12px; border:2px solid var(--line); background:#fff; font-size:13px; cursor:pointer; transition:all 0.2s;">20歳</button>
+            <button type="button" class="age-btn" data-age="18" style="padding:10px 16px; border-radius:12px; border:2px solid var(--line); background:#fff; font-size:13px; cursor:pointer; transition:all 0.2s;">21歳</button>
+            <button type="button" class="age-btn" data-age="18" style="padding:10px 16px; border-radius:12px; border:2px solid var(--line); background:#fff; font-size:13px; cursor:pointer; transition:all 0.2s;">22歳</button>
+            <button type="button" class="age-btn" data-age="19-22" style="padding:10px 16px; border-radius:12px; border:2px solid var(--line); background:#fff; font-size:13px; cursor:pointer; transition:all 0.2s;">23〜25歳</button>
+            <button type="button" class="age-btn" data-age="23+" style="padding:10px 16px; border-radius:12px; border:2px solid var(--line); background:#fff; font-size:13px; cursor:pointer; transition:all 0.2s;">26歳以上</button>
+          </div>
+          <input type="hidden" id="regAge" value="">
         </div>
         <div>
           <div style="font-size:12px; color:var(--text-sub); margin-bottom:6px;">メールアドレス</div>
@@ -2149,7 +2168,7 @@ function renderGate(){
         </div>
 
         <div style="margin-top:10px; font-size:11px; color:var(--text-sub);">
-          送信される内容：名前、メール、診断TYPE（${res.code}）、各軸の比率（A〜D）
+          送信される内容：名前、年齢、メール、診断TYPE（${res.code}）、各軸の比率（A〜D）
         </div>
       </div>
     </div>
@@ -2158,8 +2177,34 @@ function renderGate(){
   // 既に入力があれば反映
   const nameEl = document.getElementById("regName");
   const emailEl = document.getElementById("regEmail");
+  const ageEl = document.getElementById("regAge");
   nameEl.value = state.profile?.name || "";
   emailEl.value = state.profile?.email || "";
+  ageEl.value = state.profile?.age || "";
+
+  // 年齢ボタンのイベントリスナー
+  document.querySelectorAll(".age-btn").forEach(btn => {
+    // 既に選択済みの場合はハイライト
+    if(btn.dataset.age === ageEl.value) {
+      btn.style.background = "var(--accent-soft)";
+      btn.style.borderColor = "var(--accent)";
+      btn.style.color = "var(--accent)";
+    }
+    btn.onclick = () => {
+      // 全ボタンのスタイルをリセット
+      document.querySelectorAll(".age-btn").forEach(b => {
+        b.style.background = "#fff";
+        b.style.borderColor = "var(--line)";
+        b.style.color = "var(--text-main)";
+      });
+      // 選択したボタンをハイライト
+      btn.style.background = "var(--accent-soft)";
+      btn.style.borderColor = "var(--accent)";
+      btn.style.color = "var(--accent)";
+      // 値を保存
+      ageEl.value = btn.dataset.age;
+    };
+  });
 
   document.getElementById("btnGateBack").onclick = () => {
     state.step = "quiz";
@@ -2172,12 +2217,14 @@ function renderGate(){
     errEl.style.display = "none";
 
     const name = (nameEl.value || "").trim();
+    const age = (ageEl.value || "").trim();
     const email = (emailEl.value || "").trim();
     const consent = document.getElementById("regConsent").checked;
 
     const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
     if(!name){ errEl.textContent = "名前を入力してください"; errEl.style.display="block"; return; }
+    if(!age){ errEl.textContent = "年齢を選択してください"; errEl.style.display="block"; return; }
     if(!emailOk){ errEl.textContent = "メールアドレスを正しく入力してください"; errEl.style.display="block"; return; }
     if(!consent){ errEl.textContent = "同意にチェックしてください"; errEl.style.display="block"; return; }
 
@@ -2198,6 +2245,7 @@ function renderGate(){
       // 送信データ（必要に応じて増減）
       const payload = {
         name,
+        age,
         email,
         type: res.code,
         axes: res.leftPct,   // A,B,C,Dが0..100
@@ -2209,7 +2257,7 @@ function renderGate(){
       await submitLead(payload);
 
       // 登録情報保存（次回スキップ用）
-      state.profile = { name, email };
+      state.profile = { name, email, age };
       state.step = "result";
       saveState();
       render();
