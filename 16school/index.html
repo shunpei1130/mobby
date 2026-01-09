@@ -1323,7 +1323,96 @@ function gotoDiagnosisHome(){
   questionOrder: null, // 質問の順番（シャッフル済みインデックス配列）
   gender: null, // "male" | "female"
   interested: false, // モビィが欲しい！ボタンが押されたか
+  userId: null, // ユーザー固有ID（共有追跡用）
+  referrerId: null, // 紹介者のID（誰の紹介で来たか）
+  shareCount: 0, // 共有した回数
 };
+
+    // ユーザーID生成（8文字のランダム文字列）
+    function generateUserId() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+      let result = '';
+      for (let i = 0; i < 8; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    }
+
+    // URLパラメータから紹介者IDを取得
+    function getReferrerFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('ref') || null;
+    }
+
+    // ユーザーIDの初期化（なければ生成）
+    function initUserId() {
+      if (!state.userId) {
+        state.userId = generateUserId();
+        saveState();
+      }
+      return state.userId;
+    }
+
+    // 紹介者の追跡
+    function trackReferrer() {
+      const refId = getReferrerFromURL();
+      if (refId && refId !== state.userId && !state.referrerId) {
+        state.referrerId = refId;
+        saveState();
+        // 紹介訪問イベントを記録
+        submitShareEvent({
+          eventType: "referral_visit",
+          userId: state.userId,
+          referrerId: refId
+        });
+      }
+    }
+
+    // 共有イベントをAPIに送信
+    async function submitShareEvent(eventData) {
+      // ローカル環境ではスキップ
+      const hostname = window.location.hostname;
+      const protocol = window.location.protocol;
+      const isLocal = hostname === 'localhost' || 
+                      hostname === '127.0.0.1' ||
+                      hostname === '' ||
+                      protocol === 'file:';
+      
+      if (isLocal) {
+        console.log('[DEBUG] ローカル環境: 共有イベント送信をスキップ', eventData);
+        return { ok: true, skipped: true };
+      }
+
+      const payload = {
+        ...eventData,
+        createdAt: new Date().toISOString()
+      };
+
+      console.log("[Share] Submitting event:", payload);
+      try {
+        const r = await fetch("/api/share", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok) {
+          console.error("[Share] Request failed:", data);
+          throw new Error(data?.error || "送信に失敗しました");
+        }
+        console.log("[Share] Event submitted successfully:", data);
+        return data;
+      } catch (error) {
+        console.error("[Share] Error:", error);
+        throw error;
+      }
+    }
+
+    // 共有リンクを生成
+    function generateShareLink() {
+      const baseUrl = window.location.origin + window.location.pathname;
+      return `${baseUrl}?ref=${state.userId}`;
+    }
 
 
     /***********************
@@ -2260,6 +2349,20 @@ function renderGate(){
       state.profile = { name, email, age };
       state.step = "result";
       saveState();
+
+      // 紹介経由の場合、紹介完了イベントを送信
+      if (state.referrerId) {
+        submitShareEvent({
+          eventType: "referral_complete",
+          userId: state.userId,
+          referrerId: state.referrerId,
+          userName: name,
+          userEmail: email,
+          userType: res.code,
+          gender: state.gender
+        }).catch(e => console.error("紹介完了イベント送信エラー:", e));
+      }
+
       render();
     }catch(e){
       errEl.textContent = e?.message || "送信に失敗しました";
@@ -2665,6 +2768,36 @@ function renderGate(){
           </div>
         </div>
         
+        <!-- 友達に共有セクション -->
+        <div class="panel fade-in" style="text-align:center; margin-top:40px; animation-delay:0.3s; background:linear-gradient(135deg, #e8f4fd 0%, #f0f8ff 100%); border:2px solid #4dabf7;">
+          <p class="kicker" style="color:#4dabf7;">友達にも診断してもらおう！</p>
+          <h3 style="font-size:18px; margin:12px 0; color:var(--text-main);">
+            🔗 診断結果を共有する
+          </h3>
+          <p class="text-body" style="font-size:13px; margin-bottom:20px;">
+            あなたの紹介で診断した友達の結果も後で確認できるかも？
+          </p>
+          
+          <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:16px;">
+            <button id="btnShareLine" style="padding:14px 24px; font-size:14px; background:#06C755; color:white; border-radius:12px; display:flex; align-items:center; gap:8px; border:none;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
+              LINEで送る
+            </button>
+            <button id="btnShareTwitter" style="padding:14px 24px; font-size:14px; background:#000; color:white; border-radius:12px; display:flex; align-items:center; gap:8px; border:none;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              Xでシェア
+            </button>
+            <button id="btnShareCopy" style="padding:14px 24px; font-size:14px; background:#f0f0f5; color:var(--text-main); border-radius:12px; display:flex; align-items:center; gap:8px; border:1px solid var(--line);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              リンクをコピー
+            </button>
+          </div>
+          
+          <div id="shareSuccess" style="display:none; padding:10px; background:#e8f5e9; border-radius:10px; color:#2e7d32; font-size:13px; font-weight:600;">
+            ✓ コピーしました！友達に送ってね
+          </div>
+        </div>
+
         <div style="text-align:center; margin-top:40px;">
            <button id="btnBack" style="color:#86868b; background:transparent;">回答を見直す</button>
         </div>
@@ -2728,6 +2861,90 @@ function renderGate(){
         };
       }
 
+      // 共有ボタンのイベントリスナー
+      const shareLink = generateShareLink();
+      const shareText = `【学校キャラ診断】私は「${char.name}」でした！\n${char.catch || char.summary}\n\nあなたも診断してみて👇\n`;
+      
+      // LINE共有
+      document.getElementById("btnShareLine").onclick = async () => {
+        const lineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareLink)}&text=${encodeURIComponent(shareText)}`;
+        
+        // 共有イベントを記録
+        state.shareCount++;
+        saveState();
+        document.getElementById("shareCountDisplay").textContent = state.shareCount;
+        
+        submitShareEvent({
+          eventType: "share",
+          userId: state.userId,
+          platform: "line",
+          userName: state.profile?.name || "",
+          userEmail: state.profile?.email || "",
+          userType: res.code,
+          gender: state.gender
+        }).catch(e => console.error("共有イベント送信エラー:", e));
+        
+        window.open(lineUrl, '_blank');
+      };
+      
+      // Twitter/X共有
+      document.getElementById("btnShareTwitter").onclick = async () => {
+        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText + shareLink)}`;
+        
+        // 共有イベントを記録
+        state.shareCount++;
+        saveState();
+        document.getElementById("shareCountDisplay").textContent = state.shareCount;
+        
+        submitShareEvent({
+          eventType: "share",
+          userId: state.userId,
+          platform: "twitter",
+          userName: state.profile?.name || "",
+          userEmail: state.profile?.email || "",
+          userType: res.code,
+          gender: state.gender
+        }).catch(e => console.error("共有イベント送信エラー:", e));
+        
+        window.open(twitterUrl, '_blank');
+      };
+      
+      // リンクコピー
+      document.getElementById("btnShareCopy").onclick = async () => {
+        try {
+          await navigator.clipboard.writeText(shareLink);
+          
+          // 共有イベントを記録
+          state.shareCount++;
+          saveState();
+          document.getElementById("shareCountDisplay").textContent = state.shareCount;
+          
+          submitShareEvent({
+            eventType: "share",
+            userId: state.userId,
+            platform: "copy",
+            userName: state.profile?.name || "",
+            userEmail: state.profile?.email || "",
+            userType: res.code,
+            gender: state.gender
+          }).catch(e => console.error("共有イベント送信エラー:", e));
+          
+          // 成功メッセージを表示
+          const successEl = document.getElementById("shareSuccess");
+          successEl.style.display = "block";
+          successEl.style.animation = "fadeIn 0.3s ease forwards";
+          
+          setTimeout(() => {
+            successEl.style.animation = "fadeOut 0.3s ease forwards";
+            setTimeout(() => {
+              successEl.style.display = "none";
+            }, 300);
+          }, 2000);
+        } catch (e) {
+          alert("コピーに失敗しました。手動でコピーしてください: " + shareLink);
+        }
+      };
+
       document.getElementById("btnBack").onclick = () => {
         state.step = "quiz";
         state.page = 0;
@@ -2737,6 +2954,8 @@ function renderGate(){
 
     // Start
     loadState();
+    initUserId();  // ユーザーID初期化
+    trackReferrer();  // 紹介者追跡
     render();
 
   </script>
