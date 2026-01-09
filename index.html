@@ -1034,6 +1034,44 @@
     100%{transform:scale(0);opacity:0;}
   }
   
+  /* 右下の法的リンク */
+  .legal-links{
+    position:fixed;
+    bottom:12px;
+    right:12px;
+    z-index:30;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    align-items:flex-end;
+    font-size:0.75rem;
+    opacity:0.6;
+    transition:opacity 0.3s ease;
+  }
+  .legal-links:hover{
+    opacity:1;
+  }
+  .legal-links a{
+    color:var(--color-forest);
+    text-decoration:none;
+    padding:4px 8px;
+    transition:opacity 0.2s ease;
+  }
+  .legal-links a:hover{
+    text-decoration:underline;
+  }
+  @media (max-width: 768px){
+    .legal-links{
+      font-size:0.3rem;
+      bottom:8px;
+      right:8px;
+      gap:0px;
+    }
+    .legal-links a{
+      padding:3px 6px;
+    }
+  }
+  
   /* ===== Retro Camera (Overlay内) ===== */
   #vfOverlay .vf-stage{
     position:relative;
@@ -1673,6 +1711,13 @@
     <!-- ▼▼▼ ここにモビィ診断ボタンを追加 ▼▼▼ -->
     <div id="mobbyDiagnosisWrapper" style="width:100%;text-align:center;margin-top:20px;">
       <button class="btn btn-primary" id="goMobbyDiagnosis" style="font-size:18px;padding:16px 40px;">モビィ診断</button>
+    </div>
+    
+    <!-- 右下の法的リンク -->
+    <div class="legal-links">
+      <a href="terms.html">利用規約</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="company.html">運営者情報</a>
     </div>
   </div>
 
