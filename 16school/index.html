@@ -1783,12 +1783,23 @@ function renderGate(){
     btn.textContent = "送信中…";
 
     try{
+      // 各質問の回答データを整形（質問ID -> 回答値のマッピング）
+      const questionAnswers = {};
+      const questions = getQuestions();
+      questions.forEach(q => {
+        if (state.answers[q.id]) {
+          questionAnswers[q.id] = state.answers[q.id];
+        }
+      });
+
       // 送信データ（必要に応じて増減）
       const payload = {
         name,
         email,
         type: res.code,
         axes: res.leftPct,   // A,B,C,Dが0..100
+        answers: questionAnswers,  // 各質問の回答（Q1:3, Q2:5, ...）
+        gender: state.gender,  // "male" または "female"
         createdAt: new Date().toISOString(),
       };
 

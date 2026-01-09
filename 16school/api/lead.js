@@ -34,9 +34,11 @@ export default async function handler(req, res) {
     const email = String(body.email || "").trim();
     const type = String(body.type || "").trim();
     const axes = body.axes || {};
+    const answers = body.answers || {};  // 各質問の回答データ
+    const gender = String(body.gender || "").trim();  // 性別（"male" または "female"）
     const createdAt = String(body.createdAt || new Date().toISOString()).trim();
 
-    console.log("[LEAD API] Parsed data:", { name, email, type, axes, createdAt });
+    console.log("[LEAD API] Parsed data:", { name, email, type, axes, answers, gender, createdAt });
 
     const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     if (!name) {
@@ -64,16 +66,28 @@ export default async function handler(req, res) {
     console.log("[LEAD API] Sending email via Resend...");
     const resend = new Resend(resendKey);
 
-    const subject = `【診断リード】${name} / ${email} / ${type}`;
+    const genderLabel = gender === "female" ? "女子版" : gender === "male" ? "男子版" : "";
+    const subject = `【診断リード】${name} / ${email} / ${type} ${genderLabel}`;
+    
+    // 回答データを整形（見やすく）
+    const answersText = Object.entries(answers)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([qid, val]) => `  ${qid}: ${val}`)
+      .join("\n");
+    
     const text = [
       `createdAt: ${createdAt}`,
       `name: ${name}`,
       `email: ${email}`,
       `type: ${type}`,
+      `gender: ${gender} ${genderLabel}`,
       `axes: ${JSON.stringify(axes)}`,
       "",
+      "【各質問の回答（1-7の7段階）】",
+      answersText,
+      "",
       "raw:",
-      JSON.stringify(body),
+      JSON.stringify(body, null, 2),
     ].join("\n");
 
     const emailResult = await resend.emails.send({
