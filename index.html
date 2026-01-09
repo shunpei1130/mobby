@@ -129,6 +129,26 @@
   #main-content{opacity:0;transition:opacity 1.5s ease;}
   #main-content.visible{opacity:1;}
   
+  /* モビィタイトル上のサブテキスト */
+  .mobby-subtitle{
+    text-align:center;
+    font-size:0.85rem;
+    font-weight:600;
+    font-family:var(--font-ja);
+    color:var(--color-forest);
+    opacity:0.75;
+    padding-top:28px;
+    padding-bottom:4px;
+    letter-spacing:0.1em;
+  }
+  @media (max-width: 768px){
+    .mobby-subtitle{
+      font-size:0.75rem;
+      padding-top:20px;
+      padding-bottom:2px;
+    }
+  }
+  
   /* モビィタイトル */
   .mobby-title{
     text-align:center;
@@ -136,7 +156,7 @@
     font-weight:900;
     font-family:'Montserrat', sans-serif;
     color:var(--color-forest);
-    padding-top:32px;
+    padding-top:0px;
     padding-bottom:8px;
     opacity:0.95;
     line-height:1;
@@ -144,7 +164,7 @@
   @media (max-width: 768px){
     .mobby-title{
       font-size:clamp(3.2rem, 6vw, 3.5rem);
-      padding-top:24px;
+      padding-top:0px;
       padding-bottom:6px;
     }
   }
@@ -1298,6 +1318,7 @@
   </script>
 
   <div id="main-content">
+    <div class="mobby-subtitle">カメラ型キーホルダー</div>
     <div class="mobby-title">Mobby</div>
     <h1 class="headline reveal delay-200">閉じ込めたい５つの思い出</h1>
     <section class="hero">

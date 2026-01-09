@@ -3,11 +3,81 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>就活キャラ診断</title>
+  
+  <!-- SEO基本 -->
+  <title>学校キャラ診断（モビィ診断）- あなたの性格を16タイプで無料診断</title>
+  <meta name="description" content="学校キャラ診断（モビィ診断）は40問の質問であなたの学校での性格タイプを16種類から無料診断。陽キャラ・陰キャラ、やんちゃ・真面目など4軸で性格を分析。男子版・女子版に対応した人気の性格診断テスト。">
+  <meta name="keywords" content="学校キャラ診断,モビィ診断,性格診断,キャラ診断,16タイプ,無料診断,性格テスト,陽キャラ,陰キャラ,学生,診断テスト,心理テスト,自己分析">
+  <meta name="author" content="Mobby">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mobby-hp.vercel.app/16school/">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mobby-hp.vercel.app/16school/">
+  <meta property="og:title" content="学校キャラ診断（モビィ診断）- あなたの性格を16タイプで診断">
+  <meta property="og:description" content="40問の質問であなたの学校でのキャラクタータイプを16種類から診断。陽キャラ・陰キャラ、やんちゃ・真面目など4軸で性格を分析。男子版・女子版対応の無料性格診断。">
+  <meta property="og:image" content="https://mobby-hp.vercel.app/16school/logo.jpg">
+  <meta property="og:site_name" content="学校キャラ診断（モビィ診断）">
+  <meta property="og:locale" content="ja_JP">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://mobby-hp.vercel.app/16school/">
+  <meta name="twitter:title" content="学校キャラ診断（モビィ診断）- あなたの性格を16タイプで診断">
+  <meta name="twitter:description" content="40問の質問であなたの学校でのキャラクタータイプを16種類から診断。男子版・女子版対応の無料性格診断。">
+  <meta name="twitter:image" content="https://mobby-hp.vercel.app/16school/logo.jpg">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="fav.jpg">
+  <link rel="apple-touch-icon" href="logo.jpg">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
+  
+  <!-- 構造化データ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "学校キャラ診断（モビィ診断）",
+    "alternateName": ["モビィ診断", "学校キャラ診断", "性格診断"],
+    "description": "40問の質問であなたの学校でのキャラクタータイプを16種類から診断する無料の性格診断ツール。陽キャラ・陰キャラなど4軸で性格を分析。",
+    "url": "https://mobby-hp.vercel.app/16school/",
+    "applicationCategory": "LifestyleApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Mobby"
+    },
+    "inLanguage": "ja",
+    "audience": {
+      "@type": "Audience",
+      "audienceType": "学生、若者"
+    },
+    "keywords": "学校キャラ診断, モビィ診断, 性格診断, キャラ診断, 16タイプ, 無料診断, 心理テスト",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "1000",
+      "bestRating": "5",
+      "worstRating": "1"
+    }
+  }
+  </script>
   <style>
     :root {
+      /* Fonts */
+      --font-ja: 'Yomogi', cursive;
+      --font-en: 'Yomogi', cursive;
+      
       /* Apple-esque Palette */
-      --bg: #fbfbfd; /* 背景：ほんのりグレーがかった白 */
+      --bg: #fff8e8; /* 背景：温かみのあるクリーム色 */
       --surface: #ffffff; /* カード背景：純白 */
       --text-main: #1d1d1f; /* メインテキスト：ほぼ黒 */
       --text-sub: #86868b; /* サブテキスト：グレー */
@@ -25,7 +95,7 @@
     
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-family: var(--font-en), var(--font-ja);
       background: var(--bg);
       color: var(--text-main);
       line-height: 1.6;
@@ -51,7 +121,9 @@
     .brand { display: flex; align-items: center; gap: 12px; }
     .logo {
       width: 40px; height: 40px; border-radius: 10px;
-      background: linear-gradient(135deg, #0071e3, #42a5f5);
+      background-image: url('logo.jpg');
+      background-size: cover;
+      background-position: center;
       box-shadow: 0 4px 10px rgba(0,113,227,0.3);
       cursor: pointer;
     }
@@ -108,6 +180,14 @@
     button.danger { color: var(--danger); background: rgba(255,59,48,0.05); }
     button.danger:hover { background: rgba(255,59,48,0.1); }
     button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+    @media (max-width: 600px) {
+      button.danger {
+        white-space: nowrap;
+        min-width: 80px;
+        font-size: 12px !important;
+        padding: 10px 16px;
+      }
+    }
 
     /* Panels & Cards */
     .panel {
@@ -399,8 +479,8 @@
     }
     @media (max-width: 600px) {
       .char-grid { 
-        grid-template-columns: repeat(4, 1fr);
-        gap: 8px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
       }
     }
     .char-card {
@@ -410,6 +490,8 @@
       padding: 24px;
       border: 1px solid rgba(255,255,255,0.8);
       transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
     }
     @media (max-width: 600px) {
       .char-card {
@@ -445,12 +527,16 @@
       font-weight: 700;
       margin: 0 0 8px;
       color: var(--text-main);
+      min-height: 54px;
+      display: flex;
+      align-items: flex-start;
     }
     @media (max-width: 600px) {
       .char-card-name {
         font-size: 10px;
         margin: 0 0 4px;
         line-height: 1.3;
+        min-height: 26px;
       }
     }
     .char-card-type {
@@ -476,17 +562,19 @@
       font-size: 14px;
       line-height: 1.6;
       color: var(--text-main);
-      margin: 0;
+      margin: 0 0 12px;
+      flex-grow: 1;
     }
     @media (max-width: 600px) {
       .char-card-desc {
         font-size: 9px;
         line-height: 1.4;
         display: none; /* スマホでは説明文を非表示 */
+        margin: 0;
       }
     }
     .char-card-detail-btn {
-      margin-top: 12px;
+      margin-top: auto;
       padding: 8px 16px;
       font-size: 12px;
       width: 100%;
@@ -603,38 +691,69 @@
   <div class="wrap">
     <header>
       <div class="brand">
+        <a href="../index.html?skipSplash=1" class="back-btn" style="text-decoration:none;">
+          <button style="margin-right:12px; font-size:15px; padding:6px 18px; border-radius:20px; border:1px solid #e0e0e0; background:#fff8e8; color:#0071e3; cursor:pointer;">&lt; トップに戻る</button>
+        </a>
         <div class="logo" id="logoHome"></div>
         <div class="title">
-          <h1 id="titleHome">就活キャラ診断</h1>
-          <p>あなたの勝ち筋と適職タイプ</p>
+          <h1 id="titleHome">学校キャラ診断</h1>
+          <p>あなたのキャラクターを16タイプで診断</p>
         </div>
       </div>
-      <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
         <nav class="nav">
           <a href="#" id="navDiagnosis" class="active">診断</a>
           <a href="#" id="navCharacters">キャラ一覧</a>
         </nav>
+        <div style="display: flex; gap: 8px;">
         <button class="danger" id="btnReset" style="font-size:11px;">リセット</button>
+          <button id="btnTypeGuide" style="font-size:11px; background:var(--accent-soft); color:var(--accent);">タイプ解説</button>
+        </div>
       </div>
     </header>
 
     <main id="app"></main>
 
     <footer>
-      <p>※本診断はプロトタイプです。結果は端末にのみ保存されます。</p>
+      <p>※結果は端末にのみ保存されます。</p>
     </footer>
   </div>
 
   <script>
     function isQuizCompleted(){
-  return Object.keys(state.answers || {}).length >= QUESTIONS.length;
+  const questions = getQuestions();
+  return Object.keys(state.answers || {}).length >= questions.length;
 }
 function isRegistered(){
-  return !!(state.profile && state.profile.name && state.profile.email);
+  // ローカル環境（localhost または 127.0.0.1）の場合は自動的にスキップ
+  const hostname = window.location.hostname;
+  const protocol = window.location.protocol;
+  const isLocal = hostname === 'localhost' || 
+                  hostname === '127.0.0.1' ||
+                  hostname === '' ||
+                  protocol === 'file:';
+  
+  console.log('[DEBUG] isRegistered check:', { hostname, protocol, isLocal });
+  
+  if (isLocal) {
+    console.log('[DEBUG] ローカル環境検出: 登録画面をスキップします');
+    return true; // ローカル環境では登録画面をスキップ
+  }
+  
+  const hasProfile = !!(state.profile && state.profile.name && state.profile.email);
+  console.log('[DEBUG] プロフィール確認:', hasProfile, state.profile);
+  return hasProfile;
 }
 function gotoDiagnosisHome(){
   // 完了&登録済みなら結果へ、それ以外はintroへ
-  state.step = (isQuizCompleted() && isRegistered()) ? "result" : "intro";
+  if(isQuizCompleted() && isRegistered()) {
+    state.step = "result";
+  } else if(state.gender && Object.keys(state.answers).length > 0) {
+    // 性別選択済みで回答途中ならquizへ
+    state.step = "quiz";
+  } else {
+    state.step = "intro";
+  }
   render();
 }
 
@@ -642,100 +761,350 @@ function gotoDiagnosisHome(){
      * Data & Logic
      ***********************/
     const AXES = {
-      A: { key:"A", name:"情報の集め方", left:"読む（一次情報）", right:"話す（対話）" },
-      B: { key:"B", name:"得意な環境", left:"安定・仕組み", right:"変化・カオス" },
-      C: { key:"C", name:"動機の源泉", left:"意義・人", right:"合理・成果" },
-      D: { key:"D", name:"進め方", left:"計画的", right:"柔軟・即興" }
+      A: { key:"A", name:"キャラタイプ", left:"陽キャラ", right:"陰キャラ", leftCode:"が", rightCode:"な" },
+      B: { key:"B", name:"雰囲気", left:"やんちゃ", right:"真面目", leftCode:"や", rightCode:"お" },
+      C: { key:"C", name:"行動スタイル", left:"仲間重視", right:"個人行動重視", leftCode:"み", rightCode:"こ" },
+      D: { key:"D", name:"評価基準", left:"外（他者評価）", right:"内（自己基準）", leftCode:"そ", rightCode:"う" }
     };
 
-    const ANS_LABEL = {1:"全く違う", 2:"やや違う", 3:"ややそう思う", 4:"強くそう思う"};
+    // ひらがなコード → 画像ファイル名のマッピング（男子版）
+    const CODE_TO_IMAGE = {
+      "がやみそ": "ortp", "がやみう": "orti", "がやこそ": "orlp", "がやこう": "orli",
+      "がおみそ": "ojtp", "がおみう": "ojti", "がおこそ": "ojlp", "がおこう": "ojli",
+      "なやみそ": "qrtp", "なやみう": "qrti", "なやこそ": "qrlp", "なやこう": "qrli",
+      "なおみそ": "qjtp", "なおみう": "qjti", "なおこそ": "qjlp", "なおこう": "qjli",
+    };
+
+    // ひらがなコード → 画像ファイル名のマッピング（女子版：R=清楚(お), J=ギャル(や)）
+    const CODE_TO_IMAGE_FEMALE = {
+      "がおみそ": "ortp2", "がおみう": "orti2", "がおこそ": "orlp2", "がおこう": "orli2",
+      "がやみそ": "ojtp2", "がやみう": "ojti2", "がやこそ": "ojlp2", "がやこう": "ojli2",
+      "なおみそ": "qrtp2", "なおみう": "qrti2", "なおこそ": "qrlp2", "なおこう": "qrli2",
+      "なやみそ": "qjtp2", "なやみう": "qjti2", "なやこそ": "qjlp2", "なやこう": "qjli2",
+    };
+
+    // 学校版では直接コードを使用（変換マッピング不要）
+
+    const ANS_LABEL = {1:"そう思う", 2:"ややそう思う", 3:"少しそう思う", 4:"どちらでもない", 5:"少しそう思わない", 6:"ややそう思わない", 7:"そう思わない"};
 
 
-    // 7択用にスコア調整: 1(Strongly Disagree) .. 4(Strongly Agree)
-    // Reverseなら: 5 - answer
     const QUESTIONS = [
-      // A: 読む（一次情報） vs 話す（対話）
-      {id:"A1", axis:"A", text:"企業研究はまず公式情報（採用サイト・IRなど）を読み込む", reverse:false},
-      {id:"A2", axis:"A", text:"人に会う前に、自分で調べ尽くしてから臨みたい", reverse:false},
-      {id:"A3", axis:"A", text:"文章や資料を読むほうが理解が深まる", reverse:false},
-      {id:"A4", axis:"A", text:"疑問はまず検索・資料で確認してから質問する", reverse:false},
-      {id:"A5", axis:"A", text:"考えはメモや文章化で整理することが多い", reverse:false},
-      {id:"A6", axis:"A", text:"人に話してみると考えがまとまってくる", reverse:true},
-      {id:"A7", axis:"A", text:"資料より、働く人の“生の声”のほうが判断材料になる", reverse:true},
-      {id:"A8", axis:"A", text:"まず人に会って聞きながら、情報を埋めていくタイプだ", reverse:true},
-      {id:"A9", axis:"A", text:"自分で調べるより、詳しい人に聞くほうが早いと思う", reverse:true},
-      {id:"A10", axis:"A", text:"会話の中でその場で質問がどんどん湧いてくる", reverse:true},
+  // A：陽キャラ vs 陰キャラ
+  {id:"A1", axis:"A", text:"クラスで何かを決める場面では、自然と自分から意見を出すことが多い", reverse:false},
+  {id:"A2", axis:"A", text:"人が集まって盛り上がっている場所には、つい行きたくなる", reverse:false},
+  {id:"A3", axis:"A", text:"初対面の人とも、自分から話しかけることが多い", reverse:false},
+  {id:"A4", axis:"A", text:"授業中に先生と目が合っても、特に気にならない", reverse:false},
+  {id:"A5", axis:"A", text:"行事やイベントでは、中心にいることが多い", reverse:false},
+  {id:"A6", axis:"A", text:"みんなが黙っていると、何か話したくなる", reverse:false},
+  {id:"A7", axis:"A", text:"クラスの雰囲気は、自分の言動で多少変わると思う", reverse:false},
+  {id:"A8", axis:"A", text:"注目される場面は、わりと好きだ", reverse:false},
+  {id:"A9", axis:"A", text:"何か起きたとき、まず動く側だと思う", reverse:false},
+  {id:"A10", axis:"A", text:"目立たない日が続くと、少し物足りなく感じる", reverse:false},
 
-      // B: 安定・仕組み vs 変化・カオス
-      {id:"B1", axis:"B", text:"役割と評価基準が明確なほうが力を出せる", reverse:false},
-      {id:"B2", axis:"B", text:"手順やルールが整っていると安心する", reverse:false},
-      {id:"B3", axis:"B", text:"研修や育成の仕組みがある環境が好きだ", reverse:false},
-      {id:"B4", axis:"B", text:"前例や型があるほうが改善しやすい", reverse:false},
-      {id:"B5", axis:"B", text:"変化が少ない環境のほうが集中できる", reverse:false},
-      {id:"B6", axis:"B", text:"前例のないテーマほどワクワクする", reverse:true},
-      {id:"B7", axis:"B", text:"ルールがなくても自分で型を作って進められる", reverse:true},
-      {id:"B8", axis:"B", text:"方針が頻繁に変わる環境でもむしろ燃える", reverse:true},
-      {id:"B9", axis:"B", text:"0→1で立ち上げる仕事をやりたい", reverse:true},
-      {id:"B10", axis:"B", text:"整っていない環境を自分で整えるのが好きだ", reverse:true},
+  // B：やんちゃ vs 真面目
+  {id:"B1", axis:"B", text:"服や持ち物は、実用性よりも見た目を重視しがちだ", reverse:false},
+  {id:"B2", axis:"B", text:"人からどう見られているかは、わりと気になる", reverse:false},
+  {id:"B3", axis:"B", text:"新しい服や靴を買うと、誰かに気づいてほしいと思う", reverse:false},
+  {id:"B4", axis:"B", text:"校則は、工夫すれば少し崩してもいいと思う", reverse:false},
+  {id:"B5", axis:"B", text:"色やデザインで物を選ぶことが多い", reverse:false},
+  {id:"B6", axis:"B", text:"写真を撮るとき、写りを意識する", reverse:false},
+  {id:"B7", axis:"B", text:"服装が変わると、テンションも結構変わる", reverse:false},
+  {id:"B8", axis:"B", text:"目立つアイテムを見ると、ちょっと惹かれる", reverse:false},
+  {id:"B9", axis:"B", text:"周りと違う格好をするのは楽しい", reverse:false},
+  {id:"B10", axis:"B", text:"『オシャレだね』と言われると素直にうれしい", reverse:false},
 
-      // C: 意義・人 vs 合理・成果
-      {id:"C1", axis:"C", text:"「誰の課題を解くか」が明確だとやる気が出る", reverse:false},
-      {id:"C2", axis:"C", text:"理念やミッションへの共感を重視する", reverse:false},
-      {id:"C3", axis:"C", text:"感謝されたり役に立てると頑張れる", reverse:false},
-      {id:"C4", axis:"C", text:"相手の気持ちや納得感を大事にして判断したい", reverse:false},
-      {id:"C5", axis:"C", text:"自分の価値観に反する仕事は避けたい", reverse:false},
-      {id:"C6", axis:"C", text:"成果（数字・KPI）が出ないなら意味が薄いと感じる", reverse:true},
-      {id:"C7", axis:"C", text:"条件（給与・成長機会）を合理的に比較して選びたい", reverse:true},
-      {id:"C8", axis:"C", text:"データやロジックを優先して意思決定したい", reverse:true},
-      {id:"C9", axis:"C", text:"勝てる確度が高い選択を取りたい", reverse:true},
-      {id:"C10", axis:"C", text:"“好き嫌い”よりリターンで決めることが多い", reverse:true},
+  // C：仲間重視 vs 個人行動重視
+  {id:"C1", axis:"C", text:"学校では、基本的に誰かと一緒にいることが多い", reverse:false},
+  {id:"C2", axis:"C", text:"行動するときは、周りと合わせるほうだ", reverse:false},
+  {id:"C3", axis:"C", text:"休み時間は、誰かと話して過ごすことが多い", reverse:false},
+  {id:"C4", axis:"C", text:"放課後の予定は、誰かと一緒に決まることが多い", reverse:false},
+  {id:"C5", axis:"C", text:"グループから外れると、少し不安になる", reverse:false},
+  {id:"C6", axis:"C", text:"友達と同じ行動を取ることが多い", reverse:false},
+  {id:"C7", axis:"C", text:"何かを決めるとき、周りの意見をよく聞く", reverse:false},
+  {id:"C8", axis:"C", text:"一人で行動する日が続くと、少し寂しい", reverse:false},
+  {id:"C9", axis:"C", text:"チームでやるほうが力を出せる", reverse:false},
+  {id:"C10", axis:"C", text:"集団の一部でいる感覚は心地いい", reverse:false},
 
-      // D: 計画的 vs 柔軟・即興
-      {id:"D1", axis:"D", text:"締切よりかなり前から準備する", reverse:false},
-      {id:"D2", axis:"D", text:"ToDoや段取りを作ると安心する", reverse:false},
-      {id:"D3", axis:"D", text:"面接の想定問答は事前に用意しておく", reverse:false},
-      {id:"D4", axis:"D", text:"リスクを洗い出して対策してから動く", reverse:false},
-      {id:"D5", axis:"D", text:"計画が立つと迷いが減る", reverse:false},
-      {id:"D6", axis:"D", text:"細かい計画より、まず動いて途中で調整する", reverse:true},
-      {id:"D7", axis:"D", text:"状況を見て優先順位を入れ替えるのが得意だ", reverse:true},
-      {id:"D8", axis:"D", text:"準備が不十分でも勢いで切り抜けられる", reverse:true},
-      {id:"D9", axis:"D", text:"予定が崩れてもすぐ別案を出せる", reverse:true},
-      {id:"D10", axis:"D", text:"直前の追い込みでパフォーマンスが上がる", reverse:true},
-    ];
+  // D：評価基準が外 vs 内
+  {id:"D1", axis:"D", text:"頑張る理由は、周りに結果を見てもらえるからだ", reverse:false},
+  {id:"D2", axis:"D", text:"褒められると、次も頑張ろうと思える", reverse:false},
+  {id:"D3", axis:"D", text:"周りの反応は、自分の行動の基準になりやすい", reverse:false},
+  {id:"D4", axis:"D", text:"成果は、つい人と比べてしまう", reverse:false},
+  {id:"D5", axis:"D", text:"誰にも見られていないと、モチベーションは下がりやすい", reverse:false},
+  {id:"D6", axis:"D", text:"評価されないことは、正直つらい", reverse:false},
+  {id:"D7", axis:"D", text:"『すごい』と言われるとかなりうれしい", reverse:false},
+  {id:"D8", axis:"D", text:"人に見せる前提で行動することが多い", reverse:false},
+  {id:"D9", axis:"D", text:"結果が出ないと、あまり意味がないと感じる", reverse:false},
+  {id:"D10", axis:"D", text:"周りにどう思われるかは、判断材料の一つだ", reverse:false},
+];
 
     const CHARACTERS = {
-      "LLLL": {name:"Notion建築士", summary:"徹底的な調査と計画で、組織を裏から支える知性派。", description:"一次情報を読み込み、構造化してから動く。安定した仕組みの中で力が出て、判断軸は「意義・人」。計画を切って着実に詰めるので、ESも面接も準備で勝つ。"},
-      "LLLR": {name:"高IQサボり魔", summary:"情報を整理し、相手に合わせて柔軟に伝える架け橋。", description:"情報はまず読み倒して最短ルートを作る。安定環境で効率化がハマり、モチベは「意義・人」寄りだが、進め方は即興で省エネ。準備は要点だけ押さえて、残りは現場で最適化する。"},
-      "LLRL": {name:"タスク完遂ガチ勢", summary:"要件を整理し、着実に実行して成果を積み上げる。", description:"読み込み→段取り→実行の精度が高い。安定した環境で、役割と手順を守りつつ「意義・人」を軸に粘れる。計画通りに完遂して信頼を取りにいく職人気質。"},
-      "LLRR": {name:"デスク環境沼の住人", summary:"マニュアルを守りつつ、現場の詰まりを柔軟に直す。", description:"一次情報で状況把握し、必要ならその場でやり方を変える。安定・仕組みが好きだが、進め方は柔軟で現場調整が得意。人の納得感も大事にしつつ、詰まりを即座に直す。"},
-      "LRLL": {name:"0→1（ゼロイチ）起業家", summary:"変化を読み解き、新しい仕組みを着実に作り上げる。", description:"読み込みで仮説を作り、カオス環境で形にしていく。動機は「意義・人」起点で、計画を引きながら大きく動かす。新規事業や立ち上げで、構想と実行を両立する。"},
-      "LRLR": {name:"特定班ディガー", summary:"広く情報を集め、面白い仮説を次々と試す発想家。", description:"調べ尽くして確度を上げ、変化のある場で試行する。意義や人への共感が強いが、進め方は即興でフットワークも軽い。「一次情報×検証」で深掘り型の強さが出る。"},
-      "LRRL": {name:"ソロラン最強勢", summary:"勝ち筋を冷静に分析し、成長領域へ果敢に挑む。", description:"一次情報で勝ち筋を読み、カオス環境でも自走する。モチベは「意義・人」寄りだが、進め方は計画的で崩れにくい。孤独耐性が高く、成果を積み上げて説得する。"},
-      "LRRR": {name:"人柱テスター", summary:"まずはやってみる。失敗から学び、高速で正解に近づく。", description:"読み込みはするが、答えは現場で作るタイプ。変化の中で学習し、意義に共感できるなら突っ込める。準備より検証が早く、失敗から改善して勝ちに近づく。"},
-      "RLLL": {name:"避難所のモデレーター", summary:"人の話を引き出し、丁寧に合意を作って前進させる。", description:"会話で情報を集め、安定した枠組みの中で合意を作る。判断軸は「意義・人」で、計画的に場を整える。面接では対話力と調整力が刺さる。"},
-      "RLLR": {name:"全肯定ご自愛勢", summary:"その場の空気を読み、関わる全員が心地よい環境を作る。", description:"人と話しながら空気を読み、安定環境で安心感を提供する。意義・人を優先しつつ、進め方は柔軟で無理をしない。チームの温度を保ちながら前に進める。"},
-      "RLRL": {name:"界隈の神（解釈一致）", summary:"周りを巻き込みながら、目標に向かって着実に進む。", description:"対話で本音とニーズを掴み、変化のある場でも筋道を立てられる。動機は「意義・人」で、計画的に巻き込みながら進める。共感を“構造”に落として推進できる。"},
-      "RLRR": {name:"バイブス係長", summary:"トラブルも笑顔で解決。チームの熱量を上げるエンジン。", description:"会話で状況を取りにいき、カオス環境でノリ良く突破する。意義・人で動くが、計画に縛られず即興で回す。ムードメーカーなのに、実は修羅場耐性が高い。"},
-      "RRLL": {name:"言語化の魔術師", summary:"大きな夢を、誰もが理解できる言葉と計画に落とす。", description:"対話から素材を拾い、変化の中でも意味を見失わない。意義・人を軸に、計画的に言葉と道筋に落とす。ESはストーリー設計、面接は納得感で勝つ。"},
-      "RRLR": {name:"フッ軽インフルエンサー", summary:"「面白そう！」で周りを巻き込み、変化の渦を作る。", description:"人から情報を集め、変化の波にすぐ乗る。動機は「意義・人」寄りで、進め方は即興。まず動いて発信し、反応を見て方向修正する。"},
-      "RRRL": {name:"垢抜けプロデューサー", summary:"人と資源を集め、最短距離で成果を叩き出す実力派。", description:"対話で現場を掴み、カオス環境でも計画を引いて前進する。合理・成果を軸に意思決定し、勝てる形に整えるのが得意。伸び代を見抜いて改善を設計する。"},
-      "RRRR": {name:"脳内ワンダーランド", summary:"どんな状況でも瞬時に最適解を出し、周りを驚かせる。", description:"会話で刺激を取り込み、カオス環境で即興的に形にする。合理・成果で最適解を選び、スピード重視で試す。アイデア量と決断の速さで場を動かす。"},
+  "がやみそ": {
+    name:"文化祭センターステージモビィ",
+    summary:"場の空気を読むのが早く、自然と前に立っているタイプ。",
+    description:"場の空気を読むのが早く、自然と前に立っているタイプ。目立つこと自体が目的というより、「今ここを回さないと空気が止まる」という感覚で動いている。周囲の反応がエネルギー源で、盛り上がりや称賛があるほどギアが上がる。",
+    strength:"瞬時に場を温める力があり、人を巻き込むスピードが速い。外向けの発信や初対面の場面に強く、全体を動かす起点になれる。",
+    weakness:"反応が薄いと一気にモチベーションが下がりやすい。盛り上げを優先するあまり、細部の詰めや後処理が甘くなることがある。"
+  },
+
+  "がやみう": {
+    name:"体育祭モビィ",
+    summary:"熱量で先頭に立つタイプ。",
+    description:"熱量で先頭に立つタイプ。評価や称賛よりも「本気でやったか」「燃え切れたか」を自分の中で大事にしている。仲間のテンションを引き上げることに自然と喜びを感じる。",
+    strength:"逆境や勝負どころで強く、周囲の士気を一気に引き上げられる。チームに火をつける役割を無意識に担える。",
+    weakness:"熱量の差で周囲とズレが生じることがある。燃え尽きた後に急にエネルギーが落ちる。"
+  },
+
+  "がやこそ": {
+    name:"廊下ランウェイモビィ",
+    summary:"集団よりも単独で存在感を出すタイプ。",
+    description:"集団よりも単独で存在感を出すタイプ。注目されることに抵抗はなく、見られる場面ほど整う。自分が勝てる土俵を直感的に選ぶ。",
+    strength:"セルフプロデュース力が高く、勝負所で結果を出せる。一人で突破する強さがある。",
+    weakness:"協調性が低いと誤解されやすい。評価が得られない環境では集中力が落ちる。"
+  },
+
+  "がやこう": {
+    name:"屋上自由時間モビィ",
+    summary:"人前に出ることは嫌いではないが、群れに依存しないタイプ。",
+    description:"人前に出ることは嫌いではないが、群れに依存しないタイプ。自分のペースと基準を大切にしている。表では陽気でも、内側はかなりマイペース。",
+    strength:"自分軸が強く、人に流されにくい。独自のセンスや判断を持っている。",
+    weakness:"気分屋だと思われやすい。説明不足で誤解を招くことがある。"
+  },
+
+  "がおみそ": {
+    name:"応援団長モビィ",
+    summary:"人前で引っ張りながら、ルールや秩序も守れるリーダータイプ。",
+    description:"人前で引っ張りながら、ルールや秩序も守れるリーダータイプ。責任を引き受けることを避けない。外からの信頼や称賛があるほど力を発揮する。",
+    strength:"リーダーシップが安定しており、集団を安心して任せられる。対外的な信用が高い。",
+    weakness:"プレッシャーを抱え込みやすい。人に頼るタイミングが遅くなりがち。"
+  },
+
+  // ▼ここから“後半の文章量”を前半に揃えて増量
+  "がおみう": {
+    name:"学級委員モビィ",
+    summary:"目立つよりも、全体がきちんと回っている状態に価値を感じるタイプ。",
+    description:"目立つよりも、全体がきちんと回っている状態に価値を感じるタイプ。公平さや納得感を重視し、評価がなくても役割を果たす。場当たりより段取りで安心を作り、揉めそうな空気を先に整えてしまう。",
+    strength:"調整力が高く、安定した運用ができる。人の意見を拾って折り合いをつけられるので、クラスの摩擦を減らせる。信頼が積み上がりやすい。",
+    weakness:"正しさを優先しすぎると、融通が利かないと思われることがある。自分の頑張りが可視化されにくく、報われなさを溜め込みやすい。"
+  },
+
+  "がおこそ": {
+    name:"成績掲示板モビィ",
+    summary:"一人で結果を出し、分かりやすい形で評価されたいタイプ。",
+    description:"一人で結果を出し、分かりやすい形で評価されたいタイプ。努力そのものだけでなく、報われ方や“勝った実感”も大事にしている。静かに燃えていて、順位や点数のような指標があるほど集中力が上がる。",
+    strength:"目標達成力が高く、競争環境で強い。自己管理ができ、やるべきことを逆算して淡々と積み上げられる。結果で周囲を納得させる説得力がある。",
+    weakness:"他人との比較で気持ちが揺れやすく、数字が落ちると焦りが出やすい。チーム作業では温度差が生まれやすく、任せるより抱え込む方向に寄りがち。"
+  },
+
+  "がおこう": {
+    name:"理科室研究モビィ",
+    summary:"外では堂々としているが、内側は探究心が強い研究者タイプ。",
+    description:"外では堂々としているが、内側は探究心が強い研究者タイプ。結果を急ぐより「納得できる筋道」を重視し、理解が深まるほどテンションが上がる。興味のあるテーマには時間を忘れて没頭し、周りが驚く完成度まで持っていく。",
+    strength:"探究心と継続力があり、深い理解に到達できる。根拠を積み上げて考えられるので、難しい課題でもブレにくい。自分なりの答えを作るのが得意。",
+    weakness:"興味のない話題では集中が切れやすく、手が止まりやすい。完璧を求めすぎて着地が遅くなり、提出や締切の調整が課題になることがある。"
+  },
+
+  "なやみそ": {
+    name:"裏アカ拡散モビィ",
+    summary:"表では静かだが、裏で流れを作るタイプ。",
+    description:"表では静かだが、裏で流れを作るタイプ。仲間内の反応がエネルギー源で、前に出るより“裏方で回す”ほうが楽。空気の変化に敏感で、誰が何を求めているかを読んで拡散や根回しで影響を出す。",
+    strength:"状況把握力が高く、情報の回し方がうまい。表に出ずに空気を動かせるので、集団の流れを作る起点になれる。タイミングを見て一気に火をつけられる。",
+    weakness:"意図が伝わりにくく、誤解されやすい。反応待ちになると動きが鈍りやすく、考えすぎて様子見が長くなることがある。"
+  },
+
+  "なやみう": {
+    name:"部室たまり場モビィ",
+    summary:"仲間を大事にするが、範囲は狭く深いタイプ。",
+    description:"仲間を大事にするが、範囲は狭く深いタイプ。大勢より“いつメン”の安心感が大事で、居場所があると一気に元気になる。外では静かでも、内輪に入ると急にノリが良くなって場を回せる。",
+    strength:"身内への忠誠心が高く、安心できる空間を作れる。関係が深いぶん、助け合いや連携が速い。仲間の変化にも気づきやすい。",
+    weakness:"新しい環境に入りにくく、初動が遅れがち。内輪ノリが外でズレると気まずくなり、距離を取ってしまうことがある。"
+  },
+
+  "なやこそ": {
+    name:"制服アレンジモビィ",
+    summary:"言葉より見た目で自己表現するタイプ。",
+    description:"言葉より見た目で自己表現するタイプ。直接アピールはしないが、評価は欲しいという距離感を持っている。目立ちすぎないラインで差分を作り、「わかる人にはわかる」仕上げにこだわる。",
+    strength:"一貫したセンスがあり、独自性が強い。空気を壊さずに個性を出せるため、印象が残りやすい。静かに自己プロデュースできる。",
+    weakness:"近寄りがたいと思われることがあり、誤解が解けるまで時間がかかる。評価がないとモヤモヤしやすく、内心では気にしているのに言えないことがある。"
+  },
+
+  "なやこう": {
+    name:"教科書裏落書きモビィ",
+    summary:"一人で世界を作り込むタイプ。",
+    description:"一人で世界を作り込むタイプ。外には出さないが、内側の熱量は高く、頭の中ではずっと何かを作っている。人と合わせるより、自分の世界観を深める時間で満たされる。",
+    strength:"創造性と没頭力が高く、独自の発想を持つ。好きなテーマでは集中が途切れず、細部まで作り込める。周りにない視点で価値を出せる。",
+    weakness:"周囲に伝わりにくく、評価されにくいと孤立しやすい。言語化が遅れると誤解され、急に距離を置かれることがある。"
+  },
+
+  "なおみそ": {
+    name:"舞台袖実行委員モビィ",
+    summary:"前に出ず、成功を成立させる側のタイプ。",
+    description:"前に出ず、成功を成立させる側のタイプ。仲間の動きを整理し、ミスや詰まりを見つけると即座に修正へ回る。結果としての評価も気にしていて、静かに“成功の責任”を背負っている。",
+    strength:"実務力と調整力が高く、トラブルに強い。全体の進行を俯瞰できるので、崩れそうな場面でも立て直せる。周囲の信頼を取りやすい。",
+    weakness:"抱え込みやすく、頼る前に限界まで背負いがち。感情が見えにくいと言われやすく、疲れていても平気な顔をしてしまう。"
+  },
+
+  "なおみう": {
+    name:"図書委員モビィ",
+    summary:"静かな秩序を好み、淡々と続けられるタイプ。",
+    description:"静かな秩序を好み、淡々と続けられるタイプ。派手な達成より、日々の積み重ねで環境が整っていく感覚が好き。評価がなくてもやれるが、そのぶん自分のペースが崩れると一気にしんどくなる。",
+    strength:"継続力と誠実さがあり、環境を整えるのが得意。ルールや手順を守りつつ、安定したクオリティを出せる。任されたことを落とさない信頼感がある。",
+    weakness:"変化に弱く、急な方針転換でストレスが溜まりやすい。自分の気持ちを後回しにしがちで、気づいたら疲労が限界になっていることがある。"
+  },
+
+  "なおこそ": {
+    name:"模試ランキングモビィ",
+    summary:"静かに燃える競争者タイプ。",
+    description:"静かに燃える競争者タイプ。結果が安定すると安心し、崩れると内心かなり焦る。表では淡々としていても、頭の中では勝ち筋を計算していて、やると決めたら一気に詰める。",
+    strength:"分析力と自己管理能力が高い。弱点を見つけて修正するのが早く、点数や成果を安定させられる。勝負所の集中力が強い。",
+    weakness:"他人比較で疲れやすく、順位の上下に気持ちを持っていかれやすい。協働を遠回りに感じると一人で抱え込み、相談が遅れることがある。"
+  },
+
+  "なおこう": {
+    name:"自習室モビィ",
+    summary:"誰も見ていなくても積み上げるタイプ。",
+    description:"誰も見ていなくても積み上げるタイプ。評価より自分の基準を優先し、納得できるまで淡々と続ける。静かな場所ほど集中が深まり、周りが気づかないところで完成度を上げていく。",
+    strength:"粘り強く、深い集中ができる。自己評価の軸が安定しているので、環境に左右されにくい。長期で信頼される安定感がある。",
+    weakness:"完璧主義になりやすく、終わらせる判断が遅い。人に頼るのが苦手で、詰まっても一人で抱えて時間を使いすぎることがある。"
+  },
+};
+
+
+    /***********************
+     * 女子版 Data
+     ***********************/
+    const AXES_FEMALE = {
+      A: { key:"A", name:"キャラタイプ", left:"陽キャラ", right:"陰キャラ", leftCode:"が", rightCode:"な" },
+      B: { key:"B", name:"雰囲気", left:"清楚", right:"ギャル", leftCode:"お", rightCode:"や" },
+      C: { key:"C", name:"関係性", left:"友達優先", right:"恋愛優先", leftCode:"み", rightCode:"こ" },
+      D: { key:"D", name:"評価基準", left:"評価重視", right:"自分基準", leftCode:"そ", rightCode:"う" }
     };
 
-    const STORAGE_KEY = "shukatsu_diag_apple_v1";
+    const QUESTIONS_FEMALE = [
+      // A：陽キャラ（外向） vs 陰キャラ（内向）
+      {id:"A1", axis:"A", text:"人と一緒に過ごす時間が長いほど、元気が出るほうだ", reverse:false},
+      {id:"A2", axis:"A", text:"『にぎやかな人だね』と言われると、だいたい当たっていると思う", reverse:false},
+      {id:"A3", axis:"A", text:"登校は、友達と一緒のほうが気分が上がる", reverse:false},
+      {id:"A4", axis:"A", text:"お昼は、誰かと話しながら食べるほうが楽しい", reverse:false},
+      {id:"A5", axis:"A", text:"休み時間は、誰かと話していることが多い", reverse:false},
+      {id:"A6", axis:"A", text:"人と一緒にいる時間が長いと、疲れやすいほうだ", reverse:true},
+      {id:"A7", axis:"A", text:"予定がない放課後は、一人時間がうれしい", reverse:true},
+      {id:"A8", axis:"A", text:"初対面の人が多い場では、まず様子を見ることが多い", reverse:true},
+      {id:"A9", axis:"A", text:"盛り上がっている輪に、自分から入っていくのは得意ではない", reverse:true},
+      {id:"A10", axis:"A", text:"一日ほとんど誰とも話さなくても、特に困らない", reverse:true},
+
+      // B：清楚（ナチュラル） vs ギャル（盛り・派手）
+      {id:"B1", axis:"B", text:"自分の雰囲気は、落ち着いているほうだと思う", reverse:false},
+      {id:"B2", axis:"B", text:"制服や私服は、浮かない無難さを意識して選びがちだ", reverse:false},
+      {id:"B3", axis:"B", text:"髪色は、黒〜暗めのほうがしっくりくる", reverse:false},
+      {id:"B4", axis:"B", text:"メイクやネイルは、最低限で十分だと思う", reverse:false},
+      {id:"B5", axis:"B", text:"写真は、盛るより自然な写りのほうが好きだ", reverse:false},
+      {id:"B6", axis:"B", text:"制服や私服は、可愛さや「盛れ」を優先したくなる", reverse:true},
+      {id:"B7", axis:"B", text:"髪色は、明るめにしてみたい気持ちが強い", reverse:true},
+      {id:"B8", axis:"B", text:"メイクやネイルは、気分を上げるために大事だ", reverse:true},
+      {id:"B9", axis:"B", text:"流行っているものは、見かけたら早めに試したくなる", reverse:true},
+      {id:"B10", axis:"B", text:"『派手だね』と言われると、むしろうれしい寄りだ", reverse:true},
+
+      // C：友達優先 vs 恋愛優先
+      {id:"C1", axis:"C", text:"今の自分にとって一番大事なのは、友達との関係だ", reverse:false},
+      {id:"C2", axis:"C", text:"恋人ができても、友達との距離感は変えたくない", reverse:false},
+      {id:"C3", axis:"C", text:"放課後や休日は、友達と過ごすことが多い", reverse:false},
+      {id:"C4", axis:"C", text:"予定が被ったら、友達の予定を優先しがちだ", reverse:false},
+      {id:"C5", axis:"C", text:"恋人と友達が合わないなら、友達側に気を使いやすい", reverse:false},
+      {id:"C6", axis:"C", text:"恋人ができたら、生活の中心は恋人寄りになると思う", reverse:true},
+      {id:"C7", axis:"C", text:"放課後や休日は、恋人（または好きな人）と過ごしたい気持ちが強い", reverse:true},
+      {id:"C8", axis:"C", text:"恋愛の話は、友達にあまり言わずに自分の中で進めたい", reverse:true},
+      {id:"C9", axis:"C", text:"ダブルデートより、二人きりのほうがいいと思う", reverse:true},
+      {id:"C10", axis:"C", text:"友達との関係は、恋愛によって多少変わっても仕方ないと思う", reverse:true},
+
+      // D：評価重視（外） vs 自分基準（内）
+      {id:"D1", axis:"D", text:"人からの反応があるほうが、やる気が出る", reverse:false},
+      {id:"D2", axis:"D", text:"『すごいね』と言われると、かなりうれしい", reverse:false},
+      {id:"D3", axis:"D", text:"写真や成果物は、誰かに見せる前提で作ることが多い", reverse:false},
+      {id:"D4", axis:"D", text:"服や持ち物は、どう見られるかを意識して選びがちだ", reverse:false},
+      {id:"D5", axis:"D", text:"テストや課題の結果は、つい人と比べてしまう", reverse:false},
+      {id:"D6", axis:"D", text:"自分が納得できれば、周りの反応が少なくても満足できる", reverse:true},
+      {id:"D7", axis:"D", text:"SNS投稿は、反応をあまり気にせず載せることが多い", reverse:true},
+      {id:"D8", axis:"D", text:"反応が薄くても、自分が好きなことは続けたい", reverse:true},
+      {id:"D9", axis:"D", text:"グループで案を出すときは、評価より『本当に良い』と思う案を優先する", reverse:true},
+      {id:"D10", axis:"D", text:"誰からも評価されなくても、コツコツ頑張り続けられるほうだ", reverse:true},
+    ];
+
+    const CHARACTERS_FEMALE = {
+      "がおみそ": {name:"文化祭広報モビィ", summary:"人の輪の中心に入りながら、空気を整えて「見せ方」まで作るタイプ。", description:"人の輪の中心に入りながら、空気を整えて「見せ方」まで作るタイプ。友達と一緒に動くことでテンションが上がり、写真や投稿など「みんなが見てる場所」で力を出す。自分が目立つより、全体が盛れて回ることに燃える。", strength:"周囲の空気を読みながら段取りを組める。人を巻き込むのが上手く、集合・撮影・告知などを自然に回して場を前に進められる。", weakness:"反応が薄いと急に不安になりやすい。みんなに合わせすぎて、自分の本音や疲れに気づくのが遅れることがある。"},
+      "がおみう": {name:"昼休みお弁当会モビィ", summary:"友達といるのが好きだけど、派手に目立つより「落ち着く輪」を大事にするタイプ。", description:"友達といるのが好きだけど、派手に目立つより「落ち着く輪」を大事にするタイプ。気を使えるし聞き上手で、いつものメンバーの安心感がエネルギーになる。評価より「今日いい時間だった」で満足できる。", strength:"場をやわらかく保つのが得意で、関係を長持ちさせる。相手の変化に気づきやすく、相談や愚痴の受け皿になれる。", weakness:"輪を壊したくなくて言いたいことを飲み込みがち。空気を優先しすぎると、後からしんどさがまとめて来る。"},
+      "がおこそ": {name:"帰り道デートモビィ", summary:"明るく社交的だけど、好きな人ができると一気に恋愛モードになるタイプ。", description:"明るく社交的だけど、好きな人ができると一気に恋愛モードになるタイプ。周りの反応や「見られ方」も気になるので、恋も学校生活もちゃんと可愛く整えたい。テンションが上がると行動が早い。", strength:"恋愛の推進力が強く、距離を縮めるのが上手い。友達の前でも自然に振る舞えて、恋の流れを作るのが得意。", weakness:"周りの視線や噂に振り回されやすい。恋がうまくいかないと、普段の明るさまで落ち込みやすい。"},
+      "がおこう": {name:"屋上ひみつ恋モビィ", summary:"恋愛が大事だけど、見せびらかすより「二人の空気」を守りたいタイプ。", description:"恋愛が大事だけど、見せびらかすより「二人の空気」を守りたいタイプ。表では明るくしていても、心の中ではかなり慎重。自分が納得できる関係じゃないと進めない。", strength:"相手への理解が深く、関係を丁寧に育てられる。周りに流されず、二人にとっての心地よさを作れる。", weakness:"不安を一人で抱え込みやすく、確認が遅れる。友達との相談が減ると、視野が狭くなることがある。"},
+      "がやみそ": {name:"プリクラ拡散モビィ", summary:"とにかく友達と盛れると最強になるタイプ。", description:"とにかく友達と盛れると最強になるタイプ。流行や写真映えに敏感で、「今この瞬間楽しい」を全力で作る。反応が良いほどテンションが跳ね上がり、企画も集合も自分から動ける。", strength:"行動力が速く、場を一気に華やかにできる。友達の気分を上げるのが上手く、イベントや写真の主導権を取れる。", weakness:"反応やノリが悪いと不機嫌になりやすい。盛りを優先しすぎると、約束や細かい配慮が抜けることがある。"},
+      "がやみう": {name:"購買前たまり場モビィ", summary:"ギャル寄りの明るさはあるけど、評価より自分のノリを優先するタイプ。", description:"ギャル寄りの明るさはあるけど、評価より自分のノリを優先するタイプ。友達と一緒にいるのは好きで、購買前みたいな「たまり場」で雑談してる時間が一番落ち着く。盛れも大事だけど、気分が最優先。", strength:"自然体で人を安心させる。付き合いが良く、誘いに乗るのも誘うのも上手いので、人間関係の回転がいい。", weakness:"気分で動くぶん、予定が雑になりやすい。興味が薄い場面では急に省エネになり、温度差が出ることがある。"},
+      "がやこそ": {name:"カップル自撮りモビィ", summary:"恋愛が生活の主役になりやすく、しかも「見せ方」までこだわるタイプ。", description:"恋愛が生活の主役になりやすく、しかも「見せ方」までこだわるタイプ。可愛く盛れること、周りにどう見えるかも大事で、恋のテンションが上がるほど発信も増える。自分から距離を詰めるのが早い。", strength:"恋愛の推進力が強く、雰囲気作りが上手い。相手を巻き込みつつ、二人の世界を明るく演出できる。", weakness:"周囲の評価に左右されやすく、比較で不安になりがち。盛りや見せ方に疲れても止まれないことがある。"},
+      "がやこう": {name:"放課後即レスモビィ", summary:"恋愛優先だけど、周りの目より「今の自分の気持ち」で動くタイプ。", description:"恋愛優先だけど、周りの目より「今の自分の気持ち」で動くタイプ。好きになると一直線で、返信や会う予定も早い。派手さは武器だけど、実は自分のテンション管理が上手く、納得できないと冷めるのも速い。", strength:"決断が早く、恋の進展スピードを作れる。自分の軸で動けるので、駆け引きよりストレートに勝てる。", weakness:"熱が上がる分、冷めると切り替えも早い。勢いで動いた後に、友達との予定や優先順位が崩れやすい。"},
+      "なおみそ": {name:"クラスアルバム映えモビィ", summary:"大人数のノリは得意じゃないけど、「ちゃんと写る場面」には強いタイプ。", description:"大人数のノリは得意じゃないけど、「ちゃんと写る場面」には強いタイプ。清楚寄りで浮かないことを意識しつつ、写真や行事では評価を落としたくない。友達との関係も大事で、外ではきちんと振る舞える。", strength:"場に合わせた立ち回りができる。控えめなのに抜け目がなく、要所ではしっかり結果を残せる。", weakness:"人の目を気にして疲れやすい。無理して合わせると、家に帰ってから反動でどっと落ちることがある。"},
+      "なおみう": {name:"図書室まったりモビィ", summary:"静かな友達関係が好きで、落ち着く空間にいると本領を出すタイプ。", description:"静かな友達関係が好きで、落ち着く空間にいると本領を出すタイプ。派手な盛りより、安心できる人とゆっくり話すのが好き。評価より自分の心地よさが基準で、無理はしない。", strength:"関係を丁寧に育てられ、信頼が深い。聞き役が上手く、相手に安心感を与えられる。", weakness:"自分から輪に入るのが遅く、誤解されやすい。気を許すまで時間がかかり、チャンスを逃すことがある。"},
+      "なおこそ": {name:"ストーリー匂わせモビィ", summary:"表では静かめなのに、恋愛になると「見せ方」が一気に増えるタイプ。", description:"表では静かめなのに、恋愛になると「見せ方」が一気に増えるタイプ。直接言うのは恥ずかしいけど、反応はほしい。清楚寄りで上品に見せたい気持ちが強く、恋の空気を周りに察してほしい。", strength:"空気感の演出が上手く、相手にも周囲にも自然に印象づけられる。控えめに見えて、恋の戦略はしっかりある。", weakness:"反応が無いと不安が増えやすい。匂わせが行き過ぎると誤解や噂を招き、疲れる原因になる。"},
+      "なおこう": {name:"ロッカー手紙モビィ", summary:"恋愛は大事だけど、周りに見せるより「自分の中で育てる」タイプ。", description:"恋愛は大事だけど、周りに見せるより「自分の中で育てる」タイプ。一対一の空気が好きで、派手さより誠実さで勝負したい。自分が納得できる形じゃないと動けず、慎重に距離を詰める。", strength:"誠実でブレにくく、関係を長期で安定させられる。相手をよく見て、丁寧に信頼を積める。", weakness:"慎重すぎてタイミングを逃しやすい。気持ちを言語化するのが遅く、相手に伝わらないまま空回りすることがある。"},
+      "なやみそ": {name:"ストーリー撮影班モビィ", summary:"盛りに全振りはしないけど、「映える瞬間」の嗅覚が強いタイプ。", description:"盛りに全振りはしないけど、「映える瞬間」の嗅覚が強いタイプ。陰寄りで静かに見えても、友達のためなら裏で動ける。反応が取れる絵を作るのが得意で、集合写真の位置や光まで考えている。", strength:"観察力が高く、雰囲気作りや撮影の段取りが上手い。表に出ずに成果を出せるので、グループの完成度を底上げできる。", weakness:"評価が取れないと急に冷めやすい。裏方に回りすぎて、自分が楽しめていないことに気づきにくい。"},
+      "なやみう": {name:"ネイルこだわりモビィ", summary:"派手さは好きだけど、見せびらかすより「自分のテンション」のために盛るタイプ。", description:"派手さは好きだけど、見せびらかすより「自分のテンション」のために盛るタイプ。陰寄りで一人時間も大事にする。ネイルや小物のこだわりは細かく、気分が上がるポイントを自分で作れる。", strength:"自分の機嫌を自分で取れる。こだわりを形にするのが上手く、ブレない世界観を作れる。", weakness:"興味がない場面では露骨に省エネになりやすい。自分の世界に入りすぎると、誘いを逃して孤立することがある。"},
+      "なやこそ": {name:"匂わせプリクラモビィ", summary:"静かめに見えて、恋愛が絡むと一気に「見せ方」が鋭くなるタイプ。", description:"静かめに見えて、恋愛が絡むと一気に「見せ方」が鋭くなるタイプ。ギャル寄りの盛りは武器だけど、目的は派手さより反応。はっきり言わないのに察してほしくて、空気の主導権を取りに行く。", strength:"演出力が高く、相手の注意を引くのが上手い。控えめな顔をしつつ、勝ち筋を作るのが得意。", weakness:"反応が薄いと不安が爆発しやすい。匂わせが誤解を生むと、友達関係や噂で消耗する。"},
+      "なやこう": {name:"放課後こっそり通話モビィ", summary:"恋愛は最優先になりやすいけど、周りに見せるより「二人の時間」を守りたいタイプ。", description:"恋愛は最優先になりやすいけど、周りに見せるより「二人の時間」を守りたいタイプ。ギャル寄りの雰囲気でも中身は意外と繊細で、雑に扱われると一気に冷める。自分の基準で関係の質を見ている。", strength:"本音の距離が近く、一対一での関係構築が強い。相手に合わせるだけでなく、自分の心地よさも守れる。", weakness:"友達への連絡や輪の維持が後回しになりやすい。恋の波で感情が振れやすく、メンタル管理が課題になることがある。"},
+    };
+
+    const STORAGE_KEY = "school_char_diag_v1";
     const PAGE_SIZE = 5; // 40問 ÷ 5問 = 8ページ
 
     const state = {
-  step: "intro", // intro | quiz | gate | result | characters
+  step: "intro", // intro | genderSelect | quiz | gate | result | characters
   page: 0,
   answers: {},
   profile: { name: "", email: "" }, // 追加
+  questionOrder: null, // 質問の順番（シャッフル済みインデックス配列）
+  gender: null, // "male" | "female"
+  interested: false, // モビィが欲しい！ボタンが押されたか
 };
 
 
     /***********************
      * Functions
      ***********************/
+    function shuffleArray(array) {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
+
+    // 性別に応じた質問・軸・キャラクターを取得
+    function getQuestions() {
+      return state.gender === "female" ? QUESTIONS_FEMALE : QUESTIONS;
+    }
+    function getAxes() {
+      return state.gender === "female" ? AXES_FEMALE : AXES;
+    }
+    function getCharacters() {
+      return state.gender === "female" ? CHARACTERS_FEMALE : CHARACTERS;
+    }
+
+    function getQuestionOrder() {
+      const questions = getQuestions();
+      // 既にシャッフル済みの順番があればそれを使用
+      if (state.questionOrder && state.questionOrder.length === questions.length) {
+        return state.questionOrder;
+      }
+      // 初回のみシャッフル
+      const indices = Array.from({ length: questions.length }, (_, i) => i);
+      state.questionOrder = shuffleArray(indices);
+      saveState();
+      return state.questionOrder;
+    }
+
+    function getShuffledQuestions() {
+      const order = getQuestionOrder();
+      const questions = getQuestions();
+      return order.map(index => questions[index]);
+    }
+
     function loadState(){
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
@@ -749,6 +1118,8 @@ function gotoDiagnosisHome(){
       state.step = "intro";
       state.page = 0;
       state.answers = {};
+      state.questionOrder = null;
+      state.gender = null;
       localStorage.removeItem(STORAGE_KEY);
       render();
     }
@@ -791,7 +1162,8 @@ function gotoDiagnosisHome(){
         return shaped; // -1..+1
       };
 
-      for(const q of QUESTIONS){
+      const questions = getQuestions();
+      for(const q of questions){
         const ansRaw = state.answers[q.id];  // 1..7
         if(!ansRaw) continue;
 
@@ -840,14 +1212,20 @@ const means = {};
       // 直線回答（同じ選択肢に偏る）検知：精度が落ちやすい
       let straightLine = false;
       if(allAnswers.length){
-        const freq = {1:0,2:0,3:0,4:0};
+        const freq = {1:0,2:0,3:0,4:0,5:0,6:0,7:0};
         allAnswers.forEach(a => freq[a]++);
         const maxF = Math.max(freq[1],freq[2],freq[3],freq[4]);
         straightLine = (maxF / allAnswers.length) >= 0.80;
       }
 
-      const code = hard.A + hard.B + hard.C + hard.D;
-      return { means, hard, code, norm, pos, leftPct, coherenceByAxis, breakdown, decisiveness, straightLine, char: CHARACTERS[code] };
+      // コード生成（性別に応じた軸とキャラクターを使用）
+      const axes = getAxes();
+      const characters = getCharacters();
+      const actualCode = (hard.A === "L" ? axes.A.leftCode : axes.A.rightCode) +
+                         (hard.B === "L" ? axes.B.leftCode : axes.B.rightCode) +
+                         (hard.C === "L" ? axes.C.leftCode : axes.C.rightCode) +
+                         (hard.D === "L" ? axes.D.leftCode : axes.D.rightCode);
+      return { means, hard, code: actualCode, norm, pos, leftPct, coherenceByAxis, breakdown, decisiveness, straightLine, char: characters[actualCode], axes };
     }
 
     // --- Rendering ---
@@ -857,6 +1235,229 @@ const means = {};
     document.getElementById("btnReset").onclick = () => {
       if(confirm("最初からやり直しますか？")) resetState();
     };
+
+    // タイプ解説モーダル
+    document.getElementById("btnTypeGuide").onclick = () => {
+      showTypeGuideModal();
+    };
+
+    function showTypeGuideModal() {
+      const modalHtml = `
+        <div class="char-modal-overlay" id="typeGuideOverlay">
+          <div class="char-modal" style="max-width:700px;">
+            <button class="char-modal-close" id="typeGuideClose">×</button>
+            <div style="text-align:center; margin-bottom:24px;">
+              <p class="kicker">TYPE CODE GUIDE</p>
+              <h2 class="big" style="font-size:22px; margin-bottom:8px;">タイプコード解説</h2>
+              <p class="text-body" style="font-size:13px;">4文字のひらがなコードは、4つの軸の傾向を表しています。</p>
+            </div>
+            
+            <div style="display:flex; gap:16px; margin-bottom:24px; flex-wrap:wrap;">
+              <button id="guideTabMale" class="primary" style="flex:1; min-width:120px; padding:10px 16px; font-size:13px;">👦 男子版</button>
+              <button id="guideTabFemale" style="flex:1; min-width:120px; padding:10px 16px; font-size:13px; background:linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%); border:2px solid #f48fb1; color:#ad1457;">👧 女子版</button>
+            </div>
+            
+            <div id="guideContent">
+              ${renderTypeGuideContent("male")}
+            </div>
+          </div>
+        </div>
+      `;
+      
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+      
+      const overlay = document.getElementById('typeGuideOverlay');
+      const closeBtn = document.getElementById('typeGuideClose');
+      
+      // タブ切り替え
+      document.getElementById('guideTabMale').onclick = () => {
+        document.getElementById('guideTabMale').className = 'primary';
+        document.getElementById('guideTabFemale').className = '';
+        document.getElementById('guideTabFemale').style.background = 'linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%)';
+        document.getElementById('guideTabFemale').style.border = '2px solid #f48fb1';
+        document.getElementById('guideTabFemale').style.color = '#ad1457';
+        document.getElementById('guideContent').innerHTML = renderTypeGuideContent("male");
+      };
+      
+      document.getElementById('guideTabFemale').onclick = () => {
+        document.getElementById('guideTabFemale').className = 'primary';
+        document.getElementById('guideTabFemale').style.background = '';
+        document.getElementById('guideTabFemale').style.border = '';
+        document.getElementById('guideTabFemale').style.color = '';
+        document.getElementById('guideTabMale').className = '';
+        document.getElementById('guideContent').innerHTML = renderTypeGuideContent("female");
+      };
+      
+      closeBtn.onclick = () => {
+        overlay.style.animation = 'fadeOut 0.2s ease forwards';
+        setTimeout(() => overlay.remove(), 200);
+      };
+      
+      overlay.onclick = (e) => {
+        if (e.target === overlay) {
+          overlay.style.animation = 'fadeOut 0.2s ease forwards';
+          setTimeout(() => overlay.remove(), 200);
+        }
+      };
+    }
+
+    function renderTypeGuideContent(gender) {
+      if (gender === "male") {
+        return `
+          <div style="display:grid; gap:16px;">
+            <div class="info-card" style="margin:0;">
+              <h3 style="color:var(--accent); margin-bottom:12px;">軸A：キャラタイプ</h3>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #2f9e73;">
+                  <div style="font-size:24px; font-weight:700; color:#2f9e73;">が</div>
+                  <div style="font-size:13px; font-weight:600; margin:4px 0;">陽キャラ</div>
+                  <div style="font-size:11px; color:var(--text-sub);">外向的・目立つ存在</div>
+                </div>
+                <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #7b5aa6;">
+                  <div style="font-size:24px; font-weight:700; color:#7b5aa6;">な</div>
+                  <div style="font-size:13px; font-weight:600; margin:4px 0;">陰キャラ</div>
+                  <div style="font-size:11px; color:var(--text-sub);">内向的・控えめ</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="info-card" style="margin:0;">
+              <h3 style="color:var(--accent); margin-bottom:12px;">軸B：雰囲気</h3>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #2f9e73;">
+                  <div style="font-size:24px; font-weight:700; color:#2f9e73;">や</div>
+                  <div style="font-size:13px; font-weight:600; margin:4px 0;">やんちゃ</div>
+                  <div style="font-size:11px; color:var(--text-sub);">見た目重視・派手</div>
+                </div>
+                <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #7b5aa6;">
+                  <div style="font-size:24px; font-weight:700; color:#7b5aa6;">お</div>
+                  <div style="font-size:13px; font-weight:600; margin:4px 0;">真面目</div>
+                  <div style="font-size:11px; color:var(--text-sub);">実用重視・落ち着き</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="info-card" style="margin:0;">
+              <h3 style="color:var(--accent); margin-bottom:12px;">軸C：行動スタイル</h3>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #2f9e73;">
+                  <div style="font-size:24px; font-weight:700; color:#2f9e73;">み</div>
+                  <div style="font-size:13px; font-weight:600; margin:4px 0;">仲間重視</div>
+                  <div style="font-size:11px; color:var(--text-sub);">グループ行動が好き</div>
+                </div>
+                <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #7b5aa6;">
+                  <div style="font-size:24px; font-weight:700; color:#7b5aa6;">こ</div>
+                  <div style="font-size:13px; font-weight:600; margin:4px 0;">個人行動重視</div>
+                  <div style="font-size:11px; color:var(--text-sub);">一人の時間が好き</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="info-card" style="margin:0;">
+              <h3 style="color:var(--accent); margin-bottom:12px;">軸D：評価基準</h3>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #2f9e73;">
+                  <div style="font-size:24px; font-weight:700; color:#2f9e73;">そ</div>
+                  <div style="font-size:13px; font-weight:600; margin:4px 0;">外（他者評価）</div>
+                  <div style="font-size:11px; color:var(--text-sub);">周りの反応が大事</div>
+                </div>
+                <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #7b5aa6;">
+                  <div style="font-size:24px; font-weight:700; color:#7b5aa6;">う</div>
+                  <div style="font-size:13px; font-weight:600; margin:4px 0;">内（自己基準）</div>
+                  <div style="font-size:11px; color:var(--text-sub);">自分の納得が大事</div>
+                </div>
+              </div>
+            </div>
+            
+            <div style="background:#f0f0f5; padding:16px; border-radius:12px; margin-top:8px;">
+              <div style="font-size:13px; font-weight:600; margin-bottom:8px;">💡 コードの読み方</div>
+              <div style="font-size:12px; color:var(--text-sub); line-height:1.6;">
+                例：<span style="font-family:monospace; background:#fff; padding:2px 8px; border-radius:6px; font-weight:600;">がやみそ</span><br>
+                → 陽キャラ(が) + やんちゃ(や) + 仲間重視(み) + 外評価(そ)<br>
+                → 文化祭センターステージモビィ
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        return `
+          <div style="display:grid; gap:16px;">
+            <div class="info-card" style="margin:0;">
+              <h3 style="color:#ec407a; margin-bottom:12px;">軸A：キャラタイプ</h3>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #2f9e73;">
+                  <div style="font-size:24px; font-weight:700; color:#2f9e73;">が</div>
+                  <div style="font-size:13px; font-weight:600; margin:4px 0;">陽キャラ</div>
+                  <div style="font-size:11px; color:var(--text-sub);">外向的・にぎやか</div>
+                </div>
+                <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #7b5aa6;">
+                  <div style="font-size:24px; font-weight:700; color:#7b5aa6;">な</div>
+                  <div style="font-size:13px; font-weight:600; margin:4px 0;">陰キャラ</div>
+                  <div style="font-size:11px; color:var(--text-sub);">内向的・一人時間も好き</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="info-card" style="margin:0;">
+              <h3 style="color:#ec407a; margin-bottom:12px;">軸B：雰囲気</h3>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #2f9e73;">
+                  <div style="font-size:24px; font-weight:700; color:#2f9e73;">お</div>
+                  <div style="font-size:13px; font-weight:600; margin:4px 0;">清楚</div>
+                  <div style="font-size:11px; color:var(--text-sub);">ナチュラル・落ち着き</div>
+                </div>
+                <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #7b5aa6;">
+                  <div style="font-size:24px; font-weight:700; color:#7b5aa6;">や</div>
+                  <div style="font-size:13px; font-weight:600; margin:4px 0;">ギャル</div>
+                  <div style="font-size:11px; color:var(--text-sub);">盛り・派手好き</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="info-card" style="margin:0;">
+              <h3 style="color:#ec407a; margin-bottom:12px;">軸C：関係性</h3>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #2f9e73;">
+                  <div style="font-size:24px; font-weight:700; color:#2f9e73;">み</div>
+                  <div style="font-size:13px; font-weight:600; margin:4px 0;">友達優先</div>
+                  <div style="font-size:11px; color:var(--text-sub);">友達との時間が大事</div>
+                </div>
+                <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #7b5aa6;">
+                  <div style="font-size:24px; font-weight:700; color:#7b5aa6;">こ</div>
+                  <div style="font-size:13px; font-weight:600; margin:4px 0;">恋愛優先</div>
+                  <div style="font-size:11px; color:var(--text-sub);">恋愛が中心になりやすい</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="info-card" style="margin:0;">
+              <h3 style="color:#ec407a; margin-bottom:12px;">軸D：評価基準</h3>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #2f9e73;">
+                  <div style="font-size:24px; font-weight:700; color:#2f9e73;">そ</div>
+                  <div style="font-size:13px; font-weight:600; margin:4px 0;">評価重視</div>
+                  <div style="font-size:11px; color:var(--text-sub);">周りの反応が大事</div>
+                </div>
+                <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #7b5aa6;">
+                  <div style="font-size:24px; font-weight:700; color:#7b5aa6;">う</div>
+                  <div style="font-size:13px; font-weight:600; margin:4px 0;">自分基準</div>
+                  <div style="font-size:11px; color:var(--text-sub);">自分の納得が大事</div>
+                </div>
+              </div>
+            </div>
+            
+            <div style="background:#fce4ec; padding:16px; border-radius:12px; margin-top:8px;">
+              <div style="font-size:13px; font-weight:600; margin-bottom:8px; color:#ad1457;">💡 コードの読み方</div>
+              <div style="font-size:12px; color:var(--text-sub); line-height:1.6;">
+                例：<span style="font-family:monospace; background:#fff; padding:2px 8px; border-radius:6px; font-weight:600;">がおみそ</span><br>
+                → 陽キャラ(が) + 清楚(お) + 友達優先(み) + 評価重視(そ)<br>
+                → 文化祭広報モビィ
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
 
     // Navigation handlers
     document.getElementById("logoHome").onclick = () => {
@@ -868,9 +1469,17 @@ const means = {};
       render();
     };
     document.getElementById("navDiagnosis").onclick = (e) => {
-  e.preventDefault();
-  gotoDiagnosisHome();
-};
+      e.preventDefault();
+      // 回答が完了している場合は結果画面を表示
+      const answered = Object.keys(state.answers).length;
+      const questions = getQuestions();
+      if(answered >= questions.length) {
+        state.step = "result";
+        render();
+      } else {
+        gotoDiagnosisHome();
+      }
+    };
 
     document.getElementById("navCharacters").onclick = (e) => {
       e.preventDefault();
@@ -879,7 +1488,7 @@ const means = {};
     };
 
     function updateNavActive() {
-      const isDiagnosis = ["intro", "quiz", "gate", "result"].includes(state.step);
+      const isDiagnosis = ["intro", "genderSelect", "quiz", "gate", "result"].includes(state.step);
       document.getElementById("navDiagnosis").classList.toggle("active", isDiagnosis);
       document.getElementById("navCharacters").classList.toggle("active", state.step === "characters");
     }
@@ -888,6 +1497,7 @@ const means = {};
       window.scrollTo(0,0);
       updateNavActive();
       if(state.step === "intro") renderIntro();
+      else if(state.step === "genderSelect") renderGenderSelect();
       else if(state.step === "quiz") renderQuiz();
       else if(state.step === "gate") renderGate();
       else if(state.step === "characters") renderCharacters();
@@ -896,52 +1506,99 @@ const means = {};
 
     function renderIntro(){
       const count = Object.keys(state.answers).length;
+      const totalQ = state.gender ? getQuestions().length : 40; // 性別選択前は40問と表示
+      const genderLabel = state.gender === "female" ? "（女子版）" : state.gender === "male" ? "（男子版）" : "";
       app.innerHTML = `
         <div class="panel fade-in" style="text-align:center; padding: 60px 20px;">
-          <p class="kicker">就活自己分析</p>
-          <h2 class="big">あなたの「持ち味」を<br>4つの軸で言語化します。</h2>
+          <p class="kicker">学校キャラ診断</p>
+          <h2 class="big">あなたのキャラクターを<br>4つの軸で診断します。</h2>
           <p class="text-body" style="max-width:400px; margin:0 auto 30px;">
-            直感で選ぶ40問の質問から、あなたの強みが活きる環境や、ES・面接でのアピール方法を提案します。
+            直感で選ぶ${totalQ}問の質問から、あなたの学校でのキャラクタータイプを16種類から診断します。
           </p>
           <button class="primary" id="btnStart" style="padding:16px 32px; font-size:16px;">
             ${count > 0 ? "診断を再開する" : "診断をはじめる"}
           </button>
-          ${count > 0 ? `<p style="font-size:12px; color:#86868b; margin-top:16px;">${count} / 40問 回答済み</p>` : ""}
-        </div>
-        
-        <div class="card-grid">
-          <div class="info-card">
-            <h3>情報収集のスタイル</h3>
-            <div class="text-body" style="font-size:12px;">自分で読み込む vs 人と話す</div>
-          </div>
-          <div class="info-card">
-            <h3>好む環境</h3>
-            <div class="text-body" style="font-size:12px;">安定・仕組み vs 変化・カオス</div>
-          </div>
-          <div class="info-card">
-            <h3>モチベーション</h3>
-            <div class="text-body" style="font-size:12px;">意義・共感 vs 合理・成果</div>
-          </div>
-          <div class="info-card">
-            <h3>仕事の進め方</h3>
-            <div class="text-body" style="font-size:12px;">計画的 vs 臨機応変</div>
-          </div>
+          ${count > 0 ? `<p style="font-size:12px; color:#86868b; margin-top:16px;">${count} / ${totalQ}問 回答済み${genderLabel}</p>` : ""}
         </div>
       `;
       document.getElementById("btnStart").onclick = () => {
+        // 既に性別が選択済みで回答がある場合は直接quizへ
+        if(state.gender && Object.keys(state.answers).length > 0) {
+          state.step = "quiz";
+          getQuestionOrder();
+          const shuffledQs = getShuffledQuestions();
+          const idx = shuffledQs.findIndex(q => !state.answers[q.id]);
+          state.page = idx >= 0 ? Math.floor(idx / PAGE_SIZE) : 0;
+        } else {
+          // 性別選択画面へ
+          state.step = "genderSelect";
+        }
+        render();
+      };
+    }
+
+    function renderGenderSelect(){
+      app.innerHTML = `
+        <div class="panel fade-in" style="text-align:center; padding: 60px 20px;">
+          <p class="kicker">STEP 1</p>
+          <h2 class="big">あなたの性別を選んでください</h2>
+          <p class="text-body" style="max-width:400px; margin:0 auto 40px;">
+            男子版・女子版で異なるキャラクタータイプを診断します。
+          </p>
+          
+          <div style="display:flex; gap:20px; justify-content:center; flex-wrap:wrap; max-width:500px; margin:0 auto;">
+            <button id="btnMale" class="primary" style="flex:1; min-width:180px; padding:24px 32px; font-size:18px; display:flex; flex-direction:column; align-items:center; gap:8px;">
+              <span style="font-size:36px;">👦</span>
+              <span>男子版</span>
+            </button>
+            <button id="btnFemale" style="flex:1; min-width:180px; padding:24px 32px; font-size:18px; display:flex; flex-direction:column; align-items:center; gap:8px; background:linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%); border:2px solid #f48fb1; color:#ad1457;">
+              <span style="font-size:36px;">👧</span>
+              <span>女子版</span>
+            </button>
+          </div>
+          
+          <button id="btnGenderBack" style="margin-top:30px; color:#86868b; background:transparent;">戻る</button>
+        </div>
+      `;
+      
+      document.getElementById("btnMale").onclick = () => {
+        state.gender = "male";
         state.step = "quiz";
+        // 質問の順番を確定（初回のみシャッフル）
+        getQuestionOrder();
         // 未回答の最初のページへ
-        const idx = QUESTIONS.findIndex(q => !state.answers[q.id]);
+        const shuffledQs = getShuffledQuestions();
+        const idx = shuffledQs.findIndex(q => !state.answers[q.id]);
         state.page = idx >= 0 ? Math.floor(idx / PAGE_SIZE) : 0;
+        saveState();
+        render();
+      };
+      
+      document.getElementById("btnFemale").onclick = () => {
+        state.gender = "female";
+        state.step = "quiz";
+        // 質問の順番を確定（初回のみシャッフル）
+        getQuestionOrder();
+        // 未回答の最初のページへ
+        const shuffledQs = getShuffledQuestions();
+        const idx = shuffledQs.findIndex(q => !state.answers[q.id]);
+        state.page = idx >= 0 ? Math.floor(idx / PAGE_SIZE) : 0;
+        saveState();
+        render();
+      };
+      
+      document.getElementById("btnGenderBack").onclick = () => {
+        state.step = "intro";
         render();
       };
     }
 
     function renderQuiz(){
+      const shuffledQs = getShuffledQuestions();
       const start = state.page * PAGE_SIZE;
-      const currentQs = QUESTIONS.slice(start, start + PAGE_SIZE);
-      const totalPage = Math.ceil(QUESTIONS.length / PAGE_SIZE);
-      const progress = Math.round((Object.keys(state.answers).length / QUESTIONS.length) * 100);
+      const currentQs = shuffledQs.slice(start, start + PAGE_SIZE);
+      const totalPage = Math.ceil(shuffledQs.length / PAGE_SIZE);
+      const progress = Math.round((Object.keys(state.answers).length / shuffledQs.length) * 100);
 
       const qHtml = currentQs.map((q, i) => {
         const val = state.answers[q.id];
@@ -1005,7 +1662,8 @@ const means = {};
             saveState();
 
             // プログレスバーだけ更新
-            const p = Math.round((Object.keys(state.answers).length / QUESTIONS.length) * 100);
+            const shuffledQs = getShuffledQuestions();
+            const p = Math.round((Object.keys(state.answers).length / shuffledQs.length) * 100);
             document.querySelector(".progress-fill").style.width = p + "%";
             document.querySelector(".progress-meta span:last-child").innerText = p + "%";
           };
@@ -1027,7 +1685,13 @@ document.getElementById("btnPrev").onclick = () => {
           state.page++;
           render();
         } else {
-          state.step = "gate";
+          // クイズ完了時: ローカル環境または登録済みの場合は直接結果へ
+          if(isRegistered()){
+            console.log('[DEBUG] 登録済みまたはローカル環境: 結果画面へ直接遷移');
+            state.step = "result";
+          } else {
+            state.step = "gate";
+          }
           render();
         }
       };
@@ -1060,10 +1724,51 @@ document.getElementById("btnPrev").onclick = () => {
   }
 }
 
+async function submitInterest(){
+  // 既に登録済みかチェック
+  if(!state.profile || !state.profile.email){
+    alert("先に診断を完了してください");
+    return;
+  }
+
+  const res = computeResult();
+  const questions = getQuestions();
+  const questionAnswers = {};
+  questions.forEach(q => {
+    if (state.answers[q.id]) {
+      questionAnswers[q.id] = state.answers[q.id];
+    }
+  });
+
+  const payload = {
+    name: state.profile.name,
+    email: state.profile.email,
+    type: res.code,
+    axes: res.leftPct,
+    answers: questionAnswers,
+    gender: state.gender,
+    interested: true,  // 興味ありフラグ
+    createdAt: new Date().toISOString(),
+  };
+
+  console.log("[Interest] Submitting interest:", payload);
+  await submitLead(payload);
+}
+
 function renderGate(){
+  // ローカル環境または登録済みの場合は直接結果へ
+  if(isRegistered()){
+    console.log('[DEBUG] renderGate: 登録済みまたはローカル環境のため結果画面へ');
+    state.step = "result";
+    saveState();
+    render();
+    return;
+  }
+
   // 回答が揃ってる前提だが、念のため
   const answered = Object.keys(state.answers).length;
-  if(answered < QUESTIONS.length){
+  const shuffledQs = getShuffledQuestions();
+  if(answered < shuffledQs.length){
     state.step = "quiz";
     saveState();
     render();
@@ -1077,7 +1782,7 @@ function renderGate(){
       <p class="kicker">結果の閲覧には登録が必要です</p>
       <h2 class="big">名前とメールアドレスを入力してください</h2>
       <p class="text-body" style="margin-top:-6px;">
-        入力後すぐに診断結果を表示します。
+        入力後すぐにあなたのキャラクタータイプを表示します。
       </p>
 
       <div style="margin-top:22px; display:grid; gap:12px; max-width:520px;">
@@ -1142,12 +1847,23 @@ function renderGate(){
     btn.textContent = "送信中…";
 
     try{
+      // 各質問の回答データを整形（質問ID -> 回答値のマッピング）
+      const questionAnswers = {};
+      const questions = getQuestions();
+      questions.forEach(q => {
+        if (state.answers[q.id]) {
+          questionAnswers[q.id] = state.answers[q.id];
+        }
+      });
+
       // 送信データ（必要に応じて増減）
       const payload = {
         name,
         email,
         type: res.code,
         axes: res.leftPct,   // A,B,C,Dが0..100
+        answers: questionAnswers,  // 各質問の回答（Q1:3, Q2:5, ...）
+        gender: state.gender,  // "male" または "female"
         createdAt: new Date().toISOString(),
       };
 
@@ -1167,19 +1883,35 @@ function renderGate(){
   };
 }
 
+    // キャラ一覧の性別選択状態（ページ内のみ、localStorageには保存しない）
+    let charListGender = "male";
+
+    // 画像パスを取得する関数
+    function getImagePath(code, isFemale) {
+      if (isFemale) {
+        const imgCode = CODE_TO_IMAGE_FEMALE[code];
+        return imgCode ? `cha/${imgCode}.jpg` : '';
+      } else {
+        const imgCode = CODE_TO_IMAGE[code];
+        return imgCode ? `cha/${imgCode}.jpg` : '';
+      }
+}
+
     function renderCharacters(){
-      const charKeys = Object.keys(CHARACTERS).sort();
+      const characters = charListGender === "female" ? CHARACTERS_FEMALE : CHARACTERS;
+      const charKeys = Object.keys(characters).sort();
       const charHtml = charKeys.map(code => {
-        const char = CHARACTERS[code];
+        const char = characters[code];
+        const imgPath = getImagePath(code, charListGender === "female");
         return `
           <div class="char-card fade-in">
             <div class="char-card-image">
-              <img src="cha/${code.toLowerCase()}.png" alt="${char.name}" onerror="this.parentElement.style.background='#f0f0f5'; this.parentElement.innerHTML='<div style=\\'display:flex;align-items:center;justify-content:center;height:100%;color:#86868b;font-size:12px;\\'>画像なし</div>';">
+              <img src="${imgPath}" alt="${char.name}" onerror="this.parentElement.style.background='#f0f0f5'; this.parentElement.innerHTML='<div style=\\'display:flex;align-items:center;justify-content:center;height:100%;color:#86868b;font-size:12px;\\'>画像なし</div>';">
             </div>
             <div class="char-card-type">TYPE: ${code}</div>
             <h3 class="char-card-name">${char.name}</h3>
             <p class="char-card-desc">${char.description}</p>
-            <button class="char-card-detail-btn primary" data-char-code="${code}">詳細</button>
+            <button class="char-card-detail-btn primary" data-char-code="${code}" data-gender="${charListGender}">詳細</button>
           </div>
         `;
       }).join("");
@@ -1188,32 +1920,61 @@ function renderGate(){
         <div class="panel fade-in">
           <p class="kicker">全16タイプ</p>
           <h2 class="big">キャラクター一覧</h2>
-          <p class="text-body" style="margin-bottom:0;">
+          <p class="text-body" style="margin-bottom:20px;">
             4つの軸の組み合わせで生まれる、16種類のキャラクタータイプをご紹介します。
           </p>
+          
+          <div style="display:flex; gap:12px; justify-content:center;">
+            <button id="charListMale" class="${charListGender === 'male' ? 'primary' : ''}" style="padding:12px 24px; font-size:14px; display:flex; align-items:center; gap:6px;">
+              <span>👦</span>
+              <span>男子版</span>
+            </button>
+            <button id="charListFemale" class="${charListGender === 'female' ? 'primary' : ''}" style="padding:12px 24px; font-size:14px; display:flex; align-items:center; gap:6px; ${charListGender === 'female' ? 'background:linear-gradient(135deg, #ec407a 0%, #f48fb1 100%); border-color:#ec407a;' : 'background:linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%); border:2px solid #f48fb1; color:#ad1457;'}">
+              <span>👧</span>
+              <span>女子版</span>
+            </button>
         </div>
+        </div>
+        
         <div class="char-grid">
           ${charHtml}
         </div>
       `;
 
+      // 性別切り替えボタンのイベントリスナー
+      document.getElementById("charListMale").onclick = () => {
+        if(charListGender !== "male") {
+          charListGender = "male";
+          renderCharacters();
+        }
+      };
+      document.getElementById("charListFemale").onclick = () => {
+        if(charListGender !== "female") {
+          charListGender = "female";
+          renderCharacters();
+        }
+      };
+
       // 詳細ボタンのイベントリスナー
       document.querySelectorAll('.char-card-detail-btn').forEach(btn => {
         btn.onclick = () => {
           const code = btn.dataset.charCode;
-          showCharDetail(code);
+          const gender = btn.dataset.gender;
+          showCharDetail(code, gender);
         };
       });
     }
 
-    function showCharDetail(code) {
-      const char = CHARACTERS[code];
+    function showCharDetail(code, gender = "male") {
+      const characters = gender === "female" ? CHARACTERS_FEMALE : CHARACTERS;
+      const char = characters[code];
+      const imgPath = getImagePath(code, gender === "female");
       const modalHtml = `
         <div class="char-modal-overlay" id="charModalOverlay">
           <div class="char-modal">
             <button class="char-modal-close" id="charModalClose">×</button>
             <div class="char-modal-image">
-              <img src="cha/${code.toLowerCase()}.png" alt="${char.name}" onerror="this.parentElement.style.background='#f0f0f5'; this.parentElement.innerHTML='<div style=\\'display:flex;align-items:center;justify-content:center;height:100%;color:#86868b;\\'>画像なし</div>';">
+              <img src="${imgPath}" alt="${char.name}" onerror="this.parentElement.style.background='#f0f0f5'; this.parentElement.innerHTML='<div style=\\'display:flex;align-items:center;justify-content:center;height:100%;color:#86868b;\\'>画像なし</div>';">
             </div>
             <div style="text-align:center;">
               <div class="char-modal-type">TYPE: ${code}</div>
@@ -1245,20 +2006,42 @@ function renderGate(){
     function renderResult(){
       const res = computeResult();
       const char = res.char;
+      const isFemale = state.gender === "female";
       
-      // ES・面接アドバイスの生成
+      // 学校生活アドバイスの生成（性別に応じて変更）
       const isL = (k) => res.hard[k] === "L";
-      const esTip = isL("C") 
-        ? "「なぜやるか（原体験・価値観）」を中心に添え、共感を生むストーリーで構成する。"
-        : "「どう成果を出すか（課題・解決策・結果）」を数値や比較を用いて論理的に構成する。";
-        
-      const interviewTip = isL("D")
-        ? "結論ファーストに加え、プロセス（工夫した点・判断基準）を丁寧に話すと信頼されやすい。"
-        : "臨機応変な対応力をアピール。想定外のトラブルをどう乗り越えたかを楽しそうに話す。";
-
-      const oneStep = isL("A")
-        ? "採用サイト/IR/社員インタビューを読み、刺さったキーワードを3つメモする。"
-        : "OB訪問・説明会・SNSのDM等で、1人に“質問を1つ”投げて会話を作る。";
+      
+      let situationTip, styleTip, teamTip, motivationTip;
+      
+      if (isFemale) {
+        // 女子版アドバイス
+        situationTip = isL("A") 
+          ? "大勢で盛り上がる場面で力を発揮しやすい。みんなで楽しむイベントや集まりで輝ける。"
+          : "少人数での深い関わりや一人の時間を大切にすると良い。無理に輪に入らなくても大丈夫。";
+        styleTip = isL("B")
+          ? "落ち着いた雰囲気や自然体を大切にすることで、周囲からの信頼を得やすい。"
+          : "おしゃれや見た目を楽しむことで気分が上がる。自分らしいスタイルを追求して。";
+        teamTip = isL("C")
+          ? "友達との時間を大切にすることで安心感が得られ、毎日が充実する。"
+          : "恋愛に真剣に向き合えるタイプ。大切な人との時間を優先しても良い。";
+        motivationTip = isL("D")
+          ? "周りからの反応や評価がエネルギーになる。SNSや発信で力を発揮できる。"
+          : "自分の基準で納得できることを優先する。人の評価に左右されすぎないことが強み。";
+      } else {
+        // 男子版アドバイス
+        situationTip = isL("A") 
+        ? "大勢で盛り上がる場面で力を発揮しやすい。イベントやグループ活動で輝ける。"
+        : "少人数での深い関わりや一人の時間を大切にすると良い。無理に前に出なくても大丈夫。";
+        styleTip = isL("B")
+        ? "見た目や印象を大切にし、自分らしさを表現することでより楽しめる。"
+        : "ルールや秩序を守り、計画的に行動することで信頼を得られる。";
+        teamTip = isL("C")
+        ? "友達と一緒に行動することで安心感が得られ、力を発揮しやすい。"
+        : "一人の時間を確保し、自分のペースで行動することが大切。";
+        motivationTip = isL("D")
+        ? "周りからの評価や反応がモチベーションになる。結果を見せる場面を作ると良い。"
+        : "自分の基準で納得できることを優先する。人の評価に左右されすぎないことが強み。";
+      }
 
       app.innerHTML = `
         <div class="panel fade-in">
@@ -1271,20 +2054,20 @@ function renderGate(){
             </p>` : ``}
 
             
-            <div class="char-image-placeholder">
-               <img src="cha/${res.code.toLowerCase()}.png" alt="${char.name}" onerror="this.style.display='none'; this.parentElement.querySelector('span').style.display='block';">
-               <span style="display:none;">ここにキャラクター画像が入ります</span> 
-            </div>
-            
-            <div style="display:inline-block; background:#f0f0f5; padding:6px 16px; border-radius:20px; font-size:12px; font-family:monospace; color:#86868b;">
-              TYPE: ${res.code}
-            </div>
+             <div class="char-image-placeholder">
+                <img src="${getImagePath(res.code, isFemale)}" alt="${char.name}" onerror="this.style.display='none'; this.parentElement.querySelector('span').style.display='block';">
+                <span style="display:none;">ここにキャラクター画像が入ります</span> 
+             </div>
+             
+             <div style="display:inline-block; background:#f0f0f5; padding:6px 16px; border-radius:20px; font-size:12px; font-family:monospace; color:#86868b;">
+               TYPE: ${res.code}
+             </div>
           </div>
 
           <div style="margin-top:40px;">
             <p class="kicker" style="margin-bottom:16px;">4つの軸の傾向</p>
             ${["A","B","C","D"].map(k => {
-              const ax = AXES[k];
+              const ax = res.axes[k];
               const left = res.leftPct[k];
               const right = 100 - left;
               const coh = Math.round((res.coherenceByAxis[k] || 0) * 100);
@@ -1308,34 +2091,73 @@ function renderGate(){
                     <span>一貫度 ${coh}%</span>
                     <span>${ax.right} ${right}%</span>
                   </div>
-                  <details class="axis-details">
-                    <summary>内訳を見る</summary>
-                    <div class="axis-breakdown">${rows}</div>
-                  </details>
                 </div>
               `;
             }).join("")}
           </div>
         </div>
 
+        <div class="panel fade-in" style="margin-top:40px;">
+          <p class="kicker" style="margin-bottom:16px;">キャラクター解説</p>
+          <p class="text-body" style="font-size:15px; line-height:1.8; margin:0;">${char.description}</p>
+        </div>
+
+        <div style="margin-top:24px;">
+          <div class="panel fade-in" style="animation-delay:0.1s;">
+            <p class="kicker" style="margin-bottom:16px;">あなたの長所</p>
+            <p class="text-body" style="font-size:15px; line-height:1.8; margin:0;">${char.strength}</p>
+          </div>
+          <div class="panel fade-in" style="animation-delay:0.15s; margin-top:24px;">
+            <p class="kicker" style="margin-bottom:16px;">あなたの短所</p>
+            <p class="text-body" style="font-size:15px; line-height:1.8; margin:0;">${char.weakness}</p>
+          </div>
+        </div>
+
         <div class="card-grid fade-in" style="animation-delay:0.2s;">
           <div class="info-card">
-            <h3>📝 ESの書き方</h3>
-            <p class="text-body">${esTip}</p>
+            <h3>🎭 活躍する場面</h3>
+            <p class="text-body">${situationTip}</p>
           </div>
           <div class="info-card">
-            <h3>🗣 面接のヒント</h3>
-            <p class="text-body">${interviewTip}</p>
+            <h3>✨ スタイルの特徴</h3>
+            <p class="text-body">${styleTip}</p>
           </div>
           <div class="info-card">
-            <h3>💡 今日の一歩</h3>
-            <p class="text-body">${oneStep}</p>
+            <h3>👥 人との関わり方</h3>
+            <p class="text-body">${teamTip}</p>
           </div>
           <div class="info-card">
-            <h3>🏢 合う環境の傾向</h3>
-            <p class="text-body">
-              ${isL("B") ? "役割や評価制度が整った、安定してスキルを磨ける環境。" : "変化が激しく、自分の裁量でルールを作っていける環境。"}
+            <h3>💪 モチベーション</h3>
+            <p class="text-body">${motivationTip}</p>
+          </div>
+        </div>
+        
+        <div class="panel fade-in" style="text-align:center; margin-top:40px; animation-delay:0.25s; background:linear-gradient(135deg, #fff8e8 0%, #fffbf0 100%); border:2px solid var(--accent);">
+          <p class="kicker" style="color:var(--accent);">このキャラクターに興味がありますか？</p>
+          <h3 style="font-size:20px; margin:12px 0; color:var(--text-main);">
+            ${char.name}のぬいぐるみが欲しい！
+          </h3>
+          <p class="text-body" style="font-size:13px; margin-bottom:20px;">
+            ボタンを押すと、あなたの興味を記録して今後の制作の参考にします。
+          </p>
+          <button id="btnInterest" class="primary" style="padding:16px 32px; font-size:16px; ${state.interested ? 'background:#34c759; border-color:#34c759;' : ''}">
+            ${state.interested ? '✓ 興味を送信しました！' : '🎁 このモビィが欲しい！'}
+          </button>
+          <div id="interestFeedback" style="display:none; margin-top:16px; padding:12px; background:#e8f5e9; border-radius:12px; color:#2e7d32; font-size:13px; font-weight:600;">
+            ✓ ありがとうございます！あなたの興味を記録しました。
+          </div>
+          
+          <!-- 興味を示した人にだけ表示される抽選予約ボタン -->
+          <div id="reservationButtonArea" style="display:${state.interested ? 'block' : 'none'}; margin-top:24px; padding-top:24px; border-top:1px solid rgba(0,0,0,0.08);">
+            <p class="text-body" style="font-size:14px; margin-bottom:16px; color:var(--text-main); font-weight:600;">
+              🎉 無料抽選に参加しませんか？
             </p>
+            <p class="text-body" style="font-size:12px; margin-bottom:20px; color:var(--text-sub);">
+              抽選に当たったら、当選の手紙を送ります。<br>住所を登録して予約してください。
+            </p>
+            <button id="btnReservation" class="primary" style="padding:14px 28px; font-size:15px; background:linear-gradient(135deg, #f6d49c 0%, #f0c87f 100%); border-color:#f0c87f; color:#6b5d3f;">
+              📝 抽選予約ページへ
+            </button>
           </div>
         </div>
         
@@ -1343,6 +2165,64 @@ function renderGate(){
            <button id="btnBack" style="color:#86868b; background:transparent;">回答を見直す</button>
         </div>
       `;
+
+      // 興味ボタンのイベントリスナー
+      document.getElementById("btnInterest").onclick = async () => {
+        if(state.interested){
+          return; // 既に押されている場合は何もしない
+        }
+        
+        const btn = document.getElementById("btnInterest");
+        const feedback = document.getElementById("interestFeedback");
+        const reservationArea = document.getElementById("reservationButtonArea");
+        
+        btn.disabled = true;
+        btn.textContent = "送信中...";
+        
+        try {
+          await submitInterest();
+          
+          // 成功時の処理
+          state.interested = true;
+          saveState();
+          
+          btn.textContent = "✓ 興味を送信しました！";
+          btn.style.background = "#34c759";
+          btn.style.borderColor = "#34c759";
+          btn.style.boxShadow = "0 4px 12px rgba(52,199,89,0.25)";
+          
+          feedback.style.display = "block";
+          feedback.style.animation = "fadeIn 0.4s ease forwards";
+          
+          // 予約ボタンエリアを表示
+          if(reservationArea){
+            reservationArea.style.display = "block";
+            reservationArea.style.animation = "fadeIn 0.6s ease forwards";
+          }
+          
+          // 3秒後にフィードバックをフェードアウト
+          setTimeout(() => {
+            feedback.style.animation = "fadeOut 0.4s ease forwards";
+            setTimeout(() => {
+              feedback.style.display = "none";
+            }, 400);
+          }, 3000);
+          
+        } catch(e) {
+          alert("送信に失敗しました: " + (e?.message || "不明なエラー"));
+          btn.disabled = false;
+          btn.textContent = "🎁 このモビィが欲しい！";
+        }
+      };
+      
+      // 抽選予約ボタンのイベントリスナー
+      const reservationBtn = document.getElementById("btnReservation");
+      if(reservationBtn){
+        reservationBtn.onclick = () => {
+          // ルートページの抽選予約ポップアップを開くためにパラメータ付きでページ遷移
+          window.location.href = "../index.html?openPricePopup=true#price";
+        };
+      }
 
       document.getElementById("btnBack").onclick = () => {
         state.step = "quiz";
