@@ -725,7 +725,24 @@
   return Object.keys(state.answers || {}).length >= questions.length;
 }
 function isRegistered(){
-  return !!(state.profile && state.profile.name && state.profile.email);
+  // ローカル環境（localhost または 127.0.0.1）の場合は自動的にスキップ
+  const hostname = window.location.hostname;
+  const protocol = window.location.protocol;
+  const isLocal = hostname === 'localhost' || 
+                  hostname === '127.0.0.1' ||
+                  hostname === '' ||
+                  protocol === 'file:';
+  
+  console.log('[DEBUG] isRegistered check:', { hostname, protocol, isLocal });
+  
+  if (isLocal) {
+    console.log('[DEBUG] ローカル環境検出: 登録画面をスキップします');
+    return true; // ローカル環境では登録画面をスキップ
+  }
+  
+  const hasProfile = !!(state.profile && state.profile.name && state.profile.email);
+  console.log('[DEBUG] プロフィール確認:', hasProfile, state.profile);
+  return hasProfile;
 }
 function gotoDiagnosisHome(){
   // 完了&登録済みなら結果へ、それ以外はintroへ
@@ -1042,6 +1059,7 @@ function gotoDiagnosisHome(){
   profile: { name: "", email: "" }, // 追加
   questionOrder: null, // 質問の順番（シャッフル済みインデックス配列）
   gender: null, // "male" | "female"
+  interested: false, // モビィが欲しい！ボタンが押されたか
 };
 
 
@@ -1667,7 +1685,13 @@ document.getElementById("btnPrev").onclick = () => {
           state.page++;
           render();
         } else {
-          state.step = "gate";
+          // クイズ完了時: ローカル環境または登録済みの場合は直接結果へ
+          if(isRegistered()){
+            console.log('[DEBUG] 登録済みまたはローカル環境: 結果画面へ直接遷移');
+            state.step = "result";
+          } else {
+            state.step = "gate";
+          }
           render();
         }
       };
@@ -1700,7 +1724,47 @@ document.getElementById("btnPrev").onclick = () => {
   }
 }
 
+async function submitInterest(){
+  // 既に登録済みかチェック
+  if(!state.profile || !state.profile.email){
+    alert("先に診断を完了してください");
+    return;
+  }
+
+  const res = computeResult();
+  const questions = getQuestions();
+  const questionAnswers = {};
+  questions.forEach(q => {
+    if (state.answers[q.id]) {
+      questionAnswers[q.id] = state.answers[q.id];
+    }
+  });
+
+  const payload = {
+    name: state.profile.name,
+    email: state.profile.email,
+    type: res.code,
+    axes: res.leftPct,
+    answers: questionAnswers,
+    gender: state.gender,
+    interested: true,  // 興味ありフラグ
+    createdAt: new Date().toISOString(),
+  };
+
+  console.log("[Interest] Submitting interest:", payload);
+  await submitLead(payload);
+}
+
 function renderGate(){
+  // ローカル環境または登録済みの場合は直接結果へ
+  if(isRegistered()){
+    console.log('[DEBUG] renderGate: 登録済みまたはローカル環境のため結果画面へ');
+    state.step = "result";
+    saveState();
+    render();
+    return;
+  }
+
   // 回答が揃ってる前提だが、念のため
   const answered = Object.keys(state.answers).length;
   const shuffledQs = getShuffledQuestions();
@@ -2068,10 +2132,68 @@ function renderGate(){
           </div>
         </div>
         
+        <div class="panel fade-in" style="text-align:center; margin-top:40px; animation-delay:0.25s; background:linear-gradient(135deg, #fff8e8 0%, #fffbf0 100%); border:2px solid var(--accent);">
+          <p class="kicker" style="color:var(--accent);">このキャラクターに興味がありますか？</p>
+          <h3 style="font-size:20px; margin:12px 0; color:var(--text-main);">
+            ${char.name}のぬいぐるみが欲しい！
+          </h3>
+          <p class="text-body" style="font-size:13px; margin-bottom:20px;">
+            ボタンを押すと、あなたの興味を記録して今後の制作の参考にします。
+          </p>
+          <button id="btnInterest" class="primary" style="padding:16px 32px; font-size:16px; ${state.interested ? 'background:#34c759; border-color:#34c759;' : ''}">
+            ${state.interested ? '✓ 興味を送信しました！' : '🎁 このモビィが欲しい！'}
+          </button>
+          <div id="interestFeedback" style="display:none; margin-top:16px; padding:12px; background:#e8f5e9; border-radius:12px; color:#2e7d32; font-size:13px; font-weight:600;">
+            ✓ ありがとうございます！あなたの興味を記録しました。
+          </div>
+        </div>
+        
         <div style="text-align:center; margin-top:40px;">
            <button id="btnBack" style="color:#86868b; background:transparent;">回答を見直す</button>
         </div>
       `;
+
+      // 興味ボタンのイベントリスナー
+      document.getElementById("btnInterest").onclick = async () => {
+        if(state.interested){
+          return; // 既に押されている場合は何もしない
+        }
+        
+        const btn = document.getElementById("btnInterest");
+        const feedback = document.getElementById("interestFeedback");
+        
+        btn.disabled = true;
+        btn.textContent = "送信中...";
+        
+        try {
+          await submitInterest();
+          
+          // 成功時の処理
+          state.interested = true;
+          saveState();
+          
+          btn.textContent = "✓ 興味を送信しました！";
+          btn.style.background = "#34c759";
+          btn.style.borderColor = "#34c759";
+          btn.style.boxShadow = "0 4px 12px rgba(52,199,89,0.25)";
+          
+          feedback.style.display = "block";
+          feedback.style.animation = "fadeIn 0.4s ease forwards";
+          
+          // 3秒後にフィードバックをフェードアウト
+          setTimeout(() => {
+            feedback.style.animation = "fadeOut 0.4s ease forwards";
+            setTimeout(() => {
+              feedback.style.display = "none";
+            }, 400);
+          }, 3000);
+          
+        } catch(e) {
+          alert("送信に失敗しました: " + (e?.message || "不明なエラー"));
+          btn.disabled = false;
+          btn.textContent = "🎁 このモビィが欲しい！";
+        }
+      };
 
       document.getElementById("btnBack").onclick = () => {
         state.step = "quiz";
