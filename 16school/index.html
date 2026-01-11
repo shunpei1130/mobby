@@ -39,7 +39,7 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "学校キャラ診断（モビィ診断）",
     "alternateName": ["モビィ診断", "学校キャラ診断", "性格診断"],
     "description": "40問の質問であなたの学校でのキャラクタータイプを16種類から診断する無料の性格診断ツール。陽キャラ・陰キャラなど4軸で性格を分析。",
@@ -49,9 +49,15 @@
     "offers": {
       "@type": "Offer",
       "price": "0",
-      "priceCurrency": "JPY"
+      "priceCurrency": "JPY",
+      "availability": "https://schema.org/InStock",
+      "url": "https://mobby-hp.vercel.app/16school/"
     },
     "author": {
+      "@type": "Organization",
+      "name": "Mobby"
+    },
+    "publisher": {
       "@type": "Organization",
       "name": "Mobby"
     },
