@@ -36,7 +36,7 @@ export default async function handler(req, res) {
     const axes = body.axes || {};
     const answers = body.answers || {};  // 各質問の回答データ
     const gender = String(body.gender || "").trim();  // 性別（"male" または "female"）
-    const interested = body.interested === true;  // モビィが欲しい！ボタンが押されたか
+    const interested = body.interested === true;  // モビーが欲しい！ボタンが押されたか
     const createdAt = String(body.createdAt || new Date().toISOString()).trim();
 
     console.log("[LEAD API] Parsed data:", { name, email, type, axes, answers, gender, interested, createdAt });
@@ -68,7 +68,7 @@ export default async function handler(req, res) {
     const resend = new Resend(resendKey);
 
     const genderLabel = gender === "female" ? "女子版" : gender === "male" ? "男子版" : "";
-    const interestLabel = interested ? "【🎁 このモビィが欲しい！】" : "";
+    const interestLabel = interested ? "【🎁 このモビーが欲しい！】" : "";
     const subject = `【診断リード】${interestLabel}${name} / ${email} / ${type} ${genderLabel}`;
     
     // 回答データを整形（見やすく）
@@ -83,7 +83,7 @@ export default async function handler(req, res) {
       `email: ${email}`,
       `type: ${type}`,
       `gender: ${gender} ${genderLabel}`,
-      interested ? `興味度: ★★★ このモビィのぬいぐるみが欲しい！` : `興味度: 診断のみ`,
+      interested ? `興味度: ★★★ このモビーのぬいぐるみが欲しい！` : `興味度: 診断のみ`,
       `axes: ${JSON.stringify(axes)}`,
       "",
       "【各質問の回答（1-7の7段階）】",
