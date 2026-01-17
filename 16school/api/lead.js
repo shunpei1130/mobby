@@ -41,12 +41,13 @@ export default async function handler(req, res) {
 
     console.log("[LEAD API] Parsed data:", { name, email, type, axes, answers, gender, interested, createdAt });
 
-    const emailOk = email === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    // メールアドレスは任意（空の場合はOK、入力されている場合は形式チェック）
+    const emailOk = email === "" || (email.length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
     if (!name) {
       console.error("[LEAD API] Validation error: name is required");
       return res.status(400).json({ error: "name is required" });
     }
-    if (!emailOk) {
+    if (email && !emailOk) {
       console.error("[LEAD API] Validation error: email is invalid", email);
       return res.status(400).json({ error: "email is invalid" });
     }
@@ -69,7 +70,8 @@ export default async function handler(req, res) {
 
     const genderLabel = gender === "female" ? "女子版" : gender === "male" ? "男子版" : "";
     const interestLabel = interested ? "【🎁 このモビーが欲しい！】" : "";
-    const subject = `【診断リード】${interestLabel}${name} / ${email} / ${type} ${genderLabel}`;
+    const emailDisplay = email || "（メール未入力）";
+    const subject = `【診断リード】${interestLabel}${name} / ${emailDisplay} / ${type} ${genderLabel}`;
     
     // 回答データを整形（見やすく）
     const answersText = Object.entries(answers)
@@ -80,7 +82,7 @@ export default async function handler(req, res) {
     const text = [
       `createdAt: ${createdAt}`,
       `name: ${name}`,
-      `email: ${email}`,
+      `email: ${email || "（未入力）"}`,
       `type: ${type}`,
       `gender: ${gender} ${genderLabel}`,
       interested ? `興味度: ★★★ このモビーのぬいぐるみが欲しい！` : `興味度: 診断のみ`,
@@ -98,7 +100,7 @@ export default async function handler(req, res) {
       to,
       subject,
       text,
-      replyTo: email
+      ...(email ? { replyTo: email } : {})
     });
 
     console.log("[LEAD API] Email sent successfully:", emailResult);

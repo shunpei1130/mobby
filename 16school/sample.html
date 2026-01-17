@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
   
   <!-- SEO基本 -->
   <title>学校キャラ診断（モビー診断）- あなたの学校でのキャラを16タイプで診断</title>
@@ -10,6 +10,10 @@
   <meta name="keywords" content="学校キャラ診断,モビー診断,性格診断,キャラ診断,16タイプ,無料診断,性格テスト,陽キャラ,陰キャラ,学生,診断テスト,心理テスト,自己分析">
   <meta name="author" content="Mobby">
   <meta name="robots" content="index, follow">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="format-detection" content="telephone=no">
   <link rel="canonical" href="https://mobby-hp.vercel.app/16school/">
   
   <!-- Open Graph / Facebook -->
@@ -20,6 +24,7 @@
   <meta property="og:image" content="https://mobby-hp.vercel.app/16school/logo.jpg">
   <meta property="og:site_name" content="学校キャラ診断（モビー診断）">
   <meta property="og:locale" content="ja_JP">
+  <meta name="theme-color" content="#fff8e8">
   
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
@@ -45,7 +50,10 @@
     "description": "40問の質問であなたの学校でのキャラクタータイプを16種類から診断する無料の性格診断ツール。陽キャラ・陰キャラなど4軸で性格を分析。",
     "url": "https://mobby-hp.vercel.app/16school/",
     "applicationCategory": "LifestyleApplication",
-    "operatingSystem": "All",
+    "operatingSystem": ["Android", "iOS", "Windows", "macOS", "Linux"],
+    "browserRequirements": "Requires JavaScript. Requires HTML5.",
+    "softwareVersion": "1.0",
+    "mobileUrl": "https://mobby-hp.vercel.app/16school/",
     "offers": {
       "@type": "Offer",
       "price": 0,
@@ -84,6 +92,22 @@
         "name": "ユーザー"
       },
       "reviewBody": "自分のキャラクタータイプがわかって面白かった！友達とやってみて盛り上がりました。"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "学校キャラ診断（モビー診断）",
+    "alternateName": ["モビー診断", "学校キャラ診断"],
+    "url": "https://mobby-hp.vercel.app/16school/",
+    "description": "40問の質問であなたの学校でのキャラクタータイプを16種類から診断する無料の性格診断ツール",
+    "inLanguage": "ja",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://mobby-hp.vercel.app/16school/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
     }
   }
   </script>
