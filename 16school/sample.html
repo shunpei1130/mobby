@@ -757,7 +757,7 @@ function isRegistered(){
     return true; // ローカル環境では登録画面をスキップ
   }
   
-  const hasProfile = !!(state.profile && state.profile.name && state.profile.email && state.profile.age);
+  const hasProfile = !!(state.profile && state.profile.name && state.profile.age);
   console.log('[DEBUG] プロフィール確認:', hasProfile, state.profile);
   return hasProfile;
 }
@@ -1336,7 +1336,7 @@ function gotoDiagnosisHome(){
   step: "intro", // intro | genderSelect | quiz | gate | result | characters
   page: 0,
   answers: {},
-  profile: { name: "", email: "", age: "" }, // 名前、メール、年齢
+  profile: { name: "", email: "", age: "" }, // ニックネーム、メール（任意）、年齢
   questionOrder: null, // 質問の順番（シャッフル済みインデックス配列）
   gender: null, // "male" | "female"
   interested: false, // モビーが欲しい！ボタンが押されたか
@@ -2171,7 +2171,7 @@ document.getElementById("btnPrev").onclick = () => {
 
 async function submitInterest(){
   // 既に登録済みかチェック
-  if(!state.profile || !state.profile.email){
+  if(!state.profile || !state.profile.name){
     alert("先に診断を完了してください");
     return;
   }
@@ -2233,7 +2233,7 @@ function renderGate(){
 
       <div style="margin-top:22px; display:grid; gap:12px; max-width:520px;">
         <div>
-          <div style="font-size:12px; color:var(--text-sub); margin-bottom:6px;">お名前</div>
+          <div style="font-size:12px; color:var(--text-sub); margin-bottom:6px;">ニックネーム</div>
           <input id="regName" type="text" placeholder="例）山田 太郎"
             style="width:100%; padding:14px 14px; border-radius:14px; border:1px solid var(--line); background:#fff; font-size:14px;">
         </div>
@@ -2256,8 +2256,8 @@ function renderGate(){
           <input type="hidden" id="regAge" value="">
         </div>
         <div>
-          <div style="font-size:12px; color:var(--text-sub); margin-bottom:6px;">メールアドレス</div>
-          <input id="regEmail" type="email" placeholder="example@gmail.com"
+          <div style="font-size:12px; color:var(--text-sub); margin-bottom:6px;">メールアドレス（任意）</div>
+          <input id="regEmail" type="email" placeholder="example@gmail.com（任意）"
             style="width:100%; padding:14px 14px; border-radius:14px; border:1px solid var(--line); background:#fff; font-size:14px;">
         </div>
 
@@ -2274,7 +2274,7 @@ function renderGate(){
         </div>
 
         <div style="margin-top:10px; font-size:11px; color:var(--text-sub);">
-          送信される内容：名前、年齢、メール、診断TYPE（${res.code}）、各軸の比率（A〜D）
+          送信される内容：ニックネーム、年齢、メール（任意）、診断TYPE（${res.code}）、各軸の比率（A〜D）
         </div>
       </div>
     </div>
@@ -2327,9 +2327,9 @@ function renderGate(){
     const email = (emailEl.value || "").trim();
     const consent = document.getElementById("regConsent").checked;
 
-    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const emailOk = email === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-    if(!name){ errEl.textContent = "名前を入力してください"; errEl.style.display="block"; return; }
+    if(!name){ errEl.textContent = "ニックネームを入力してください"; errEl.style.display="block"; return; }
     if(!age){ errEl.textContent = "年齢を選択してください"; errEl.style.display="block"; return; }
     if(!emailOk){ errEl.textContent = "メールアドレスを正しく入力してください"; errEl.style.display="block"; return; }
     if(!consent){ errEl.textContent = "同意にチェックしてください"; errEl.style.display="block"; return; }

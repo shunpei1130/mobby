@@ -41,7 +41,7 @@ export default async function handler(req, res) {
 
     console.log("[LEAD API] Parsed data:", { name, email, type, axes, answers, gender, interested, createdAt });
 
-    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const emailOk = email === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     if (!name) {
       console.error("[LEAD API] Validation error: name is required");
       return res.status(400).json({ error: "name is required" });
