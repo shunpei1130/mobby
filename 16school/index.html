@@ -781,7 +781,8 @@ function isRegistered(){
     return true; // ローカル環境では登録画面をスキップ
   }
   
-  const hasProfile = !!(state.profile && state.profile.name && state.profile.age);
+  // メールアドレス必須（未入力だと登録済みにしない）
+  const hasProfile = !!(state.profile && state.profile.name && state.profile.age && state.profile.email);
   console.log('[DEBUG] プロフィール確認:', hasProfile, state.profile);
   return hasProfile;
 }
@@ -2280,8 +2281,8 @@ function renderGate(){
           <input type="hidden" id="regAge" value="">
         </div>
         <div>
-          <div style="font-size:12px; color:var(--text-sub); margin-bottom:6px;">メールアドレス（任意）</div>
-          <input id="regEmail" type="email" placeholder="example@gmail.com（任意）"
+          <div style="font-size:12px; color:var(--text-sub); margin-bottom:6px;">メールアドレス（必須）</div>
+          <input id="regEmail" type="email" placeholder="example@gmail.com" required
             style="width:100%; padding:14px 14px; border-radius:14px; border:1px solid var(--line); background:#fff; font-size:14px;">
         </div>
 
@@ -2298,7 +2299,7 @@ function renderGate(){
         </div>
 
         <div style="margin-top:10px; font-size:11px; color:var(--text-sub);">
-          送信される内容：ニックネーム、年齢、メール（任意）、診断TYPE（${res.code}）、各軸の比率（A〜D）
+          送信される内容：ニックネーム、年齢、メール（必須）、診断TYPE（${res.code}）、各軸の比率（A〜D）
         </div>
       </div>
     </div>
@@ -2351,10 +2352,11 @@ function renderGate(){
     const email = (emailEl.value || "").trim();
     const consent = document.getElementById("regConsent").checked;
 
-    const emailOk = email === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
     if(!name){ errEl.textContent = "ニックネームを入力してください"; errEl.style.display="block"; return; }
     if(!age){ errEl.textContent = "年齢を選択してください"; errEl.style.display="block"; return; }
+    if(!email){ errEl.textContent = "メールアドレスを入力してください"; errEl.style.display="block"; return; }
     if(!emailOk){ errEl.textContent = "メールアドレスを正しく入力してください"; errEl.style.display="block"; return; }
     if(!consent){ errEl.textContent = "同意にチェックしてください"; errEl.style.display="block"; return; }
 

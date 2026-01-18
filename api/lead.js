@@ -38,13 +38,16 @@ export default async function handler(req, res) {
 
     console.log("[LEAD API] Parsed data:", { name, email, type, axes, createdAt });
 
-    // メールアドレスは任意（空の場合はOK、入力されている場合は形式チェック）
-    const emailOk = email === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     if (!name) {
       console.error("[LEAD API] Validation error: name is required");
       return res.status(400).json({ error: "name is required" });
     }
-    if (email && !emailOk) {
+    if (!email) {
+      console.error("[LEAD API] Validation error: email is required");
+      return res.status(400).json({ error: "email is required" });
+    }
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!emailOk) {
       console.error("[LEAD API] Validation error: email is invalid", email);
       return res.status(400).json({ error: "email is invalid" });
     }
@@ -65,12 +68,11 @@ export default async function handler(req, res) {
     console.log("[LEAD API] Sending email via Resend...");
     const resend = new Resend(resendKey);
 
-    const emailDisplay = email || "（メール未入力）";
-    const subject = `【学校キャラ診断】${name} / ${emailDisplay} / ${type}`;
+    const subject = `【学校キャラ診断】${name} / ${email} / ${type}`;
     const text = [
       `createdAt: ${createdAt}`,
       `name: ${name}`,
-      `email: ${email || "（未入力）"}`,
+      `email: ${email}`,
       `type: ${type}`,
       `axes: ${JSON.stringify(axes)}`,
       "",
@@ -83,7 +85,7 @@ export default async function handler(req, res) {
       to,
       subject,
       text,
-      ...(email ? { replyTo: email } : {})
+      replyTo: email
     });
 
     console.log("[LEAD API] Email sent successfully:", emailResult);
