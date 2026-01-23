@@ -220,6 +220,34 @@
   .btn-primary:hover{background-color:var(--color-earth);transform:translateY(-2px) rotate(1deg);}
   .btn-ghost{background:rgba(255,255,255,0);color:var(--color-forest);border-color:rgba(47,79,79,0.35);}
   .btn-ghost:hover{background:rgba(174,198,207,0.35);border-color:transparent;transform:translateY(-2px);}
+
+  #goMobbyOutfit{
+    position:relative;
+  }
+  #goMobbyOutfit:disabled{
+    opacity:0.55;
+    cursor:not-allowed;
+    box-shadow:none;
+    transform:none;
+  }
+  #goMobbyOutfit:disabled:hover{
+    background-color:var(--color-accent-red);
+    transform:none;
+  }
+  #goMobbyOutfit .btn-badge{
+    position:absolute;
+    top:-6px;
+    right:-6px;
+    font-size:11px;
+    font-weight:700;
+    padding:4px 8px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.9);
+    color:var(--color-forest);
+    border:1px solid rgba(47,79,79,0.18);
+    box-shadow:2px 2px 0 rgba(0,0,0,0.06);
+    letter-spacing:0.02em;
+  }
   
   /* モビー診断ボタンのスマホ対応 */
   @media (max-width: 768px) {
@@ -1760,7 +1788,10 @@
     <!-- ▼▼▼ ここにモビー診断ボタンを追加 ▼▼▼ -->
     <div id="mobbyDiagnosisWrapper" style="width:100%;display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:20px;">
       <a class="btn btn-primary" id="goMobbyDiagnosis" href="16school/index.html" style="font-size:14px;padding:10px 24px;">モビー診断</a>
-      <a class="btn btn-primary" id="goMobbyOutfit" href="mobby-custom/index.html" style="font-size:14px;padding:10px 24px;">MobbyOutfit</a>
+      <button class="btn btn-primary" id="goMobbyOutfit" type="button" disabled title="準備中のため現在は遷移できません" style="font-size:14px;padding:10px 24px;">
+        MobbyOutfit
+        <span class="btn-badge">準備中</span>
+      </button>
     </div>
     
     <!-- 右下の法的リンク -->
@@ -1777,12 +1808,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js">// モビー診断ボタンで16school/index.htmlへ遷移
 document.getElementById('goMobbyDiagnosis')?.addEventListener('click', () => {
   window.location.href = '16school/index.html';
-});
-document.getElementById('goMobbyOutfit')?.addEventListener('click', () => {
-  window.location.href = 'mobby-custom/index.html';
-});
-document.getElementById('goMobbyOutfit')?.addEventListener('click', () => {
-  window.location.href = 'mobby-custom/index.html';
 });
 </script>
   <!-- EmailJS -->
