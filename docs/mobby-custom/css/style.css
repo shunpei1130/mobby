@@ -49,6 +49,39 @@ body{
   padding:8px 16px;border-bottom:1px solid var(--border);
   background:rgba(255,248,240,.85);backdrop-filter: blur(10px);
 }
+.inappNotice{
+  width:min(1100px, calc(100% - 32px));
+  margin:12px auto 0;
+  padding:12px 14px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:rgba(255,255,255,.92);
+  box-shadow:0 10px 24px rgba(122,84,58,.12);
+}
+.inappNoticeTitle{
+  font-weight:700;
+  font-size:14px;
+  margin:0 0 6px;
+}
+.inappNoticeText{
+  margin:0 0 10px;
+  color:var(--muted);
+  font-size:13px;
+}
+.inappNoticeActions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.inappNoticeActions .btn{
+  padding:8px 12px;
+}
+@media (max-width: 600px){
+  .inappNotice{
+    margin:8px 12px 0;
+    width:calc(100% - 24px);
+  }
+}
 .brand{color:var(--text);text-decoration:none;opacity:.9}
 .topbarLeft{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-start;flex-direction:row;flex:1;min-width:0}
 .topbarLeft #userBadge{margin-left:auto}

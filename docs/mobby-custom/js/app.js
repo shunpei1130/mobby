@@ -6,7 +6,7 @@ import {
   collection, doc, addDoc, getDoc, getDocs, query, orderBy, limit, setDoc,
   serverTimestamp, runTransaction, where, deleteDoc, deleteField, increment, arrayUnion
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-import { onAuthStateChanged, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { onAuthStateChanged, signInWithPopup, signInWithRedirect, getRedirectResult, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
 function patchDialog(el) {
   if (!el) return;
@@ -243,6 +243,11 @@ const inviteInput = document.getElementById("inviteInput");
 const inviteSave = document.getElementById("inviteSave");
 const inviteSkip = document.getElementById("inviteSkip");
 const inviteStatus = document.getElementById("inviteStatus");
+const inAppNotice = document.getElementById("inAppNotice");
+const inAppOpenSafari = document.getElementById("inAppOpenSafari");
+const inAppCopyLink = document.getElementById("inAppCopyLink");
+const inAppContinue = document.getElementById("inAppContinue");
+const inAppCopyStatus = document.getElementById("inAppCopyStatus");
 
 modalClose?.addEventListener("click", () => modal.close());
 modal?.addEventListener("click", (e) => {
@@ -304,6 +309,67 @@ inviteModal?.addEventListener("click", (e) => {
     e.clientX >= rect.left && e.clientX <= rect.right &&
     e.clientY >= rect.top && e.clientY <= rect.bottom;
   if (!inside) inviteModal.close();
+});
+
+const INAPP_NOTICE_DISMISS_KEY = "mobby_inapp_notice_dismissed_v1";
+
+function isIosDevice() {
+  return /iP(hone|od|ad)/i.test(navigator.userAgent || "");
+}
+
+function isInAppBrowser() {
+  return /TikTok|FBAN|FBAV|Instagram|Line|Twitter|WebView|; wv\)/i.test(navigator.userAgent || "");
+}
+
+const isIosInApp = isIosDevice() && isInAppBrowser();
+
+function showInAppNotice() {
+  if (inAppNotice) inAppNotice.classList.remove("hidden");
+}
+
+function hideInAppNotice() {
+  if (inAppNotice) inAppNotice.classList.add("hidden");
+}
+
+if (isIosInApp && localStorage.getItem(INAPP_NOTICE_DISMISS_KEY) !== "1") {
+  showInAppNotice();
+}
+
+inAppContinue?.addEventListener("click", () => {
+  localStorage.setItem(INAPP_NOTICE_DISMISS_KEY, "1");
+  hideInAppNotice();
+});
+
+inAppOpenSafari?.addEventListener("click", () => {
+  const url = location.href;
+  const opened = window.open(url, "_blank");
+  if (!opened) location.href = url;
+});
+
+inAppCopyLink?.addEventListener("click", async () => {
+  const url = location.href;
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(url);
+    } else {
+      const textarea = document.createElement("textarea");
+      textarea.value = url;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+    }
+    if (inAppCopyStatus) {
+      inAppCopyStatus.textContent = "URLをコピーしました。Safariで開いてください。";
+    }
+  } catch (e) {
+    if (inAppCopyStatus) {
+      inAppCopyStatus.textContent = "コピーに失敗しました。右上メニューからSafariで開いてください。";
+    }
+  }
 });
 
 // ---- assets list ----
@@ -1066,6 +1132,30 @@ function syncAuthUi(user) {
   }
 }
 
+function handleAuthError(e) {
+  if (e?.code === "auth/operation-not-allowed") {
+    alert("Googleログインが無効です。Firebaseコンソールで Authentication > ログイン方法 > Google を有効化してください。");
+  } else if (e?.code === "auth/unauthorized-domain") {
+    alert("このドメインは許可されていません。Firebaseコンソールの Authentication > 設定 > 承認済みドメイン に追加してください。");
+  } else if (e?.code === "auth/popup-blocked") {
+    alert("ポップアップがブロックされました。許可して再試行してください。");
+  } else if (e?.code === "auth/popup-closed-by-user" || e?.code === "auth/redirect-cancelled-by-user") {
+    // no-op
+  } else if (e?.message) {
+    alert("ログインに失敗: " + e.message);
+  }
+}
+
+const shouldUseRedirectLogin = isIosDevice();
+
+async function startGoogleLogin() {
+  if (shouldUseRedirectLogin) {
+    await signInWithRedirect(auth, googleProvider);
+    return;
+  }
+  await signInWithPopup(auth, googleProvider);
+}
+
 function syncAvatarFromProfile(profile, user) {
   if (!user) return;
   const title = profile?.displayName || user?.displayName || user?.email || "";
@@ -1077,6 +1167,16 @@ function syncAvatarFromProfile(profile, user) {
 }
 
 syncAuthUi(null);
+
+(async () => {
+  try {
+    const result = await getRedirectResult(auth);
+    if (result?.user) syncAuthUi(result.user);
+  } catch (e) {
+    handleAuthError(e);
+    syncAuthUi(auth.currentUser);
+  }
+})();
 
 
 function getUserLabel(profile, user) {
@@ -2315,19 +2415,9 @@ btnLogin?.addEventListener("click", async () => {
   try {
     if (btnLogin) btnLogin.disabled = true;
     if (userBadge) userBadge.textContent = "ログイン中...";
-    await signInWithPopup(auth, googleProvider);
+    await startGoogleLogin();
   } catch (e) {
-    if (e?.code === "auth/operation-not-allowed") {
-      alert("Googleログインが無効です。Firebaseコンソールで Authentication > ログイン方法 > Google を有効化してください。");
-    } else if (e?.code === "auth/unauthorized-domain") {
-      alert("このドメインは許可されていません。Firebaseコンソールの Authentication > 設定 > 承認済みドメイン に追加してください。");
-    } else if (e?.code === "auth/popup-blocked") {
-      alert("ポップアップがブロックされました。許可して再試行してください。");
-    } else if (e?.code === "auth/popup-closed-by-user") {
-      // no-op
-    } else {
-      alert("ログインに失敗: " + e.message);
-    }
+    handleAuthError(e);
     syncAuthUi(auth.currentUser);
   } finally {
     if (btnLogin) btnLogin.disabled = false;
@@ -2353,19 +2443,9 @@ termsAccept?.addEventListener("click", async () => {
   try {
     if (btnLogin) btnLogin.disabled = true;
     if (userBadge) userBadge.textContent = "ログイン中...";
-    await signInWithPopup(auth, googleProvider);
+    await startGoogleLogin();
   } catch (e) {
-    if (e?.code === "auth/operation-not-allowed") {
-      alert("Googleログインが無効です。Firebaseコンソールで Authentication > ログイン方法 > Google を有効化してください。");
-    } else if (e?.code === "auth/unauthorized-domain") {
-      alert("このドメインは許可されていません。Firebaseコンソールの Authentication > 設定 > 承認済みドメイン に追加してください。");
-    } else if (e?.code === "auth/popup-blocked") {
-      alert("ポップアップがブロックされました。許可して再試行してください。");
-    } else if (e?.code === "auth/popup-closed-by-user") {
-      // no-op
-    } else {
-      alert("ログインに失敗: " + e.message);
-    }
+    handleAuthError(e);
     syncAuthUi(auth.currentUser);
   } finally {
     if (btnLogin) btnLogin.disabled = false;

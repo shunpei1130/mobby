@@ -27,6 +27,17 @@
     </nav>
   </header>
 
+  <div id="inAppNotice" class="inappNotice hidden" role="alert" aria-live="polite">
+    <div class="inappNoticeTitle">iPhoneのアプリ内ブラウザではログインできない場合があります</div>
+    <p class="inappNoticeText">Safariで開くとスムーズです。右上の「…」→「ブラウザで開く」でもOK。</p>
+    <div class="inappNoticeActions">
+      <button id="inAppOpenSafari" class="btn primary" type="button">Safariで開く</button>
+      <button id="inAppCopyLink" class="btn" type="button">URLをコピー</button>
+      <button id="inAppContinue" class="btn" type="button">このまま続ける</button>
+    </div>
+    <div id="inAppCopyStatus" class="muted"></div>
+  </div>
+
   <main class="container">
     <!-- DESIGN -->
     <section id="viewDesign" class="grid2 hidden">
