@@ -1,0 +1,3 @@
+[submodule "mobby-custom"]
+	path = mobby-custom
+	url = https://github.com/shunpei1130/mobby-custom
