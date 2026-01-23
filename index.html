@@ -7,7 +7,7 @@
   <!-- SEO基本 -->
   <title>Mobby（モビー）- かわいいカメラ型キーホルダー公式サイト</title>
   <meta name="description" content="Mobby（モビー）はあなたの思い出を撮影できるカメラ型キーホルダー。持ち歩けるかわいいデザインで、いつでもどこでも大切な瞬間を記録。学生から大人まで人気のカメラアクセサリー。">
-  <meta name="keywords" content="Mobby,モビー,モビー,カメラ型キーホルダー,キーホルダーカメラ,ミニカメラ,かわいいキーホルダー,写真撮影,アクセサリー,学生グッズ,プレゼント">
+  <meta name="keywords" content="Mobby,モビー,モビー,モビー診断,カメラ型キーホルダー,学校モビー診断,モビーアウトフィット,写真撮影,モビーキーホルダー,学生グッズ,プレゼント">
   <meta name="author" content="Mobby">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://mobby.online/">
@@ -223,9 +223,10 @@
   
   /* モビー診断ボタンのスマホ対応 */
   @media (max-width: 768px) {
-    #goMobbyDiagnosis {
-      font-size: 16px !important;
-      padding: 12px 28px !important;
+    #goMobbyDiagnosis,
+    #goMobbyOutfit {
+      font-size: 12px !important;
+      padding: 8px 18px !important;
     }
     #mobbyDiagnosisWrapper {
       margin-top: 0px !important;
@@ -1757,8 +1758,9 @@
       </div>
     </div>
     <!-- ▼▼▼ ここにモビー診断ボタンを追加 ▼▼▼ -->
-    <div id="mobbyDiagnosisWrapper" style="width:100%;text-align:center;margin-top:20px;">
-      <button class="btn btn-primary" id="goMobbyDiagnosis" style="font-size:18px;padding:16px 40px;">モビー診断</button>
+    <div id="mobbyDiagnosisWrapper" style="width:100%;display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:20px;">
+      <a class="btn btn-primary" id="goMobbyDiagnosis" href="16school/index.html" style="font-size:14px;padding:10px 24px;">モビー診断</a>
+      <a class="btn btn-primary" id="goMobbyOutfit" href="mobby-custom/index.html" style="font-size:14px;padding:10px 24px;">MobbyOutfit</a>
     </div>
     
     <!-- 右下の法的リンク -->
@@ -1775,6 +1777,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js">// モビー診断ボタンで16school/index.htmlへ遷移
 document.getElementById('goMobbyDiagnosis')?.addEventListener('click', () => {
   window.location.href = '16school/index.html';
+});
+document.getElementById('goMobbyOutfit')?.addEventListener('click', () => {
+  window.location.href = 'mobby-custom/index.html';
+});
+document.getElementById('goMobbyOutfit')?.addEventListener('click', () => {
+  window.location.href = 'mobby-custom/index.html';
 });
 </script>
   <!-- EmailJS -->
