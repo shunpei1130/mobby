@@ -1,6 +1,15 @@
 // js/firebase.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAuth, signInAnonymously, onAuthStateChanged, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import {
+  getAuth,
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence,
+  inMemoryPersistence,
+  signInAnonymously,
+  onAuthStateChanged,
+  GoogleAuthProvider
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
 
@@ -18,6 +27,40 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
+
+let persistenceMode = "unknown";
+let persistenceReady = null;
+
+export function ensureAuthPersistence() {
+  if (persistenceReady) return persistenceReady;
+  persistenceReady = (async () => {
+    try {
+      await setPersistence(auth, browserLocalPersistence);
+      persistenceMode = "local";
+      return persistenceMode;
+    } catch (e1) {
+      try {
+        await setPersistence(auth, browserSessionPersistence);
+        persistenceMode = "session";
+        return persistenceMode;
+      } catch (e2) {
+        try {
+          await setPersistence(auth, inMemoryPersistence);
+          persistenceMode = "memory";
+          return persistenceMode;
+        } catch (e3) {
+          persistenceMode = "failed";
+          return persistenceMode;
+        }
+      }
+    }
+  })();
+  return persistenceReady;
+}
+
+export function getAuthPersistenceMode() {
+  return persistenceMode;
+}
 
 // ✅ ここが必要（app.jsが import してる export）
 export const db = getFirestore(app);

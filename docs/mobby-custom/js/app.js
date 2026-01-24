@@ -1,4 +1,4 @@
-﻿import { db, auth, googleProvider } from "./firebase.js";
+import { db, auth, googleProvider, ensureAuthPersistence, getAuthPersistenceMode } from "./firebase.js";
 import { createEditor } from "./editor.js";
 import { createGallery } from "./gallery.js";
 
@@ -1189,6 +1189,11 @@ async function startGoogleLogin() {
     showInAppNotice();
     throw new Error("INAPP_LOGIN_BLOCKED");
   }
+  await ensureAuthPersistence();
+  if (getAuthPersistenceMode() === "memory" || getAuthPersistenceMode() === "failed") {
+    alert("ブラウザの保存領域が使えないためログインできません。プライベートブラウズを解除して再試行してください。");
+    throw new Error("AUTH_PERSISTENCE_UNAVAILABLE");
+  }
   if (shouldUseRedirectLogin) {
     await signInWithRedirect(auth, googleProvider);
     return;
@@ -1219,6 +1224,7 @@ syncAuthUi(null);
 
 (async () => {
   try {
+    await ensureAuthPersistence();
     const result = await getRedirectResult(auth);
     if (result?.user) syncAuthUi(result.user);
   } catch (e) {
