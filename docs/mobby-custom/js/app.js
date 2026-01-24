@@ -665,6 +665,9 @@ function applyTemplateSelection(nextValue) {
   if (templateSelect && current !== nextValue) {
     templateSelect.dispatchEvent(new Event("change", { bubbles: true }));
   }
+  if (templatePicker && templateToggle) {
+    setTemplatePickerCollapsed(true);
+  }
 }
 
 templateTabs.forEach((tab) => {

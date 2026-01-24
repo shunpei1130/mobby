@@ -367,14 +367,14 @@ body{
 .canvasWrap::after{
   content:"";
   position:absolute;
-  inset:8%;
+  inset:4%;
   border:1px dashed rgba(121,93,72,.22);
   border-radius:18px;
   pointer-events:none;
 }
 .templatePreview{
   position:absolute;
-  inset:6%;
+  inset:1%;
   display:flex;
   justify-content:center;
   align-items:center;
@@ -1339,7 +1339,7 @@ canvas{display:block;width:100% !important;height:auto !important;touch-action:p
     padding:0 10px;
     border-radius:10px;
     font-size:11px;
-    margin-left:-20px;
+    margin-left:-30px;
   }
   .templateTabs{width:100%}
   .templateTab{flex:1 1 0;text-align:center}
