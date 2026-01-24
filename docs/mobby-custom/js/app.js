@@ -1182,7 +1182,7 @@ function handleAuthError(e) {
   }
 }
 
-const shouldUseRedirectLogin = isIosDevice() || isInApp;
+const shouldUseRedirectLogin = isInApp;
 
 async function startGoogleLogin() {
   if (isInApp) {
