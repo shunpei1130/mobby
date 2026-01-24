@@ -1192,6 +1192,10 @@ function handleAuthError(e) {
 const shouldUseRedirectLogin = isIosDevice() || isInApp;
 
 async function startGoogleLogin() {
+  if (isInApp) {
+    showInAppNotice();
+    throw new Error("INAPP_LOGIN_BLOCKED");
+  }
   if (shouldUseRedirectLogin) {
     await signInWithRedirect(auth, googleProvider);
     return;
@@ -2455,6 +2459,10 @@ idSave?.addEventListener("click", async () => {
 
 
 btnLogin?.addEventListener("click", async () => {
+  if (isInApp) {
+    showInAppNotice();
+    return;
+  }
   const accepted = safeStorageGet("mobby_terms_accepted") === "1";
   if (!accepted) {
     termsAgreeRow?.classList.add("hidden");
@@ -2489,6 +2497,10 @@ termsAgree?.addEventListener("change", () => {
 });
 
 termsAccept?.addEventListener("click", async () => {
+  if (isInApp) {
+    showInAppNotice();
+    return;
+  }
   if (!termsAgree?.checked) return;
   safeStorageSet("mobby_terms_accepted", "1");
   termsModal?.close();
