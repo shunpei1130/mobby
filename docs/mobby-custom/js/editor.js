@@ -952,8 +952,9 @@
         || !!getRotationRing(tx, ty, currentSelection));
     const hitId = hitTest(tx, ty);
     const hitObject = !!hitId || !!hitHandle;
-    objectEditEnabled = hitObject;
-    if (drawMode === "draw" && !hitObject) {
+    const allowObjectEdit = hitObject && drawMode !== "draw";
+    objectEditEnabled = allowObjectEdit;
+    if (drawMode === "draw") {
       if (activePointers.size > 1) {
         return;
       }

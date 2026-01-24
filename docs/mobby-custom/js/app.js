@@ -98,6 +98,7 @@ const btnRedo = document.getElementById("btnRedo");
 const penColor = document.getElementById("penColor");
 const penSize = document.getElementById("penSize");
 const penSizeValue = document.getElementById("penSizeValue");
+const eraserSize = document.getElementById("eraserSize");
 const btnClearDraw = document.getElementById("btnClearDraw");
 const drawEffect = document.getElementById("drawEffect");
 const drawEffectColor = document.getElementById("drawEffectColor");
@@ -818,8 +819,11 @@ function updatePenOptions() {
     size: clampNumber(penSize?.value, 1, 40, 6),
     ...getDrawEffectOptions()
   });
+}
+
+function updateEraserOptions() {
   editor.setEraserOptions?.({
-    size: clampNumber(penSize?.value, 1, 40, 6)
+    size: clampNumber(eraserSize?.value, 1, 60, 24)
   });
 }
 
@@ -862,6 +866,7 @@ function setDrawTool(tool) {
 
 penColor?.addEventListener("input", updatePenOptions);
 penSize?.addEventListener("input", updatePenOptions);
+eraserSize?.addEventListener("input", updateEraserOptions);
 drawEffect?.addEventListener("change", updatePenOptions);
 drawEffectColor?.addEventListener("input", updatePenOptions);
 drawEffectBlur?.addEventListener("input", updatePenOptions);
@@ -876,6 +881,7 @@ btnModeDraw?.addEventListener("click", () => setCanvasMode("draw"));
 editor.setDrawMode("select");
 setCanvasModeVisible();
 updatePenOptions();
+updateEraserOptions();
 if (penSizeValue) penSizeValue.textContent = String(clampNumber(penSize?.value, 1, 40, 6));
 if (drawStrokeWidthValue) drawStrokeWidthValue.textContent = String(clampNumber(drawStrokeWidth?.value, 0, 12, 0));
 
