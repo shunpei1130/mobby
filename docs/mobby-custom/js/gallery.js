@@ -1,5 +1,5 @@
 ﻿import {
-  collection, doc, addDoc, getDoc, getDocs, query, orderBy, limit,
+  collection, doc, addDoc, getDoc, getDocs, query, where, orderBy, limit,
   serverTimestamp, runTransaction
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
@@ -479,6 +479,12 @@ export function createGallery({ db, uid, gridEl, statusEl, modalEl, modalBodyEl,
         ${canFollow ? `<button id="profileModalFollow" class="btn ${followingState ? "active" : ""}">${followingState ? "フォロー中" : "フォロー"}</button>` : ""}
       </div>
       <div class="profileModalBio">${bio || "<span class=\"muted\">ひとことはまだありません。</span>"}</div>
+      <div class="profileDivider"></div>
+      <div class="profileDesignsSection">
+        <h3 class="profileListTitle">投稿一覧</h3>
+        <div id="profileModalDesignsStatus" class="muted">読み込み中...</div>
+        <div id="profileModalDesigns" class="profileDesigns"></div>
+      </div>
     `;
 
     profileModalEl.showModal();
@@ -502,6 +508,57 @@ export function createGallery({ db, uid, gridEl, statusEl, modalEl, modalBodyEl,
         followBtn.disabled = false;
       }
     });
+
+    const designsStatusEl = profileModalBodyEl.querySelector("#profileModalDesignsStatus");
+    const designsEl = profileModalBodyEl.querySelector("#profileModalDesigns");
+    if (!designsStatusEl || !designsEl) return;
+    designsStatusEl.textContent = "読み込み中...";
+    designsEl.innerHTML = "";
+    try {
+      const q = query(
+        designsCol,
+        where("uid", "==", targetUid),
+        orderBy("createdAt", "desc")
+      );
+      const snap = await getDocs(q);
+      if (snap.empty) {
+        designsStatusEl.textContent = "まだ投稿がありません。";
+        return;
+      }
+      designsStatusEl.textContent = "";
+      for (const docSnap of snap.docs) {
+        const data = docSnap.data();
+        const card = document.createElement("div");
+        card.className = "profileWork";
+
+        const img = document.createElement("img");
+        img.src = data.thumb || data.imageUrl || "";
+        img.alt = data.title || "Untitled";
+
+        const body = document.createElement("div");
+        body.className = "profileWorkBody";
+
+        const titleEl = document.createElement("div");
+        titleEl.className = "profileWorkTitle";
+        titleEl.textContent = data.title || "Untitled";
+
+        const meta = document.createElement("div");
+        meta.className = "profileWorkMeta";
+        meta.textContent = `👍 ${Number(data.likes || 0)} / ${formatDate(data.createdAt)}`;
+
+        body.appendChild(titleEl);
+        body.appendChild(meta);
+        card.appendChild(img);
+        card.appendChild(body);
+        card.addEventListener("click", async () => {
+          await openModal(docSnap.id, data);
+        });
+        designsEl.appendChild(card);
+      }
+    } catch (e) {
+      console.warn("profile modal designs fetch failed", e);
+      designsStatusEl.textContent = "読み込みに失敗しました。";
+    }
   }
 
   async function openModal(designId, data) {

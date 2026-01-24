@@ -1281,7 +1281,7 @@ canvas{display:block;width:100% !important;height:auto !important;touch-action:p
     padding:0 10px;
     border-radius:10px;
     font-size:11px;
-    margin-left:-6px;
+    margin-left:-20px;
   }
   .templateTabs{width:100%}
   .templateTab{flex:1 1 0;text-align:center}
