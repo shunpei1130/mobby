@@ -40,7 +40,7 @@
   const MIN_VIEW_SCALE = 0.8;
   const MAX_VIEW_SCALE = 2.6;
   const VIEW_SCALE_SNAP = 0.03;
-  const TEMPLATE_INSET_RATIO = 0.09;
+  const TEMPLATE_INSET_RATIO = 0.06;
   const DESIGN_INSET_RATIO = 0.08;
   const activePointers = new Map();
   const sampleSpacing = 2;

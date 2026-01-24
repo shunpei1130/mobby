@@ -358,7 +358,9 @@ body{
   border-radius:20px;
   overflow:hidden;
   background:rgba(255,255,255,.55);
-  margin:12px 0;
+  margin:12px auto;
+  max-width:100%;
+  align-self:center;
   touch-action:pan-y;
   position:relative;
 }
@@ -372,7 +374,7 @@ body{
 }
 .templatePreview{
   position:absolute;
-  inset:9%;
+  inset:6%;
   display:flex;
   justify-content:center;
   align-items:center;
@@ -1306,7 +1308,7 @@ canvas{display:block;width:100% !important;height:auto !important;touch-action:p
   display:block;
 }
 @media (min-width: 901px){
-  .designCard .canvasWrap{width:clamp(360px, 48vw, 560px); margin:12px auto;}
+  .designCard .canvasWrap{width:clamp(420px, 60vw, 680px); margin:12px auto;}
   .designZoomControl{display:flex;}
 }
 @media (max-width: 900px){
@@ -1326,7 +1328,7 @@ canvas{display:block;width:100% !important;height:auto !important;touch-action:p
   .grid2{grid-template-columns:1fr;width:100%;gap:18px;}
   .card{width:100%}
   .designCard{padding:10px 14px}
-  .designCard .canvasWrap{width:clamp(220px, 74vw, 320px); margin:0 auto 4px;}
+  .designCard .canvasWrap{width:clamp(320px, 98%, 560px); margin:0 auto 4px;}
   .designItemPicker{align-items:center;justify-content:flex-start;gap:6px;margin:2px 0 2px;}
   .designItemPicker .label{width:100%}
   .designItemPicker.isCollapsed{margin:0 0 2px;}
