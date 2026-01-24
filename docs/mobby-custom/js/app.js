@@ -272,7 +272,6 @@ const inviteSave = document.getElementById("inviteSave");
 const inviteSkip = document.getElementById("inviteSkip");
 const inviteStatus = document.getElementById("inviteStatus");
 const inAppNotice = document.getElementById("inAppNotice");
-const inAppOpenSafari = document.getElementById("inAppOpenSafari");
 const inAppCopyLink = document.getElementById("inAppCopyLink");
 const inAppContinue = document.getElementById("inAppContinue");
 const inAppCopyStatus = document.getElementById("inAppCopyStatus");
@@ -366,12 +365,6 @@ if (isInApp && safeStorageGet(INAPP_NOTICE_DISMISS_KEY) !== "1") {
 inAppContinue?.addEventListener("click", () => {
   safeStorageSet(INAPP_NOTICE_DISMISS_KEY, "1");
   hideInAppNotice();
-});
-
-inAppOpenSafari?.addEventListener("click", () => {
-  const url = location.href;
-  const opened = window.open(url, "_blank");
-  if (!opened) location.href = url;
 });
 
 inAppCopyLink?.addEventListener("click", async () => {
