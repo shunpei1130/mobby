@@ -26,6 +26,32 @@ function patchDialog(el) {
 
 document.querySelectorAll("dialog").forEach(patchDialog);
 
+function safeStorageGet(key) {
+  try {
+    return localStorage.getItem(key);
+  } catch (_) {
+    return null;
+  }
+}
+
+function safeStorageSet(key, value) {
+  try {
+    localStorage.setItem(key, value);
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
+function safeStorageRemove(key) {
+  try {
+    localStorage.removeItem(key);
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
 const tabDesign = document.getElementById("tabDesign");
 const tabGallery = document.getElementById("tabGallery");
 const tabPurchase = document.getElementById("tabPurchase");
@@ -323,7 +349,7 @@ function isInAppBrowser() {
   return /TikTok|FBAN|FBAV|Instagram|Line|Twitter|WebView|; wv\)/i.test(navigator.userAgent || "");
 }
 
-const isIosInApp = isIosDevice() && isInAppBrowser();
+const isInApp = isInAppBrowser();
 
 function showInAppNotice() {
   if (inAppNotice) inAppNotice.classList.remove("hidden");
@@ -333,12 +359,12 @@ function hideInAppNotice() {
   if (inAppNotice) inAppNotice.classList.add("hidden");
 }
 
-if (isIosInApp && localStorage.getItem(INAPP_NOTICE_DISMISS_KEY) !== "1") {
+if (isInApp && safeStorageGet(INAPP_NOTICE_DISMISS_KEY) !== "1") {
   showInAppNotice();
 }
 
 inAppContinue?.addEventListener("click", () => {
-  localStorage.setItem(INAPP_NOTICE_DISMISS_KEY, "1");
+  safeStorageSet(INAPP_NOTICE_DISMISS_KEY, "1");
   hideInAppNotice();
 });
 
@@ -704,7 +730,7 @@ try {
 }
 
 function getDraftState() {
-  const raw = localStorage.getItem(DRAFT_KEY);
+  const raw = safeStorageGet(DRAFT_KEY);
   if (!raw) return null;
   try {
     const parsed = JSON.parse(raw);
@@ -741,7 +767,7 @@ function saveDraft() {
   if (isRestoringDraft) return;
   const state = editor.getState?.();
   if (!state) return;
-  localStorage.setItem(DRAFT_KEY, JSON.stringify({ state, savedAt: Date.now() }));
+  safeStorageSet(DRAFT_KEY, JSON.stringify({ state, savedAt: Date.now() }));
 }
 
 const draftState = getDraftState();
@@ -752,7 +778,7 @@ if (draftState && draftModal) {
     draftModal.close();
   });
   draftDiscard?.addEventListener("click", async () => {
-    localStorage.removeItem(DRAFT_KEY);
+    safeStorageRemove(DRAFT_KEY);
     const nextTemplate = templateSelect?.value || defaultTemplateUrl;
     if (nextTemplate) {
       await editor.setState?.({ template: nextTemplate, objects: [] });
@@ -905,7 +931,7 @@ btnDesignReset?.addEventListener("click", () => {
   if (titleInput) titleInput.value = "";
   if (publishStatus) publishStatus.textContent = "";
   try {
-    localStorage.removeItem(DRAFT_KEY);
+    safeStorageRemove(DRAFT_KEY);
   } catch (_) {
     // ignore
   }
@@ -1154,6 +1180,8 @@ function handleAuthError(e) {
     alert("このドメインは許可されていません。Firebaseコンソールの Authentication > 設定 > 承認済みドメイン に追加してください。");
   } else if (e?.code === "auth/popup-blocked") {
     alert("ポップアップがブロックされました。許可して再試行してください。");
+  } else if (e?.code === "auth/operation-not-supported-in-this-environment" || e?.code === "auth/web-storage-unsupported") {
+    alert("このブラウザ環境ではログインできません。Safari/Chromeなどのブラウザで開いてください。");
   } else if (e?.code === "auth/popup-closed-by-user" || e?.code === "auth/redirect-cancelled-by-user") {
     // no-op
   } else if (e?.message) {
@@ -1161,14 +1189,23 @@ function handleAuthError(e) {
   }
 }
 
-const shouldUseRedirectLogin = isIosDevice();
+const shouldUseRedirectLogin = isIosDevice() || isInApp;
 
 async function startGoogleLogin() {
   if (shouldUseRedirectLogin) {
     await signInWithRedirect(auth, googleProvider);
     return;
   }
-  await signInWithPopup(auth, googleProvider);
+  try {
+    await signInWithPopup(auth, googleProvider);
+  } catch (e) {
+    const code = e?.code;
+    if (code === "auth/popup-blocked" || code === "auth/cancelled-popup-request" || code === "auth/operation-not-supported-in-this-environment" || code === "auth/web-storage-unsupported") {
+      await signInWithRedirect(auth, googleProvider);
+      return;
+    }
+    throw e;
+  }
 }
 
 function syncAvatarFromProfile(profile, user) {
@@ -2418,7 +2455,7 @@ idSave?.addEventListener("click", async () => {
 
 
 btnLogin?.addEventListener("click", async () => {
-  const accepted = localStorage.getItem("mobby_terms_accepted") === "1";
+  const accepted = safeStorageGet("mobby_terms_accepted") === "1";
   if (!accepted) {
     termsAgreeRow?.classList.add("hidden");
     if (termsAgree) termsAgree.checked = false;
@@ -2453,7 +2490,7 @@ termsAgree?.addEventListener("change", () => {
 
 termsAccept?.addEventListener("click", async () => {
   if (!termsAgree?.checked) return;
-  localStorage.setItem("mobby_terms_accepted", "1");
+  safeStorageSet("mobby_terms_accepted", "1");
   termsModal?.close();
   try {
     if (btnLogin) btnLogin.disabled = true;
