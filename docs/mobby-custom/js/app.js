@@ -52,6 +52,8 @@ function safeStorageRemove(key) {
   }
 }
 
+const MOBBY_TYPE_STORAGE_KEY = "mobby_selected_type_v1";
+
 const tabDesign = document.getElementById("tabDesign");
 const tabGallery = document.getElementById("tabGallery");
 const tabPurchase = document.getElementById("tabPurchase");
@@ -250,6 +252,10 @@ const idInput = document.getElementById("idInput");
 const idSave = document.getElementById("idSave");
 const idStatus = document.getElementById("idStatus");
 const idModalClose = document.getElementById("idModalClose");
+const mobbyTypeModal = document.getElementById("mobbyTypeModal");
+const mobbyTypeOptions = document.getElementById("mobbyTypeOptions");
+const mobbyTypeSave = document.getElementById("mobbyTypeSave");
+const mobbyTypeStatus = document.getElementById("mobbyTypeStatus");
 const btnLogin = document.getElementById("btnLogin");
 const btnLogout = document.getElementById("btnLogout");
 const userAvatar = document.getElementById("userAvatar");
@@ -312,6 +318,9 @@ idModalClose?.addEventListener("click", () => {
   idModal.close();
 });
 nicknameModal?.addEventListener("cancel", (e) => {
+  e.preventDefault();
+});
+mobbyTypeModal?.addEventListener("cancel", (e) => {
   e.preventDefault();
 });
 avatarModalClose?.addEventListener("click", () => avatarModal.close());
@@ -398,9 +407,9 @@ inAppCopyLink?.addEventListener("click", async () => {
 const DEFAULT_UNLOCKED_STICKERS = new Set([
   "Logo",
   "キラキラ1",
-  "ハート1",
-  "屋上ひみつ恋モビー"
+  "ハート1"
 ]);
+const LEGACY_DEFAULT_MOBBY = "屋上ひみつ恋モビー";
 
 const STICKERS = [
   { name: "Logo", url: "assets/stickers/Logo.png" },
@@ -447,8 +456,40 @@ const STICKERS = [
 ];
 const MOBBY_NAME_RE = /モビ[ィー]/;
 
+function normalizeMobbyName(name) {
+  return String(name || "").replace(/モビィ/g, "モビー").trim();
+}
+
 function isMobbySticker(name, url) {
   return /モビ[ィー]/.test(name) || /モビ[ィー]/.test(url) || /モビィ透過済|モビー透過済/.test(url);
+}
+
+function syncMobbyTypeStorage(profile) {
+  const name = normalizeMobbyName(profile?.mobbyType || "");
+  if (!name) return;
+  safeStorageSet(MOBBY_TYPE_STORAGE_KEY, name);
+}
+
+function syncAvatarFrameMobbyType(profile) {
+  if (!avatarFrame) return;
+  const name = normalizeMobbyName(profile?.mobbyType || "");
+  if (!name) return;
+  const baseSrc = avatarFrame.getAttribute("src") || "avatar/index.html";
+  const basePath = baseSrc.split("?")[0];
+  const nextSrc = `${basePath}?mobbyType=${encodeURIComponent(name)}`;
+  if (avatarFrame.getAttribute("src") !== nextSrc) {
+    avatarFrame.setAttribute("src", nextSrc);
+  }
+}
+
+function getMobbyStickerOptions() {
+  return STICKERS.filter((item) => isMobbySticker(item.name, item.url));
+}
+
+function getMobbyStickerByName(name) {
+  const target = normalizeMobbyName(name);
+  if (!target) return null;
+  return STICKERS.find((item) => normalizeMobbyName(item.name) === target) || null;
 }
 
 function getStickerPrice(name, url) {
@@ -458,6 +499,10 @@ function getStickerPrice(name, url) {
 
 function buildStickerList(profile) {
   const unlocked = new Set(DEFAULT_UNLOCKED_STICKERS);
+  if (profile?.mobbyType) {
+    const sticker = getMobbyStickerByName(profile.mobbyType);
+    if (sticker?.name) unlocked.add(sticker.name);
+  }
   const saved = Array.isArray(profile?.unlockedStickers) ? profile.unlockedStickers : [];
   for (const name of saved) unlocked.add(name);
   return STICKERS.map((item) => {
@@ -977,6 +1022,8 @@ let timelineRecommendDocs = [];
 let timelineFollowingDocs = [];
 let timelineFilterValue = "all";
 let invitePrompted = false;
+let selectedMobbyType = "";
+let selectedMobbyTypeUrl = "";
 let activeAdjustPanel = null;
 let drawModeUiEnabled = false;
 let purchasePanelMode = "manual";
@@ -1291,14 +1338,19 @@ function syncRankFilterOptions() {
   gallery.setFilter?.(rankFilter.value || "all");
 }
 
-function extractTimelineMobbyNames(state) {
-  if (gallery?.extractMobbyNames) return gallery.extractMobbyNames(state);
+function extractTimelineMobbyNames(data) {
+  if (gallery?.extractMobbyNames) return gallery.extractMobbyNames(data);
   const names = new Set();
-  const objects = Array.isArray(state?.objects) ? state.objects : [];
+  const direct = normalizeMobbyName(data?.mobbyType || "");
+  if (direct) {
+    names.add(direct);
+    return names;
+  }
+  const objects = Array.isArray(data?.state?.objects) ? data.state.objects : [];
   for (const o of objects) {
     if (o?.type !== "img" || typeof o.name !== "string") continue;
     if (!/モビ[ィー]/.test(o.name)) continue;
-    names.add(o.name.replace(/モビィ/g, "モビー"));
+    names.add(normalizeMobbyName(o.name));
   }
   return names;
 }
@@ -1306,7 +1358,7 @@ function extractTimelineMobbyNames(state) {
 function buildTimelineFilterOptions(items) {
   const set = new Set();
   for (const item of items) {
-    const names = extractTimelineMobbyNames(item.data?.state);
+    const names = extractTimelineMobbyNames(item.data);
     for (const name of names) set.add(name);
   }
   return Array.from(set);
@@ -1332,7 +1384,7 @@ function filterTimelineDocs(items) {
   let filtered = items;
   if (timelineFilterValue !== "all") {
     filtered = filtered.filter((item) => {
-      const names = extractTimelineMobbyNames(item.data?.state);
+      const names = extractTimelineMobbyNames(item.data);
       return names.has(timelineFilterValue);
     });
   }
@@ -1782,6 +1834,17 @@ async function ensureProfileDoc(user) {
       next.inviteIssuedCode = generateInviteCode(user.uid);
       next.inviteIssuedAt = serverTimestamp();
     }
+    if (snap.exists()) {
+      if (!data.mobbyType) {
+        next.mobbyType = LEGACY_DEFAULT_MOBBY;
+        const legacySticker = getMobbyStickerByName(LEGACY_DEFAULT_MOBBY);
+        if (legacySticker?.url) next.mobbyTypeUrl = legacySticker.url;
+        next.mobbyTypeSelectedAt = serverTimestamp();
+      } else if (!data.mobbyTypeUrl) {
+        const currentSticker = getMobbyStickerByName(data.mobbyType);
+        if (currentSticker?.url) next.mobbyTypeUrl = currentSticker.url;
+      }
+    }
     if (!snap.exists()) {
       next.createdAt = serverTimestamp();
       next.followersCount = 0;
@@ -1808,6 +1871,12 @@ async function fetchProfile(targetUid) {
     profileCache.set(targetUid, null);
     return null;
   }
+}
+
+async function ensureAvatarFrameMobbyType() {
+  if (!uid) return;
+  const currentProfile = profileCache.get(uid) || await fetchProfile(uid);
+  syncAvatarFrameMobbyType(currentProfile);
 }
 
 async function refreshFollowingSet() {
@@ -2238,6 +2307,51 @@ function openNicknameModal(currentName) {
   nicknameInput.focus();
 }
 
+function setMobbyTypeSelection(name, url) {
+  selectedMobbyType = name || "";
+  selectedMobbyTypeUrl = url || "";
+  if (mobbyTypeOptions) {
+    const buttons = mobbyTypeOptions.querySelectorAll(".mobbyTypeOption");
+    buttons.forEach((btn) => {
+      const isActive = btn.dataset.mobbyName === selectedMobbyType;
+      btn.classList.toggle("active", isActive);
+      btn.setAttribute("aria-pressed", isActive ? "true" : "false");
+    });
+  }
+  if (mobbyTypeSave) mobbyTypeSave.disabled = !selectedMobbyType || !authReady;
+}
+
+function renderMobbyTypeOptions(current) {
+  if (!mobbyTypeOptions) return;
+  const options = getMobbyStickerOptions();
+  const normalizedCurrent = normalizeMobbyName(current);
+  mobbyTypeOptions.innerHTML = "";
+  for (const option of options) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "mobbyTypeOption";
+    btn.dataset.mobbyName = option.name;
+    btn.dataset.mobbyUrl = option.url;
+    btn.setAttribute("aria-pressed", "false");
+    btn.innerHTML = `<img src="${option.url}" alt="${option.name}"><span>${option.name}</span>`;
+    btn.addEventListener("click", () => setMobbyTypeSelection(option.name, option.url));
+    mobbyTypeOptions.appendChild(btn);
+  }
+  const currentOption = options.find((opt) => normalizeMobbyName(opt.name) === normalizedCurrent);
+  if (currentOption) {
+    setMobbyTypeSelection(currentOption.name, currentOption.url);
+  } else {
+    setMobbyTypeSelection("", "");
+  }
+}
+
+function openMobbyTypeModal(currentName) {
+  if (!mobbyTypeModal) return;
+  renderMobbyTypeOptions(currentName || "");
+  if (mobbyTypeStatus) mobbyTypeStatus.textContent = "";
+  mobbyTypeModal.showModal();
+}
+
 function isProfileSetupComplete(profile) {
   return !!(profile?.username && profile?.displayName);
 }
@@ -2264,6 +2378,8 @@ async function applyAuthState(user) {
   requireProfileSetup = !!user && !isProfileSetupComplete(profile);
   updateUserBadgeFromProfile(profile, user);
   syncAvatarFromProfile(profile, user);
+  syncMobbyTypeStorage(profile);
+  syncAvatarFrameMobbyType(profile);
   refreshStickerAssets(profile);
   ensureGallery(uid);
   if (viewGallery && !viewGallery.classList.contains("hidden")) {
@@ -2283,6 +2399,8 @@ async function applyAuthState(user) {
     openIdModal("");
   } else if (user && (!profile?.displayName || !profile.displayName.trim())) {
     openNicknameModal("");
+  } else if (user && (!profile?.mobbyType || !profile.mobbyType.trim())) {
+    openMobbyTypeModal("");
   } else if (user && !profile?.inviteCode) {
     maybeOpenInviteModal();
   }
@@ -2353,20 +2471,22 @@ profileInviteCopy?.addEventListener("click", async () => {
     alert("コピーに失敗: " + e.message);
   }
 });
-profileAvatar?.addEventListener("click", () => {
+profileAvatar?.addEventListener("click", async () => {
   if (!uid) {
     alert("ログインが必要です。");
     return;
   }
+  await ensureAvatarFrameMobbyType();
   avatarModal?.showModal();
 });
-profileAvatar?.addEventListener("keydown", (event) => {
+profileAvatar?.addEventListener("keydown", async (event) => {
   if (event.key !== "Enter" && event.key !== " ") return;
   event.preventDefault();
   if (!uid) {
     alert("ログインが必要です。");
     return;
   }
+  await ensureAvatarFrameMobbyType();
   avatarModal?.showModal();
 });
 
@@ -2471,6 +2591,8 @@ idSave?.addEventListener("click", async () => {
     requireProfileSetup = !isProfileSetupComplete(current);
     if (!current.displayName) {
       openNicknameModal("");
+    } else if (!current.mobbyType) {
+      openMobbyTypeModal("");
     } else {
       maybeOpenInviteModal();
     }
@@ -2612,13 +2734,55 @@ nicknameSave?.addEventListener("click", async () => {
     updateUserBadgeFromProfile({ displayName: name }, auth.currentUser);
     if (nicknameStatus) nicknameStatus.textContent = "保存しました。";
     nicknameModal?.close();
-    requireProfileSetup = !isProfileSetupComplete({ ...(profileCache.get(uid) || {}), displayName: name });
-    maybeOpenInviteModal();
+    const current = { ...(profileCache.get(uid) || {}), displayName: name };
+    requireProfileSetup = !isProfileSetupComplete(current);
+    if (!current.mobbyType) {
+      openMobbyTypeModal("");
+    } else {
+      maybeOpenInviteModal();
+    }
   } catch (e) {
     alert("ニックネーム保存に失敗: " + e.message);
     if (nicknameStatus) nicknameStatus.textContent = "";
   } finally {
     if (nicknameSave) nicknameSave.disabled = false;
+  }
+});
+
+mobbyTypeSave?.addEventListener("click", async () => {
+  if (!uid) {
+    alert("ログインが必要");
+    return;
+  }
+  if (!selectedMobbyType) {
+    if (mobbyTypeStatus) mobbyTypeStatus.textContent = "モビータイプを選択してください。";
+    return;
+  }
+  const resolvedSticker = getMobbyStickerByName(selectedMobbyType);
+  const resolvedUrl = selectedMobbyTypeUrl || resolvedSticker?.url || "";
+  try {
+    if (mobbyTypeSave) mobbyTypeSave.disabled = true;
+    if (mobbyTypeStatus) mobbyTypeStatus.textContent = "保存中...";
+    const profileRef = doc(db, "profiles", uid);
+    await setDoc(profileRef, {
+      mobbyType: selectedMobbyType,
+      mobbyTypeUrl: resolvedUrl,
+      mobbyTypeSelectedAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+    const cached = profileCache.get(uid) || {};
+    profileCache.set(uid, { ...cached, mobbyType: selectedMobbyType, mobbyTypeUrl: resolvedUrl });
+    syncMobbyTypeStorage({ mobbyType: selectedMobbyType });
+    syncAvatarFrameMobbyType({ mobbyType: selectedMobbyType });
+    refreshStickerAssets(profileCache.get(uid));
+    if (mobbyTypeStatus) mobbyTypeStatus.textContent = "保存しました。";
+    mobbyTypeModal?.close();
+    maybeOpenInviteModal();
+  } catch (e) {
+    alert("モビータイプ保存に失敗: " + e.message);
+    if (mobbyTypeStatus) mobbyTypeStatus.textContent = "";
+  } finally {
+    if (mobbyTypeSave) mobbyTypeSave.disabled = false;
   }
 });
 
@@ -2734,6 +2898,18 @@ btnPublish?.addEventListener("click", async () => {
     btnPublish.disabled = true;
     if (publishStatus) publishStatus.textContent = "画像を書き出し中...";
 
+    const currentProfile = profileCache.get(uid) || await fetchProfile(uid);
+    const profileMobby = normalizeMobbyName(currentProfile?.mobbyType || "");
+    const profileSticker = getMobbyStickerByName(profileMobby);
+    const mobbyType = profileSticker?.name || currentProfile?.mobbyType || "";
+    const mobbyTypeUrl = currentProfile?.mobbyTypeUrl || profileSticker?.url || "";
+    if (!mobbyType) {
+      alert("モビータイプを選択してください。");
+      if (publishStatus) publishStatus.textContent = "";
+      openMobbyTypeModal("");
+      return;
+    }
+
     const usedNames = editor.getUsedAssetNames();
     const hasLogo = usedNames.includes("Logo");
     const hasMobby = usedNames.some((name) => MOBBY_NAME_RE.test(name));
@@ -2758,6 +2934,8 @@ btnPublish?.addEventListener("click", async () => {
       thumb,
       state,
       uid,
+      mobbyType,
+      mobbyTypeUrl,
       likes: 0,
       createdAt: serverTimestamp()
     });

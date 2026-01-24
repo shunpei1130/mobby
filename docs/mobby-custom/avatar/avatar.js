@@ -34,6 +34,7 @@ const TYPE_LIST = [
   "購買前たまり場モビィ",
   "部室たまり場モビィ"
 ];
+const MOBBY_TYPE_STORAGE_KEY = "mobby_selected_type_v1";
 
 const NEON_COLORS = [
   { label: "ネオンピンク", value: "#ff7ad9" },
@@ -78,6 +79,31 @@ function clampText(raw, max) {
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, max);
+}
+
+function normalizeMobbyName(name) {
+  return String(name || "").replace(/モビィ/g, "モビー").trim();
+}
+
+function findTypeByNormalized(target) {
+  const normalized = normalizeMobbyName(target);
+  if (!normalized) return "";
+  return TYPE_LIST.find((item) => normalizeMobbyName(item) === normalized) || "";
+}
+
+function getDefaultType() {
+  const params = new URLSearchParams(window.location.search || "");
+  const fromParam = params.get("mobbyType") || "";
+  const matchParam = findTypeByNormalized(fromParam);
+  if (matchParam) return matchParam;
+  try {
+    const stored = localStorage.getItem(MOBBY_TYPE_STORAGE_KEY) || "";
+    const matchStored = findTypeByNormalized(stored);
+    if (matchStored) return matchStored;
+  } catch (_) {
+    // ignore
+  }
+  return "";
 }
 
 function populateSelect(select, items) {
@@ -310,6 +336,11 @@ populateSelect(typeColorSelect, NEON_COLORS);
 populateSelect(nameColorSelect, NEON_COLORS);
 populateSelect(msgColorSelect, NEON_COLORS);
 populateSelect(decoSelect, DECO_TEMPLATES);
+
+const defaultType = getDefaultType();
+if (defaultType) {
+  typeSelect.value = defaultType;
+}
 
 bindLiveUpdates();
 applySelections(true);

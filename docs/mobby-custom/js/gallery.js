@@ -10,13 +10,24 @@ export function createGallery({ db, uid, gridEl, statusEl, modalEl, modalBodyEl,
   let filterOptions = [];
   const profileCache = new Map();
 
-  function extractMobbyNames(state) {
+  function normalizeMobbyName(name) {
+    return String(name || "").replace(/モビィ/g, "モビー").trim();
+  }
+
+  function extractMobbyNames(dataOrState) {
     const names = new Set();
+    if (!dataOrState) return names;
+    const direct = normalizeMobbyName(dataOrState?.mobbyType || "");
+    if (direct) {
+      names.add(direct);
+      return names;
+    }
+    const state = dataOrState?.state || dataOrState;
     const objects = Array.isArray(state?.objects) ? state.objects : [];
     for (const o of objects) {
       if (o?.type !== "img" || typeof o.name !== "string") continue;
       if (!/モビ[ィー]/.test(o.name)) continue;
-      names.add(o.name.replace(/モビィ/g, "モビー"));
+      names.add(normalizeMobbyName(o.name));
     }
     return names;
   }
@@ -24,7 +35,7 @@ export function createGallery({ db, uid, gridEl, statusEl, modalEl, modalBodyEl,
   function buildFilterOptions(items) {
     const set = new Set();
     for (const item of items) {
-      const names = extractMobbyNames(item.data?.state);
+      const names = extractMobbyNames(item.data);
       for (const name of names) set.add(name);
     }
     return Array.from(set);
@@ -318,7 +329,7 @@ export function createGallery({ db, uid, gridEl, statusEl, modalEl, modalBodyEl,
 
     const filtered = cachedDocs.filter(({ data }) => {
       if (currentFilter === "all") return true;
-      const names = extractMobbyNames(data?.state);
+      const names = extractMobbyNames(data);
       return names.has(currentFilter);
     });
 
