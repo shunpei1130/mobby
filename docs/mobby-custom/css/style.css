@@ -238,6 +238,27 @@ body{
   flex-wrap:wrap;
   margin:6px 0 12px;
 }
+.designItemPicker.isCollapsed{
+  margin:0 0 6px;
+}
+.designItemPicker.isCollapsed .templateTabs{
+  display:none;
+}
+.templateToggle{
+  height:30px;
+  padding:0 12px;
+  border-radius:12px;
+  font-size:12px;
+  line-height:1.2;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.templateToggle[aria-expanded="true"]{
+  background:linear-gradient(180deg, rgba(255,208,176,.85), rgba(255,184,150,.9));
+  border-color:rgba(255,140,100,.45);
+  color:#3a1f15;
+}
 .templateTabs{
   display:flex;
   gap:8px;
@@ -1249,9 +1270,19 @@ canvas{display:block;width:100% !important;height:auto !important;touch-action:p
   .grid2{grid-template-columns:1fr;width:100%;gap:18px;}
   .card{width:100%}
   .designCard{padding:10px 14px}
-  .designCard .canvasWrap{width:clamp(220px, 74vw, 320px); margin:8px auto;}
-  .designItemPicker{align-items:flex-start}
+  .designCard .canvasWrap{width:clamp(220px, 74vw, 320px); margin:0 auto 4px;}
+  .designItemPicker{align-items:center;justify-content:flex-start;gap:6px;margin:2px 0 2px;}
   .designItemPicker .label{width:100%}
+  .designItemPicker.isCollapsed{margin:0 0 2px;}
+  .designItemPicker.isCollapsed + .canvasWrap{margin-top:-40px;}
+  .templateToggle{
+    width:auto;
+    height:26px;
+    padding:0 10px;
+    border-radius:10px;
+    font-size:11px;
+    margin-left:-6px;
+  }
   .templateTabs{width:100%}
   .templateTab{flex:1 1 0;text-align:center}
   .row{flex-direction:column;align-items:stretch}

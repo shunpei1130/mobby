@@ -114,8 +114,9 @@
 
         </div>
 
-        <div class="designItemPicker">
-          <div class="templateTabs" role="group" aria-label="アイテムを選択">
+        <div class="designItemPicker isCollapsed">
+          <button id="templateToggle" class="btn templateToggle" type="button" aria-expanded="false" aria-controls="templateTabs">種類</button>
+          <div id="templateTabs" class="templateTabs" role="group" aria-label="アイテムを選択">
             <button class="tab templateTab active" type="button" data-template="assets/templates/tshirt.png" aria-pressed="true">Tシャツ</button>
             <button class="tab templateTab" type="button" data-template="assets/templates/longt.png" aria-pressed="false">ロンT</button>
             <button class="tab templateTab" type="button" data-template="assets/templates/pants.png" aria-pressed="false">パンツ</button>

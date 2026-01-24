@@ -50,6 +50,8 @@ const btnModeDraw = document.getElementById("btnModeDraw");
 const designZoom = document.getElementById("designZoom");
 const templateSelect = document.getElementById("templateSelect");
 const templateTabs = Array.from(document.querySelectorAll(".templateTab"));
+const templateToggle = document.getElementById("templateToggle");
+const templatePicker = document.querySelector(".designItemPicker");
 const assetGrid = document.getElementById("assetGrid");
 const btnClear = document.getElementById("btnClear");
 const btnPublish = document.getElementById("btnPublish");
@@ -583,6 +585,13 @@ function syncTemplateUi(nextValue) {
   }
 }
 
+function setTemplatePickerCollapsed(nextCollapsed) {
+  if (!templatePicker || !templateToggle) return;
+  const shouldCollapse = !!nextCollapsed;
+  templatePicker.classList.toggle("isCollapsed", shouldCollapse);
+  templateToggle.setAttribute("aria-expanded", shouldCollapse ? "false" : "true");
+}
+
 function applyTemplateSelection(nextValue) {
   if (!nextValue) return;
   const current = templateSelect?.value || "";
@@ -598,6 +607,12 @@ templateTabs.forEach((tab) => {
 });
 templateSelect?.addEventListener("change", () => syncTemplateUi());
 syncTemplateUi();
+if (templatePicker && templateToggle) {
+  setTemplatePickerCollapsed(templatePicker.classList.contains("isCollapsed"));
+  templateToggle.addEventListener("click", () => {
+    setTemplatePickerCollapsed(!templatePicker.classList.contains("isCollapsed"));
+  });
+}
 
 function syncInvitePoints(nextPoints) {
   if (profileInvitePoints) {
