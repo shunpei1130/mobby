@@ -379,6 +379,7 @@ body{
   justify-content:center;
   align-items:center;
   pointer-events:none;
+  z-index:0;
 }
 .templatePreview img{
   width:100%;
@@ -387,7 +388,7 @@ body{
   max-height:none;
   opacity:.35;
 }
-canvas{display:block;width:100% !important;height:auto !important;touch-action:pan-y}
+canvas{display:block;width:100% !important;height:auto !important;touch-action:pan-y;position:relative;z-index:1}
 .canvasInteracting{overflow:hidden}
 .canvasModeToggle{
   position:absolute;
@@ -825,6 +826,17 @@ canvas{display:block;width:100% !important;height:auto !important;touch-action:p
   gap:8px;
   flex-wrap:wrap;
   font-size:12px;
+}
+.btn.danger{
+  border-color:rgba(200,70,70,.65);
+  background:linear-gradient(180deg, rgba(255,170,170,.9), rgba(255,120,120,.9));
+  color:#5a1d1d;
+  font-weight:700;
+}
+.btn.danger:hover{filter:brightness(1.05)}
+.dangerBox{
+  border-color:rgba(200,70,70,.25);
+  background:rgba(255,245,245,.65);
 }
 .countBtn{
   border:1px solid var(--border);

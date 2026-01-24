@@ -4,9 +4,9 @@ import { createGallery } from "./gallery.js";
 
 import {
   collection, doc, addDoc, getDoc, getDocs, query, orderBy, limit, setDoc,
-  serverTimestamp, runTransaction, where, deleteDoc, deleteField, increment, arrayUnion
+  serverTimestamp, runTransaction, where, deleteDoc, deleteField, increment, arrayUnion, startAfter
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-import { onAuthStateChanged, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, signInWithCredential, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { onAuthStateChanged, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, signInWithCredential, GoogleAuthProvider, deleteUser } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
 function patchDialog(el) {
   if (!el) return;
@@ -232,6 +232,8 @@ const followingList = document.getElementById("followingList");
 const followersList = document.getElementById("followersList");
 const profileDesigns = document.getElementById("profileDesigns");
 const profileDesignsStatus = document.getElementById("profileDesignsStatus");
+const deleteAccountBtn = document.getElementById("deleteAccountBtn");
+const deleteAccountStatus = document.getElementById("deleteAccountStatus");
 
 const modal = document.getElementById("modal");
 const modalBody = document.getElementById("modalBody");
@@ -2205,10 +2207,13 @@ async function loadProfileView() {
     setProfileUiEnabled(false);
     if (profileFollowingCount) profileFollowingCount.textContent = "0";
     if (profileFollowersCount) profileFollowersCount.textContent = "0";
+    if (deleteAccountBtn) deleteAccountBtn.disabled = true;
+    if (deleteAccountStatus) deleteAccountStatus.textContent = "";
     return;
   }
 
   setProfileUiEnabled(true);
+  if (deleteAccountBtn) deleteAccountBtn.disabled = false;
   if (profileStatus) profileStatus.textContent = "読み込み中...";
 
   const profile = await fetchProfile(uid);
@@ -2262,6 +2267,147 @@ async function saveProfileAvatar(dataUrl) {
 
 function normalizeUsername(raw) {
   return (raw || "").trim();
+}
+
+async function deleteAllDocsInCollection(colRef) {
+  const snap = await getDocs(colRef);
+  if (snap.empty) return;
+  for (const docSnap of snap.docs) {
+    await deleteDoc(docSnap.ref);
+  }
+}
+
+async function deleteDesignSubcollections(designId) {
+  if (!designId) return;
+  const commentsCol = collection(db, "designs", designId, "comments");
+  const likesCol = collection(db, "designs", designId, "likesByUser");
+  await Promise.all([deleteAllDocsInCollection(commentsCol), deleteAllDocsInCollection(likesCol)]);
+}
+
+async function deleteUserDesigns(targetUid, onProgress) {
+  const designsCol = collection(db, "designs");
+  let lastDoc = null;
+  while (true) {
+    const q = lastDoc
+      ? query(designsCol, where("uid", "==", targetUid), orderBy("createdAt", "desc"), startAfter(lastDoc), limit(30))
+      : query(designsCol, where("uid", "==", targetUid), orderBy("createdAt", "desc"), limit(30));
+    const snap = await getDocs(q);
+    if (snap.empty) break;
+    for (const docSnap of snap.docs) {
+      if (onProgress) onProgress(`投稿削除中... (${docSnap.id})`);
+      await deleteDesignSubcollections(docSnap.id);
+      await deleteDoc(docSnap.ref);
+    }
+    lastDoc = snap.docs[snap.docs.length - 1];
+  }
+}
+
+async function deleteUserInteractions(targetUid, onProgress) {
+  const designsCol = collection(db, "designs");
+  let lastDoc = null;
+  while (true) {
+    const q = lastDoc
+      ? query(designsCol, orderBy("createdAt", "desc"), startAfter(lastDoc), limit(30))
+      : query(designsCol, orderBy("createdAt", "desc"), limit(30));
+    const snap = await getDocs(q);
+    if (snap.empty) break;
+    for (const docSnap of snap.docs) {
+      const designId = docSnap.id;
+      if (onProgress) onProgress(`関連データ削除中... (${designId})`);
+      try {
+        const likeRef = doc(db, "designs", designId, "likesByUser", targetUid);
+        const likeSnap = await getDoc(likeRef);
+        if (likeSnap.exists()) {
+          await deleteDoc(likeRef);
+        }
+      } catch (e) {
+        console.warn("delete like failed", designId, e);
+      }
+      try {
+        const commentsCol = collection(db, "designs", designId, "comments");
+        let lastComment = null;
+        while (true) {
+          const cq = lastComment
+            ? query(commentsCol, where("uid", "==", targetUid), orderBy("createdAt", "desc"), startAfter(lastComment), limit(50))
+            : query(commentsCol, where("uid", "==", targetUid), orderBy("createdAt", "desc"), limit(50));
+          const csnap = await getDocs(cq);
+          if (csnap.empty) break;
+          for (const commentDoc of csnap.docs) {
+            await deleteDoc(commentDoc.ref);
+          }
+          lastComment = csnap.docs[csnap.docs.length - 1];
+        }
+      } catch (e) {
+        console.warn("delete comments failed", designId, e);
+      }
+    }
+    lastDoc = snap.docs[snap.docs.length - 1];
+  }
+}
+
+async function deleteFollowEdges(targetUid) {
+  const followingCol = collection(db, "profiles", targetUid, "following");
+  const followersCol = collection(db, "profiles", targetUid, "followers");
+  const followingSnap = await getDocs(followingCol);
+  for (const docSnap of followingSnap.docs) {
+    const otherUid = docSnap.id;
+    try {
+      await deleteDoc(docSnap.ref);
+      const followerRef = doc(db, "profiles", otherUid, "followers", targetUid);
+      const otherProfileRef = doc(db, "profiles", otherUid);
+      await runTransaction(db, async (tx) => {
+        const otherSnap = await tx.get(otherProfileRef);
+        const count = Number(otherSnap.data()?.followersCount || 0);
+        tx.delete(followerRef);
+        tx.set(otherProfileRef, { followersCount: Math.max(0, count - 1) }, { merge: true });
+      });
+    } catch (e) {
+      console.warn("delete following edge failed", otherUid, e);
+    }
+  }
+  const followersSnap = await getDocs(followersCol);
+  for (const docSnap of followersSnap.docs) {
+    const otherUid = docSnap.id;
+    try {
+      await deleteDoc(docSnap.ref);
+      const followingRef = doc(db, "profiles", otherUid, "following", targetUid);
+      const otherProfileRef = doc(db, "profiles", otherUid);
+      await runTransaction(db, async (tx) => {
+        const otherSnap = await tx.get(otherProfileRef);
+        const count = Number(otherSnap.data()?.followingCount || 0);
+        tx.delete(followingRef);
+        tx.set(otherProfileRef, { followingCount: Math.max(0, count - 1) }, { merge: true });
+      });
+    } catch (e) {
+      console.warn("delete follower edge failed", otherUid, e);
+    }
+  }
+}
+
+async function deleteUserAccountData(targetUid, onProgress) {
+  if (!targetUid) return;
+  if (onProgress) onProgress("フォロー情報削除中...");
+  await deleteFollowEdges(targetUid);
+  if (onProgress) onProgress("投稿削除中...");
+  await deleteUserDesigns(targetUid, onProgress);
+  if (onProgress) onProgress("他投稿のいいね/コメント削除中...");
+  await deleteUserInteractions(targetUid, onProgress);
+  if (onProgress) onProgress("プロフィール削除中...");
+  const profileRef = doc(db, "profiles", targetUid);
+  try {
+    const currentProfile = profileCache.get(targetUid) || await fetchProfile(targetUid);
+    const username = currentProfile?.username || "";
+    if (username) {
+      try {
+        await deleteDoc(doc(db, "usernames", username.toLowerCase()));
+      } catch (e) {
+        console.warn("delete username map failed", e);
+      }
+    }
+  } catch (_) {
+    // ignore
+  }
+  await deleteDoc(profileRef);
 }
 
 function validateUsername(name) {
@@ -2491,6 +2637,39 @@ profileAvatar?.addEventListener("keydown", async (event) => {
   }
   await ensureAvatarFrameMobbyType();
   avatarModal?.showModal();
+});
+
+deleteAccountBtn?.addEventListener("click", async () => {
+  if (!uid || !auth.currentUser) {
+    alert("ログインが必要です。");
+    return;
+  }
+  const ok = confirm("アカウント削除を行います。この操作は取り消せません。");
+  if (!ok) return;
+  const keyword = prompt("削除する場合は DELETE と入力してください。", "");
+  if (keyword !== "DELETE") {
+    if (deleteAccountStatus) deleteAccountStatus.textContent = "削除はキャンセルされました。";
+    return;
+  }
+  try {
+    if (deleteAccountBtn) deleteAccountBtn.disabled = true;
+    if (deleteAccountStatus) deleteAccountStatus.textContent = "削除準備中...";
+    await deleteUserAccountData(uid, (msg) => {
+      if (deleteAccountStatus) deleteAccountStatus.textContent = msg;
+    });
+    if (deleteAccountStatus) deleteAccountStatus.textContent = "アカウント削除中...";
+    await deleteUser(auth.currentUser);
+    if (deleteAccountStatus) deleteAccountStatus.textContent = "削除が完了しました。";
+  } catch (e) {
+    if (e?.code === "auth/requires-recent-login") {
+      alert("安全のため再ログインが必要です。再度ログインしてからお試しください。");
+    } else {
+      alert("アカウント削除に失敗: " + e.message);
+    }
+    if (deleteAccountStatus) deleteAccountStatus.textContent = "";
+  } finally {
+    if (deleteAccountBtn) deleteAccountBtn.disabled = false;
+  }
 });
 
 idReset?.addEventListener("click", async () => {
