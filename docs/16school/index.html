@@ -193,7 +193,7 @@
     }
     @media (max-width: 600px) {
       header { flex-direction: column; align-items: flex-start; }
-      .nav { width: 100%; justify-content: flex-start; }
+      .nav { width: auto; justify-content: flex-start; }
     }
 
     /* Buttons */
@@ -733,21 +733,21 @@
     <header>
       <div class="brand">
         <a href="../index.html?skipSplash=1" class="back-btn" style="text-decoration:none;">
-          <button style="margin-right:12px; font-size:15px; padding:6px 18px; border-radius:20px; border:1px solid #e0e0e0; background:#fff8e8; color:#0071e3; cursor:pointer;">&lt; トップに戻る</button>
+          <button style="margin-right:12px; font-size:15px; padding:6px 18px; border-radius:20px; border:1px solid #e0e0e0; background:#fff8e8; color:#0071e3; cursor:pointer;">Home</button>
         </a>
+        <button id="goMobbyOutfit" style="margin-right:12px; font-size:15px; padding:6px 18px; border-radius:20px; border:1px solid #e0e0e0; background:#fff8e8; color:#0071e3; cursor:pointer;">Mobby Outfit</button>
         <div class="logo" id="logoHome"></div>
         <div class="title">
           <h1 id="titleHome">学校モビー診断</h1>
-          <p>学校モビー診断であなたのキャラクターを16タイプで診断</p>
         </div>
       </div>
-      <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
         <nav class="nav">
           <a href="#" id="navDiagnosis" class="active">診断</a>
           <a href="#" id="navCharacters">キャラ一覧</a>
         </nav>
-        <div style="display: flex; gap: 8px;">
-        <button class="danger" id="btnReset" style="font-size:11px;">リセット</button>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <button class="danger" id="btnReset" style="font-size:11px;">リセット</button>
           <button id="btnTypeGuide" style="font-size:11px; background:var(--accent-soft); color:var(--accent);">タイプ解説</button>
         </div>
       </div>
@@ -760,6 +760,20 @@
   </div>
 
   <script>
+    // Mobby Outfitはパスワード制で公開
+    const outfitButton = document.getElementById("goMobbyOutfit");
+    if (outfitButton) {
+      outfitButton.addEventListener("click", () => {
+        const input = window.prompt("Mobby Outfitはパスワードが必要です。");
+        if (input === null) return;
+        if (input.trim() === "1130") {
+          window.location.href = "../mobby-custom/index.html";
+        } else {
+          window.alert("パスワードが違います。");
+        }
+      });
+    }
+
     function isQuizCompleted(){
   const questions = getQuestions();
   return Object.keys(state.answers || {}).length >= questions.length;

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <!-- SEO基本 -->
-  <title>Mobby（モビー）- かわいいカメラ型キーホルダー公式サイト</title>
+  <title>Mobby（モビー）公式サイト</title>
   <meta name="description" content="Mobby（モビー）はあなたの思い出を撮影できるカメラ型キーホルダー。持ち歩けるかわいいデザインで、いつでもどこでも大切な瞬間を記録。学生から大人まで人気のカメラアクセサリー。">
   <meta name="keywords" content="Mobby,モビー,モビー,モビー診断,カメラ型キーホルダー,学校モビー診断,モビーアウトフィット,写真撮影,モビーキーホルダー,学生グッズ,プレゼント">
   <meta name="author" content="Mobby">
@@ -1788,9 +1788,9 @@
     <!-- ▼▼▼ ここにモビー診断ボタンを追加 ▼▼▼ -->
     <div id="mobbyDiagnosisWrapper" style="width:100%;display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:20px;">
       <a class="btn btn-primary" id="goMobbyDiagnosis" href="16school/index.html" style="font-size:14px;padding:10px 24px;">モビー診断</a>
-      <button class="btn btn-primary" id="goMobbyOutfit" type="button" disabled title="準備中のため現在は遷移できません" style="font-size:14px;padding:10px 24px;">
+      <button class="btn btn-primary" id="goMobbyOutfit" type="button" title="パスワードが必要です" style="font-size:14px;padding:10px 24px;">
         MobbyOutfit
-        <span class="btn-badge">準備中</span>
+        <span class="btn-badge">限定公開</span>
       </button>
     </div>
     
@@ -1813,6 +1813,20 @@ document.getElementById('goMobbyDiagnosis')?.addEventListener('click', () => {
 </script>
   <!-- EmailJS -->
   <script>
+  // Mobby Outfitはパスワード制で公開
+  const outfitButton = document.getElementById("goMobbyOutfit");
+  if (outfitButton) {
+    outfitButton.addEventListener("click", () => {
+      const input = window.prompt("Mobby Outfitはパスワードが必要です。");
+      if (input === null) return;
+      if (input.trim() === "1130") {
+        window.location.href = "mobby-custom/index.html";
+      } else {
+        window.alert("パスワードが違います。");
+      }
+    });
+  }
+
   /* =========================
    Sky & Birds (background)
    - 目的：軌跡を残さない（毎フレーム完全クリア）
