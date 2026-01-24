@@ -3,6 +3,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/fireba
 import {
   getAuth,
   setPersistence,
+  indexedDBLocalPersistence,
   browserLocalPersistence,
   browserSessionPersistence,
   inMemoryPersistence,
@@ -34,26 +35,23 @@ let persistenceReady = null;
 export function ensureAuthPersistence() {
   if (persistenceReady) return persistenceReady;
   persistenceReady = (async () => {
-    try {
-      await setPersistence(auth, browserLocalPersistence);
-      persistenceMode = "local";
-      return persistenceMode;
-    } catch (e1) {
+    const attempts = [
+      { mode: "indexeddb", persistence: indexedDBLocalPersistence },
+      { mode: "local", persistence: browserLocalPersistence },
+      { mode: "session", persistence: browserSessionPersistence },
+      { mode: "memory", persistence: inMemoryPersistence }
+    ];
+    for (const attempt of attempts) {
       try {
-        await setPersistence(auth, browserSessionPersistence);
-        persistenceMode = "session";
+        await setPersistence(auth, attempt.persistence);
+        persistenceMode = attempt.mode;
         return persistenceMode;
-      } catch (e2) {
-        try {
-          await setPersistence(auth, inMemoryPersistence);
-          persistenceMode = "memory";
-          return persistenceMode;
-        } catch (e3) {
-          persistenceMode = "failed";
-          return persistenceMode;
-        }
+      } catch (_) {
+        // try next
       }
     }
+    persistenceMode = "failed";
+    return persistenceMode;
   })();
   return persistenceReady;
 }

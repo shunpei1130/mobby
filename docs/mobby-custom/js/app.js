@@ -6,7 +6,7 @@ import {
   collection, doc, addDoc, getDoc, getDocs, query, orderBy, limit, setDoc,
   serverTimestamp, runTransaction, where, deleteDoc, deleteField, increment, arrayUnion
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-import { onAuthStateChanged, signInWithPopup, signInWithRedirect, getRedirectResult, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { onAuthStateChanged, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, signInWithCredential, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
 function patchDialog(el) {
   if (!el) return;
@@ -1190,7 +1190,8 @@ async function startGoogleLogin() {
     throw new Error("INAPP_LOGIN_BLOCKED");
   }
   await ensureAuthPersistence();
-  if (getAuthPersistenceMode() === "memory" || getAuthPersistenceMode() === "failed") {
+  const persistenceMode = getAuthPersistenceMode();
+  if (shouldUseRedirectLogin && (persistenceMode === "memory" || persistenceMode === "failed")) {
     alert("ブラウザの保存領域が使えないためログインできません。プライベートブラウズを解除して再試行してください。");
     throw new Error("AUTH_PERSISTENCE_UNAVAILABLE");
   }
@@ -1226,7 +1227,15 @@ syncAuthUi(null);
   try {
     await ensureAuthPersistence();
     const result = await getRedirectResult(auth);
-    if (result?.user) syncAuthUi(result.user);
+    if (result?.user) {
+      if (!auth.currentUser) {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        if (credential) {
+          await signInWithCredential(auth, credential);
+        }
+      }
+      syncAuthUi(auth.currentUser || result.user);
+    }
   } catch (e) {
     handleAuthError(e);
     syncAuthUi(auth.currentUser);
