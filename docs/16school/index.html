@@ -834,6 +834,32 @@
     </div>
   </div>
 
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+  <script>
+    (function initFirebaseForDiagnosis() {
+      if (!window.firebase) return;
+      const firebaseConfig = {
+        apiKey: "AIzaSyC9p0CGc65dim9DwxNN6Khvai3ZjV4p5FU",
+        authDomain: "mobbyfashion.firebaseapp.com",
+        projectId: "mobbyfashion",
+        storageBucket: "mobbyfashion.firebasestorage.app",
+        messagingSenderId: "459297026910",
+        appId: "1:459297026910:web:4c4ad521961ea52c0dd5cf",
+        measurementId: "G-7LEBQ0SCHZ"
+      };
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+      window.mobbyFirebase = {
+        auth: firebase.auth(),
+        db: firebase.firestore(),
+        fieldValue: firebase.firestore.FieldValue
+      };
+    })();
+  </script>
+
   <script>
     // Mobby Outfitはパスワード制で公開
     const outfitButton = document.getElementById("goMobbyOutfit");
@@ -1485,6 +1511,8 @@ function gotoDiagnosisHome(){
     };
 
     const STORAGE_KEY = "school_char_diag_v1";
+    const DIAGNOSIS_PENDING_KEY = "mobby_school_diag_pending_v1";
+    const DIAGNOSIS_LINK_TIMEOUT_MS = 2500;
     const PAGE_SIZE = 5; // 40問 ÷ 5問 = 8ページ
 
     const state = {
@@ -1537,6 +1565,89 @@ function gotoDiagnosisHome(){
           userId: state.userId,
           referrerId: refId
         });
+      }
+    }
+
+    function normalizeEmail(email) {
+      return String(email || "").trim().toLowerCase();
+    }
+
+    function getFirebaseContext() {
+      if (!window.mobbyFirebase) return null;
+      const { auth, db, fieldValue } = window.mobbyFirebase;
+      if (!auth || !db || !fieldValue) return null;
+      return window.mobbyFirebase;
+    }
+
+    function storePendingDiagnosis(payload) {
+      try {
+        localStorage.setItem(DIAGNOSIS_PENDING_KEY, JSON.stringify(payload));
+      } catch (e) {
+        console.warn("[Diagnosis] Pending save failed:", e);
+      }
+    }
+
+    function clearPendingDiagnosis() {
+      try {
+        localStorage.removeItem(DIAGNOSIS_PENDING_KEY);
+      } catch (_) {}
+    }
+
+    function waitForAuthUser(auth, timeoutMs = DIAGNOSIS_LINK_TIMEOUT_MS) {
+      if (!auth) return Promise.resolve(null);
+      if (auth.currentUser) return Promise.resolve(auth.currentUser);
+      return new Promise((resolve) => {
+        let settled = false;
+        const timer = setTimeout(() => {
+          if (settled) return;
+          settled = true;
+          resolve(auth.currentUser || null);
+        }, timeoutMs);
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          unsubscribe();
+          resolve(user || null);
+        });
+      });
+    }
+
+    async function linkDiagnosisToFirebase(payload) {
+      const ctx = getFirebaseContext();
+      if (!ctx) return false;
+      try {
+        const user = await waitForAuthUser(ctx.auth);
+        if (!user) return false;
+        const diagEmail = normalizeEmail(payload?.email);
+        const userEmail = normalizeEmail(user.email);
+        const emailMatch = !!diagEmail && !!userEmail && diagEmail === userEmail;
+        const diagnosis = {
+          source: "16school",
+          type: payload?.type || "",
+          axes: payload?.axes || {},
+          answers: payload?.answers || {},
+          gender: payload?.gender || "",
+          name: payload?.name || "",
+          age: payload?.age || "",
+          email: payload?.email || "",
+          userId: payload?.userId || "",
+          referrerId: payload?.referrerId || "",
+          shareCount: Number(payload?.shareCount || 0),
+          interested: payload?.interested === true,
+          createdAt: payload?.createdAt || new Date().toISOString()
+        };
+        await ctx.db.collection("profiles").doc(user.uid).set({
+          schoolDiagnosis: diagnosis,
+          schoolDiagnosisLinkedAt: ctx.fieldValue.serverTimestamp(),
+          schoolDiagnosisEmail: payload?.email || "",
+          schoolDiagnosisEmailMatch: emailMatch,
+          updatedAt: ctx.fieldValue.serverTimestamp()
+        }, { merge: true });
+        return true;
+      } catch (e) {
+        console.warn("[Diagnosis] Firebase link failed:", e);
+        return false;
       }
     }
 
@@ -2513,10 +2624,26 @@ function renderGate(){
         axes: res.leftPct,   // A,B,C,Dが0..100
         answers: questionAnswers,  // 各質問の回答（Q1:3, Q2:5, ...）
         gender: state.gender,  // "male" または "female"
+        userId: state.userId,
+        referrerId: state.referrerId,
+        shareCount: state.shareCount,
+        source: "16school",
         createdAt: new Date().toISOString(),
       };
 
       await submitLead(payload);
+
+      linkDiagnosisToFirebase(payload)
+        .then((linked) => {
+          if (linked) {
+            clearPendingDiagnosis();
+          } else {
+            storePendingDiagnosis(payload);
+          }
+        })
+        .catch(() => {
+          storePendingDiagnosis(payload);
+        });
 
       // 登録情報保存（次回スキップ用）
       state.profile = { name, email, age };

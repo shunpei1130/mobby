@@ -52,7 +52,63 @@ function safeStorageRemove(key) {
   }
 }
 
+const SCHOOL_DIAGNOSIS_PENDING_KEY = "mobby_school_diag_pending_v1";
 const MOBBY_TYPE_STORAGE_KEY = "mobby_selected_type_v1";
+
+function normalizeEmail(email) {
+  return String(email || "").trim().toLowerCase();
+}
+
+function readPendingDiagnosis() {
+  const raw = safeStorageGet(SCHOOL_DIAGNOSIS_PENDING_KEY);
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw);
+  } catch (_) {
+    return null;
+  }
+}
+
+function clearPendingDiagnosis() {
+  safeStorageRemove(SCHOOL_DIAGNOSIS_PENDING_KEY);
+}
+
+async function linkPendingDiagnosisToProfile(user) {
+  if (!user) return;
+  const pending = readPendingDiagnosis();
+  if (!pending) return;
+  try {
+    const diagEmail = normalizeEmail(pending.email);
+    const userEmail = normalizeEmail(user.email);
+    const emailMatch = !!diagEmail && !!userEmail && diagEmail === userEmail;
+    const diagnosis = {
+      source: "16school",
+      type: pending.type || "",
+      axes: pending.axes || {},
+      answers: pending.answers || {},
+      gender: pending.gender || "",
+      name: pending.name || "",
+      age: pending.age || "",
+      email: pending.email || "",
+      userId: pending.userId || "",
+      referrerId: pending.referrerId || "",
+      shareCount: Number(pending.shareCount || 0),
+      interested: pending.interested === true,
+      createdAt: pending.createdAt || pending.completedAt || ""
+    };
+    const profileRef = doc(db, "profiles", user.uid);
+    await setDoc(profileRef, {
+      schoolDiagnosis: diagnosis,
+      schoolDiagnosisLinkedAt: serverTimestamp(),
+      schoolDiagnosisEmail: pending.email || "",
+      schoolDiagnosisEmailMatch: emailMatch,
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+    clearPendingDiagnosis();
+  } catch (e) {
+    console.warn("pending diagnosis link failed", e);
+  }
+}
 
 const tabDesign = document.getElementById("tabDesign");
 const tabGallery = document.getElementById("tabGallery");
@@ -2523,6 +2579,7 @@ async function applyAuthState(user) {
   invitePrompted = false;
   syncAuthUi(user);
   await ensureProfileDoc(user);
+  await linkPendingDiagnosisToProfile(user);
   profileCache.clear();
   const profile = await fetchProfile(uid);
   requireProfileSetup = !!user && !isProfileSetupComplete(profile);
