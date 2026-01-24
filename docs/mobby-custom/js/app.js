@@ -1197,15 +1197,16 @@ async function startGoogleLogin() {
   }
   if (shouldUseRedirectLogin) {
     await signInWithRedirect(auth, googleProvider);
-    return;
+    return null;
   }
   try {
-    await signInWithPopup(auth, googleProvider);
+    const result = await signInWithPopup(auth, googleProvider);
+    return result;
   } catch (e) {
     const code = e?.code;
     if (code === "auth/popup-blocked" || code === "auth/cancelled-popup-request" || code === "auth/operation-not-supported-in-this-environment" || code === "auth/web-storage-unsupported") {
       await signInWithRedirect(auth, googleProvider);
-      return;
+      return null;
     }
     throw e;
   }
@@ -1234,7 +1235,7 @@ syncAuthUi(null);
           await signInWithCredential(auth, credential);
         }
       }
-      syncAuthUi(auth.currentUser || result.user);
+      await queueAuthSync(auth.currentUser || result.user);
     }
   } catch (e) {
     handleAuthError(e);
@@ -2244,14 +2245,16 @@ function maybeOpenInviteModal() {
   openInviteModal("");
 }
 
-onAuthStateChanged(auth, async (user) => {
+let authSyncPromise = Promise.resolve();
+
+async function applyAuthState(user) {
   authReady = true;
   uid = user?.uid || "";
   invitePrompted = false;
   syncAuthUi(user);
   await ensureProfileDoc(user);
   profileCache.clear();
-  let profile = await fetchProfile(uid);
+  const profile = await fetchProfile(uid);
   requireProfileSetup = !!user && !isProfileSetupComplete(profile);
   updateUserBadgeFromProfile(profile, user);
   syncAvatarFromProfile(profile, user);
@@ -2277,6 +2280,19 @@ onAuthStateChanged(auth, async (user) => {
   } else if (user && !profile?.inviteCode) {
     maybeOpenInviteModal();
   }
+}
+
+function queueAuthSync(user) {
+  authSyncPromise = authSyncPromise
+    .then(() => applyAuthState(user))
+    .catch((e) => {
+      console.warn("auth sync failed", e);
+    });
+  return authSyncPromise;
+}
+
+onAuthStateChanged(auth, (user) => {
+  queueAuthSync(user);
 });
 
 profileFollowingBtn?.addEventListener("click", async () => {
@@ -2482,8 +2498,15 @@ btnLogin?.addEventListener("click", async () => {
   }
   try {
     if (btnLogin) btnLogin.disabled = true;
-    if (userBadge) userBadge.textContent = "ログイン中...";
-    await startGoogleLogin();
+    if (userBadgeLabel) {
+      userBadgeLabel.textContent = "ログイン中...";
+    } else if (userBadge) {
+      userBadge.textContent = "ログイン中...";
+    }
+    const result = await startGoogleLogin();
+    if (result?.user) {
+      await queueAuthSync(result.user);
+    }
   } catch (e) {
     handleAuthError(e);
     syncAuthUi(auth.currentUser);
@@ -2514,8 +2537,15 @@ termsAccept?.addEventListener("click", async () => {
   termsModal?.close();
   try {
     if (btnLogin) btnLogin.disabled = true;
-    if (userBadge) userBadge.textContent = "ログイン中...";
-    await startGoogleLogin();
+    if (userBadgeLabel) {
+      userBadgeLabel.textContent = "ログイン中...";
+    } else if (userBadge) {
+      userBadge.textContent = "ログイン中...";
+    }
+    const result = await startGoogleLogin();
+    if (result?.user) {
+      await queueAuthSync(result.user);
+    }
   } catch (e) {
     handleAuthError(e);
     syncAuthUi(auth.currentUser);
@@ -2527,7 +2557,11 @@ termsAccept?.addEventListener("click", async () => {
 btnLogout?.addEventListener("click", async () => {
   try {
     if (btnLogout) btnLogout.disabled = true;
-    if (userBadge) userBadge.textContent = "ログアウト中...";
+    if (userBadgeLabel) {
+      userBadgeLabel.textContent = "ログアウト中...";
+    } else if (userBadge) {
+      userBadge.textContent = "ログアウト中...";
+    }
     await signOut(auth);
     syncAuthUi(null);
   } catch (e) {
