@@ -425,6 +425,7 @@ const STICKERS = [
   { name: "心友", url: "assets/stickers/心友.PNG" },
   { name: "星1", url: "assets/stickers/星１.PNG" },
   { name: "カップル自撮りモビー", url: "assets/stickers/モビィ透過済女/カップル自撮りモビィ.png" },
+  { name: "クラスアルバム映えモビー", url: "assets/stickers/モビィ透過済女/クラスアルバム映えモビィ.png" },
   { name: "ストーリー撮影班モビー", url: "assets/stickers/モビィ透過済女/ストーリー撮影班モビィ.png" },
   { name: "ストーリー匂わせモビー", url: "assets/stickers/モビィ透過済女/ストーリー匂わせモビィ.png" },
   { name: "ネイルこだわりモビー", url: "assets/stickers/モビィ透過済女/ネイルこだわりモビィ.png" },
