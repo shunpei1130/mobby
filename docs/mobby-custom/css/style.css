@@ -1129,6 +1129,73 @@ canvas{display:block;width:100% !important;height:auto !important;touch-action:p
   font-size:12px;
   color:var(--muted);
 }
+.purchaseSizeModal{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  padding:6px;
+}
+.purchaseSizeHeader{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.purchaseSizeTitle{
+  font-weight:700;
+  font-size:16px;
+}
+.purchaseSizeNote{
+  color:var(--muted);
+  font-size:12px;
+}
+.purchaseSizeList{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
+  gap:12px;
+}
+.purchaseSizeCard{
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.75);
+  border-radius:16px;
+  padding:12px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  box-shadow:0 8px 16px rgba(122,84,58,.12);
+}
+.purchaseSizeInfo{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.purchaseSizeLabel{
+  font-weight:700;
+}
+.purchaseSizeHeight{
+  color:var(--muted);
+  font-size:12px;
+}
+.purchaseSizePrice{
+  font-weight:700;
+}
+.purchaseSizeBuy{
+  margin-top:4px;
+  align-self:flex-start;
+}
+.purchaseSizeThumb{
+  width:110px;
+  flex:0 0 110px;
+}
+.purchaseSizeThumb img{
+  width:100%;
+  aspect-ratio:1/1;
+  object-fit:cover;
+  border-radius:12px;
+  border:1px solid rgba(121,93,72,.18);
+  background:rgba(255,255,255,.85);
+  display:block;
+}
 .purchaseBody{
   padding:10px;
   display:flex;

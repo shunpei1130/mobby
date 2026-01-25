@@ -1545,35 +1545,89 @@ const MANUAL_PURCHASE_ITEMS = [
   {
     id: "manual-1",
     title: "イカチ―・パコ",
-    price: 5000,
+    price: 6980,
     image: "assets/ikati/イカチ―・パコ1.png",
     images: [
       "assets/ikati/イカチ―・パコ1.png",
       "assets/ikati/イカチ―・パコ2.png"
     ],
-    note: "スウェット・パンツ S/M/L"
+    note: "スウェット・パンツ S/M",
+    sizes: [
+      {
+        id: "short",
+        label: "SHORT (S)",
+        height: "148-157cm",
+        price: 6980,
+        url: "https://buy.stripe.com/9B6aEX6d72DH4KqbJJao800",
+        image: "assets/ikati/stripe/イカチ―・パコ2.png"
+      },
+      {
+        id: "regular",
+        label: "REGULAR (M)",
+        height: "157-167cm",
+        price: 6980,
+        url: "https://buy.stripe.com/fZu14ngRLbad3Gm155ao801",
+        image: "assets/ikati/stripe/イカチ―・パコ2.png"
+      }
+    ]
   },
   {
     id: "manual-2",
     title: "イカチ―・ピコ",
-    price: 5000,
+    price: 6980,
     image: "assets/ikati/イカチ―・ピコ1.png",
     images: [
       "assets/ikati/イカチ―・ピコ1.png",
       "assets/ikati/イカチ―・ピコ2.png"
     ],
-    note: "スウェット・パンツ S/M/L"
+    note: "スウェット・パンツ S/M",
+    sizes: [
+      {
+        id: "short",
+        label: "SHORT (S)",
+        height: "148-157cm",
+        price: 6980,
+        url: "https://buy.stripe.com/14A6oH44Zemp7WC011ao802",
+        image: "assets/ikati/stripe/イカチ―・ピコ2.png"
+      },
+      {
+        id: "regular",
+        label: "REGULAR (M)",
+        height: "157-167cm",
+        price: 6980,
+        url: "https://buy.stripe.com/28E5kD44Z3HL2Ci6ppao803",
+        image: "assets/ikati/stripe/イカチ―・ピコ2.png"
+      }
+    ]
   },
   {
     id: "manual-3",
     title: "イカチー・ンコ",
-    price: 5000,
+    price: 6980,
     image: "assets/ikati/イカチー・ンコ1.png",
     images: [
       "assets/ikati/イカチー・ンコ1.png",
       "assets/ikati/イカチー・ンコ2.png"
     ],
-    note: "スウェット・パンツ S/M/L"
+    note: "スウェット・パンツ S/M",
+    sizes: [
+      {
+        id: "short",
+        label: "SHORT (S)",
+        height: "148-157cm",
+        price: 6980,
+        url: "https://buy.stripe.com/9B63cvbxrceh5OufZZao804",
+        image: "assets/ikati/stripe/イカチー・ンコ2.png"
+      },
+      {
+        id: "regular",
+        label: "REGULAR (M)",
+        height: "157-167cm",
+        price: 6980,
+        url: "https://buy.stripe.com/aFa00j6d74LP1ye7ttao805",
+        image: "assets/ikati/stripe/イカチー・ンコ2.png"
+      }
+    ]
   },
   {
     id: "manual-4",
@@ -1651,7 +1705,48 @@ function openPurchasePreview(images = [], title) {
   modal.showModal();
 }
 
-function createPurchaseCard({ title, image, images, meta, price, badges }) {
+function openPurchaseSizeModal({ title, note, sizes } = {}) {
+  if (!modal || !modalBody) return;
+  const safeSizes = Array.isArray(sizes)
+    ? sizes.filter((size) => size && size.url)
+    : [];
+  if (!safeSizes.length) return;
+  const titleText = title || "サイズを選択";
+  const noteText = note ? `<div class="purchaseSizeNote">${note}</div>` : "";
+  const listHtml = safeSizes.map((size) => {
+    const priceText = formatPrice(size.price);
+    const heightText = size.height ? `想定身長：${size.height}` : "";
+    const imageAlt = `${titleText} ${size.label || ""}`.trim();
+    const imageHtml = size.image
+      ? `<div class="purchaseSizeThumb"><img src="${size.image}" alt="${imageAlt}" loading="lazy"></div>`
+      : "";
+    return `
+      <div class="purchaseSizeCard">
+        <div class="purchaseSizeInfo">
+          <div class="purchaseSizeLabel">${size.label || ""}</div>
+          ${heightText ? `<div class="purchaseSizeHeight">${heightText}</div>` : ""}
+          ${priceText ? `<div class="purchaseSizePrice">${priceText}</div>` : ""}
+          <a class="btn primary purchaseSizeBuy" href="${size.url}" target="_blank" rel="noopener">購入する</a>
+        </div>
+        ${imageHtml}
+      </div>
+    `;
+  }).join("");
+  modalBody.innerHTML = `
+    <div class="purchaseSizeModal">
+      <div class="purchaseSizeHeader">
+        <div class="purchaseSizeTitle">${titleText}</div>
+        ${noteText}
+      </div>
+      <div class="purchaseSizeList">
+        ${listHtml}
+      </div>
+    </div>
+  `;
+  modal.showModal();
+}
+
+function createPurchaseCard({ title, image, images, meta, note, price, badges, sizes }) {
   const card = document.createElement("div");
   card.className = "purchaseItem";
 
@@ -1708,7 +1803,12 @@ function createPurchaseCard({ title, image, images, meta, price, badges }) {
   const buyBtn = document.createElement("button");
   buyBtn.className = "btn primary purchaseBtn";
   buyBtn.type = "button";
-  buyBtn.textContent = "購入";
+  buyBtn.textContent = "サイズ選択";
+  if (Array.isArray(sizes) && sizes.length) {
+    buyBtn.addEventListener("click", () => {
+      openPurchaseSizeModal({ title, note: note || meta, sizes });
+    });
+  }
   row.appendChild(buyBtn);
 
   body.appendChild(row);
@@ -1806,8 +1906,10 @@ function renderManualPurchaseItems() {
       image: item.image,
       images: item.images,
       meta: item.note,
+      note: item.note,
       price: item.price,
-      badges
+      badges,
+      sizes: item.sizes
     });
     purchaseManualGrid.appendChild(card);
   }
