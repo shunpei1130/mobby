@@ -1135,7 +1135,10 @@ btnTimelineRefresh?.addEventListener("click", () => {
   refreshTimeline();
 });
 rankFilter?.addEventListener("change", () => {
-  gallery?.setFilter?.(rankFilter.value || "all");
+  if (rankFilter && rankFilter.value !== "all") {
+    rankFilter.value = "all";
+  }
+  gallery?.setFilter?.("all");
 });
 timelineFilter?.addEventListener("change", () => {
   timelineFilterValue = timelineFilter.value || "all";
@@ -1387,17 +1390,18 @@ function updateUserBadgeFromProfile(profile, user) {
 }
 function syncRankFilterOptions() {
   if (!rankFilter || !gallery) return;
-  const options = gallery.getFilterOptions?.() || ["all"];
-  const current = rankFilter.value || "all";
+  const options = gallery.getFilterOptions?.() || [];
+  if (!options.includes("all")) options.unshift("all");
   rankFilter.innerHTML = "";
   for (const opt of options) {
     const el = document.createElement("option");
     el.value = opt;
     el.textContent = opt === "all" ? "すべて" : opt;
+    if (opt !== "all") el.disabled = true;
     rankFilter.appendChild(el);
   }
-  rankFilter.value = options.includes(current) ? current : "all";
-  gallery.setFilter?.(rankFilter.value || "all");
+  rankFilter.value = "all";
+  gallery.setFilter?.("all");
 }
 
 function extractTimelineMobbyNames(data) {
@@ -1539,7 +1543,7 @@ async function refreshTimeline() {
   renderTimelineList(timelineFollowingDocs, timelineFollowing, timelineFollowingStatus);
 }
 
-const DEFAULT_PURCHASE_PRICE = 5000;
+const DEFAULT_PURCHASE_PRICE = 12800;
 const DEFAULT_PURCHASE_IMAGE = "assets/templates/tshirt.png";
 const MANUAL_PURCHASE_ITEMS = [
   {
@@ -1632,14 +1636,14 @@ const MANUAL_PURCHASE_ITEMS = [
   {
     id: "manual-4",
     title: "モビー リボンT",
-    price: 5000,
+    price: 12800,
     image: DEFAULT_PURCHASE_IMAGE,
     note: "クリーム / ソフトタッチ"
   },
   {
     id: "manual-5",
     title: "モビー シンプルラインT",
-    price: 5000,
+    price: 12800,
     image: DEFAULT_PURCHASE_IMAGE,
     note: "アイボリー / ベーシック"
   }
@@ -1746,7 +1750,19 @@ function openPurchaseSizeModal({ title, note, sizes } = {}) {
   modal.showModal();
 }
 
-function createPurchaseCard({ title, image, images, meta, note, price, badges, sizes }) {
+function openPurchaseNotice(message) {
+  if (!message) return;
+  if (!modal || !modalBody) {
+    alert(message);
+    return;
+  }
+  modalBody.innerHTML = `
+    <div class="purchaseNotice">${message}</div>
+  `;
+  modal.showModal();
+}
+
+function createPurchaseCard({ title, image, images, meta, note, price, badges, sizes, purchaseNotice }) {
   const card = document.createElement("div");
   card.className = "purchaseItem";
 
@@ -1804,7 +1820,11 @@ function createPurchaseCard({ title, image, images, meta, note, price, badges, s
   buyBtn.className = "btn primary purchaseBtn";
   buyBtn.type = "button";
   buyBtn.textContent = "サイズ選択";
-  if (Array.isArray(sizes) && sizes.length) {
+  if (purchaseNotice) {
+    buyBtn.addEventListener("click", () => {
+      openPurchaseNotice(purchaseNotice);
+    });
+  } else if (Array.isArray(sizes) && sizes.length) {
     buyBtn.addEventListener("click", () => {
       openPurchaseSizeModal({ title, note: note || meta, sizes });
     });
@@ -1847,7 +1867,8 @@ async function renderPurchaseOwn() {
         title: data.title || "Untitled",
         image: data.thumb || data.imageUrl || DEFAULT_PURCHASE_IMAGE,
         meta,
-        price: DEFAULT_PURCHASE_PRICE
+        price: DEFAULT_PURCHASE_PRICE,
+        purchaseNotice: "ランキング3位に入ると購入できます。"
       });
       purchaseOwnGrid.appendChild(card);
     }
