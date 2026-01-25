@@ -348,7 +348,7 @@ export function createGallery({ db, uid, gridEl, statusEl, modalEl, modalBodyEl,
     statusEl.textContent = "読み込み中...";
     gridEl.innerHTML = "";
 
-    const q = query(designsCol, orderBy("likes", "desc"), limit(30));
+    const q = query(designsCol, orderBy("likes", "desc"), limit(15));
     const snap = await getDocs(q);
 
     cachedDocs = snap.docs.map((d) => ({ id: d.id, data: d.data() }));

@@ -1545,6 +1545,11 @@ async function refreshTimeline() {
 
 const DEFAULT_PURCHASE_PRICE = 12800;
 const DEFAULT_PURCHASE_IMAGE = "assets/templates/tshirt.png";
+const PURCHASE_TOP_LINKS = {
+  1: "https://buy.stripe.com/dRmbJ10SN7Y13GmfZZao806",
+  2: "https://buy.stripe.com/eVqfZh7hb3HLa4K9BBao807",
+  3: "https://buy.stripe.com/bJe8wP30Vguxfp49BBao808"
+};
 const MANUAL_PURCHASE_ITEMS = [
   {
     id: "manual-1",
@@ -1762,7 +1767,7 @@ function openPurchaseNotice(message) {
   modal.showModal();
 }
 
-function createPurchaseCard({ title, image, images, meta, note, price, badges, sizes, purchaseNotice }) {
+function createPurchaseCard({ title, image, images, meta, note, price, badges, sizes, purchaseNotice, purchaseUrl }) {
   const card = document.createElement("div");
   card.className = "purchaseItem";
 
@@ -1823,6 +1828,11 @@ function createPurchaseCard({ title, image, images, meta, note, price, badges, s
   if (purchaseNotice) {
     buyBtn.addEventListener("click", () => {
       openPurchaseNotice(purchaseNotice);
+    });
+  } else if (purchaseUrl) {
+    buyBtn.addEventListener("click", () => {
+      const next = window.open(purchaseUrl, "_blank");
+      if (next) next.opener = null;
     });
   } else if (Array.isArray(sizes) && sizes.length) {
     buyBtn.addEventListener("click", () => {
@@ -1895,6 +1905,7 @@ async function renderPurchaseTop() {
       const docSnap = snap.docs[i];
       const data = docSnap.data() || {};
       const rank = i + 1;
+      const purchaseUrl = PURCHASE_TOP_LINKS[rank];
       const authorProfile = await fetchProfile(data.uid);
       const authorName = authorProfile?.username || authorProfile?.displayName || getFallbackName(data.uid);
       const likesText = `${Number(data.likes || 0)}`;
@@ -1904,7 +1915,8 @@ async function renderPurchaseTop() {
         image: data.thumb || data.imageUrl || DEFAULT_PURCHASE_IMAGE,
         meta,
         price: DEFAULT_PURCHASE_PRICE,
-        badges: [{ text: `${rank}位`, className: `rankBadge small rank${rank}` }]
+        badges: [{ text: `${rank}位`, className: `rankBadge small rank${rank}` }],
+        purchaseUrl
       });
       purchaseTopGrid.appendChild(card);
     }
