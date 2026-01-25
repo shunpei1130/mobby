@@ -745,46 +745,6 @@
     background:rgba(174,198,207,0.35);
     transform:scale(1.05);
   }
-  .password-popup{
-    max-width:460px;
-    text-align:center;
-  }
-  .password-field{
-    display:flex;
-    gap:12px;
-    justify-content:center;
-    align-items:center;
-    margin-top:20px;
-    flex-wrap:wrap;
-  }
-  .password-field input{
-    min-width:220px;
-    padding:10px 14px;
-    border-radius:16px;
-    border:2px solid rgba(47,79,79,0.18);
-    background:rgba(255,255,255,0.9);
-    color:var(--color-forest);
-    font-size:16px;
-    font-family:var(--font-en), var(--font-ja);
-  }
-  .password-field input:focus{
-    outline:none;
-    border-color:rgba(47,79,79,0.45);
-    box-shadow:0 0 0 3px rgba(174,198,207,0.35);
-  }
-  .password-error{
-    margin-top:10px;
-    min-height:1.2em;
-    color:var(--color-accent-red);
-    font-weight:700;
-    letter-spacing:0.02em;
-  }
-  @media (max-width: 480px){
-    .password-field input,
-    .password-field .btn{
-      width:100%;
-    }
-  }
   @media (max-width: 768px){
     .popup-content{
       padding:30px 20px;
@@ -1828,25 +1788,7 @@
     <!-- ▼▼▼ ここにモビー診断ボタンを追加 ▼▼▼ -->
     <div id="mobbyDiagnosisWrapper" style="width:100%;display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:20px;">
       <a class="btn btn-primary" id="goMobbyDiagnosis" href="16school/index.html" style="font-size:14px;padding:10px 24px;">モビー診断</a>
-      <button class="btn btn-primary" id="goMobbyOutfit" type="button" title="パスワードが必要です" style="font-size:14px;padding:10px 24px;">
-        MobbyOutfit
-        <span class="btn-badge">限定公開</span>
-      </button>
-    </div>
-
-    <div id="outfitPasswordPopup" class="popup-overlay" aria-hidden="true">
-      <div class="popup-content password-popup" role="dialog" aria-modal="true" aria-labelledby="outfitPasswordTitle">
-        <button class="popup-close" id="closeOutfitPassword" aria-label="閉じる">×</button>
-        <div class="container">
-          <h2 id="outfitPasswordTitle">Mobby Outfit</h2>
-          <p class="lead">パスワードを入力してください。</p>
-          <div class="password-field">
-            <input id="outfitPasswordInput" type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" placeholder="パスワード" />
-            <button class="btn btn-primary" id="outfitPasswordSubmit" type="button">進む</button>
-          </div>
-          <div class="password-error" id="outfitPasswordError" aria-live="polite"></div>
-        </div>
-      </div>
+      <a class="btn btn-primary" id="goMobbyOutfit" href="mobby-custom/index.html" style="font-size:14px;padding:10px 24px;">MobbyOutfit</a>
     </div>
     
     <!-- 右下の法的リンク -->
@@ -1868,62 +1810,6 @@ document.getElementById('goMobbyDiagnosis')?.addEventListener('click', () => {
 </script>
   <!-- EmailJS -->
   <script>
-  // Mobby Outfitはパスワード制で公開（TikTok等のWebViewでも表示できるようにモーダルで対応）
-  const outfitButton = document.getElementById("goMobbyOutfit");
-  const outfitPopup = document.getElementById("outfitPasswordPopup");
-  const outfitClose = document.getElementById("closeOutfitPassword");
-  const outfitSubmit = document.getElementById("outfitPasswordSubmit");
-  const outfitInput = document.getElementById("outfitPasswordInput");
-  const outfitError = document.getElementById("outfitPasswordError");
-
-  function openOutfitPopup() {
-    if (!outfitPopup) return;
-    outfitPopup.classList.add("is-open");
-    outfitPopup.setAttribute("aria-hidden", "false");
-    if (outfitError) outfitError.textContent = "";
-    if (outfitInput) {
-      outfitInput.value = "";
-      setTimeout(() => outfitInput.focus(), 50);
-    }
-  }
-
-  function closeOutfitPopup() {
-    if (!outfitPopup) return;
-    outfitPopup.classList.remove("is-open");
-    outfitPopup.setAttribute("aria-hidden", "true");
-  }
-
-  function submitOutfitPassword() {
-    if (!outfitInput) return;
-    if (outfitInput.value.trim() === "1130") {
-      closeOutfitPopup();
-      window.location.href = "mobby-custom/index.html";
-    } else if (outfitError) {
-      outfitError.textContent = "パスワードが違います。";
-      outfitInput.select();
-    }
-  }
-
-  if (outfitButton) {
-    outfitButton.addEventListener("click", openOutfitPopup);
-  }
-  if (outfitClose) {
-    outfitClose.addEventListener("click", closeOutfitPopup);
-  }
-  if (outfitPopup) {
-    outfitPopup.addEventListener("click", (e) => {
-      if (e.target === outfitPopup) closeOutfitPopup();
-    });
-  }
-  if (outfitSubmit) {
-    outfitSubmit.addEventListener("click", submitOutfitPassword);
-  }
-  if (outfitInput) {
-    outfitInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") submitOutfitPassword();
-    });
-  }
-
   /* =========================
    Sky & Birds (background)
    - 目的：軌跡を残さない（毎フレーム完全クリア）

@@ -760,34 +760,6 @@
       font-size: 22px;
       cursor: pointer;
     }
-    .password-field {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 16px;
-    }
-    .password-field input {
-      width: min(260px, 100%);
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(0, 0, 0, 0.18);
-      font-size: 16px;
-    }
-    .password-error {
-      min-height: 1.2em;
-      margin-top: 8px;
-      color: #d1495b;
-      font-weight: 700;
-      font-size: 13px;
-    }
-    @media (max-width: 480px) {
-      .password-field input,
-      .password-field button {
-        width: 100%;
-      }
-    }
-
   </style>
 </head>
 <body>
@@ -798,7 +770,7 @@
         <a href="../index.html?skipSplash=1" class="back-btn" style="text-decoration:none;">
           <button style="margin-right:12px; font-size:15px; padding:6px 18px; border-radius:20px; border:1px solid #e0e0e0; background:#fff8e8; color:#0071e3; cursor:pointer;">Home</button>
         </a>
-        <button id="goMobbyOutfit" style="margin-right:12px; font-size:15px; padding:6px 18px; border-radius:20px; border:1px solid #e0e0e0; background:#fff8e8; color:#0071e3; cursor:pointer;">Mobby Outfit</button>
+        <a id="goMobbyOutfit" href="../mobby-custom/index.html" style="margin-right:12px; font-size:15px; padding:6px 18px; border-radius:20px; border:1px solid #e0e0e0; background:#fff8e8; color:#0071e3; cursor:pointer; text-decoration:none; display:inline-block;">Mobby Outfit</a>
         <div class="logo" id="logoHome"></div>
         <div class="title">
           <h1 id="titleHome">学校モビー診断</h1>
@@ -820,18 +792,6 @@
     <footer>
       &copy; 2026 Mobby. All rights reserved.
     </footer>
-    <div id="outfitPasswordPopup" class="popup-overlay" aria-hidden="true">
-      <div class="popup-content password-popup" role="dialog" aria-modal="true" aria-labelledby="outfitPasswordTitle">
-        <button class="popup-close" id="closeOutfitPassword" aria-label="閉じる">×</button>
-        <h2 id="outfitPasswordTitle">Mobby Outfit</h2>
-        <p style="margin:10px 0 0;">パスワードを入力してください。</p>
-        <div class="password-field">
-          <input id="outfitPasswordInput" type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" placeholder="パスワード" />
-          <button class="primary" id="outfitPasswordSubmit" type="button">進む</button>
-        </div>
-        <div class="password-error" id="outfitPasswordError" aria-live="polite"></div>
-      </div>
-    </div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
@@ -861,62 +821,6 @@
   </script>
 
   <script>
-    // Mobby Outfitはパスワード制で公開
-    const outfitButton = document.getElementById("goMobbyOutfit");
-    const outfitPopup = document.getElementById("outfitPasswordPopup");
-    const outfitClose = document.getElementById("closeOutfitPassword");
-    const outfitSubmit = document.getElementById("outfitPasswordSubmit");
-    const outfitInput = document.getElementById("outfitPasswordInput");
-    const outfitError = document.getElementById("outfitPasswordError");
-
-    function openOutfitPopup() {
-      if (!outfitPopup) return;
-      outfitPopup.classList.add("is-open");
-      outfitPopup.setAttribute("aria-hidden", "false");
-      if (outfitError) outfitError.textContent = "";
-      if (outfitInput) {
-        outfitInput.value = "";
-        setTimeout(() => outfitInput.focus(), 50);
-      }
-    }
-
-    function closeOutfitPopup() {
-      if (!outfitPopup) return;
-      outfitPopup.classList.remove("is-open");
-      outfitPopup.setAttribute("aria-hidden", "true");
-    }
-
-    function submitOutfitPassword() {
-      if (!outfitInput) return;
-      if (outfitInput.value.trim() === "1130") {
-        closeOutfitPopup();
-        window.location.href = "../mobby-custom/index.html";
-      } else if (outfitError) {
-        outfitError.textContent = "パスワードが違います。";
-        outfitInput.select();
-      }
-    }
-
-    if (outfitButton) {
-      outfitButton.addEventListener("click", openOutfitPopup);
-    }
-    if (outfitClose) {
-      outfitClose.addEventListener("click", closeOutfitPopup);
-    }
-    if (outfitPopup) {
-      outfitPopup.addEventListener("click", (e) => {
-        if (e.target === outfitPopup) closeOutfitPopup();
-      });
-    }
-    if (outfitSubmit) {
-      outfitSubmit.addEventListener("click", submitOutfitPassword);
-    }
-    if (outfitInput) {
-      outfitInput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") submitOutfitPassword();
-      });
-    }
-
     function isQuizCompleted(){
   const questions = getQuestions();
   return Object.keys(state.answers || {}).length >= questions.length;
