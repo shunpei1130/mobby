@@ -24,7 +24,7 @@ export default async function handler(req, res) {
 
     const resendKey = process.env.RESEND_API_KEY_NOTIFY || process.env.RESEND_API_KEY;
     const to = process.env.NOTIFY_TO_EMAIL || "info@mobby.online";
-    const from = process.env.NOTIFY_FROM_EMAIL || "Mobby通知 <onboarding@resend.dev>";
+    const from = process.env.NOTIFY_FROM_EMAIL || "Mobby通知 <notify@mobby.online>";
 
     if (!resendKey) {
       console.error("[NOTIFY API] RESEND_API_KEY is missing");
