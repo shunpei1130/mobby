@@ -114,7 +114,6 @@ export default async function handler(req, res) {
       referrerId: body.referrerId || "",
       shareCount: Number(body.shareCount || 0),
       pageId,
-      passCode,
       leadTitle
     };
 
