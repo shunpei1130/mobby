@@ -1,6 +1,7 @@
 {
     "name": "mobby-site",
     "private": true,
+    "type": "module",
     "dependencies": {
       "@vercel/blob": "^0.24.1",
       "resend": "^4.0.0"
