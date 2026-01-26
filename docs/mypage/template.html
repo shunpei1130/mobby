@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{{USER_NAME}}さん専用ページ | {{LEAD_TITLE}} 限定コレクション</title>
+  <base href="{{BASE_HREF}}" />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -522,7 +523,7 @@
 
     <section class="hero">
       <div class="card hero-main">
-        <div class="ribbon">{{USER_NAME}} ONLY</div>
+        <div class="ribbon">{{USER_NAME_UPPER}} ONLY</div>
         <p class="eyebrow">あなたの診断結果から生まれた専用ページ</p>
         <h1>{{USER_NAME}}さんへ</h1>
         <p class="lead">{{LEAD_TITLE}}</p>
@@ -596,12 +597,12 @@
       </div>
     </section>
 
-    <div class="footer">Mobby Private Atelier • For {{USER_NAME}} Only</div>
+    <div class="footer">Mobby Private Atelier • For {{USER_NAME_UPPER}} Only</div>
   </div>
   <script type="application/json" id="diagnosisData">{{DIAGNOSIS_JSON}}</script>
   <script>
     (function () {
-      const PASS = "1130";
+      const PASS = "{{PASS_CODE}}";
       const gate = document.getElementById("passwordGate");
       const input = document.getElementById("gateInput");
       const btn = document.getElementById("gateBtn");

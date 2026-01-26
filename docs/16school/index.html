@@ -2311,7 +2311,7 @@ document.getElementById("btnPrev").onclick = () => {
         }
       };
     }
-    async function submitLead(payload){
+async function submitLead(payload){
   console.log("[Frontend] Submitting lead:", payload);
   try {
     const r = await fetch("/api/lead", {
@@ -2335,6 +2335,77 @@ document.getElementById("btnPrev").onclick = () => {
     return data;
   } catch (error) {
     console.error("[Frontend] Error in submitLead:", error);
+    throw error;
+  }
+}
+
+function buildPrivatePageData(res) {
+  const name = state.profile?.name || "あなた";
+  const char = res?.char || {};
+  const leadTitle = char.name || res.code || "";
+  const summary = char.summary || char.catch || "";
+
+  const heroLines = [];
+  if (summary) heroLines.push(summary);
+  if (leadTitle) {
+    heroLines.push(`${name}さんの診断結果から、${leadTitle}の世界観をぎゅっと詰め込みました。`);
+  }
+
+  const quoteLines = [];
+  if (char.catch) {
+    quoteLines.push(char.catch);
+  } else if (char.summary) {
+    quoteLines.push(char.summary);
+  }
+  quoteLines.push(`${name}さんらしさを、もっと楽しめるように。`);
+
+  const storyLines = [];
+  if (leadTitle) {
+    storyLines.push(`${name}さんの診断傾向をもとに、「${leadTitle}」の世界観を専用デザインに落とし込みました。`);
+  } else {
+    storyLines.push(`${name}さんの診断傾向をもとに、専用デザインに落とし込みました。`);
+  }
+  if (char.hook) storyLines.push(char.hook);
+
+  const collectionLines = [];
+  collectionLines.push(`${name}さんの診断結果から導いたムードを、毎日持ち歩けるサイズへ。`);
+  collectionLines.push("ぬいぐるみ型キーホルダーとアクリルキーホルダーの2点を、今だけの特別仕様で用意しました。");
+
+  const suffixMap = { "はっきり": "強め", "やや": "寄り", "場面による": "中間" };
+  const chips = ["A","B","C","D"].map((k) => {
+    const axis = res.axes?.[k];
+    const label = res.hard?.[k] === "L" ? axis?.left : axis?.right;
+    const suffix = suffixMap[res.confidenceLabel?.[k]] || "寄り";
+    return label ? `${label}${suffix}` : "";
+  }).filter(Boolean);
+
+  return {
+    leadTitle,
+    typeLabel: res.code || "",
+    heroLines,
+    chips,
+    quoteLines,
+    storyLines,
+    collectionLines
+  };
+}
+
+async function submitInterestPage(payload){
+  console.log("[Frontend] Submitting interest page:", payload);
+  try {
+    const r = await fetch("/api/interest", {
+      method: "POST",
+      headers: { "Content-Type":"application/json" },
+      body: JSON.stringify(payload)
+    });
+    const data = await r.json().catch(()=> ({}));
+    if(!r.ok) {
+      throw new Error(data?.error || "送信に失敗しました");
+    }
+    console.log("[Frontend] Interest page scheduled:", data);
+    return data;
+  } catch (error) {
+    console.error("[Frontend] Error in submitInterestPage:", error);
     throw error;
   }
 }
@@ -2365,10 +2436,17 @@ async function submitInterest(){
     gender: state.gender,
     interested: true,  // 興味ありフラグ
     createdAt: new Date().toISOString(),
+    userId: state.userId,
+    referrerId: state.referrerId,
+    shareCount: state.shareCount
   };
 
-  console.log("[Interest] Submitting interest:", payload);
+  const page = buildPrivatePageData(res);
+  const interestPayload = { ...payload, page };
+
+  console.log("[Interest] Submitting interest:", interestPayload);
   await submitLead(payload);
+  await submitInterestPage(interestPayload);
 }
 
 function renderGate(){
@@ -2955,7 +3033,7 @@ function renderGate(){
             ${state.interested ? '✓ 興味を送信しました！' : '🎁 このモビーが欲しい！'}
           </button>
           <div id="interestFeedback" style="display:none; margin-top:16px; padding:12px; background:#e8f5e9; border-radius:12px; color:#2e7d32; font-size:13px; font-weight:600;">
-            ✓ ありがとうございます！あなたの興味を記録しました。
+            ✓ ありがとうございます！1分後に専用ページのURLをメールでお届けします。
           </div>
           
           <!-- 興味を示した人にだけ表示される抽選予約ボタン -->
