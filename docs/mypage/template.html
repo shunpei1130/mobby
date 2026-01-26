@@ -635,38 +635,25 @@
     })();
   </script>
   <script>
-    // アクセス通知（Resend直接送信）
+    // Access notification via Vercel API
     (function() {
       const NOTIFY_KEY = 'mobbyNotified_' + location.pathname;
-      if (sessionStorage.getItem(NOTIFY_KEY)) return; // 重複送信防止
+      if (sessionStorage.getItem(NOTIFY_KEY)) return;
 
       const pageId = location.pathname.split('/').pop().replace('.html', '');
-      const userName = document.title.split('さん専用')[0] || pageId;
+      const titleParts = document.title.split('さん専用');
+      const userName = titleParts[0] || pageId;
       const accessTime = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
 
-      fetch('https://api.resend.com/emails', {
+      fetch('https://www.mobby.online/api/notify', {
         method: 'POST',
-        headers: {
-          'Authorization': 'Bearer re_YNuy8q2J_9fNua9BzxmHPADWu2YyTdsSq',
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          from: 'Mobby通知 <onboarding@resend.dev>',
-          to: 'info@mobby.online',
-          subject: '📱 マイページアクセス: ' + userName,
-          html: '<div style="font-family:sans-serif;max-width:600px;margin:0 auto;">' +
-            '<h2 style="color:#ff4d8d;">🎀 マイページにアクセスがありました</h2>' +
-            '<table style="width:100%;border-collapse:collapse;">' +
-            '<tr><td style="padding:10px;border-bottom:1px solid #eee;font-weight:bold;">ページID</td>' +
-            '<td style="padding:10px;border-bottom:1px solid #eee;">' + pageId + '</td></tr>' +
-            '<tr><td style="padding:10px;border-bottom:1px solid #eee;font-weight:bold;">ユーザー名</td>' +
-            '<td style="padding:10px;border-bottom:1px solid #eee;">' + userName + '</td></tr>' +
-            '<tr><td style="padding:10px;border-bottom:1px solid #eee;font-weight:bold;">アクセス日時</td>' +
-            '<td style="padding:10px;border-bottom:1px solid #eee;">' + accessTime + '</td></tr>' +
-            '<tr><td style="padding:10px;border-bottom:1px solid #eee;font-weight:bold;">リファラー</td>' +
-            '<td style="padding:10px;border-bottom:1px solid #eee;">' + (document.referrer || 'なし') + '</td></tr>' +
-            '</table>' +
-            '<p style="margin-top:20px;color:#666;font-size:12px;">Mobbyマイページ自動通知</p></div>'
+          pageId: pageId,
+          userName: userName,
+          accessTime: accessTime,
+          referrer: document.referrer || '',
+          userAgent: navigator.userAgent || ''
         })
       }).then(function() {
         sessionStorage.setItem(NOTIFY_KEY, '1');
