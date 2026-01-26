@@ -22,7 +22,7 @@ export default async function handler(req, res) {
     const referrer = String(body.referrer || "").trim();
     const userAgent = String(body.userAgent || "").trim();
 
-    const resendKey = process.env.RESEND_API_KEY;
+    const resendKey = process.env.RESEND_API_KEY_NOTIFY || process.env.RESEND_API_KEY;
     const to = process.env.NOTIFY_TO_EMAIL || "info@mobby.online";
     const from = process.env.NOTIFY_FROM_EMAIL || "Mobby通知 <onboarding@resend.dev>";
 
