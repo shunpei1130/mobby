@@ -430,6 +430,27 @@
     .fade-in { animation: fadeIn 0.4s ease forwards; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+    .support-mini {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      background: #fff;
+      color: #c55454;
+      border: 1px solid #ffb3b3;
+      box-shadow: var(--shadow-sm);
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .support-mini:hover { transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+    .support-note {
+      margin-top: 6px;
+      font-size: 10px;
+      color: #9b6b6b;
+    }
 
     footer {
       text-align: center;
@@ -2973,6 +2994,10 @@ function renderGate(){
         <div class="panel fade-in" style="margin-top:24px; background:linear-gradient(135deg, #fff5f5 0%, #fff 100%); border-left:4px solid #ff6b6b;">
           <p class="kicker" style="margin-bottom:16px; color:#ff6b6b;">😣 しんどくなるとき</p>
           <p class="text-body" style="font-size:15px; line-height:1.8; margin:0; color:var(--text-main);">${char.downside}</p>
+          <div style="margin-top:14px; text-align:center;">
+            <a class="support-mini" href="https://app-kappa-five-29.vercel.app/" target="_blank" rel="noopener noreferrer">24chat</a>
+            <div class="support-note">しんどい時にだけ使ってください。</div>
+          </div>
         </div>
         ` : ''}
 
