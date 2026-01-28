@@ -2944,9 +2944,97 @@ function renderGate(){
             : "自分の基準で納得できることを優先する。人の評価に左右されすぎないことが強み。";
       }
 
-      const loveTip = char.love || (isFemale
-        ? "恋愛は自分のペースで距離を縮めると良いタイプ。安心できる相手と、無理のない範囲で進めると◎。"
-        : "恋愛は自然体が強み。相手の反応を見つつ、無理に背伸びせず進めると◎。");
+      // 4軸に基づく詳細な恋愛傾向の生成
+      let loveApproach, loveStyle, lovePriority, loveValue, loveAdvice;
+      
+      if (isFemale) {
+        // A軸: アプローチスタイル
+        loveApproach = isMid("A")
+          ? "場面によって、積極的にいくこともあれば、じっくり様子を見ることもある。その時の相手や空気で、距離の詰め方が変わるタイプ。"
+          : isL("A")
+            ? "気になる人には自分から話しかけられる。グループでの会話から自然に仲良くなることが多く、明るさで相手の心を開かせるのが得意。"
+            : "好きな人の前では緊張しがち。でもその分、一度心を開いた相手との関係は深くなりやすい。二人きりの空間が得意。";
+        
+        // B軸: 見せ方・雰囲気
+        loveStyle = isMid("B")
+          ? "TPOに合わせて、可愛い系もカッコいい系も使い分けられる柔軟さがある。"
+          : isL("B")
+            ? "恋愛でも清楚さや誠実さを大事にする。派手なアピールより、自然体でいることで相手に安心感を与えられる。"
+            : "恋愛では見た目やノリの良さで勝負できる。華やかな雰囲気で、相手の注目を集めやすい。";
+        
+        // C軸: 恋愛への向き合い方
+        lovePriority = isMid("C")
+          ? "友達との時間も恋愛も、どちらも大事にしたい欲張りタイプ。バランスを取りながら、両方楽しめるのが強み。"
+          : isL("C")
+            ? "好きな人ができても、友達との時間は大切にしたい。恋バナで盛り上がったり、友達に相談しながら恋を進めるタイプ。"
+            : "好きな人ができると、その人中心の生活になりがち。恋愛に真剣に向き合えるのは長所だけど、友達との時間も忘れずに。";
+        
+        // D軸: 判断基準
+        loveValue = isMid("D")
+          ? "周りの意見も参考にしつつ、最後は自分の気持ちで決められる。客観性と主観のバランスが取れている。"
+          : isL("D")
+            ? "「周りから見てお似合いか」「友達に紹介できるか」も気になるタイプ。でもそれは、大切な人を大事にしたい気持ちの裏返し。"
+            : "「自分が幸せかどうか」が一番大事。周りの評価より、自分の心が動くかどうかで恋愛を選べる。";
+        
+        // アドバイス
+        loveAdvice = isL("C")
+          ? "友達に相談しながら進めると安心できるタイプ。一人で抱え込まないでね。"
+          : "二人の時間を大切にしつつ、たまには友達との息抜きも忘れずに。";
+      } else {
+        // 男子版
+        loveApproach = isMid("A")
+          ? "場面によって、ガンガンいくこともあれば、様子を見ることもある。相手や状況で、アプローチが変わるタイプ。"
+          : isL("A")
+            ? "気になる人には自分から声をかけられる。グループの盛り上げ役になりながら、自然と距離を縮めるのが得意。"
+            : "好きな人の前では口数が減りがち。でもその分、一度仲良くなると深い関係を築ける。じっくり型の恋愛向き。";
+        
+        loveStyle = isMid("B")
+          ? "場面に応じて、ノリ良くいくこともあれば、真面目に向き合うこともできる柔軟さがある。"
+          : isL("B")
+            ? "恋愛でもノリや雰囲気を大事にする。楽しい空気を作れるから、一緒にいて飽きないと思われやすい。"
+            : "恋愛でも誠実さを大事にする。派手なアピールより、真剣に向き合う姿勢で信頼を得られるタイプ。";
+        
+        lovePriority = isMid("C")
+          ? "友達との時間も恋愛も、どちらも大事にしたいタイプ。バランスを取りながら、両方楽しめる。"
+          : isL("C")
+            ? "好きな人ができても、仲間との時間は大切にしたい。恋愛の話を友達にするのは照れるけど、いざという時は頼りにしてる。"
+            : "好きな人ができると、その人優先になりがち。一途なのは長所だけど、友達との時間も大切にね。";
+        
+        loveValue = isMid("D")
+          ? "周りの意見も参考にしつつ、最後は自分で決められる。バランス感覚がある。"
+          : isL("D")
+            ? "「周りからどう見られるか」も気になるタイプ。でもそれは、ちゃんと考えてる証拠。"
+            : "「自分がどう思うか」が一番大事。周りの評価より、自分の気持ちを信じて動ける。";
+        
+        loveAdvice = isL("A")
+          ? "持ち前の明るさで距離を縮められる。でも、たまには相手の話をじっくり聞く時間も作ってみて。"
+          : "焦らず自分のペースでOK。二人きりの時間を増やすと、自然と距離が縮まるよ。";
+      }
+      
+      const loveTipDetailed = `
+        <div style="margin-bottom:14px;">
+          <span style="display:inline-block; background:rgba(255,77,141,0.1); color:#ff4d8d; font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; margin-bottom:8px;">アプローチスタイル</span>
+          <p style="margin:0; line-height:1.7;">${loveApproach}</p>
+        </div>
+        <div style="margin-bottom:14px;">
+          <span style="display:inline-block; background:rgba(255,77,141,0.1); color:#ff4d8d; font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; margin-bottom:8px;">恋愛での雰囲気</span>
+          <p style="margin:0; line-height:1.7;">${loveStyle}</p>
+        </div>
+        <div style="margin-bottom:14px;">
+          <span style="display:inline-block; background:rgba(255,77,141,0.1); color:#ff4d8d; font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; margin-bottom:8px;">恋愛と友達のバランス</span>
+          <p style="margin:0; line-height:1.7;">${lovePriority}</p>
+        </div>
+        <div style="margin-bottom:14px;">
+          <span style="display:inline-block; background:rgba(255,77,141,0.1); color:#ff4d8d; font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; margin-bottom:8px;">恋愛で大事にしていること</span>
+          <p style="margin:0; line-height:1.7;">${loveValue}</p>
+        </div>
+        <div style="padding:12px; background:linear-gradient(135deg, #fff0f5 0%, #fff 100%); border-radius:12px; border-left:3px solid #ff4d8d;">
+          <span style="font-size:12px; font-weight:700; color:#ff4d8d;">💡 アドバイス</span>
+          <p style="margin:6px 0 0; line-height:1.7; font-size:14px;">${char.love || ''} ${loveAdvice}</p>
+        </div>
+      `;
+      
+      const loveTip = loveTipDetailed;
 
       // 確信度に応じた説明文の選択
       const useMainDesc = res.midCount <= 1;  // 中間が1軸以下なら通常説明
@@ -3030,43 +3118,60 @@ function renderGate(){
           ` : ''}
         </div>
 
-        <!-- 共感フック（学校シーン） -->
-        <div class="panel fade-in" style="margin-top:40px;">
-          <p class="kicker" style="margin-bottom:16px;">🎬 こんな場面、ありませんか？</p>
-          <p class="text-body" style="font-size:15px; line-height:1.9; margin:0; color:var(--text-main);">${descriptionToShow}</p>
+        <!-- 詳細セクションを開くボタン -->
+        <div class="panel fade-in" style="margin-top:40px; text-align:center;">
+          <p class="kicker" style="margin-bottom:10px;">診断の詳しい説明</p>
+          <p class="text-body" style="font-size:13px; margin:0 0 14px;">
+            気持ちに余裕があるときだけ、ゆっくり読んでみてください。
+          </p>
+          <button id="btnToggleDetails" class="primary" style="padding:12px 28px; font-size:14px;">
+            詳細を見る
+          </button>
         </div>
 
-        <!-- しんどい時 -->
-        ${char.downside ? `
-        <div class="panel fade-in" style="margin-top:24px; background:linear-gradient(135deg, #fff5f5 0%, #fff 100%); border-left:4px solid #ff6b6b;">
-          <p class="kicker" style="margin-bottom:16px; color:#ff6b6b;">😣 しんどくなるとき</p>
-          <p class="text-body" style="font-size:15px; line-height:1.8; margin:0; color:var(--text-main);">${char.downside}</p>
-          <div style="margin-top:14px; text-align:center;">
-            <a class="support-mini" href="https://app-kappa-five-29.vercel.app/" target="_blank" rel="noopener noreferrer">24chat</a>
-            <div class="support-note">しんどい時にだけ使ってください。</div>
+        <div id="detailSections" style="display:none;">
+          <!-- 共感フック（学校シーン） -->
+          <div class="panel fade-in" style="margin-top:24px;">
+            <p class="kicker" style="margin-bottom:16px;">🎬 こんな場面、ありませんか？</p>
+            <p class="text-body" style="font-size:15px; line-height:1.9; margin:0; color:var(--text-main);">${descriptionToShow}</p>
           </div>
-        </div>
-        ` : ''}
 
-        <!-- 周りからの見え方 -->
-        ${char.perception ? `
-        <div class="panel fade-in" style="margin-top:24px; background:linear-gradient(135deg, #f0f9ff 0%, #fff 100%); border-left:4px solid #4dabf7;">
-          <p class="kicker" style="margin-bottom:16px; color:#4dabf7;">👀 周りからの見え方</p>
-          <p class="text-body" style="font-size:15px; line-height:1.8; margin:0; color:var(--text-main);">${char.perception}</p>
-        </div>
-        ` : ''}
+          <!-- しんどい時 -->
+          ${char.downside ? `
+          <div class="panel fade-in" style="margin-top:24px; background:linear-gradient(135deg, #fff5f5 0%, #fff 100%); border-left:4px solid #ff6b6b;">
+            <p class="kicker" style="margin-bottom:16px; color:#ff6b6b;">😣 しんどくなるとき</p>
+            <p class="text-body" style="font-size:15px; line-height:1.8; margin:0; color:var(--text-main);">${char.downside}</p>
+            <div style="margin-top:14px; text-align:center;">
+              <a class="support-mini" href="https://app-kappa-five-29.vercel.app/" target="_blank" rel="noopener noreferrer">24chat</a>
+              <div class="support-note">しんどい時にだけ使ってください。</div>
+            </div>
+          </div>
+          ` : ''}
 
-        <div style="margin-top:24px;">
-          <div class="panel fade-in" style="animation-delay:0.1s;">
+          <!-- 周りからの見え方 -->
+          ${char.perception ? `
+          <div class="panel fade-in" style="margin-top:24px; background:linear-gradient(135deg, #f0f9ff 0%, #fff 100%); border-left:4px solid #4dabf7;">
+            <p class="kicker" style="margin-bottom:16px; color:#4dabf7;">👀 周りからの見え方</p>
+            <p class="text-body" style="font-size:15px; line-height:1.8; margin:0; color:var(--text-main);">${char.perception}</p>
+          </div>
+          ` : ''}
+
+          <div class="panel fade-in" style="margin-top:24px;">
             <p class="kicker" style="margin-bottom:16px;">✨ あなたの長所</p>
             <p class="text-body" style="font-size:15px; line-height:1.8; margin:0;">${char.strength}</p>
           </div>
-          
+        </div>
+
+        <!-- ここから下は常に表示 -->
+        <div style="margin-top:24px;">
           <!-- アクリルキーホルダーセクション -->
-          <div class="panel fade-in" style="animation-delay:0.12s; margin-top:24px; background:linear-gradient(145deg, #fff7fb, #fff2e2); border:2px solid rgba(255, 77, 141, 0.2); overflow:hidden; position:relative;">
+          <div class="panel fade-in" style="animation-delay:0.12s; background:linear-gradient(145deg, #fff7fb, #fff2e2); border:2px solid rgba(255, 77, 141, 0.2); overflow:hidden; position:relative;">
             <div style="position:absolute; top:18px; right:-44px; transform:rotate(20deg); background:linear-gradient(135deg, #ffb347, #ffd27f); color:#fff; font-size:11px; letter-spacing:0.18em; padding:6px 48px; text-transform:uppercase;">LIMITED</div>
             <p class="kicker" style="margin-bottom:12px; color:#ff4d8d;">🎀 限定アクセサリー</p>
-            <h3 style="font-size:20px; margin:0 0 16px; color:var(--text-main);">アクリルキーホルダー</h3>
+            <h3 style="font-size:20px; margin:0 0 8px; color:var(--text-main);">アクリルキーホルダー</h3>
+            <p style="display:inline-block; font-size:15px; font-weight:700; color:#ff4d8d; background:rgba(255,77,141,0.08); padding:6px 14px; border-radius:999px; margin:0 0 18px; letter-spacing:0.03em;">
+              あなたの診断結果を持ち歩こう
+            </p>
             <div style="display:flex; gap:12px; justify-content:center; margin-bottom:18px; background:linear-gradient(145deg, #fff7fb, #fff2e2); border-radius:16px; padding:16px; border:1px solid rgba(255,255,255,0.9);">
               <div style="width:45%; max-width:140px; position:relative;">
                 <video src="key/${char.name}.mp4" autoplay muted loop playsinline style="display:none; width:100%; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onloadeddata="this.style.display='block'; this.nextElementSibling.style.display='none';"></video>
@@ -3088,34 +3193,35 @@ function renderGate(){
               限定アイテムを手に取る →
             </a>
           </div>
-          
-          <div class="panel fade-in" style="animation-delay:0.15s; margin-top:24px;">
-            <p class="kicker" style="margin-bottom:16px;">⚡ 気をつけたいこと</p>
-            <p class="text-body" style="font-size:15px; line-height:1.8; margin:0;">${char.weakness}</p>
-          </div>
+        
+        
         </div>
 
-        <!-- ズレチェック -->
-        ${char.altCheck ? `
-        <div class="panel fade-in" style="margin-top:24px; background:#fffbeb; border:1px dashed #f0a020;">
-          <p class="kicker" style="margin-bottom:8px; color:#f0a020;">🤔 ちょっと違うかも？と思ったら</p>
-          <p class="text-body" style="font-size:14px; line-height:1.7; margin:0; color:var(--text-main);">${char.altCheck}</p>
+        <div class="panel fade-in" style="margin-top:32px; text-align:center;">
+          <p class="kicker" style="margin-bottom:10px;">📌 学校生活と恋愛のヒント</p>
+          <p class="text-body" style="font-size:13px; margin:0 0 14px;">
+            余裕のあるときにだけ読めるように、ここから下は折りたたんであります。
+          </p>
+          <button id="btnToggleLifeTips" class="primary" style="padding:10px 24px; font-size:13px;">
+            学校生活のヒントを見る
+          </button>
         </div>
-        ` : ''}
 
-        <div class="card-grid fade-in" style="animation-delay:0.2s; margin-top:24px;">
-          <div class="info-card">
-            <h3>📌 学校生活のヒント</h3>
-            <ul>
-              <li><span class="tip-title">🎭 活躍する場面</span><span class="tip-body">${situationTip}</span></li>
-              <li><span class="tip-title">✨ スタイルの特徴</span><span class="tip-body">${styleTip}</span></li>
-              <li><span class="tip-title">👥 人との関わり方</span><span class="tip-body">${teamTip}</span></li>
-              <li><span class="tip-title">💪 モチベーション</span><span class="tip-body">${motivationTip}</span></li>
-            </ul>
-          </div>
-          <div class="love-card">
-            <h3>💗 恋愛の傾向</h3>
-            <p class="text-body">${loveTip}</p>
+        <div id="lifeTips" style="display:none;">
+          <div class="card-grid fade-in" style="animation-delay:0.2s; margin-top:24px;">
+            <div class="info-card">
+              <h3>📌 学校生活のヒント</h3>
+              <ul>
+                <li><span class="tip-title">🎭 活躍する場面</span><span class="tip-body">${situationTip}</span></li>
+                <li><span class="tip-title">✨ スタイルの特徴</span><span class="tip-body">${styleTip}</span></li>
+                <li><span class="tip-title">👥 人との関わり方</span><span class="tip-body">${teamTip}</span></li>
+                <li><span class="tip-title">💪 モチベーション</span><span class="tip-body">${motivationTip}</span></li>
+              </ul>
+            </div>
+            <div class="love-card">
+              <h3>💗 恋愛の傾向</h3>
+              <div class="text-body">${loveTip}</div>
+            </div>
           </div>
         </div>
         
@@ -3182,6 +3288,28 @@ function renderGate(){
            <button id="btnBack" style="color:#86868b; background:transparent;">回答を見直す</button>
         </div>
       `;
+
+      // 詳細セクション開閉ボタン
+      const toggleBtn = document.getElementById("btnToggleDetails");
+      const detailSections = document.getElementById("detailSections");
+      if (toggleBtn && detailSections) {
+        toggleBtn.addEventListener("click", () => {
+          const isHidden = detailSections.style.display === "none" || detailSections.style.display === "";
+          detailSections.style.display = isHidden ? "block" : "none";
+          toggleBtn.textContent = isHidden ? "詳しい説明をとじる" : "詳細を見る";
+        });
+      }
+
+      // 学校生活のヒント開閉ボタン
+      const lifeBtn = document.getElementById("btnToggleLifeTips");
+      const lifeTips = document.getElementById("lifeTips");
+      if (lifeBtn && lifeTips) {
+        lifeBtn.addEventListener("click", () => {
+          const isHidden = lifeTips.style.display === "none" || lifeTips.style.display === "";
+          lifeTips.style.display = isHidden ? "block" : "none";
+          lifeBtn.textContent = isHidden ? "学校生活のヒントをとじる" : "学校生活のヒントを見る";
+        });
+      }
 
       // 興味ボタンのイベントリスナー
       document.getElementById("btnInterest").onclick = async () => {
