@@ -3191,9 +3191,13 @@ function renderGate(){
               あなたの診断結果を持ち歩こう
             </p>
             <div style="display:flex; gap:12px; justify-content:center; margin-bottom:18px; background:linear-gradient(145deg, #fff7fb, #fff2e2); border-radius:16px; padding:16px; border:1px solid rgba(255,255,255,0.9);">
-              <div style="width:45%; max-width:140px; position:relative;">
-                <video src="${isFemale ? `key/${char.name}.mp4` : 'key/男/test.mp4'}" autoplay muted loop playsinline style="display:none; width:100%; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onloadeddata="this.style.display='block'; this.nextElementSibling.style.display='none';"></video>
+              <div style="width:45%; max-width:140px; position:relative; overflow:hidden;">
+                ${isFemale ? `
+                <video src="key/${char.name}.mp4" autoplay muted loop playsinline webkit-playsinline disablepictureinpicture style="display:none; width:100%; height:auto; max-height:180px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onloadeddata="this.style.display='block'; this.nextElementSibling.style.display='none';"></video>
                 <img src="key/${char.name}.jpg" alt="アクリルキーホルダー 表面" style="width:100%; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
+                ` : `
+                <video src="key/男/test.mp4" autoplay muted loop playsinline webkit-playsinline disablepictureinpicture style="width:100%; height:auto; max-height:180px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);"></video>
+                `}
               </div>
               <img src="key/ura.jpg" alt="アクリルキーホルダー 裏面" style="width:45%; max-width:140px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
             </div>
