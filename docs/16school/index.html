@@ -3068,7 +3068,10 @@ function renderGate(){
             <p class="kicker" style="margin-bottom:12px; color:#ff4d8d;">🎀 限定アクセサリー</p>
             <h3 style="font-size:20px; margin:0 0 16px; color:var(--text-main);">アクリルキーホルダー</h3>
             <div style="display:flex; gap:12px; justify-content:center; margin-bottom:18px; background:linear-gradient(145deg, #fff7fb, #fff2e2); border-radius:16px; padding:16px; border:1px solid rgba(255,255,255,0.9);">
-              <img src="key/${char.name}.jpg" alt="アクリルキーホルダー 表面" style="width:45%; max-width:140px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
+              <div style="width:45%; max-width:140px; position:relative;">
+                <video src="key/${char.name}.mp4" autoplay muted loop playsinline style="display:none; width:100%; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onloadeddata="this.style.display='block'; this.nextElementSibling.style.display='none';"></video>
+                <img src="key/${char.name}.jpg" alt="アクリルキーホルダー 表面" style="width:100%; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
+              </div>
               <img src="key/ura.jpg" alt="アクリルキーホルダー 裏面" style="width:45%; max-width:140px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
             </div>
             <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
