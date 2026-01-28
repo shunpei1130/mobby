@@ -1912,8 +1912,26 @@ const means = {};
 
 
     const app = document.getElementById("app");
+
+    // リセットボタン（TikTokブラウザ対策）
     document.getElementById("btnReset").onclick = () => {
-      if(confirm("最初からやり直しますか？")) resetState();
+      const ua = (navigator.userAgent || "").toLowerCase();
+      const isTikTok = ua.includes("tiktok") || ua.includes("musical.ly");
+
+      if (isTikTok) {
+        // TikTokアプリ内ブラウザでは confirm が動かないことがあるので、そのままリセット
+        resetState();
+        return;
+      }
+
+      try {
+        if (window.confirm && window.confirm("最初からやり直しますか？")) {
+          resetState();
+        }
+      } catch (e) {
+        // 何かあったら安全側でリセットだけ行う
+        resetState();
+      }
     };
 
     // タイプ解説モーダル
@@ -3174,7 +3192,7 @@ function renderGate(){
             </p>
             <div style="display:flex; gap:12px; justify-content:center; margin-bottom:18px; background:linear-gradient(145deg, #fff7fb, #fff2e2); border-radius:16px; padding:16px; border:1px solid rgba(255,255,255,0.9);">
               <div style="width:45%; max-width:140px; position:relative;">
-                <video src="key/${char.name}.mp4" autoplay muted loop playsinline style="display:none; width:100%; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onloadeddata="this.style.display='block'; this.nextElementSibling.style.display='none';"></video>
+                <video src="${isFemale ? `key/${char.name}.mp4` : 'key/男/test.mp4'}" autoplay muted loop playsinline style="display:none; width:100%; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onloadeddata="this.style.display='block'; this.nextElementSibling.style.display='none';"></video>
                 <img src="key/${char.name}.jpg" alt="アクリルキーホルダー 表面" style="width:100%; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
               </div>
               <img src="key/ura.jpg" alt="アクリルキーホルダー 裏面" style="width:45%; max-width:140px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
