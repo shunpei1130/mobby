@@ -3061,6 +3061,31 @@ function renderGate(){
             <p class="kicker" style="margin-bottom:16px;">✨ あなたの長所</p>
             <p class="text-body" style="font-size:15px; line-height:1.8; margin:0;">${char.strength}</p>
           </div>
+          
+          <!-- アクリルキーホルダーセクション -->
+          <div class="panel fade-in" style="animation-delay:0.12s; margin-top:24px; background:linear-gradient(145deg, #fff7fb, #fff2e2); border:2px solid rgba(255, 77, 141, 0.2); overflow:hidden; position:relative;">
+            <div style="position:absolute; top:18px; right:-44px; transform:rotate(20deg); background:linear-gradient(135deg, #ffb347, #ffd27f); color:#fff; font-size:11px; letter-spacing:0.18em; padding:6px 48px; text-transform:uppercase;">LIMITED</div>
+            <p class="kicker" style="margin-bottom:12px; color:#ff4d8d;">🎀 限定アクセサリー</p>
+            <h3 style="font-size:20px; margin:0 0 16px; color:var(--text-main);">アクリルキーホルダー</h3>
+            <div style="display:flex; gap:12px; justify-content:center; margin-bottom:18px; background:linear-gradient(145deg, #fff7fb, #fff2e2); border-radius:16px; padding:16px; border:1px solid rgba(255,255,255,0.9);">
+              <img src="key/${char.name}.jpg" alt="アクリルキーホルダー 表面" style="width:45%; max-width:140px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
+              <img src="key/ura.jpg" alt="アクリルキーホルダー 裏面" style="width:45%; max-width:140px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+              <span style="font-size:20px; color:#b65174; font-weight:700; letter-spacing:0.04em;">1,900円</span>
+            </div>
+            <p class="text-body" style="font-size:14px; line-height:1.8; margin:0 0 14px;">
+              <strong>表は${char.name}、裏にはあなたの診断がいつでも見れるQRコード。</strong> 透明感ときらめきで、光を味方にするクリアアクセ。
+            </p>
+            <ul style="margin:0 0 18px; padding-left:18px; color:var(--text-sub); line-height:1.8; font-size:13px;">
+              <li>表裏で違う表情が楽しめるデザイン</li>
+              <li>日常でも特別感を残すサイズ感</li>
+            </ul>
+            <a href="https://buy.stripe.com/bJe14n8lf7Y11yecNNao80a" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:10px; padding:14px 28px; border-radius:999px; font-size:14px; font-weight:600; text-decoration:none; background:linear-gradient(135deg, #ff4d8d, #ff7aa8); color:#fff; box-shadow:0 14px 30px rgba(255, 77, 141, 0.3); transition:transform 0.2s ease;">
+              限定アイテムを手に取る →
+            </a>
+          </div>
+          
           <div class="panel fade-in" style="animation-delay:0.15s; margin-top:24px;">
             <p class="kicker" style="margin-bottom:16px;">⚡ 気をつけたいこと</p>
             <p class="text-body" style="font-size:15px; line-height:1.8; margin:0;">${char.weakness}</p>
