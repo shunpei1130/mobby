@@ -1,7 +1,7 @@
 // /api/reservation.js
-const { Resend } = require("resend");
+import { Resend } from "resend";
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.status(405).json({ ok: false, error: "Method Not Allowed" });
     return;
@@ -96,4 +96,4 @@ module.exports = async (req, res) => {
     console.error("Reservation API error:", e);
     res.status(500).json({ ok: false, error: "Internal Error", details: e.message });
   }
-};
+}
