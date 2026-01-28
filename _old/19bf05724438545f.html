@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>いろはさん専用ページ | プリクラ拡散モビー 限定コレクション</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-1: #fff1f5;
+      --bg-2: #f3f6ff;
+      --ink: #1e1824;
+      --muted: #6d6672;
+      --accent: #ff4d8d;
+      --accent-2: #ffb347;
+      --card: rgba(255, 255, 255, 0.86);
+      --glass: rgba(255, 255, 255, 0.68);
+      --line: rgba(30, 24, 36, 0.08);
+      --shadow: 0 20px 60px rgba(255, 77, 141, 0.12);
+      --radius-lg: 28px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Zen Maru Gothic", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Meiryo", sans-serif;
+      color: var(--ink);
+      background: radial-gradient(circle at top left, #fff7fb 0%, transparent 45%),
+                  radial-gradient(circle at 20% 80%, #ffe9f1 0%, transparent 50%),
+                  linear-gradient(135deg, var(--bg-1), var(--bg-2));
+      min-height: 100vh;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.7) 1px, transparent 1px);
+      background-size: 22px 22px;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .page {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 56px 20px 110px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .password-gate {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(20, 16, 24, 0.6);
+      backdrop-filter: blur(10px);
+      z-index: 10;
+      padding: 20px;
+    }
+
+    .password-card {
+      width: min(420px, 100%);
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    .password-card h2 {
+      margin: 0 0 10px;
+      font-size: 20px;
+    }
+
+    .password-card p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .password-card input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line);
+      font-size: 15px;
+      text-align: center;
+      letter-spacing: 0.2em;
+      margin-bottom: 14px;
+    }
+
+    .password-card button {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, var(--accent), #ff7R8);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .password-error {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #c53030;
+      display: none;
+    }
+
+    .topline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid var(--line);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .top-left-btn {
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      z-index: 6;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid rgba(255, 77, 141, 0.25);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 10px 24px rgba(255, 77, 141, 0.18);
+    }
+
+    .top-left-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .card {
+      position: relative;
+      padding: 28px;
+      border-radius: var(--radius-lg);
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      overflow: hidden;
+    }
+
+    .ribbon {
+      position: absolute;
+      top: 20px;
+      right: -48px;
+      transform: rotate(25deg);
+      background: linear-gradient(135deg, var(--accent), #ff7R8);
+      color: #fff;
+      padding: 6px 60px;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-family: "Fraunces", serif;
+      font-size: clamp(32px, 4vw, 44px);
+      margin: 0 0 8px;
+    }
+
+    .lead {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--accent);
+      margin: 0 0 14px;
+    }
+
+    .type-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .type-badge {
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--line);
+      font-family: "Fraunces", serif;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+    }
+
+    .spark {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #fff1e1, #ffe6f0);
+      font-size: 12px;
+      color: #b84c6f;
+      border: 1px solid rgba(255, 77, 141, 0.2);
+    }
+
+    .copy {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.9;
+      margin-bottom: 18px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chip {
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--glass);
+      border: 1px solid var(--line);
+      font-size: 12px;
+    }
+
+    .hero-side {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      justify-content: space-between;
+    }
+
+    .seal {
+      align-self: flex-start;
+      padding: 8px 14px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px dashed rgba(255, 77, 141, 0.4);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+    }
+
+    .portrait {
+      flex: 1;
+      min-height: 200px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(140deg, #ffe3ef 0%, #fff6e5 60%, #f7fbff 100%);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 18px;
+      font-size: 13px;
+      color: #a45b73;
+    }
+
+    
+    
+    
+    .portrait-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: calc(var(--radius-md) - 4px);
+    }
+.quote {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.8;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      border: 1px solid var(--line);
+    }
+
+    .story {
+      margin-top: 26px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.75));
+    }
+
+    .story h2 {
+      font-family: "Fraunces", serif;
+      font-size: 24px;
+      margin: 0 0 10px;
+    }
+
+    .story p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    .collection {
+      margin-top: 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    
+    
+    .product-grid {
+      display: grid;
+      gap: 18px;
+    }
+.product {
+      padding: 26px;
+      border-radius: var(--radius-lg);
+      background: #fff;
+      border: 1px solid rgba(255, 77, 141, 0.2);
+      box-shadow: 0 20px 50px rgba(255, 77, 141, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product::after {
+      content: "LIMITED";
+      position: absolute;
+      top: 18px;
+      right: -44px;
+      transform: rotate(20deg);
+      background: linear-gradient(135deg, #ffb347, #ffd27f);
+      color: #fff;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      padding: 6px 48px;
+    }
+
+            .product-visual {
+      height: 220px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(145deg, #fff7fb, #fff2e2);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+      position: relative;
+      overflow: hidden;
+      padding: 16px;
+    }
+
+    .product-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .product-visual.dual {
+      gap: 10px;
+    }
+
+    .product-visual.dual img {
+      width: 46%;
+    }
+.product h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+        .price-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 8px 0 12px;
+      font-family: "Fraunces", serif;
+    }
+
+    .price {
+      font-size: 18px;
+      color: #b65174;
+      letter-spacing: 0.04em;
+    }
+
+    .soldout {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #ffe1ea;
+      color: #b65174;
+      border: 1px solid rgba(255, 77, 141, 0.35);
+      text-transform: uppercase;
+    }
+.product p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .product ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 13px;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .cta.primary {
+      background: linear-gradient(135deg, var(--accent), #ff7R8);
+      color: #fff;
+      box-shadow: 0 14px 30px rgba(255, 77, 141, 0.3);
+    }
+
+    .cta.secondary {
+      background: #fff;
+      color: var(--accent);
+      border-color: rgba(255, 77, 141, 0.3);
+    }
+
+    .cta:hover {
+      transform: translateY(-2px);
+    }
+
+    .cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .note {
+      margin-top: 16px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .footer {
+      margin-top: 50px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .float {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @media (max-width: 880px) {
+      .hero,
+      .collection {
+        grid-template-columns: 1fr;
+      }
+      
+    .hero-side { order: 2; }
+      .top-left-btn { top: 12px; left: 12px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .float, .cta { animation: none; transition: none; }
+    }
+      .cta.primary {
+      color: #5a2340;
+    }
+
+    .password-card button {
+      color: #5a2340;
+    }
+
+</style>
+</head>
+<body>
+  <a class="top-left-btn" href="https://www.mobby.online/index.html">Mobby</a>
+  <div class="password-gate" id="passwordGate" aria-hidden="true">
+    <div class="password-card">
+      <h2>合言葉を入力してください</h2>
+      <p>このページはいろはさん専用です。パスワードを入力すると閲覧できます。</p>
+      <input id="gateInput" type="password" inputmode="numeric" autocomplete="one-time-code" placeholder="パスワード" />
+      <button type="button" id="gateBtn">ページを開く</button>
+      <div class="password-error" id="gateError">パスワードが違います。</div>
+    </div>
+  </div>
+  <div class="page">
+    <div class="topline">Private Invitation • 19BF05724438545F</div>
+
+    <section class="hero">
+      <div class="card hero-main">
+        <div class="ribbon">IROHA ONLY</div>
+        <p class="eyebrow">あなたの診断結果から生まれた専用ページ</p>
+        <h1>いろはさんへ</h1>
+        <p class="lead">プリクラ拡散モビー</p>
+        <div class="type-line">
+          <span class="type-badge">TYPE がやみそ</span>
+          <span class="spark">期間限定コレクション</span>
+        </div>
+        <p class="copy">
+          ひと声で空気が明るくなる、あの盛れた瞬間の中心にいるタイプ。
+          その華やかさと“みんなで盛る”空気感を、いろはさんのために
+          まるごとデザインに落とし込みました。
+        </p>
+        <div class="chips">
+          <span class="chip">陽キャラ強め</span>
+          <span class="chip">ギャル寄りの華やかさ</span>
+          <span class="chip">友達優先</span>
+          <span class="chip">評価重視</span>
+        </div>
+      </div>
+
+      <div class="card hero-side">
+        <div class="seal">限定ページ / いろはさん専用</div>
+        <div class="portrait float">
+          <video class="portrait-video" src="img/mv.mp4" autoplay muted loop playsinline></video>
+        </div>
+        <div class="quote">
+          「今日めっちゃ盛れた！」が最高の瞬間。<br>
+          そのテンションを引き上げられるのは、いろはさんだけ。
+        </div>
+      </div>
+    </section>
+
+    <section class="card story">
+      <h2>あなた専用の理由</h2>
+      <p>
+        このページは診断結果の傾向をもとに、いろはさんの“映える空気感”を
+        そのまま体験できるように設計しています。誰にでも見せるページではなく、
+        「いろはさんにしか似合わない世界観」を形にしました。
+      </p>
+    </section>
+
+            <section class="collection">
+      <div>
+        <div class="eyebrow">Limited Wardrobe</div>
+        <h2>がやみそ・プリクラ拡散モビー 限定アクセサリー</h2>
+        <p class="copy">
+          いろはさんの診断結果から導いた色とムードを、毎日持ち運べるサイズへ。
+          ぬいぐるみ型キーホルダーとアクリルキーホルダーの2点を、今だけの特別仕様で用意しました。
+        </p>
+        <div class="cta-group">
+          <span class="cta secondary">このページはいろはさん専用</span>
+        </div>
+        <p class="note">※ メールでお届けしたリンクからのみ閲覧できます。</p>
+      </div>
+
+      <div class="product-grid">
+        <div class="product">
+          <div class="product-visual">
+            <img src="img/nuigurumi.png" alt="ぬいぐるみ型キーホルダー">
+          </div>
+          <h3>ぬいぐるみ型キーホルダー</h3>
+          <div class="price-row">
+            <span class="price">8,000円</span>
+            <span class="soldout">売り切れ</span>
+          </div>
+          <p>ふわっとした触り心地で、手元からテンションを上げるお守り。</p>
+          <ul>
+            <li>バッグや鍵で揺れる立体感</li>
+            <li>写真に写ったときの存在感</li>
+          </ul>
+        </div>
+
+        <div class="product">
+          <div class="product-visual dual">
+            <img src="img/omote.png" alt="アクリルキーホルダー 表面">
+            <img src="img/ura.png" alt="アクリルキーホルダー 裏面">
+          </div>
+          <h3>アクリルキーホルダー</h3>
+          <div class="price-row">
+            <span class="price">1,900円</span>
+          </div>
+          <p><strong>表はプリクラ拡散モビー、裏にはあなたの診断がいつでも見れるQRコード。</strong> 透明感ときらめきで、光を味方にするクリアアクセ。</p>
+          <ul>
+            <li>表裏で違う表情が楽しめるデザイン</li>
+            <li>プリクラや写真で映えるツヤ感</li>
+            <li>日常でも特別感を残すサイズ感</li>
+          </ul>
+          <a class="cta primary" href="https://buy.stripe.com/bJe14n8lf7Y11yecNNao80a" target="_blank" rel="noopener">限定アイテムを手に取る</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">Mobby Private Atelier • For IROHA ONLY</div>
+  </div>
+  <script>
+    (function () {
+      const PASS = "1130";
+      const gate = document.getElementById("passwordGate");
+      const input = document.getElementById("gateInput");
+      const btn = document.getElementById("gateBtn");
+      const error = document.getElementById("gateError");
+      const KEY = "mobbyPageUnlocked";
+
+      const unlock = () => {
+        if (input.value === PASS) {
+          sessionStorage.setItem(KEY, "1");
+          gate.remove();
+        } else {
+          error.style.display = "block";
+          input.focus();
+          input.select();
+        }
+      };
+
+      if (sessionStorage.getItem(KEY) === "1") {
+        gate.remove();
+        return;
+      }
+
+      gate.setAttribute("aria-hidden", "false");
+      btn.addEventListener("click", unlock);
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          unlock();
+        }
+      });
+      input.focus();
+    })();
+  </script>
+  <script>
+    // Access notification via Vercel API
+    (function() {
+      const NOTIFY_KEY = 'mobbyNotified_' + location.pathname;
+      if (sessionStorage.getItem(NOTIFY_KEY)) return;
+
+      const pageId = location.pathname.split('/').pop().replace('.html', '');
+      const titleParts = document.title.split('さん専用');
+      const userName = titleParts[0] || pageId;
+      const accessTime = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+
+      fetch('https://www.mobby.online/api/notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pageId: pageId,
+          userName: userName,
+          accessTime: accessTime,
+          referrer: document.referrer || '',
+          userAgent: navigator.userAgent || ''
+        })
+      }).then(function() {
+        sessionStorage.setItem(NOTIFY_KEY, '1');
+      }).catch(function() {});
+    })();
+  </script>
+</body>
+</html>
