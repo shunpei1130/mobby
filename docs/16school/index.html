@@ -207,10 +207,10 @@
       cursor: pointer;
       font-size: 13px;
       font-weight: 500;
-      transition: all 0.2s ease;
+      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease, box-shadow 0.2s ease;
     }
     button:hover { background: rgba(0,0,0,0.08); transform: translateY(-1px); }
-    button:active { transform: scale(0.98); }
+    button:active { transform: translateY(0) scale(0.96); }
     
     button.primary {
       background: var(--accent);
@@ -218,6 +218,7 @@
       box-shadow: 0 4px 12px rgba(0,113,227,0.25);
     }
     button.primary:hover { background: #0077ed; box-shadow: 0 6px 16px rgba(0,113,227,0.35); }
+    button.primary:active { box-shadow: 0 2px 8px rgba(0,113,227,0.3); transform: translateY(1px) scale(0.97); }
     
     button.danger { color: var(--danger); background: rgba(255,59,48,0.05); }
     button.danger:hover { background: rgba(255,59,48,0.1); }
@@ -312,11 +313,12 @@
       border: 2px solid transparent;
       border-radius: 12px;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s, border-color 0.2s;
       height: 100%;
       min-height: 64px;
       text-align: center;
     }
+    .opt-btn label:active { transform: scale(0.97); }
     .opt-btn label .t { font-size: 12px; font-weight: 600; color: var(--text-sub); line-height: 1.2; }
     
     /* Checked State */
@@ -507,7 +509,7 @@
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      transition: transform 80ms ease, border-color 180ms ease, box-shadow 180ms ease;
+      transition: transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1), background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
       flex-shrink: 0;
     }
     .likert-btn[data-i="1"], .likert-btn[data-i="7"] { width: 76px; height: 76px; }
@@ -520,10 +522,11 @@
     .likert-btn.right { border-color: rgba(123,90,166,0.85); }
 
     .likert-btn.selected{
+      background: rgba(0,113,227,0.28);
       box-shadow: 0 0 0 6px rgba(0,113,227,0.12);
       border-color: rgba(0,113,227,0.65);
     }
-    .likert-btn:active{ transform: scale(0.98); }
+    .likert-btn:active{ transform: scale(0.92); }
 
     @media (max-width: 420px){
       .likert7{ gap: 6px; }
