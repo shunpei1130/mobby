@@ -914,20 +914,34 @@
     const PAGE_SIZE = 5;
     let state = loadState();
 
+    function createDefaultState(){
+      return { step:"intro", page:0, answers:{}, questionOrder:null, profile:{ name:"", email:"" } };
+    }
     function loadState(){
       try {
         const s = JSON.parse(localStorage.getItem("mamaMobbyState"));
-        if(s && s.answers) return s;
+        if(s && s.answers){
+          if(!s.profile) s.profile = { name:"", email:"" };
+          s.profile.name = s.profile.name || "";
+          s.profile.email = s.profile.email || "";
+          return s;
+        }
       } catch(e){}
-      return { step:"intro", page:0, answers:{}, questionOrder:null };
+      return createDefaultState();
     }
     function saveState(){
       localStorage.setItem("mamaMobbyState", JSON.stringify(state));
     }
     function resetState(){
-      state = { step:"intro", page:0, answers:{}, questionOrder:null };
+      state = createDefaultState();
       saveState();
       render();
+    }
+    function isQuizCompleted(){
+      return Object.keys(state.answers || {}).length >= QUESTIONS.length;
+    }
+    function isRegistered(){
+      return !!(state.profile && state.profile.name && state.profile.email);
     }
 
     // Question order (shuffle once per session)
@@ -1489,7 +1503,9 @@
       e.preventDefault();
       const answered = Object.keys(state.answers).length;
       if(answered >= QUESTIONS.length){
-        state.step = "result";
+        state.step = isRegistered() ? "result" : "gate";
+      } else if(answered > 0){
+        state.step = "quiz";
       } else {
         state.step = "intro";
       }
@@ -1502,16 +1518,32 @@
     };
 
     function updateNavActive(){
-      const isDiag = ["intro","quiz","result"].includes(state.step);
+      const isDiag = ["intro","quiz","gate","result"].includes(state.step);
       document.getElementById("navDiagnosis").classList.toggle("active", isDiag);
       document.getElementById("navCharacters").classList.toggle("active", state.step === "characters");
     }
 
     function render(){
       window.scrollTo(0,0);
+
+      const prevStep = state.step;
+      if(state.step === "result" && !isRegistered()){
+        if(isQuizCompleted()){
+          state.step = "gate";
+        } else {
+          state.step = Object.keys(state.answers).length ? "quiz" : "intro";
+        }
+      } else if(state.step === "gate" && isRegistered()){
+        state.step = "result";
+      } else if(state.step === "gate" && !isQuizCompleted()){
+        state.step = Object.keys(state.answers).length ? "quiz" : "intro";
+      }
+      if(prevStep !== state.step) saveState();
+
       updateNavActive();
       if(state.step === "intro") renderIntro();
       else if(state.step === "quiz") renderQuiz();
+      else if(state.step === "gate") renderGate();
       else if(state.step === "characters") renderCharacters();
       else renderResult();
     }
@@ -1622,9 +1654,91 @@
           state.page++;
           render();
         } else {
-          state.step = "result";
+          state.step = isRegistered() ? "result" : "gate";
           render();
         }
+      };
+    }
+
+    function renderGate(){
+      if(isRegistered()){
+        state.step = "result";
+        saveState();
+        render();
+        return;
+      }
+
+      const answered = Object.keys(state.answers).length;
+      if(answered < QUESTIONS.length){
+        state.step = answered > 0 ? "quiz" : "intro";
+        saveState();
+        render();
+        return;
+      }
+
+      const res = computeResult();
+
+      app.innerHTML = `
+        <div class="panel fade-in">
+          <p class="kicker">結果を見る前に入力してください</p>
+          <h2 class="big">あと少しで結果が見れます！</h2>
+          <p class="text-body" style="margin-top:-6px;">
+            入力後すぐにあなたのママタイプを表示します。
+          </p>
+
+          <div style="margin-top:22px; display:grid; gap:12px; max-width:520px;">
+            <div>
+              <div style="font-size:12px; color:var(--text-sub); margin-bottom:6px;">ニックネーム（必須）</div>
+              <input id="regName" type="text" placeholder="例）さくら"
+                style="width:100%; padding:14px 14px; border-radius:14px; border:1px solid var(--line); background:#fff; font-size:14px;">
+            </div>
+            <div>
+              <div style="font-size:12px; color:var(--text-sub); margin-bottom:6px;">メールアドレス（必須）</div>
+              <input id="regEmail" type="email" placeholder="example@gmail.com" required
+                style="width:100%; padding:14px 14px; border-radius:14px; border:1px solid var(--line); background:#fff; font-size:14px;">
+            </div>
+
+            <div id="regErr" style="display:none; color:var(--danger); font-size:12px;"></div>
+
+            <div style="display:flex; gap:10px; margin-top:8px;">
+              <button id="btnGateBack" style="background:transparent; color:#86868b;">戻る</button>
+              <button class="primary" id="btnGateGo" style="flex:1; padding:14px 18px;">結果を見る</button>
+            </div>
+
+            <div style="margin-top:10px; font-size:11px; color:var(--text-sub);">
+              保存される内容：ニックネーム、メール（必須）、診断TYPE（${res.code}）
+            </div>
+          </div>
+        </div>
+      `;
+
+      const nameEl = document.getElementById("regName");
+      const emailEl = document.getElementById("regEmail");
+      nameEl.value = state.profile?.name || "";
+      emailEl.value = state.profile?.email || "";
+
+      document.getElementById("btnGateBack").onclick = () => {
+        state.step = "quiz";
+        saveState();
+        render();
+      };
+
+      document.getElementById("btnGateGo").onclick = () => {
+        const errEl = document.getElementById("regErr");
+        errEl.style.display = "none";
+
+        const name = (nameEl.value || "").trim();
+        const email = (emailEl.value || "").trim();
+        const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+        if(!name){ errEl.textContent = "ニックネームを入力してください"; errEl.style.display = "block"; return; }
+        if(!email){ errEl.textContent = "メールアドレスを入力してください"; errEl.style.display = "block"; return; }
+        if(!emailOk){ errEl.textContent = "メールアドレスを正しく入力してください"; errEl.style.display = "block"; return; }
+
+        state.profile = { name, email };
+        state.step = "result";
+        saveState();
+        render();
       };
     }
 

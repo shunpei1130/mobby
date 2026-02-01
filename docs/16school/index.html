@@ -381,6 +381,105 @@
     .love-card h3 { margin: 0 0 12px; font-size: 15px; color: #ad1457; }
     .love-card .text-body { margin: 0; font-size: 13px; color: var(--text-main); }
 
+    /* Mama Share */
+    .mama-share {
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at 15% 10%, rgba(255, 214, 229, 0.75), rgba(255, 214, 229, 0) 55%),
+                  linear-gradient(135deg, #fff5f7 0%, #fffdf1 100%);
+      border: 2px solid #ffb3c7;
+    }
+    .mama-share::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 90% 0%, rgba(255, 220, 180, 0.55), rgba(255, 220, 180, 0) 45%);
+      pointer-events: none;
+    }
+    .mama-share-content { position: relative; z-index: 1; }
+    .mama-share-title { font-size: 20px; margin: 10px 0 8px; color: var(--text-main); }
+    .mama-share-steps {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 16px 0 18px;
+    }
+    .mama-step {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #ffffff;
+      border: 1px dashed #ffc1d3;
+      color: #b04a6b;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: var(--shadow-sm);
+    }
+    .mama-step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ff6fa3;
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .mama-share-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .mama-line {
+      background: #06c755;
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 22px;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 22px rgba(6, 199, 85, 0.25);
+    }
+    .mama-open {
+      background: #ffffff;
+      color: #e6507a;
+      border: 1px solid #ffb3c7;
+      border-radius: 12px;
+      padding: 14px 22px;
+      font-size: 14px;
+    }
+    .mama-ghost {
+      background: #ffffff;
+      color: #b04a6b;
+      border: 1px solid #ffc1d3;
+      border-radius: 12px;
+      padding: 14px 22px;
+      font-size: 14px;
+    }
+    .mama-share-success {
+      display: none;
+      margin-top: 14px;
+      padding: 10px 12px;
+      background: #ffffff;
+      border-radius: 10px;
+      color: #b04a6b;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid #ffd0df;
+    }
+    @media (max-width: 600px) {
+      .mama-share-actions { flex-direction: column; }
+      .mama-share-actions button { width: 100%; }
+    }
+
     /* Axis Bars */
     /* Axis Indicator */
     .axis-row { margin-bottom: 18px; }
@@ -1667,6 +1766,10 @@ function gotoDiagnosisHome(){
     function generateShareLink() {
       const baseUrl = window.location.origin + window.location.pathname;
       return `${baseUrl}?ref=${state.userId}`;
+    }
+
+    function generateMamaShareLink() {
+      return new URL("mama/", window.location.href).href;
     }
 
 
@@ -3223,6 +3326,29 @@ function renderGate(){
         
         </div>
 
+        <!-- ママに共有セクション -->
+        <div class="panel fade-in mama-share" style="text-align:center; margin-top:32px; animation-delay:0.28s;">
+          <div class="mama-share-content">
+            <p class="kicker" style="color:#e6507a;">👩‍👧 ママにも共有</p>
+            <h3 class="mama-share-title">ママモビー診断を送ってみよう</h3>
+            <p class="text-body" style="font-size:13px; margin:0 0 14px;">
+              あなたの結果を添えて送るだけ。親子の会話がふわっと広がります。
+            </p>
+            <div class="mama-share-steps">
+              <span class="mama-step"><span class="mama-step-num">1</span>あなたの結果を送る</span>
+              <span class="mama-step"><span class="mama-step-num">2</span>ママが診断</span>
+              <span class="mama-step"><span class="mama-step-num">3</span>タイプ比較</span>
+            </div>
+            <div class="mama-share-actions">
+              <button id="btnShareMamaLine" class="mama-line">💌 LINEでママに送る</button>
+              <button id="btnOpenMama" class="mama-open">👩‍👧 ママ診断を開く</button>
+              <button id="btnShareMamaCopy" class="mama-ghost">📋 招待文をコピー</button>
+            </div>
+            <div id="mamaShareSuccess" class="mama-share-success">
+              ✓ コピーしました！ママに貼り付けて送ってね
+            </div>
+          </div>
+        </div>
         <div class="panel fade-in" style="margin-top:32px; text-align:center;">
           <p class="kicker" style="margin-bottom:10px;">📌 学校生活と恋愛のヒント</p>
           <p class="text-body" style="font-size:13px; margin:0 0 14px;">
@@ -3280,6 +3406,7 @@ function renderGate(){
           </div>
         </div>
         
+
         <!-- 友達に共有セクション -->
         <div class="panel fade-in" style="text-align:center; margin-top:40px; animation-delay:0.3s; background:linear-gradient(135deg, #e8f4fd 0%, #f0f8ff 100%); border:2px solid #4dabf7;">
           <p class="kicker" style="color:#4dabf7;">友達にも診断してもらおう！</p>
@@ -3397,6 +3524,75 @@ function renderGate(){
 
       // 共有ボタンのイベントリスナー
       const shareLink = generateShareLink();
+      const mamaLink = generateMamaShareLink();
+      const mamaShareText = "\u30de\u30de\u3078\n\u79c1\u306e\u5b66\u6821\u30e2\u30d3\u30fc\u8a3a\u65ad\u306f\u300c" + char.name + "\u300d\u3060\u3063\u305f\u3088\uff01\n\u30de\u30de\u3082\u30de\u30de\u30e2\u30d3\u30fc\u8a3a\u65ad\u3084\u3063\u3066\u307f\u3066\u306d\ud83d\udc47\n";
+      const mamaShareMessage = `${mamaShareText}${mamaLink}`;
+
+      const mamaLineBtn = document.getElementById("btnShareMamaLine");
+      if (mamaLineBtn) {
+        mamaLineBtn.onclick = async () => {
+          const lineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(mamaLink)}&text=${encodeURIComponent(mamaShareText)}`;
+
+          state.shareCount++;
+          saveState();
+
+          submitShareEvent({
+            eventType: "share",
+            userId: state.userId,
+            platform: "mama_line",
+            userName: state.profile?.name || "",
+            userEmail: state.profile?.email || "",
+            userType: res.code,
+            gender: state.gender
+          }).catch(e => console.error("Share event error:", e));
+
+          window.open(lineUrl, "_blank");
+        };
+      }
+
+      const mamaOpenBtn = document.getElementById("btnOpenMama");
+      if (mamaOpenBtn) {
+        mamaOpenBtn.onclick = () => {
+          window.open(mamaLink, "_blank");
+        };
+      }
+
+      const mamaCopyBtn = document.getElementById("btnShareMamaCopy");
+      if (mamaCopyBtn) {
+        mamaCopyBtn.onclick = async () => {
+          try {
+            await navigator.clipboard.writeText(mamaShareMessage);
+
+            state.shareCount++;
+            saveState();
+
+            submitShareEvent({
+              eventType: "share",
+              userId: state.userId,
+              platform: "mama_copy",
+              userName: state.profile?.name || "",
+              userEmail: state.profile?.email || "",
+              userType: res.code,
+              gender: state.gender
+            }).catch(e => console.error("Share event error:", e));
+
+            const successEl = document.getElementById("mamaShareSuccess");
+            if (successEl) {
+              successEl.style.display = "block";
+              successEl.style.animation = "fadeIn 0.3s ease forwards";
+
+              setTimeout(() => {
+                successEl.style.animation = "fadeOut 0.3s ease forwards";
+                setTimeout(() => {
+                  successEl.style.display = "none";
+                }, 300);
+              }, 2000);
+            }
+          } catch (e) {
+            alert("\u30b3\u30d4\u30fc\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002\u624b\u52d5\u3067\u30b3\u30d4\u30fc\u3057\u3066\u304f\u3060\u3055\u3044: " + mamaShareMessage);
+          }
+        };
+      }
       const shareText = `【学校キャラ診断】私は「${char.name}」でした！\n${char.catch || char.summary}\n\nあなたも診断してみて👇\n`;
       
       // LINE共有
