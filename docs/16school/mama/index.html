@@ -1660,6 +1660,32 @@
       };
     }
 
+    async function submitLead(payload){
+      console.log("[Frontend] Submitting lead:", payload);
+      try {
+        const r = await fetch("/api/lead", {
+          method: "POST",
+          headers: { "Content-Type":"application/json" },
+          body: JSON.stringify(payload)
+        });
+        console.log("[Frontend] Response status:", r.status, r.statusText);
+        const data = await r.json().catch(()=> ({}));
+        if(!r.ok) {
+          console.error("[Frontend] Request failed:", {
+            status: r.status,
+            statusText: r.statusText,
+            data: data
+          });
+          throw new Error(data?.error || "送信に失敗しました");
+        }
+        console.log("[Frontend] Lead submitted successfully");
+        return data;
+      } catch (error) {
+        console.error("[Frontend] Error in submitLead:", error);
+        throw error;
+      }
+    }
+
     function renderGate(){
       if(isRegistered()){
         state.step = "result";
@@ -1723,7 +1749,7 @@
         render();
       };
 
-      document.getElementById("btnGateGo").onclick = () => {
+      document.getElementById("btnGateGo").onclick = async () => {
         const errEl = document.getElementById("regErr");
         errEl.style.display = "none";
 
@@ -1736,9 +1762,30 @@
         if(!emailOk){ errEl.textContent = "メールアドレスを正しく入力してください"; errEl.style.display = "block"; return; }
 
         state.profile = { name, email };
-        state.step = "result";
-        saveState();
-        render();
+        const res = computeResult();
+        const questionAnswers = {};
+        QUESTIONS.forEach(q => {
+          if(state.answers[q.id]) questionAnswers[q.id] = state.answers[q.id];
+        });
+
+        const payload = {
+          name,
+          email,
+          type: res.code,
+          axes: res.leftPct,
+          answers: questionAnswers,
+          createdAt: new Date().toISOString()
+        };
+
+        try {
+          await submitLead(payload);
+          state.step = "result";
+          saveState();
+          render();
+        } catch (error) {
+          errEl.textContent = "送信に失敗しました。時間をおいて再度お試しください。";
+          errEl.style.display = "block";
+        }
       };
     }
 
