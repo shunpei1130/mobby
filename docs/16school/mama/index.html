@@ -1,0 +1,1990 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  
+  <!-- SEO基本 -->
+  <title>ママモビー診断 | 親タイプ診断 - あなたのママタイプを16タイプで診断</title>
+  <meta name="description" content="ママモビー診断は40問の質問であなたの保護者としてのタイプを16種類から無料診断。コミュニティとの関わり方、子どもへの接し方など4軸で分析。お子さんからの共有で診断スタート。">
+  <meta name="keywords" content="ママモビー診断,親タイプ診断,ママ診断,保護者診断,16タイプ,無料診断,子育てタイプ,性格診断">
+  <meta name="author" content="Mobby">
+  <meta name="robots" content="index, follow">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="canonical" href="https://www.mobby.online/16school/mama/">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.mobby.online/16school/mama/">
+  <meta property="og:title" content="ママモビー診断 | 親タイプ診断 - あなたのママタイプを16タイプで診断">
+  <meta property="og:description" content="ママモビー診断は40問の質問であなたの保護者タイプを16種類から診断。コミュニティとの関わり方、子どもへの接し方など4軸で分析。">
+  <meta property="og:image" content="https://www.mobby.online/16school/logo.jpg">
+  <meta property="og:site_name" content="ママモビー診断（モビー診断）">
+  <meta property="og:locale" content="ja_JP">
+  <meta name="theme-color" content="#fff0f5">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://www.mobby.online/16school/mama/">
+  <meta name="twitter:title" content="ママモビー診断 | 親タイプ診断 - あなたのママタイプを16タイプで診断">
+  <meta name="twitter:description" content="ママモビー診断は40問の質問であなたの保護者タイプを16種類から診断。">
+  <meta name="twitter:image" content="https://www.mobby.online/16school/logo.jpg">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="../fav.jpg">
+  <link rel="apple-touch-icon" href="../logo.jpg">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --font-ja: 'Yomogi', cursive;
+      --font-en: 'Yomogi', cursive;
+      --bg: #fff0f5;
+      --surface: #ffffff;
+      --text-main: #1d1d1f;
+      --text-sub: #86868b;
+      --accent: #ec407a;
+      --accent-soft: #fce4ec;
+      --line: #f8bbd9;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+      --shadow-lg: 0 12px 30px rgba(0,0,0,0.08);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --danger: #ff3b30;
+    }
+
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    
+    body {
+      margin: 0;
+      font-family: var(--font-en), var(--font-ja);
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+
+    .wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand { display: flex; align-items: center; gap: 0px; }
+    .logo {
+      width: 30px; height: 30px; border-radius: 10px;
+      background-image: url('../logo.jpg');
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 4px 10px rgba(236,64,122,0.3);
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    .title h1 { font-size: 14px; margin: 0; font-weight: 600; cursor: pointer; }
+    .title p { margin: 0; color: var(--text-sub); font-size: 12px; }
+    .nav {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .nav a {
+      color: var(--text-main);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .nav a:hover {
+      background: rgba(0,0,0,0.05);
+    }
+    .nav a.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    @media (max-width: 600px) {
+      header { flex-direction: column; align-items: flex-start; }
+      .nav { width: auto; justify-content: flex-start; }
+    }
+
+    button {
+      border: 1px solid transparent;
+      background: rgba(0,0,0,0.05);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease, box-shadow 0.2s ease;
+    }
+    button:hover { background: rgba(0,0,0,0.08); transform: translateY(-1px); }
+    button:active { transform: translateY(0) scale(0.96); }
+    
+    button.primary {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 4px 12px rgba(236,64,122,0.25);
+    }
+    button.primary:hover { background: #d81b60; box-shadow: 0 6px 16px rgba(236,64,122,0.35); }
+    button.primary:active { box-shadow: 0 2px 8px rgba(236,64,122,0.3); transform: translateY(1px) scale(0.97); }
+    
+    button.danger { color: var(--danger); background: rgba(255,59,48,0.05); }
+    button.danger:hover { background: rgba(255,59,48,0.1); }
+    button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .panel {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 30px 24px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(255,255,255,0.8);
+    }
+    @media (max-width: 600px) {
+      .panel { padding: 20px 16px; border-radius: 16px; }
+    }
+
+    .kicker {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      font-weight: 600;
+      margin: 0 0 10px;
+    }
+    .big {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.25;
+      margin: 0 0 16px;
+    }
+    @media (max-width: 600px) { .big { font-size: 24px; } }
+
+    .text-body {
+      font-size: 14px;
+      color: var(--text-sub);
+      line-height: 1.75;
+    }
+
+    .progress-wrap {
+      margin-bottom: 10px;
+    }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+    }
+    .progress-track {
+      height: 6px;
+      background: #eee;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent) 0%, #f48fb1 100%);
+      transition: width 0.3s ease;
+    }
+
+    .qCard {
+      margin-bottom: 20px;
+      padding: 18px;
+      background: #fafafa;
+      border-radius: 14px;
+    }
+    .qCard .qText {
+      font-size: 15px;
+      font-weight: 500;
+      margin: 0 0 12px;
+      line-height: 1.6;
+    }
+
+    .likert7{
+      display:flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px 0 6px;
+    }
+    .likert-labels{
+      display:flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 0 4px;
+    }
+    .likert-labels .left{ color:#2f9e73; }
+    .likert-labels .right{ color:#7b5aa6; }
+    .likert-buttons{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      flex-wrap: nowrap;
+      width: 100%;
+    }
+
+    .likert-btn{
+      appearance:none;
+      -webkit-appearance:none;
+      border: 3px solid rgba(0,0,0,0.25);
+      background: transparent;
+      border-radius: 999px;
+      cursor: pointer;
+      padding: 0;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      transition: transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1), background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+      flex-shrink: 0;
+    }
+    .likert-btn[data-i="1"], .likert-btn[data-i="7"] { width: 76px; height: 76px; }
+    .likert-btn[data-i="2"], .likert-btn[data-i="6"] { width: 58px; height: 58px; }
+    .likert-btn[data-i="3"], .likert-btn[data-i="5"] { width: 44px; height: 44px; }
+    .likert-btn[data-i="4"] { width: 30px; height: 30px; }
+
+    .likert-btn.left  { border-color: rgba(47,158,115,0.85); }
+    .likert-btn.mid   { border-color: rgba(140,140,148,0.65); }
+    .likert-btn.right { border-color: rgba(123,90,166,0.85); }
+
+    .likert-btn.selected{
+      background: rgba(236,64,122,0.28);
+      box-shadow: 0 0 0 6px rgba(236,64,122,0.12);
+      border-color: rgba(236,64,122,0.65);
+    }
+    .likert-btn:active{ transform: scale(0.92); }
+
+    @media (max-width: 420px){
+      .likert7{ gap: 6px; }
+      .likert-labels{ font-size: 9px; padding: 0 2px; }
+      .likert-buttons{ gap: 4px; }
+      .likert-btn[data-i="1"], .likert-btn[data-i="7"] { width: 48px; height: 48px; }
+      .likert-btn[data-i="2"], .likert-btn[data-i="6"] { width: 40px; height: 40px; }
+      .likert-btn[data-i="3"], .likert-btn[data-i="5"] { width: 32px; height: 32px; }
+      .likert-btn[data-i="4"] { width: 24px; height: 24px; }
+    }
+    @media (max-width: 360px){
+      .likert7{ gap: 4px; }
+      .likert-labels{ font-size: 8px; }
+      .likert-buttons{ gap: 2px; }
+      .likert-btn[data-i="1"], .likert-btn[data-i="7"] { width: 42px; height: 42px; }
+      .likert-btn[data-i="2"], .likert-btn[data-i="6"] { width: 36px; height: 36px; }
+      .likert-btn[data-i="3"], .likert-btn[data-i="5"] { width: 28px; height: 28px; }
+      .likert-btn[data-i="4"] { width: 22px; height: 22px; }
+    }
+
+    .char-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+    @media (max-width: 600px) {
+      .char-grid { 
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+    }
+    .char-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      padding: 24px;
+      border: 1px solid rgba(255,255,255,0.8);
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    @media (max-width: 600px) {
+      .char-card {
+        padding: 8px;
+        border-radius: 12px;
+      }
+    }
+    .char-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+    .char-card-image {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      background: #f0f0f5;
+    }
+    @media (max-width: 600px) {
+      .char-card-image {
+        border-radius: 8px;
+        margin-bottom: 6px;
+      }
+    }
+    .char-card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .char-card-name {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 0 0 8px;
+      color: var(--text-main);
+    }
+    @media (max-width: 600px) {
+      .char-card-name {
+        font-size: 11px;
+        margin-bottom: 4px;
+      }
+    }
+    .char-card-code {
+      font-size: 11px;
+      font-family: monospace;
+      color: var(--text-sub);
+      background: #f0f0f5;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+    @media (max-width: 600px) {
+      .char-card-code {
+        font-size: 9px;
+        padding: 1px 4px;
+        margin-bottom: 4px;
+      }
+    }
+    .char-card-desc {
+      font-size: 13px;
+      color: var(--text-sub);
+      flex: 1;
+      margin-bottom: 12px;
+    }
+    @media (max-width: 600px) {
+      .char-card-desc {
+        display: none;
+      }
+    }
+    .char-card-detail-btn {
+      width: 100%;
+      padding: 10px;
+      font-size: 13px;
+    }
+    @media (max-width: 600px) {
+      .char-card-detail-btn {
+        padding: 6px;
+        font-size: 10px;
+      }
+    }
+
+    .char-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+      animation: fadeIn 0.2s ease;
+    }
+    .char-modal {
+      background: var(--surface);
+      border-radius: 24px;
+      padding: 32px;
+      max-width: 500px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      animation: modalSlideIn 0.3s ease;
+      transform: scale(0.95);
+    }
+    @keyframes modalSlideIn {
+      to { transform: scale(1); }
+    }
+    .char-modal-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      width: 32px; height: 32px;
+      border: none;
+      background: rgba(0,0,0,0.05);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--text-main);
+      transition: background 0.2s;
+    }
+    .char-modal-close:hover { background: rgba(0,0,0,0.1); }
+    .char-modal-image {
+      width: 200px; height: 200px;
+      border-radius: 16px;
+      overflow: hidden;
+      margin: 0 auto 24px;
+      background: #f0f0f5;
+    }
+    .char-modal-image img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .char-modal-type {
+      display: inline-block;
+      background: #f0f0f5;
+      padding: 6px 16px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-family: monospace;
+      color: var(--text-sub);
+      margin-bottom: 16px;
+    }
+    .char-modal-name {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 16px;
+      color: var(--text-main);
+      text-align: center;
+    }
+    .char-modal-desc {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--text-main);
+      margin: 0;
+    }
+
+    .result-hero {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .char-image-placeholder {
+      width: 100%;
+      max-width: 320px;
+      aspect-ratio: 1 / 1;
+      background: #f0f0f5;
+      border-radius: 24px;
+      margin: 20px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-sub);
+      font-size: 13px;
+      border: 1px dashed #d2d2d7;
+      overflow: hidden;
+    }
+    .char-image-placeholder img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 24px;
+    }
+    @media (max-width: 700px) { .card-grid { grid-template-columns: 1fr; } }
+
+    .info-card {
+      background: #f5f5f7;
+      padding: 20px;
+      border-radius: 16px;
+    }
+    .info-card h3 { margin: 0 0 12px; font-size: 15px; color: var(--text-main); }
+    .info-card ul { margin: 0; padding-left: 20px; font-size: 13px; color: var(--text-main); }
+    .info-card li { margin-bottom: 6px; }
+    .info-card .tip-title { display: block; font-weight: 600; margin-bottom: 4px; }
+    .info-card .tip-body { display: block; color: var(--text-main); }
+
+    .axis-row { margin-bottom: 18px; }
+    .axis-name { font-size: 13px; font-weight: 600; margin-bottom: 6px; display: block; }
+    .axis-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-sub); margin-bottom: 6px; }
+    .axis-meta { display:flex; justify-content: space-between; gap: 10px; font-size: 11px; color: var(--text-sub); margin-top: 6px; }
+    .axis-track {
+      height: 10px;
+      background: #e5e5ea;
+      border-radius: 999px;
+      position: relative;
+      overflow: visible;
+    }
+    .axis-center {
+      position:absolute;
+      left:50%;
+      top:50%;
+      width: 2px;
+      height: 14px;
+      background: rgba(0,0,0,0.10);
+      transform: translate(-50%, -50%);
+      border-radius: 2px;
+    }
+    .axis-dot {
+      position:absolute;
+      top:50%;
+      width: 14px;
+      height: 14px;
+      background: var(--accent);
+      border: 3px solid #fff;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+    }
+
+    .hidden { display: none; }
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+    /* 当てはまりチェック用スタイル */
+    .check-item:hover {
+      background: #f5f5f5 !important;
+    }
+    .check-item:has(input:checked) {
+      background: #e3f2fd !important;
+      border-color: #1976d2 !important;
+    }
+    .check-item:has(input:checked) span {
+      color: #1565c0;
+    }
+    
+    /* パーソナライズセクションのアニメーション */
+    .insight-card {
+      animation: slideInUp 0.4s ease forwards;
+      opacity: 0;
+    }
+    @keyframes slideInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .insight-card:nth-child(1) { animation-delay: 0.1s; }
+    .insight-card:nth-child(2) { animation-delay: 0.2s; }
+    .insight-card:nth-child(3) { animation-delay: 0.3s; }
+    .insight-card:nth-child(4) { animation-delay: 0.4s; }
+    .insight-card:nth-child(5) { animation-delay: 0.5s; }
+    .insight-card:nth-child(6) { animation-delay: 0.6s; }
+
+    footer {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-sub);
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <a href="../../index.html?skipSplash=1" class="back-btn" style="text-decoration:none;">
+          <button style="margin-right:6px; font-size:15px; padding:6px 18px; border-radius:20px; border:1px solid #f8bbd9; background:#fff0f5; color:#ec407a; cursor:pointer;">Home</button>
+        </a>
+        <a href="../index.html" style="padding-right:6px; font-size:13px; padding:6px 18px;margin-right: 6px; border-radius:20px; border:1px solid #f8bbd9; background:#fff0f5; color:#ec407a; cursor:pointer; text-decoration:none; display:inline-block;">学校モビー診断</a>
+        <div class="logo" id="logoHome"></div>
+        <div class="title">
+          <h1 id="titleHome">ママモビー診断</h1>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <nav class="nav">
+          <a href="#" id="navDiagnosis" class="active">診断</a>
+          <a href="#" id="navCharacters">タイプ一覧</a>
+        </nav>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <button class="danger" id="btnReset" style="font-size:11px;">リセット</button>
+          <button id="btnTypeGuide" style="font-size:11px; background:var(--accent-soft); color:var(--accent);">タイプ解説</button>
+        </div>
+      </div>
+    </header>
+
+    <main id="app"></main>
+    <footer>
+      &copy; 2026 Mobby. All rights reserved.
+    </footer>
+  </div>
+
+  <script>
+    /***********************
+     * Data & Logic
+     ***********************/
+    const AXES = {
+      A: { key:"A", name:"コミュニティ距離感", left:"巻き込み・広げる", right:"厳選・必要最小限", leftCode:"が", rightCode:"な" },
+      B: { key:"B", name:"青春恋愛スタート様式", left:"直球アタック", right:"じわじわ観察", leftCode:"や", rightCode:"お" },
+      C: { key:"C", name:"子に願う優先軸", left:"選択肢を増やす", right:"土台を育てる", leftCode:"み", rightCode:"こ" },
+      D: { key:"D", name:"子への関わり方", left:"伴走コーチ", right:"見守り任せる", leftCode:"そ", rightCode:"う" }
+    };
+
+    const ANS_LABEL = {1:"そう思う", 2:"ややそう思う", 3:"少しそう思う", 4:"どちらでもない", 5:"少しそう思わない", 6:"ややそう思わない", 7:"そう思わない"};
+
+    const QUESTIONS = [
+      // A：コミュニティ距離感（巻き込み vs 厳選）
+      {id:"A1", axis:"A", text:"保護者会やPTAの活動には、できるだけ参加するようにしている", reverse:false},
+      {id:"A2", axis:"A", text:"子どもの学校のことで、他の保護者とLINEで情報交換することが多い", reverse:false},
+      {id:"A3", axis:"A", text:"学校行事では、知り合いの保護者に自分から声をかけることが多い", reverse:false},
+      {id:"A4", axis:"A", text:"保護者同士のランチ会や集まりに誘われたら、なるべく参加したい", reverse:false},
+      {id:"A5", axis:"A", text:"子どもの友達の保護者とも、顔見知り程度には繋がっていたい", reverse:false},
+      {id:"A6", axis:"A", text:"保護者付き合いは、必要最低限で十分だと思う", reverse:true},
+      {id:"A7", axis:"A", text:"学校のことで連絡を取る保護者は、数人いれば十分だ", reverse:true},
+      {id:"A8", axis:"A", text:"保護者会では、必要なことだけ聞いてサッと帰りたい", reverse:true},
+      {id:"A9", axis:"A", text:"グループLINEの通知は多いとストレスを感じる", reverse:true},
+      {id:"A10", axis:"A", text:"深く付き合える保護者が少数いれば、広く浅い付き合いはなくていい", reverse:true},
+
+      // B：青春恋愛スタート様式（直球 vs 観察）
+      {id:"B1", axis:"B", text:"学生時代、好きな人ができたら自分からアプローチする方だった", reverse:false},
+      {id:"B2", axis:"B", text:"「この人だ」と思ったら、迷わず行動に移すタイプだった", reverse:false},
+      {id:"B3", axis:"B", text:"告白は、待つより自分からした方がスッキリすると思っていた", reverse:false},
+      {id:"B4", axis:"B", text:"恋愛では、駆け引きより素直に気持ちを伝える方が性に合っていた", reverse:false},
+      {id:"B5", axis:"B", text:"好きな人には、周りに知られてもいいからアピールしていた", reverse:false},
+      {id:"B6", axis:"B", text:"学生時代、好きな人ができても、しばらくは様子を見る方だった", reverse:true},
+      {id:"B7", axis:"B", text:"相手の気持ちが見えるまでは、慎重に距離を縮めていた", reverse:true},
+      {id:"B8", axis:"B", text:"告白するなら、確信が持てるまで待ちたいタイプだった", reverse:true},
+      {id:"B9", axis:"B", text:"恋愛では、急がず相手のペースに合わせることが多かった", reverse:true},
+      {id:"B10", axis:"B", text:"好きな人には、気づかれないように見ていることが多かった", reverse:true},
+
+      // C：子に願う優先軸（選択肢 vs 土台）
+      {id:"C1", axis:"C", text:"子どもには、将来の選択肢が広がるように勉強を頑張ってほしい", reverse:false},
+      {id:"C2", axis:"C", text:"成績や進路のことは、早めに意識させた方がいいと思う", reverse:false},
+      {id:"C3", axis:"C", text:"習い事や塾は、将来役立つかどうかで選ぶことが多い", reverse:false},
+      {id:"C4", axis:"C", text:"「できる」ことを増やすことが、子どもの自信につながると思う", reverse:false},
+      {id:"C5", axis:"C", text:"勉強や進路の話は、日常的に子どもとするようにしている", reverse:false},
+      {id:"C6", axis:"C", text:"成績より、子どもが安心できる居場所があることの方が大事だ", reverse:true},
+      {id:"C7", axis:"C", text:"子どもの人間関係や心の状態を、一番気にかけている", reverse:true},
+      {id:"C8", axis:"C", text:"勉強より、好きなことや得意なことを伸ばしてあげたい", reverse:true},
+      {id:"C9", axis:"C", text:"子どもが毎日楽しく過ごせていれば、成績は二の次でいい", reverse:true},
+      {id:"C10", axis:"C", text:"友達との関係がうまくいっていることが、一番安心する", reverse:true},
+
+      // D：子への関わり方（伴走 vs 見守り）
+      {id:"D1", axis:"D", text:"子どもの予定や提出物は、一緒に確認するようにしている", reverse:false},
+      {id:"D2", axis:"D", text:"テスト前は、計画を立てる手伝いをすることが多い", reverse:false},
+      {id:"D3", axis:"D", text:"子どもが困っていたら、すぐに一緒に解決策を考えたい", reverse:false},
+      {id:"D4", axis:"D", text:"「次はこうしてみたら？」と具体的にアドバイスすることが多い", reverse:false},
+      {id:"D5", axis:"D", text:"子どもの生活リズムや習慣づくりには、親が関わるべきだと思う", reverse:false},
+      {id:"D6", axis:"D", text:"子どものことは、基本的に本人に任せている", reverse:true},
+      {id:"D7", axis:"D", text:"口出しするより、見守っている方が子どもは伸びると思う", reverse:true},
+      {id:"D8", axis:"D", text:"失敗も経験だから、先回りして助けすぎないようにしている", reverse:true},
+      {id:"D9", axis:"D", text:"子どもから相談されたら動くが、自分からはあまり介入しない", reverse:true},
+      {id:"D10", axis:"D", text:"子どもには、自分で考えて決める力をつけてほしい", reverse:true},
+    ];
+
+    const CHARACTERS = {
+      "がやみそ": {
+        name:"連絡網即断司令塔モビー",
+        tags:"巻き込み｜直球｜選択肢｜伴走",
+        catch: "情報も段取りも、回すなら私。家族の選択肢を増やす伴走型。",
+        hook: ["グループLINEで要点まとめを投下しがち", "提出物・締切・持ち物を見える化して回したい", "学生時代の恋も「好きなら動く」で進みがち"],
+        downside: ["情報が多すぎて全部拾いにいって消耗する", "温度差（返事が遅い/決まらない）にイライラする", "子が動かないと、つい口出しが増える"],
+        perception: ["「頼れる」「まとめ上手」「助かった」が集まりやすい", "仕切りが強いと圧に見えることがある", "熱量が高くて近い人、と思われがち"],
+        loveTitle: "イベント発火・正面突破型",
+        loveStart: "委員会・文化祭・部活など「一緒に何かやる」で一気に火がつく",
+        loveSign: "用事を作る／帰り道を確保する／相手の予定を先に押さえにいく",
+        loveDecider: "「曖昧が苦手」。付き合うならちゃんとした形にしたい",
+        loveCheck: ["告白する前に、段取りが頭の中で組めてた", "好きな人には手伝うよが増える", "友達に根回ししてしまう"],
+        loveSeen: "「分かりやすい」「進みが早い」「頼れる」"
+      },
+      "がやみう": {
+        name:"運動会タイムキーパーモビー",
+        tags:"巻き込み｜直球｜選択肢｜見守り",
+        catch: "必要なことは即決で整える。でも最後は子に任せる。",
+        hook: ["予定・集合・段取りは先に固めたい", "情報共有はサッと、長い雑談は引きずらない", "恋も「タイミング来たら一言で距離を縮める」派"],
+        downside: ["物事が長引く/決まらない空気が苦手", "子の選択肢を狭める行動（放置/先延ばし）を見ると焦る", "巻き込みが多い場に長時間いると疲れる"],
+        perception: ["テキパキしていて安心感がある", "さっぱりしていて付き合いやすい", "ときどきドライ・淡白に見える"],
+        loveTitle: "短距離直球・さっぱり型",
+        loveStart: "好きに気づいたら早めに答え合わせしたい",
+        loveSign: "話しかける回数が増える／誘う／でもダラダラはしない",
+        loveDecider: "テンポが合うか。重くならない関係が一番",
+        loveCheck: ["好きなら言うが自然", "恋より予定優先の日も普通にある", "終わる時もスパッと終わる"],
+        loveSeen: "「潔い」「ノリがいい」「引きずらない」"
+      },
+      "がやこそ": {
+        name:"放課後相談ホットラインモビー",
+        tags:"巻き込み｜直球｜土台｜伴走",
+        catch: "心の土台づくりに直球で伴走。相談が来たら全力で受ける。",
+        hook: ["子の表情やテンションの変化にすぐ気づく", "「何があった？」を直球で聞きがち", "ママ友にもうちさ…と共有・相談しやすい"],
+        downside: ["人間関係の話を抱え込みやすい", "直球で聞いて子が閉じると、やり方に迷う", "助けたくて動きすぎて疲れる"],
+        perception: ["面倒見が良くて頼られやすい", "距離が近い・熱いママに見える", "介入が強めと誤解されることがある"],
+        loveTitle: "情熱お世話焼き・一直線型",
+        loveStart: "相手が落ち込んでる時、弱ってる時に守りたいが点火しやすい",
+        loveSign: "差し入れ／励まし／相手の悩みを一緒に抱える",
+        loveDecider: "「この人の味方でいたい」と思えたら速い",
+        loveCheck: ["好き＝応援したくなる", "相手の変化に敏感", "尽くしすぎて後で疲れる"],
+        loveSeen: "「面倒見が良い」「熱い」「距離が近い」"
+      },
+      "がやこう": {
+        name:"校門あいさつ隊モビー",
+        tags:"巻き込み｜直球｜土台｜見守り",
+        catch: "場の空気は明るくする。子のことは任せて見守る。",
+        hook: ["あいさつ・声かけは自分からできる", "子には「どうしたい？」を聞いて任せたい", "昔の恋も、好きなら一回は直球で動ける"],
+        downside: ["見守りたいのに周囲の不安煽りで揺れる", "子が相談してくれないとモヤる", "正論を言いすぎた後に反省しがち"],
+        perception: ["気さくで話しかけやすい", "干渉しないので付き合いやすい", "あっさりしていて本音が読めないと言われることも"],
+        loveTitle: "ムード直球・自由恋愛型",
+        loveStart: "「一緒にいて楽しい」が積み上がって、ある日ふっと直球でいく",
+        loveSign: "会うと元気／ノリが良くなる／好きバレしても案外平気",
+        loveDecider: "理屈より空気。「この人といる自分が好き」かどうか",
+        loveCheck: ["恋は楽しいが最優先", "駆け引きは面倒", "束縛されると冷める"],
+        loveSeen: "「明るい」「恋もオープン」「サバサバ」"
+      },
+      "がおみそ": {
+        name:"面談前リサーチモビー",
+        tags:"巻き込み｜観察｜選択肢｜伴走",
+        catch: "まず情報収集。勝ち筋を見つけて、静かに伴走する。",
+        hook: ["先に調べてから動くと安心する", "面談前に聞ける人から情報を取りにいく", "恋も「確信してから動く」慎重スタート"],
+        downside: ["情報を集めすぎて不安が増える", "噂や比較に引っ張られて疲れる", "子が感覚で動くと心配で口出しが増える"],
+        perception: ["準備が丁寧で頼りになる", "裏でいろいろ知っている人に見える", "慎重すぎ・計算高いと誤解されることがある"],
+        loveTitle: "情報収集→本命一点・慎重型",
+        loveStart: "好きになる前に相手の評判・人となりを静かに集めがち",
+        loveSign: "目立たない形で近づく／共通の接点を増やす／一人で作戦を立てる",
+        loveDecider: "信頼できるか。長く続く絵が描けるか",
+        loveCheck: ["告白前に相性を見てた", "勢いより確実性", "好きが深まるほど慎重になる"],
+        loveSeen: "「実は本気」「堅実」「静かに強い」"
+      },
+      "がおみう": {
+        name:"LINE既読熟考モビー",
+        tags:"巻き込み｜観察｜選択肢｜見守り",
+        catch: "すぐ返さないのは、ちゃんと考えてるから。見守り型の情報処理。",
+        hook: ["LINEは一回読んで、頭の中で整理してから返す", "必要な情報だけ拾って、必要な時に共有したい", "子の勉強は本人のタイミングを尊重したい"],
+        downside: ["返信圧が強いグループで消耗する", "見守りたいのに情報が入ると不安になる", "急に「今決めて」に弱い"],
+        perception: ["落ち着いていて大人っぽい", "話すと的確で安心感がある", "距離感が読めない／ミステリアスに見られがち"],
+        loveTitle: "好きバレしない賢者・自然成立型",
+        loveStart: "気づいたら距離が近い。関係が自然に育つのが得意",
+        loveSign: "返事は落ち着いて／でも会話は途切れさせない／視線は長め",
+        loveDecider: "焦らず整うかどうか。急展開はむしろ苦手",
+        loveCheck: ["押すより保つが得意", "好きでも平常運転", "決まる時は勝手に決まる"],
+        loveSeen: "「落ち着いてる」「読めない」「気づいたら付き合ってた」"
+      },
+      "がおこそ": {
+        name:"友だち関係ナビモビー",
+        tags:"巻き込み｜観察｜土台｜伴走",
+        catch: "空気を読みながら、子の人間関係を迷子にしない伴走役。",
+        hook: ["場の空気や温度差に敏感", "子の友だち関係は気持ちの整理から手伝いたい", "恋も「まず観察→確信してから」タイプ"],
+        downside: ["気を遣いすぎて疲れる", "誰かが傷つく場面に心が削れる", "子・先生・ママ友の板挟みになりやすい"],
+        perception: ["調整役として助かる存在", "優しくて聞き上手", "我慢してそう、と心配されることがある"],
+        loveTitle: "共感で深まる・伴走型",
+        loveStart: "相手の話を聞くうちに心の距離が先に近づく",
+        loveSign: "相談相手になる／相手の機嫌に敏感／小さな変化に気づく",
+        loveDecider: "「この人の前だと素でいられる」が確信になる",
+        loveCheck: ["恋は安心が最優先", "相手の温度に合わせがち", "板挟みで疲れやすい"],
+        loveSeen: "「優しい」「聞き上手」「良い子」"
+      },
+      "がおこう": {
+        name:"ランチ会聞き役モビー",
+        tags:"巻き込み｜観察｜土台｜見守り",
+        catch: "急がず焦らず、話を受け止める。土台重視の見守り型。",
+        hook: ["結論を急がず「うんうん」で受け止めがち", "子の波を見て、話すタイミングを待てる", "恋も様子見から始まるのが自然"],
+        downside: ["話を聞きすぎて感情が引っ張られる", "自分の意見を強く求められる場が続くと疲れる", "タイミング待ちをしすぎて機会を逃す"],
+        perception: ["安心感があって話しやすい", "穏やかでトラブルが起きにくそう", "受け身／何を考えてるか分からないと言われることも"],
+        loveTitle: "聞き役自然体・じわじわ型",
+        loveStart: "グイグイ行かず仲良しから恋に変わるまでが長い",
+        loveSign: "相手の話をよく覚えてる／否定しない／一緒にいる時間が増える",
+        loveDecider: "居心地。会話の沈黙が平気かどうか",
+        loveCheck: ["恋は急がない", "追いかけるより寄り添う", "好きがバレにくい"],
+        loveSeen: "「穏やか」「安定」「本命感がある」"
+      },
+      "なやみそ": {
+        name:"家庭内スケジュール司令モビー",
+        tags:"厳選｜直球｜選択肢｜伴走",
+        catch: "外では静か、家では段取りで勝つ。選択肢重視の伴走型。",
+        hook: ["人付き合いは最小限、家の運用は最優先", "「今やろう」「先に決めよう」を言いがち", "恋も決めたら動く直球気味"],
+        downside: ["学校の急な変更で予定が崩れるとストレス", "子がのんびりだと強めに言ってしまう", "頼れる人が少なく、全部背負いがち"],
+        perception: ["しっかり者で家庭運営がうまい", "近づくと意外と優しいタイプ", "最初はサバサバ・怖そうに見られることがある"],
+        loveTitle: "少数精鋭・本命一本釣り型",
+        loveStart: "好きになる人数は少ない。その分、決めたら直球",
+        loveSign: "一対一で会おうとする／周りにはあまり言わない／でも行動は早い",
+        loveDecider: "時間の使い方が一致するか（自分のペースを壊されないか）",
+        loveCheck: ["クラス全員に愛想はしない", "本命だけ特別", "変に探られると一気に冷める"],
+        loveSeen: "「クール」「狙いが定まると速い」「意外と一途」"
+      },
+      "なやみう": {
+        name:"テスト前だけ直球モビー",
+        tags:"厳選｜直球｜選択肢｜見守り",
+        catch: "普段は任せる。だけど締切前だけは直球で軌道修正。",
+        hook: ["期限が近づくと一気にスイッチが入る", "アドバイスは短く要点だけにしたい", "余計な付き合いに時間を使いたくない"],
+        downside: ["子が締切間際まで動かないと焦る", "「見守りたいのに焦る」の矛盾で自己嫌悪になる", "もっと関わるべき？の罪悪感が出る"],
+        perception: ["合理的で頼れる", "ドライに見えるが、実は熱い", "距離感が明確で付き合いやすい"],
+        loveTitle: "即断・切り替え早い型",
+        loveStart: "迷う時間がもったいない。好きなら短期で答えを出したい",
+        loveSign: "一回誘う／反応を見る／ダメなら引くのも早い",
+        loveDecider: "脈ありかどうかの手応え。片想い長期は苦手",
+        loveCheck: ["引き際が早い", "熱しやすいが冷めるのも早い", "グダグダが一番ムリ"],
+        loveSeen: "「さっぱり」「決断早い」「追わない」"
+      },
+      "なやこそ": {
+        name:"親子直球作戦会議モビー",
+        tags:"厳選｜直球｜土台｜伴走",
+        catch: "守る時は守る。子の土台を固めるために、家で作戦会議。",
+        hook: ["「なんか嫌だった」を言語化して整理したい", "必要な人には直球で連絡して守りにいく", "恋も言う時は言う直球スタート"],
+        downside: ["子の悩みに入り込みすぎて気持ちが重くなる", "直球で言いすぎて反発されると凹む", "学校や相手家庭にどこまで言うか迷う"],
+        perception: ["子どもの味方感が強い", "頼もしい・守ってくれそう", "対外的には強いママに見られやすい"],
+        loveTitle: "守護直球・一騎討ち型",
+        loveStart: "この人を守りたいが点火すると一直線。周囲より相手が最優先",
+        loveSign: "相手の味方になる／嫌なことを嫌と言う／関係を曖昧にしない",
+        loveDecider: "誠実さ。人として信頼できるか",
+        loveCheck: ["好きになると味方スイッチが入る", "二人の問題は二人で解きたい", "裏切りに弱い"],
+        loveSeen: "「強い」「頼れる」「本命になると怖いくらい一途」"
+      },
+      "なやこう": {
+        name:"送迎車内サクッと相談モビー",
+        tags:"厳選｜直球｜土台｜見守り",
+        catch: "短い時間で核心に触れる。言ったら任せる、直球見守り型。",
+        hook: ["送迎の数分で深い話ができる", "「どうしたい？」を聞いて決めさせたい", "必要な時だけサッと動くのが得意"],
+        downside: ["話したいのに時間が取れないとモヤる", "子が抱え込むタイプだと心配が増える", "直球質問が空振りすると気まずい"],
+        perception: ["落ち着いていて芯がある", "大事なときに動く人", "近寄りがたいが、話すと優しいと言われがち"],
+        loveTitle: "二人だけ直球・距離感うまい型",
+        loveStart: "外では静かに、二人のタイミングで直球",
+        loveSign: "人前では普通／二人になると核心を突く／短い言葉で距離を縮める",
+        loveDecider: "一緒にいて疲れないか。干渉されないか",
+        loveCheck: ["周りにバレたくない", "会話は短くても深い", "束縛は即アウト"],
+        loveSeen: "「ミステリアス」「急に距離が近くなる」「実はロマンチスト」"
+      },
+      "なおみそ": {
+        name:"成績表こっそり分析モビー",
+        tags:"厳選｜観察｜選択肢｜伴走",
+        catch: "目立たず整えて、勝ち筋を作る。観察×選択肢×伴走。",
+        hook: ["表では静か、裏で整えるのが得意", "成績表や提出物からつまずきを見つけがち", "恋もまず観察、確信してから動く"],
+        downside: ["静かに頑張りすぎて誰にも気づかれない", "分析しすぎて不安が増える", "子が感情で拒否すると打ち手がなくなる"],
+        perception: ["影の実務家、安定感がある", "頼ると答えが早い", "何でも把握してそうで圧に感じられることがある"],
+        loveTitle: "静かな戦略・長期戦型",
+        loveStart: "好きは認めるまで時間がかかる。でも内側では着実に固まっていく",
+        loveSign: "相手の好み・地雷を把握／負担にならない形で手助け／黙って支える",
+        loveDecider: "将来像が合うか。安定して続くか",
+        loveCheck: ["恋に勝ち筋を求めてしまう", "気持ちより先に整える", "想いは重いが出し方は静か"],
+        loveSeen: "「できる」「本気になると強い」「隠れて燃えてる」"
+      },
+      "なおみう": {
+        name:"影の進路リサーチモビー",
+        tags:"厳選｜観察｜選択肢｜見守り",
+        catch: "口は出さない、でも見ている。選択肢は静かに確保する。",
+        hook: ["気になるけど、口出しは最小限にしたい", "情報は集めるが、出すのは必要な時だけ", "恋も様子見から自然に始まる"],
+        downside: ["心配してるのに動けない自分にモヤる", "周りが騒ぐほど焦りが増える", "静かに見守りすぎて状況を聞きそびれる"],
+        perception: ["落ち着いていて賢い", "干渉しないので楽", "冷たい／本音が見えないと誤解されることがある"],
+        loveTitle: "影の堅実・静観型",
+        loveStart: "好きでも生活が崩れるのは嫌。自分のペースを守りつつ育てる",
+        loveSign: "会えば嬉しいけど見せない／連絡頻度は多くない／でも切らさない",
+        loveDecider: "安心と信頼。派手さよりちゃんとしてる",
+        loveCheck: ["恋で一喜一憂しすぎない", "静かに距離を詰める", "感情を見せるのは最後"],
+        loveSeen: "「落ち着いてる」「大人」「本音が読めない」"
+      },
+      "なおこそ": {
+        name:"寝る前そっとカウンセルモビー",
+        tags:"厳選｜観察｜土台｜伴走",
+        catch: "言葉にできない気持ちを拾う。土台を整える静かな伴走。",
+        hook: ["表情で今日は無理な日が分かる", "夜に少しずつ話を引き出すのが得意", "恋も観察スタートで、確信してから深くなる"],
+        downside: ["相手の気持ちを感じすぎて疲れる", "確証がなくて動けず迷いが長引く", "周囲への説明が苦手で孤立しがち"],
+        perception: ["優しくて信頼できる", "家庭の空気を整える人", "抱えてるものが見えず心配されることがある"],
+        loveTitle: "夜更けの長文・深掘り型",
+        loveStart: "昼は平気、夜にふと深くなる。「言葉」で近づく恋",
+        loveSign: "相談が長くなる／相手の気持ちを言語化してあげる／二人の世界が濃い",
+        loveDecider: "気持ちを丁寧に扱ってくれるか。雑にされると冷める",
+        loveCheck: ["夜に考えすぎる", "分かってほしいが強い", "言葉が刺さると一気に冷める"],
+        loveSeen: "「優しい」「深い」「恋すると世界が狭くなる」"
+      },
+      "なおこう": {
+        name:"後方席静観モビー",
+        tags:"厳選｜観察｜土台｜見守り",
+        catch: "必要以上に踏み込まない。安心基地として、後ろから支える。",
+        hook: ["子が話すまで待てる", "余計な口出しをせず、安心できる場を作りたい", "人付き合いは深く少なくが合う"],
+        downside: ["子が本音を言わないと待つしかないが辛い", "周りのアドバイスが多いと揺れる", "自分の意見を求められる場が続くと消耗する"],
+        perception: ["穏やかでブレない", "距離感が上手で安心する", "何を考えているか分からないと言われることも"],
+        loveTitle: "熟成片想い・静かに見守る型",
+        loveStart: "好きに気づいてもすぐ動かない。確信が持てるまで育てる",
+        loveSign: "目で追う／相手の好きなものを覚える／でも近づきすぎない",
+        loveDecider: "「このままでも幸せ」と思えるかどうか（無理に形にしない）",
+        loveCheck: ["片想いが長引きがち", "自分から壊すのが怖い", "急に詰められると引く"],
+        loveSeen: "「恋してるのに気づかれない」「静かに一途」「守りが堅い」"
+      }
+    };
+
+    // State
+    const PAGE_SIZE = 5;
+    let state = loadState();
+
+    function loadState(){
+      try {
+        const s = JSON.parse(localStorage.getItem("mamaMobbyState"));
+        if(s && s.answers) return s;
+      } catch(e){}
+      return { step:"intro", page:0, answers:{}, questionOrder:null };
+    }
+    function saveState(){
+      localStorage.setItem("mamaMobbyState", JSON.stringify(state));
+    }
+    function resetState(){
+      state = { step:"intro", page:0, answers:{}, questionOrder:null };
+      saveState();
+      render();
+    }
+
+    // Question order (shuffle once per session)
+    function getQuestionOrder(){
+      if(!state.questionOrder){
+        const byAxis = {A:[],B:[],C:[],D:[]};
+        QUESTIONS.forEach((q,i) => byAxis[q.axis].push(i));
+        Object.values(byAxis).forEach(arr => shuffleArray(arr));
+        const order = [];
+        for(let i=0; i<10; i++){
+          ["A","B","C","D"].forEach(ax => {
+            if(byAxis[ax][i] !== undefined) order.push(byAxis[ax][i]);
+          });
+        }
+        state.questionOrder = order;
+        saveState();
+      }
+      return state.questionOrder;
+    }
+    function shuffleArray(arr){
+      for(let i=arr.length-1; i>0; i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+    function getShuffledQuestions(){
+      const order = getQuestionOrder();
+      return order.map(i => QUESTIONS[i]);
+    }
+
+    // Compute result
+    function computeResult(){
+      const axes = AXES;
+      const byAxis = {A:[],B:[],C:[],D:[]};
+      QUESTIONS.forEach(q => {
+        const raw = state.answers[q.id];
+        if(raw !== undefined){
+          const score = q.reverse ? raw : (8 - raw);
+          byAxis[q.axis].push({ id:q.id, text:q.text, raw, score, reverse:q.reverse });
+        }
+      });
+
+      const means = {};
+      const breakdown = {};
+      for(const k of ["A","B","C","D"]){
+        const arr = byAxis[k];
+        if(arr.length === 0){ means[k] = 4; breakdown[k] = []; continue; }
+        const sum = arr.reduce((a,b) => a + b.score, 0);
+        means[k] = sum / arr.length;
+        breakdown[k] = arr.map(it => {
+          const contrib = (it.score - 4) / 3;
+          return { id:it.id, text:it.text, ans:it.raw, contrib };
+        });
+      }
+
+      const hard = {};
+      const norm = {};
+      const pos = {};
+      const leftPct = {};
+      const confidenceLevel = {};
+      const confidenceLabel = {};
+      const coherenceByAxis = {};
+      let midCount = 0;
+
+      for(const k of ["A","B","C","D"]){
+        const m = means[k];
+        const n = (m - 1) / 6;
+        norm[k] = n;
+        pos[k] = Math.round(n * 100);
+        leftPct[k] = Math.round((1 - n) * 100);
+        hard[k] = n < 0.5 ? "L" : "R";
+
+        const dist = Math.abs(n - 0.5);
+        if(dist < 0.1){
+          confidenceLevel[k] = "mid";
+          confidenceLabel[k] = "場面による";
+          midCount++;
+        } else if(dist < 0.2){
+          confidenceLevel[k] = "moderate";
+          confidenceLabel[k] = "やや";
+        } else {
+          confidenceLevel[k] = "strong";
+          confidenceLabel[k] = "はっきり";
+        }
+
+        const arr = byAxis[k];
+        if(arr.length > 1){
+          const avg = means[k];
+          const variance = arr.reduce((s, it) => s + Math.pow(it.score - avg, 2), 0) / arr.length;
+          coherenceByAxis[k] = 1 - Math.sqrt(variance) / 3;
+        } else {
+          coherenceByAxis[k] = 1;
+        }
+      }
+
+      const codeArr = ["A","B","C","D"].map(k => hard[k] === "L" ? axes[k].leftCode : axes[k].rightCode);
+      const actualCode = codeArr.join("");
+
+      // Adjacent types
+      const adjacentTypes = [];
+      if(midCount > 0){
+        for(const k of ["A","B","C","D"]){
+          if(confidenceLevel[k] === "mid"){
+            const altCode = codeArr.map((c, i) => {
+              if(["A","B","C","D"][i] === k){
+                return c === axes[k].leftCode ? axes[k].rightCode : axes[k].leftCode;
+              }
+              return c;
+            }).join("");
+            if(CHARACTERS[altCode]){
+              adjacentTypes.push({ code:altCode, name:CHARACTERS[altCode].name });
+            }
+          }
+        }
+      }
+
+      // Decisiveness
+      const totalDecisiveness = ["A","B","C","D"].reduce((s,k) => s + Math.abs(norm[k] - 0.5), 0) / 2;
+      const overallConfidence = totalDecisiveness > 0.6 ? "strong" : totalDecisiveness > 0.4 ? "moderate" : "mid";
+      const overallLabel = overallConfidence === "strong" ? "傾向がはっきり出ています" : 
+                          overallConfidence === "moderate" ? "やや傾向が出ています" : "場面によって変わりやすいタイプです";
+
+      // Straight line check
+      const allAns = Object.values(state.answers);
+      const straightLine = allAns.length >= 10 && new Set(allAns).size <= 2;
+
+      return {
+        means, hard, code: actualCode, norm, pos, leftPct,
+        coherenceByAxis, breakdown,
+        totalDecisiveness, confidenceLevel, confidenceLabel, midCount, adjacentTypes,
+        overallConfidence, overallLabel, straightLine,
+        char: CHARACTERS[actualCode], axes
+      };
+    }
+
+    // =====================================
+    // パーソナライズされたインサイト生成
+    // =====================================
+    
+    // 質問ごとのパーソナライズコメント（強い回答に対して）
+    const QUESTION_INSIGHTS = {
+      // A軸：コミュニティ距離感
+      "A1": {
+        left: "保護者会やPTAに積極的に参加されているんですね。「顔を出すことで見えてくる情報がある」と感じていませんか？",
+        right: "保護者会は必要な時だけ、という割り切りがありますよね。時間の使い方に優先順位をつけている証拠です。"
+      },
+      "A2": {
+        left: "LINEでの情報交換、大事にされていますね。「知っておいた方がいい」という情報アンテナが高いタイプです。",
+        right: "LINEのやり取りは最小限派ですね。通知に追われない余裕が、あなたの強みになっています。"
+      },
+      "A3": {
+        left: "行事で自分から声をかけられるの、実は勇気がいること。その行動力、周りは頼もしく見ています。",
+        right: "行事では静かに見守るタイプですね。必要な人とは自然とつながれる、そんな安心感がありませんか？"
+      },
+      "A4": {
+        left: "ランチ会や集まりには前向きに参加したい派ですね。そういう場で得た情報が、あとで役立った経験ありませんか？",
+        right: "集まりは気が向いた時だけ、という感覚わかります。無理して参加しないことで、本当に大事な関係が見えてきますよね。"
+      },
+      "A5": {
+        left: "子どもの友達の保護者とも顔見知りでいたい気持ち、子どものためを思っての行動ですよね。",
+        right: "子どもの交友関係と親の付き合いは別、という線引きがありますね。それも一つの境界線の守り方です。"
+      },
+      "A6": {
+        right: "「必要最低限でいい」—この割り切りができる人、実は多くないんです。自分の時間を大切にできていますね。",
+        left: "人付き合いは広めに持っておきたい派ですね。いざという時のネットワークが、きっとあなたの安心材料になっています。"
+      },
+      "A9": {
+        right: "グループLINEの通知がストレス…めちゃくちゃわかります。既読スルーできる勇気、大事にしてください。",
+        left: "通知が多くても気にならないタイプですね。情報の波に乗れる処理能力の高さを感じます。"
+      },
+      "A10": {
+        right: "深く付き合える人が少数いればいい—質を重視する姿勢、素敵です。その人たちを大切にしていますよね。",
+        left: "いろんな人との浅く広い繋がりも大事にしたい派ですね。多様な視点が入ってくるメリットを感じていませんか？"
+      },
+
+      // B軸：青春恋愛スタート様式
+      "B1": {
+        left: "学生時代、好きな人に自分からアプローチできたタイプ。その行動力、今の人生にも活きていませんか？",
+        right: "好きな人がいても様子を見る派だったんですね。慎重に相手を見極める目、今も健在ではないですか？"
+      },
+      "B2": {
+        left: "「この人だ」と決めたら迷わない。その決断力、子育ての場面でも発揮されていそうですね。",
+        right: "決める前によく考える派ですね。直感より確信を大事にする姿勢、失敗が少ないはずです。"
+      },
+      "B3": {
+        left: "告白は待つより自分から派。スッキリしたい性格、今も「ハッキリさせたい」場面多くないですか？",
+        right: "告白は相手の気持ちが見えてから派ですね。リスクを避ける慎重さ、大人になっても変わっていませんよね。"
+      },
+      "B5": {
+        left: "好きバレしても平気なタイプ、オープンな性格ですね。隠し事が苦手で、正直に生きてる感じしませんか？",
+        right: "好きな人には気づかれたくなかった派。感情を見せないクール面、今も健在かもしれませんね。"
+      },
+      "B7": {
+        right: "相手の気持ちが見えるまで待てる忍耐力。それって、子どもの成長を見守る力にも通じていませんか？",
+        left: "待つより先に動く派。モヤモヤを抱え続けるのが苦手で、ハッキリさせたいタイプですよね。"
+      },
+      "B10": {
+        right: "好きな人をこっそり見ていたタイプ。観察力が高くて、相手の変化に気づきやすいはずです。",
+        left: "見てるだけじゃ満足できなかった派。行動で示す恋愛スタイル、今のあなたにも通じるものがありそう。"
+      },
+
+      // C軸：子に願う優先軸
+      "C1": {
+        left: "選択肢が広がるように勉強を頑張ってほしい—その願い、子どもの可能性を信じているからこそですよね。",
+        right: "勉強より大事なこともある、と感じていますよね。成績以外の成長にも目を向けられている証拠です。"
+      },
+      "C2": {
+        left: "成績や進路は早めに意識派。先を見据えた準備、子どもの将来を真剣に考えているからこそですね。",
+        right: "進路の話は時期が来てから派。子どもの「今」を大切にする姿勢、焦らない強さがあります。"
+      },
+      "C3": {
+        left: "習い事は将来役立つかで選ぶ派。投資対効果を考えられる、現実的な視点を持っていますね。",
+        right: "子どもが楽しいかどうかを優先する派。今の笑顔を大切にする姿勢、素敵です。"
+      },
+      "C4": {
+        left: "「できる」を増やすことが自信になる—成功体験を積ませたい親心、伝わってきます。",
+        right: "できなくても大丈夫という安心感を与えたい派。心の土台を大切にしていますね。"
+      },
+      "C6": {
+        right: "成績より居場所が大事—この優先順位、子どもの心を守りたい気持ちの表れですよね。",
+        left: "成績も居場所もどちらも大事にしたい派。バランス感覚を持っていますね。"
+      },
+      "C7": {
+        right: "子どもの人間関係や心の状態を一番気にかけている…その観察眼、子どもの変化を見逃さないはずです。",
+        left: "心の状態も大事だけど、具体的なサポートもしたい派。行動で示す愛情ですね。"
+      },
+      "C9": {
+        right: "毎日楽しければ成績は二の次—この割り切り、子どもにとっては安心の源になっていますよ。",
+        left: "楽しさも大事だけど、将来のことも気になる派。両方考えられるバランス感覚がありますね。"
+      },
+      "C10": {
+        right: "友達関係がうまくいってると一番安心…子どもの社会性を大切に見守っていますね。",
+        left: "友達関係も大事だけど、学業面も気になる派。総合的に子どもを見ていますね。"
+      },
+
+      // D軸：子への関わり方
+      "D1": {
+        left: "予定や提出物を一緒に確認する派。「うっかり忘れ」を防ぐサポート、子どもは助かっているはずです。",
+        right: "提出物は本人に任せる派。自分で管理する力を育てているんですね。"
+      },
+      "D2": {
+        left: "テスト前に計画を手伝う派。伴走型のサポート、子どもの安心材料になっていますよ。",
+        right: "テスト勉強は本人に任せる派。自分で考える力を信じているからこそですね。"
+      },
+      "D3": {
+        left: "困っていたらすぐ一緒に解決策を考えたい—その即レス体制、子どもにとって心強いはずです。",
+        right: "まずは自分で考えさせる派。すぐ助けないことで、考える力が育っていますね。"
+      },
+      "D4": {
+        left: "「次はこうしてみたら？」と具体的にアドバイスする派。実践的なサポート、頼りになりますね。",
+        right: "アドバイスは求められた時だけ派。子どもの自主性を尊重していますね。"
+      },
+      "D5": {
+        left: "生活リズムや習慣づくりには親が関わるべき派。土台を整えてあげたい親心、伝わります。",
+        right: "習慣は本人に任せる派。自分でリズムを作る力を信じていますね。"
+      },
+      "D6": {
+        right: "基本的に本人に任せている—その「見守る勇気」、子どもの自立心を育てています。",
+        left: "任せつつも関わりたい派。バランスを取りながらサポートしていますね。"
+      },
+      "D7": {
+        right: "口出しより見守る方が伸びると信じている…その我慢、実は一番難しいことですよね。",
+        left: "見守りつつも声はかけたい派。適度な関わりを大切にしていますね。"
+      },
+      "D8": {
+        right: "失敗も経験だから先回りしない—この姿勢、子どもが自分で学ぶ機会を作っています。",
+        left: "できれば失敗は防いであげたい派。心配するのも親心ですよね。"
+      },
+      "D9": {
+        right: "相談されたら動くけど自分からは介入しない—絶妙な距離感を保っていますね。",
+        left: "相談がなくても気になったら声をかける派。コミュニケーションを大切にしていますね。"
+      },
+      "D10": {
+        right: "自分で考えて決める力をつけてほしい—その願い、子どもの将来を見据えていますね。",
+        left: "自立も大事だけど、一緒に考える時間も大切にしたい派。伴走の姿勢が伝わります。"
+      }
+    };
+
+    // 軸の組み合わせインサイト
+    const COMBINATION_INSIGHTS = {
+      // A + D の組み合わせ
+      "A_L_D_L": "情報を集めながら子どもにも積極的に関わるタイプ。周りの保護者とも繋がりつつ、家でもしっかりサポートする「全方位型」ですね。忙しくなりがちですが、それがあなたの安心材料でもあるはず。",
+      "A_L_D_R": "人付き合いは広めにしつつ、子どものことは任せるタイプ。外の情報は取りに行くけど、家では「自分で考えなさい」というスタンス。メリハリがありますね。",
+      "A_R_D_L": "人付き合いは厳選しつつ、子どもには密に関わるタイプ。外に時間を使わない分、家族に集中できている証拠です。",
+      "A_R_D_R": "外も中も「必要最小限」派。自分の時間も大切にしながら、子どもの自立も促す効率重視タイプですね。",
+      
+      // B + C の組み合わせ
+      "B_L_C_L": "恋愛も子育ても「直球×選択肢重視」。迷ったら動く、行動で道を切り拓くタイプですね。子どもにも「チャレンジして可能性を広げてほしい」と思っていませんか？",
+      "B_L_C_R": "恋愛は直球だったけど、子どもには心の土台を大切にしてほしい派。自分が経験してきたからこそ、違うアプローチを選んでいるのかもしれませんね。",
+      "B_R_C_L": "恋愛は慎重派だったけど、子どもの選択肢は広げたい。観察力を活かして、子どもに合った道を見つけるのが上手そうですね。",
+      "B_R_C_R": "恋愛も子育ても「じっくり型」。焦らず、子どもの心の成長を見守る姿勢が一貫していますね。",
+
+      // C + D の組み合わせ
+      "C_L_D_L": "選択肢を広げるために一緒に頑張る伴走型。テスト前に一緒に計画を立てたり、塾や習い事の送迎をしながら話を聞いたり…「結果」と「プロセス」両方を大切にしていますよね。",
+      "C_L_D_R": "選択肢は広げたいけど、やるのは本人任せ。機会は与えるけど強制はしない、絶妙なバランス感覚ですね。",
+      "C_R_D_L": "心の土台を一緒に育てる伴走型。成績より「今日楽しかった？」が口癖かもしれませんね。子どもの表情をよく見ていますよね。",
+      "C_R_D_R": "心の安定を見守るスタイル。必要な時だけ手を差し伸べる「安全基地」のような存在になっていませんか？"
+    };
+
+    // 回答の一貫性に基づくコメント
+    const COHERENCE_COMMENTS = {
+      high: "この軸についてはブレが少なく、あなたの中で価値観がしっかり固まっているようです。",
+      mid: "状況によって対応を変える柔軟さがありますね。一概には言えない、という感覚があるのでは？",
+      low: "この軸は場面によってかなり変わるようですね。相手や状況を見て判断する適応力の表れです。"
+    };
+
+    function generatePersonalizedInsights(res) {
+      const insights = {
+        strongHits: [],      // 強く響くピンポイント
+        axisDetails: {},     // 軸ごとの詳細
+        combinations: [],    // 組み合わせインサイト
+        coherenceNotes: {},  // 一貫性コメント
+        behaviorChecks: []   // 行動チェックリスト
+      };
+
+      // 1. 強い回答を抽出してピンポイントインサイト生成
+      for(const k of ["A","B","C","D"]){
+        const bd = res.breakdown[k];
+        bd.forEach(item => {
+          const qInsight = QUESTION_INSIGHTS[item.id];
+          if(!qInsight) return;
+          
+          // 強い回答（左寄り or 右寄り）を判定
+          const isStrongLeft = item.contrib < -0.3; // 左寄り（そう思う側）
+          const isStrongRight = item.contrib > 0.3; // 右寄り（そう思わない側）
+          
+          if(isStrongLeft && qInsight.left){
+            insights.strongHits.push({
+              text: qInsight.left,
+              strength: Math.abs(item.contrib),
+              axis: k
+            });
+          } else if(isStrongRight && qInsight.right){
+            insights.strongHits.push({
+              text: qInsight.right,
+              strength: Math.abs(item.contrib),
+              axis: k
+            });
+          }
+        });
+
+        // 一貫性コメント
+        const coh = res.coherenceByAxis[k];
+        if(coh > 0.7){
+          insights.coherenceNotes[k] = COHERENCE_COMMENTS.high;
+        } else if(coh > 0.4){
+          insights.coherenceNotes[k] = COHERENCE_COMMENTS.mid;
+        } else {
+          insights.coherenceNotes[k] = COHERENCE_COMMENTS.low;
+        }
+      }
+
+      // 強い順にソートして上位を取得
+      insights.strongHits.sort((a,b) => b.strength - a.strength);
+      insights.strongHits = insights.strongHits.slice(0, 6);
+
+      // 2. 軸の組み合わせインサイト
+      const combos = [
+        { keys: ["A", "D"], id: `A_${res.hard.A}_D_${res.hard.D}` },
+        { keys: ["B", "C"], id: `B_${res.hard.B}_C_${res.hard.C}` },
+        { keys: ["C", "D"], id: `C_${res.hard.C}_D_${res.hard.D}` }
+      ];
+      
+      combos.forEach(c => {
+        // 両軸ともmid（場面による）の場合は組み合わせコメントをスキップ
+        const bothMid = c.keys.every(k => res.confidenceLevel[k] === "mid");
+        if(!bothMid && COMBINATION_INSIGHTS[c.id]){
+          insights.combinations.push(COMBINATION_INSIGHTS[c.id]);
+        }
+      });
+
+      // 3. 行動チェックリスト（タイプに応じて生成）
+      insights.behaviorChecks = generateBehaviorChecks(res);
+
+      return insights;
+    }
+
+    function generateBehaviorChecks(res) {
+      const checks = [];
+      
+      // A軸
+      if(res.hard.A === "L" && res.confidenceLevel.A !== "mid"){
+        checks.push("保護者会で「あの人いつもいるよね」と思われている");
+        checks.push("学校の情報はだいたい把握している自信がある");
+      } else if(res.hard.A === "R" && res.confidenceLevel.A !== "mid"){
+        checks.push("保護者グループLINEの通知はミュートにしがち");
+        checks.push("行事は最小限の参加で済ませたい");
+      }
+      
+      // B軸
+      if(res.hard.B === "L" && res.confidenceLevel.B !== "mid"){
+        checks.push("学生時代、好きな人に告白したことがある（または行動で示した）");
+        checks.push("曖昧な関係より、ハッキリさせたい性格");
+      } else if(res.hard.B === "R" && res.confidenceLevel.B !== "mid"){
+        checks.push("学生時代、好きな人をこっそり見ていた時期がある");
+        checks.push("相手の反応を見てから動くタイプ");
+      }
+      
+      // C軸
+      if(res.hard.C === "L" && res.confidenceLevel.C !== "mid"){
+        checks.push("子どもの成績表や通知表はしっかりチェックする");
+        checks.push("将来の選択肢が広がるような習い事・経験を意識している");
+      } else if(res.hard.C === "R" && res.confidenceLevel.C !== "mid"){
+        checks.push("成績より「今日学校楽しかった？」を先に聞く");
+        checks.push("子どもの友達関係が気になることが多い");
+      }
+      
+      // D軸
+      if(res.hard.D === "L" && res.confidenceLevel.D !== "mid"){
+        checks.push("子どもの予定や持ち物は一緒に確認することが多い");
+        checks.push("「こうしてみたら？」とアドバイスしがち");
+      } else if(res.hard.D === "R" && res.confidenceLevel.D !== "mid"){
+        checks.push("子どもには「自分で考えて」と言うことが多い");
+        checks.push("困っていても、まずは本人に任せて見守る");
+      }
+
+      return checks;
+    }
+
+    function generateAxisDetailComment(res, axis) {
+      const level = res.confidenceLevel[axis];
+      const side = res.hard[axis];
+      const ax = res.axes[axis];
+      const leftPct = res.leftPct[axis];
+      const rightPct = 100 - leftPct;
+      
+      const sideLabel = side === "L" ? ax.left.split("・")[0] : ax.right.split("・")[0];
+      const oppLabel = side === "L" ? ax.right.split("・")[0] : ax.left.split("・")[0];
+      
+      if(level === "strong"){
+        return `「${sideLabel}」の傾向がはっきり出ています。これはあなたの軸として確立されていて、迷いが少ないはずです。`;
+      } else if(level === "moderate"){
+        return `やや「${sideLabel}」寄りですが、状況によっては「${oppLabel}」の面も出ることがありそうです。`;
+      } else {
+        return `この軸は場面によって変わりやすいようです。「${sideLabel}」と「${oppLabel}」の両方を持っていて、状況に応じて使い分けているのかもしれません。`;
+      }
+    }
+
+    // Rendering
+    const app = document.getElementById("app");
+
+    document.getElementById("btnReset").onclick = () => {
+      if(confirm("最初からやり直しますか？")) resetState();
+    };
+
+    document.getElementById("btnTypeGuide").onclick = () => showTypeGuideModal();
+
+    function showTypeGuideModal(){
+      const modalHtml = `
+        <div class="char-modal-overlay" id="typeGuideOverlay">
+          <div class="char-modal" style="max-width:700px;">
+            <button class="char-modal-close" id="typeGuideClose">×</button>
+            <div style="text-align:center; margin-bottom:24px;">
+              <p class="kicker">TYPE CODE GUIDE</p>
+              <h2 class="big" style="font-size:22px; margin-bottom:8px;">タイプコード解説</h2>
+              <p class="text-body" style="font-size:13px;">4文字のひらがなコードは、4つの軸の傾向を表しています。</p>
+            </div>
+            
+            <div style="display:grid; gap:16px;">
+              <div class="info-card" style="margin:0;">
+                <h3 style="color:var(--accent); margin-bottom:12px;">軸A：コミュニティ距離感</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                  <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #2f9e73;">
+                    <div style="font-size:24px; font-weight:700; color:#2f9e73;">が</div>
+                    <div style="font-size:13px; font-weight:600; margin:4px 0;">巻き込み・広げる</div>
+                    <div style="font-size:11px; color:var(--text-sub);">行事や保護者コミュに自然に入る</div>
+                  </div>
+                  <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #7b5aa6;">
+                    <div style="font-size:24px; font-weight:700; color:#7b5aa6;">な</div>
+                    <div style="font-size:13px; font-weight:600; margin:4px 0;">厳選・必要最小限</div>
+                    <div style="font-size:11px; color:var(--text-sub);">用件ベース、深く少なく</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="info-card" style="margin:0;">
+                <h3 style="color:var(--accent); margin-bottom:12px;">軸B：青春恋愛スタート様式</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                  <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #2f9e73;">
+                    <div style="font-size:24px; font-weight:700; color:#2f9e73;">や</div>
+                    <div style="font-size:13px; font-weight:600; margin:4px 0;">直球アタック</div>
+                    <div style="font-size:11px; color:var(--text-sub);">決めたら動く/言う</div>
+                  </div>
+                  <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #7b5aa6;">
+                    <div style="font-size:24px; font-weight:700; color:#7b5aa6;">お</div>
+                    <div style="font-size:13px; font-weight:600; margin:4px 0;">じわじわ観察</div>
+                    <div style="font-size:11px; color:var(--text-sub);">様子見/間合い/確信してから</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="info-card" style="margin:0;">
+                <h3 style="color:var(--accent); margin-bottom:12px;">軸C：子に願う優先軸</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                  <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #2f9e73;">
+                    <div style="font-size:24px; font-weight:700; color:#2f9e73;">み</div>
+                    <div style="font-size:13px; font-weight:600; margin:4px 0;">選択肢を増やす</div>
+                    <div style="font-size:11px; color:var(--text-sub);">学力/成果/習慣/進路</div>
+                  </div>
+                  <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #7b5aa6;">
+                    <div style="font-size:24px; font-weight:700; color:#7b5aa6;">こ</div>
+                    <div style="font-size:13px; font-weight:600; margin:4px 0;">土台を育てる</div>
+                    <div style="font-size:11px; color:var(--text-sub);">関係/経験/心の安定</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="info-card" style="margin:0;">
+                <h3 style="color:var(--accent); margin-bottom:12px;">軸D：子への関わり方</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                  <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #2f9e73;">
+                    <div style="font-size:24px; font-weight:700; color:#2f9e73;">そ</div>
+                    <div style="font-size:13px; font-weight:600; margin:4px 0;">伴走コーチ</div>
+                    <div style="font-size:11px; color:var(--text-sub);">段取り/一緒に作戦</div>
+                  </div>
+                  <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #7b5aa6;">
+                    <div style="font-size:24px; font-weight:700; color:#7b5aa6;">う</div>
+                    <div style="font-size:13px; font-weight:600; margin:4px 0;">見守り任せる</div>
+                    <div style="font-size:11px; color:var(--text-sub);">必要時だけ介入/基本任せる</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div style="background:#fce4ec; padding:16px; border-radius:12px; margin-top:8px;">
+                <div style="font-size:13px; font-weight:600; margin-bottom:8px; color:var(--accent);">💡 コードの読み方</div>
+                <div style="font-size:12px; color:var(--text-sub); line-height:1.6;">
+                  例：<span style="font-family:monospace; background:#fff; padding:2px 8px; border-radius:6px; font-weight:600;">がやみそ</span><br>
+                  → 巻き込み(が) + 直球(や) + 選択肢(み) + 伴走(そ)<br>
+                  → 連絡網即断司令塔モビー
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+      
+      const overlay = document.getElementById('typeGuideOverlay');
+      const closeBtn = document.getElementById('typeGuideClose');
+      
+      closeBtn.onclick = () => {
+        overlay.style.animation = 'fadeOut 0.2s ease forwards';
+        setTimeout(() => overlay.remove(), 200);
+      };
+      
+      overlay.onclick = (e) => {
+        if(e.target === overlay){
+          overlay.style.animation = 'fadeOut 0.2s ease forwards';
+          setTimeout(() => overlay.remove(), 200);
+        }
+      };
+    }
+
+    // Navigation
+    document.getElementById("logoHome").onclick = () => { state.step = "intro"; render(); };
+    document.getElementById("titleHome").onclick = () => { state.step = "intro"; render(); };
+    document.getElementById("navDiagnosis").onclick = (e) => {
+      e.preventDefault();
+      const answered = Object.keys(state.answers).length;
+      if(answered >= QUESTIONS.length){
+        state.step = "result";
+      } else {
+        state.step = "intro";
+      }
+      render();
+    };
+    document.getElementById("navCharacters").onclick = (e) => {
+      e.preventDefault();
+      state.step = "characters";
+      render();
+    };
+
+    function updateNavActive(){
+      const isDiag = ["intro","quiz","result"].includes(state.step);
+      document.getElementById("navDiagnosis").classList.toggle("active", isDiag);
+      document.getElementById("navCharacters").classList.toggle("active", state.step === "characters");
+    }
+
+    function render(){
+      window.scrollTo(0,0);
+      updateNavActive();
+      if(state.step === "intro") renderIntro();
+      else if(state.step === "quiz") renderQuiz();
+      else if(state.step === "characters") renderCharacters();
+      else renderResult();
+    }
+
+    function renderIntro(){
+      const count = Object.keys(state.answers).length;
+      app.innerHTML = `
+        <div class="panel fade-in" style="text-align:center; padding: 60px 20px;">
+          <p class="kicker">ママモビー診断</p>
+          <h2 class="big">あなたのママタイプを<br>4つの軸で診断します。</h2>
+          <p class="text-body" style="max-width:400px; margin:0 auto 30px;">
+            直感で選ぶ40問の質問から、保護者としてのタイプを16種類から診断します。<br><br>
+            <span style="color:var(--accent); font-weight:600;">お子さんから共有されましたか？</span><br>
+            ぜひ診断してみてください！
+          </p>
+          <button class="primary" id="btnStart" style="padding:16px 32px; font-size:16px;">
+            ${count > 0 ? "診断を再開する" : "診断をはじめる"}
+          </button>
+          ${count > 0 ? `<p style="font-size:12px; color:#86868b; margin-top:16px;">${count} / 40問 回答済み</p>` : ""}
+        </div>
+      `;
+      document.getElementById("btnStart").onclick = () => {
+        state.step = "quiz";
+        getQuestionOrder();
+        const shuffledQs = getShuffledQuestions();
+        const idx = shuffledQs.findIndex(q => !state.answers[q.id]);
+        state.page = idx >= 0 ? Math.floor(idx / PAGE_SIZE) : 0;
+        saveState();
+        render();
+      };
+    }
+
+    function renderQuiz(){
+      const shuffledQs = getShuffledQuestions();
+      const start = state.page * PAGE_SIZE;
+      const currentQs = shuffledQs.slice(start, start + PAGE_SIZE);
+      const totalPage = Math.ceil(shuffledQs.length / PAGE_SIZE);
+      const progress = Math.round((Object.keys(state.answers).length / shuffledQs.length) * 100);
+
+      const qHtml = currentQs.map((q, i) => {
+        const val = state.answers[q.id];
+        return `
+          <div class="qCard fade-in" style="animation-delay: ${i*0.05}s">
+            <div class="kicker" style="color:#86868b; margin-bottom:4px;">Q${start+i+1}</div>
+            <p class="qText">${q.text}</p>
+            <div class="likert7">
+              <div class="likert-labels">
+                <span class="left">そう思う</span>
+                <span class="right">そう思わない</span>
+              </div>
+              <div class="likert-buttons">
+                ${[1,2,3,4,5,6,7].map(n => {
+                  const side = n<=3 ? "left" : (n===4 ? "mid" : "right");
+                  const sel = (val === n) ? "selected" : "";
+                  return `<button type="button" class="likert-btn ${side} ${sel}" data-i="${n}" data-qid="${q.id}" data-val="${n}" aria-label="選択肢 ${n}"></button>`;
+                }).join("")}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      app.innerHTML = `
+        <div class="panel">
+          <div class="progress-wrap">
+            <div class="progress-meta">
+              <span>進行状況</span>
+              <span>${progress}%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" style="width:${progress}%"></div>
+            </div>
+          </div>
+
+          <div style="margin-top:30px;">
+            ${qHtml}
+          </div>
+
+          <div style="display:flex; justify-content:space-between; margin-top:30px;">
+            <button id="btnPrev" ${state.page===0 ? "disabled":""}>戻る</button>
+            <button class="primary" id="btnNext">
+              ${state.page === totalPage - 1 ? "結果を見る" : "次へ"}
+            </button>
+          </div>
+        </div>
+      `;
+
+      currentQs.forEach(q => {
+        document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(btn => {
+          btn.onclick = () => {
+            const val = parseInt(btn.dataset.val);
+            state.answers[q.id] = val;
+            document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(b => b.classList.remove("selected"));
+            btn.classList.add("selected");
+            saveState();
+            const p = Math.round((Object.keys(state.answers).length / shuffledQs.length) * 100);
+            document.querySelector(".progress-fill").style.width = p + "%";
+            document.querySelector(".progress-meta span:last-child").innerText = p + "%";
+          };
+        });
+      });
+
+      document.getElementById("btnPrev").onclick = () => { state.page--; render(); };
+      document.getElementById("btnNext").onclick = () => {
+        const missing = currentQs.find(q => !state.answers[q.id]);
+        if(missing){ alert("まだ回答していない項目があります"); return; }
+        if(state.page < totalPage - 1){
+          state.page++;
+          render();
+        } else {
+          state.step = "result";
+          render();
+        }
+      };
+    }
+
+    function renderCharacters(){
+      const codes = Object.keys(CHARACTERS);
+      const charCardsHtml = codes.map(code => {
+        const char = CHARACTERS[code];
+        return `
+          <div class="char-card">
+            <div class="char-card-image">
+              <div style="display:flex;align-items:center;justify-content:center;height:100%;color:#86868b;font-size:12px;">画像準備中</div>
+            </div>
+            <div class="char-card-code">${code}</div>
+            <div class="char-card-name">${char.name}</div>
+            <div class="char-card-desc">${char.catch}</div>
+            <button class="char-card-detail-btn primary" data-char-code="${code}">詳細</button>
+          </div>
+        `;
+      }).join("");
+
+      app.innerHTML = `
+        <div class="panel fade-in">
+          <div style="text-align:center; margin-bottom:24px;">
+            <p class="kicker">ALL TYPES</p>
+            <h2 class="big" style="font-size:24px;">16タイプ一覧</h2>
+            <p class="text-body">すべてのママモビータイプを見ることができます。</p>
+          </div>
+          <div class="char-grid">
+            ${charCardsHtml}
+          </div>
+        </div>
+      `;
+
+      document.querySelectorAll('.char-card-detail-btn').forEach(btn => {
+        btn.onclick = () => showCharDetail(btn.dataset.charCode);
+      });
+    }
+
+    function showCharDetail(code){
+      const char = CHARACTERS[code];
+      const modalHtml = `
+        <div class="char-modal-overlay" id="charModalOverlay">
+          <div class="char-modal" style="max-height:85vh; overflow-y:auto;">
+            <button class="char-modal-close" id="charModalClose">×</button>
+            <div class="char-modal-image">
+              <div style="display:flex;align-items:center;justify-content:center;height:100%;color:#86868b;">画像準備中</div>
+            </div>
+            <div style="text-align:center; margin-bottom:20px;">
+              <div class="char-modal-type">TYPE: ${code}</div>
+              <h2 class="char-modal-name">${char.name}</h2>
+              <p style="font-size:12px; color:var(--text-sub); margin:0 0 12px;">${char.tags}</p>
+              <p style="font-size:14px; font-weight:600; color:var(--text-main); margin:0;">
+                ${char.catch}
+              </p>
+            </div>
+            
+            <div style="margin-bottom:20px;">
+              <h3 style="font-size:14px; font-weight:700; color:var(--accent); margin:0 0 8px;">💬 あるある</h3>
+              <ul style="margin:0; padding-left:20px; font-size:13px; line-height:1.8;">
+                ${char.hook.map(h => `<li>${h}</li>`).join("")}
+              </ul>
+            </div>
+            
+            <div style="margin-bottom:20px; padding:12px; background:#fff5f5; border-radius:12px; border-left:3px solid #ff6b6b;">
+              <h3 style="font-size:14px; font-weight:700; color:#ff6b6b; margin:0 0 8px;">😣 しんどい時</h3>
+              <ul style="margin:0; padding-left:20px; font-size:13px; line-height:1.8;">
+                ${char.downside.map(d => `<li>${d}</li>`).join("")}
+              </ul>
+            </div>
+            
+            <div style="padding:12px; background:#f0f9ff; border-radius:12px; border-left:3px solid #4dabf7;">
+              <h3 style="font-size:14px; font-weight:700; color:#4dabf7; margin:0 0 8px;">👀 周りからの見え方</h3>
+              <ul style="margin:0; padding-left:20px; font-size:13px; line-height:1.8;">
+                ${char.perception.map(p => `<li>${p}</li>`).join("")}
+              </ul>
+            </div>
+            
+            <div style="margin-top:20px; padding:12px; background:linear-gradient(135deg, #fff0f5 0%, #fff 100%); border-radius:12px; border-left:3px solid #ff69b4;">
+              <h3 style="font-size:14px; font-weight:700; color:#ff69b4; margin:0 0 8px;">💕 学生時代の恋愛観：${char.loveTitle}</h3>
+              <p style="font-size:12px; margin:0 0 6px;"><strong>恋の始まり：</strong>${char.loveStart}</p>
+              <p style="font-size:12px; margin:0 0 6px;"><strong>好きサイン：</strong>${char.loveSign}</p>
+              <p style="font-size:12px; margin:0;"><strong>当時の見え方：</strong>${char.loveSeen}</p>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+      
+      const overlay = document.getElementById('charModalOverlay');
+      const closeBtn = document.getElementById('charModalClose');
+      
+      closeBtn.onclick = () => {
+        overlay.style.animation = 'fadeOut 0.2s ease forwards';
+        setTimeout(() => overlay.remove(), 200);
+      };
+      
+      overlay.onclick = (e) => {
+        if(e.target === overlay){
+          overlay.style.animation = 'fadeOut 0.2s ease forwards';
+          setTimeout(() => overlay.remove(), 200);
+        }
+      };
+    }
+
+    function renderResult(){
+      const res = computeResult();
+      const char = res.char;
+      const personalInsights = generatePersonalizedInsights(res);
+
+      app.innerHTML = `
+        <div class="panel fade-in">
+          <div class="result-hero">
+            <p class="kicker">診断結果</p>
+            <h2 class="big" style="font-size:28px;">${char.name}</h2>
+            
+            <p style="font-size:12px; color:var(--text-sub); margin-bottom:8px;">${char.tags}</p>
+            
+            <p class="text-body" style="color:var(--text-main); font-weight:600; font-size:16px; margin-bottom:16px;">
+              ${char.catch}
+            </p>
+            
+            ${res.straightLine ? `<p class="text-body" style="margin-top:10px; color:#6e6e73; font-size:13px;">
+              ※回答が同じ選択肢に偏っているため、傾向が測りにくい可能性があります。
+            </p>` : ``}
+
+            <div class="char-image-placeholder">
+              <span>ここにキャラクター画像が入ります</span> 
+            </div>
+             
+            <div style="display:inline-block; background:#f0f0f5; padding:6px 16px; border-radius:20px; font-size:12px; font-family:monospace; color:#86868b;">
+              TYPE: ${res.code}
+            </div>
+          </div>
+
+          <div style="margin-top:40px;">
+            <p class="kicker" style="margin-bottom:16px;">4つの軸の傾向</p>
+            ${["A","B","C","D"].map(k => {
+              const ax = res.axes[k];
+              const left = res.leftPct[k];
+              const right = 100 - left;
+              const conf = res.confidenceLabel[k];
+              const confLevel = res.confidenceLevel[k];
+              const confColor = confLevel === "strong" ? "#2f9e73" : confLevel === "moderate" ? "#f0a020" : "#7b5aa6";
+              const winSide = res.hard[k] === "L" ? ax.left : ax.right;
+              const axisComment = generateAxisDetailComment(res, k);
+              return `
+                <div class="axis-row" style="margin-bottom:24px;">
+                  <span class="axis-name">${ax.name}</span>
+                  <div class="axis-labels">
+                    <span>${ax.left}</span>
+                    <span>${ax.right}</span>
+                  </div>
+                  <div class="axis-track">
+                    <div class="axis-center"></div>
+                    <div class="axis-dot" style="left:${res.pos[k]}%;"></div>
+                  </div>
+                  <div class="axis-meta">
+                    <span>${ax.left.split("・")[0]} ${left}%</span>
+                    <span style="color:${confColor}; font-weight:600;">${conf === "場面による" ? "⚖️ 場面による" : conf === "やや" ? `→ やや${winSide.split("・")[0]}寄り` : `✓ ${winSide.split("・")[0]}寄り`}</span>
+                    <span>${ax.right.split("・")[0]} ${right}%</span>
+                  </div>
+                  <p style="font-size:12px; color:var(--text-sub); margin:8px 0 0; line-height:1.6; padding:8px 12px; background:#f9f9fb; border-radius:8px;">
+                    ${axisComment}
+                  </p>
+                </div>
+              `;
+            }).join("")}
+          </div>
+          
+          ${res.adjacentTypes.length > 0 ? `
+          <div style="margin-top:24px; padding:16px; background:#f9f9fb; border-radius:14px; border-left:4px solid #7b5aa6;">
+            <p style="font-size:13px; font-weight:600; color:#7b5aa6; margin:0 0 8px;">
+              ⚖️ 場面によっては…
+            </p>
+            <p style="font-size:13px; color:var(--text-main); margin:0; line-height:1.6;">
+              ${res.adjacentTypes.map(t => `<span style="background:#fff; padding:2px 8px; border-radius:6px; margin-right:4px;">『${t.name}』</span>`).join('')}
+              の傾向が出ることもあります。
+            </p>
+          </div>
+          ` : ''}
+        </div>
+
+        <!-- あなただけのインサイト（パーソナライズ） -->
+        ${personalInsights.strongHits.length > 0 ? `
+        <div class="panel fade-in" style="margin-top:24px; background:linear-gradient(135deg, #fff8e1 0%, #fff 50%);">
+          <p class="kicker" style="margin-bottom:16px; color:#f9a825;">✨ あなたの回答から見えたこと</p>
+          <p style="font-size:12px; color:var(--text-sub); margin-bottom:16px;">
+            診断の回答から、特にあなたらしさが出ていたポイントをピックアップしました。
+          </p>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            ${personalInsights.strongHits.map((hit, idx) => `
+              <div class="insight-card" style="padding:14px 16px; background:#fff; border-radius:12px; border-left:4px solid #ffb300; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                <p style="margin:0; font-size:14px; line-height:1.7; color:var(--text-main);">
+                  ${hit.text}
+                </p>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+        ` : ''}
+
+        <!-- 組み合わせインサイト -->
+        ${personalInsights.combinations.length > 0 ? `
+        <div class="panel fade-in" style="margin-top:24px; background:linear-gradient(135deg, #e8f5e9 0%, #fff 50%);">
+          <p class="kicker" style="margin-bottom:16px; color:#43a047;">🔗 軸の組み合わせから見える特徴</p>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            ${personalInsights.combinations.map((combo, idx) => `
+              <div class="insight-card" style="padding:14px 16px; background:#fff; border-radius:12px; border-left:4px solid #66bb6a; box-shadow:0 2px 8px rgba(0,0,0,0.04); animation-delay:${0.1 + idx * 0.15}s;">
+                <p style="margin:0; font-size:14px; line-height:1.7; color:var(--text-main);">
+                  ${combo}
+                </p>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+        ` : ''}
+
+        <!-- 当てはまりチェック -->
+        ${personalInsights.behaviorChecks.length > 0 ? `
+        <div class="panel fade-in" style="margin-top:24px; background:linear-gradient(135deg, #e3f2fd 0%, #fff 50%);">
+          <p class="kicker" style="margin-bottom:8px; color:#1976d2;">☑️ 当てはまりチェック</p>
+          <p style="font-size:12px; color:var(--text-sub); margin-bottom:16px;">
+            あなたの回答傾向から推測される行動パターンです。いくつ当てはまりますか？
+          </p>
+          <div style="display:grid; gap:10px;">
+            ${personalInsights.behaviorChecks.map(check => `
+              <label style="display:flex; align-items:flex-start; gap:10px; padding:12px 14px; background:#fff; border-radius:10px; cursor:pointer; transition:background 0.2s; border:1px solid #e3f2fd;" class="check-item">
+                <input type="checkbox" style="width:18px; height:18px; margin-top:2px; accent-color:#1976d2; flex-shrink:0;">
+                <span style="font-size:13px; line-height:1.6; color:var(--text-main);">${check}</span>
+              </label>
+            `).join("")}
+          </div>
+          <p id="checkResult" style="font-size:13px; color:#1976d2; font-weight:600; margin-top:16px; text-align:center; display:none;"></p>
+        </div>
+        ` : ''}
+
+        <!-- 学生時代の恋愛価値観（折りたたみ） -->
+        <div class="panel fade-in" style="margin-top:24px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" id="loveToggleBtn">
+            <p class="kicker" style="margin:0; color:#ff69b4;">💕 学生時代のママの恋愛価値観</p>
+            <span id="loveToggleIcon" style="font-size:20px; color:var(--accent); transition:transform 0.3s;">▼</span>
+          </div>
+          <div id="loveContent" style="display:none; margin-top:16px;">
+            <div style="background:linear-gradient(135deg, #fff0f5 0%, #fff 100%); padding:16px; border-radius:14px; border:1px solid #f8bbd9;">
+              <p style="font-size:15px; font-weight:700; color:#ec407a; margin:0 0 12px;">
+                ${char.loveTitle}
+              </p>
+              
+              <div style="margin-bottom:12px;">
+                <span style="display:inline-block; background:rgba(236,64,122,0.1); color:#ec407a; font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; margin-bottom:6px;">恋の始まり</span>
+                <p style="margin:0; font-size:13px; line-height:1.7;">${char.loveStart}</p>
+              </div>
+              
+              <div style="margin-bottom:12px;">
+                <span style="display:inline-block; background:rgba(236,64,122,0.1); color:#ec407a; font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; margin-bottom:6px;">好きサイン</span>
+                <p style="margin:0; font-size:13px; line-height:1.7;">${char.loveSign}</p>
+              </div>
+              
+              <div style="margin-bottom:12px;">
+                <span style="display:inline-block; background:rgba(236,64,122,0.1); color:#ec407a; font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; margin-bottom:6px;">決め手</span>
+                <p style="margin:0; font-size:13px; line-height:1.7;">${char.loveDecider}</p>
+              </div>
+              
+              <div style="margin-bottom:12px;">
+                <span style="display:inline-block; background:rgba(236,64,122,0.1); color:#ec407a; font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; margin-bottom:6px;">当たりチェック</span>
+                <div style="margin-top:6px;">
+                  ${char.loveCheck.map(c => `<div style="font-size:13px; line-height:1.8; padding-left:4px;">☐ ${c}</div>`).join("")}
+                </div>
+              </div>
+              
+              <div style="padding:10px; background:#fff; border-radius:10px; border-left:3px solid #ff69b4;">
+                <span style="font-size:11px; font-weight:700; color:#ff69b4;">👀 当時の周りからの見え方</span>
+                <p style="margin:6px 0 0; font-size:13px; line-height:1.6;">${char.loveSeen}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel fade-in" style="margin-top:24px;">
+          <p class="kicker" style="margin-bottom:16px;">💬 あるある</p>
+          <ul style="margin:0; padding-left:20px; font-size:14px; line-height:1.9;">
+            ${char.hook.map(h => `<li>${h}</li>`).join("")}
+          </ul>
+        </div>
+
+        <div class="panel fade-in" style="margin-top:24px;">
+          <p class="kicker" style="margin-bottom:16px; color:#ff6b6b;">😣 しんどい時</p>
+          <ul style="margin:0; padding-left:20px; font-size:14px; line-height:1.9;">
+            ${char.downside.map(d => `<li>${d}</li>`).join("")}
+          </ul>
+        </div>
+
+        <div class="panel fade-in" style="margin-top:24px;">
+          <p class="kicker" style="margin-bottom:16px; color:#4dabf7;">👀 周りからの見え方</p>
+          <ul style="margin:0; padding-left:20px; font-size:14px; line-height:1.9;">
+            ${char.perception.map(p => `<li>${p}</li>`).join("")}
+          </ul>
+        </div>
+
+        <div class="panel fade-in" style="margin-top:24px; text-align:center;">
+          <p class="kicker" style="margin-bottom:16px;">診断の確度</p>
+          <p class="text-body" style="font-size:14px; margin:0;">
+            ${res.overallLabel}
+          </p>
+        </div>
+
+        <div style="text-align:center; margin-top:40px;">
+          <button id="btnBack" style="color:#86868b; background:transparent;">回答を見直す</button>
+        </div>
+      `;
+
+      document.getElementById("btnBack").onclick = () => {
+        state.step = "quiz";
+        state.page = 0;
+        render();
+      };
+
+      // 恋愛価値観の折りたたみ
+      document.getElementById("loveToggleBtn").onclick = () => {
+        const content = document.getElementById("loveContent");
+        const icon = document.getElementById("loveToggleIcon");
+        if(content.style.display === "none"){
+          content.style.display = "block";
+          icon.style.transform = "rotate(180deg)";
+        } else {
+          content.style.display = "none";
+          icon.style.transform = "rotate(0deg)";
+        }
+      };
+
+      // 当てはまりチェックのインタラクション
+      const checkItems = document.querySelectorAll('.check-item input[type="checkbox"]');
+      const checkResult = document.getElementById('checkResult');
+      if(checkItems.length > 0 && checkResult){
+        checkItems.forEach(item => {
+          item.addEventListener('change', () => {
+            const total = checkItems.length;
+            const checked = Array.from(checkItems).filter(c => c.checked).length;
+            
+            if(checked > 0){
+              checkResult.style.display = 'block';
+              if(checked === total){
+                checkResult.innerHTML = `🎯 全問正解！かなり当たっていますね！`;
+              } else if(checked >= total * 0.7){
+                checkResult.innerHTML = `✨ ${checked}/${total}個当てはまり！なかなかの的中率です！`;
+              } else if(checked >= total * 0.5){
+                checkResult.innerHTML = `👍 ${checked}/${total}個当てはまり！半分以上ですね！`;
+              } else {
+                checkResult.innerHTML = `📝 ${checked}/${total}個当てはまり`;
+              }
+            } else {
+              checkResult.style.display = 'none';
+            }
+          });
+        });
+      }
+    }
+
+    // Initialize
+    render();
+  </script>
+</body>
+</html>
