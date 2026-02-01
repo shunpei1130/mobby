@@ -68,7 +68,8 @@ export default async function handler(req, res) {
     console.log("[LEAD API] Sending email via Resend...");
     const resend = new Resend(resendKey);
 
-    const subject = `【学校キャラ診断】${name} / ${email} / ${type}`;
+    const diagTitle = String(body.diagTitle || "学校キャラ診断").trim();
+    const subject = `【${diagTitle}】${name} / ${email} / ${type}`;
     const text = [
       `createdAt: ${createdAt}`,
       `name: ${name}`,
