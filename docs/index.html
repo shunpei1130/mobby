@@ -745,6 +745,31 @@
     background:rgba(174,198,207,0.35);
     transform:scale(1.05);
   }
+  .diagnosis-popup-title{
+    text-align:center;
+    font-size:1.4rem;
+    font-weight:700;
+    color:var(--color-earth);
+    margin-bottom:14px;
+  }
+  .diagnosis-popup-subtitle{
+    text-align:center;
+    font-size:0.95rem;
+    color:var(--color-forest);
+    opacity:0.8;
+    margin-bottom:24px;
+  }
+  .diagnosis-options{
+    display:flex;
+    gap:16px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .diagnosis-options .btn{
+    min-width:180px;
+    font-size:1rem;
+    padding:12px 22px;
+  }
   @media (max-width: 768px){
     .popup-content{
       padding:30px 20px;
@@ -758,6 +783,10 @@
       width:50px;
       height:50px;
       max-width:none;
+    }
+    .diagnosis-options .btn{
+      width:100%;
+      max-width:260px;
     }
   }
   
@@ -1765,6 +1794,18 @@
       </div>
     </div>
 
+    <div id="diagnosisPopup" class="popup-overlay" aria-hidden="true">
+      <div class="popup-content">
+        <button class="popup-close" id="closeDiagnosisPopup" aria-label="閉じる">×</button>
+        <div class="diagnosis-popup-title">モビー診断</div>
+        <div class="diagnosis-popup-subtitle">診断タイプを選んでください</div>
+        <div class="diagnosis-options">
+          <a class="btn btn-primary" href="16school/index.html">学校モビー診断</a>
+          <a class="btn btn-primary" href="16school/mama/index.html">ママモビー診断</a>
+        </div>
+      </div>
+    </div>
+
     
     <!-- ポップアップボタン（最下部） -->
     <div class="popup-buttons-bar">
@@ -1787,7 +1828,7 @@
     </div>
     <!-- ▼▼▼ ここにモビー診断ボタンを追加 ▼▼▼ -->
     <div id="mobbyDiagnosisWrapper" style="width:100%;display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:20px;">
-      <a class="btn btn-primary" id="goMobbyDiagnosis" href="16school/index.html" style="font-size:14px;padding:10px 24px;">モビー診断</a>
+      <button class="btn btn-primary" id="goMobbyDiagnosis" type="button" style="font-size:14px;padding:10px 24px;">モビー診断</button>
       <a class="btn btn-primary" id="goMobbyOutfit" href="mobby-custom/index.html" style="font-size:14px;padding:10px 24px;">MobbyOutfit</a>
     </div>
     
@@ -1803,11 +1844,7 @@
 
 
   <!-- Matter.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js">// モビー診断ボタンで16school/index.htmlへ遷移
-document.getElementById('goMobbyDiagnosis')?.addEventListener('click', () => {
-  window.location.href = '16school/index.html';
-});
-</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <!-- EmailJS -->
   <script>
   /* =========================
@@ -3103,6 +3140,7 @@ document.getElementById('openPricePopup')?.addEventListener('click', () => openP
 document.getElementById('openFaqPopup')?.addEventListener('click', () => openPopup('faqPopup'));
 document.getElementById('openImagePopup')?.addEventListener('click', () => openPopup('imagePopup'));
 document.getElementById('openVideoPopup')?.addEventListener('click', () => openPopup('videoPopup'));
+document.getElementById('goMobbyDiagnosis')?.addEventListener('click', () => openPopup('diagnosisPopup'));
 
 /* Close buttons */
 document.getElementById('closeMessagePopup')?.addEventListener('click', () => closePopup('messagePopup'));
@@ -3111,6 +3149,7 @@ document.getElementById('closePricePopup')?.addEventListener('click', () => clos
 document.getElementById('closeFaqPopup')?.addEventListener('click', () => closePopup('faqPopup'));
 document.getElementById('closeImagePopup')?.addEventListener('click', () => closePopup('imagePopup'));
 document.getElementById('closeVideoPopup')?.addEventListener('click', () => closePopup('videoPopup'));
+document.getElementById('closeDiagnosisPopup')?.addEventListener('click', () => closePopup('diagnosisPopup'));
 
 /* Overlay click to close */
 document.getElementById('messagePopup')?.addEventListener('click', (e) => {
@@ -3132,6 +3171,9 @@ document.getElementById('imagePopup')?.addEventListener('click', (e) => {
 document.getElementById('videoPopup')?.addEventListener('click', (e) => {
   if(e.target.id === 'videoPopup') closePopup('videoPopup');
 });
+document.getElementById('diagnosisPopup')?.addEventListener('click', (e) => {
+  if(e.target.id === 'diagnosisPopup') closePopup('diagnosisPopup');
+});
 
 /* ESC */
 window.addEventListener('keydown', (e) => {
@@ -3142,6 +3184,7 @@ window.addEventListener('keydown', (e) => {
     if(document.getElementById('faqPopup')?.classList.contains('is-open')) closePopup('faqPopup');
     if(document.getElementById('imagePopup')?.classList.contains('is-open')) closePopup('imagePopup');
     if(document.getElementById('videoPopup')?.classList.contains('is-open')) closePopup('videoPopup');
+    if(document.getElementById('diagnosisPopup')?.classList.contains('is-open')) closePopup('diagnosisPopup');
   }
 });
 
@@ -3331,11 +3374,6 @@ document.getElementById("faqContactForm")?.addEventListener("submit", async (e) 
   countEl.textContent = String(count);
 })();
 
-
-// モビー診断ボタンで16school/index.htmlへ遷移
-document.getElementById('goMobbyDiagnosis')?.addEventListener('click', () => {
-  window.location.href = '16school/index.html';
-});
 
 // URLパラメータで抽選予約ポップアップを自動的に開く
 (() => {
