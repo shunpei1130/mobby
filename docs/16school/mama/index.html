@@ -1774,6 +1774,7 @@
           type: res.code,
           axes: res.leftPct,
           answers: questionAnswers,
+          diagTitle: "ママモビー診断",
           createdAt: new Date().toISOString()
         };
 
@@ -2024,6 +2025,20 @@
         </div>
         ` : ''}
 
+        <!-- ママ友に共有 -->
+        <div class="panel fade-in" style="margin-top:24px; background:linear-gradient(135deg, #fff0f5 0%, #fff 50%);">
+          <p class="kicker" style="margin-bottom:8px; color:#ec407a;">👩‍👧 ママ友に共有</p>
+          <p style="font-size:12px; color:var(--text-sub); margin-bottom:16px;">
+            診断結果をママ友にもシェアしてみよう！
+          </p>
+          <div style="display:grid; gap:10px;">
+            <button id="shareLine" class="primary" style="background:#06c755; box-shadow:0 4px 12px rgba(6,199,85,0.25);">LINEで共有</button>
+            <button id="shareCopy" style="background:#fff; border:1px solid #f8bbd9;">URLをコピー</button>
+            <button id="shareX" style="background:#111; color:#fff;">Xで共有</button>
+          </div>
+          <p id="shareCopied" style="font-size:12px; color:#ec407a; font-weight:600; margin-top:12px; text-align:center; display:none;">URLをコピーしました！</p>
+        </div>
+
         <!-- 学生時代の恋愛価値観（折りたたみ） -->
         <div class="panel fade-in" style="margin-top:24px;">
           <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" id="loveToggleBtn">
@@ -2104,6 +2119,40 @@
         state.page = 0;
         render();
       };
+
+      // 共有
+      const shareText = `ママモビー診断の結果「${char.name}」でした！`;
+      const shareUrl = window.location.href;
+      const shareLineBtn = document.getElementById("shareLine");
+      const shareCopyBtn = document.getElementById("shareCopy");
+      const shareXBtn = document.getElementById("shareX");
+      const shareCopied = document.getElementById("shareCopied");
+
+      if(shareLineBtn){
+        shareLineBtn.onclick = () => {
+          const lineUrl = `https://line.me/R/msg/text/?${encodeURIComponent(shareText + " " + shareUrl)}`;
+          window.open(lineUrl, "_blank");
+        };
+      }
+      if(shareXBtn){
+        shareXBtn.onclick = () => {
+          const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+          window.open(xUrl, "_blank");
+        };
+      }
+      if(shareCopyBtn){
+        shareCopyBtn.onclick = async () => {
+          try {
+            await navigator.clipboard.writeText(shareUrl);
+            if(shareCopied){
+              shareCopied.style.display = "block";
+              setTimeout(() => { shareCopied.style.display = "none"; }, 1600);
+            }
+          } catch(e){
+            window.prompt("URLをコピーしてください", shareUrl);
+          }
+        };
+      }
 
       // 恋愛価値観の折りたたみ
       document.getElementById("loveToggleBtn").onclick = () => {

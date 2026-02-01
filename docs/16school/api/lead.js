@@ -73,7 +73,8 @@ export default async function handler(req, res) {
 
     const genderLabel = gender === "female" ? "女子版" : gender === "male" ? "男子版" : "";
     const interestLabel = interested ? "【🎁 このモビーが欲しい！】" : "";
-    const subject = `【診断リード】${interestLabel}${name} / ${email} / ${type} ${genderLabel}`;
+    const diagTitle = String(body.diagTitle || "学校キャラ診断").trim();
+    const subject = `【${diagTitle}】${interestLabel}${name} / ${email} / ${type} ${genderLabel}`;
     
     // 回答データを整形（見やすく）
     const answersText = Object.entries(answers)
