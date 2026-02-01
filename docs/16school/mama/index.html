@@ -1634,7 +1634,7 @@
         return `
           <div class="char-card">
             <div class="char-card-image">
-              <div style="display:flex;align-items:center;justify-content:center;height:100%;color:#86868b;font-size:12px;">画像準備中</div>
+              <img src="img/${char.name}.jpg" alt="${char.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:#86868b;font-size:12px;\'>画像準備中</div>'">
             </div>
             <div class="char-card-code">${code}</div>
             <div class="char-card-name">${char.name}</div>
@@ -1669,7 +1669,7 @@
           <div class="char-modal" style="max-height:85vh; overflow-y:auto;">
             <button class="char-modal-close" id="charModalClose">×</button>
             <div class="char-modal-image">
-              <div style="display:flex;align-items:center;justify-content:center;height:100%;color:#86868b;">画像準備中</div>
+              <img src="img/${char.name}.jpg" alt="${char.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:#86868b;\'>画像準備中</div>'">
             </div>
             <div style="text-align:center; margin-bottom:20px;">
               <div class="char-modal-type">TYPE: ${code}</div>
@@ -1751,7 +1751,8 @@
             </p>` : ``}
 
             <div class="char-image-placeholder">
-              <span>ここにキャラクター画像が入ります</span> 
+              <img src="img/${char.name}.jpg" alt="${char.name}" loading="eager" onerror="this.style.display='none'; var s=this.nextElementSibling; if(s) s.style.display='block';" />
+              <span style="display:none; color:var(--text-sub); font-size:13px;">画像準備中</span>
             </div>
              
             <div style="display:inline-block; background:#f0f0f5; padding:6px 16px; border-radius:20px; font-size:12px; font-family:monospace; color:#86868b;">
