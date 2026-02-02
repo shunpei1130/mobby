@@ -941,6 +941,21 @@
       return Object.keys(state.answers || {}).length >= QUESTIONS.length;
     }
     function isRegistered(){
+      // ローカル環境（localhost または 127.0.0.1）の場合は自動的にスキップ
+      const hostname = window.location.hostname;
+      const protocol = window.location.protocol;
+      const isLocal = hostname === 'localhost' || 
+                      hostname === '127.0.0.1' ||
+                      hostname === '' ||
+                      protocol === 'file:';
+
+      console.log('[DEBUG] isRegistered check:', { hostname, protocol, isLocal });
+
+      if (isLocal) {
+        console.log('[DEBUG] ローカル環境検出: 登録画面をスキップします');
+        return true; // ローカル環境では登録画面をスキップ
+      }
+
       return !!(state.profile && state.profile.name && state.profile.email);
     }
 
@@ -1974,18 +1989,23 @@
         <!-- あなただけのインサイト（パーソナライズ） -->
         ${personalInsights.strongHits.length > 0 ? `
         <div class="panel fade-in" style="margin-top:24px; background:linear-gradient(135deg, #fff8e1 0%, #fff 50%);">
-          <p class="kicker" style="margin-bottom:16px; color:#f9a825;">✨ あなたの回答から見えたこと</p>
-          <p style="font-size:12px; color:var(--text-sub); margin-bottom:16px;">
-            診断の回答から、特にあなたらしさが出ていたポイントをピックアップしました。
-          </p>
-          <div style="display:flex; flex-direction:column; gap:12px;">
-            ${personalInsights.strongHits.map((hit, idx) => `
-              <div class="insight-card" style="padding:14px 16px; background:#fff; border-radius:12px; border-left:4px solid #ffb300; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
-                <p style="margin:0; font-size:14px; line-height:1.7; color:var(--text-main);">
-                  ${hit.text}
-                </p>
-              </div>
-            `).join("")}
+          <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" id="insightToggleBtn">
+            <p class="kicker" style="margin:0; color:#f9a825;">✨ あなたの回答から見えたこと</p>
+            <span id="insightToggleIcon" style="font-size:20px; color:#f9a825; transition:transform 0.3s;">▼</span>
+          </div>
+          <div id="insightContent" style="display:none; margin-top:16px;">
+            <p style="font-size:12px; color:var(--text-sub); margin-bottom:16px;">
+              診断の回答から、特にあなたらしさが出ていたポイントをピックアップしました。
+            </p>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              ${personalInsights.strongHits.map((hit, idx) => `
+                <div class="insight-card" style="padding:14px 16px; background:#fff; border-radius:12px; border-left:4px solid #ffb300; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                  <p style="margin:0; font-size:14px; line-height:1.7; color:var(--text-main);">
+                    ${hit.text}
+                  </p>
+                </div>
+              `).join("")}
+            </div>
           </div>
         </div>
         ` : ''}
@@ -2025,11 +2045,26 @@
         </div>
         ` : ''}
 
-        <!-- ママ友に共有 -->
+        <!-- 抽選予約 -->
+        <div class="panel fade-in" style="margin-top:24px; text-align:center; background:linear-gradient(135deg, #fff8e8 0%, #fffbf0 100%); border:2px solid var(--accent);">
+          <div id="reservationButtonArea" style="display:block; margin-top:0; padding-top:0; border-top:none;">
+            <p class="text-body" style="font-size:14px; margin-bottom:16px; color:var(--text-main); font-weight:600;">
+              🎉 特別なモビーの無料抽選に参加しませんか？
+            </p>
+            <p class="text-body" style="font-size:12px; margin-bottom:20px; color:var(--text-sub);">
+              抽選に当たったら、当選の手紙を送ります。<br>住所を登録して予約してください。
+            </p>
+            <button id="btnReservation" class="primary" style="padding:14px 28px; font-size:15px; background:linear-gradient(135deg, #f6d49c 0%, #f0c87f 100%); border-color:#f0c87f; color:#6b5d3f;">
+              📝 抽選予約ページへ
+            </button>
+          </div>
+        </div>
+
+        <!-- 子供・ママ友に共有 -->
         <div class="panel fade-in" style="margin-top:24px; background:linear-gradient(135deg, #fff0f5 0%, #fff 50%);">
-          <p class="kicker" style="margin-bottom:8px; color:#ec407a;">👩‍👧 ママ友に共有</p>
+          <p class="kicker" style="margin-bottom:8px; color:#ec407a;">👩‍👧 子供・ママ友に共有</p>
           <p style="font-size:12px; color:var(--text-sub); margin-bottom:16px;">
-            診断結果をママ友にもシェアしてみよう！
+            診断結果を子供・ママ友にもシェアしてみよう！
           </p>
           <div style="display:grid; gap:10px;">
             <button id="shareLine" class="primary" style="background:#06c755; box-shadow:0 4px 12px rgba(6,199,85,0.25);">LINEで共有</button>
@@ -2150,6 +2185,30 @@
             }
           } catch(e){
             window.prompt("URLをコピーしてください", shareUrl);
+          }
+        };
+      }
+
+      // 抽選予約ボタンのイベントリスナー
+      const reservationBtn = document.getElementById("btnReservation");
+      if(reservationBtn){
+        reservationBtn.onclick = () => {
+          window.location.href = "../../index.html?openPricePopup=true#price";
+        };
+      }
+
+      // あなたの回答から見えたことの折りたたみ
+      const insightToggleBtn = document.getElementById("insightToggleBtn");
+      if(insightToggleBtn){
+        insightToggleBtn.onclick = () => {
+          const content = document.getElementById("insightContent");
+          const icon = document.getElementById("insightToggleIcon");
+          if(content.style.display === "none"){
+            content.style.display = "block";
+            icon.style.transform = "rotate(180deg)";
+          } else {
+            content.style.display = "none";
+            icon.style.transform = "rotate(0deg)";
           }
         };
       }
