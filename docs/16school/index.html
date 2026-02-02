@@ -2856,7 +2856,15 @@ function renderGate(){
         const imgCode = CODE_TO_IMAGE[code];
         return imgCode ? `cha/${imgCode}.jpg` : '';
       }
-}
+    }
+
+    function getKeyImagePath(code, isFemale, name) {
+      if (isFemale) {
+        return name ? `key/${name}.jpg` : '';
+      }
+      const imgCode = CODE_TO_IMAGE[code];
+      return imgCode ? `key/男/${imgCode}.jpg` : '';
+    }
 
     function renderCharacters(){
       const characters = charListGender === "female" ? CHARACTERS_FEMALE : CHARACTERS;
@@ -2877,7 +2885,7 @@ function renderGate(){
         `;
       }).join("");
 
-      app.innerHTML = `
+       app.innerHTML = `
         <div class="panel fade-in">
           <p class="kicker">全16タイプ</p>
           <h2 class="big">キャラクター一覧</h2>
@@ -3159,6 +3167,7 @@ function renderGate(){
       `;
       
       const loveTip = loveTipDetailed;
+      const keyImagePath = getKeyImagePath(res.code, isFemale, char.name);
 
       // 確信度に応じた説明文の選択
       const useMainDesc = res.midCount <= 1;  // 中間が1軸以下なら通常説明
@@ -3300,10 +3309,9 @@ function renderGate(){
               <div style="width:45%; max-width:140px; position:relative; overflow:hidden;">
                 ${isFemale ? `
                 <video src="key/${char.name}.mp4" autoplay muted loop playsinline webkit-playsinline disablepictureinpicture style="display:none; width:100%; height:auto; max-height:180px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onloadeddata="this.style.display='block'; this.nextElementSibling.style.display='none';"></video>
-                <img src="key/${char.name}.jpg" alt="アクリルキーホルダー 表面" style="width:100%; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
+                <img src="${keyImagePath}" alt="アクリルキーホルダー 表面" style="width:100%; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
                 ` : `
-                <video src="key/男/test.mp4" autoplay muted loop playsinline webkit-playsinline disablepictureinpicture style="display:none; width:100%; height:auto; max-height:180px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onloadeddata="this.style.display='block'; this.nextElementSibling.style.display='none';"></video>
-                <img src="key/男/test.jpg" alt="アクリルキーホルダー 表面" style="width:100%; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
+                <img src="${keyImagePath}" alt="アクリルキーホルダー 表面" style="width:100%; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
                 `}
               </div>
               <img src="key/ura.jpg" alt="アクリルキーホルダー 裏面" style="width:45%; max-width:140px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
