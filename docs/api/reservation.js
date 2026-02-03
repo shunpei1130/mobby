@@ -1,5 +1,7 @@
 // /api/reservation.js
 import { Resend } from "resend";
+import { put } from "@vercel/blob";
+import { randomUUID } from "crypto";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -64,6 +66,26 @@ export default async function handler(req, res) {
     const safeEmail = (typeof email === "string" ? email : "").slice(0, 200);
     const safePhone = (typeof phone === "string" ? phone : "").slice(0, 50);
     const safePurchaseReason = Array.isArray(purchaseReason) ? purchaseReason : (purchaseReason ? [purchaseReason] : []);
+    const createdAt = new Date().toISOString();
+    const reservationId = randomUUID().replaceAll("-", "");
+    const reservationRecord = {
+      reservationId,
+      createdAt,
+      address: trimmedAddress,
+      name: safeName,
+      email: safeEmail || "",
+      phone: safePhone || "",
+      purchaseReason: safePurchaseReason
+    };
+    const timestamp = createdAt.replaceAll(":", "-").replaceAll(".", "-");
+    const blobPath = `reservations/${timestamp}_${reservationId}.json`;
+
+    const blob = await put(blobPath, JSON.stringify(reservationRecord), {
+      access: "private",
+      addRandomSuffix: false,
+      contentType: "application/json; charset=utf-8"
+    });
+    console.log("[RESERVATION API] Saved reservation", { path: blob.pathname });
 
     const resend = new Resend(process.env.RESEND_API_KEY);
     const to = process.env.RESERVATION_TO_EMAIL || process.env.TO_EMAIL;
