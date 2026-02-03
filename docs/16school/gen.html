@@ -3366,68 +3366,7 @@ function renderGate(){
           </div>
         </div>
 
-        <!-- ここから下は常に表示 -->
-        <div style="margin-top:24px;">
-          <!-- アクリルキーホルダーセクション -->
-          <div class="panel fade-in" style="animation-delay:0.12s; background:linear-gradient(145deg, #fff7fb, #fff2e2); border:2px solid rgba(255, 77, 141, 0.2); overflow:hidden; position:relative;">
-            <div style="position:absolute; top:18px; right:-44px; transform:rotate(20deg); background:linear-gradient(135deg, #ffb347, #ffd27f); color:#fff; font-size:11px; letter-spacing:0.18em; padding:6px 48px; text-transform:uppercase;">LIMITED</div>
-            <p class="kicker" style="margin-bottom:12px; color:#ff4d8d;">🎀 限定アクセサリー</p>
-            <h3 style="font-size:20px; margin:0 0 8px; color:var(--text-main);">アクリルキーホルダー</h3>
-            <p style="display:inline-block; font-size:15px; font-weight:700; color:#ff4d8d; background:rgba(255,77,141,0.08); padding:6px 14px; border-radius:999px; margin:0 0 18px; letter-spacing:0.03em;">
-              あなたの診断結果を持ち歩こう
-            </p>
-            <div style="display:flex; gap:12px; justify-content:center; margin-bottom:18px; background:linear-gradient(145deg, #fff7fb, #fff2e2); border-radius:16px; padding:16px; border:1px solid rgba(255,255,255,0.9);">
-              <div style="width:45%; max-width:140px; position:relative; overflow:hidden;">
-                <img src="${keyImagePath}" alt="アクリルキーホルダー 表面" style="width:100%; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
-              </div>
-              <img src="key/ura.jpg" alt="アクリルキーホルダー 裏面" style="width:45%; max-width:140px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
-            </div>
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
-              <span style="font-size:20px; color:#b65174; font-weight:700; letter-spacing:0.04em;">1,900円</span>
-            </div>
-            <p class="text-body" style="font-size:14px; line-height:1.8; margin:0 0 14px;">
-              <strong>表は${char.name}、裏にはあなたの診断がいつでも見れるQRコード。</strong> 透明感ときらめきで、光を味方にするクリアアクセ。
-            </p>
-            <ul style="margin:0 0 18px; padding-left:18px; color:var(--text-sub); line-height:1.8; font-size:13px;">
-              <li>表裏で違う表情が楽しめるデザイン</li>
-              <li>日常でも特別感を残すサイズ感</li>
-            </ul>
-            <a href="https://buy.stripe.com/bJe14n8lf7Y11yecNNao80a" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:10px; padding:14px 28px; border-radius:999px; font-size:14px; font-weight:600; text-decoration:none; background:linear-gradient(135deg, #ff4d8d, #ff7aa8); color:#fff; box-shadow:0 14px 30px rgba(255, 77, 141, 0.3); transition:transform 0.2s ease;">
-              限定アイテムを手に取る →
-            </a>
-          </div>
-        
-        
-        </div>
 
-        <div class="panel fade-in" style="text-align:center; margin-top:40px; animation-delay:0.25s; background:linear-gradient(135deg, #fff8e8 0%, #fffbf0 100%); border:2px solid var(--accent);">
-          <p class="kicker" style="color:var(--accent);">このキャラクターに興味がありますか？</p>
-          <h3 style="font-size:20px; margin:12px 0; color:var(--text-main);">
-            ${char.name}のぬいぐるみが欲しい！
-          </h3>
-          <p class="text-body" style="font-size:13px; margin-bottom:20px;">
-            ボタンを押すと、あなたの興味を記録して今後の制作の参考にします。
-          </p>
-          <button id="btnInterest" class="primary" style="padding:16px 32px; font-size:16px; ${state.interested ? 'background:#34c759; border-color:#34c759;' : ''}">
-            ${state.interested ? '✓ 興味を送信しました！' : '🎁 このモビーが欲しい！'}
-          </button>
-          <div id="interestFeedback" style="display:none; margin-top:18px; padding:16px 18px; background:linear-gradient(135deg, #e8f5e9 0%, #f3fff6 100%); border-radius:14px; color:#1f7a3a; font-size:15px; font-weight:700; border:2px solid #34c759; box-shadow:0 10px 24px rgba(52,199,89,0.2);">
-            ✓ 1分以内に専用ページのURLをメールでお届けします！
-          </div>
-          
-          <!-- 興味を示した人にだけ表示される抽選予約ボタン -->
-          <div id="reservationButtonArea" style="display:${state.interested ? 'block' : 'none'}; margin-top:24px; padding-top:24px; border-top:1px solid rgba(0,0,0,0.08);">
-            <p class="text-body" style="font-size:14px; margin-bottom:16px; color:var(--text-main); font-weight:600;">
-              🎉 カメラ型キーホルダーモビーの無料抽選に参加しませんか？
-            </p>
-            <p class="text-body" style="font-size:12px; margin-bottom:20px; color:var(--text-sub);">
-              抽選に当たったら、当選の手紙を送ります。<br>住所を登録して予約してください。
-            </p>
-            <button id="btnReservation" class="primary" style="padding:14px 28px; font-size:15px; background:linear-gradient(135deg, #f6d49c 0%, #f0c87f 100%); border-color:#f0c87f; color:#6b5d3f;">
-              📝 抽選予約ページへ
-            </button>
-          </div>
-        </div>
         
 
         <div class="panel fade-in share-wrapper" style="margin-top:40px;">
@@ -3767,27 +3706,6 @@ function renderGate(){
 
   </script>
 <script id="diagRaw" type="application/json">
-{
-  "createdAt": "2026-02-03T13:34:47.190Z",
-  "name": "なおき",
-  "email": "hanadanaoki0121@gmail.com",
-  "type": "がやみそ",
-  "axes": {"A":90,"B":69,"C":91,"D":69},
-  "raw": {
-    "name": "なおき",
-    "age": "13",
-    "email": "hanadanaoki0121@gmail.com",
-    "type": "がやみそ",
-    "axes": {"A":90,"B":69,"C":91,"D":69},
-    "answers": {"A1":1,"A2":2,"A3":1,"A4":2,"A5":3,"A6":7,"A7":7,"A8":6,"A9":6,"A10":7,"B1":2,"B2":3,"B3":3,"B4":1,"B5":3,"B6":3,"B7":5,"B8":7,"B9":3,"B10":6,"C1":1,"C2":1,"C3":1,"C4":2,"C5":2,"C6":7,"C7":6,"C8":7,"C9":6,"C10":6,"D1":2,"D2":1,"D3":1,"D4":3,"D5":4,"D6":6,"D7":5,"D8":2,"D9":5,"D10":5},
-    "gender": "male",
-    "userId": "zpMH9nrD",
-    "referrerId": null,
-    "shareCount": 0,
-    "source": "16school",
-    "createdAt": "2026-02-03T13:34:47.190Z"
-  }
-}
 </script>
 <script>
 (function(){
@@ -3867,6 +3785,27 @@ function renderGate(){
     applyDiagnosis(payload);
   }
 
+  function defineConsoleSetter(){
+    var existing = window.DIAGNOSIS_RAW;
+    try {
+      delete window.DIAGNOSIS_RAW;
+    } catch (e) {}
+
+    Object.defineProperty(window, "DIAGNOSIS_RAW", {
+      configurable: true,
+      set: function(v){
+        applyDiagnosisRaw(v);
+      },
+      get: function(){
+        return undefined;
+      }
+    });
+
+    if (existing) {
+      applyDiagnosisRaw(existing);
+    }
+  }
+
   function tryAutoApply(){
     var scriptEl = document.getElementById("diagRaw");
     if (scriptEl && scriptEl.textContent.trim()) {
@@ -3883,7 +3822,8 @@ function renderGate(){
   window.applyDiagnosis = applyDiagnosis;
   window.applyDiagnosisRaw = applyDiagnosisRaw;
   window.applyDiagnosisAuto = tryAutoApply;
-  console.info("[gen] use applyDiagnosis(payload) or applyDiagnosisRaw(json or wrapper). Optional: set window.DIAGNOSIS_RAW or fill #diagRaw.");
+  defineConsoleSetter();
+  console.info("[gen] console: DIAGNOSIS_RAW = {...}  or applyDiagnosisRaw({...})");
   tryAutoApply();
 })();
 </script>
