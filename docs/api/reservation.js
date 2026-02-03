@@ -81,7 +81,7 @@ export default async function handler(req, res) {
     const blobPath = `reservations/${timestamp}_${reservationId}.json`;
 
     const blob = await put(blobPath, JSON.stringify(reservationRecord), {
-      access: "private",
+      access: "public",
       addRandomSuffix: false,
       contentType: "application/json; charset=utf-8"
     });
