@@ -66,7 +66,7 @@ export default async function handler(req, res) {
     const safePurchaseReason = Array.isArray(purchaseReason) ? purchaseReason : (purchaseReason ? [purchaseReason] : []);
 
     const resend = new Resend(process.env.RESEND_API_KEY);
-    const to = process.env.TO_EMAIL;
+    const to = process.env.RESERVATION_TO_EMAIL || process.env.TO_EMAIL;
     const from = process.env.FROM_EMAIL;
 
     if (!to || !from) {
