@@ -90,6 +90,7 @@ export default async function handler(req, res) {
         `電話: ${safePhone || "(未入力)"}\n` +
         `購入理由: ${purchaseReasonText}\n`
     });
+    console.log("[RESERVATION API] Email sent successfully", { to, from });
 
     res.status(200).json({ ok: true });
   } catch (e) {
