@@ -1540,7 +1540,7 @@
 
           <!-- 抽選予約フォーム -->
           <div class="price-reservation-form reveal delay-200" style="margin-top:32px;">
-            <h3 style="font-size:1.2rem;margin-bottom:12px;color:var(--color-forest);">無料抽選予約</h3>
+            <h3 style="font-size:1.2rem;margin-bottom:12px;color:var(--color-forest);">カメラ型キーホルダー無料抽選予約</h3>
             <p style="font-size:0.9rem;opacity:0.85;margin-bottom:20px;line-height:1.6;">
               抽選に当たったら、当選の手紙を送るビィ。<br>
               住所を入力して予約してビィ。
@@ -1814,7 +1814,7 @@
           <button class="btn btn-secondary" id="openColorsPopup">4色</button>
           <div class="btn-with-counter">
             <div class="reservation-counter" id="reservationCounter" aria-live="polite">
-              現在の予約数：<span id="reservationCount">72</span>
+              現在の予約数：<span id="reservationCount">0</span>
             </div>
             <button class="btn btn-secondary" id="openPricePopup">予約</button>
           </div>
@@ -3222,8 +3222,11 @@ function showMsg(div, { ok, text }) {
   div.textContent = text;
 }
 
+let refreshReservationCount = null;
+
 /* priceReservationForm */
 document.getElementById("priceReservationForm")?.addEventListener("submit", async (e) => {
+  e.preventDefault();
   e.preventDefault();
 
   const form = e.target;
@@ -3263,10 +3266,13 @@ document.getElementById("priceReservationForm")?.addEventListener("submit", asyn
 
     showMsg(messageDiv, { ok: true, text: "送信しました。抽選結果を待ってね。" });
 
-    setTimeout(() => {
+     setTimeout(() => {
       form.reset();
       submitBtn.disabled = false;
       submitBtn.textContent = originalText || "予約する";
+      if (typeof refreshReservationCount === "function") {
+        refreshReservationCount();
+      }
     }, 1200);
   } catch (error) {
     const errorMessage = error.message || "送信に失敗しました。時間をおいて再度お試しください。";
@@ -3331,48 +3337,33 @@ document.getElementById("faqContactForm")?.addEventListener("submit", async (e) 
   }
 });
 
-/* ===== Reservation counter: start 72, +1 every 3 days from 2026-01-07 ===== */
+/* ===== Reservation counter ===== */
+/* ===== Reservation counter ===== */
 (() => {
-  const COUNT_KEY = "mobby_reservation_count_v1";
-  const LAST_KEY  = "mobby_reservation_last_update_v1";
-
-  const BASE_COUNT = 72;
-  const START_DATE = new Date("2026-01-07T00:00:00+09:00");
-  const INTERVAL_DAYS = 3;
-
   const countEl = document.getElementById("reservationCount");
   if (!countEl) return;
+  const endpoint = "/api/reservation-count";
+  const intervalMs = 30000;
 
-  function floorDayJST(d){
-    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-  }
+  const fetchCount = async () => {
+    try {
+      const res = await fetch(`${endpoint}?t=${Date.now()}`, { cache: "no-store" });
+      if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+      const data = await res.json().catch(() => ({}));
+      const count = Number(data?.count);
+      if (!Number.isFinite(count)) throw new Error("Invalid count");
+      countEl.textContent = String(count);
+      return count;
+    } catch (err) {
+      console.warn("[ReservationCount]", err);
+      return null;
+    }
+  };
 
-  function daysBetween(a, b){
-    const ms = 24 * 60 * 60 * 1000;
-    const da = floorDayJST(a).getTime();
-    const db = floorDayJST(b).getTime();
-    return Math.floor((db - da) / ms);
-  }
-
-  function load(){
-    const storedCount = Number(localStorage.getItem(COUNT_KEY));
-    const now = new Date();
-    const daysFromStart = Math.max(0, daysBetween(START_DATE, now));
-    const shouldBe = BASE_COUNT + Math.floor(daysFromStart / INTERVAL_DAYS);
-
-    let count = Number.isFinite(storedCount) && storedCount > 0 ? storedCount : shouldBe;
-    count = Math.max(count, shouldBe);
-
-    localStorage.setItem(COUNT_KEY, String(count));
-    localStorage.setItem(LAST_KEY, now.toISOString());
-
-    return count;
-  }
-
-  const count = load();
-  countEl.textContent = String(count);
+  refreshReservationCount = fetchCount;
+  fetchCount();
+  setInterval(fetchCount, intervalMs);
 })();
-
 
 // URLパラメータで抽選予約ポップアップを自動的に開く
 (() => {
