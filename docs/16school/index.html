@@ -3766,5 +3766,18 @@ function renderGate(){
     render();
 
   </script>
+  <script>
+    (function() {
+      const imgs = document.querySelectorAll('img');
+      imgs.forEach((img) => {
+        if (!img.hasAttribute('loading')) {
+          img.setAttribute('loading', 'lazy');
+        }
+        if (!img.hasAttribute('decoding')) {
+          img.setAttribute('decoding', 'async');
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
