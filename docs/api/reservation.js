@@ -16,7 +16,7 @@ export default async function handler(req, res) {
       return;
     }
 
-    const { address, name, email, phone, purchaseReason, hp } = req.body;
+    const { address, name, email, phone, purchaseReason, pricePrediction, hp } = req.body;
 
     if (hp) {
       res.status(200).json({ ok: true });
@@ -66,6 +66,7 @@ export default async function handler(req, res) {
     const safeEmail = (typeof email === "string" ? email : "").slice(0, 200);
     const safePhone = (typeof phone === "string" ? phone : "").slice(0, 50);
     const safePurchaseReason = Array.isArray(purchaseReason) ? purchaseReason : (purchaseReason ? [purchaseReason] : []);
+    const safePricePrediction = (typeof pricePrediction === "string" ? pricePrediction : "").slice(0, 50);
     const createdAt = new Date().toISOString();
     const reservationId = randomUUID().replaceAll("-", "");
     const reservationRecord = {
@@ -75,7 +76,8 @@ export default async function handler(req, res) {
       name: safeName,
       email: safeEmail || "",
       phone: safePhone || "",
-      purchaseReason: safePurchaseReason
+      purchaseReason: safePurchaseReason,
+      pricePrediction: safePricePrediction || ""
     };
     const timestamp = createdAt.replaceAll(":", "-").replaceAll(".", "-");
     const blobPath = `reservations/${timestamp}_${reservationId}.json`;
@@ -99,6 +101,7 @@ export default async function handler(req, res) {
     const purchaseReasonText = safePurchaseReason.length > 0 
       ? safePurchaseReason.join("、") 
       : "(未入力)";
+    const pricePredictionText = safePricePrediction ? safePricePrediction : "(未入力)";
 
     await resend.emails.send({
       from,
@@ -110,7 +113,8 @@ export default async function handler(req, res) {
         `名前: ${safeName}\n` +
         `メール: ${safeEmail || "(未入力)"}\n` +
         `電話: ${safePhone || "(未入力)"}\n` +
-        `購入理由: ${purchaseReasonText}\n`
+        `購入理由: ${purchaseReasonText}\n` +
+        `値段予想: ${pricePredictionText}\n`
     });
     console.log("[RESERVATION API] Email sent successfully", { to, from });
 

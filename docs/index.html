@@ -1645,6 +1645,24 @@
                     </label>
                   </div>
                 </div>
+                <div class="form-group" style="margin-top:16px;">
+                  <label for="reservationPricePrediction" style="display:block;margin-bottom:8px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">
+                    値段の予想（どれを選んでも当選確率は変わりません）
+                    <span style="color:rgba(47,79,79,0.5);font-size:0.85rem;">（任意）</span>
+                  </label>
+                  <select 
+                    id="reservationPricePrediction" 
+                    name="pricePrediction"
+                    style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;transition:border-color 0.2s;"
+                  >
+                    <option value="">選択してください（任意）</option>
+                    <option value="8000円未満">8000円未満</option>
+                    <option value="8000円">8000円</option>
+                    <option value="12000円">12000円</option>
+                    <option value="15000円">15000円</option>
+                    <option value="15000円以上">15000円以上</option>
+                  </select>
+                </div>
               </div>
               
               <button 
@@ -3235,6 +3253,7 @@ document.getElementById("priceReservationForm")?.addEventListener("submit", asyn
   const email = document.getElementById("reservationEmail")?.value ?? "";
   const phone = document.getElementById("reservationPhone")?.value ?? "";
   const purchaseReasons = Array.from(form.querySelectorAll('input[name="purchaseReason"]:checked')).map(cb => cb.value);
+  const pricePrediction = document.getElementById("reservationPricePrediction")?.value ?? "";
   const messageDiv = document.getElementById("priceFormMessage");
   const submitBtn = form.querySelector('button[type="submit"]');
 
@@ -3261,6 +3280,7 @@ document.getElementById("priceReservationForm")?.addEventListener("submit", asyn
       email: email.trim(),
       phone: phone.trim(),
       purchaseReason: purchaseReasons,
+      pricePrediction: pricePrediction.trim(),
       hp: ""
     });
 
@@ -3343,7 +3363,7 @@ document.getElementById("faqContactForm")?.addEventListener("submit", async (e) 
   const countEl = document.getElementById("reservationCount");
   if (!countEl) return;
   const endpoint = "/api/reservation-count";
-  const intervalMs = 30000;
+  const intervalMs = 300000;
 
   const fetchCount = async () => {
     try {
