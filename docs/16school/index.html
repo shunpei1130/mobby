@@ -3448,9 +3448,7 @@ function renderGate(){
           <button id="btnInterest" class="primary" style="padding:16px 32px; font-size:16px; ${state.interested ? 'background:#34c759; border-color:#34c759;' : ''}">
             ${state.interested ? '✓ 興味を送信しました！' : '🎁 このモビーが欲しい！'}
           </button>
-          <div id="interestFeedback" style="display:none; margin-top:18px; padding:16px 18px; background:linear-gradient(135deg, #e8f5e9 0%, #f3fff6 100%); border-radius:14px; color:#1f7a3a; font-size:15px; font-weight:700; border:2px solid #34c759; box-shadow:0 10px 24px rgba(52,199,89,0.2);">
-            ✓ 1分以内に専用ページのURLをメールでお届けします！
-          </div>
+       
           
           <!-- 興味を示した人にだけ表示される抽選予約ボタン -->
           <div id="reservationButtonArea" style="display:${state.interested ? 'block' : 'none'}; margin-top:24px; padding-top:24px; border-top:1px solid rgba(0,0,0,0.08);">
