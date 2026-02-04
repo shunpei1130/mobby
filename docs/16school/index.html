@@ -2721,11 +2721,19 @@ async function submitInterest(){
     shareCount: state.shareCount
   };
 
+  const diagnosisPayload = {
+    ...payload,
+    diagnosis_type: (res?.char && res.char.name) ? res.char.name : (res.code || payload.type || "")
+  };
+
   const page = buildPrivatePageData(res);
   const interestPayload = { ...payload, page };
 
   console.log("[Interest] Submitting interest:", interestPayload);
   await submitLead(payload);
+  submitDiagnosis(diagnosisPayload).catch((error) => {
+    console.error("[Frontend] Diagnosis save failed:", error);
+  });
   await submitInterestPage(interestPayload);
 }
 

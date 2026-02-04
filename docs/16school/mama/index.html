@@ -1701,6 +1701,26 @@
       }
     }
 
+    async function submitDiagnosis(payload){
+      console.log("[Frontend] Submitting diagnosis:", payload);
+      try {
+        const r = await fetch("/api/diagnosis", {
+          method: "POST",
+          headers: { "Content-Type":"application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await r.json().catch(()=> ({}));
+        if(!r.ok) {
+          throw new Error(data?.error || "保存に失敗しました");
+        }
+        console.log("[Frontend] Diagnosis submitted successfully");
+        return data;
+      } catch (error) {
+        console.error("[Frontend] Error in submitDiagnosis:", error);
+        throw error;
+      }
+    }
+
     function renderGate(){
       if(isRegistered()){
         state.step = "result";
@@ -1793,8 +1813,16 @@
           createdAt: new Date().toISOString()
         };
 
+        const diagnosisPayload = {
+          ...payload,
+          diagnosis_type: (res?.char && res.char.name) ? res.char.name : (res.code || payload.type || "")
+        };
+
         try {
           await submitLead(payload);
+          submitDiagnosis(diagnosisPayload).catch((error) => {
+            console.error("[Frontend] Diagnosis save failed:", error);
+          });
           state.step = "result";
           saveState();
           render();
