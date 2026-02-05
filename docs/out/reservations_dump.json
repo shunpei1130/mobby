@@ -3222,5 +3222,21 @@
       "キーホルダーとして使いたいから"
     ],
     "pricePrediction": ""
+  },
+  {
+    "pathname": "reservations/2026-02-05T07-51-31-239Z_9ba33bb893b942fc8ffbc91a3cca1f22.json",
+    "uploadedAt": "2026-02-05T07:51:32.000Z",
+    "url": "https://tlvhufbmkibcfx5t.public.blob.vercel-storage.com/reservations/2026-02-05T07-51-31-239Z_9ba33bb893b942fc8ffbc91a3cca1f22.json",
+    "reservationId": "9ba33bb893b942fc8ffbc91a3cca1f22",
+    "createdAt": "2026-02-05T07:51:31.239Z",
+    "address": "〒830-0047 福岡県久留米市津福本町503-1大曲ハイツ406号室",
+    "name": "藤原羽音",
+    "email": "yupe.56n.25nico@gmail.com",
+    "phone": "08083622680",
+    "purchaseReason": [
+      "見た目がかわいいから",
+      "キーホルダーとして使いたいから"
+    ],
+    "pricePrediction": "12000円"
   }
 ]
