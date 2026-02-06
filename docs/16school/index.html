@@ -1645,6 +1645,7 @@ function gotoDiagnosisHome(){
     const STORAGE_KEY = "school_char_diag_v1";
     const DIAGNOSIS_PENDING_KEY = "mobby_school_diag_pending_v1";
     const DIAGNOSIS_LINK_TIMEOUT_MS = 2500;
+    const GAS_WEBAPP_URL = ""; // TODO: GASのWebアプリURLを貼る
     const PAGE_SIZE = 5; // 40問 ÷ 5問 = 8ページ
 
     const state = {
@@ -2619,6 +2620,75 @@ async function submitDiagnosis(payload){
   }
 }
 
+function buildStripeSheetPayload(res){
+  const questions = getQuestions();
+  const questionAnswers = {};
+  questions.forEach(q => {
+    if (state.answers[q.id]) {
+      questionAnswers[q.id] = state.answers[q.id];
+    }
+  });
+
+  let storageRaw = "";
+  try {
+    storageRaw = localStorage.getItem(STORAGE_KEY) || "";
+  } catch (_) {}
+
+  let stateSnapshot = null;
+  try {
+    stateSnapshot = JSON.parse(JSON.stringify(state));
+  } catch (_) {
+    stateSnapshot = state;
+  }
+
+  return {
+    event: "stripe_click",
+    source: "16school",
+    createdAt: new Date().toISOString(),
+    pageUrl: window.location.href,
+    userAgent: navigator.userAgent,
+    name: state.profile?.name || "",
+    age: state.profile?.age || "",
+    email: state.profile?.email || "",
+    gender: state.gender || "",
+    type: res?.code || "",
+    diagnosisName: res?.char?.name || "",
+    axes: res?.leftPct || {},
+    answers: questionAnswers,
+    interested: state.interested === true,
+    userId: state.userId || "",
+    referrerId: state.referrerId || "",
+    shareCount: state.shareCount || 0,
+    storageKey: STORAGE_KEY,
+    storageRaw,
+    stateSnapshot
+  };
+}
+
+function sendToGoogleSheet(payload){
+  if (!GAS_WEBAPP_URL) {
+    console.warn("[Stripe] GAS_WEBAPP_URL is empty. Skipping sheet send.");
+    return;
+  }
+  try {
+    const body = JSON.stringify(payload);
+    if (navigator.sendBeacon) {
+      const blob = new Blob([body], { type: "text/plain" });
+      navigator.sendBeacon(GAS_WEBAPP_URL, blob);
+      return;
+    }
+    fetch(GAS_WEBAPP_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain" },
+      body,
+      keepalive: true
+    }).catch(() => {});
+  } catch (e) {
+    console.warn("[Stripe] Sheet send failed:", e);
+  }
+}
+
 function buildPrivatePageData(res) {
   const name = state.profile?.name || "あなた";
   const char = res?.char || {};
@@ -3429,7 +3499,7 @@ function renderGate(){
               <li>表裏で違う表情が楽しめるデザイン</li>
               <li>日常でも特別感を残すサイズ感</li>
             </ul>
-            <a href="https://buy.stripe.com/bJe14n8lf7Y11yecNNao80a" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:10px; padding:14px 28px; border-radius:999px; font-size:14px; font-weight:600; text-decoration:none; background:linear-gradient(135deg, #ff4d8d, #ff7aa8); color:#fff; box-shadow:0 14px 30px rgba(255, 77, 141, 0.3); transition:transform 0.2s ease;">
+            <a id="stripeBuyButton" href="https://buy.stripe.com/bJe14n8lf7Y11yecNNao80a" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:10px; padding:14px 28px; border-radius:999px; font-size:14px; font-weight:600; text-decoration:none; background:linear-gradient(135deg, #ff4d8d, #ff7aa8); color:#fff; box-shadow:0 14px 30px rgba(255, 77, 141, 0.3); transition:transform 0.2s ease;">
               限定アイテムを手に取る →
             </a>
           </div>
@@ -3635,6 +3705,14 @@ function renderGate(){
           // ルートページの抽選予約ポップアップを開くためにパラメータ付きでページ遷移
           window.location.href = "../index.html?openPricePopup=true#price";
         };
+      }
+
+      const stripeBtn = document.getElementById("stripeBuyButton");
+      if (stripeBtn) {
+        stripeBtn.addEventListener("click", () => {
+          const payload = buildStripeSheetPayload(res);
+          sendToGoogleSheet(payload);
+        });
       }
 
       // 共有ボタンのイベントリスナー
