@@ -3490,8 +3490,12 @@ function isDiagnosisCompleted(data) {
   if (!data || typeof data !== "object") return false;
   const answered = Object.keys(data.answers || {}).length;
   const hasIdentity = !!(data.profile?.name && data.profile?.email);
-  const onResultStep = data.step === "result" || data.step === "characters";
-  return answered > 0 && hasIdentity && onResultStep;
+  const hasSummary = !!(
+    data.type ||
+    data.diagnosisName ||
+    (data.axes && Object.keys(data.axes).length > 0)
+  );
+  return answered > 0 && hasIdentity && hasSummary;
 }
 
 function isDiagnosisCompletedByPending(data) {

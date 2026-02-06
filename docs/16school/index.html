@@ -1653,6 +1653,9 @@ function gotoDiagnosisHome(){
   page: 0,
   answers: {},
   profile: { name: "", email: "", age: "" }, // ニックネーム、メール（任意）、年齢
+  type: "", // 診断コード（ホーム側連携用）
+  diagnosisName: "", // 診断名（ホーム側連携用）
+  axes: null, // 診断軸（ホーム側連携用）
   questionOrder: null, // 質問の順番（シャッフル済みインデックス配列）
   gender: null, // "male" | "female"
   interested: false, // モビーが欲しい！ボタンが押されたか
@@ -1724,6 +1727,24 @@ function gotoDiagnosisHome(){
       try {
         localStorage.removeItem(DIAGNOSIS_PENDING_KEY);
       } catch (_) {}
+    }
+
+    function persistDiagnosisSummary(res) {
+      const nextType = res?.code || "";
+      const nextName = (res?.char && res.char.name) ? res.char.name : "";
+      const nextAxes = res?.leftPct || {};
+      const hasChanged =
+        state.type !== nextType ||
+        state.diagnosisName !== nextName ||
+        JSON.stringify(state.axes || {}) !== JSON.stringify(nextAxes);
+
+      state.type = nextType;
+      state.diagnosisName = nextName;
+      state.axes = nextAxes;
+
+      if (hasChanged) {
+        saveState();
+      }
     }
 
     function waitForAuthUser(auth, timeoutMs = DIAGNOSIS_LINK_TIMEOUT_MS) {
@@ -1893,6 +1914,9 @@ function gotoDiagnosisHome(){
       state.questionOrder = null;
       state.gender = null;
       state.profile = { name: "", email: "", age: "" };  // プロフィール情報もクリア
+      state.type = "";
+      state.diagnosisName = "";
+      state.axes = null;
       state.interested = false;  // 興味フラグもクリア
       localStorage.removeItem(STORAGE_KEY);
       render();
@@ -3192,6 +3216,7 @@ function renderGate(){
 
     function renderResult(){
       const res = computeResult();
+      persistDiagnosisSummary(res);
       const char = res.char;
       const isFemale = state.gender === "female";
       
