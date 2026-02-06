@@ -912,6 +912,8 @@
 
     // State
     const PAGE_SIZE = 5;
+    const STORAGE_KEY = "mamaMobbyState";
+    const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzu8ZWwvtKHWIwqnjqlKkdbPTWN1o7oSxpsBZ-Crdv6zlmCbSeWFlMDZ3sjU9SgCsFOgQ/exec"; // GASのWebアプリURL
     let state = loadState();
 
     function createDefaultState(){
@@ -919,7 +921,7 @@
     }
     function loadState(){
       try {
-        const s = JSON.parse(localStorage.getItem("mamaMobbyState"));
+        const s = JSON.parse(localStorage.getItem(STORAGE_KEY));
         if(s && s.answers){
           if(!s.profile) s.profile = { name:"", email:"" };
           s.profile.name = s.profile.name || "";
@@ -930,7 +932,7 @@
       return createDefaultState();
     }
     function saveState(){
-      localStorage.setItem("mamaMobbyState", JSON.stringify(state));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
     function resetState(){
       state = createDefaultState();
@@ -1721,6 +1723,74 @@
       }
     }
 
+    function buildStripeSheetPayload(res){
+      const questionAnswers = {};
+      QUESTIONS.forEach(q => {
+        if (state.answers[q.id]) {
+          questionAnswers[q.id] = state.answers[q.id];
+        }
+      });
+
+      let storageRaw = "";
+      try {
+        storageRaw = localStorage.getItem(STORAGE_KEY) || "";
+      } catch (_) {}
+
+      let stateSnapshot = null;
+      try {
+        stateSnapshot = JSON.parse(JSON.stringify(state));
+      } catch (_) {
+        stateSnapshot = state;
+      }
+
+      return {
+        event: "stripe_click",
+        source: "16school",
+        createdAt: new Date().toISOString(),
+        pageUrl: window.location.href,
+        userAgent: navigator.userAgent,
+        name: state.profile?.name || "",
+        age: state.profile?.age || "",
+        email: state.profile?.email || "",
+        gender: state.gender || "",
+        type: res?.code || "",
+        diagnosisName: res?.char?.name || "",
+        axes: res?.leftPct || {},
+        answers: questionAnswers,
+        interested: state.interested === true,
+        userId: state.userId || "",
+        referrerId: state.referrerId || "",
+        shareCount: state.shareCount || 0,
+        storageKey: STORAGE_KEY,
+        storageRaw,
+        stateSnapshot
+      };
+    }
+
+    function sendToGoogleSheet(payload){
+      if (!GAS_WEBAPP_URL) {
+        console.warn("[Stripe] GAS_WEBAPP_URL is empty. Skipping sheet send.");
+        return;
+      }
+      try {
+        const body = JSON.stringify(payload);
+        if (navigator.sendBeacon) {
+          const blob = new Blob([body], { type: "text/plain" });
+          navigator.sendBeacon(GAS_WEBAPP_URL, blob);
+          return;
+        }
+        fetch(GAS_WEBAPP_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain" },
+          body,
+          keepalive: true
+        }).catch(() => {});
+      } catch (e) {
+        console.warn("[Stripe] Sheet send failed:", e);
+      }
+    }
+
     function renderGate(){
       if(isRegistered()){
         state.step = "result";
@@ -1935,10 +2005,15 @@
       };
     }
 
+    function getKeyImagePath(name) {
+      return name ? `../key/mama/${name}.jpg` : "";
+    }
+
     function renderResult(){
       const res = computeResult();
       const char = res.char;
       const personalInsights = generatePersonalizedInsights(res);
+      const keyImagePath = getKeyImagePath(char?.name);
 
       app.innerHTML = `
         <div class="panel fade-in">
@@ -2072,6 +2147,35 @@
           <p id="checkResult" style="font-size:13px; color:#1976d2; font-weight:600; margin-top:16px; text-align:center; display:none;"></p>
         </div>
         ` : ''}
+
+        <!-- アクリルキーホルダーセクション -->
+        <div class="panel fade-in" style="margin-top:24px; animation-delay:0.12s; background:linear-gradient(145deg, #fff7fb, #fff2e2); border:2px solid rgba(255, 77, 141, 0.2); overflow:hidden; position:relative;">
+          <div style="position:absolute; top:18px; right:-44px; transform:rotate(20deg); background:linear-gradient(135deg, #ffb347, #ffd27f); color:#fff; font-size:11px; letter-spacing:0.18em; padding:6px 48px; text-transform:uppercase;">LIMITED</div>
+          <p class="kicker" style="margin-bottom:12px; color:#ff4d8d;">🎀 限定アクセサリー</p>
+          <h3 style="font-size:20px; margin:0 0 8px; color:var(--text-main);">アクリルキーホルダー</h3>
+          <p style="display:inline-block; font-size:15px; font-weight:700; color:#ff4d8d; background:rgba(255,77,141,0.08); padding:6px 14px; border-radius:999px; margin:0 0 18px; letter-spacing:0.03em;">
+            あなたの診断結果を持ち歩こう
+          </p>
+          <div style="display:flex; gap:12px; justify-content:center; margin-bottom:18px; background:linear-gradient(145deg, #fff7fb, #fff2e2); border-radius:16px; padding:16px; border:1px solid rgba(255,255,255,0.9);">
+            <div style="width:45%; max-width:140px; position:relative; overflow:hidden;">
+              <img src="${keyImagePath}" alt="アクリルキーホルダー 表面" style="width:100%; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
+            </div>
+            <img src="../key/ura.jpg" alt="アクリルキーホルダー 裏面" style="width:45%; max-width:140px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+            <span style="font-size:20px; color:#b65174; font-weight:700; letter-spacing:0.04em;">1,900円</span>
+          </div>
+          <p class="text-body" style="font-size:14px; line-height:1.8; margin:0 0 14px;">
+            <strong>表は${char.name}、裏にはあなたの診断がいつでも見れるQRコード。</strong> 透明感ときらめきで、光を味方にするクリアアクセ。
+          </p>
+          <ul style="margin:0 0 18px; padding-left:18px; color:var(--text-sub); line-height:1.8; font-size:13px;">
+            <li>表裏で違う表情が楽しめるデザイン</li>
+            <li>日常でも特別感を残すサイズ感</li>
+          </ul>
+          <a id="stripeBuyButton" href="https://buy.stripe.com/bJe14n8lf7Y11yecNNao80a" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:10px; padding:14px 28px; border-radius:999px; font-size:14px; font-weight:600; text-decoration:none; background:linear-gradient(135deg, #ff4d8d, #ff7aa8); color:#fff; box-shadow:0 14px 30px rgba(255, 77, 141, 0.3); transition:transform 0.2s ease;">
+            限定アイテムを手に取る →
+          </a>
+        </div>
 
         <!-- 抽選予約 -->
         <div class="panel fade-in" style="margin-top:24px; text-align:center; background:linear-gradient(135deg, #fff8e8 0%, #fffbf0 100%); border:2px solid var(--accent);">
@@ -2223,6 +2327,14 @@
         reservationBtn.onclick = () => {
           window.location.href = "../../index.html?openPricePopup=true#price";
         };
+      }
+
+      const stripeBtn = document.getElementById("stripeBuyButton");
+      if (stripeBtn) {
+        stripeBtn.addEventListener("click", () => {
+          const payload = buildStripeSheetPayload(res);
+          sendToGoogleSheet(payload);
+        });
       }
 
       // あなたの回答から見えたことの折りたたみ
