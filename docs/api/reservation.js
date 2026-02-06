@@ -16,7 +16,7 @@ export default async function handler(req, res) {
       return;
     }
 
-    const { address, name, email, phone, purchaseReason, pricePrediction, hp } = req.body;
+    const { address, name, email, phone, purchaseReason, pricePrediction, productType, productLabel, hp } = req.body;
 
     if (hp) {
       res.status(200).json({ ok: true });
@@ -67,11 +67,17 @@ export default async function handler(req, res) {
     const safePhone = (typeof phone === "string" ? phone : "").slice(0, 50);
     const safePurchaseReason = Array.isArray(purchaseReason) ? purchaseReason : (purchaseReason ? [purchaseReason] : []);
     const safePricePrediction = (typeof pricePrediction === "string" ? pricePrediction : "").slice(0, 50);
+    const rawProductType = typeof productType === "string" ? productType.trim().toLowerCase() : "";
+    const safeProductType = rawProductType === "acrylic_keyholder" ? "acrylic_keyholder" : "camera_keyholder";
+    const fallbackLabel = safeProductType === "acrylic_keyholder" ? "アクリルキーホルダー" : "カメラ型キーホルダー";
+    const safeProductLabel = (typeof productLabel === "string" ? productLabel.trim() : "").slice(0, 80) || fallbackLabel;
     const createdAt = new Date().toISOString();
     const reservationId = randomUUID().replaceAll("-", "");
     const reservationRecord = {
       reservationId,
       createdAt,
+      productType: safeProductType,
+      productLabel: safeProductLabel,
       address: trimmedAddress,
       name: safeName,
       email: safeEmail || "",
@@ -106,9 +112,10 @@ export default async function handler(req, res) {
     await resend.emails.send({
       from,
       to: [to],
-      subject: "【Mobby】抽選予約（住所入力）",
+      subject: `【Mobby】${safeProductLabel} 抽選予約（住所入力）`,
       text:
         `抽選予約が届きました。\n\n` +
+        `予約タイプ: ${safeProductLabel}\n` +
         `住所:\n${trimmedAddress}\n\n` +
         `名前: ${safeName}\n` +
         `メール: ${safeEmail || "(未入力)"}\n` +

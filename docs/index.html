@@ -653,6 +653,141 @@
     border-color:rgba(210,105,30,0.4);
     box-shadow:0 0 0 3px rgba(210,105,30,0.1);
   }
+  .price-reservation-tabs{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:10px;
+    padding:6px;
+    border-radius:18px;
+    background:rgba(246,212,156,0.26);
+    border:1px solid rgba(47,79,79,0.12);
+  }
+  .price-reservation-tab{
+    appearance:none;
+    border:1px solid transparent;
+    border-radius:14px;
+    padding:12px 14px;
+    font-size:0.94rem;
+    font-weight:700;
+    font-family:var(--font-en), var(--font-ja);
+    line-height:1.45;
+    color:var(--color-earth);
+    background:transparent;
+    cursor:pointer;
+    transition:all 0.18s var(--ease-soft);
+  }
+  .price-reservation-tab[aria-selected="true"]{
+    background:#fff;
+    border-color:rgba(47,79,79,0.18);
+    box-shadow:0 8px 18px rgba(0,0,0,0.08);
+  }
+  .price-reservation-tab[aria-selected="false"]{
+    opacity:0.8;
+  }
+  .price-reservation-tab:focus-visible{
+    outline:none;
+    box-shadow:0 0 0 3px rgba(210,105,30,0.2);
+  }
+  .price-reservation-panel{
+    display:none;
+    margin-top:18px;
+  }
+  .price-reservation-panel.is-active{
+    display:block;
+  }
+  .price-reservation-panel h3{
+    font-size:1.2rem;
+    margin-bottom:12px;
+    color:var(--color-forest);
+  }
+  .product-tab-card{
+    background:linear-gradient(145deg, #fff6ec, #ffffff);
+    border:2px solid rgba(246, 212, 156, 0.7);
+    border-radius:20px;
+    padding:18px;
+    box-shadow:0 10px 22px rgba(0,0,0,0.07);
+  }
+  .product-tab-gallery{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    margin:14px 0 16px;
+  }
+  .product-tab-gallery img{
+    width:44%;
+    max-width:170px;
+    border-radius:12px;
+    object-fit:cover;
+    box-shadow:0 4px 12px rgba(0,0,0,0.12);
+  }
+  .product-tab-price{
+    display:inline-block;
+    font-size:0.93rem;
+    color:var(--color-earth);
+    background:rgba(246,212,156,0.35);
+    border:1px solid rgba(47,79,79,0.12);
+    border-radius:999px;
+    padding:6px 12px;
+    margin-bottom:12px;
+  }
+  .product-tab-list{
+    margin:0 0 14px;
+    padding-left:18px;
+    color:var(--color-earth);
+    font-size:0.92rem;
+    line-height:1.7;
+  }
+  .product-tab-note{
+    font-size:0.84rem;
+    opacity:0.8;
+    margin-top:10px;
+  }
+  .reservation-form-section{
+    margin-top:20px;
+    padding-top:20px;
+    border-top:1px dashed rgba(47,79,79,0.15);
+  }
+  .reservation-reasons{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .reservation-reason-item{
+    display:flex;
+    align-items:center;
+    cursor:pointer;
+    font-size:0.95rem;
+    color:var(--color-earth);
+  }
+  .reservation-reason-item input{
+    margin-right:8px;
+    width:18px;
+    height:18px;
+    cursor:pointer;
+    accent-color:var(--color-forest);
+  }
+  .camera-tab-hero{
+    margin:8px 0 20px;
+  }
+  .camera-tab-hero-image{
+    display:flex;
+    justify-content:center;
+    margin-bottom:12px;
+  }
+  .camera-tab-hero-image img{
+    width:100%;
+    max-width:220px;
+    border-radius:14px;
+    object-fit:cover;
+    box-shadow:0 6px 14px rgba(0,0,0,0.12);
+    border:1px solid rgba(47,79,79,0.12);
+  }
+  .camera-tab-hero-text{
+    font-size:0.9rem;
+    opacity:0.85;
+    line-height:1.6;
+    margin:0;
+  }
   
   /* Sticky CTA */
   .sticky-cta{
@@ -787,6 +922,47 @@
     .diagnosis-options .btn{
       width:100%;
       max-width:260px;
+      text-align:center;
+    }
+    .price-reservation-form{
+      padding:18px 14px;
+    }
+    .price-reservation-tabs{
+      gap:8px;
+      padding:4px;
+    }
+    .price-reservation-tab{
+      font-size:0.85rem;
+      padding:10px 8px;
+    }
+    .product-tab-card{
+      padding:14px;
+    }
+    .product-tab-gallery{
+      gap:8px;
+    }
+    .product-tab-gallery img{
+      width:48%;
+    }
+    .camera-tab-hero{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      margin:8px 0 16px;
+    }
+    .camera-tab-hero-image{
+      margin:0;
+      flex:0 0 86px;
+      justify-content:flex-start;
+    }
+    .camera-tab-hero-image img{
+      max-width:86px;
+      border-radius:10px;
+    }
+    .camera-tab-hero-text{
+      flex:1;
+      font-size:0.86rem;
+      margin:0;
     }
   }
   
@@ -1536,144 +1712,184 @@
       <div class="popup-content">
         <button class="popup-close" id="closePricePopup" aria-label="閉じる">×</button>
         <div class="container">
-          <h2>購入権の予約（無料）</h2>
+          <h2>購入・予約</h2>
+
+          <div class="price-reservation-tabs reveal delay-200" role="tablist" aria-label="抽選予約タイプ" style="margin-top:32px;">
+            <button
+              id="reservationTabCamera"
+              class="price-reservation-tab"
+              type="button"
+              role="tab"
+              aria-selected="true"
+              aria-controls="reservationPanelCamera"
+              data-reservation-tab="camera"
+            >
+              カメラ型<br>キーホルダー
+            </button>
+            <button
+              id="reservationTabAcrylic"
+              class="price-reservation-tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="reservationPanelAcrylic"
+              data-reservation-tab="acrylic"
+              tabindex="-1"
+            >
+              アクリル<br>キーホルダー
+            </button>
+          </div>
 
           <!-- 抽選予約フォーム -->
-          <div class="price-reservation-form reveal delay-200" style="margin-top:32px;">
-            <h3 style="font-size:1.2rem;margin-bottom:12px;color:var(--color-forest);">カメラ型キーホルダー<br>無料抽選予約</h3>
-            <p style="font-size:0.9rem;opacity:0.85;margin-bottom:20px;line-height:1.6;">
-              抽選に当たったら、当選の手紙を送るビィ。<br>
-              住所を入力して予約してビィ。
-            </p>
-            <form id="priceReservationForm">
-              <div class="form-group">
-                <label for="reservationAddress" style="display:block;margin-bottom:6px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">住所 <span style="color:rgba(47,79,79,0.6);font-size:0.85rem;">（必須）</span></label>
-                <textarea 
-                  id="reservationAddress" 
-                  name="address" 
-                  required 
-                  rows="4"
-                  placeholder="郵便番号、都道府県、市区町村、番地、建物名などをご記入ください"
-                  style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;resize:vertical;transition:border-color 0.2s;"
-                ></textarea>
+          <div class="price-reservation-form reveal delay-200" style="margin-top:14px;">
+            <section
+              id="reservationPanelCamera"
+              class="price-reservation-panel is-active"
+              role="tabpanel"
+              aria-labelledby="reservationTabCamera"
+              data-reservation-panel="camera"
+            >
+              <h3>カメラ型キーホルダー<br>無料抽選予約</h3>
+              <div class="camera-tab-hero">
+                <div class="camera-tab-hero-image">
+                  <img src="carousel/t1.jpg" alt="カメラ型キーホルダーのイメージ" loading="lazy">
+                </div>
+                <p class="camera-tab-hero-text">
+                  抽選に当たったら、当選の手紙を送るビィ。<br>
+                  住所を入力して予約してビィ。
+                </p>
               </div>
-              
-              <div style="margin-top:20px;padding-top:20px;border-top:1px dashed rgba(47,79,79,0.15);">
-                <p style="font-size:0.85rem;opacity:0.75;margin-bottom:16px;">住所が間違えてたら連絡するビィ</p>
-                
-                <div class="form-group" style="margin-top:16px;">
-                  <label for="reservationName" style="display:block;margin-bottom:6px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">名前 <span style="color:rgba(47,79,79,0.6);font-size:0.85rem;">（必須）</span></label>
-                  <input 
-                    type="text" 
-                    id="reservationName" 
-                    name="name" 
+              <form id="priceReservationFormCamera" data-product-type="camera_keyholder" data-product-label="カメラ型キーホルダー">
+                <div class="form-group">
+                  <label for="cameraReservationAddress" style="display:block;margin-bottom:6px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">住所 <span style="color:rgba(47,79,79,0.6);font-size:0.85rem;">（必須）</span></label>
+                  <textarea
+                    id="cameraReservationAddress"
+                    name="address"
                     required
-                    placeholder="お名前"
-                    style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;transition:border-color 0.2s;"
-                  />
+                    rows="4"
+                    placeholder="郵便番号、都道府県、市区町村、番地、建物名などをご記入ください"
+                    style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;resize:vertical;transition:border-color 0.2s;"
+                  ></textarea>
                 </div>
-                
-                <div class="form-group" style="margin-top:16px;">
-                  <label for="reservationEmail" style="display:block;margin-bottom:6px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">メールアドレス <span style="color:rgba(47,79,79,0.5);font-size:0.85rem;">（任意）</span></label>
-                  <input 
-                    type="email" 
-                    id="reservationEmail" 
-                    name="email" 
-                    placeholder="your.email@example.com"
-                    style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;transition:border-color 0.2s;"
-                  />
-                </div>
-                
-                <div class="form-group" style="margin-top:16px;">
-                  <label for="reservationPhone" style="display:block;margin-bottom:6px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">電話番号 <span style="color:rgba(47,79,79,0.5);font-size:0.85rem;">（任意）</span></label>
-                  <input 
-                    type="tel" 
-                    id="reservationPhone" 
-                    name="phone" 
-                    placeholder="090-1234-5678"
-                    style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;transition:border-color 0.2s;"
-                  />
-                </div>
-                
-                <div class="form-group" style="margin-top:16px;">
-                  <label style="display:block;margin-bottom:8px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">なぜ予約しましたか？ <span style="color:rgba(47,79,79,0.5);font-size:0.85rem;">（任意・複数選択可）</span></label>
-                  <div style="display:flex;flex-direction:column;gap:10px;">
-                    <label style="display:flex;align-items:center;cursor:pointer;font-size:0.95rem;color:var(--color-earth);">
-                      <input 
-                        type="checkbox" 
-                        name="purchaseReason" 
-                        value="見た目がかわいいから"
-                        style="margin-right:8px;width:18px;height:18px;cursor:pointer;accent-color:var(--color-forest);"
-                      />
-                      見た目がかわいいから
+
+                <div class="reservation-form-section">
+                  <p style="font-size:0.85rem;opacity:0.75;margin-bottom:16px;">住所が間違えてたら連絡するビィ</p>
+
+                  <div class="form-group" style="margin-top:16px;">
+                    <label for="cameraReservationName" style="display:block;margin-bottom:6px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">名前 <span style="color:rgba(47,79,79,0.6);font-size:0.85rem;">（必須）</span></label>
+                    <input
+                      type="text"
+                      id="cameraReservationName"
+                      name="name"
+                      required
+                      placeholder="お名前"
+                      style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;transition:border-color 0.2s;"
+                    />
+                  </div>
+
+                  <div class="form-group" style="margin-top:16px;">
+                    <label for="cameraReservationEmail" style="display:block;margin-bottom:6px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">メールアドレス <span style="color:rgba(47,79,79,0.5);font-size:0.85rem;">（任意）</span></label>
+                    <input
+                      type="email"
+                      id="cameraReservationEmail"
+                      name="email"
+                      placeholder="your.email@example.com"
+                      style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;transition:border-color 0.2s;"
+                    />
+                  </div>
+
+                  <div class="form-group" style="margin-top:16px;">
+                    <label for="cameraReservationPhone" style="display:block;margin-bottom:6px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">電話番号 <span style="color:rgba(47,79,79,0.5);font-size:0.85rem;">（任意）</span></label>
+                    <input
+                      type="tel"
+                      id="cameraReservationPhone"
+                      name="phone"
+                      placeholder="090-1234-5678"
+                      style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;transition:border-color 0.2s;"
+                    />
+                  </div>
+
+                  <div class="form-group" style="margin-top:16px;">
+                    <label style="display:block;margin-bottom:8px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">なぜ予約しましたか？ <span style="color:rgba(47,79,79,0.5);font-size:0.85rem;">（任意・複数選択可）</span></label>
+                    <div class="reservation-reasons">
+                      <label class="reservation-reason-item">
+                        <input type="checkbox" name="purchaseReason" value="見た目がかわいいから" />
+                        見た目がかわいいから
+                      </label>
+                      <label class="reservation-reason-item">
+                        <input type="checkbox" name="purchaseReason" value="５枚しか残せない機能が面白いから" />
+                        ５枚しか残せない機能が面白いから
+                      </label>
+                      <label class="reservation-reason-item">
+                        <input type="checkbox" name="purchaseReason" value="プレゼント用" />
+                        プレゼント用
+                      </label>
+                      <label class="reservation-reason-item">
+                        <input type="checkbox" name="purchaseReason" value="キーホルダーとして使いたいから" />
+                        キーホルダーとして使いたいから
+                      </label>
+                      <label class="reservation-reason-item">
+                        <input type="checkbox" name="purchaseReason" value="カメラとして使いたいから" />
+                        カメラとして使いたいから
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="form-group" style="margin-top:16px;">
+                    <label for="cameraReservationPricePrediction" style="display:block;margin-bottom:8px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">
+                      値段の予想（どれを選んでも当選確率は変わりません）
+                      <span style="color:rgba(47,79,79,0.5);font-size:0.85rem;">（任意）</span>
                     </label>
-                    <label style="display:flex;align-items:center;cursor:pointer;font-size:0.95rem;color:var(--color-earth);">
-                      <input 
-                        type="checkbox" 
-                        name="purchaseReason" 
-                        value="５枚しか残せない機能が面白いから"
-                        style="margin-right:8px;width:18px;height:18px;cursor:pointer;accent-color:var(--color-forest);"
-                      />
-                      ５枚しか残せない機能が面白いから
-                    </label>
-                    <label style="display:flex;align-items:center;cursor:pointer;font-size:0.95rem;color:var(--color-earth);">
-                      <input 
-                        type="checkbox" 
-                        name="purchaseReason" 
-                        value="プレゼント用"
-                        style="margin-right:8px;width:18px;height:18px;cursor:pointer;accent-color:var(--color-forest);"
-                      />
-                      プレゼント用
-                    </label>
-                    <label style="display:flex;align-items:center;cursor:pointer;font-size:0.95rem;color:var(--color-earth);">
-                      <input 
-                        type="checkbox" 
-                        name="purchaseReason" 
-                        value="キーホルダーとして使いたいから"
-                        style="margin-right:8px;width:18px;height:18px;cursor:pointer;accent-color:var(--color-forest);"
-                      />
-                      キーホルダーとして使いたいから
-                    </label>
-                    <label style="display:flex;align-items:center;cursor:pointer;font-size:0.95rem;color:var(--color-earth);">
-                      <input 
-                        type="checkbox" 
-                        name="purchaseReason" 
-                        value="カメラとして使いたいから"
-                        style="margin-right:8px;width:18px;height:18px;cursor:pointer;accent-color:var(--color-forest);"
-                      />
-                      カメラとして使いたいから
-                    </label>
+                    <select
+                      id="cameraReservationPricePrediction"
+                      name="pricePrediction"
+                      style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;transition:border-color 0.2s;"
+                    >
+                      <option value="">選択してください（任意）</option>
+                      <option value="8000円未満">8000円未満</option>
+                      <option value="8000円">8000円</option>
+                      <option value="12000円">12000円</option>
+                      <option value="15000円">15000円</option>
+                      <option value="15000円以上">15000円以上</option>
+                    </select>
                   </div>
                 </div>
-                <div class="form-group" style="margin-top:16px;">
-                  <label for="reservationPricePrediction" style="display:block;margin-bottom:8px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">
-                    値段の予想（どれを選んでも当選確率は変わりません）
-                    <span style="color:rgba(47,79,79,0.5);font-size:0.85rem;">（任意）</span>
-                  </label>
-                  <select 
-                    id="reservationPricePrediction" 
-                    name="pricePrediction"
-                    style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;transition:border-color 0.2s;"
-                  >
-                    <option value="">選択してください（任意）</option>
-                    <option value="8000円未満">8000円未満</option>
-                    <option value="8000円">8000円</option>
-                    <option value="12000円">12000円</option>
-                    <option value="15000円">15000円</option>
-                    <option value="15000円以上">15000円以上</option>
-                  </select>
+
+                <button type="submit" class="btn btn-primary" style="margin-top:18px;width:100%;">予約する</button>
+                <div class="price-form-message" style="margin-top:12px;display:none;padding:10px 14px;border-radius:12px;font-size:0.9rem;"></div>
+              </form>
+            </section>
+
+            <section
+              id="reservationPanelAcrylic"
+              class="price-reservation-panel"
+              role="tabpanel"
+              aria-labelledby="reservationTabAcrylic"
+              data-reservation-panel="acrylic"
+              hidden
+            >
+              <div class="product-tab-card" style="background:linear-gradient(145deg, #fff7fb, #fff2e2); border-color:rgba(255, 77, 141, 0.28);">
+                <p class="kicker" style="margin-bottom:10px;color:#ff4d8d;">LIMITED ACCESSORY</p>
+                <h3 style="margin:0 0 6px;color:var(--color-earth);">あなたの診断結果が見れる<br>アクリルキーホルダー</h3>
+                <p class="product-tab-price" style="background:rgba(255,77,141,0.12); border-color:rgba(255,77,141,0.25); color:#b65174;">1,900円</p>
+                <div class="product-tab-gallery" style="background:linear-gradient(145deg, #fff7fb, #fff2e2); border-radius:16px; padding:12px; border:1px solid rgba(255,255,255,0.9);">
+                  <img src="16school/key/プリクラ拡散モビー.jpg" alt="アクリルキーホルダー 表面" loading="lazy">
+                  <img src="16school/key/ura.jpg" alt="アクリルキーホルダー 裏面" loading="lazy">
+                </div>
+                <p style="font-size:0.93rem;line-height:1.7;margin:0 0 12px;color:var(--color-earth);">
+                  表はあなたのモビーデザイン、裏には診断結果を見返せるQRコード。透明感ときらめきで、日常で使えるアクセサリーです。
+                </p>
+                <ul class="product-tab-list">
+                  <li>表裏で違う表情が楽しめるデザイン</li>
+                  <li>日常でも特別感を残すサイズ感</li>
+                  <li>診断体験とつながる限定アイテム</li>
+                </ul>
+                <a id="acrylicStripeBuyButton" href="https://buy.stripe.com/bJe14n8lf7Y11yecNNao80a" target="_blank" rel="noopener" class="btn btn-primary" style="width:100%; display:flex; justify-content:center; font-size:0.92rem; padding:10px 14px;">限定アイテムを手に取る</a>
+                <div id="acrylicStripeMessage" style="display:none;margin-top:10px;padding:10px 12px;border-radius:12px;font-size:0.86rem;background:rgba(255,77,141,0.12);border:1px solid rgba(255,77,141,0.24);color:var(--color-earth);">
+                  先に学校モビー診断を完了してください。
                 </div>
               </div>
-              
-              <button 
-                type="submit" 
-                class="btn btn-primary" 
-                style="margin-top:18px;width:100%;"
-              >
-                予約する
-              </button>
-              <div id="priceFormMessage" style="margin-top:12px;display:none;padding:10px 14px;border-radius:12px;font-size:0.9rem;"></div>
-            </form>
+            </section>
           </div>
 
         </div>
@@ -1834,7 +2050,7 @@
             <div class="reservation-counter" id="reservationCounter" aria-live="polite">
               現在の予約数：<span id="reservationCount">0</span>
             </div>
-            <button class="btn btn-secondary" id="openPricePopup">予約</button>
+            <button class="btn btn-secondary" id="openPricePopup">購入</button>
           </div>
           
           <button class="btn btn-secondary" id="openFaqPopup">FAQ</button>
@@ -3153,7 +3369,10 @@ function updateImageGallery(){
 /* Popup buttons */
 document.getElementById('openMessagePopup')?.addEventListener('click', () => openPopup('messagePopup'));
 document.getElementById('openColorsPopup')?.addEventListener('click', () => openPopup('colorsPopup'));
-document.getElementById('openPricePopup')?.addEventListener('click', () => openPopup('pricePopup'));
+document.getElementById('openPricePopup')?.addEventListener('click', () => {
+  activateReservationTab("camera");
+  openPopup('pricePopup');
+});
 document.getElementById('openFaqPopup')?.addEventListener('click', () => openPopup('faqPopup'));
 document.getElementById('openImagePopup')?.addEventListener('click', () => openPopup('imagePopup'));
 document.getElementById('openVideoPopup')?.addEventListener('click', () => openPopup('videoPopup'));
@@ -3208,7 +3427,10 @@ window.addEventListener('keydown', (e) => {
 /* Popup transitions */
 document.getElementById('openPriceFromColors')?.addEventListener('click', () => {
   closePopup('colorsPopup');
-  setTimeout(() => openPopup('pricePopup'), 200);
+  setTimeout(() => {
+    activateReservationTab("camera");
+    openPopup('pricePopup');
+  }, 200);
 });
 document.getElementById('openColorsFromFaq')?.addEventListener('click', () => {
   closePopup('faqPopup');
@@ -3240,79 +3462,258 @@ function showMsg(div, { ok, text }) {
   div.textContent = text;
 }
 
+const DIAGNOSIS_STORAGE_KEY = "school_char_diag_v1";
+const DIAGNOSIS_PENDING_KEY = "mobby_school_diag_pending_v1";
+const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzu8ZWwvtKHWIwqnjqlKkdbPTWN1o7oSxpsBZ-Crdv6zlmCbSeWFlMDZ3sjU9SgCsFOgQ/exec";
+
+function getDiagnosisStorage() {
+  try {
+    const raw = localStorage.getItem(DIAGNOSIS_STORAGE_KEY);
+    if (!raw) return { raw: "", data: null };
+    return { raw, data: JSON.parse(raw) };
+  } catch (_) {
+    return { raw: "", data: null };
+  }
+}
+
+function getPendingDiagnosisStorage() {
+  try {
+    const raw = localStorage.getItem(DIAGNOSIS_PENDING_KEY);
+    if (!raw) return { raw: "", data: null };
+    return { raw, data: JSON.parse(raw) };
+  } catch (_) {
+    return { raw: "", data: null };
+  }
+}
+
+function isDiagnosisCompleted(data) {
+  if (!data || typeof data !== "object") return false;
+  const answered = Object.keys(data.answers || {}).length;
+  const hasIdentity = !!(data.profile?.name && data.profile?.email);
+  const onResultStep = data.step === "result" || data.step === "characters";
+  return answered > 0 && hasIdentity && onResultStep;
+}
+
+function isDiagnosisCompletedByPending(data) {
+  if (!data || typeof data !== "object") return false;
+  const answered = Object.keys(data.answers || {}).length;
+  const hasIdentity = !!(data.name && data.email);
+  const hasType = !!data.type;
+  return answered > 0 && hasIdentity && hasType;
+}
+
+function buildStripeSheetPayloadFromStorage() {
+  const diagnosis = getDiagnosisStorage();
+  const pending = getPendingDiagnosisStorage();
+  const data = diagnosis.data || {};
+  const pendingData = pending.data || {};
+
+  return {
+    event: "stripe_click",
+    source: "16school",
+    createdAt: new Date().toISOString(),
+    pageUrl: window.location.href,
+    userAgent: navigator.userAgent,
+    name: data.profile?.name || pendingData.name || "",
+    age: data.profile?.age || pendingData.age || "",
+    email: data.profile?.email || pendingData.email || "",
+    gender: data.gender || pendingData.gender || "",
+    type: pendingData.type || data.type || "",
+    diagnosisName: pendingData.diagnosis_type || data.diagnosisName || "",
+    axes: pendingData.axes || data.axes || {},
+    answers: pendingData.answers || data.answers || {},
+    interested: data.interested === true || pendingData.interested === true,
+    userId: data.userId || pendingData.userId || "",
+    referrerId: data.referrerId || pendingData.referrerId || "",
+    shareCount: Number(data.shareCount || pendingData.shareCount || 0),
+    storageKey: DIAGNOSIS_STORAGE_KEY,
+    storageRaw: diagnosis.raw || "",
+    pendingStorageKey: DIAGNOSIS_PENDING_KEY,
+    pendingStorageRaw: pending.raw || "",
+    stateSnapshot: data
+  };
+}
+
+function sendToGoogleSheet(payload) {
+  if (!GAS_WEBAPP_URL) return;
+  try {
+    const body = JSON.stringify(payload);
+    if (navigator.sendBeacon) {
+      const blob = new Blob([body], { type: "text/plain" });
+      navigator.sendBeacon(GAS_WEBAPP_URL, blob);
+      return;
+    }
+    fetch(GAS_WEBAPP_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain" },
+      body,
+      keepalive: true
+    }).catch(() => {});
+  } catch (_) {}
+}
+
+function initAcrylicStripeButton() {
+  const btn = document.getElementById("acrylicStripeBuyButton");
+  if (!btn) return;
+
+  btn.addEventListener("click", (e) => {
+    const messageEl = document.getElementById("acrylicStripeMessage");
+    const diagnosis = getDiagnosisStorage();
+    const pendingDiagnosis = getPendingDiagnosisStorage();
+    const ready = isDiagnosisCompleted(diagnosis.data) || isDiagnosisCompletedByPending(pendingDiagnosis.data);
+
+    if (!ready) {
+      e.preventDefault();
+      if (messageEl) {
+        messageEl.style.display = "block";
+      }
+      return;
+    }
+
+    if (messageEl) {
+      messageEl.style.display = "none";
+    }
+
+    const payload = buildStripeSheetPayloadFromStorage();
+    sendToGoogleSheet(payload);
+  });
+}
+
 let refreshReservationCount = null;
 
-/* priceReservationForm */
-document.getElementById("priceReservationForm")?.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  e.preventDefault();
+const reservationTabButtons = Array.from(document.querySelectorAll(".price-reservation-tab[data-reservation-tab]"));
+const reservationTabPanels = Array.from(document.querySelectorAll(".price-reservation-panel[data-reservation-panel]"));
 
-  const form = e.target;
-  const address = document.getElementById("reservationAddress")?.value ?? "";
-  const name = document.getElementById("reservationName")?.value ?? "";
-  const email = document.getElementById("reservationEmail")?.value ?? "";
-  const phone = document.getElementById("reservationPhone")?.value ?? "";
-  const purchaseReasons = Array.from(form.querySelectorAll('input[name="purchaseReason"]:checked')).map(cb => cb.value);
-  const pricePrediction = document.getElementById("reservationPricePrediction")?.value ?? "";
-  const messageDiv = document.getElementById("priceFormMessage");
-  const submitBtn = form.querySelector('button[type="submit"]');
+function activateReservationTab(tabKey) {
+  if (!tabKey) return;
 
-  if (!messageDiv || !submitBtn) return;
+  reservationTabButtons.forEach((button) => {
+    const isActive = button.dataset.reservationTab === tabKey;
+    button.setAttribute("aria-selected", isActive ? "true" : "false");
+    button.tabIndex = isActive ? 0 : -1;
+  });
 
-  if (!address || address.trim() === "") {
-    showMsg(messageDiv, { ok: false, text: "住所を入力してください。" });
-    return;
-  }
-  if (!name || name.trim() === "") {
-    showMsg(messageDiv, { ok: false, text: "名前を入力してください。" });
-    return;
-  }
+  reservationTabPanels.forEach((panel) => {
+    const isActive = panel.dataset.reservationPanel === tabKey;
+    panel.classList.toggle("is-active", isActive);
+    panel.hidden = !isActive;
+  });
+}
 
-  submitBtn.disabled = true;
-  const originalText = submitBtn.textContent;
-  submitBtn.textContent = "送信中...";
-  messageDiv.style.display = "none";
+reservationTabButtons.forEach((button, index) => {
+  button.addEventListener("click", () => {
+    activateReservationTab(button.dataset.reservationTab || "");
+  });
 
-  try {
-    await postJSON("/api/reservation", {
-      address: address.trim(),
-      name: name.trim(),
-      email: email.trim(),
-      phone: phone.trim(),
-      purchaseReason: purchaseReasons,
-      pricePrediction: pricePrediction.trim(),
-      hp: ""
-    });
+  button.addEventListener("keydown", (e) => {
+    if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(e.key)) return;
+    e.preventDefault();
 
-    showMsg(messageDiv, { ok: true, text: "送信しました。抽選結果を待ってね。" });
+    let nextIndex = index;
+    if (e.key === "ArrowRight") nextIndex = (index + 1) % reservationTabButtons.length;
+    if (e.key === "ArrowLeft") nextIndex = (index - 1 + reservationTabButtons.length) % reservationTabButtons.length;
+    if (e.key === "Home") nextIndex = 0;
+    if (e.key === "End") nextIndex = reservationTabButtons.length - 1;
 
-     setTimeout(() => {
-      form.reset();
+    const nextButton = reservationTabButtons[nextIndex];
+    if (!nextButton) return;
+
+    activateReservationTab(nextButton.dataset.reservationTab || "");
+    nextButton.focus();
+  });
+});
+
+if (reservationTabButtons.length > 0) {
+  const defaultTab = reservationTabButtons.find((button) => button.getAttribute("aria-selected") === "true")?.dataset.reservationTab
+    || reservationTabButtons[0]?.dataset.reservationTab
+    || "";
+  activateReservationTab(defaultTab);
+}
+
+function bindReservationForm(formId) {
+  const form = document.getElementById(formId);
+  if (!form) return;
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const address = String(form.querySelector('[name="address"]')?.value ?? "");
+    const name = String(form.querySelector('[name="name"]')?.value ?? "");
+    const email = String(form.querySelector('[name="email"]')?.value ?? "");
+    const phone = String(form.querySelector('[name="phone"]')?.value ?? "");
+    const pricePrediction = String(form.querySelector('[name="pricePrediction"]')?.value ?? "");
+    const purchaseReasons = Array.from(form.querySelectorAll('input[name="purchaseReason"]:checked')).map((cb) => cb.value);
+    const productType = String(form.dataset.productType || "");
+    const productLabel = String(form.dataset.productLabel || "");
+    const messageDiv = form.querySelector(".price-form-message");
+    const submitBtn = form.querySelector('button[type="submit"]');
+
+    if (!messageDiv || !submitBtn) return;
+
+    if (!address.trim()) {
+      showMsg(messageDiv, { ok: false, text: "住所を入力してください。" });
+      return;
+    }
+    if (!name.trim()) {
+      showMsg(messageDiv, { ok: false, text: "名前を入力してください。" });
+      return;
+    }
+
+    submitBtn.disabled = true;
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = "送信中...";
+    messageDiv.style.display = "none";
+
+    try {
+      await postJSON("/api/reservation", {
+        address: address.trim(),
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
+        purchaseReason: purchaseReasons,
+        pricePrediction: pricePrediction.trim(),
+        productType,
+        productLabel,
+        hp: ""
+      });
+
+      const successText = productLabel
+        ? `送信しました。${productLabel}の抽選結果を待ってね。`
+        : "送信しました。抽選結果を待ってね。";
+      showMsg(messageDiv, { ok: true, text: successText });
+
+      setTimeout(() => {
+        form.reset();
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText || "予約する";
+        if (typeof refreshReservationCount === "function") {
+          refreshReservationCount();
+        }
+      }, 1200);
+    } catch (error) {
+      const errorMessage = error.message || "送信に失敗しました。時間をおいて再度お試しください。";
+      let userMessage = errorMessage;
+      if (errorMessage.includes("Address is required") || errorMessage.includes("Invalid address")) {
+        userMessage = "住所を入力してください。";
+      } else if (errorMessage.includes("Name is required") || errorMessage.includes("Invalid name") || errorMessage.includes("cannot be empty")) {
+        userMessage = "名前を入力してください。";
+      } else if (errorMessage.includes("at least 5 characters")) {
+        userMessage = "住所は5文字以上入力してください。";
+      } else if (errorMessage.includes("at most")) {
+        userMessage = "入力文字数が多すぎます。";
+      } else if (errorMessage.includes("Request failed")) {
+        userMessage = "送信に失敗しました。時間をおいて再度お試しください。";
+      }
+      showMsg(messageDiv, { ok: false, text: userMessage });
       submitBtn.disabled = false;
       submitBtn.textContent = originalText || "予約する";
-      if (typeof refreshReservationCount === "function") {
-        refreshReservationCount();
-      }
-    }, 1200);
-  } catch (error) {
-    const errorMessage = error.message || "送信に失敗しました。時間をおいて再度お試しください。";
-    let userMessage = errorMessage;
-    if (errorMessage.includes("Address is required") || errorMessage.includes("Invalid address")) {
-      userMessage = "住所を入力してください。";
-    } else if (errorMessage.includes("Name is required") || errorMessage.includes("Invalid name") || errorMessage.includes("cannot be empty")) {
-      userMessage = "名前を入力してください。";
-    } else if (errorMessage.includes("at least 5 characters")) {
-      userMessage = "住所は5文字以上入力してください。";
-    } else if (errorMessage.includes("at most")) {
-      userMessage = "入力文字数が多すぎます。";
-    } else if (errorMessage.includes("Request failed")) {
-      userMessage = "送信に失敗しました。時間をおいて再度お試しください。";
     }
-    showMsg(messageDiv, { ok: false, text: userMessage });
-    submitBtn.disabled = false;
-    submitBtn.textContent = originalText || "予約する";
-  }
-});
+  });
+}
+
+bindReservationForm("priceReservationFormCamera");
+initAcrylicStripeButton();
 
 /* faqContactForm */
 document.getElementById("faqContactForm")?.addEventListener("submit", async (e) => {
@@ -3394,6 +3795,7 @@ document.getElementById("faqContactForm")?.addEventListener("submit", async (e) 
     console.log('[Auto-open] 抽選予約ポップアップを開きます');
     // ページ読み込み後少し待ってからポップアップを開く（アニメーションのため）
     setTimeout(() => {
+      activateReservationTab("camera");
       openPopup('pricePopup');
       
       // URLパラメータをクリーンアップ（履歴を汚さないため）
