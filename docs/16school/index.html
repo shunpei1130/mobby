@@ -3121,9 +3121,14 @@ function renderGate(){
       return imgCode ? `key/男/${imgCode}.jpg` : '';
     }
 
-    function getSnsImagePath(isFemale, name) {
+    function getSnsImagePaths(isFemale, name) {
       const base = isFemale ? "snsimg/woman" : "snsimg/man";
-      return name ? `${base}/${encodeURIComponent(name)}.jpg` : "";
+      if (!name) return null;
+      const encoded = encodeURIComponent(name);
+      return {
+        webp: `${base}/${encoded}.webp`,
+        jpg: `${base}/${encoded}.jpg`
+      };
     }
 
     function sanitizeDownloadName(name) {
@@ -3895,7 +3900,7 @@ function renderGate(){
         };
       }
 
-      const snsImagePath = getSnsImagePath(isFemale, char.name);
+      const snsImagePaths = getSnsImagePaths(isFemale, char.name);
       const snsSaveBtn = document.getElementById("btnSaveSnsImage");
       const snsSaveBox = document.getElementById("snsSaveBox");
       const snsSaveHint = document.getElementById("snsSaveHint");
@@ -3908,53 +3913,71 @@ function renderGate(){
           snsSavePreview.style.display = "none";
           snsSaveFallback.style.display = "none";
 
-          if (!snsImagePath) {
+          if (!snsImagePaths) {
             snsSaveHint.textContent = "画像が見つからないため、結果画面をスクショして保存してください。";
             snsSaveFallback.style.display = "block";
             return;
           }
 
           const iosLike = isIOSLikeDevice();
-          snsSaveHint.textContent = iosLike
-            ? "iPhoneは画像を長押しして「写真に保存」を選んでください。"
-            : "画像を読み込んでいます。保存できない場合は画像を右クリックして保存してください。";
+          state.shareCount++;
+          saveState();
+          submitShareEvent({
+            eventType: "share",
+            userId: state.userId,
+            platform: "sns_image_save",
+            userName: state.profile?.name || "",
+            userEmail: state.profile?.email || "",
+            userType: res.code,
+            gender: state.gender
+          }).catch(e => console.error("共有イベント送信エラー:", e));
+
+          if (!iosLike) {
+            snsSaveHint.textContent = "保存を開始しました。うまくいかない場合は結果画面をスクショしてください。";
+            const dl = document.createElement("a");
+            dl.href = snsImagePaths.webp;
+            dl.download = `${sanitizeDownloadName(char.name)}.webp`;
+            dl.rel = "noopener";
+            document.body.appendChild(dl);
+            dl.click();
+            document.body.removeChild(dl);
+            return;
+          }
+
+          snsSaveHint.textContent = "iPhoneは画像を長押しして「写真に保存」を選んでください。";
+          snsSavePreview.alt = `${char.name} SNS投稿用画像`;
+
+          if (
+            snsSavePreview.src &&
+            (
+              decodeURIComponent(snsSavePreview.src).endsWith(decodeURIComponent(snsImagePaths.webp)) ||
+              decodeURIComponent(snsSavePreview.src).endsWith(decodeURIComponent(snsImagePaths.jpg))
+            )
+          ) {
+            snsSavePreview.style.display = "block";
+            snsSaveFallback.style.display = "none";
+            snsSaveBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            return;
+          }
 
           snsSavePreview.onload = () => {
             snsSavePreview.style.display = "block";
             snsSaveFallback.style.display = "none";
-
-            state.shareCount++;
-            saveState();
-            submitShareEvent({
-              eventType: "share",
-              userId: state.userId,
-              platform: "sns_image_save",
-              userName: state.profile?.name || "",
-              userEmail: state.profile?.email || "",
-              userType: res.code,
-              gender: state.gender
-            }).catch(e => console.error("共有イベント送信エラー:", e));
-
-            if (!iosLike) {
-              const dl = document.createElement("a");
-              dl.href = snsImagePath;
-              dl.download = `${sanitizeDownloadName(char.name)}.jpg`;
-              dl.rel = "noopener";
-              document.body.appendChild(dl);
-              dl.click();
-              document.body.removeChild(dl);
-            }
           };
 
+          let triedJpgFallback = false;
           snsSavePreview.onerror = () => {
+            if (!triedJpgFallback) {
+              triedJpgFallback = true;
+              snsSavePreview.src = snsImagePaths.jpg;
+              return;
+            }
             snsSavePreview.style.display = "none";
             snsSaveFallback.style.display = "block";
             snsSaveHint.textContent = "このタイプのSNS画像は準備中です。結果画面をスクショして投稿してください。";
           };
 
-          snsSavePreview.removeAttribute("src");
-          snsSavePreview.src = snsImagePath;
-          snsSavePreview.alt = `${char.name} SNS投稿用画像`;
+          snsSavePreview.src = snsImagePaths.webp;
           snsSaveBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
         };
       }
