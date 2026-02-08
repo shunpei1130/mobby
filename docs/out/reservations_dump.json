@@ -3422,5 +3422,96 @@
       "見た目がかわいいから"
     ],
     "pricePrediction": ""
+  },
+  {
+    "pathname": "reservations/2026-02-06T05-50-39-240Z_fa36612323ef4b92b62206d1673454d5.json",
+    "uploadedAt": "2026-02-06T05:50:40.000Z",
+    "url": "https://tlvhufbmkibcfx5t.public.blob.vercel-storage.com/reservations/2026-02-06T05-50-39-240Z_fa36612323ef4b92b62206d1673454d5.json",
+    "reservationId": "fa36612323ef4b92b62206d1673454d5",
+    "createdAt": "2026-02-06T05:50:39.240Z",
+    "productType": "camera_keyholder",
+    "productLabel": "カメラ型キーホルダー",
+    "address": "埼玉県八潮市八潮　8-14-2\nグリーンパーク第二八潮　309号室\n文字のフォントが可愛くて癒させます。見た目もふもふしそうですね。",
+    "name": "洲加本玲夏",
+    "email": "tukamotorena0618@icloud.com",
+    "phone": "08071287700",
+    "purchaseReason": [
+      "見た目がかわいいから",
+      "５枚しか残せない機能が面白いから",
+      "カメラとして使いたいから"
+    ],
+    "pricePrediction": "8000円未満"
+  },
+  {
+    "pathname": "reservations/2026-02-06T08-42-02-600Z_4d6fc0b5d33649dbb9a81278426ac278.json",
+    "uploadedAt": "2026-02-06T08:42:05.000Z",
+    "url": "https://tlvhufbmkibcfx5t.public.blob.vercel-storage.com/reservations/2026-02-06T08-42-02-600Z_4d6fc0b5d33649dbb9a81278426ac278.json",
+    "reservationId": "4d6fc0b5d33649dbb9a81278426ac278",
+    "createdAt": "2026-02-06T08:42:02.600Z",
+    "productType": "camera_keyholder",
+    "productLabel": "カメラ型キーホルダー",
+    "address": "961-0864\n福島県須賀川市北上町24-1\nローズヒル1 205号",
+    "name": "塩田",
+    "email": "",
+    "phone": "",
+    "purchaseReason": [],
+    "pricePrediction": ""
+  },
+  {
+    "pathname": "reservations/2026-02-06T08-43-49-585Z_76b431b131e6405f95f1eb066ad4b26b.json",
+    "uploadedAt": "2026-02-06T08:43:50.000Z",
+    "url": "https://tlvhufbmkibcfx5t.public.blob.vercel-storage.com/reservations/2026-02-06T08-43-49-585Z_76b431b131e6405f95f1eb066ad4b26b.json",
+    "reservationId": "76b431b131e6405f95f1eb066ad4b26b",
+    "createdAt": "2026-02-06T08:43:49.585Z",
+    "productType": "camera_keyholder",
+    "productLabel": "カメラ型キーホルダー",
+    "address": "962-0864\n福島県須賀川市北上町24-1\nローズヒル1 205号",
+    "name": "塩田 華魁",
+    "email": "ks.krn685@gmail.com",
+    "phone": "08068811228",
+    "purchaseReason": [
+      "見た目がかわいいから",
+      "キーホルダーとして使いたいから",
+      "カメラとして使いたいから"
+    ],
+    "pricePrediction": "8000円"
+  },
+  {
+    "pathname": "reservations/2026-02-06T12-25-05-823Z_beaf110bcbbc42fbac13a7bbfe488c56.json",
+    "uploadedAt": "2026-02-06T12:25:06.000Z",
+    "url": "https://tlvhufbmkibcfx5t.public.blob.vercel-storage.com/reservations/2026-02-06T12-25-05-823Z_beaf110bcbbc42fbac13a7bbfe488c56.json",
+    "reservationId": "beaf110bcbbc42fbac13a7bbfe488c56",
+    "createdAt": "2026-02-06T12:25:05.823Z",
+    "productType": "camera_keyholder",
+    "productLabel": "カメラ型キーホルダー",
+    "address": "千葉県船橋市274-0072三山6-40-11",
+    "name": "こんにちは",
+    "email": "rehanaboby1985@yahoo.com",
+    "phone": "08067646548",
+    "purchaseReason": [
+      "見た目がかわいいから",
+      "キーホルダーとして使いたいから",
+      "カメラとして使いたいから"
+    ],
+    "pricePrediction": "8000円未満"
+  },
+  {
+    "pathname": "reservations/2026-02-06T12-42-02-818Z_869c6ac7664c4aadbe261985ee2caa23.json",
+    "uploadedAt": "2026-02-06T12:42:04.000Z",
+    "url": "https://tlvhufbmkibcfx5t.public.blob.vercel-storage.com/reservations/2026-02-06T12-42-02-818Z_869c6ac7664c4aadbe261985ee2caa23.json",
+    "reservationId": "869c6ac7664c4aadbe261985ee2caa23",
+    "createdAt": "2026-02-06T12:42:02.818Z",
+    "productType": "camera_keyholder",
+    "productLabel": "カメラ型キーホルダー",
+    "address": "464-0032\n名古屋市千種区猫洞通1-8-1\nグランドメゾン猫洞通ヒルズ101",
+    "name": "青木杏菜",
+    "email": "anna20110923@icloud.com",
+    "phone": "09085509923",
+    "purchaseReason": [
+      "見た目がかわいいから",
+      "キーホルダーとして使いたいから",
+      "カメラとして使いたいから"
+    ],
+    "pricePrediction": "8000円"
   }
 ]

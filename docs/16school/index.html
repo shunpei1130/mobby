@@ -521,6 +521,59 @@
       padding: 20px;
       border-radius: 16px;
     }
+    .sns-save-wrap {
+      margin-bottom: 14px;
+    }
+    .sns-save-btn {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 24px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #0f5bb5;
+      background: linear-gradient(135deg, #d6ecff 0%, #eaf6ff 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .sns-save-box {
+      display: none;
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 12px;
+      background: #ffffff;
+      border: 1px solid #bcdfff;
+      text-align: left;
+    }
+    .sns-save-hint {
+      margin: 0;
+      color: #20538d;
+      font-size: 12px;
+      line-height: 1.6;
+      font-weight: 600;
+    }
+    .sns-save-preview-wrap {
+      margin-top: 10px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #d8e8f8;
+      background: #f7fbff;
+    }
+    .sns-save-preview {
+      display: none;
+      width: 100%;
+      height: auto;
+      vertical-align: middle;
+    }
+    .sns-save-fallback {
+      display: none;
+      margin: 10px 0 0;
+      font-size: 12px;
+      line-height: 1.7;
+      color: #5f6368;
+    }
     .share-row .panel {
       margin-top: 0;
     }
@@ -3068,6 +3121,19 @@ function renderGate(){
       return imgCode ? `key/男/${imgCode}.jpg` : '';
     }
 
+    function getSnsImagePath(isFemale, name) {
+      const base = isFemale ? "snsimg/woman" : "snsimg/man";
+      return name ? `${base}/${encodeURIComponent(name)}.jpg` : "";
+    }
+
+    function sanitizeDownloadName(name) {
+      return (name || "mobby-result").replace(/[\\/:*?"<>|]/g, "_");
+    }
+
+    function isIOSLikeDevice() {
+      return /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    }
+
     function renderCharacters(){
       const characters = charListGender === "female" ? CHARACTERS_FEMALE : CHARACTERS;
       const charKeys = Object.keys(characters).sort();
@@ -3571,6 +3637,23 @@ function renderGate(){
             <p class="text-body" style="font-size:13px; margin-bottom:20px;">
               診断した友達の結果も後で確認できるかも！？
             </p>
+
+            <div class="sns-save-wrap">
+              <button id="btnSaveSnsImage" class="sns-save-btn">
+                📸 SNS投稿用画像を保存
+              </button>
+              <div id="snsSaveBox" class="sns-save-box">
+                <p id="snsSaveHint" class="sns-save-hint">
+                  画像を読み込み中です...
+                </p>
+                <div class="sns-save-preview-wrap">
+                  <img id="snsSavePreview" class="sns-save-preview" alt="SNS投稿用画像" loading="eager" decoding="async" />
+                </div>
+                <p id="snsSaveFallback" class="sns-save-fallback">
+                  このタイプのSNS画像は準備中です。結果画面をスクショしてストーリーに投稿してください。
+                </p>
+              </div>
+            </div>
             
             <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:16px;">
               <button id="btnShareLine" style="padding:14px 24px; width: 100%; font-size:14px; background:#06C755; color:white; border-radius:12px; display:flex; align-items:center; justify-content:center; gap:8px; border:none;">
@@ -3811,6 +3894,71 @@ function renderGate(){
           }
         };
       }
+
+      const snsImagePath = getSnsImagePath(isFemale, char.name);
+      const snsSaveBtn = document.getElementById("btnSaveSnsImage");
+      const snsSaveBox = document.getElementById("snsSaveBox");
+      const snsSaveHint = document.getElementById("snsSaveHint");
+      const snsSavePreview = document.getElementById("snsSavePreview");
+      const snsSaveFallback = document.getElementById("snsSaveFallback");
+
+      if (snsSaveBtn && snsSaveBox && snsSaveHint && snsSavePreview && snsSaveFallback) {
+        snsSaveBtn.onclick = () => {
+          snsSaveBox.style.display = "block";
+          snsSavePreview.style.display = "none";
+          snsSaveFallback.style.display = "none";
+
+          if (!snsImagePath) {
+            snsSaveHint.textContent = "画像が見つからないため、結果画面をスクショして保存してください。";
+            snsSaveFallback.style.display = "block";
+            return;
+          }
+
+          const iosLike = isIOSLikeDevice();
+          snsSaveHint.textContent = iosLike
+            ? "iPhoneは画像を長押しして「写真に保存」を選んでください。"
+            : "画像を読み込んでいます。保存できない場合は画像を右クリックして保存してください。";
+
+          snsSavePreview.onload = () => {
+            snsSavePreview.style.display = "block";
+            snsSaveFallback.style.display = "none";
+
+            state.shareCount++;
+            saveState();
+            submitShareEvent({
+              eventType: "share",
+              userId: state.userId,
+              platform: "sns_image_save",
+              userName: state.profile?.name || "",
+              userEmail: state.profile?.email || "",
+              userType: res.code,
+              gender: state.gender
+            }).catch(e => console.error("共有イベント送信エラー:", e));
+
+            if (!iosLike) {
+              const dl = document.createElement("a");
+              dl.href = snsImagePath;
+              dl.download = `${sanitizeDownloadName(char.name)}.jpg`;
+              dl.rel = "noopener";
+              document.body.appendChild(dl);
+              dl.click();
+              document.body.removeChild(dl);
+            }
+          };
+
+          snsSavePreview.onerror = () => {
+            snsSavePreview.style.display = "none";
+            snsSaveFallback.style.display = "block";
+            snsSaveHint.textContent = "このタイプのSNS画像は準備中です。結果画面をスクショして投稿してください。";
+          };
+
+          snsSavePreview.removeAttribute("src");
+          snsSavePreview.src = snsImagePath;
+          snsSavePreview.alt = `${char.name} SNS投稿用画像`;
+          snsSaveBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        };
+      }
+
       const shareText = `【学校キャラ診断】私は「${char.name}」でした！\n${char.catch || char.summary}\n\nあなたも診断してみて👇\n`;
       
       // LINE共有
