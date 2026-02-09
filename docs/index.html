@@ -1788,6 +1788,21 @@
                   </div>
 
                   <div class="form-group" style="margin-top:16px;">
+                    <label for="cameraReservationAge" style="display:block;margin-bottom:6px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">年齢 <span style="color:rgba(47,79,79,0.6);font-size:0.85rem;">（必須）</span></label>
+                    <input
+                      type="number"
+                      id="cameraReservationAge"
+                      name="age"
+                      required
+                      min="0"
+                      max="120"
+                      inputmode="numeric"
+                      placeholder="例: 32"
+                      style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;transition:border-color 0.2s;"
+                    />
+                  </div>
+
+                  <div class="form-group" style="margin-top:16px;">
                     <label for="cameraReservationEmail" style="display:block;margin-bottom:6px;font-weight:700;color:var(--color-earth);font-size:0.95rem;">メールアドレス <span style="color:rgba(47,79,79,0.5);font-size:0.85rem;">（任意）</span></label>
                     <input
                       type="email"
@@ -3644,6 +3659,7 @@ function bindReservationForm(formId) {
 
     const address = String(form.querySelector('[name="address"]')?.value ?? "");
     const name = String(form.querySelector('[name="name"]')?.value ?? "");
+    const age = String(form.querySelector('[name="age"]')?.value ?? "");
     const email = String(form.querySelector('[name="email"]')?.value ?? "");
     const phone = String(form.querySelector('[name="phone"]')?.value ?? "");
     const pricePrediction = String(form.querySelector('[name="pricePrediction"]')?.value ?? "");
@@ -3663,6 +3679,10 @@ function bindReservationForm(formId) {
       showMsg(messageDiv, { ok: false, text: "名前を入力してください。" });
       return;
     }
+    if (!age.trim()) {
+      showMsg(messageDiv, { ok: false, text: "年齢を入力してください。" });
+      return;
+    }
 
     submitBtn.disabled = true;
     const originalText = submitBtn.textContent;
@@ -3673,6 +3693,7 @@ function bindReservationForm(formId) {
       await postJSON("/api/reservation", {
         address: address.trim(),
         name: name.trim(),
+        age: age.trim(),
         email: email.trim(),
         phone: phone.trim(),
         purchaseReason: purchaseReasons,
@@ -3702,6 +3723,8 @@ function bindReservationForm(formId) {
         userMessage = "住所を入力してください。";
       } else if (errorMessage.includes("Name is required") || errorMessage.includes("Invalid name") || errorMessage.includes("cannot be empty")) {
         userMessage = "名前を入力してください。";
+      } else if (errorMessage.includes("Age is required") || errorMessage.includes("Invalid age")) {
+        userMessage = "年齢を入力してください。";
       } else if (errorMessage.includes("at least 5 characters")) {
         userMessage = "住所は5文字以上入力してください。";
       } else if (errorMessage.includes("at most")) {

@@ -16,7 +16,7 @@ export default async function handler(req, res) {
       return;
     }
 
-    const { address, name, email, phone, purchaseReason, pricePrediction, productType, productLabel, hp } = req.body;
+    const { address, name, age, email, phone, purchaseReason, pricePrediction, productType, productLabel, hp } = req.body;
 
     if (hp) {
       res.status(200).json({ ok: true });
@@ -61,8 +61,25 @@ export default async function handler(req, res) {
       return;
     }
 
+    // 年齢のバリデーション（必須）
+    if (age === undefined || age === null || String(age).trim().length === 0) {
+      res.status(400).json({ ok: false, error: "Age is required" });
+      return;
+    }
+    const normalizedAge = String(age).trim();
+    if (!/^\d{1,3}$/.test(normalizedAge)) {
+      res.status(400).json({ ok: false, error: "Invalid age" });
+      return;
+    }
+    const numericAge = Number(normalizedAge);
+    if (!Number.isInteger(numericAge) || numericAge < 0 || numericAge > 120) {
+      res.status(400).json({ ok: false, error: "Invalid age" });
+      return;
+    }
+
     // 任意項目の軽い制限
     const safeName = trimmedName.slice(0, 200);
+    const safeAge = String(numericAge);
     const safeEmail = (typeof email === "string" ? email : "").slice(0, 200);
     const safePhone = (typeof phone === "string" ? phone : "").slice(0, 50);
     const safePurchaseReason = Array.isArray(purchaseReason) ? purchaseReason : (purchaseReason ? [purchaseReason] : []);
@@ -80,6 +97,7 @@ export default async function handler(req, res) {
       productLabel: safeProductLabel,
       address: trimmedAddress,
       name: safeName,
+      age: safeAge || "",
       email: safeEmail || "",
       phone: safePhone || "",
       purchaseReason: safePurchaseReason,
@@ -118,6 +136,7 @@ export default async function handler(req, res) {
         `予約タイプ: ${safeProductLabel}\n` +
         `住所:\n${trimmedAddress}\n\n` +
         `名前: ${safeName}\n` +
+        `年齢: ${safeAge || "(未入力)"}\n` +
         `メール: ${safeEmail || "(未入力)"}\n` +
         `電話: ${safePhone || "(未入力)"}\n` +
         `購入理由: ${purchaseReasonText}\n` +
