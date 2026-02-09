@@ -996,7 +996,7 @@
       QUESTIONS.forEach(q => {
         const raw = state.answers[q.id];
         if(raw !== undefined){
-          const score = q.reverse ? raw : (8 - raw);
+          const score = q.reverse ? (8 - raw) : raw;
           byAxis[q.axis].push({ id:q.id, text:q.text, raw, score, reverse:q.reverse });
         }
       });
