@@ -655,7 +655,7 @@
   }
   .price-reservation-tabs{
     display:grid;
-    grid-template-columns:repeat(2, minmax(0, 1fr));
+    grid-template-columns:repeat(3, minmax(0, 1fr));
     gap:10px;
     padding:6px;
     border-radius:18px;
@@ -928,11 +928,12 @@
       padding:18px 14px;
     }
     .price-reservation-tabs{
+      grid-template-columns:repeat(3, minmax(0, 1fr));
       gap:8px;
       padding:4px;
     }
     .price-reservation-tab{
-      font-size:0.85rem;
+      font-size:0.75rem;
       padding:10px 8px;
     }
     .product-tab-card{
@@ -1727,6 +1728,18 @@
               カメラ型<br>キーホルダー
             </button>
             <button
+              id="reservationTabPlush"
+              class="price-reservation-tab"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="reservationPanelPlush"
+              data-reservation-tab="plush"
+              tabindex="-1"
+            >
+              ぬいぐるみ<br>キーホルダー
+            </button>
+            <button
               id="reservationTabAcrylic"
               class="price-reservation-tab"
               type="button"
@@ -1873,6 +1886,37 @@
                 <button type="submit" class="btn btn-primary" style="margin-top:18px;width:100%;">予約する</button>
                 <div class="price-form-message" style="margin-top:12px;display:none;padding:10px 14px;border-radius:12px;font-size:0.9rem;"></div>
               </form>
+            </section>
+
+            <section
+              id="reservationPanelPlush"
+              class="price-reservation-panel"
+              role="tabpanel"
+              aria-labelledby="reservationTabPlush"
+              data-reservation-panel="plush"
+              hidden
+            >
+              <div class="product-tab-card" style="background:linear-gradient(145deg, #fff7fb, #fff3e8); border-color:rgba(255, 99, 160, 0.35);">
+                <p class="kicker" style="margin-bottom:10px;color:#ff4d8d;">LIMITED ITEM</p>
+                <h3 style="margin:0 0 8px;color:var(--color-earth);">ふわふわ<br>ぬいぐるみキーホルダー</h3>
+                <span style="display:inline-block;margin-bottom:10px;padding:6px 12px;border-radius:999px;background:#ff4d8d;color:#fff;font-size:0.78rem;font-weight:700;letter-spacing:0.02em;">先着100個限定</span>
+                <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px;margin-bottom:12px;">
+                  <p style="margin:0;color:rgba(82,62,62,0.72);font-size:0.9rem;text-decoration:line-through;text-decoration-thickness:2px;">通常価格 6,000円</p>
+                  <p style="margin:0;display:inline-block;padding:7px 12px;border-radius:999px;background:rgba(255,77,141,0.14);border:1px solid rgba(255,77,141,0.3);color:#b65174;font-size:0.96rem;font-weight:700;">特別価格 4,800円</p>
+                </div>
+                <div style="display:flex;justify-content:center;margin:8px 0 14px;">
+                  <img src="img/nui.jpeg" alt="ぬいぐるみキーホルダーのイメージ" loading="lazy" style="width:min(100%, 240px);border-radius:16px;object-fit:cover;box-shadow:0 6px 14px rgba(0,0,0,0.12);border:1px solid rgba(255,255,255,0.9);">
+                </div>
+                <p style="font-size:0.93rem;line-height:1.75;margin:0 0 12px;color:var(--color-earth);">
+                  バッグにつけるだけで気分が上がる、やわらかい手ざわりの限定デザイン。毎日持ち歩きたくなる、かわいいをぎゅっと詰めました。
+                </p>
+                <ul class="product-tab-list">
+                  <li>ふわっと軽い、毎日使いやすいサイズ感</li>
+                  <li>写真映えするフェミニンなカラーリング</li>
+                  <li>期間・数量ともに限定のスペシャルアイテム</li>
+                </ul>
+                <a id="plushStripeBuyButton" href="https://buy.stripe.com/28EaEX30Vfqt6SybJJao80b" target="_blank" rel="noopener" class="btn btn-primary" style="width:100%;display:flex;justify-content:center;font-size:0.92rem;padding:10px 14px;">期間限定アイテムを確認する</a>
+              </div>
             </section>
 
             <section
@@ -3521,7 +3565,7 @@ function isDiagnosisCompletedByPending(data) {
   return answered > 0 && hasIdentity && hasType;
 }
 
-function buildStripeSheetPayloadFromStorage() {
+function buildStripeSheetPayloadFromStorage(extraPayload = {}) {
   const diagnosis = getDiagnosisStorage();
   const pending = getPendingDiagnosisStorage();
   const data = diagnosis.data || {};
@@ -3549,7 +3593,8 @@ function buildStripeSheetPayloadFromStorage() {
     storageRaw: diagnosis.raw || "",
     pendingStorageKey: DIAGNOSIS_PENDING_KEY,
     pendingStorageRaw: pending.raw || "",
-    stateSnapshot: data
+    stateSnapshot: data,
+    ...extraPayload
   };
 }
 
@@ -3572,30 +3617,61 @@ function sendToGoogleSheet(payload) {
   } catch (_) {}
 }
 
-function initAcrylicStripeButton() {
-  const btn = document.getElementById("acrylicStripeBuyButton");
+function initStripeButtonTracking({
+  buttonId,
+  messageId = "",
+  requireDiagnosis = false,
+  productType = "",
+  productLabel = ""
+}) {
+  const btn = document.getElementById(buttonId);
   if (!btn) return;
 
   btn.addEventListener("click", (e) => {
-    const messageEl = document.getElementById("acrylicStripeMessage");
-    const diagnosis = getDiagnosisStorage();
-    const pendingDiagnosis = getPendingDiagnosisStorage();
-    const ready = isDiagnosisCompleted(diagnosis.data) || isDiagnosisCompletedByPending(pendingDiagnosis.data);
+    const messageEl = messageId ? document.getElementById(messageId) : null;
 
-    if (!ready) {
-      e.preventDefault();
-      if (messageEl) {
-        messageEl.style.display = "block";
+    if (requireDiagnosis) {
+      const diagnosis = getDiagnosisStorage();
+      const pendingDiagnosis = getPendingDiagnosisStorage();
+      const ready = isDiagnosisCompleted(diagnosis.data) || isDiagnosisCompletedByPending(pendingDiagnosis.data);
+
+      if (!ready) {
+        e.preventDefault();
+        if (messageEl) {
+          messageEl.style.display = "block";
+        }
+        return;
       }
-      return;
     }
 
     if (messageEl) {
       messageEl.style.display = "none";
     }
 
-    const payload = buildStripeSheetPayloadFromStorage();
+    const payload = buildStripeSheetPayloadFromStorage({
+      clickedProductType: productType,
+      clickedProductLabel: productLabel,
+      clickedButtonId: buttonId
+    });
     sendToGoogleSheet(payload);
+  });
+}
+
+function initAcrylicStripeButton() {
+  initStripeButtonTracking({
+    buttonId: "acrylicStripeBuyButton",
+    messageId: "acrylicStripeMessage",
+    requireDiagnosis: true,
+    productType: "acrylic_keyholder",
+    productLabel: "アクリルキーホルダー"
+  });
+}
+
+function initPlushStripeButton() {
+  initStripeButtonTracking({
+    buttonId: "plushStripeBuyButton",
+    productType: "plush_keyholder",
+    productLabel: "ぬいぐるみキーホルダー"
   });
 }
 
@@ -3741,6 +3817,7 @@ function bindReservationForm(formId) {
 
 bindReservationForm("priceReservationFormCamera");
 initAcrylicStripeButton();
+initPlushStripeButton();
 
 /* faqContactForm */
 document.getElementById("faqContactForm")?.addEventListener("submit", async (e) => {

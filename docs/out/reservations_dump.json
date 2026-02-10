@@ -3774,5 +3774,148 @@
       "カメラとして使いたいから"
     ],
     "pricePrediction": "8000円未満"
+  },
+  {
+    "pathname": "reservations/2026-02-08T14-37-07-586Z_d4a3b64ab446478eb3e9716725eacbf5.json",
+    "uploadedAt": "2026-02-08T14:37:08.000Z",
+    "url": "https://tlvhufbmkibcfx5t.public.blob.vercel-storage.com/reservations/2026-02-08T14-37-07-586Z_d4a3b64ab446478eb3e9716725eacbf5.json",
+    "reservationId": "d4a3b64ab446478eb3e9716725eacbf5",
+    "createdAt": "2026-02-08T14:37:07.586Z",
+    "productType": "camera_keyholder",
+    "productLabel": "カメラ型キーホルダー",
+    "address": "東京都杉並区上高井戸1-15-14ドーミー芦花公園519",
+    "name": "丹下深公奈",
+    "email": "",
+    "phone": "",
+    "purchaseReason": [],
+    "pricePrediction": ""
+  },
+  {
+    "pathname": "reservations/2026-02-08T16-32-44-875Z_1a9f38c1bb5747e1870a1d1a9025813e.json",
+    "uploadedAt": "2026-02-08T16:32:46.000Z",
+    "url": "https://tlvhufbmkibcfx5t.public.blob.vercel-storage.com/reservations/2026-02-08T16-32-44-875Z_1a9f38c1bb5747e1870a1d1a9025813e.json",
+    "reservationId": "1a9f38c1bb5747e1870a1d1a9025813e",
+    "createdAt": "2026-02-08T16:32:44.875Z",
+    "productType": "camera_keyholder",
+    "productLabel": "カメラ型キーホルダー",
+    "address": "愛知県一色町4440423 アメニティースクエア14 22番地",
+    "name": "真央",
+    "email": "xiyedexing@gmail.com",
+    "phone": "+817066260017",
+    "purchaseReason": [
+      "見た目がかわいいから"
+    ],
+    "pricePrediction": "8000円未満"
+  },
+  {
+    "pathname": "reservations/2026-02-08T22-44-27-041Z_252d89be584448159d3c869802747cef.json",
+    "uploadedAt": "2026-02-08T22:44:28.000Z",
+    "url": "https://tlvhufbmkibcfx5t.public.blob.vercel-storage.com/reservations/2026-02-08T22-44-27-041Z_252d89be584448159d3c869802747cef.json",
+    "reservationId": "252d89be584448159d3c869802747cef",
+    "createdAt": "2026-02-08T22:44:27.041Z",
+    "productType": "camera_keyholder",
+    "productLabel": "カメラ型キーホルダー",
+    "address": "〒690-0823\n島根県松江市西川津町769-12",
+    "name": "川次響季",
+    "email": "mugi55bikkie@gmail.com",
+    "phone": "07041924183",
+    "purchaseReason": [
+      "５枚しか残せない機能が面白いから"
+    ],
+    "pricePrediction": "15000円"
+  },
+  {
+    "pathname": "reservations/2026-02-09T06-58-06-883Z_e148453f24b949d7bea00683445a9bdb.json",
+    "uploadedAt": "2026-02-09T06:58:08.000Z",
+    "url": "https://tlvhufbmkibcfx5t.public.blob.vercel-storage.com/reservations/2026-02-09T06-58-06-883Z_e148453f24b949d7bea00683445a9bdb.json",
+    "reservationId": "e148453f24b949d7bea00683445a9bdb",
+    "createdAt": "2026-02-09T06:58:06.883Z",
+    "productType": "camera_keyholder",
+    "productLabel": "カメラ型キーホルダー",
+    "address": "富山県下新川郡入善町舟見1569-1",
+    "name": "大沼葉月",
+    "email": "hazuki07202009@gmail.com",
+    "phone": "08042507458",
+    "purchaseReason": [
+      "見た目がかわいいから",
+      "キーホルダーとして使いたいから"
+    ],
+    "pricePrediction": ""
+  },
+  {
+    "pathname": "reservations/2026-02-09T08-52-39-147Z_5b2054c039e24b839b291e929e2ca6fe.json",
+    "uploadedAt": "2026-02-09T08:52:40.000Z",
+    "url": "https://tlvhufbmkibcfx5t.public.blob.vercel-storage.com/reservations/2026-02-09T08-52-39-147Z_5b2054c039e24b839b291e929e2ca6fe.json",
+    "reservationId": "5b2054c039e24b839b291e929e2ca6fe",
+    "createdAt": "2026-02-09T08:52:39.147Z",
+    "productType": "camera_keyholder",
+    "productLabel": "カメラ型キーホルダー",
+    "address": "千葉県松戸市新松戸4-32-1新松戸東パークハウスC-1212",
+    "name": "野垣素美",
+    "email": "limelemon199909@gmail.com",
+    "phone": "",
+    "purchaseReason": [
+      "見た目がかわいいから",
+      "キーホルダーとして使いたいから"
+    ],
+    "pricePrediction": "8000円"
+  },
+  {
+    "pathname": "reservations/2026-02-09T09-48-25-179Z_c38df3a3b6f3490b9787b8f448e4b021.json",
+    "uploadedAt": "2026-02-09T09:48:26.000Z",
+    "url": "https://tlvhufbmkibcfx5t.public.blob.vercel-storage.com/reservations/2026-02-09T09-48-25-179Z_c38df3a3b6f3490b9787b8f448e4b021.json",
+    "reservationId": "c38df3a3b6f3490b9787b8f448e4b021",
+    "createdAt": "2026-02-09T09:48:25.179Z",
+    "productType": "camera_keyholder",
+    "productLabel": "カメラ型キーホルダー",
+    "address": "甲府市古上条町410",
+    "name": "仲澤叶空",
+    "age": "15",
+    "email": "office.toa2010@gmail.com",
+    "phone": "09033160507",
+    "purchaseReason": [
+      "見た目がかわいいから",
+      "キーホルダーとして使いたいから",
+      "カメラとして使いたいから"
+    ],
+    "pricePrediction": "8000円"
+  },
+  {
+    "pathname": "reservations/2026-02-09T09-49-12-146Z_a0b44ce95a8a4853b979befbe257daf1.json",
+    "uploadedAt": "2026-02-09T09:49:13.000Z",
+    "url": "https://tlvhufbmkibcfx5t.public.blob.vercel-storage.com/reservations/2026-02-09T09-49-12-146Z_a0b44ce95a8a4853b979befbe257daf1.json",
+    "reservationId": "a0b44ce95a8a4853b979befbe257daf1",
+    "createdAt": "2026-02-09T09:49:12.146Z",
+    "productType": "camera_keyholder",
+    "productLabel": "カメラ型キーホルダー",
+    "address": "山梨県甲府市古上条町410",
+    "name": "仲澤叶空",
+    "age": "15",
+    "email": "office.toa2010@gmail.com",
+    "phone": "09033160507",
+    "purchaseReason": [
+      "見た目がかわいいから",
+      "キーホルダーとして使いたいから",
+      "カメラとして使いたいから"
+    ],
+    "pricePrediction": "8000円"
+  },
+  {
+    "pathname": "reservations/2026-02-09T11-15-27-468Z_dbbbc56175424ef59d23d91f810d4ba4.json",
+    "uploadedAt": "2026-02-09T11:15:28.000Z",
+    "url": "https://tlvhufbmkibcfx5t.public.blob.vercel-storage.com/reservations/2026-02-09T11-15-27-468Z_dbbbc56175424ef59d23d91f810d4ba4.json",
+    "reservationId": "dbbbc56175424ef59d23d91f810d4ba4",
+    "createdAt": "2026-02-09T11:15:27.468Z",
+    "productType": "camera_keyholder",
+    "productLabel": "カメラ型キーホルダー",
+    "address": "780-0954\n高知市佐々木町200-58",
+    "name": "西森",
+    "age": "24",
+    "email": "gonyugon1006@gmail.com",
+    "phone": "",
+    "purchaseReason": [
+      "見た目がかわいいから"
+    ],
+    "pricePrediction": "12000円"
   }
 ]
