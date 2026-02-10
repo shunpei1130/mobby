@@ -410,6 +410,53 @@
     .love-card h3 { margin: 0 0 12px; font-size: 15px; color: #ad1457; }
     .love-card .text-body { margin: 0; font-size: 13px; color: var(--text-main); }
 
+    .result-product-tabs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      padding: 5px;
+      border-radius: 14px;
+      background: rgba(255, 182, 205, 0.2);
+      border: 1px solid rgba(255, 77, 141, 0.18);
+      margin-bottom: 16px;
+    }
+    .result-product-tab {
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 10px 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #96506b;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .result-product-tab[aria-selected="true"] {
+      background: #ffffff;
+      color: #b65174;
+      border-color: rgba(255, 77, 141, 0.3);
+      box-shadow: 0 8px 16px rgba(255, 77, 141, 0.12);
+    }
+    .result-product-tab[aria-selected="false"] {
+      opacity: 0.78;
+    }
+    .result-product-tab:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 77, 141, 0.2);
+    }
+    .result-product-content {
+      display: none;
+    }
+    .result-product-content.is-active {
+      display: block;
+    }
+    @media (max-width: 600px) {
+      .result-product-tab {
+        font-size: 12px;
+        padding: 10px 6px;
+      }
+    }
+
     /* Mama Share */
     .mama-share {
       position: relative;
@@ -2697,7 +2744,7 @@ async function submitDiagnosis(payload){
   }
 }
 
-function buildStripeSheetPayload(res){
+function buildStripeSheetPayload(res, extraPayload = {}){
   const questions = getQuestions();
   const questionAnswers = {};
   questions.forEach(q => {
@@ -2738,7 +2785,8 @@ function buildStripeSheetPayload(res){
     shareCount: state.shareCount || 0,
     storageKey: STORAGE_KEY,
     storageRaw,
-    stateSnapshot
+    stateSnapshot,
+    ...extraPayload
   };
 }
 
@@ -3571,33 +3619,116 @@ function renderGate(){
 
         <!-- ここから下は常に表示 -->
         <div style="margin-top:24px;">
-          <!-- アクリルキーホルダーセクション -->
+          <!-- 限定キーホルダーセクション -->
           <div class="panel fade-in" style="animation-delay:0.12s; background:linear-gradient(145deg, #fff7fb, #fff2e2); border:2px solid rgba(255, 77, 141, 0.2); overflow:hidden; position:relative;">
             <div style="position:absolute; top:18px; right:-44px; transform:rotate(20deg); background:linear-gradient(135deg, #ffb347, #ffd27f); color:#fff; font-size:11px; letter-spacing:0.18em; padding:6px 48px; text-transform:uppercase;">LIMITED</div>
             <p class="kicker" style="margin-bottom:12px; color:#ff4d8d;">🎀 限定アクセサリー</p>
-            <h3 style="font-size:20px; margin:0 0 8px; color:var(--text-main);">アクリルキーホルダー</h3>
-            <p style="display:inline-block; font-size:15px; font-weight:700; color:#ff4d8d; background:rgba(255,77,141,0.08); padding:6px 14px; border-radius:999px; margin:0 0 18px; letter-spacing:0.03em;">
-              あなたの診断結果を持ち歩こう
-            </p>
-            <div style="display:flex; gap:12px; justify-content:center; margin-bottom:18px; background:linear-gradient(145deg, #fff7fb, #fff2e2); border-radius:16px; padding:16px; border:1px solid rgba(255,255,255,0.9);">
-              <div style="width:45%; max-width:140px; position:relative; overflow:hidden;">
-                <img src="${keyImagePath}" alt="アクリルキーホルダー 表面" style="width:100%; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
+
+            <div class="result-product-tabs" role="tablist" aria-label="限定キーホルダー">
+              <button
+                id="resultProductTabPlush"
+                class="result-product-tab"
+                type="button"
+                role="tab"
+                aria-selected="true"
+                aria-controls="resultProductPanelPlush"
+                data-result-product-tab="plush"
+              >
+                ぬいぐるみ<br>キーホルダー
+              </button>
+              <button
+                id="resultProductTabAcrylic"
+                class="result-product-tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="resultProductPanelAcrylic"
+                data-result-product-tab="acrylic"
+                tabindex="-1"
+              >
+                アクリル<br>キーホルダー
+              </button>
+            </div>
+
+            <section
+              id="resultProductPanelPlush"
+              class="result-product-content is-active"
+              role="tabpanel"
+              aria-labelledby="resultProductTabPlush"
+              data-result-product-panel="plush"
+            >
+              <h3 style="font-size:20px; margin:0 0 8px; color:var(--text-main);">ふわふわぬいぐるみキーホルダー</h3>
+              <p style="display:inline-block; font-size:12px; font-weight:700; color:#ffffff; background:#ff4d8d; padding:6px 12px; border-radius:999px; margin:0 0 12px; letter-spacing:0.03em;">
+                先着100個限定
+              </p>
+              <div style="display:flex; flex-wrap:wrap; align-items:flex-end; gap:10px; margin-bottom:14px;">
+                <span style="font-size:14px; color:rgba(82,62,62,0.72); text-decoration:line-through; text-decoration-thickness:2px;">通常価格 6,000円</span>
+                <span style="font-size:17px; color:#b65174; font-weight:700; letter-spacing:0.04em; background:rgba(255,77,141,0.1); border:1px solid rgba(255,77,141,0.24); padding:6px 12px; border-radius:999px;">特別価格 4,800円</span>
               </div>
-              <img src="key/ura.jpg" alt="アクリルキーホルダー 裏面" style="width:45%; max-width:140px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
-            </div>
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
-              <span style="font-size:20px; color:#b65174; font-weight:700; letter-spacing:0.04em;">1,900円</span>
-            </div>
-            <p class="text-body" style="font-size:14px; line-height:1.8; margin:0 0 14px;">
-              <strong>表は${char.name}、裏にはあなたの診断がいつでも見れるQRコード。このページをそのまま持ち歩けるよ！</strong> 透明感ときらめきで、光を味方にするクリアアクセ。
-            </p>
-            <ul style="margin:0 0 18px; padding-left:18px; color:var(--text-sub); line-height:1.8; font-size:13px;">
-              <li>表裏で違う表情が楽しめるデザイン</li>
-              <li>日常でも特別感を残すサイズ感</li>
-            </ul>
-            <a id="stripeBuyButton" href="https://buy.stripe.com/bJe14n8lf7Y11yecNNao80a" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:10px; padding:14px 28px; border-radius:999px; font-size:14px; font-weight:600; text-decoration:none; background:linear-gradient(135deg, #ff4d8d, #ff7aa8); color:#fff; box-shadow:0 14px 30px rgba(255, 77, 141, 0.3); transition:transform 0.2s ease;">
-              限定アイテムを手に取る →
-            </a>
+              <div style="display:flex; justify-content:center; margin-bottom:14px; background:linear-gradient(145deg, #fff7fb, #fff2e2); border-radius:16px; padding:16px; border:1px solid rgba(255,255,255,0.9);">
+                <img src="../img/nui.jpeg" alt="ぬいぐるみキーホルダー" style="width:min(100%, 240px); border-radius:14px; object-fit:cover; box-shadow:0 6px 14px rgba(0,0,0,0.12);" onerror="this.style.display='none';">
+              </div>
+              <p class="text-body" style="font-size:14px; line-height:1.8; margin:0 0 14px;">
+                <strong>${char.name}のムードをそのままぎゅっと。</strong> ふわっと軽い質感で、バッグにつけるだけで気分が上がる限定ぬいぐるみキーホルダーです。
+              </p>
+              <ul style="margin:0 0 18px; padding-left:18px; color:var(--text-sub); line-height:1.8; font-size:13px;">
+                <li>写真映えするフェミニンな配色</li>
+                <li>毎日使いやすいコンパクトサイズ</li>
+                <li>期間・数量ともに限定の特別仕様</li>
+              </ul>
+              <a
+                id="stripeBuyButtonPlush"
+                data-stripe-product-type="plush_keyholder"
+                data-stripe-product-label="ぬいぐるみキーホルダー"
+                href="https://buy.stripe.com/28EaEX30Vfqt6SybJJao80b"
+                target="_blank"
+                rel="noopener"
+                style="display:inline-flex; align-items:center; gap:10px; padding:14px 28px; border-radius:999px; font-size:14px; font-weight:600; text-decoration:none; background:linear-gradient(135deg, #ff4d8d, #ff7aa8); color:#fff; box-shadow:0 14px 30px rgba(255, 77, 141, 0.3); transition:transform 0.2s ease;"
+              >
+                期間限定アイテムを確認する →
+              </a>
+            </section>
+
+            <section
+              id="resultProductPanelAcrylic"
+              class="result-product-content"
+              role="tabpanel"
+              aria-labelledby="resultProductTabAcrylic"
+              data-result-product-panel="acrylic"
+              hidden
+            >
+              <h3 style="font-size:20px; margin:0 0 8px; color:var(--text-main);">アクリルキーホルダー</h3>
+              <p style="display:inline-block; font-size:15px; font-weight:700; color:#ff4d8d; background:rgba(255,77,141,0.08); padding:6px 14px; border-radius:999px; margin:0 0 18px; letter-spacing:0.03em;">
+                あなたの診断結果を持ち歩こう
+              </p>
+              <div style="display:flex; gap:12px; justify-content:center; margin-bottom:18px; background:linear-gradient(145deg, #fff7fb, #fff2e2); border-radius:16px; padding:16px; border:1px solid rgba(255,255,255,0.9);">
+                <div style="width:45%; max-width:140px; position:relative; overflow:hidden;">
+                  <img src="${keyImagePath}" alt="アクリルキーホルダー 表面" style="width:100%; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
+                </div>
+                <img src="key/ura.jpg" alt="アクリルキーホルダー 裏面" style="width:45%; max-width:140px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
+              </div>
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                <span style="font-size:20px; color:#b65174; font-weight:700; letter-spacing:0.04em;">1,900円</span>
+              </div>
+              <p class="text-body" style="font-size:14px; line-height:1.8; margin:0 0 14px;">
+                <strong>表は${char.name}、裏にはあなたの診断がいつでも見れるQRコード。このページをそのまま持ち歩けるよ！</strong> 透明感ときらめきで、光を味方にするクリアアクセ。
+              </p>
+              <ul style="margin:0 0 18px; padding-left:18px; color:var(--text-sub); line-height:1.8; font-size:13px;">
+                <li>表裏で違う表情が楽しめるデザイン</li>
+                <li>日常でも特別感を残すサイズ感</li>
+              </ul>
+              <a
+                id="stripeBuyButtonAcrylic"
+                data-stripe-product-type="acrylic_keyholder"
+                data-stripe-product-label="アクリルキーホルダー"
+                href="https://buy.stripe.com/bJe14n8lf7Y11yecNNao80a"
+                target="_blank"
+                rel="noopener"
+                style="display:inline-flex; align-items:center; gap:10px; padding:14px 28px; border-radius:999px; font-size:14px; font-weight:600; text-decoration:none; background:linear-gradient(135deg, #ff4d8d, #ff7aa8); color:#fff; box-shadow:0 14px 30px rgba(255, 77, 141, 0.3); transition:transform 0.2s ease;"
+              >
+                限定アイテムを手に取る →
+              </a>
+            </section>
           </div>
         
         
@@ -3762,6 +3893,55 @@ function renderGate(){
         });
       }
 
+      const resultProductTabButtons = Array.from(document.querySelectorAll(".result-product-tab[data-result-product-tab]"));
+      const resultProductPanels = Array.from(document.querySelectorAll(".result-product-content[data-result-product-panel]"));
+
+      function activateResultProductTab(tabKey) {
+        if (!tabKey) return;
+
+        resultProductTabButtons.forEach((button) => {
+          const isActive = button.dataset.resultProductTab === tabKey;
+          button.setAttribute("aria-selected", isActive ? "true" : "false");
+          button.tabIndex = isActive ? 0 : -1;
+        });
+
+        resultProductPanels.forEach((panel) => {
+          const isActive = panel.dataset.resultProductPanel === tabKey;
+          panel.classList.toggle("is-active", isActive);
+          panel.hidden = !isActive;
+        });
+      }
+
+      resultProductTabButtons.forEach((button, index) => {
+        button.addEventListener("click", () => {
+          activateResultProductTab(button.dataset.resultProductTab || "");
+        });
+
+        button.addEventListener("keydown", (e) => {
+          if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(e.key)) return;
+          e.preventDefault();
+
+          let nextIndex = index;
+          if (e.key === "ArrowRight") nextIndex = (index + 1) % resultProductTabButtons.length;
+          if (e.key === "ArrowLeft") nextIndex = (index - 1 + resultProductTabButtons.length) % resultProductTabButtons.length;
+          if (e.key === "Home") nextIndex = 0;
+          if (e.key === "End") nextIndex = resultProductTabButtons.length - 1;
+
+          const nextButton = resultProductTabButtons[nextIndex];
+          if (!nextButton) return;
+
+          activateResultProductTab(nextButton.dataset.resultProductTab || "");
+          nextButton.focus();
+        });
+      });
+
+      if (resultProductTabButtons.length > 0) {
+        const defaultTab = resultProductTabButtons.find((button) => button.dataset.resultProductTab === "plush")?.dataset.resultProductTab
+          || resultProductTabButtons[0]?.dataset.resultProductTab
+          || "";
+        activateResultProductTab(defaultTab);
+      }
+
       // 興味ボタンのイベントリスナー
       document.getElementById("btnInterest").onclick = async () => {
         if(state.interested){
@@ -3820,13 +4000,17 @@ function renderGate(){
         };
       }
 
-      const stripeBtn = document.getElementById("stripeBuyButton");
-      if (stripeBtn) {
+      const stripeButtons = Array.from(document.querySelectorAll("[data-stripe-product-type]"));
+      stripeButtons.forEach((stripeBtn) => {
         stripeBtn.addEventListener("click", () => {
-          const payload = buildStripeSheetPayload(res);
+          const payload = buildStripeSheetPayload(res, {
+            clickedProductType: stripeBtn.dataset.stripeProductType || "",
+            clickedProductLabel: stripeBtn.dataset.stripeProductLabel || "",
+            clickedButtonId: stripeBtn.id || ""
+          });
           sendToGoogleSheet(payload);
         });
-      }
+      });
 
       // 共有ボタンのイベントリスナー
       const shareLink = generateShareLink();
