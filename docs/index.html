@@ -788,6 +788,139 @@
     line-height:1.6;
     margin:0;
   }
+  .plush-gallery{
+    margin:8px 0 14px;
+  }
+  .plush-gallery-swipe-hint{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    margin-bottom:8px;
+    font-size:0.78rem;
+    font-weight:700;
+    color:#b65174;
+    letter-spacing:0.01em;
+    transition:opacity 0.2s ease;
+  }
+  .plush-gallery-swipe-hint.is-hidden{
+    opacity:0;
+  }
+  .plush-gallery-swipe-icon{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:0.95rem;
+    animation:plushSwipeHint 1.3s ease-in-out infinite;
+  }
+  @keyframes plushSwipeHint{
+    0%,100%{transform:translateX(-4px);}
+    50%{transform:translateX(4px);}
+  }
+  .plush-gallery-viewport{
+    position:relative;
+    overflow:hidden;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,0.9);
+    background:linear-gradient(145deg, #ffe9f4, #fff7ec);
+    touch-action:pan-y;
+    cursor:grab;
+  }
+  .plush-gallery-viewport.is-dragging{
+    cursor:grabbing;
+  }
+  .plush-gallery-viewport::before,
+  .plush-gallery-viewport::after{
+    content:"";
+    position:absolute;
+    top:0;
+    bottom:0;
+    width:24px;
+    pointer-events:none;
+    z-index:2;
+  }
+  .plush-gallery-viewport::before{
+    left:0;
+    background:linear-gradient(to right, rgba(255,247,251,0.8), rgba(255,247,251,0));
+  }
+  .plush-gallery-viewport::after{
+    right:0;
+    background:linear-gradient(to left, rgba(255,247,251,0.8), rgba(255,247,251,0));
+  }
+  .plush-gallery-track{
+    display:flex;
+    transition:transform 0.36s var(--ease-soft);
+    will-change:transform;
+  }
+  .plush-gallery-slide{
+    min-width:100%;
+    display:flex;
+    justify-content:center;
+    padding:10px;
+  }
+  .plush-gallery-slide img{
+    width:auto;
+    max-width:min(100%, 240px);
+    max-height:188px;
+    height:auto;
+    display:block;
+    border-radius:16px;
+    object-fit:cover;
+    box-shadow:0 6px 14px rgba(0,0,0,0.12);
+    border:1px solid rgba(255,255,255,0.92);
+    user-select:none;
+    -webkit-user-drag:none;
+    pointer-events:none;
+  }
+  .plush-gallery-controls{
+    margin-top:9px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+  }
+  .plush-gallery-nav{
+    width:32px;
+    height:32px;
+    border-radius:999px;
+    border:1px solid rgba(255,77,141,0.35);
+    background:rgba(255,255,255,0.85);
+    color:#b65174;
+    font-size:18px;
+    font-weight:700;
+    line-height:1;
+    cursor:pointer;
+    transition:transform 0.18s var(--ease-soft), opacity 0.18s ease, background 0.18s ease;
+  }
+  .plush-gallery-nav:hover{
+    transform:translateY(-1px);
+    background:rgba(255,255,255,0.98);
+  }
+  .plush-gallery-nav:disabled{
+    opacity:0.45;
+    cursor:default;
+    transform:none;
+  }
+  .plush-gallery-dots{
+    display:flex;
+    gap:7px;
+    align-items:center;
+    justify-content:center;
+  }
+  .plush-gallery-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    border:none;
+    background:rgba(182,81,116,0.28);
+    padding:0;
+    cursor:pointer;
+    transition:transform 0.18s var(--ease-soft), background 0.18s ease;
+  }
+  .plush-gallery-dot.is-active{
+    background:#ff4d8d;
+    transform:scale(1.2);
+  }
   
   /* Sticky CTA */
   .sticky-cta{
@@ -944,6 +1077,25 @@
     }
     .product-tab-gallery img{
       width:48%;
+    }
+    .plush-gallery-slide{
+      padding:8px;
+    }
+    .plush-gallery-slide img{
+      width:auto;
+      max-width:min(100%, 190px);
+      max-height:150px;
+      height:auto;
+      border-radius:12px;
+    }
+    .plush-gallery-controls{
+      margin-top:8px;
+      gap:7px;
+    }
+    .plush-gallery-nav{
+      width:30px;
+      height:30px;
+      font-size:16px;
     }
     .camera-tab-hero{
       display:flex;
@@ -1904,8 +2056,24 @@
                   <p style="margin:0;color:rgba(82,62,62,0.72);font-size:0.9rem;text-decoration:line-through;text-decoration-thickness:2px;">通常価格 6,000円</p>
                   <p style="margin:0;display:inline-block;padding:7px 12px;border-radius:999px;background:rgba(255,77,141,0.14);border:1px solid rgba(255,77,141,0.3);color:#b65174;font-size:0.96rem;font-weight:700;">特別価格 4,800円</p>
                 </div>
-                <div style="display:flex;justify-content:center;margin:8px 0 14px;">
-                  <img src="img/nui.jpeg" alt="ぬいぐるみキーホルダーのイメージ" loading="lazy" style="width:min(100%, 240px);border-radius:16px;object-fit:cover;box-shadow:0 6px 14px rgba(0,0,0,0.12);border:1px solid rgba(255,255,255,0.9);">
+                <div class="plush-gallery" id="plushGallery">
+                  <div class="plush-gallery-swipe-hint" id="plushGalleryHint" aria-hidden="true">
+                    <span class="plush-gallery-swipe-icon">⇆</span>
+                    左右にスワイプして全ての写真を見る
+                  </div>
+                  <div
+                    class="plush-gallery-viewport"
+                    id="plushGalleryViewport"
+                    tabindex="0"
+                    aria-label="ぬいぐるみキーホルダー画像ギャラリー"
+                  >
+                    <div class="plush-gallery-track" id="plushGalleryTrack"></div>
+                  </div>
+                  <div class="plush-gallery-controls" aria-label="ぬいぐるみ画像ナビゲーション">
+                    <button class="plush-gallery-nav" type="button" id="plushGalleryPrev" aria-label="前の画像">‹</button>
+                    <div class="plush-gallery-dots" id="plushGalleryDots"></div>
+                    <button class="plush-gallery-nav" type="button" id="plushGalleryNext" aria-label="次の画像">›</button>
+                  </div>
                 </div>
                 <p style="font-size:0.93rem;line-height:1.75;margin:0 0 12px;color:var(--color-earth);">
                   バッグにつけるだけで気分が上がる、やわらかい手ざわりの限定デザイン。毎日持ち歩きたくなる、かわいいをぎゅっと詰めました。
@@ -3679,6 +3847,194 @@ let refreshReservationCount = null;
 
 const reservationTabButtons = Array.from(document.querySelectorAll(".price-reservation-tab[data-reservation-tab]"));
 const reservationTabPanels = Array.from(document.querySelectorAll(".price-reservation-panel[data-reservation-panel]"));
+const PLUSH_RESERVATION_IMAGES = [
+  "img/nui/nui.jpeg",
+  "img/nui/1.jpg",
+  "img/nui/2.jpg",
+  "img/nui/3.jpg",
+  "img/nui/4.jpg"
+];
+let syncPlushReservationGallery = () => {};
+
+function initPlushReservationGallery() {
+  const root = document.getElementById("plushGallery");
+  const viewport = document.getElementById("plushGalleryViewport");
+  const track = document.getElementById("plushGalleryTrack");
+  const dotsWrap = document.getElementById("plushGalleryDots");
+  const prevBtn = document.getElementById("plushGalleryPrev");
+  const nextBtn = document.getElementById("plushGalleryNext");
+  const hint = document.getElementById("plushGalleryHint");
+
+  if (!root || !viewport || !track || !dotsWrap) return;
+  if (root.dataset.initialized === "true") return;
+
+  const images = Array.from(new Set(PLUSH_RESERVATION_IMAGES));
+  if (images.length === 0) return;
+
+  const slides = [];
+  const dots = [];
+
+  images.forEach((src, index) => {
+    const slide = document.createElement("div");
+    slide.className = "plush-gallery-slide";
+
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = `ぬいぐるみキーホルダー ${index + 1}`;
+    img.loading = index === 0 ? "eager" : "lazy";
+    img.decoding = "async";
+
+    slide.appendChild(img);
+    track.appendChild(slide);
+    slides.push(slide);
+
+    const dot = document.createElement("button");
+    dot.type = "button";
+    dot.className = "plush-gallery-dot";
+    dot.setAttribute("aria-label", `${index + 1}枚目を表示`);
+    dot.addEventListener("click", () => {
+      goTo(index, true);
+    });
+    dotsWrap.appendChild(dot);
+    dots.push(dot);
+  });
+
+  let currentIndex = 0;
+  let dragging = false;
+  let startX = 0;
+  let currentX = 0;
+  let startTranslateX = 0;
+  let pointerId = null;
+  const maxIndex = slides.length - 1;
+  const swipeThreshold = 30;
+
+  function slideWidth() {
+    return viewport.getBoundingClientRect().width || 1;
+  }
+
+  function hideHint() {
+    if (!hint) return;
+    hint.classList.add("is-hidden");
+  }
+
+  function updateNav() {
+    dots.forEach((dot, index) => {
+      dot.classList.toggle("is-active", index === currentIndex);
+    });
+    if (prevBtn) prevBtn.disabled = currentIndex === 0;
+    if (nextBtn) nextBtn.disabled = currentIndex === maxIndex;
+  }
+
+  function render(animated = true) {
+    const width = slideWidth();
+    const x = -currentIndex * width;
+    track.style.transition = animated ? "transform 0.36s var(--ease-soft)" : "none";
+    track.style.transform = `translateX(${x}px)`;
+    updateNav();
+  }
+
+  function goTo(nextIndex, fromUser = false, animated = true) {
+    currentIndex = Math.max(0, Math.min(maxIndex, nextIndex));
+    render(animated);
+    if (fromUser) hideHint();
+  }
+
+  function endDrag(e) {
+    if (!dragging) return;
+    if (pointerId !== null && e?.pointerId !== undefined && e.pointerId !== pointerId) return;
+
+    dragging = false;
+    pointerId = null;
+    viewport.classList.remove("is-dragging");
+
+    const deltaX = currentX - startX;
+    if (deltaX <= -swipeThreshold && currentIndex < maxIndex) currentIndex += 1;
+    if (deltaX >= swipeThreshold && currentIndex > 0) currentIndex -= 1;
+    if (Math.abs(deltaX) > 6) hideHint();
+
+    render(true);
+
+    if (viewport.releasePointerCapture && e?.pointerId !== undefined) {
+      try { viewport.releasePointerCapture(e.pointerId); } catch (_) {}
+    }
+  }
+
+  viewport.addEventListener("pointerdown", (e) => {
+    if (dragging || slides.length <= 1) return;
+
+    dragging = true;
+    pointerId = e.pointerId;
+    startX = e.clientX;
+    currentX = e.clientX;
+    startTranslateX = -currentIndex * slideWidth();
+    track.style.transition = "none";
+    viewport.classList.add("is-dragging");
+
+    if (viewport.setPointerCapture) {
+      try { viewport.setPointerCapture(e.pointerId); } catch (_) {}
+    }
+
+    e.preventDefault();
+  });
+
+  viewport.addEventListener("pointermove", (e) => {
+    if (!dragging) return;
+    if (pointerId !== null && e.pointerId !== pointerId) return;
+
+    currentX = e.clientX;
+    const dx = currentX - startX;
+    const width = slideWidth();
+    const minTranslate = -maxIndex * width;
+    let targetX = startTranslateX + dx;
+
+    if (targetX > 0) {
+      targetX *= 0.35;
+    } else if (targetX < minTranslate) {
+      targetX = minTranslate + (targetX - minTranslate) * 0.35;
+    }
+
+    track.style.transform = `translateX(${targetX}px)`;
+    e.preventDefault();
+  });
+
+  viewport.addEventListener("pointerup", endDrag);
+  viewport.addEventListener("pointercancel", endDrag);
+  viewport.addEventListener("lostpointercapture", () => endDrag());
+
+  if (prevBtn) {
+    prevBtn.addEventListener("click", () => {
+      goTo(currentIndex - 1, true);
+    });
+  }
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => {
+      goTo(currentIndex + 1, true);
+    });
+  }
+
+  viewport.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") {
+      goTo(currentIndex + 1, true);
+      e.preventDefault();
+      return;
+    }
+    if (e.key === "ArrowLeft") {
+      goTo(currentIndex - 1, true);
+      e.preventDefault();
+    }
+  });
+
+  const sync = () => {
+    if (viewport.offsetParent === null) return;
+    render(false);
+  };
+
+  window.addEventListener("resize", sync, { passive: true });
+  syncPlushReservationGallery = sync;
+
+  root.dataset.initialized = "true";
+  goTo(0, false, false);
+}
 
 function activateReservationTab(tabKey) {
   if (!tabKey) return;
@@ -3694,6 +4050,12 @@ function activateReservationTab(tabKey) {
     panel.classList.toggle("is-active", isActive);
     panel.hidden = !isActive;
   });
+
+  if (tabKey === "plush") {
+    requestAnimationFrame(() => {
+      syncPlushReservationGallery();
+    });
+  }
 }
 
 reservationTabButtons.forEach((button, index) => {
@@ -3718,6 +4080,8 @@ reservationTabButtons.forEach((button, index) => {
     nextButton.focus();
   });
 });
+
+initPlushReservationGallery();
 
 if (reservationTabButtons.length > 0) {
   const defaultTab = reservationTabButtons.find((button) => button.getAttribute("aria-selected") === "true")?.dataset.reservationTab
