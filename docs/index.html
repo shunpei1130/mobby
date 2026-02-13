@@ -859,7 +859,11 @@
     padding:10px;
   }
   .plush-gallery-slide img{
-    width:min(100%, 240px);
+    width:auto;
+    max-width:min(100%, 240px);
+    max-height:188px;
+    height:auto;
+    display:block;
     border-radius:16px;
     object-fit:cover;
     box-shadow:0 6px 14px rgba(0,0,0,0.12);
@@ -1078,7 +1082,10 @@
       padding:8px;
     }
     .plush-gallery-slide img{
-      width:min(100%, 190px);
+      width:auto;
+      max-width:min(100%, 190px);
+      max-height:150px;
+      height:auto;
       border-radius:12px;
     }
     .plush-gallery-controls{
