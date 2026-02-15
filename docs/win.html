@@ -1491,7 +1491,7 @@
         function startCountdown() {
             let endTime = localStorage.getItem('mobby_win_end');
             if (!endTime) {
-                endTime = Date.now() + 24 * 60 * 60 * 1000;
+                endTime = Date.now() + 28 * 60 * 60 * 1000;
                 localStorage.setItem('mobby_win_end', endTime);
             }
             endTime = parseInt(endTime);
