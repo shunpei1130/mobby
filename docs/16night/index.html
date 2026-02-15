@@ -799,30 +799,40 @@
         <footer>&copy; 2026 Mobby. All rights reserved.</footer>
     </div>
     <script>
-        const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzu8ZWwvtKHWIwqnjqlKkdbPTWN1o7oSxpsBZ-Crdv6zlmCbSeWFlMDZ3sjU9SgCsFOgQ/exec";
-
-        function sendToGoogleSheet(payload) {
-            console.log("[Night] sendToGoogleSheet called");
-            console.log("[Night] GAS_WEBAPP_URL:", GAS_WEBAPP_URL);
-            console.log("[Night] Payload:", JSON.stringify(payload, null, 2));
-            if (!GAS_WEBAPP_URL) { console.warn("[Night] GAS_WEBAPP_URL is empty. Skipping."); return; }
+        async function submitLead(payload) {
+            console.log("[Night] submitLead:", payload);
             try {
-                const body = JSON.stringify(payload);
-                console.log("[Night] Body length:", body.length);
-                if (navigator.sendBeacon) {
-                    const blob = new Blob([body], { type: "text/plain" });
-                    const result = navigator.sendBeacon(GAS_WEBAPP_URL, blob);
-                    console.log("[Night] sendBeacon result:", result);
-                    return;
-                }
-                console.log("[Night] sendBeacon not available, using fetch");
-                fetch(GAS_WEBAPP_URL, {
-                    method: "POST", mode: "no-cors",
-                    headers: { "Content-Type": "text/plain" },
-                    body, keepalive: true
-                }).then(() => { console.log("[Night] fetch completed"); })
-                    .catch((e) => { console.error("[Night] fetch error:", e); });
-            } catch (e) { console.error("[Night] Sheet send failed:", e); }
+                const r = await fetch("/api/lead", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                const data = await r.json().catch(() => ({}));
+                if (!r.ok) throw new Error(data?.error || "送信に失敗しました");
+                console.log("[Night] Lead submitted successfully");
+                return data;
+            } catch (error) {
+                console.error("[Night] Error in submitLead:", error);
+                throw error;
+            }
+        }
+
+        async function submitDiagnosis(payload) {
+            console.log("[Night] submitDiagnosis:", payload);
+            try {
+                const r = await fetch("/api/diagnosis", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                const data = await r.json().catch(() => ({}));
+                if (!r.ok) throw new Error(data?.error || "保存に失敗しました");
+                console.log("[Night] Diagnosis submitted successfully");
+                return data;
+            } catch (error) {
+                console.error("[Night] Error in submitDiagnosis:", error);
+                throw error;
+            }
         }
         const AXES = {
             A: { key: "A", name: "接客スタンス", left: "盛り上げ型", right: "聞き上手型", leftCode: "も", rightCode: "き" },
@@ -1024,33 +1034,31 @@
         function renderResult() {
             const res = computeResult(), ch = res.char;
 
-            // Google Spreadsheet に診断結果を送信（1回だけ）
+            // /api/lead + /api/diagnosis に診断結果を送信（1回だけ）
             console.log("[Night] renderResult: sentToSheet=", state.sentToSheet, "profile=", state.profile);
             if (!state.sentToSheet && state.profile && state.profile.name) {
-                console.log("[Night] Preparing to send to Google Sheet...");
+                console.log("[Night] Preparing to send to /api/lead and /api/diagnosis...");
                 state.sentToSheet = true;
                 saveState();
                 try {
                     const questionAnswers = {};
                     QUESTIONS.forEach(q => { if (state.answers[q.id]) questionAnswers[q.id] = state.answers[q.id]; });
-                    const sheetPayload = {
-                        token: "8mPz2Wq9xL5vN7kRj4tYcX1aB6sD9uGf",
-                        event: "stripe_click",
-                        source: "16night",
-                        createdAt: new Date().toISOString(),
-                        pageUrl: window.location.href,
-                        userAgent: navigator.userAgent,
+                    const payload = {
                         name: state.profile.name,
                         email: state.profile.email,
                         type: res.code,
-                        diagnosis_type: ch ? ch.name : res.code,
-                        diagnosisName: ch ? ch.name : "",
-                        bestJob: ch ? ch.bestJob : "",
                         axes: res.leftPct,
-                        answers: questionAnswers
+                        answers: questionAnswers,
+                        source: "16night",
+                        createdAt: new Date().toISOString()
                     };
-                    sendToGoogleSheet(sheetPayload);
-                } catch (e) { console.error("[Night] Sheet send error:", e); }
+                    const diagnosisPayload = {
+                        ...payload,
+                        diagnosis_type: ch ? ch.name : res.code
+                    };
+                    submitLead(payload).catch(e => console.error("[Night] Lead send failed:", e));
+                    submitDiagnosis(diagnosisPayload).catch(e => console.error("[Night] Diagnosis send failed:", e));
+                } catch (e) { console.error("[Night] API send error:", e); }
             } else {
                 console.log("[Night] Skipped sending: sentToSheet=", state.sentToSheet, "hasName=", !!(state.profile && state.profile.name));
             }
