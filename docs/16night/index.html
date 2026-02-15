@@ -802,20 +802,27 @@
         const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzu8ZWwvtKHWIwqnjqlKkdbPTWN1o7oSxpsBZ-Crdv6zlmCbSeWFlMDZ3sjU9SgCsFOgQ/exec";
 
         function sendToGoogleSheet(payload) {
+            console.log("[Night] sendToGoogleSheet called");
+            console.log("[Night] GAS_WEBAPP_URL:", GAS_WEBAPP_URL);
+            console.log("[Night] Payload:", JSON.stringify(payload, null, 2));
             if (!GAS_WEBAPP_URL) { console.warn("[Night] GAS_WEBAPP_URL is empty. Skipping."); return; }
             try {
                 const body = JSON.stringify(payload);
+                console.log("[Night] Body length:", body.length);
                 if (navigator.sendBeacon) {
                     const blob = new Blob([body], { type: "text/plain" });
-                    navigator.sendBeacon(GAS_WEBAPP_URL, blob);
+                    const result = navigator.sendBeacon(GAS_WEBAPP_URL, blob);
+                    console.log("[Night] sendBeacon result:", result);
                     return;
                 }
+                console.log("[Night] sendBeacon not available, using fetch");
                 fetch(GAS_WEBAPP_URL, {
                     method: "POST", mode: "no-cors",
                     headers: { "Content-Type": "text/plain" },
                     body, keepalive: true
-                }).catch(() => { });
-            } catch (e) { console.warn("[Night] Sheet send failed:", e); }
+                }).then(() => { console.log("[Night] fetch completed"); })
+                    .catch((e) => { console.error("[Night] fetch error:", e); });
+            } catch (e) { console.error("[Night] Sheet send failed:", e); }
         }
         const AXES = {
             A: { key: "A", name: "接客スタンス", left: "盛り上げ型", right: "聞き上手型", leftCode: "も", rightCode: "き" },
@@ -1018,7 +1025,9 @@
             const res = computeResult(), ch = res.char;
 
             // Google Spreadsheet に診断結果を送信（1回だけ）
+            console.log("[Night] renderResult: sentToSheet=", state.sentToSheet, "profile=", state.profile);
             if (!state.sentToSheet && state.profile && state.profile.name) {
+                console.log("[Night] Preparing to send to Google Sheet...");
                 state.sentToSheet = true;
                 saveState();
                 try {
@@ -1039,8 +1048,9 @@
                         answers: questionAnswers
                     };
                     sendToGoogleSheet(sheetPayload);
-                    console.log("[Night] Sent to Google Sheet:", sheetPayload);
-                } catch (e) { console.warn("[Night] Sheet send error:", e); }
+                } catch (e) { console.error("[Night] Sheet send error:", e); }
+            } else {
+                console.log("[Night] Skipped sending: sentToSheet=", state.sentToSheet, "hasName=", !!(state.profile && state.profile.name));
             }
             const useMainDesc = res.midCount <= 1;
             const axisHtml = ["A", "B", "C", "D"].map(k => {
