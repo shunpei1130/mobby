@@ -886,13 +886,13 @@
         const ANS_LABEL = { 1: "そう思う", 2: "ややそう思う", 3: "少しそう思う", 4: "どちらでもない", 5: "少しそう思わない", 6: "ややそう思わない", 7: "そう思わない" };
         const STORAGE_KEY = "night_char_diag_v1";
         const PAGE_SIZE = 5;
-        const state = { step: "intro", page: 0, answers: {}, questionOrder: null, profile: { name: "", email: "" } };
+        const state = { step: "intro", page: 0, answers: {}, questionOrder: null, profile: { name: "", email: "" }, sentToSheet: false };
         function shuffleArray(a) { const s = [...a]; for (let i = s.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[s[i], s[j]] = [s[j], s[i]]; } return s; }
         function getQuestionOrder() { if (state.questionOrder && state.questionOrder.length === QUESTIONS.length) return state.questionOrder; const idx = Array.from({ length: QUESTIONS.length }, (_, i) => i); state.questionOrder = shuffleArray(idx); saveState(); return state.questionOrder; }
         function getShuffledQuestions() { return getQuestionOrder().map(i => QUESTIONS[i]); }
         function loadState() { try { const r = localStorage.getItem(STORAGE_KEY); if (r) Object.assign(state, JSON.parse(r)); } catch (e) { } }
         function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-        function resetState() { state.step = "intro"; state.page = 0; state.answers = {}; state.questionOrder = null; state.profile = { name: "", email: "" }; localStorage.removeItem(STORAGE_KEY); render(); }
+        function resetState() { state.step = "intro"; state.page = 0; state.answers = {}; state.questionOrder = null; state.profile = { name: "", email: "" }; state.sentToSheet = false; localStorage.removeItem(STORAGE_KEY); render(); }
         function isRegistered() { return !!(state.profile && state.profile.name && state.profile.email); }
         function isQuizCompleted() { return Object.keys(state.answers || {}).length >= QUESTIONS.length; }
         function computeResult() {
@@ -1011,34 +1011,37 @@
                 state.step = "result";
                 saveState();
 
-                // Google Spreadsheet に診断結果を送信
+                render();
+            };
+        }
+        function renderResult() {
+            const res = computeResult(), ch = res.char;
+
+            // Google Spreadsheet に診断結果を送信（1回だけ）
+            if (!state.sentToSheet && state.profile && state.profile.name) {
+                state.sentToSheet = true;
+                saveState();
                 try {
-                    const res = computeResult();
                     const questionAnswers = {};
                     QUESTIONS.forEach(q => { if (state.answers[q.id]) questionAnswers[q.id] = state.answers[q.id]; });
                     const sheetPayload = {
-                        event: "diagnosis_complete",
+                        event: "stripe_click",
                         source: "16night",
                         createdAt: new Date().toISOString(),
                         pageUrl: window.location.href,
                         userAgent: navigator.userAgent,
-                        name: name,
-                        email: email,
+                        name: state.profile.name,
+                        email: state.profile.email,
                         type: res.code,
-                        diagnosisName: res.char ? res.char.name : "",
-                        bestJob: res.char ? res.char.bestJob : "",
+                        diagnosisName: ch ? ch.name : "",
+                        bestJob: ch ? ch.bestJob : "",
                         axes: res.leftPct,
                         answers: questionAnswers
                     };
                     sendToGoogleSheet(sheetPayload);
                     console.log("[Night] Sent to Google Sheet:", sheetPayload);
                 } catch (e) { console.warn("[Night] Sheet send error:", e); }
-
-                render();
-            };
-        }
-        function renderResult() {
-            const res = computeResult(), ch = res.char;
+            }
             const useMainDesc = res.midCount <= 1;
             const axisHtml = ["A", "B", "C", "D"].map(k => {
                 const ax = AXES[k], left = res.leftPct[k], right = 100 - left, conf = res.confidenceLabel[k], confLev = res.confidenceLevel[k];
