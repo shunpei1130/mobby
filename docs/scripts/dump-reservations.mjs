@@ -1,5 +1,5 @@
 // scripts/dump-reservations.mjs
-// cd /d "C:\Users\shunp\OneDrive\ドキュメント\works\mobby\HP\docs" && node scripts\dump-reservations.mjs reservations/
+// node scripts\dump-reservations.mjs reservations/
 import fs from 'node:fs/promises';
 import dotenv from 'dotenv';
 import { list } from '@vercel/blob';

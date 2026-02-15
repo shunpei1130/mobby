@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🎉 おめでとうございます！ | Mobby 限定ご招待</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/jpeg" href="img/fav.jpg">
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Yomogi&family=Montserrat:wght@700;800;900&family=Noto+Sans+JP:wght@400;700;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Yomogi&display=swap');
+
+        :root {
+            --color-cream: #FFF8E7;
+            --color-forest: #2F4F4F;
+            --color-sky: #AEC6CF;
+            --color-earth: #8B4513;
+            --color-accent-red: #D2691E;
+            --color-soft-yellow: #F0E68C;
+            --color-gold: #DAA520;
+            --color-gold-light: #FFD700;
+            --font-ja: 'Yomogi', cursive;
+            --font-en: 'Montserrat', sans-serif;
+            --ease-soft: cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-ja);
+            background: var(--color-cream);
+            color: var(--color-forest);
+            overflow-x: hidden;
+            line-height: 1.7;
+        }
+
+        /* ===== SPLASH / CONGRATULATIONS SCREEN ===== */
+        #splash {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+            cursor: pointer;
+            transition: opacity 1.2s ease, visibility 1.2s ease;
+            overflow: hidden;
+        }
+
+        #splash.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* Star particles in splash */
+        .star-field {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--dur, 3s) ease-in-out infinite;
+            opacity: 0;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        /* Golden ring effect */
+        .golden-ring {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: ringPulse 2.5s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        .golden-ring::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, #FFD700, #FFA500, #FFD700, #FF8C00, #FFD700);
+            animation: ringRotate 4s linear infinite;
+        }
+
+        .golden-ring::after {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+        }
+
+        .golden-ring .emoji {
+            position: relative;
+            z-index: 1;
+            font-size: 5.5rem;
+            animation: emojiFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes ringPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 60px rgba(255, 215, 0, 0.6), 0 0 100px rgba(255, 165, 0, 0.2);
+            }
+        }
+
+        @keyframes ringRotate {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes emojiFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .splash-text {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .splash-congrats {
+            font-family: var(--font-en);
+            font-weight: 900;
+            font-size: clamp(1.8rem, 5vw, 3.2rem);
+            background: linear-gradient(135deg, #FFD700, #FFA500, #FFD700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.06em;
+            text-shadow: none;
+            line-height: 1.2;
+        }
+
+        .splash-sub {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: clamp(0.9rem, 2.5vw, 1.15rem);
+            margin-top: 14px;
+            font-weight: 400;
+            letter-spacing: 0.06em;
+        }
+
+        .splash-tap {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+            margin-top: 40px;
+            animation: pulseFade 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseFade {
+
+            0%,
+            100% {
+                opacity: 0.4;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        /* ===== CONFETTI ===== */
+        .confetti-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10000;
+            overflow: hidden;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            top: -20px;
+            animation: confettiFall var(--fall-dur, 3s) var(--fall-delay, 0s) linear forwards;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(1);
+                opacity: 1;
+            }
+
+            80% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(105vh) rotate(var(--rot, 720deg)) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        #main {
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        #main.visible {
+            opacity: 1;
+        }
+
+        /* Hero Section */
+        .hero-win {
+            text-align: center;
+            padding: 50px 20px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-win::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at center, rgba(255, 215, 0, 0.08) 0%, transparent 60%);
+            animation: heroGlow 6s ease-in-out infinite;
+        }
+
+        @keyframes heroGlow {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        .winner-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.15));
+            border: 2px solid rgba(218, 165, 32, 0.4);
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--color-earth);
+            letter-spacing: 0.08em;
+            animation: badgePulse 3s ease-in-out infinite;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes badgePulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
+            }
+
+            50% {
+                box-shadow: 0 0 35px rgba(255, 215, 0, 0.3);
+            }
+        }
+
+        .hero-title {
+            font-family: var(--font-en);
+            font-weight: 900;
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--color-forest);
+            line-height: 1.15;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title .gold {
+            background: linear-gradient(135deg, #DAA520, #FFD700, #B8860B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            margin-top: 12px;
+            opacity: 0.88;
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Countdown */
+        .countdown-section {
+            text-align: center;
+            padding: 0 20px 30px;
+        }
+
+        .countdown-card {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 28px;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(218, 165, 32, 0.3);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        .countdown-label {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--color-earth);
+            letter-spacing: 0.05em;
+        }
+
+        .countdown-timer {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .countdown-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .countdown-num {
+            font-family: var(--font-en);
+            font-weight: 900;
+            font-size: 1.8rem;
+            color: var(--color-forest);
+            background: rgba(255, 248, 231, 0.8);
+            border-radius: 12px;
+            padding: 6px 12px;
+            min-width: 50px;
+            text-align: center;
+            border: 1px solid rgba(47, 79, 79, 0.1);
+        }
+
+        .countdown-sep {
+            font-family: var(--font-en);
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: var(--color-earth);
+            opacity: 0.5;
+        }
+
+        .countdown-txt {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--color-earth);
+            opacity: 0.7;
+            margin-top: 4px;
+        }
+
+        /* Message from Creator */
+        .message-section {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+
+        .message-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 28px;
+            padding: 32px 28px;
+            border: 1px solid rgba(47, 79, 79, 0.12);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .message-card::before {
+            content: '✉';
+            position: absolute;
+            top: -10px;
+            right: -5px;
+            font-size: 6rem;
+            opacity: 0.04;
+        }
+
+        .message-label {
+            font-weight: 800;
+            color: var(--color-earth);
+            font-size: 1.1rem;
+            letter-spacing: 0.08em;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .message-text {
+            font-size: 1.05rem;
+            line-height: 2;
+            opacity: 0.95;
+        }
+
+        .message-text .highlight {
+            background: linear-gradient(transparent 60%, rgba(255, 215, 0, 0.3) 60%);
+            font-weight: 700;
+        }
+
+        /* Product Gallery */
+        .product-section {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+
+        .section-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 999px;
+            background: rgba(218, 165, 32, 0.12);
+            border: 1px solid rgba(218, 165, 32, 0.25);
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--color-earth);
+            letter-spacing: 0.06em;
+            margin-bottom: 14px;
+        }
+
+        .product-title {
+            font-size: clamp(1.4rem, 3vw, 1.8rem);
+            font-weight: 700;
+            color: var(--color-earth);
+            margin-bottom: 20px;
+        }
+
+        .product-gallery {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 24px;
+            max-width: 360px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .product-gallery .main-img {
+            grid-column: 1 / -1;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(47, 79, 79, 0.12);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
+            position: relative;
+            background: #f5f0ea;
+        }
+
+        .product-gallery .main-img img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .product-gallery .main-img .exclusive-ribbon {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            padding: 8px 16px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #DAA520, #FFD700);
+            color: #fff;
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 0.06em;
+            box-shadow: 0 4px 12px rgba(218, 165, 32, 0.4);
+        }
+
+        .product-gallery .sub-img {
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(47, 79, 79, 0.12);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            background: #f5f0ea;
+        }
+
+        .product-gallery .sub-img img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s var(--ease-soft);
+        }
+
+        .product-gallery .sub-img:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Product Details */
+        .product-details {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 26px;
+            padding: 28px 24px;
+            border: 1px solid rgba(47, 79, 79, 0.12);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        .product-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--color-forest);
+            margin-bottom: 12px;
+        }
+
+        .product-desc {
+            font-size: 0.98rem;
+            line-height: 1.9;
+            opacity: 0.9;
+            margin-bottom: 18px;
+        }
+
+        .product-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .feature-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: rgba(174, 198, 207, 0.25);
+            border: 1px solid rgba(47, 79, 79, 0.12);
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--color-forest);
+        }
+
+        .price-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .price-current {
+            font-family: var(--font-en);
+            font-weight: 900;
+            font-size: 2.4rem;
+            color: var(--color-forest);
+        }
+
+        .price-tax {
+            font-size: 0.85rem;
+            color: var(--color-earth);
+            opacity: 0.8;
+            margin-bottom: 6px;
+        }
+
+        .stock-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 999px;
+            background: rgba(255, 99, 71, 0.1);
+            border: 1px solid rgba(255, 99, 71, 0.25);
+            font-weight: 700;
+            font-size: 0.88rem;
+            color: #c0392b;
+            margin-bottom: 20px;
+        }
+
+        .stock-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e74c3c;
+            animation: stockPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes stockPulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        /* Buy Button */
+        .buy-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #2F4F4F, #3a6363);
+            color: #fff;
+            font-family: var(--font-ja);
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: all 0.3s var(--ease-soft);
+            box-shadow: 0 8px 24px rgba(47, 79, 79, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .buy-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .buy-btn:hover::before {
+            left: 100%;
+        }
+
+        .buy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(47, 79, 79, 0.35);
+        }
+
+        .buy-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Trust / Info Section */
+        .trust-section {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .trust-card {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(47, 79, 79, 0.1);
+            border-radius: 20px;
+            padding: 18px 14px;
+            text-align: center;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+        }
+
+        .trust-icon {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .trust-label {
+            font-weight: 700;
+            font-size: 0.88rem;
+            color: var(--color-earth);
+            margin-bottom: 4px;
+        }
+
+        .trust-desc {
+            font-size: 0.8rem;
+            opacity: 0.75;
+        }
+
+        /* Notice */
+        .notice-section {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+
+        .notice-card {
+            background: rgba(255, 248, 231, 0.8);
+            border: 1px dashed rgba(139, 69, 19, 0.25);
+            border-radius: 20px;
+            padding: 22px 20px;
+        }
+
+        .notice-title {
+            font-weight: 700;
+            color: var(--color-earth);
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .notice-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .notice-list li {
+            font-size: 0.88rem;
+            opacity: 0.88;
+            padding: 4px 0;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .notice-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--color-earth);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            opacity: 0.6;
+            font-size: 0.82rem;
+        }
+
+        /* ===== SCROLL ANIMATIONS ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s var(--ease-soft), transform 0.8s var(--ease-soft);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .delay-1 {
+            transition-delay: 0.15s;
+        }
+
+        .delay-2 {
+            transition-delay: 0.3s;
+        }
+
+        .delay-3 {
+            transition-delay: 0.45s;
+        }
+
+        /* ===== FLOATING PARTICLES ===== */
+        .floating-particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.08;
+            animation: particleFloat var(--p-dur, 15s) var(--p-delay, 0s) ease-in-out infinite;
+        }
+
+        @keyframes particleFloat {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            25% {
+                transform: translate(var(--px, 40px), var(--py, -60px)) rotate(90deg);
+            }
+
+            50% {
+                transform: translate(calc(var(--px, 40px) * -1), calc(var(--py, -60px) * 2)) rotate(180deg);
+            }
+
+            75% {
+                transform: translate(calc(var(--px, 40px) * 0.5), var(--py, -60px)) rotate(270deg);
+            }
+        }
+
+        /* ===== PURCHASE MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 10001;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--color-cream);
+            border-radius: 28px;
+            padding: 36px 28px;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.15);
+            transform: translateY(20px);
+            transition: transform 0.4s var(--ease-soft);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-emoji {
+            font-size: 3.5rem;
+            margin-bottom: 14px;
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--color-forest);
+            margin-bottom: 8px;
+        }
+
+        .modal-desc {
+            font-size: 0.95rem;
+            opacity: 0.85;
+            margin-bottom: 22px;
+            line-height: 1.8;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.88rem;
+            color: var(--color-earth);
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(47, 79, 79, 0.18);
+            background: rgba(255, 255, 255, 0.9);
+            font-family: var(--font-ja);
+            font-size: 0.95rem;
+            color: var(--color-forest);
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-input:focus {
+            border-color: rgba(218, 165, 32, 0.5);
+            box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(47, 79, 79, 0.18);
+            background: rgba(255, 255, 255, 0.9);
+            font-family: var(--font-ja);
+            font-size: 0.95rem;
+            color: var(--color-forest);
+            outline: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%232F4F4F' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            border-color: rgba(218, 165, 32, 0.5);
+            box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.1);
+        }
+
+        .modal-buy-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
+            color: #fff;
+            font-family: var(--font-ja);
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: all 0.3s var(--ease-soft);
+            box-shadow: 0 8px 20px rgba(218, 165, 32, 0.3);
+            margin-top: 8px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-buy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(218, 165, 32, 0.4);
+        }
+
+        .modal-close {
+            margin-top: 14px;
+            padding: 10px;
+            background: none;
+            border: none;
+            font-family: var(--font-ja);
+            font-size: 0.88rem;
+            color: var(--color-forest);
+            opacity: 0.5;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .golden-ring {
+                width: 160px;
+                height: 160px;
+            }
+
+            .golden-ring .emoji {
+                font-size: 4rem;
+            }
+
+            .product-details {
+                padding: 20px 16px;
+            }
+
+            .product-name {
+                font-size: 1.1rem;
+            }
+
+            .product-desc {
+                font-size: 0.9rem;
+            }
+
+            .price-current {
+                font-size: 1.8rem;
+            }
+
+            .trust-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .countdown-card {
+                flex-direction: column;
+                gap: 10px;
+                padding: 16px 20px;
+            }
+
+            .countdown-num {
+                font-size: 1.4rem;
+                min-width: 42px;
+                padding: 4px 10px;
+            }
+
+            .message-card {
+                padding: 24px 20px;
+            }
+
+            .modal-content {
+                padding: 28px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .product-gallery {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== PASSWORD GATE ===== */
+        #passGate {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        #passGate.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .gate-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .gate-title {
+            font-family: var(--font-en);
+            font-weight: 800;
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 8px;
+            letter-spacing: 0.06em;
+        }
+
+        .gate-sub {
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+        }
+
+        .gate-input {
+            width: 200px;
+            padding: 14px 18px;
+            border-radius: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-family: var(--font-en);
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 0.3em;
+            outline: none;
+            transition: border-color 0.3s ease;
+            -moz-appearance: textfield;
+        }
+
+        .gate-input::-webkit-outer-spin-button,
+        .gate-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .gate-input:focus {
+            border-color: rgba(255, 215, 0, 0.5);
+        }
+
+        .gate-input.error {
+            border-color: rgba(255, 99, 71, 0.7);
+            animation: gateShake 0.4s ease;
+        }
+
+        @keyframes gateShake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20%,
+            60% {
+                transform: translateX(-8px);
+            }
+
+            40%,
+            80% {
+                transform: translateX(8px);
+            }
+        }
+
+        .gate-btn {
+            margin-top: 16px;
+            padding: 12px 36px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
+            color: #fff;
+            font-family: var(--font-ja);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.06em;
+            transition: all 0.3s var(--ease-soft);
+            box-shadow: 0 6px 18px rgba(218, 165, 32, 0.3);
+        }
+
+        .gate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(218, 165, 32, 0.4);
+        }
+
+        .gate-error-msg {
+            color: rgba(255, 99, 71, 0.9);
+            font-size: 0.85rem;
+            margin-top: 12px;
+            min-height: 1.2em;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== PASSWORD GATE ===== -->
+    <div id="passGate">
+        <div class="gate-icon">🔐</div>
+        <div class="gate-title">ENTER PASSCODE</div>
+        <p class="gate-sub">パスコードを入力してください</p>
+        <input class="gate-input" id="gateInput" type="password" inputmode="numeric" maxlength="4" autocomplete="off"
+            placeholder="••••">
+        <button class="gate-btn" id="gateBtn" onclick="checkGate()">認証する</button>
+        <p class="gate-error-msg" id="gateError"></p>
+    </div>
+
+    <!-- ===== CONFETTI ===== -->
+    <div class="confetti-container" id="confetti"></div>
+
+    <!-- ===== SPLASH SCREEN ===== -->
+    <div id="splash" onclick="dismissSplash()">
+        <div class="star-field" id="starField"></div>
+        <div class="golden-ring">
+            <span class="emoji">🎊</span>
+        </div>
+        <div class="splash-text">
+            <div class="splash-congrats">CONGRATULATIONS!</div>
+            <p class="splash-sub">あなたは抽選に当選しました</p>
+        </div>
+        <p class="splash-tap">タップして特別ページへ</p>
+    </div>
+
+    <!-- ===== FLOATING PARTICLES ===== -->
+    <div class="floating-particles" id="particles"></div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div id="main">
+
+        <!-- Hero -->
+        <section class="hero-win">
+            <div class="winner-badge reveal">
+                ✨ 当選者限定ページ ✨
+            </div>
+            <h1 class="hero-title reveal delay-1">
+                特別なあなたへ<br>
+                <span class="gold">限定アイテム</span>をお届け
+            </h1>
+            <p class="hero-subtitle reveal delay-2">
+                抽選に当選されたあなただけが<br>アクセスできる先着限定の特別販売ページです。
+            </p>
+        </section>
+
+        <!-- Countdown -->
+        <section class="countdown-section reveal">
+            <div class="countdown-card">
+                <span class="countdown-label">⏰ 販売終了まで</span>
+                <div class="countdown-timer" id="countdown">
+                    <div class="countdown-unit">
+                        <span class="countdown-num" id="cd-hours">00</span>
+                        <span class="countdown-txt">時間</span>
+                    </div>
+                    <span class="countdown-sep">:</span>
+                    <div class="countdown-unit">
+                        <span class="countdown-num" id="cd-mins">00</span>
+                        <span class="countdown-txt">分</span>
+                    </div>
+                    <span class="countdown-sep">:</span>
+                    <div class="countdown-unit">
+                        <span class="countdown-num" id="cd-secs">00</span>
+                        <span class="countdown-txt">秒</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Message from Creator -->
+        <section class="message-section">
+            <div class="message-card reveal">
+                <div class="message-label">💌 制作者からのメッセージ</div>
+                <p class="message-text" id="typewriter"></p>
+            </div>
+        </section>
+
+        <!-- Product -->
+        <section class="product-section">
+            <div class="section-tag reveal">🏷️ 先着限定アイテム</div>
+            <h2 class="product-title reveal delay-1">Mobby ぬいぐるみキーホルダー</h2>
+
+            <div class="product-gallery reveal delay-2">
+                <div class="main-img">
+                    <img src="img/nui/nui.jpeg" alt="Mobby ぬいぐるみキーホルダー">
+                    <div class="exclusive-ribbon">✨ 先着限定</div>
+                </div>
+                <div class="sub-img">
+                    <img src="img/nui/2.jpg" alt="Mobby イエロー">
+                </div>
+                <div class="sub-img">
+                    <img src="img/nui/3.jpg" alt="Mobby ミント">
+                </div>
+            </div>
+
+            <div class="product-details reveal">
+                <div class="product-name">🧸 Mobby（モビー）ぬいぐるみキーホルダー</div>
+                <p class="product-desc">
+                    ふわふわの手触りが最高なMobbyのぬいぐるみキーホルダー。<br>
+                    バッグやリュックにつければ、いつでもMobbyと一緒。<br>
+                    当選者だけが手に入れられる、世界にひとつの特別なアイテムです。
+                </p>
+                <div class="product-features">
+                    <span class="feature-tag">🎁 当選者限定</span>
+                    <span class="feature-tag">🧵 ふわふわ素材</span>
+                    <span class="feature-tag">📎 キーホルダー付き</span>
+                    <span class="feature-tag">📦 丁寧梱包</span>
+                </div>
+                <div class="stock-indicator">
+                    <span class="stock-dot"></span>
+                    残りわずか — お早めに！
+                </div>
+                <div class="price-row">
+                    <span class="price-current">¥4,800</span>
+                    <span class="price-tax">（税込）</span>
+                </div>
+                <a class="buy-btn" id="buyBtn" href="https://buy.stripe.com/14AcN50SNdil7WCeVVao80c" target="_blank"
+                    rel="noopener" style="text-decoration:none; text-align:center;">
+                    🛒 購入手続きへ進む
+                </a>
+            </div>
+        </section>
+
+        <!-- Trust -->
+        <section class="trust-section">
+            <div class="trust-grid">
+                <div class="trust-card reveal">
+                    <div class="trust-icon">🚚</div>
+                    <div class="trust-label">送料無料</div>
+                    <div class="trust-desc">全国どこでも送料無料でお届けします</div>
+                </div>
+                <div class="trust-card reveal delay-1">
+                    <div class="trust-icon">🔒</div>
+                    <div class="trust-label">安全な決済</div>
+                    <div class="trust-desc">SSL暗号化で安心のお支払い</div>
+                </div>
+                <div class="trust-card reveal delay-2">
+                    <div class="trust-icon">📞</div>
+                    <div class="trust-label">サポート対応</div>
+                    <div class="trust-desc">ご不明点はいつでもご連絡ください</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Notice -->
+        <section class="notice-section">
+            <div class="notice-card reveal">
+                <div class="notice-title">📋 ご購入に関するご注意</div>
+                <ul class="notice-list">
+                    <li>このページは抽選当選者のみが購入可能です</li>
+                    <li>お一人様1個までのご購入とさせていただきます</li>
+                    <li>転売目的のご購入はお断りしております</li>
+                    <li>発送まで2〜3週間ほどお時間をいただきます</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2026 Mobby — All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- ===== PURCHASE MODAL ===== -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <div class="modal-emoji">🎁</div>
+            <div class="modal-title">ご購入手続き</div>
+            <p class="modal-desc">
+                情報を入力して、<br>あなただけのMobbyを手に入れよう！
+            </p>
+
+            <form id="purchaseForm" onsubmit="handlePurchase(event)">
+                <div class="form-group">
+                    <label class="form-label" for="name">お名前</label>
+                    <input class="form-input" type="text" id="name" placeholder="山田 太郎" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="email">メールアドレス</label>
+                    <input class="form-input" type="email" id="email" placeholder="example@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="phone">電話番号</label>
+                    <input class="form-input" type="tel" id="phone" placeholder="090-1234-5678" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="address">配送先住所</label>
+                    <input class="form-input" type="text" id="address" placeholder="東京都渋谷区..." required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="payment">お支払い方法</label>
+                    <select class="form-select" id="payment" required>
+                        <option value="">選択してください</option>
+                        <option value="convenience">コンビニ払い</option>
+                        <option value="bank">銀行振込</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="modal-buy-btn">
+                    ✨ 購入を確定する ✨
+                </button>
+            </form>
+            <button class="modal-close" onclick="closeModal()">閉じる</button>
+        </div>
+    </div>
+
+    <script>
+        // ===== GATE =====
+        function _h(s) { let h = 0; for (let i = 0; i < s.length; i++) { h = ((h << 5) - h) + s.charCodeAt(i); h |= 0; } return h; }
+        function checkGate() {
+            const v = document.getElementById('gateInput').value;
+            if (_h(v) === 1479589) {
+                document.getElementById('passGate').classList.add('hidden');
+            } else {
+                const inp = document.getElementById('gateInput');
+                inp.classList.add('error');
+                document.getElementById('gateError').textContent = 'パスコードが違います';
+                setTimeout(() => inp.classList.remove('error'), 500);
+            }
+        }
+        document.getElementById('gateInput').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') checkGate();
+        });
+
+        // ===== STARS =====
+        (function createStars() {
+            const field = document.getElementById('starField');
+            for (let i = 0; i < 80; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.setProperty('--dur', (2 + Math.random() * 4) + 's');
+                star.style.animationDelay = Math.random() * 5 + 's';
+                const size = 1 + Math.random() * 3;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                field.appendChild(star);
+            }
+        })();
+
+        // ===== CONFETTI =====
+        function launchConfetti() {
+            const container = document.getElementById('confetti');
+            const colors = ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE'];
+            const shapes = ['square', 'circle'];
+            for (let i = 0; i < 80; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const shape = shapes[Math.floor(Math.random() * shapes.length)];
+                piece.style.left = Math.random() * 100 + '%';
+                piece.style.background = color;
+                piece.style.setProperty('--fall-dur', (2 + Math.random() * 3) + 's');
+                piece.style.setProperty('--fall-delay', Math.random() * 1.5 + 's');
+                piece.style.setProperty('--rot', (360 + Math.random() * 720) + 'deg');
+                const size = 6 + Math.random() * 10;
+                piece.style.width = size + 'px';
+                piece.style.height = (shape === 'circle' ? size : size * 0.6) + 'px';
+                piece.style.borderRadius = shape === 'circle' ? '50%' : '2px';
+                container.appendChild(piece);
+            }
+            setTimeout(() => { container.innerHTML = ''; }, 5500);
+        }
+
+        // ===== FLOATING PARTICLES =====
+        (function createParticles() {
+            const container = document.getElementById('particles');
+            const colors = ['rgba(218,165,32,0.15)', 'rgba(174,198,207,0.12)', 'rgba(255,215,0,0.1)', 'rgba(139,69,19,0.08)'];
+            for (let i = 0; i < 12; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.background = colors[Math.floor(Math.random() * colors.length)];
+                const size = 80 + Math.random() * 200;
+                p.style.width = size + 'px';
+                p.style.height = size + 'px';
+                p.style.setProperty('--p-dur', (12 + Math.random() * 18) + 's');
+                p.style.setProperty('--p-delay', Math.random() * 8 + 's');
+                p.style.setProperty('--px', (20 + Math.random() * 80) + 'px');
+                p.style.setProperty('--py', (-40 - Math.random() * 80) + 'px');
+                container.appendChild(p);
+            }
+        })();
+
+        // ===== SPLASH DISMISS =====
+        let splashDismissed = false;
+        function dismissSplash() {
+            if (splashDismissed) return;
+            splashDismissed = true;
+            document.getElementById('splash').classList.add('hidden');
+            document.getElementById('main').classList.add('visible');
+            launchConfetti();
+            startTypewriter();
+            startCountdown();
+        }
+
+        // ===== TYPEWRITER =====
+        function startTypewriter() {
+            const text = 'この度は、抽選にご応募いただきありがとうございました！\nそして、当選おめでとうございます🎉\n\nMobbyを応援してくださる皆さんへの感謝の気持ちを込めて、今回当選された方だけの特別なアイテムをご用意しました。\n\nこのぬいぐるみキーホルダーは、先着限定のスペシャルアイテムです。\nぜひMobbyと一緒に、毎日をもっと楽しくしてください！';
+            const el = document.getElementById('typewriter');
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    const char = text[i];
+                    if (char === '\n') {
+                        el.innerHTML += '<br>';
+                    } else {
+                        el.innerHTML += char;
+                    }
+                    i++;
+                    setTimeout(type, 32);
+                } else {
+                    el.classList.add('typing-complete');
+                }
+            }
+            setTimeout(type, 800);
+        }
+
+        // ===== COUNTDOWN (24h from first visit) =====
+        function startCountdown() {
+            let endTime = localStorage.getItem('mobby_win_end');
+            if (!endTime) {
+                endTime = Date.now() + 24 * 60 * 60 * 1000;
+                localStorage.setItem('mobby_win_end', endTime);
+            }
+            endTime = parseInt(endTime);
+
+            function update() {
+                const now = Date.now();
+                let diff = endTime - now;
+                if (diff <= 0) {
+                    endTime = now + 28 * 60 * 60 * 1000;
+                    localStorage.setItem('mobby_win_end', endTime);
+                    diff = endTime - now;
+                }
+
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('cd-mins').textContent = String(mins).padStart(2, '0');
+                document.getElementById('cd-secs').textContent = String(secs).padStart(2, '0');
+            }
+            update();
+            setInterval(update, 1000);
+        }
+
+        // ===== SCROLL REVEAL =====
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // ===== MODAL =====
+        function openModal() {
+            const modal = document.getElementById('modal');
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on overlay click
+        document.getElementById('modal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeModal();
+        });
+
+        // ===== PURCHASE HANDLER =====
+        function handlePurchase(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
+            const payment = document.getElementById('payment').value;
+
+            // Replace modal content with success
+            const modalContent = document.querySelector('.modal-content');
+            modalContent.innerHTML = `
+        <div class="modal-emoji">🎉</div>
+        <div class="modal-title">ご注文ありがとうございます！</div>
+        <p class="modal-desc">
+          <strong>${name}</strong> 様<br><br>
+          ご購入ありがとうございます！<br>
+          確認メールを <strong>${email}</strong> へお送りしました。<br><br>
+          お届けまで少々お待ちください。<br>
+          Mobbyと一緒に楽しい毎日を🧸💕
+        </p>
+        <button class="modal-close" onclick="closeModal()" style="opacity:0.8; font-size:0.95rem;">閉じる</button>
+      `;
+            launchConfetti();
+        }
+    </script>
+</body>
+
+</html>
