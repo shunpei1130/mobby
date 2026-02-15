@@ -1034,6 +1034,7 @@
                     const questionAnswers = {};
                     QUESTIONS.forEach(q => { if (state.answers[q.id]) questionAnswers[q.id] = state.answers[q.id]; });
                     const sheetPayload = {
+                        token: "8mPz2Wq9xL5vN7kRj4tYcX1aB6sD9uGf",
                         event: "stripe_click",
                         source: "16night",
                         createdAt: new Date().toISOString(),
@@ -1042,6 +1043,7 @@
                         name: state.profile.name,
                         email: state.profile.email,
                         type: res.code,
+                        diagnosis_type: ch ? ch.name : res.code,
                         diagnosisName: ch ? ch.name : "",
                         bestJob: ch ? ch.bestJob : "",
                         axes: res.leftPct,
