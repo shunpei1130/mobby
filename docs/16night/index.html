@@ -799,6 +799,24 @@
         <footer>&copy; 2026 Mobby. All rights reserved.</footer>
     </div>
     <script>
+        const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzu8ZWwvtKHWIwqnjqlKkdbPTWN1o7oSxpsBZ-Crdv6zlmCbSeWFlMDZ3sjU9SgCsFOgQ/exec";
+
+        function sendToGoogleSheet(payload) {
+            if (!GAS_WEBAPP_URL) { console.warn("[Night] GAS_WEBAPP_URL is empty. Skipping."); return; }
+            try {
+                const body = JSON.stringify(payload);
+                if (navigator.sendBeacon) {
+                    const blob = new Blob([body], { type: "text/plain" });
+                    navigator.sendBeacon(GAS_WEBAPP_URL, blob);
+                    return;
+                }
+                fetch(GAS_WEBAPP_URL, {
+                    method: "POST", mode: "no-cors",
+                    headers: { "Content-Type": "text/plain" },
+                    body, keepalive: true
+                }).catch(() => { });
+            } catch (e) { console.warn("[Night] Sheet send failed:", e); }
+        }
         const AXES = {
             A: { key: "A", name: "接客スタンス", left: "盛り上げ型", right: "聞き上手型", leftCode: "も", rightCode: "き" },
             B: { key: "B", name: "スタイル", left: "華やか系", right: "ナチュラル系", leftCode: "は", rightCode: "な" },
@@ -992,6 +1010,30 @@
                 state.profile = { name, email };
                 state.step = "result";
                 saveState();
+
+                // Google Spreadsheet に診断結果を送信
+                try {
+                    const res = computeResult();
+                    const questionAnswers = {};
+                    QUESTIONS.forEach(q => { if (state.answers[q.id]) questionAnswers[q.id] = state.answers[q.id]; });
+                    const sheetPayload = {
+                        event: "diagnosis_complete",
+                        source: "16night",
+                        createdAt: new Date().toISOString(),
+                        pageUrl: window.location.href,
+                        userAgent: navigator.userAgent,
+                        name: name,
+                        email: email,
+                        type: res.code,
+                        diagnosisName: res.char ? res.char.name : "",
+                        bestJob: res.char ? res.char.bestJob : "",
+                        axes: res.leftPct,
+                        answers: questionAnswers
+                    };
+                    sendToGoogleSheet(sheetPayload);
+                    console.log("[Night] Sent to Google Sheet:", sheetPayload);
+                } catch (e) { console.warn("[Night] Sheet send error:", e); }
+
                 render();
             };
         }
