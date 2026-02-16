@@ -285,9 +285,28 @@
       color: #fff;
     }
 
-    #openImagePopup {
+    #openEncyclopediaPopup {
       background-color: #9bb5ae;
       color: #fff;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 600px) {
+      #encyclopediaTabs {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+      }
     }
 
     #openFaqPopup {
@@ -2947,37 +2966,28 @@
       </div>
     </div>
 
-    <!-- 画像ポップアップ -->
-    <div id="imagePopup" class="popup-overlay" aria-hidden="true">
-      <div class="popup-content image-gallery-popup">
-        <button class="popup-close" id="closeImagePopup" aria-label="閉じる">×</button>
-        <div class="image-gallery-container">
-          <div class="image-gallery-viewport" id="imageGalleryViewport">
-            <div class="image-gallery-track" id="imageGalleryTrack">
-              <div class="image-gallery-slide">
-                <img src="img/1.jpg" alt="Mobby 画像 1" class="gallery-image" loading="lazy">
-              </div>
-              <div class="image-gallery-slide">
-                <img src="img/2.jpg" alt="Mobby 画像 2" class="gallery-image" loading="lazy">
-              </div>
-              <div class="image-gallery-slide">
-                <img src="img/3.jpg" alt="Mobby 画像 3" class="gallery-image" loading="lazy">
-              </div>
-              <div class="image-gallery-slide">
-                <img src="img/4.jpg" alt="Mobby 画像 4" class="gallery-image" loading="lazy">
-              </div>
-            </div>
+    <!-- モビー図鑑ポップアップ -->
+    <div id="encyclopediaPopup" class="popup-overlay" aria-hidden="true">
+      <div class="popup-content"
+        style="max-width:960px;width:95%;max-height:90vh;overflow-y:auto;border-radius:20px;padding:0;">
+        <button class="popup-close" id="closeEncyclopediaPopup" aria-label="閉じる">×</button>
+        <div style="padding:28px 24px 24px;">
+          <div style="text-align:center;margin-bottom:20px;">
+            <h2 style="font-size:22px;font-weight:800;margin:0 0 6px;color:#4a3728;">📖 モビー図鑑</h2>
+            <p style="font-size:13px;color:#8a7a6a;margin:0;">全64タイプのモビーを見てみよう！</p>
           </div>
-          <div class="image-gallery-controls">
-            <button class="gallery-nav-btn gallery-prev" id="imageGalleryPrev" aria-label="前の画像">‹</button>
-            <button class="gallery-nav-btn gallery-next" id="imageGalleryNext" aria-label="次の画像">›</button>
-          </div>
-          <div class="image-gallery-indicator" id="imageGalleryIndicator">
-            <span class="indicator-dot active" data-index="0"></span>
-            <span class="indicator-dot" data-index="1"></span>
-            <span class="indicator-dot" data-index="2"></span>
-          </div>
+          <div id="encyclopediaTabs"
+            style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;"></div>
+          <div id="encyclopediaGrid"
+            style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;"></div>
         </div>
+      </div>
+    </div>
+    <!-- 図鑑詳細モーダル -->
+    <div id="encyclopediaDetailModal"
+      style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.65);z-index:10001;align-items:center;justify-content:center;padding:20px;">
+      <div id="encyclopediaDetailContent"
+        style="background:#fff;border-radius:20px;max-width:500px;width:100%;max-height:85vh;overflow-y:auto;padding:28px 24px;position:relative;">
       </div>
     </div>
 
@@ -3030,7 +3040,7 @@
           </div>
 
           <button class="btn btn-secondary" id="openFaqPopup">FAQ</button>
-          <button class="btn btn-secondary" id="openImagePopup">画像</button>
+          <button class="btn btn-secondary" id="openEncyclopediaPopup">図鑑</button>
           <button class="btn btn-secondary" id="openVideoPopup">動画</button>
         </div>
       </div>
@@ -4127,8 +4137,8 @@
         }
       }
 
-      if (popupId === 'imagePopup') {
-        setTimeout(() => { initImageGallery(); }, 100);
+      if (popupId === 'encyclopediaPopup') {
+        setTimeout(() => { initEncyclopedia(); }, 100);
       }
     }
 
@@ -4162,187 +4172,169 @@
       }
     }
 
-    /* ===== Image Gallery (Apple-style) ===== */
-    let imageGalleryIndex = 0;
-    let imageGalleryTranslateX = 0;
-    let imageGalleryIsDragging = false;
-    let imageGalleryStartX = 0;
-    let imageGalleryStartTranslateX = 0;
-    let imageGalleryStartTime = 0;
-    let imageGalleryVelocity = 0;
-    let imageGalleryLastX = 0;
-    let imageGalleryLastTime = 0;
-    let imageGalleryTotalSlides = 0;
+    /* ===== Encyclopedia (図鑑) ===== */
+    const ENCYCLOPEDIA_DATA = [
+      // School Male (16)
+      { name: "文化祭センターステージモビー", img: "16school/snsimg/man/文化祭センターステージモビー.jpg", cat: "school_m", summary: "場の空気を読むのが早く、自然と前に立っているタイプ。", catch: "「盛り上がってる？」が合言葉。場の空気を一瞬で読んで、自分から動けるタイプ。" },
+      { name: "体育祭モビー", img: "16school/snsimg/man/体育祭モビー.jpg", cat: "school_m", summary: "盛り上がりを作るタイプ。", catch: "「全力で行こうぜ！」仲間と一緒なら、何でも全力で楽しめる。" },
+      { name: "廊下ランウェイモビー", img: "16school/snsimg/man/廊下ランウェイモビー.jpg", cat: "school_m", summary: "オシャレとノリで場を支配するタイプ。", catch: "「見られてる？ ならもっと決める」。廊下が自分のステージ。" },
+      { name: "応援団長モビー", img: "16school/snsimg/man/応援団長モビー.jpg", cat: "school_m", summary: "仲間を巻き込んで場を熱くするタイプ。", catch: "「俺がやらなきゃ始まらない」。熱さで場を変える力がある。" },
+      { name: "裏アカ拡散モビー", img: "16school/snsimg/man/裏アカ拡散モビー.jpg", cat: "school_m", summary: "情報収集と拡散が得意なタイプ。", catch: "「知ってた？」が口癖。情報ネットワークの中心にいる。" },
+      { name: "部室たまり場モビー", img: "16school/snsimg/man/部室たまり場モビー.jpg", cat: "school_m", summary: "気の合う仲間と自分のペースで過ごすタイプ。", catch: "「ここが一番落ち着く」。仲間との空間を自分で作る。" },
+      { name: "教科書裏落書きモビー", img: "16school/snsimg/man/教科書裏落書きモビー.jpg", cat: "school_m", summary: "独自の世界観を持つクリエイティブタイプ。", catch: "「これ、面白くない？」。自分の世界を表現したい。" },
+      { name: "屋上自由時間モビー", img: "16school/snsimg/man/屋上自由時間モビー.jpg", cat: "school_m", summary: "マイペースに自由を楽しむタイプ。", catch: "「自由が一番」。束縛を嫌い、自分の時間を大事にする。" },
+      { name: "舞台袖実行委員モビー", img: "16school/snsimg/man/舞台袖実行委員モビー.jpg", cat: "school_m", summary: "裏方として場を支えるタイプ。", catch: "「誰かがやらないと回らない」。縁の下の力持ち。" },
+      { name: "学級委員モビー", img: "16school/snsimg/man/学級委員モビー.jpg", cat: "school_m", summary: "真面目に場を整えるタイプ。", catch: "「ちゃんとやろう」。責任感で周りを引っ張る。" },
+      { name: "制服アレンジモビー", img: "16school/snsimg/man/制服アレンジモビー.jpg", cat: "school_m", summary: "個性を出しつつルール内で勝負するタイプ。", catch: "「校則ギリ攻める」。自分なりのスタイルにこだわる。" },
+      { name: "成績掲示板モビー", img: "16school/snsimg/man/成績掲示板モビー.jpg", cat: "school_m", summary: "数字で結果を示すタイプ。", catch: "「結果が全て」。努力を形にすることに価値を感じる。" },
+      { name: "模試ランキングモビー", img: "16school/snsimg/man/模試ランキングモビー.jpg", cat: "school_m", summary: "目標を立てて計画的に動くタイプ。", catch: "「次は絶対上がる」。戦略的に上を目指す。" },
+      { name: "図書委員モビー", img: "16school/snsimg/man/図書委員モビー.jpg", cat: "school_m", summary: "静かな場所で知識を深めるタイプ。", catch: "「この本、面白いよ」。深い知識が武器になる。" },
+      { name: "理科室研究モビー", img: "16school/snsimg/man/理科室研究モビー.jpg", cat: "school_m", summary: "興味を追求するタイプ。", catch: "「もっと知りたい」。好奇心が原動力。" },
+      { name: "自習室モビー", img: "16school/snsimg/man/自習室モビー.jpg", cat: "school_m", summary: "自分のペースでコツコツ取り組むタイプ。", catch: "「集中できる時間が好き」。一人の時間が力になる。" },
+      // School Female (16)
+      { name: "文化祭広報モビー", img: "16school/snsimg/woman/文化祭広報モビー.jpg", cat: "school_f", summary: "人の輪の中心に入りながら、空気を整えて見せ方まで作るタイプ。", catch: "「みんなで盛れよう！」が合言葉。場を回しながら、全体の見せ方まで考えられる。" },
+      { name: "昼休みお弁当会モビー", img: "16school/snsimg/woman/昼休みお弁当会モビー.jpg", cat: "school_f", summary: "友達との落ち着く時間を大事にするタイプ。", catch: "「今日も楽しかったね」が最高の褒め言葉。落ち着く仲間との時間が一番の宝物。" },
+      { name: "帰り道デートモビー", img: "16school/snsimg/woman/帰り道デートモビー.jpg", cat: "school_f", summary: "好きな人ができると一気に恋愛モードになるタイプ。", catch: "「好きな人がいると毎日キラキラ」。恋も友達も大事にしたい欲張りさん。" },
+      { name: "屋上ひみつ恋モビー", img: "16school/snsimg/woman/屋上ひみつ恋モビー.jpg", cat: "school_f", summary: "二人の空気を守りたい慎重派タイプ。", catch: "「二人だけの秘密」が特別。派手にアピールするより、静かに育てたい。" },
+      { name: "プリクラ拡散モビー", img: "16school/snsimg/woman/プリクラ拡散モビー.jpg", cat: "school_f", summary: "友達と盛れてる瞬間が最高なタイプ。", catch: "「今日めっちゃ盛れた！」が最高の瞬間。友達と一緒なら何でも楽しい。" },
+      { name: "購買前たまり場モビー", img: "16school/snsimg/woman/購買前たまり場モビー.jpg", cat: "school_f", summary: "自分のノリと気分を大事にするタイプ。", catch: "「気分がいいのが一番」。見せびらかすより、今この瞬間を楽しみたい。" },
+      { name: "カップル自撮りモビー", img: "16school/snsimg/woman/カップル自撮りモビー.jpg", cat: "school_f", summary: "恋も見せ方も全力でこだわるタイプ。", catch: "「好きな人と盛れてる私、最強」。恋愛も見せ方も両方こだわりたい。" },
+      { name: "放課後即レスモビー", img: "16school/snsimg/woman/放課後即レスモビー.jpg", cat: "school_f", summary: "自分の気持ちで即行動するタイプ。", catch: "「好きなら即行動」。周りの目より、自分の気持ちが一番大事。" },
+      { name: "クラスアルバム映えモビー", img: "16school/snsimg/woman/クラスアルバム映えモビー.jpg", cat: "school_f", summary: "控えめだけど抜け目ないタイプ。", catch: "「ここぞという時はちゃんとする」。控えめだけど、抜け目ない。" },
+      { name: "図書室まったりモビー", img: "16school/snsimg/woman/図書室まったりモビー.jpg", cat: "school_f", summary: "静かな空間で本領を発揮するタイプ。", catch: "「無理しない関係が一番」。派手さより、安心できる空間が大事。" },
+      { name: "ストーリー匂わせモビー", img: "16school/snsimg/woman/ストーリー匂わせモビー.jpg", cat: "school_f", summary: "直接言えないけど気づいてほしいタイプ。", catch: "「察してほしい」が本音。直接言えないけど、気づいてほしい。" },
+      { name: "ロッカー手紙モビー", img: "16school/snsimg/woman/ロッカー手紙モビー.jpg", cat: "school_f", summary: "大事な気持ちを静かに育てるタイプ。", catch: "「大事な気持ちは静かに育てる」。誠実さで勝負したい。" },
+      { name: "ストーリー撮影班モビー", img: "16school/snsimg/woman/ストーリー撮影班モビー.jpg", cat: "school_f", summary: "映える瞬間の嗅覚が強い裏方タイプ。", catch: "「いい写真、撮ったよ」が褒め言葉。裏方だけど、センスには自信あり。" },
+      { name: "ネイルこだわりモビー", img: "16school/snsimg/woman/ネイルこだわりモビー.jpg", cat: "school_f", summary: "自分のテンションのために盛るタイプ。", catch: "「自分が上がるためにやってる」。見せびらかしより、自分の機嫌が大事。" },
+      { name: "匂わせプリクラモビー", img: "16school/snsimg/woman/匂わせプリクラモビー.jpg", cat: "school_f", summary: "恋が絡むと見せ方が鋭くなるタイプ。", catch: "「察して…？」が全開。控えめに見えて、勝ち筋はしっかり見てる。" },
+      { name: "放課後こっそり通話モビー", img: "16school/snsimg/woman/放課後こっそり通話モビー.jpg", cat: "school_f", summary: "二人の時間を守りたい恋愛本気タイプ。", catch: "「二人だけの時間が一番」。周りには見せないけど、恋愛には本気。" },
+      // Mama (16)
+      { name: "連絡網即断司令塔モビー", img: "16school/mama/img/連絡網即断司令塔モビー.jpg", cat: "mama", summary: "情報も段取りも回す伴走型。", catch: "情報も段取りも、回すなら私。家族の選択肢を増やす伴走型。" },
+      { name: "運動会タイムキーパーモビー", img: "16school/mama/img/運動会タイムキーパーモビー.jpg", cat: "mama", summary: "必要なことは即決で整える。でも最後は子に任せる。", catch: "必要なことは即決で整える。でも最後は子に任せる。" },
+      { name: "放課後相談ホットラインモビー", img: "16school/mama/img/放課後相談ホットラインモビー.jpg", cat: "mama", summary: "心の土台づくりに直球で伴走するタイプ。", catch: "心の土台づくりに直球で伴走。相談が来たら全力で受ける。" },
+      { name: "校門あいさつ隊モビー", img: "16school/mama/img/校門あいさつ隊モビー.jpg", cat: "mama", summary: "場の空気は明るくする。子のことは任せて見守る。", catch: "場の空気は明るくする。子のことは任せて見守る。" },
+      { name: "面談前リサーチモビー", img: "16school/mama/img/面談前リサーチモビー.jpg", cat: "mama", summary: "まず情報収集。勝ち筋を見つけて、静かに伴走する。", catch: "まず情報収集。勝ち筋を見つけて、静かに伴走する。" },
+      { name: "LINE既読熟考モビー", img: "16school/mama/img/LINE既読熟考モビー.jpg", cat: "mama", summary: "すぐ返さないのは、ちゃんと考えてるから。", catch: "すぐ返さないのは、ちゃんと考えてるから。見守り型の情報処理。" },
+      { name: "友だち関係ナビモビー", img: "16school/mama/img/友だち関係ナビモビー.jpg", cat: "mama", summary: "空気を読みながら、子の人間関係を支える伴走役。", catch: "空気を読みながら、子の人間関係を迷子にしない伴走役。" },
+      { name: "ランチ会聞き役モビー", img: "16school/mama/img/ランチ会聞き役モビー.jpg", cat: "mama", summary: "急がず焦らず、話を受け止める見守り型。", catch: "急がず焦らず、話を受け止める。土台重視の見守り型。" },
+      { name: "家庭内スケジュール司令モビー", img: "16school/mama/img/家庭内スケジュール司令モビー.jpg", cat: "mama", summary: "外では静か、家では段取りで勝つ。", catch: "外では静か、家では段取りで勝つ。選択肢重視の伴走型。" },
+      { name: "テスト前だけ直球モビー", img: "16school/mama/img/テスト前だけ直球モビー.jpg", cat: "mama", summary: "普段は任せるが、締切前だけは直球で軌道修正。", catch: "普段は任せる。だけど締切前だけは直球で軌道修正。" },
+      { name: "親子直球作戦会議モビー", img: "16school/mama/img/親子直球作戦会議モビー.jpg", cat: "mama", summary: "守る時は守る。子の土台を固めるための作戦会議。", catch: "守る時は守る。子の土台を固めるために、家で作戦会議。" },
+      { name: "送迎車内サクッと相談モビー", img: "16school/mama/img/送迎車内サクッと相談モビー.jpg", cat: "mama", summary: "短い時間で核心に触れる直球見守り型。", catch: "短い時間で核心に触れる。言ったら任せる、直球見守り型。" },
+      { name: "成績表こっそり分析モビー", img: "16school/mama/img/成績表こっそり分析モビー.jpg", cat: "mama", summary: "目立たず整えて、勝ち筋を作る。", catch: "目立たず整えて、勝ち筋を作る。観察×選択肢×伴走。" },
+      { name: "影の進路リサーチモビー", img: "16school/mama/img/影の進路リサーチモビー.jpg", cat: "mama", summary: "口は出さない、でも見ている。選択肢は静かに確保する。", catch: "口は出さない、でも見ている。選択肢は静かに確保する。" },
+      { name: "寝る前そっとカウンセルモビー", img: "16school/mama/img/寝る前そっとカウンセルモビー.jpg", cat: "mama", summary: "言葉にできない気持ちを拾う静かな伴走。", catch: "言葉にできない気持ちを拾う。土台を整える静かな伴走。" },
+      { name: "後方席静観モビー", img: "16school/mama/img/後方席静観モビー.jpg", cat: "mama", summary: "必要以上に踏み込まない。安心基地として後ろから支える。", catch: "必要以上に踏み込まない。安心基地として、後ろから支える。" },
+      // Night (16)
+      { name: "No.1キャバ嬢モビー", img: "16night/img/もはふし.jpg", cat: "night", summary: "場を支配し、太客を掴み、売上で頂点を取る。", catch: "「私がNo.1。それが全て。」華やかさと戦略で頂点に立つ女王タイプ。" },
+      { name: "パーティーガールモビー", img: "16night/img/もはふや.jpg", cat: "night", summary: "場を最高に盛り上げる、お祭り大好きタイプ。", catch: "「今夜も最高に楽しもう！」ノリと華やかさで場を支配する。" },
+      { name: "インスタ映えキャストモビー", img: "16night/img/もはかし.jpg", cat: "night", summary: "SNSと見た目で新規を呼び、数字に変える。", catch: "「映える私が最強の武器」SNS集客力が半端ない現代型キャスト。" },
+      { name: "場回しクイーンモビー", img: "16night/img/もはかや.jpg", cat: "night", summary: "華やかに場を回して、全員を笑顔にする。", catch: "「全員楽しんでる？それが一番大事！」場の空気を最高にするのが使命。" },
+      { name: "エース嬢モビー", img: "16night/img/もなふし.jpg", cat: "night", summary: "品のある接客で太客を掴み、着実に稼ぐ。", catch: "「品と信頼で勝負する」落ち着いた接客力でエースに上り詰めるタイプ。" },
+      { name: "癒し系ママ候補モビー", img: "16night/img/もなふや.jpg", cat: "night", summary: "温かい空間を作り、お客さんの居場所になる。", catch: "「あなたの話、もっと聞かせて？」包容力で虜にする癒しの女神。" },
+      { name: "客引き最強モビー", img: "16night/img/もなかし.jpg", cat: "night", summary: "ナチュラルな魅力で次々と新規を獲得する。", catch: "「初めまして、が一番得意！」自然体で新規を掴む天才。" },
+      { name: "みんなの太陽モビー", img: "16night/img/もなかや.jpg", cat: "night", summary: "自然体の明るさで場全体を温める。", catch: "「いるだけで空気が明るくなる」自然体こそ最強の武器。" },
+      { name: "太客育成モビー", img: "16night/img/きはふし.jpg", cat: "night", summary: "華やかさで掴み、戦略で太客を育てる。", catch: "「あなた特別よ」の一言で太客が完成する。計算と華やかさの二刀流。" },
+      { name: "姫キャラモビー", img: "16night/img/きはふや.jpg", cat: "night", summary: "可愛がられ力で太客に愛される。", catch: "「もう〜甘えさせてよ〜♡」愛嬌と甘え上手で太客のハートを掴む。" },
+      { name: "ブランド構築モビー", img: "16night/img/きはかし.jpg", cat: "night", summary: "自分をブランド化して高単価で勝負する。", catch: "「私という存在が価値」セルフブランディングで差をつける戦略家。" },
+      { name: "SNS戦略家モビー", img: "16night/img/きはかや.jpg", cat: "night", summary: "SNSで世界観を作り、ファンを集める。", catch: "「フォロワー＝見込み客」デジタルで差をつける新時代キャスト。" },
+      { name: "VIPルーム専属モビー", img: "16night/img/きなふし.jpg", cat: "night", summary: "静かな空間で太客と深い関係を築く。", catch: "「あなただけの特別な時間」VIP対応のプロフェッショナル。" },
+      { name: "常連づくりの匠モビー", img: "16night/img/きなふや.jpg", cat: "night", summary: "穏やかな関係性で常連を増やし続ける。", catch: "「いつもの場所でいつもの笑顔」安心感で常連を虜にする。" },
+      { name: "裏方最強モビー", img: "16night/img/きなかし.jpg", cat: "night", summary: "目立たないけど、お店の売上を支える影の実力者。", catch: "「数字は裏で作るもの」静かに結果を出す最強のサポーター。" },
+      { name: "居場所づくりモビー", img: "16night/img/きなかや.jpg", cat: "night", summary: "お客さんにとっての帰る場所を作る。", catch: "「ここに来ると落ち着くでしょ？」温かい居場所を提供する癒しの存在。" },
+    ];
 
-    function initImageGallery() {
-      const track = document.getElementById('imageGalleryTrack');
-      const viewport = document.getElementById('imageGalleryViewport');
-      const prevBtn = document.getElementById('imageGalleryPrev');
-      const nextBtn = document.getElementById('imageGalleryNext');
-      const indicators = document.querySelectorAll('.indicator-dot');
-      const slides = document.querySelectorAll('.image-gallery-slide');
+    const ENCYCLOPEDIA_CATEGORIES = [
+      { key: "school_m", label: "🏫 学校♂", color: "#4a90d9" },
+      { key: "school_f", label: "🏫 学校♀", color: "#e9748d" },
+      { key: "mama", label: "👩 ママ", color: "#e8a0bf" },
+      { key: "night", label: "🌙 夜職", color: "#c9a050" },
+    ];
 
-      if (!track || !viewport) return;
+    let encyclopediaActiveTab = "school_m";
 
-      imageGalleryTotalSlides = slides.length;
+    function initEncyclopedia() {
+      const tabsEl = document.getElementById('encyclopediaTabs');
+      const gridEl = document.getElementById('encyclopediaGrid');
+      if (!tabsEl || !gridEl) return;
 
-      imageGalleryIndex = 0;
-      imageGalleryTranslateX = 0;
-      updateImageGallery();
+      // Render tabs
+      tabsEl.innerHTML = ENCYCLOPEDIA_CATEGORIES.map(c => {
+        const isActive = c.key === encyclopediaActiveTab;
+        return `<button data-cat="${c.key}" style="
+          padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;border:2px solid ${c.color};
+          background:${isActive ? c.color : 'transparent'};color:${isActive ? '#fff' : c.color};
+          transition:all 0.2s ease;
+        ">${c.label}</button>`;
+      }).join('');
 
-      if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-          if (imageGalleryIndex > 0) {
-            imageGalleryIndex--;
-            updateImageGallery();
-          }
+      // Tab click
+      tabsEl.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          encyclopediaActiveTab = btn.dataset.cat;
+          initEncyclopedia();
         });
-      }
+      });
 
-      if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-          if (imageGalleryIndex < imageGalleryTotalSlides - 1) {
-            imageGalleryIndex++;
-            updateImageGallery();
-          }
+      // Render grid
+      const items = ENCYCLOPEDIA_DATA.filter(d => d.cat === encyclopediaActiveTab);
+      const catInfo = ENCYCLOPEDIA_CATEGORIES.find(c => c.key === encyclopediaActiveTab);
+      gridEl.innerHTML = items.map((item, i) => `
+        <div class="ency-card" data-idx="${i}" style="
+          background:#fff;border-radius:14px;overflow:hidden;cursor:pointer;
+          box-shadow:0 2px 12px rgba(0,0,0,0.08);border:1px solid rgba(0,0,0,0.06);
+          transition:transform 0.2s ease,box-shadow 0.2s ease;
+          animation:fadeIn 0.3s ease ${i * 0.03}s both;
+        ">
+          <div style="aspect-ratio:1/1;overflow:hidden;background:#f5f0eb;">
+            <img src="${item.img}" alt="${item.name}" loading="lazy" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+          </div>
+          <div style="padding:8px 10px 10px;">
+            <div style="font-size:11px;font-weight:700;color:#4a3728;line-height:1.3;min-height:28px;display:flex;align-items:center;">${item.name}</div>
+          </div>
+        </div>
+      `).join('');
+
+      // Card hover
+      gridEl.querySelectorAll('.ency-card').forEach(card => {
+        card.addEventListener('mouseenter', () => { card.style.transform = 'translateY(-3px)'; card.style.boxShadow = '0 6px 20px rgba(0,0,0,0.12)'; });
+        card.addEventListener('mouseleave', () => { card.style.transform = ''; card.style.boxShadow = ''; });
+        card.addEventListener('click', () => {
+          const idx = parseInt(card.dataset.idx);
+          showEncyclopediaDetail(items[idx], catInfo);
         });
-      }
-
-      indicators.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-          imageGalleryIndex = index;
-          updateImageGallery();
-        });
       });
-
-      viewport.addEventListener('pointerdown', (e) => {
-        if (imageGalleryIsDragging) return;
-        imageGalleryIsDragging = true;
-        imageGalleryStartX = e.clientX;
-        imageGalleryStartTime = Date.now();
-        imageGalleryLastX = e.clientX;
-        imageGalleryLastTime = imageGalleryStartTime;
-        imageGalleryVelocity = 0;
-
-        const slideWidth = viewport.offsetWidth;
-        imageGalleryStartTranslateX = -imageGalleryIndex * slideWidth;
-        imageGalleryTranslateX = imageGalleryStartTranslateX;
-
-        viewport.style.cursor = 'grabbing';
-        track.style.transition = 'none';
-        e.preventDefault();
-      });
-
-      viewport.addEventListener('pointermove', (e) => {
-        if (!imageGalleryIsDragging) return;
-
-        const currentX = e.clientX;
-        const currentTime = Date.now();
-        const slideWidth = viewport.offsetWidth;
-        const diff = currentX - imageGalleryStartX;
-
-        if (currentTime - imageGalleryLastTime > 0) {
-          imageGalleryVelocity = (currentX - imageGalleryLastX) / (currentTime - imageGalleryLastTime);
-          imageGalleryLastX = currentX;
-          imageGalleryLastTime = currentTime;
-        }
-
-        const targetTranslate = imageGalleryStartTranslateX + diff;
-        const minTranslate = -(imageGalleryTotalSlides - 1) * slideWidth;
-        const maxTranslate = 0;
-
-        if (targetTranslate > maxTranslate) {
-          imageGalleryTranslateX = maxTranslate + (targetTranslate - maxTranslate) * 0.3;
-        } else if (targetTranslate < minTranslate) {
-          imageGalleryTranslateX = minTranslate + (targetTranslate - minTranslate) * 0.3;
-        } else {
-          imageGalleryTranslateX = targetTranslate;
-        }
-
-        track.style.transform = `translateX(${imageGalleryTranslateX}px)`;
-        e.preventDefault();
-      });
-
-      viewport.addEventListener('pointerup', () => {
-        if (!imageGalleryIsDragging) return;
-        imageGalleryIsDragging = false;
-        viewport.style.cursor = 'grab';
-
-        const slideWidth = viewport.offsetWidth;
-        const initialTranslateX = -imageGalleryIndex * slideWidth;
-        const diff = imageGalleryTranslateX - initialTranslateX;
-        const threshold = slideWidth * 0.01;
-        const speedThreshold = 0.01;
-
-        if (Math.abs(imageGalleryVelocity) > speedThreshold) {
-          if (imageGalleryVelocity < 0 && imageGalleryIndex < imageGalleryTotalSlides - 1) {
-            imageGalleryIndex++;
-          } else if (imageGalleryVelocity > 0 && imageGalleryIndex > 0) {
-            imageGalleryIndex--;
-          }
-        } else if (Math.abs(diff) > threshold) {
-          if (diff < 0 && imageGalleryIndex < imageGalleryTotalSlides - 1) {
-            imageGalleryIndex++;
-          } else if (diff > 0 && imageGalleryIndex > 0) {
-            imageGalleryIndex--;
-          }
-        }
-
-        updateImageGallery();
-      });
-
-      viewport.addEventListener('pointercancel', () => {
-        if (!imageGalleryIsDragging) return;
-        imageGalleryIsDragging = false;
-        viewport.style.cursor = 'grab';
-        updateImageGallery();
-      });
-
-      const handleKeyDown = (e) => {
-        if (e.key === 'ArrowLeft' && imageGalleryIndex > 0) {
-          imageGalleryIndex--;
-          updateImageGallery();
-          e.preventDefault();
-        } else if (e.key === 'ArrowRight' && imageGalleryIndex < imageGalleryTotalSlides - 1) {
-          imageGalleryIndex++;
-          updateImageGallery();
-          e.preventDefault();
-        }
-      };
-
-      viewport.addEventListener('keydown', handleKeyDown);
-      document.addEventListener('keydown', handleKeyDown);
     }
 
-    function updateImageGallery() {
-      const viewport = document.getElementById('imageGalleryViewport');
-      const track = document.getElementById('imageGalleryTrack');
-      const indicators = document.querySelectorAll('.indicator-dot');
-      const prevBtn = document.getElementById('imageGalleryPrev');
-      const nextBtn = document.getElementById('imageGalleryNext');
+    function showEncyclopediaDetail(item, catInfo) {
+      const modal = document.getElementById('encyclopediaDetailModal');
+      const content = document.getElementById('encyclopediaDetailContent');
+      if (!modal || !content) return;
 
-      if (!viewport || !track) return;
+      content.innerHTML = `
+        <button onclick="closeEncyclopediaDetail()" style="position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;border:none;background:rgba(0,0,0,0.06);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:#666;">×</button>
+        <div style="text-align:center;">
+          <div style="width:180px;height:180px;border-radius:16px;overflow:hidden;margin:0 auto 16px;background:#f5f0eb;box-shadow:0 4px 16px rgba(0,0,0,0.1);">
+            <img src="${item.img}" alt="${item.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+          </div>
+          <div style="display:inline-block;padding:4px 12px;border-radius:12px;font-size:11px;font-weight:700;background:${catInfo.color}20;color:${catInfo.color};margin-bottom:10px;">${catInfo.label}</div>
+          <h3 style="font-size:20px;font-weight:800;color:#4a3728;margin:0 0 10px;">${item.name}</h3>
+          <p style="font-size:14px;color:#6a5a4a;line-height:1.7;margin:0 0 12px;font-weight:600;">${item.catch || ''}</p>
+          <p style="font-size:13px;color:#8a7a6a;line-height:1.6;margin:0;">${item.summary || ''}</p>
+        </div>
+      `;
 
-      const slideWidth = viewport.offsetWidth;
-      imageGalleryTranslateX = -imageGalleryIndex * slideWidth;
+      modal.style.display = 'flex';
+      modal.style.animation = 'fadeIn 0.2s ease';
 
-      if (!imageGalleryIsDragging) {
-        track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-      }
-      track.style.transform = `translateX(${imageGalleryTranslateX}px)`;
+      modal.onclick = (e) => {
+        if (e.target === modal) closeEncyclopediaDetail();
+      };
+    }
 
-      indicators.forEach((dot, index) => {
-        dot.classList.toggle('active', index === imageGalleryIndex);
-      });
-
-      if (prevBtn) {
-        prevBtn.style.opacity = imageGalleryIndex === 0 ? '0.5' : '1';
-        prevBtn.style.pointerEvents = imageGalleryIndex === 0 ? 'none' : 'auto';
-      }
-      if (nextBtn) {
-        nextBtn.style.opacity = imageGalleryIndex === imageGalleryTotalSlides - 1 ? '0.5' : '1';
-        nextBtn.style.pointerEvents = imageGalleryIndex === imageGalleryTotalSlides - 1 ? 'none' : 'auto';
-      }
+    function closeEncyclopediaDetail() {
+      const modal = document.getElementById('encyclopediaDetailModal');
+      if (modal) modal.style.display = 'none';
     }
 
     /* Popup buttons */
@@ -4353,7 +4345,7 @@
       openPopup('pricePopup');
     });
     document.getElementById('openFaqPopup')?.addEventListener('click', () => openPopup('faqPopup'));
-    document.getElementById('openImagePopup')?.addEventListener('click', () => openPopup('imagePopup'));
+    document.getElementById('openEncyclopediaPopup')?.addEventListener('click', () => openPopup('encyclopediaPopup'));
     document.getElementById('openVideoPopup')?.addEventListener('click', () => openPopup('videoPopup'));
     document.getElementById('goMobbyDiagnosis')?.addEventListener('click', () => openPopup('diagnosisPopup'));
 
@@ -4362,7 +4354,7 @@
     document.getElementById('closeColorsPopup')?.addEventListener('click', () => closePopup('colorsPopup'));
     document.getElementById('closePricePopup')?.addEventListener('click', () => closePopup('pricePopup'));
     document.getElementById('closeFaqPopup')?.addEventListener('click', () => closePopup('faqPopup'));
-    document.getElementById('closeImagePopup')?.addEventListener('click', () => closePopup('imagePopup'));
+    document.getElementById('closeEncyclopediaPopup')?.addEventListener('click', () => closePopup('encyclopediaPopup'));
     document.getElementById('closeVideoPopup')?.addEventListener('click', () => closePopup('videoPopup'));
     document.getElementById('closeDiagnosisPopup')?.addEventListener('click', () => closePopup('diagnosisPopup'));
 
@@ -4379,9 +4371,8 @@
     document.getElementById('faqPopup')?.addEventListener('click', (e) => {
       if (e.target.id === 'faqPopup') closePopup('faqPopup');
     });
-    document.getElementById('imagePopup')?.addEventListener('click', (e) => {
-      if (e.target.closest('.image-gallery-container')) return;
-      if (e.target.id === 'imagePopup') closePopup('imagePopup');
+    document.getElementById('encyclopediaPopup')?.addEventListener('click', (e) => {
+      if (e.target.id === 'encyclopediaPopup') closePopup('encyclopediaPopup');
     });
     document.getElementById('videoPopup')?.addEventListener('click', (e) => {
       if (e.target.id === 'videoPopup') closePopup('videoPopup');
@@ -4397,7 +4388,7 @@
         if (document.getElementById('colorsPopup')?.classList.contains('is-open')) closePopup('colorsPopup');
         if (document.getElementById('pricePopup')?.classList.contains('is-open')) closePopup('pricePopup');
         if (document.getElementById('faqPopup')?.classList.contains('is-open')) closePopup('faqPopup');
-        if (document.getElementById('imagePopup')?.classList.contains('is-open')) closePopup('imagePopup');
+        if (document.getElementById('encyclopediaPopup')?.classList.contains('is-open')) closePopup('encyclopediaPopup');
         if (document.getElementById('videoPopup')?.classList.contains('is-open')) closePopup('videoPopup');
         if (document.getElementById('diagnosisPopup')?.classList.contains('is-open')) closePopup('diagnosisPopup');
       }
