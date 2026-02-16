@@ -1,102 +1,124 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>運営者情報 - Mobby（モビー）</title>
   <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --color-cream:#FFF8E7;
-      --color-forest:#2F4F4F;
-      --color-earth:#8B4513;
-      --font-ja:'Yomogi', cursive;
+    :root {
+      --color-cream: #FFF8E7;
+      --color-forest: #2F4F4F;
+      --color-earth: #8B4513;
+      --font-ja: 'Yomogi', cursive;
     }
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{
-      font-family:var(--font-ja);
-      background-color:var(--color-cream);
-      color:var(--color-forest);
-      line-height:1.8;
-      padding:40px 20px;
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    .container{
-      max-width:800px;
-      margin:0 auto;
-      background:rgba(255,255,255,0.9);
-      padding:40px;
-      border-radius:30px;
-      box-shadow:0 10px 30px rgba(0,0,0,0.1);
+
+    body {
+      font-family: var(--font-ja);
+      background-color: var(--color-cream);
+      color: var(--color-forest);
+      line-height: 1.8;
+      padding: 40px 20px;
     }
-    h1{
-      font-size:2rem;
-      color:var(--color-earth);
-      margin-bottom:30px;
-      text-align:center;
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 40px;
+      border-radius: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     }
-    .info-table{
-      width:100%;
-      margin-top:30px;
+
+    h1 {
+      font-size: 2rem;
+      color: var(--color-earth);
+      margin-bottom: 30px;
+      text-align: center;
     }
-    .info-row{
-      display:flex;
-      border-bottom:1px solid rgba(47,79,79,0.1);
-      padding:15px 0;
+
+    .info-table {
+      width: 100%;
+      margin-top: 30px;
     }
-    .info-row:last-child{
-      border-bottom:none;
+
+    .info-row {
+      display: flex;
+      border-bottom: 1px solid rgba(47, 79, 79, 0.1);
+      padding: 15px 0;
     }
-    .info-label{
-      min-width:150px;
-      font-weight:700;
-      color:var(--color-earth);
+
+    .info-row:last-child {
+      border-bottom: none;
     }
-    .info-value{
-      flex:1;
+
+    .info-label {
+      min-width: 150px;
+      font-weight: 700;
+      color: var(--color-earth);
     }
-    .back-link{
-      display:inline-block;
-      margin-top:30px;
-      padding:12px 30px;
-      background-color:var(--color-earth);
-      color:var(--color-cream);
-      text-decoration:none;
-      border-radius:255px 15px 225px 15px / 15px 225px 15px 255px;
-      transition:all 0.3s ease;
-      box-shadow:3px 3px 0 rgba(0,0,0,0.1);
+
+    .info-value {
+      flex: 1;
     }
-    .back-link:hover{
-      transform:translateY(-2px);
-      opacity:0.9;
+
+    .back-link {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 12px 30px;
+      background-color: var(--color-earth);
+      color: var(--color-cream);
+      text-decoration: none;
+      border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+      transition: all 0.3s ease;
+      box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
     }
-    .note{
-      margin-top:30px;
-      padding:20px;
-      background:rgba(174,198,207,0.2);
-      border-radius:18px;
-      font-size:0.9rem;
+
+    .back-link:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
     }
-    @media (max-width: 768px){
-      .container{
-        padding:30px 20px;
+
+    .note {
+      margin-top: 30px;
+      padding: 20px;
+      background: rgba(174, 198, 207, 0.2);
+      border-radius: 18px;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 30px 20px;
       }
-      h1{
-        font-size:1.6rem;
+
+      h1 {
+        font-size: 1.6rem;
       }
-      .info-row{
-        flex-direction:column;
-        gap:5px;
+
+      .info-row {
+        flex-direction: column;
+        gap: 5px;
       }
-      .info-label{
-        min-width:unset;
+
+      .info-label {
+        min-width: unset;
       }
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1>運営者情報</h1>
-    
+
     <div class="info-table">
       <div class="info-row">
         <div class="info-label">サービス名</div>
@@ -127,15 +149,16 @@
         <div class="info-value">info@mobby.online までご連絡ください</div>
       </div>
     </div>
-    
+
     <div class="note">
       <strong>特定商取引法に基づく表記について</strong><br>
       カメラ型キーホルダーは無料抽選予約として運営しています。Mobby Outfitページではアパレルを販売しています。
     </div>
-    
+
     <div style="text-align:center;">
       <a href="index.html" class="back-link">トップページに戻る</a>
     </div>
   </div>
 </body>
+
 </html>
