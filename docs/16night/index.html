@@ -859,7 +859,11 @@
                     <a href="#" id="navDiagnosis" class="active">診断</a>
                     <a href="#" id="navCharacters">キャラ一覧</a>
                 </nav>
-                <button class="danger" id="btnReset" style="font-size:11px;">リセット</button>
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <button class="danger" id="btnReset" style="font-size:11px;">リセット</button>
+                    <button id="btnTypeGuide"
+                        style="font-size:11px;background:var(--accent-soft);color:var(--accent);">タイプ解説</button>
+                </div>
             </div>
         </header>
         <main id="app"></main>
@@ -1020,6 +1024,104 @@
         }
         const app = document.getElementById("app");
         document.getElementById("btnReset").onclick = () => { if (confirm("最初からやり直しますか？")) resetState(); };
+        // タイプ解説モーダル
+        document.getElementById("btnTypeGuide").onclick = () => { showTypeGuideModal(); };
+        function showTypeGuideModal() {
+            const modalHtml = `
+                <div class="char-modal-overlay" id="typeGuideOverlay">
+                    <div class="char-modal" style="max-width:700px;">
+                        <button class="char-modal-close" id="typeGuideClose">×</button>
+                        <div style="text-align:center;margin-bottom:24px;">
+                            <p class="kicker">TYPE CODE GUIDE</p>
+                            <h2 class="big" style="font-size:22px;margin-bottom:8px;">タイプコード解説</h2>
+                            <p class="text-body" style="font-size:13px;">4文字のひらがなコードは、4つの軸の傾向を表しています。</p>
+                        </div>
+                        <div id="guideContent">
+                            ${renderTypeGuideContent()}
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            const overlay = document.getElementById('typeGuideOverlay');
+            const closeBtn = document.getElementById('typeGuideClose');
+            closeBtn.onclick = () => { overlay.style.animation = 'fadeOut 0.2s ease forwards'; setTimeout(() => overlay.remove(), 200); };
+            overlay.onclick = (e) => { if (e.target === overlay) { overlay.style.animation = 'fadeOut 0.2s ease forwards'; setTimeout(() => overlay.remove(), 200); } };
+        }
+        function renderTypeGuideContent() {
+            return `
+                <div style="display:grid;gap:16px;">
+                    <div class="info-card" style="margin:0;">
+                        <h3 style="color:var(--accent);margin-bottom:12px;">軸A：接客スタンス</h3>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                            <div style="background:var(--surface);padding:12px;border-radius:12px;border-left:4px solid #c9a050;">
+                                <div style="font-size:24px;font-weight:700;color:#c9a050;">も</div>
+                                <div style="font-size:13px;font-weight:600;margin:4px 0;">盛り上げ型</div>
+                                <div style="font-size:11px;color:var(--text-sub);">テンションで場を回す</div>
+                            </div>
+                            <div style="background:var(--surface);padding:12px;border-radius:12px;border-left:4px solid #9b6dff;">
+                                <div style="font-size:24px;font-weight:700;color:#9b6dff;">き</div>
+                                <div style="font-size:13px;font-weight:600;margin:4px 0;">聞き上手型</div>
+                                <div style="font-size:11px;color:var(--text-sub);">会話で心を掴む</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-card" style="margin:0;">
+                        <h3 style="color:var(--accent);margin-bottom:12px;">軸B：スタイル</h3>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                            <div style="background:var(--surface);padding:12px;border-radius:12px;border-left:4px solid #c9a050;">
+                                <div style="font-size:24px;font-weight:700;color:#c9a050;">は</div>
+                                <div style="font-size:13px;font-weight:600;margin:4px 0;">華やか系</div>
+                                <div style="font-size:11px;color:var(--text-sub);">派手・目立つ存在</div>
+                            </div>
+                            <div style="background:var(--surface);padding:12px;border-radius:12px;border-left:4px solid #9b6dff;">
+                                <div style="font-size:24px;font-weight:700;color:#9b6dff;">な</div>
+                                <div style="font-size:13px;font-weight:600;margin:4px 0;">ナチュラル系</div>
+                                <div style="font-size:11px;color:var(--text-sub);">清楚・自然体</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-card" style="margin:0;">
+                        <h3 style="color:var(--accent);margin-bottom:12px;">軸C：客層との関係</h3>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                            <div style="background:var(--surface);padding:12px;border-radius:12px;border-left:4px solid #c9a050;">
+                                <div style="font-size:24px;font-weight:700;color:#c9a050;">ふ</div>
+                                <div style="font-size:13px;font-weight:600;margin:4px 0;">太客重視</div>
+                                <div style="font-size:11px;color:var(--text-sub);">指名・リピート重視</div>
+                            </div>
+                            <div style="background:var(--surface);padding:12px;border-radius:12px;border-left:4px solid #9b6dff;">
+                                <div style="font-size:24px;font-weight:700;color:#9b6dff;">か</div>
+                                <div style="font-size:13px;font-weight:600;margin:4px 0;">回転重視</div>
+                                <div style="font-size:11px;color:var(--text-sub);">新規・フリー重視</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-card" style="margin:0;">
+                        <h3 style="color:var(--accent);margin-bottom:12px;">軸D：モチベーション</h3>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                            <div style="background:var(--surface);padding:12px;border-radius:12px;border-left:4px solid #c9a050;">
+                                <div style="font-size:24px;font-weight:700;color:#c9a050;">し</div>
+                                <div style="font-size:13px;font-weight:600;margin:4px 0;">収入重視</div>
+                                <div style="font-size:11px;color:var(--text-sub);">売上・数字を追う</div>
+                            </div>
+                            <div style="background:var(--surface);padding:12px;border-radius:12px;border-left:4px solid #9b6dff;">
+                                <div style="font-size:24px;font-weight:700;color:#9b6dff;">や</div>
+                                <div style="font-size:13px;font-weight:600;margin:4px 0;">やりがい重視</div>
+                                <div style="font-size:11px;color:var(--text-sub);">楽しさ・人間関係優先</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background:var(--surface);padding:16px;border-radius:12px;margin-top:8px;border:1px solid var(--line);">
+                        <div style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--accent);">💡 コードの読み方</div>
+                        <div style="font-size:12px;color:var(--text-sub);line-height:1.6;">
+                            例：<span style="font-family:monospace;background:var(--surface2);padding:2px 8px;border-radius:6px;font-weight:600;">もはふし</span><br>
+                            → 盛り上げ型(も) + 華やか系(は) + 太客重視(ふ) + 収入重視(し)<br>
+                            → No.1キャバ嬢モビー
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
         document.getElementById("navDiagnosis").onclick = e => { e.preventDefault(); if (isQuizCompleted()) { state.step = "result"; render(); } else { state.step = "intro"; render(); } };
         document.getElementById("navCharacters").onclick = e => { e.preventDefault(); state.step = "characters"; render(); };
         function updateNavActive() {
