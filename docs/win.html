@@ -1099,11 +1099,13 @@
             outline: none;
             transition: border-color 0.3s ease;
             -moz-appearance: textfield;
+            appearance: textfield;
         }
 
         .gate-input::-webkit-outer-spin-button,
         .gate-input::-webkit-inner-spin-button {
             -webkit-appearance: none;
+            appearance: none;
             margin: 0;
         }
 
@@ -1161,6 +1163,147 @@
             margin-top: 12px;
             min-height: 1.2em;
         }
+
+        /* ===== NEW SECTIONS ===== */
+        /* Specs Table */
+        .specs-table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .specs-table th,
+        .specs-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            text-align: left;
+        }
+
+        .specs-table th {
+            color: var(--color-earth);
+            font-weight: 700;
+            width: 30%;
+        }
+
+        /* Payment Icons */
+        .payment-icons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 12px;
+            font-size: 1.5rem;
+            opacity: 0.8;
+        }
+
+        .payment-note {
+            font-size: 0.8rem;
+            text-align: center;
+            opacity: 0.7;
+            margin-bottom: 15px;
+        }
+
+        /* Voices (Reviews) */
+        .voices-section {
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .voice-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .voice-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .voice-avatar {
+            font-size: 2rem;
+        }
+
+        .voice-meta {
+            text-align: left;
+        }
+
+        .voice-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .voice-rating {
+            color: var(--color-gold);
+            font-size: 0.85rem;
+        }
+
+        .voice-text {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        /* FAQ */
+        .faq-section {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .faq-item {
+            margin-bottom: 16px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .faq-q {
+            padding: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            position: relative;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .faq-q::after {
+            content: '+';
+            position: absolute;
+            right: 20px;
+            font-weight: 400;
+        }
+
+        .faq-a {
+            padding: 0 16px 16px;
+            font-size: 0.9rem;
+            opacity: 0.85;
+        }
+
+        /* Legal / Operator Info */
+        .legal-section {
+            padding: 40px 20px;
+            background: #fafafa;
+            font-size: 0.85rem;
+        }
+
+        .legal-table {
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .legal-table th,
+        .legal-table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
     </style>
 </head>
 
@@ -1214,23 +1357,13 @@
         </section>
 
         <!-- Countdown -->
+        <!-- Remaining Stock -->
         <section class="countdown-section reveal">
             <div class="countdown-card">
-                <span class="countdown-label">⏰ 販売終了まで</span>
+                <span class="countdown-label">✨ 限定販売価格</span>
                 <div class="countdown-timer" id="countdown">
-                    <div class="countdown-unit">
-                        <span class="countdown-num" id="cd-hours">00</span>
-                        <span class="countdown-txt">時間</span>
-                    </div>
-                    <span class="countdown-sep">:</span>
-                    <div class="countdown-unit">
-                        <span class="countdown-num" id="cd-mins">00</span>
-                        <span class="countdown-txt">分</span>
-                    </div>
-                    <span class="countdown-sep">:</span>
-                    <div class="countdown-unit">
-                        <span class="countdown-num" id="cd-secs">00</span>
-                        <span class="countdown-txt">秒</span>
+                    <div style="font-size: 2rem; font-weight: 800; color: var(--color-accent-red);">
+                        残り <span style="font-size: 3rem;">85</span> 個
                     </div>
                 </div>
             </div>
@@ -1275,18 +1408,71 @@
                     <span class="feature-tag">📎 キーホルダー付き</span>
                     <span class="feature-tag">📦 丁寧梱包</span>
                 </div>
+
+                <!-- B: Specs -->
+                <table class="specs-table">
+                    <tr>
+                        <th>サイズ</th>
+                        <td>約 10cm × 10cm</td>
+                    </tr>
+                    <tr>
+                        <th>素材</th>
+                        <td>ソフトボア</td>
+                    </tr>
+                    <tr>
+                        <th>仕様</th>
+                        <td>ボールチェーン付き</td>
+                    </tr>
+                </table>
+
                 <div class="stock-indicator">
                     <span class="stock-dot"></span>
-                    残りわずか — お早めに！
+                    残り <span style="font-weight:800; font-size:1.1em; color:#d32f2f;">85</span> 個 — お早めに！
                 </div>
                 <div class="price-row">
                     <span class="price-current">¥4,800</span>
                     <span class="price-tax">（税込）</span>
                 </div>
+
+                <!-- E: Payment Methods -->
+                <div class="payment-note">PayPay・クレジットカード・Apple Pay・Google Pay 対応</div>
+
                 <a class="buy-btn" id="buyBtn" href="https://buy.stripe.com/14AcN50SNdil7WCeVVao80c" target="_blank"
                     rel="noopener" style="text-decoration:none; text-align:center;">
-                    🛒 購入手続きへ進む
+                    🛒 今すぐ購入する
                 </a>
+
+            </div>
+        </section>
+
+        <!-- C: Voices (Social Proof) -->
+        <section class="voices-section reveal">
+            <div class="section-tag" style="text-align:center; display:block; margin:0 auto 20px;">💬 当選者の声</div>
+            <div style="max-width:600px; margin:0 auto;">
+                <div class="voice-card">
+                    <div class="voice-header">
+                        <div class="voice-avatar">👩</div>
+                        <div class="voice-meta">
+                            <div class="voice-name">K.S 様（20代女性）</div>
+                            <div class="voice-rating">★★★★★</div>
+                        </div>
+                    </div>
+                    <div class="voice-text">
+                        当選メールを見てすぐに購入しました！届いたMobbyは想像以上にフワフワで可愛いです。カバンに付けて毎日癒やされています。
+                    </div>
+                </div>
+                <div class="voice-card">
+                    <div class="voice-header">
+                        <div class="voice-avatar">👨</div>
+                        <div class="voice-meta">
+                            <div class="voice-name">Y.T 様（10代男性）</div>
+                            <div class="voice-rating">★★★★★</div>
+                        </div>
+                    </div>
+                    <div class="voice-text">
+                        限定品ということで特別感があります。作りもしっかりしていて、プレゼントにも良さそうだと思いました。発送もスムーズでした。
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -1303,11 +1489,26 @@
                     <div class="trust-label">安全な決済</div>
                     <div class="trust-desc">SSL暗号化で安心のお支払い</div>
                 </div>
-                <div class="trust-card reveal delay-2">
+                <a href="mailto:info@mobby.online" class="trust-card reveal delay-2"
+                    style="text-decoration:none; color:inherit; cursor:pointer;">
                     <div class="trust-icon">📞</div>
                     <div class="trust-label">サポート対応</div>
                     <div class="trust-desc">ご不明点はいつでもご連絡ください</div>
-                </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- F: FAQ -->
+        <section class="faq-section reveal">
+            <h3 style="text-align:center; font-size:1.1rem; color:var(--color-earth); margin-bottom:20px;">❓ よくある質問</h3>
+            <div class="faq-item">
+                <div class="faq-q">Q. 支払い方法は何がありますか？</div>
+                <div class="faq-a">A. PayPay、クレジットカード（Visa/Master/JCB/Amex）、Apple Pay、Google
+                    Payがご利用いただけます。Stripeの安全な決済システムを使用しています。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Q. 返品やキャンセルはできますか？</div>
+                <div class="faq-a">A. お客様都合によるキャンセルは原則お受けできませんが、万が一商品に不良があった場合は、到着後7日以内にご連絡いただければ返金・交換対応いたします。</div>
             </div>
         </section>
 
@@ -1319,10 +1520,42 @@
                     <li>このページは抽選当選者のみが購入可能です</li>
                     <li>お一人様1個までのご購入とさせていただきます</li>
                     <li>転売目的のご購入はお断りしております</li>
-                    <li>発送まで2〜3週間ほどお時間をいただきます</li>
+                    <li>発送まで2〜3週間ほどお時間をいただきます（ひとつひとつ手作業で梱包しているため）</li>
+                    <li>万が一不良品があった場合は返金・交換対応いたします</li>
                     <li>カメラ型キーホルダーが当選した場合再度お手紙を送付します。</li>
                 </ul>
             </div>
+        </section>
+
+        <!-- A: Legal / Operator Info -->
+        <section class="legal-section">
+            <h3 style="text-align:center; font-size:1rem; margin-bottom:20px;">特定商取引法に基づく表記</h3>
+            <table class="legal-table">
+                <tr>
+                    <th>販売事業者</th>
+                    <td>Mobby運営事務局</td>
+                </tr>
+                <tr>
+                    <th>運営統括責任者</th>
+                    <td>長谷川</td>
+                </tr>
+                <tr>
+                    <th>連絡先</th>
+                    <td>info@mobby.online</td>
+                </tr>
+                <tr>
+                    <th>商品代金以外の必要料金</th>
+                    <td>なし（送料無料）</td>
+                </tr>
+                <tr>
+                    <th>引き渡し時期</th>
+                    <td>注文確定後、2〜3週間以内に発送</td>
+                </tr>
+                <tr>
+                    <th>返品・交換</th>
+                    <td>不良品に限り、商品到着後7日以内であれば返金・交換対応いたします。</td>
+                </tr>
+            </table>
         </section>
 
         <!-- Footer -->
@@ -1331,48 +1564,7 @@
         </footer>
     </div>
 
-    <!-- ===== PURCHASE MODAL ===== -->
-    <div class="modal-overlay" id="modal">
-        <div class="modal-content">
-            <div class="modal-emoji">🎁</div>
-            <div class="modal-title">ご購入手続き</div>
-            <p class="modal-desc">
-                情報を入力して、<br>あなただけのMobbyを手に入れよう！
-            </p>
 
-            <form id="purchaseForm" onsubmit="handlePurchase(event)">
-                <div class="form-group">
-                    <label class="form-label" for="name">お名前</label>
-                    <input class="form-input" type="text" id="name" placeholder="山田 太郎" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="email">メールアドレス</label>
-                    <input class="form-input" type="email" id="email" placeholder="example@email.com" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="phone">電話番号</label>
-                    <input class="form-input" type="tel" id="phone" placeholder="090-1234-5678" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="address">配送先住所</label>
-                    <input class="form-input" type="text" id="address" placeholder="東京都渋谷区..." required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="payment">お支払い方法</label>
-                    <select class="form-select" id="payment" required>
-                        <option value="">選択してください</option>
-                        <option value="convenience">コンビニ払い</option>
-                        <option value="bank">銀行振込</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="modal-buy-btn">
-                    ✨ 購入を確定する ✨
-                </button>
-            </form>
-            <button class="modal-close" onclick="closeModal()">閉じる</button>
-        </div>
-    </div>
 
     <script>
         // ===== GATE =====
@@ -1463,8 +1655,10 @@
             document.getElementById('main').classList.add('visible');
             launchConfetti();
             startTypewriter();
-            startCountdown();
         }
+
+        // ===== STOCK DISPLAY =====
+
 
         // ===== TYPEWRITER =====
         function startTypewriter() {
@@ -1488,35 +1682,7 @@
             setTimeout(type, 800);
         }
 
-        // ===== COUNTDOWN (24h from first visit) =====
-        function startCountdown() {
-            let endTime = localStorage.getItem('mobby_win_end');
-            if (!endTime) {
-                endTime = Date.now() + 28 * 60 * 60 * 1000;
-                localStorage.setItem('mobby_win_end', endTime);
-            }
-            endTime = parseInt(endTime);
 
-            function update() {
-                const now = Date.now();
-                let diff = endTime - now;
-                if (diff <= 0) {
-                    endTime = now + 28 * 60 * 60 * 1000;
-                    localStorage.setItem('mobby_win_end', endTime);
-                    diff = endTime - now;
-                }
-
-                const hours = Math.floor(diff / (1000 * 60 * 60));
-                const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const secs = Math.floor((diff % (1000 * 60)) / 1000);
-
-                document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
-                document.getElementById('cd-mins').textContent = String(mins).padStart(2, '0');
-                document.getElementById('cd-secs').textContent = String(secs).padStart(2, '0');
-            }
-            update();
-            setInterval(update, 1000);
-        }
 
         // ===== SCROLL REVEAL =====
         const observer = new IntersectionObserver((entries) => {
@@ -1528,48 +1694,7 @@
         }, { threshold: 0.15 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // ===== MODAL =====
-        function openModal() {
-            const modal = document.getElementById('modal');
-            modal.classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeModal() {
-            const modal = document.getElementById('modal');
-            modal.classList.remove('show');
-            document.body.style.overflow = '';
-        }
 
-        // Close modal on overlay click
-        document.getElementById('modal').addEventListener('click', (e) => {
-            if (e.target === e.currentTarget) closeModal();
-        });
-
-        // ===== PURCHASE HANDLER =====
-        function handlePurchase(e) {
-            e.preventDefault();
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const address = document.getElementById('address').value;
-            const payment = document.getElementById('payment').value;
-
-            // Replace modal content with success
-            const modalContent = document.querySelector('.modal-content');
-            modalContent.innerHTML = `
-        <div class="modal-emoji">🎉</div>
-        <div class="modal-title">ご注文ありがとうございます！</div>
-        <p class="modal-desc">
-          <strong>${name}</strong> 様<br><br>
-          ご購入ありがとうございます！<br>
-          確認メールを <strong>${email}</strong> へお送りしました。<br><br>
-          お届けまで少々お待ちください。<br>
-          Mobbyと一緒に楽しい毎日を🧸💕
-        </p>
-        <button class="modal-close" onclick="closeModal()" style="opacity:0.8; font-size:0.95rem;">閉じる</button>
-      `;
-            launchConfetti();
-        }
     </script>
 </body>
 
