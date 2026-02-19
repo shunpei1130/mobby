@@ -1,4 +1,3 @@
-import { Resend } from "resend";
 import { put } from "@vercel/blob";
 import { randomUUID } from "crypto";
 import { readFile } from "fs/promises";
@@ -81,11 +80,6 @@ export default async function handler(req, res) {
     if (!emailOk) return res.status(400).json({ error: "email is invalid" });
     if (!type) return res.status(400).json({ error: "type is required" });
 
-    const resendKey = process.env.RESEND_API_KEY_PAGE || process.env.RESEND_API_KEY;
-    if (!resendKey) {
-      return res.status(500).json({ error: "RESEND_API_KEY_PAGE is missing" });
-    }
-
     const pageId = randomUUID().replaceAll("-", "").slice(0, 16);
     const passCode = pickPassCode();
     const baseHref = String(process.env.MYPAGE_BASE_HREF || DEFAULT_BASE_HREF).trim();
@@ -142,43 +136,20 @@ export default async function handler(req, res) {
     const origin = resolveOrigin(req);
     const viewerUrl = `${origin}/api/mypage?u=${encodeURIComponent(blob.url)}&id=${encodeURIComponent(pageId)}`;
 
-    const resend = new Resend(resendKey);
-    const sendAt = new Date(Date.now() + 60 * 1000);
-    const subject = `【学校キャラ診断】${name}さん専用ページのご案内`;
-    const htmlBody = `
-      <div style="font-family:sans-serif;max-width:560px;margin:0 auto;">
-        <h2 style="color:#ff4d8d;">${escapeHtml(name)}さん専用ページをお届けします</h2>
-        <p>診断結果をもとに、${escapeHtml(leadTitle)}の世界観をまとめたページを用意しました。</p>
-        <p><strong>パスコード:</strong> ${escapeHtml(passCode)}</p>
-        <p style="margin:24px 0;">
-          <a href="${viewerUrl}" style="background:#ff4d8d;color:#fff;padding:12px 20px;border-radius:999px;text-decoration:none;display:inline-block;">
-            専用ページを開く
-          </a>
-        </p>
-        <p style="font-size:12px;color:#666;">このメールは診断の「興味あり」を押した方に送信されています。</p>
-      </div>
-    `;
-    const textBody = [
-      `${name}さん専用ページをお届けします`,
-      `診断結果をもとに、${leadTitle}の世界観をまとめたページを用意しました。`,
-      `パスコード: ${passCode}`,
-      `URL: ${viewerUrl}`
-    ].join("\n");
-
-    await resend.emails.send({
-      from: process.env.LEAD_FROM_EMAIL || "学校キャラ診断 <onboarding@resend.dev>",
-      to: email,
-      subject,
-      html: htmlBody,
-      text: textBody,
-      scheduledAt: sendAt.toISOString()
+    console.log("[INTEREST API] Email delivery disabled. Generated interest page:", {
+      pageId,
+      name,
+      email,
+      type,
+      viewerUrl
     });
 
     return res.status(200).json({
       ok: true,
       pageId,
-      scheduledAt: sendAt.toISOString(),
-      viewerUrl
+      viewerUrl,
+      generatedAt: new Date().toISOString(),
+      emailSent: false
     });
   } catch (e) {
     console.error("[INTEREST API] Error:", e?.message);
