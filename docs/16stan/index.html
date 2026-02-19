@@ -938,7 +938,7 @@
                 const name = document.getElementById("inName").value.trim(); const email = document.getElementById("inEmail").value.trim(); const err = document.getElementById("gateError");
                 if (!name) { err.textContent = "ニックネームを入力してください"; return; } if (!email || !email.includes("@")) { err.textContent = "メールアドレスを入力してください"; return; }
                 state.profile = { name, email }; const { code, pcts } = computeResult(); state.step = "result"; saveState();
-                try { await submitLead({ name, email, source: "stan_diag" }); await submitDiagnosis({ name, email, type: code, source: "stan_diag", axes: pcts }); } catch (e) { console.error(e); } render();
+                try { await submitLead({ name, email, type: code, source: "stan_diag" }); await submitDiagnosis({ name, email, type: code, source: "stan_diag", axes: pcts }); } catch (e) { console.error(e); } render();
             };
         }
         function renderResult() {
