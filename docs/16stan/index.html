@@ -867,13 +867,13 @@
             "まうしみ": { name: "連休世界観潜入モビー", catch: "連休に世界観へ長期滞在。", hook: "まとまった休みに作品世界へ潜り、関係性や周辺文化までまとめて味わう。内側で世界を育てるタイプ。", tough: ["沼が深い時：抜け時が分からず、現実に戻りづらくなりやすい。", "消化量が多い時：頭がいっぱいになって満足感が薄れることがある。", "対処：潜るテーマを区切る（今日は関係性、明日は設定）。現実復帰用のルーティン（散歩/風呂）を用意する。"], seen: "世界観沼の住人。普段は静かでも、話し出すと深い人に見られやすい。", strengths: ["世界観に長期滞在できる没入力がある。", "周辺文化込みで理解が深い。", "自分だけの楽しみ方を作るのが上手い。"], cautions: ["抜け時が分からず時間が消えやすい。", "詰め込みすぎると満足より疲れが勝ちやすい。", "余韻で現実復帰が遅れやすい。"], advice: ["テーマ分割（今日は関係性、明日は設定など）で脳の飽和を避ける。", "1セッションの終了ライン（2話まで等）を先に決めて開始する。", "現実復帰ルーティン（風呂/散歩/食事）を固定して戻りやすくする。", "『潜る日』と『戻る日』をカレンダーで先に決める。"] }
         };
         const STORAGE_KEY = "stan_char_diag_v1", PAGE_SIZE = 5;
-        const state = { step: "intro", page: 0, answers: {}, questionOrder: null, profile: { name: "", email: "" }, sentToSheet: false };
+        const state = { step: "intro", page: 0, answers: {}, questionOrder: null, profile: { name: "", email: "", age: "" }, sentToSheet: false };
         const ANS_LABEL = { 1: "そう思う", 2: "ややそう思う", 3: "少しそう思う", 4: "どちらでもない", 5: "少しそう思わない", 6: "ややそう思わない", 7: "そう思わない" };
         function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; }
         function getQuestionOrder() { return shuffleArray([...Array(QUESTIONS.length).keys()]); }
         function loadState() { try { const s = localStorage.getItem(STORAGE_KEY); if (s) { const p = JSON.parse(s); Object.assign(state, p); } } catch (e) { } }
         function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-        function resetState() { state.step = "intro"; state.page = 0; state.answers = {}; state.questionOrder = null; state.profile = { name: "", email: "" }; state.sentToSheet = false; saveState(); }
+        function resetState() { state.step = "intro"; state.page = 0; state.answers = {}; state.questionOrder = null; state.profile = { name: "", email: "", age: "" }; state.sentToSheet = false; saveState(); }
         function computeResult() {
             const sums = { A: 0, B: 0, C: 0, D: 0 }, counts = { A: 0, B: 0, C: 0, D: 0 };
             QUESTIONS.forEach(q => { const v = state.answers[q.id]; if (v == null) return; let s = v; if (q.reverse) s = 8 - v; sums[q.axis] += s; counts[q.axis]++; });
@@ -927,19 +927,43 @@
     <div class="panel fade-in" style="text-align:center;">
     <p class="kicker">あと少し！</p>
     <h2 class="big">結果を受け取る</h2>
-    <p class="text-body" style="margin-bottom:24px;">ニックネームとメールアドレスを入力すると結果が表示されます。</p>
-    <div style="max-width:360px;margin:0 auto;">
-    <input id="inName" placeholder="ニックネーム" value="${state.profile.name}" style="width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:15px;margin-bottom:12px;font-family:var(--font-main);box-sizing:border-box;">
-    <input id="inEmail" type="email" placeholder="メールアドレス" value="${state.profile.email}" style="width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:15px;margin-bottom:20px;font-family:var(--font-main);box-sizing:border-box;">
+    <p class="text-body" style="margin-bottom:24px;">以下を入力すると結果が表示されます。</p>
+    <div style="max-width:360px;margin:0 auto;text-align:left;">
+    <div style="font-size:12px;color:var(--text-sub);margin-bottom:6px;">ニックネーム（必須）</div>
+    <input id="inName" placeholder="例）はるか" value="${state.profile.name}" style="width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:15px;margin-bottom:12px;font-family:var(--font-main);box-sizing:border-box;">
+    <div style="font-size:12px;color:var(--text-sub);margin-bottom:6px;">年齢（必須）</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+    <button type="button" class="age-btn" data-age="~14" style="padding:8px 14px;border-radius:10px;border:2px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:13px;cursor:pointer;transition:all 0.2s;">14歳以下</button>
+    <button type="button" class="age-btn" data-age="15-17" style="padding:8px 14px;border-radius:10px;border:2px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:13px;cursor:pointer;transition:all 0.2s;">15〜17歳</button>
+    <button type="button" class="age-btn" data-age="18-19" style="padding:8px 14px;border-radius:10px;border:2px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:13px;cursor:pointer;transition:all 0.2s;">18〜19歳</button>
+    <button type="button" class="age-btn" data-age="20-24" style="padding:8px 14px;border-radius:10px;border:2px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:13px;cursor:pointer;transition:all 0.2s;">20〜24歳</button>
+    <button type="button" class="age-btn" data-age="25-29" style="padding:8px 14px;border-radius:10px;border:2px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:13px;cursor:pointer;transition:all 0.2s;">25〜29歳</button>
+    <button type="button" class="age-btn" data-age="30-39" style="padding:8px 14px;border-radius:10px;border:2px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:13px;cursor:pointer;transition:all 0.2s;">30代</button>
+    <button type="button" class="age-btn" data-age="40+" style="padding:8px 14px;border-radius:10px;border:2px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:13px;cursor:pointer;transition:all 0.2s;">40歳以上</button>
+    </div>
+    <input type="hidden" id="inAge" value="${state.profile.age || ''}">
+    <div style="font-size:12px;color:var(--text-sub);margin-bottom:6px;">メールアドレス（必須）</div>
+    <input id="inEmail" type="email" placeholder="example@gmail.com" value="${state.profile.email}" style="width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:15px;margin-bottom:20px;font-family:var(--font-main);box-sizing:border-box;">
     <button class="primary" id="btnResult" style="width:100%;font-size:16px;padding:14px;">結果を見る ✨</button>
-    </div><p id="gateError" style="color:var(--danger);font-size:13px;margin-top:12px;"></p>
+    </div><p id="gateError" style="color:var(--danger);font-size:13px;margin-top:12px;text-align:center;"></p>
     </div>`;
+            const ageEl = document.getElementById("inAge");
+            document.querySelectorAll(".age-btn").forEach(btn => {
+                if (btn.dataset.age === ageEl.value) { btn.style.background = "var(--accent)"; btn.style.borderColor = "var(--accent)"; btn.style.color = "#fff"; }
+                btn.onclick = () => {
+                    document.querySelectorAll(".age-btn").forEach(b => { b.style.background = "var(--surface2)"; b.style.borderColor = "var(--line)"; b.style.color = "var(--text-main)"; });
+                    btn.style.background = "var(--accent)"; btn.style.borderColor = "var(--accent)"; btn.style.color = "#fff";
+                    ageEl.value = btn.dataset.age;
+                };
+            });
             document.getElementById("btnResult").onclick = async () => {
-                const name = document.getElementById("inName").value.trim(); const email = document.getElementById("inEmail").value.trim(); const err = document.getElementById("gateError");
-                if (!name) { err.textContent = "ニックネームを入力してください"; return; } if (!email || !email.includes("@")) { err.textContent = "メールアドレスを入力してください"; return; }
-                state.profile = { name, email }; const { code, pcts } = computeResult(); const ch = CH[code]; state.step = "result"; saveState();
+                const name = document.getElementById("inName").value.trim(); const email = document.getElementById("inEmail").value.trim(); const age = document.getElementById("inAge").value; const err = document.getElementById("gateError");
+                if (!name) { err.textContent = "ニックネームを入力してください"; return; }
+                if (!age) { err.textContent = "年齢を選択してください"; return; }
+                if (!email || !email.includes("@")) { err.textContent = "メールアドレスを入力してください"; return; }
+                state.profile = { name, email, age }; const { code, pcts } = computeResult(); const ch = CH[code]; state.step = "result"; saveState();
                 const roundedAxes = {};["A", "B", "C", "D"].forEach(k => { roundedAxes[k] = Math.round(pcts[k]); });
-                try { await submitLead({ name, email, type: code, source: "16stan" }); await submitDiagnosis({ name, email, type: code, axes: roundedAxes, answers: state.answers, source: "16stan", createdAt: new Date().toISOString(), diagnosis_type: ch ? ch.name : code }); } catch (e) { console.error(e); } render();
+                try { await submitLead({ name, email, age, type: code, source: "16stan" }); await submitDiagnosis({ name, email, age, type: code, axes: roundedAxes, answers: state.answers, source: "16stan", createdAt: new Date().toISOString(), diagnosis_type: ch ? ch.name : code }); } catch (e) { console.error(e); } render();
             };
         }
         function renderResult() {
