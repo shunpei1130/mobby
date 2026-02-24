@@ -290,6 +290,34 @@
       color: #fff;
     }
 
+    /* 図鑑一覧タブ：スマホでコンパクト表示 */
+    @media (max-width: 600px) {
+      #encyclopediaGrid.ency-compact {
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 6px !important;
+      }
+
+      #encyclopediaGrid.ency-compact .ency-card {
+        border-radius: 10px !important;
+      }
+
+      #encyclopediaGrid.ency-compact .ency-card-name {
+        font-size: 8px !important;
+        min-height: 18px !important;
+        line-height: 1.2 !important;
+      }
+
+      #encyclopediaGrid.ency-compact .ency-card-body {
+        padding: 4px 5px 5px !important;
+      }
+
+      #encyclopediaGrid.ency-compact .ency-section-header {
+        font-size: 12px !important;
+        padding: 6px 8px !important;
+        margin: 10px 0 2px !important;
+      }
+    }
+
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -2985,7 +3013,7 @@
     </div>
     <!-- 図鑑詳細モーダル -->
     <div id="encyclopediaDetailModal"
-      style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.65);z-index:10001;align-items:center;justify-content:center;padding:20px;">
+      style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.65);z-index:100000;align-items:center;justify-content:center;padding:20px;">
       <div id="encyclopediaDetailContent"
         style="background:#fff;border-radius:20px;max-width:500px;width:100%;max-height:85vh;overflow-y:auto;padding:28px 24px;position:relative;">
       </div>
@@ -4305,6 +4333,13 @@
         : ENCYCLOPEDIA_CATEGORIES.find(c => c.key === encyclopediaActiveTab);
 
 
+      // Toggle compact class for all-tab mobile view
+      if (encyclopediaActiveTab === 'all') {
+        gridEl.classList.add('ency-compact');
+      } else {
+        gridEl.classList.remove('ency-compact');
+      }
+
       if (encyclopediaActiveTab === 'all') {
         // Group by category with section headers
         const catOrder = ['school_m', 'school_f', 'mama', 'night', 'stan'];
@@ -4314,7 +4349,6 @@
           const catItems = ENCYCLOPEDIA_DATA.filter(d => d.cat === catKey);
           const ci = ENCYCLOPEDIA_CATEGORIES.find(c => c.key === catKey);
           if (!ci || catItems.length === 0) return;
-          html += `<div style="grid-column:1/-1;margin:16px 0 4px;padding:8px 12px;border-radius:12px;background:${ci.color}15;border-left:4px solid ${ci.color};font-size:14px;font-weight:700;color:${ci.color};">${ci.label}（${catItems.length}タイプ）</div>`;
           catItems.forEach((item, i) => {
             html += `
             <div class="ency-card" data-idx="${globalIdx}" style="
@@ -4323,11 +4357,8 @@
               transition:transform 0.2s ease,box-shadow 0.2s ease;
               animation:fadeIn 0.3s ease ${(globalIdx) * 0.02}s both;
             ">
-              <div style="aspect-ratio:1/1;overflow:hidden;background:#f5f0eb;">
+              <div style="aspect-ratio:1/1;overflow:hidden;background:#f5f0eb;border-radius:inherit;">
                 <img src="${item.img}" alt="${item.name}" loading="lazy" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
-              </div>
-              <div style="padding:8px 10px 10px;">
-                <div style="font-size:11px;font-weight:700;color:#4a3728;line-height:1.3;min-height:28px;display:flex;align-items:center;">${item.name}</div>
               </div>
             </div>`;
             globalIdx++;
