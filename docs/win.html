@@ -461,7 +461,7 @@
         .product-section {
             max-width: 700px;
             margin: 0 auto;
-            padding: 0 20px 40px;
+            padding: 0 20px 28px;
         }
 
         .section-tag {
@@ -949,7 +949,7 @@
         .trust-section {
             max-width: 700px;
             margin: 0 auto;
-            padding: 0 20px 40px;
+            padding: 0 20px 24px;
         }
 
         .trust-grid {
@@ -988,7 +988,7 @@
         .notice-section {
             max-width: 700px;
             margin: 0 auto;
-            padding: 0 20px 40px;
+            padding: 0 20px 20px;
         }
 
         .notice-card {
@@ -1556,9 +1556,90 @@
 
         /* Legal / Operator Info */
         .legal-section {
-            padding: 40px 20px;
+            padding: 20px;
             background: #fafafa;
             font-size: 0.85rem;
+        }
+
+        .compact-section {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 20px 12px;
+        }
+
+        .compact-accordion {
+            border-radius: 16px;
+            border: 1px solid rgba(47, 79, 79, 0.14);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .compact-accordion summary {
+            list-style: none;
+            cursor: pointer;
+            padding: 13px 16px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--color-earth);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            background: rgba(255, 248, 231, 0.75);
+        }
+
+        .compact-accordion summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .compact-accordion summary::after {
+            content: '＋';
+            font-size: 1rem;
+            opacity: 0.75;
+        }
+
+        .compact-accordion[open] summary::after {
+            content: '－';
+        }
+
+        .compact-accordion-body {
+            padding: 14px;
+        }
+
+        .compact-accordion-body .voice-card:last-child,
+        .compact-accordion-body .faq-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .compact-note-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 14px;
+            display: grid;
+            gap: 7px;
+            font-size: 0.84rem;
+            color: var(--color-forest);
+        }
+
+        .compact-note-list li {
+            padding-left: 14px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .compact-note-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--color-earth);
+        }
+
+        .legal-table-wrap {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            background: #fff;
         }
 
         .legal-table {
@@ -1848,37 +1929,6 @@
             </div>
         </section>
 
-        <!-- C: Voices (Social Proof) -->
-        <section class="voices-section reveal">
-            <div class="section-tag" style="text-align:center; display:block; margin:0 auto 20px;">💬 当選者の声</div>
-            <div style="max-width:600px; margin:0 auto;">
-                <div class="voice-card">
-                    <div class="voice-header">
-                        <div class="voice-avatar">👩</div>
-                        <div class="voice-meta">
-                            <div class="voice-name">K.S 様（20代女性）</div>
-                            <div class="voice-rating">★★★★★</div>
-                        </div>
-                    </div>
-                    <div class="voice-text">
-                        当選メールを見てすぐに購入しました！届いたMobbyは想像以上にフワフワで可愛いです。カバンに付けて毎日癒やされています。
-                    </div>
-                </div>
-                <div class="voice-card">
-                    <div class="voice-header">
-                        <div class="voice-avatar">👨</div>
-                        <div class="voice-meta">
-                            <div class="voice-name">Y.T 様（10代男性）</div>
-                            <div class="voice-rating">★★★★★</div>
-                        </div>
-                    </div>
-                    <div class="voice-text">
-                        先行販売ということで特別感があります。作りもしっかりしていて、プレゼントにも良さそうだと思いました。発送もスムーズでした。
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Trust -->
         <section class="trust-section">
             <div class="trust-grid">
@@ -1901,72 +1951,105 @@
             </div>
         </section>
 
-        <!-- F: FAQ -->
-        <section class="faq-section reveal">
-            <h3 style="text-align:center; font-size:1.1rem; color:var(--color-earth); margin-bottom:20px;">❓ よくある質問</h3>
-            <div class="faq-item">
-                <div class="faq-q">Q. 支払い方法は何がありますか？</div>
-                <div class="faq-a">A. PayPay、クレジットカード（Visa/Master/JCB/Amex）、Apple Pay、Google
-                    Payがご利用いただけます。Stripeの安全な決済システムを使用しています。</div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-q">Q. 返品やキャンセルはできますか？</div>
-                <div class="faq-a">A. お客様都合によるキャンセルは原則お受けできませんが、万が一商品に不良があった場合は、到着後7日以内にご連絡いただければ返金・交換対応いたします。</div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-q">Q. セットのアクリルキーホルダーには何を入力すればいいですか？</div>
-                <div class="faq-a">
-                    A. 学校モビー診断で使用したニックネームとメールアドレスを入力してください。診断がまだの方は、先に診断をしてからご購入ください。
+        <!-- Compact: Voices -->
+        <section class="compact-section reveal">
+            <details class="compact-accordion">
+                <summary>💬 当選者の声</summary>
+                <div class="compact-accordion-body">
+                    <div class="voice-card">
+                        <div class="voice-header">
+                            <div class="voice-avatar">👩</div>
+                            <div class="voice-meta">
+                                <div class="voice-name">K.S 様（20代女性）</div>
+                                <div class="voice-rating">★★★★★</div>
+                            </div>
+                        </div>
+                        <div class="voice-text">
+                            当選メールを見てすぐに購入しました！届いたMobbyは想像以上にフワフワで可愛いです。カバンに付けて毎日癒やされています。
+                        </div>
+                    </div>
+                    <div class="voice-card">
+                        <div class="voice-header">
+                            <div class="voice-avatar">👨</div>
+                            <div class="voice-meta">
+                                <div class="voice-name">Y.T 様（10代男性）</div>
+                                <div class="voice-rating">★★★★★</div>
+                            </div>
+                        </div>
+                        <div class="voice-text">
+                            先行販売ということで特別感があります。作りもしっかりしていて、プレゼントにも良さそうだと思いました。発送もスムーズでした。
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </details>
         </section>
 
-        <!-- Notice -->
-        <section class="notice-section">
-            <div class="notice-card reveal">
-                <div class="notice-title">📋 ご購入に関するご注意</div>
-                <ul class="notice-list">
-                    <li>このページは抽選当選者のみが購入可能です</li>
-                    <li>お一人様1個までのご購入とさせていただきます</li>
-                    <li>転売目的のご購入はお断りしております</li>
-                    <li>発送まで2〜3週間ほどお時間をいただきます（ひとつひとつ手作業で梱包しているため）</li>
-                    <li>万が一不良品があった場合は返金・交換対応いたします</li>
-                    <li>アクリルキーホルダーは診断時情報（ニックネーム・メール）入力後に購入へ進めます</li>
-                    <li>カメラ型キーホルダーが当選した場合再度お手紙を送付します。</li>
-                    <li>レビューをしていただける方はinfo@mobby.onlineまでご連絡ください。</li>
-                </ul>
-            </div>
+        <!-- Compact: FAQ -->
+        <section class="compact-section reveal">
+            <details class="compact-accordion">
+                <summary>❓ よくある質問</summary>
+                <div class="compact-accordion-body">
+                    <div class="faq-item">
+                        <div class="faq-q">Q. 支払い方法は何がありますか？</div>
+                        <div class="faq-a">A. PayPay、クレジットカード（Visa/Master/JCB/Amex）、Apple Pay、Google Payがご利用いただけます。Stripeの安全な決済システムを使用しています。</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-q">Q. 返品やキャンセルはできますか？</div>
+                        <div class="faq-a">A. お客様都合によるキャンセルは原則お受けできませんが、万が一商品に不良があった場合は、到着後7日以内にご連絡いただければ返金・交換対応いたします。</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-q">Q. セットのアクリルキーホルダーには何を入力すればいいですか？</div>
+                        <div class="faq-a">A. 学校モビー診断で使用したニックネームとメールアドレスを入力してください。診断がまだの方は、先に診断をしてからご購入ください。</div>
+                    </div>
+                </div>
+            </details>
         </section>
 
-        <!-- A: Legal / Operator Info -->
-        <section class="legal-section">
-            <h3 style="text-align:center; font-size:1rem; margin-bottom:20px;">特定商取引法に基づく表記</h3>
-            <table class="legal-table">
-                <tr>
-                    <th>販売事業者</th>
-                    <td>Mobby運営事務局</td>
-                </tr>
-                <tr>
-                    <th>運営統括責任者</th>
-                    <td>長谷川</td>
-                </tr>
-                <tr>
-                    <th>連絡先</th>
-                    <td>info@mobby.online</td>
-                </tr>
-                <tr>
-                    <th>商品代金以外の必要料金</th>
-                    <td>なし（送料無料）</td>
-                </tr>
-                <tr>
-                    <th>引き渡し時期</th>
-                    <td>注文確定後、2〜3週間以内に発送</td>
-                </tr>
-                <tr>
-                    <th>返品・交換</th>
-                    <td>不良品に限り、商品到着後7日以内であれば返金・交換対応いたします。</td>
-                </tr>
-            </table>
+        <!-- Compact: Notice & Legal -->
+        <section class="compact-section reveal">
+            <details class="compact-accordion">
+                <summary>📋 ご購入に関するご注意・法表記</summary>
+                <div class="compact-accordion-body">
+                    <ul class="compact-note-list">
+                        <li>このページは抽選当選者のみが購入可能です</li>
+                        <li>お一人様1個までのご購入とさせていただきます</li>
+                        <li>転売目的のご購入はお断りしております</li>
+                        <li>発送まで2〜3週間ほどお時間をいただきます（ひとつひとつ手作業で梱包しているため）</li>
+                        <li>万が一不良品があった場合は返金・交換対応いたします</li>
+                        <li>アクリルキーホルダーは診断時情報（ニックネーム・メール）入力後に購入へ進めます</li>
+                        <li>カメラ型キーホルダーが当選した場合再度お手紙を送付します</li>
+                        <li>レビューをしていただける方はinfo@mobby.onlineまでご連絡ください</li>
+                    </ul>
+                    <div class="legal-table-wrap">
+                        <table class="legal-table">
+                            <tr>
+                                <th>販売事業者</th>
+                                <td>Mobby運営事務局</td>
+                            </tr>
+                            <tr>
+                                <th>運営統括責任者</th>
+                                <td>長谷川</td>
+                            </tr>
+                            <tr>
+                                <th>連絡先</th>
+                                <td>info@mobby.online</td>
+                            </tr>
+                            <tr>
+                                <th>商品代金以外の必要料金</th>
+                                <td>なし（送料無料）</td>
+                            </tr>
+                            <tr>
+                                <th>引き渡し時期</th>
+                                <td>注文確定後、2〜3週間以内に発送</td>
+                            </tr>
+                            <tr>
+                                <th>返品・交換</th>
+                                <td>不良品に限り、商品到着後7日以内であれば返金・交換対応いたします</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </details>
         </section>
 
         <!-- Footer -->
