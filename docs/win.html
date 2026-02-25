@@ -2236,7 +2236,9 @@
         // ===== ACRYLIC SET INPUT =====
         (function initAcrylicSetForm() {
             const DIAGNOSIS_STORAGE_KEY = 'school_char_diag_v1';
+            const DIAGNOSIS_PENDING_KEY = 'mobby_school_diag_pending_v1';
             const WIN_ACRYLIC_STORAGE_KEY = 'mobby_win_acrylic_set_v1';
+            const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzu8ZWwvtKHWIwqnjqlKkdbPTWN1o7oSxpsBZ-Crdv6zlmCbSeWFlMDZ3sjU9SgCsFOgQ/exec';
             const CODE_TO_IMAGE = {
                 'がやみそ': 'ortp', 'がやみう': 'orti', 'がやこそ': 'orlp', 'がやこう': 'orli',
                 'がおみそ': 'ojtp', 'がおみう': 'ojti', 'がおこそ': 'ojlp', 'がおこう': 'ojli',
@@ -2278,6 +2280,106 @@
                     localStorage.setItem(key, JSON.stringify(value));
                 } catch (_) {
                 }
+            }
+
+            function getDiagnosisStorage() {
+                try {
+                    const raw = localStorage.getItem(DIAGNOSIS_STORAGE_KEY);
+                    if (!raw) return { raw: '', data: null };
+                    return { raw, data: JSON.parse(raw) };
+                } catch (_) {
+                    return { raw: '', data: null };
+                }
+            }
+
+            function getPendingDiagnosisStorage() {
+                try {
+                    const raw = localStorage.getItem(DIAGNOSIS_PENDING_KEY);
+                    if (!raw) return { raw: '', data: null };
+                    return { raw, data: JSON.parse(raw) };
+                } catch (_) {
+                    return { raw: '', data: null };
+                }
+            }
+
+            function buildStripeSheetPayloadFromStorage(extraPayload = {}) {
+                const diagnosis = getDiagnosisStorage();
+                const pending = getPendingDiagnosisStorage();
+                const data = diagnosis.data || {};
+                const pendingData = pending.data || {};
+                const setData = loadJson(WIN_ACRYLIC_STORAGE_KEY) || {};
+                const currentName = String(nicknameInput.value || '').trim();
+                const currentEmail = String(emailInput.value || '').trim();
+
+                return {
+                    event: 'stripe_click',
+                    source: 'win',
+                    createdAt: new Date().toISOString(),
+                    pageUrl: window.location.href,
+                    userAgent: navigator.userAgent,
+                    name: currentName || setData.name || data.profile?.name || pendingData.name || '',
+                    age: data.profile?.age || pendingData.age || '',
+                    email: currentEmail || setData.email || data.profile?.email || pendingData.email || '',
+                    gender: data.gender || pendingData.gender || '',
+                    type: pendingData.type || data.type || '',
+                    diagnosisName: pendingData.diagnosis_type || data.diagnosisName || '',
+                    axes: pendingData.axes || data.axes || {},
+                    answers: pendingData.answers || data.answers || {},
+                    interested: data.interested === true || pendingData.interested === true,
+                    userId: data.userId || pendingData.userId || '',
+                    referrerId: data.referrerId || pendingData.referrerId || '',
+                    shareCount: Number(data.shareCount || pendingData.shareCount || 0),
+                    setInputName: currentName || setData.name || '',
+                    setInputEmail: currentEmail || setData.email || '',
+                    setInputConfirmed: setData.confirmed === true,
+                    storageKey: DIAGNOSIS_STORAGE_KEY,
+                    storageRaw: diagnosis.raw || '',
+                    pendingStorageKey: DIAGNOSIS_PENDING_KEY,
+                    pendingStorageRaw: pending.raw || '',
+                    winSetStorageKey: WIN_ACRYLIC_STORAGE_KEY,
+                    winSetStorageRaw: localStorage.getItem(WIN_ACRYLIC_STORAGE_KEY) || '',
+                    stateSnapshot: data,
+                    ...extraPayload
+                };
+            }
+
+            function sendToGoogleSheet(payload) {
+                if (!GAS_WEBAPP_URL) return;
+                try {
+                    const body = JSON.stringify(payload);
+                    if (navigator.sendBeacon) {
+                        const blob = new Blob([body], { type: 'text/plain' });
+                        navigator.sendBeacon(GAS_WEBAPP_URL, blob);
+                        return;
+                    }
+                    fetch(GAS_WEBAPP_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'text/plain' },
+                        body,
+                        keepalive: true
+                    }).catch(() => { });
+                } catch (_) {
+                }
+            }
+
+            function initStripeButtonTracking({
+                buttonId,
+                productType = '',
+                productLabel = ''
+            }) {
+                const btn = document.getElementById(buttonId);
+                if (!btn) return;
+
+                btn.addEventListener('click', () => {
+                    if (btn.getAttribute('aria-disabled') === 'true') return;
+                    const payload = buildStripeSheetPayloadFromStorage({
+                        clickedProductType: productType,
+                        clickedProductLabel: productLabel,
+                        clickedButtonId: buttonId
+                    });
+                    sendToGoogleSheet(payload);
+                });
             }
 
             function setStatus(kind, text) {
@@ -2398,7 +2500,20 @@
                     updatedAt: new Date().toISOString()
                 });
 
+                sendToGoogleSheet(buildStripeSheetPayloadFromStorage({
+                    event: 'win_set_input_confirm',
+                    clickedButtonId: 'saveAcrylicInfoBtn',
+                    clickedProductType: 'plush_keyholder_set_with_acrylic',
+                    clickedProductLabel: 'ぬいぐるみキーホルダー（アクリル特典付き）'
+                }));
+
                 setBuyUnlocked(true);
+            });
+
+            initStripeButtonTracking({
+                buttonId: 'buyBtn',
+                productType: 'plush_keyholder_set_with_acrylic',
+                productLabel: 'ぬいぐるみキーホルダー（アクリル特典付き）'
             });
 
             buyBtn.addEventListener('click', (event) => {
