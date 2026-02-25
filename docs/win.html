@@ -2139,7 +2139,7 @@
     <div class="checkout-overlay" id="checkoutOverlay" aria-hidden="true">
         <div class="checkout-panel" role="dialog" aria-modal="true" aria-label="埋め込み決済">
             <div class="checkout-panel-header">
-                <div class="checkout-panel-title">Stripe決済（このページ内で完了）</div>
+                <div class="checkout-panel-title">Stripe決済</div>
                 <button class="checkout-close-btn" id="checkoutCloseBtn" type="button">閉じる</button>
             </div>
             <div class="checkout-mount" id="checkoutMount"></div>
@@ -2543,7 +2543,7 @@
 
                 const originalLabel = buyBtn.textContent;
                 buyBtn.disabled = true;
-                buyBtn.textContent = '決済画面を準備中...';
+                buyBtn.textContent = '決済画面を準備中...数秒で表示されます。';
                 setStatus('warn', '決済画面を準備しています。しばらくお待ちください。');
 
                 try {
