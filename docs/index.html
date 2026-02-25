@@ -1257,6 +1257,26 @@
       box-shadow: 0 10px 22px rgba(0, 0, 0, 0.07);
     }
 
+    .plush-soldout-badge {
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translate(-50%, 8%) rotate(-10deg);
+      margin: 0;
+      z-index: 2;
+      display: inline-block;
+      padding: 10px 24px;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      background: linear-gradient(135deg, #ff3b3b 0%, #a30000 100%);
+      color: #fff;
+      box-shadow: 0 10px 22px rgba(163, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      pointer-events: none;
+    }
+
     .product-tab-gallery {
       display: flex;
       gap: 12px;
@@ -1777,6 +1797,16 @@
         flex: 1;
         font-size: 0.86rem;
         margin: 0;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .plush-soldout-badge {
+        top: 36px;
+        padding: 16px 30px;
+        font-size: 4rem;
+        letter-spacing: 0.12em;
+        box-shadow: 0 14px 28px rgba(163, 0, 0, 0.4);
       }
     }
 
@@ -2845,8 +2875,9 @@
             <section id="reservationPanelPlush" class="price-reservation-panel" role="tabpanel"
               aria-labelledby="reservationTabPlush" data-reservation-panel="plush" hidden>
               <div class="product-tab-card"
-                style="background:linear-gradient(145deg, #fff7fb, #fff3e8); border-color:rgba(255, 99, 160, 0.35);">
+                style="position:relative;background:linear-gradient(145deg, #fff7fb, #fff3e8); border-color:rgba(255, 99, 160, 0.35); overflow:hidden;">
                 <p class="kicker" style="margin-bottom:10px;color:#ff4d8d;">LIMITED ITEM</p>
+                <p class="kicker plush-soldout-badge">SOLD OUT</p>
                 <h3 style="margin:0 0 8px;color:var(--color-earth);">ふわふわ<br>ぬいぐるみキーホルダー</h3>
                 <span
                   style="display:inline-block;margin-bottom:10px;padding:6px 12px;border-radius:999px;background:#ff4d8d;color:#fff;font-size:0.78rem;font-weight:700;letter-spacing:0.02em;">先着100個限定</span>
@@ -2881,9 +2912,7 @@
                   <li>写真映えするフェミニンなカラーリング</li>
                   <li>期間・数量ともに限定のスペシャルアイテム</li>
                 </ul>
-                <a id="plushStripeBuyButton" href="https://buy.stripe.com/28EaEX30Vfqt6SybJJao80b" target="_blank"
-                  rel="noopener" class="btn btn-primary"
-                  style="width:100%;display:flex;justify-content:center;font-size:0.92rem;padding:10px 14px;">期間限定アイテムを確認する</a>
+                <button id="plushStripeBuyButton" class="btn btn-primary" type="button" style="width:100%;display:flex;justify-content:center;font-size:0.92rem;padding:10px 14px;opacity:0.7;cursor:not-allowed;" disabled>SOLD OUT</button>
               </div>
             </section>
 
