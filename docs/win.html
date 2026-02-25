@@ -637,7 +637,7 @@
         }
 
         .set-preview-card {
-            margin: 0 0 18px;
+            margin: 0 0 12px;
             padding: 16px;
             border-radius: 16px;
             background: #fff;
@@ -690,11 +690,68 @@
         }
 
         .set-form-card {
-            margin: 0 0 20px;
+            margin: 0;
             padding: 16px;
             border-radius: 16px;
             background: rgba(255, 255, 255, 0.95);
             border: 1px solid rgba(47, 79, 79, 0.14);
+        }
+
+        .bundle-details {
+            margin: 0 0 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(218, 165, 32, 0.35);
+            background: rgba(255, 255, 255, 0.92);
+            overflow: hidden;
+        }
+
+        .bundle-details summary {
+            list-style: none;
+            cursor: pointer;
+            padding: 13px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(174, 198, 207, 0.13));
+        }
+
+        .bundle-details summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .bundle-summary-main {
+            display: grid;
+            gap: 2px;
+        }
+
+        .bundle-summary-title {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--color-forest);
+            line-height: 1.4;
+        }
+
+        .bundle-summary-sub {
+            font-size: 0.75rem;
+            color: var(--color-earth);
+            opacity: 0.85;
+            line-height: 1.45;
+        }
+
+        .bundle-summary-icon {
+            font-size: 1rem;
+            color: var(--color-earth);
+            transition: transform 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .bundle-details[open] .bundle-summary-icon {
+            transform: rotate(180deg);
+        }
+
+        .bundle-details-body {
+            padding: 12px;
         }
 
         .set-form-title {
@@ -1700,42 +1757,53 @@
                     </p>
                 </div>
 
-                <div class="set-preview-card">
-                    <div class="set-preview-title">セット特典：アクリルキーホルダー</div>
-                    <p class="set-preview-copy">
-                        表面はあなたの診断キャラクター、裏面は診断結果ページへアクセスできるQRデザインです。
-                    </p>
-                    <div class="set-preview-images">
-                        <figure class="set-preview-figure">
-                            <img id="acrylicFrontPreview" src="16school/key/購買前たまり場モビー.jpg" alt="アクリルキーホルダー 表面（サンプル）">
-                            <figcaption>表面（診断タイプ別）</figcaption>
-                        </figure>
-                        <figure class="set-preview-figure">
-                            <img src="16school/key/ura.jpg" alt="アクリルキーホルダー 裏面">
-                            <figcaption>裏面（QRデザイン）</figcaption>
-                        </figure>
-                    </div>
-                </div>
+                <details class="bundle-details" id="bundleDetails">
+                    <summary>
+                        <div class="bundle-summary-main">
+                            <span class="bundle-summary-title" id="bundleSummaryTitle">セット特典入力（必須）</span>
+                            <span class="bundle-summary-sub" id="bundleSummarySub">タップして入力フォームを開く</span>
+                        </div>
+                        <span class="bundle-summary-icon" aria-hidden="true">▼</span>
+                    </summary>
+                    <div class="bundle-details-body">
+                        <div class="set-preview-card">
+                            <div class="set-preview-title">セット特典：アクリルキーホルダー</div>
+                            <p class="set-preview-copy">
+                                表面はあなたの診断キャラクター、裏面は診断結果ページへアクセスできるQRデザインです。
+                            </p>
+                            <div class="set-preview-images">
+                                <figure class="set-preview-figure">
+                                    <img id="acrylicFrontPreview" src="16school/key/購買前たまり場モビー.jpg" alt="アクリルキーホルダー 表面（サンプル）">
+                                    <figcaption>表面（診断タイプ別）</figcaption>
+                                </figure>
+                                <figure class="set-preview-figure">
+                                    <img src="16school/key/ura.jpg" alt="アクリルキーホルダー 裏面">
+                                    <figcaption>裏面（QRデザイン）</figcaption>
+                                </figure>
+                            </div>
+                        </div>
 
-                <div class="set-form-card" id="acrylicInfoCard">
-                    <div class="set-form-title">セット特典入力（必須）</div>
-                    <p class="set-form-help">
-                        アクリルキーホルダーのセット特典確認のため、診断時に使用したニックネームとメールアドレスを入力してください。入力後に購入ボタンが有効になります。
-                    </p>
-                    <div class="form-group">
-                        <label class="form-label" for="acrylicNickname">診断時のニックネーム</label>
-                        <input class="form-input" id="acrylicNickname" type="text" autocomplete="name" placeholder="例）モビー太郎">
+                        <div class="set-form-card" id="acrylicInfoCard">
+                            <div class="set-form-title">セット特典入力（必須）</div>
+                            <p class="set-form-help">
+                                アクリルキーホルダーのセット特典確認のため、診断時に使用したニックネームとメールアドレスを入力してください。入力後に購入ボタンが有効になります。
+                            </p>
+                            <div class="form-group">
+                                <label class="form-label" for="acrylicNickname">診断時のニックネーム</label>
+                                <input class="form-input" id="acrylicNickname" type="text" autocomplete="name" placeholder="例）モビー太郎">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="acrylicEmail">診断時のメールアドレス</label>
+                                <input class="form-input" id="acrylicEmail" type="email" autocomplete="email" placeholder="example@gmail.com">
+                            </div>
+                            <button class="set-save-btn" id="saveAcrylicInfoBtn" type="button">入力内容を確定する</button>
+                            <p class="set-form-status" id="acrylicStatusText"></p>
+                            <a class="diag-link" href="index.html" target="_blank" rel="noopener">
+                                診断がまだの方は先に学校モビー診断をする
+                            </a>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label" for="acrylicEmail">診断時のメールアドレス</label>
-                        <input class="form-input" id="acrylicEmail" type="email" autocomplete="email" placeholder="example@gmail.com">
-                    </div>
-                    <button class="set-save-btn" id="saveAcrylicInfoBtn" type="button">入力内容を確定する</button>
-                    <p class="set-form-status" id="acrylicStatusText"></p>
-                    <a class="diag-link" href="index.html" target="_blank" rel="noopener">
-                        診断がまだの方は先に学校モビー診断をする
-                    </a>
-                </div>
+                </details>
 
                 <div class="product-features">
                     <span class="feature-tag">🧵 ふわふわ素材</span>
@@ -2100,7 +2168,10 @@
             const buyBtn = document.getElementById('buyBtn');
             const buyNote = document.getElementById('buyUnlockNote');
             const frontPreview = document.getElementById('acrylicFrontPreview');
-            if (!nicknameInput || !emailInput || !saveBtn || !statusEl || !buyBtn || !buyNote || !frontPreview) return;
+            const bundleDetails = document.getElementById('bundleDetails');
+            const bundleSummaryTitle = document.getElementById('bundleSummaryTitle');
+            const bundleSummarySub = document.getElementById('bundleSummarySub');
+            if (!nicknameInput || !emailInput || !saveBtn || !statusEl || !buyBtn || !buyNote || !frontPreview || !bundleDetails || !bundleSummaryTitle || !bundleSummarySub) return;
 
             function isEmail(value) {
                 return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || '').trim());
@@ -2140,6 +2211,11 @@
                     ? 'セット特典入力を確認しました。アクリルキーホルダーを同梱してお届けします。'
                     : '先に「セット特典入力（必須）」を完了してください。';
                 buyNote.classList.toggle('is-ready', unlocked);
+                bundleSummaryTitle.textContent = unlocked ? 'セット特典入力（入力済み）' : 'セット特典入力（必須）';
+                bundleSummarySub.textContent = unlocked ? '必要ならタップして入力内容を編集' : 'タップして入力フォームを開く';
+                if (unlocked) {
+                    bundleDetails.open = false;
+                }
             }
 
             function getDiagnosisAcrylicFrontImage(diagnosisState) {
@@ -2172,6 +2248,7 @@
             function markAsPending() {
                 setBuyUnlocked(false);
                 setStatus('warn', '入力内容を確認して「入力内容を確定する」を押してください。');
+                bundleDetails.open = true;
             }
 
             const diagnosisState = loadJson(DIAGNOSIS_STORAGE_KEY);
@@ -2245,6 +2322,7 @@
                 if (buyBtn.getAttribute('aria-disabled') === 'true') {
                     event.preventDefault();
                     setStatus('error', '購入前にセット特典入力（必須）を完了してください。');
+                    bundleDetails.open = true;
                     const card = document.getElementById('acrylicInfoCard');
                     if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
