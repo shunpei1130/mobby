@@ -771,6 +771,66 @@
             margin-top: 20px
         }
 
+        .sns-save-wrap {
+            margin-bottom: 14px
+        }
+
+        .sns-save-btn {
+            width: 100%;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 24px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #0f5bb5;
+            background: linear-gradient(135deg, #d6ecff 0%, #eaf6ff 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px
+        }
+
+        .sns-save-box {
+            display: none;
+            margin-top: 10px;
+            padding: 12px;
+            border-radius: 12px;
+            background: #ffffff;
+            border: 1px solid #bcdfff;
+            text-align: left
+        }
+
+        .sns-save-hint {
+            margin: 0;
+            color: #20538d;
+            font-size: 12px;
+            line-height: 1.6;
+            font-weight: 600
+        }
+
+        .sns-save-preview-wrap {
+            margin-top: 10px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #d8e8f8;
+            background: #f7fbff
+        }
+
+        .sns-save-preview {
+            display: none;
+            width: 100%;
+            height: auto;
+            vertical-align: middle
+        }
+
+        .sns-save-fallback {
+            display: none;
+            margin: 10px 0 0;
+            font-size: 12px;
+            line-height: 1.7;
+            color: #5f6368
+        }
+
         .share-btn {
             padding: 14px 24px;
             border-radius: 12px;
@@ -871,6 +931,24 @@
         const STORAGE_KEY = "stan_char_diag_v1", PAGE_SIZE = 5;
         const state = { step: "intro", page: 0, answers: {}, questionOrder: null, profile: { name: "", email: "", age: "" }, sentToSheet: false };
         const ANS_LABEL = { 1: "そう思う", 2: "ややそう思う", 3: "少しそう思う", 4: "どちらでもない", 5: "少しそう思わない", 6: "ややそう思わない", 7: "そう思わない" };
+        const SNS_IMAGE_PATHS = {
+            "こうしひ": "img/sns/こうしひ.png",
+            "こうしみ": "img/sns/こうしみ.png",
+            "こうはひ": "img/sns/こうはひ.png",
+            "こうはみ": "img/sns/こうはみ.png",
+            "こなしひ": "img/sns/こなしひ.png",
+            "こなしみ": "img/sns/こなしみ.png",
+            "こなはひ": "img/sns/こなはひ.png",
+            "こなはみ": "img/sns/こなはみ.png",
+            "まうしひ": "img/sns/まうしひ.png",
+            "まうしみ": "img/sns/まうしみ.png",
+            "まうはひ": "img/sns/まうはひ.png",
+            "まうはみ": "img/sns/まうはみ.png",
+            "まなしひ": "img/sns/まなしひ.png",
+            "まなしみ": "img/sns/まなしみ.png",
+            "まなはひ": "img/sns/まなはひ.png",
+            "まなはみ": "img/sns/まなはみ.png"
+        };
         function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; }
         function getQuestionOrder() { return shuffleArray([...Array(QUESTIONS.length).keys()]); }
         function loadState() { try { const s = localStorage.getItem(STORAGE_KEY); if (s) { const p = JSON.parse(s); Object.assign(state, p); } } catch (e) { } }
@@ -882,6 +960,17 @@
             let code = ""; const pcts = {};
             ["A", "B", "C", "D"].forEach(k => { const avg = counts[k] ? sums[k] / counts[k] : 4; const pct = (avg - 1) / 6 * 100; pcts[k] = pct; code += pct <= 50 ? AXES[k].leftCode : AXES[k].rightCode; });
             return { code, pcts };
+        }
+        function getSnsImagePaths(code) {
+            const png = SNS_IMAGE_PATHS[code];
+            if (!png) return null;
+            return { png };
+        }
+        function sanitizeDownloadName(name) {
+            return (name || "mobby-result").replace(/[\\/:*?"<>|]/g, "_");
+        }
+        function isIOSLikeDevice() {
+            return /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
         }
         function updateNavActive() { document.getElementById("navDiagnosis").classList.toggle("active", state.step !== "characters"); document.getElementById("navCharacters").classList.toggle("active", state.step === "characters"); }
         function render() { window.scrollTo(0, 0); updateNavActive(); if (state.step === "intro") renderIntro(); else if (state.step === "quiz") renderQuiz(); else if (state.step === "gate") renderGate(); else if (state.step === "characters") renderCharacters(); else renderResult(); }
@@ -971,6 +1060,7 @@
         function renderResult() {
             const { code, pcts } = computeResult(); const ch = CH[code]; if (!ch) { renderIntro(); return; } const app = document.getElementById("app");
             const imgPath = `img/${ch.name}.jpg`;
+            const snsImagePaths = getSnsImagePaths(code);
             let html = `<div class="fade-in"><div class="panel result-hero">
     <p class="kicker">あなたの推し活タイプは…</p>
     <h2 class="big" style="font-size:28px;">🎤 ${ch.name}</h2>
@@ -993,12 +1083,71 @@
     <div class="panel" style="margin-top:24px;"><h3 style="margin:0 0 16px;">💡 推し活を長く楽しむために</h3><ul style="padding-left:20px;font-size:14px;line-height:2;">${ch.advice.map(s => `<li>${s}</li>`).join("")}</ul></div>
     <div class="panel" style="text-align:center;margin-top:24px;">
     <h3 style="margin:0 0 16px;">結果をシェア 🎉</h3>
+    <div class="sns-save-wrap">
+    <button id="btnSaveSnsImage" class="sns-save-btn">📸 SNS投稿用画像を保存</button>
+    <div id="snsSaveBox" class="sns-save-box">
+    <p id="snsSaveHint" class="sns-save-hint">画像を読み込み中です...</p>
+    <div class="sns-save-preview-wrap">
+    <img id="snsSavePreview" class="sns-save-preview" alt="SNS投稿用画像" loading="eager" decoding="async" />
+    </div>
+    <p id="snsSaveFallback" class="sns-save-fallback">このタイプのSNS画像は準備中です。結果画面をスクショしてストーリーに投稿してください。</p>
+    </div>
+    </div>
     <div class="share-buttons">
     <a class="share-btn share-x" href="https://twitter.com/intent/tweet?text=${encodeURIComponent(`推し活モビー診断の結果は「${ch.name}」でした！🎤✨\n${ch.catch}\n`)}&url=${encodeURIComponent("https://www.mobby.online/16stan")}" target="_blank" rel="noopener">𝕏 でシェア</a>
     <a class="share-btn share-line" href="https://social-plugins.line.me/lineit/share?url=${encodeURIComponent("https://www.mobby.online/16stan")}&text=${encodeURIComponent(`推し活モビー診断の結果は「${ch.name}」でした！`)}" target="_blank" rel="noopener">LINE でシェア</a>
     </div></div>
     <div style="text-align:center;margin-top:24px;"><button onclick="resetState();render();" style="font-size:14px;">もう一度診断する</button></div>
     </div>`; app.innerHTML = html;
+
+            const snsSaveBtn = document.getElementById("btnSaveSnsImage");
+            const snsSaveBox = document.getElementById("snsSaveBox");
+            const snsSaveHint = document.getElementById("snsSaveHint");
+            const snsSavePreview = document.getElementById("snsSavePreview");
+            const snsSaveFallback = document.getElementById("snsSaveFallback");
+            if (snsSaveBtn && snsSaveBox && snsSaveHint && snsSavePreview && snsSaveFallback) {
+                snsSaveBtn.onclick = () => {
+                    snsSaveBox.style.display = "block";
+                    snsSavePreview.style.display = "none";
+                    snsSaveFallback.style.display = "none";
+                    if (!snsImagePaths) {
+                        snsSaveHint.textContent = "画像が見つからないため、結果画面をスクショして保存してください。";
+                        snsSaveFallback.style.display = "block";
+                        return;
+                    }
+                    const iosLike = isIOSLikeDevice();
+                    if (!iosLike) {
+                        snsSaveHint.textContent = "保存を開始しました。うまくいかない場合は結果画面をスクショしてください。";
+                        const dl = document.createElement("a");
+                        dl.href = snsImagePaths.png;
+                        dl.download = `${sanitizeDownloadName(ch.name)}.png`;
+                        dl.rel = "noopener";
+                        document.body.appendChild(dl);
+                        dl.click();
+                        document.body.removeChild(dl);
+                        return;
+                    }
+                    snsSaveHint.textContent = "iPhoneは画像を長押しして「写真に保存」を選んでください。";
+                    snsSavePreview.alt = `${ch.name} SNS投稿用画像`;
+                    if (snsSavePreview.src && decodeURIComponent(snsSavePreview.src).endsWith(decodeURIComponent(snsImagePaths.png))) {
+                        snsSavePreview.style.display = "block";
+                        snsSaveFallback.style.display = "none";
+                        snsSaveBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                        return;
+                    }
+                    snsSavePreview.onload = () => {
+                        snsSavePreview.style.display = "block";
+                        snsSaveFallback.style.display = "none";
+                    };
+                    snsSavePreview.onerror = () => {
+                        snsSavePreview.style.display = "none";
+                        snsSaveFallback.style.display = "block";
+                        snsSaveHint.textContent = "このタイプのSNS画像は準備中です。結果画面をスクショして投稿してください。";
+                    };
+                    snsSavePreview.src = snsImagePaths.png;
+                    snsSaveBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                };
+            }
         }
         function renderCharacters() {
             const app = document.getElementById("app"); const codes = Object.keys(CH);
