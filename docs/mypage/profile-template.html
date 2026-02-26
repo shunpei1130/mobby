@@ -1,0 +1,809 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{PAGE_TITLE}}</title>
+  <meta name="description" content="{{OG_DESCRIPTION}}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{PAGE_TITLE}}">
+  <meta property="og:description" content="{{OG_DESCRIPTION}}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{PAGE_TITLE}}">
+  <meta name="twitter:description" content="{{OG_DESCRIPTION}}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1f2532;
+      --sub: #52607a;
+      --line: rgba(31, 37, 50, 0.12);
+      --surface: rgba(255, 255, 255, 0.85);
+      --surface-strong: rgba(255, 255, 255, 0.94);
+      --brand-a: #0ea5e9;
+      --brand-b: #f97316;
+      --brand-c: #22c55e;
+      --shadow: 0 20px 60px rgba(8, 47, 73, 0.18);
+      --radius-lg: 26px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+      background:
+        radial-gradient(circle at 8% 12%, rgba(14, 165, 233, 0.26), transparent 42%),
+        radial-gradient(circle at 90% 84%, rgba(249, 115, 22, 0.25), transparent 46%),
+        linear-gradient(145deg, #f1f9ff 0%, #fff7ee 50%, #f3fffa 100%);
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.48) 1.4px, transparent 1.4px);
+      background-size: 26px 26px;
+      opacity: 0.45;
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: min(1120px, 100% - 28px);
+      margin: 0 auto;
+      padding: 26px 0 72px;
+    }
+
+    .hero {
+      position: relative;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.93), rgba(255, 255, 255, 0.76));
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      padding: 28px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -110px auto;
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle, rgba(14, 165, 233, 0.32), rgba(14, 165, 233, 0));
+      pointer-events: none;
+    }
+
+    .hero-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #0c4a6e;
+      background: rgba(14, 165, 233, 0.14);
+      border: 1px solid rgba(14, 165, 233, 0.26);
+      padding: 7px 12px;
+      border-radius: 999px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-size: clamp(28px, 4.7vw, 48px);
+      line-height: 1.08;
+      letter-spacing: 0.01em;
+    }
+
+    .hero-sub {
+      margin: 10px 0 0;
+      color: var(--sub);
+      font-size: clamp(14px, 2.3vw, 17px);
+      line-height: 1.8;
+      max-width: 760px;
+    }
+
+    .stats {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(110px, 1fr));
+      gap: 12px;
+      max-width: 700px;
+    }
+
+    .stat {
+      background: var(--surface-strong);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+    }
+
+    .stat strong {
+      display: block;
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-size: clamp(22px, 3.2vw, 30px);
+      line-height: 1;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--sub);
+      letter-spacing: 0.04em;
+    }
+
+    .hero-actions {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 11px 16px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    .btn.primary {
+      color: #fff;
+      background: linear-gradient(135deg, #0ea5e9, #0284c7);
+      box-shadow: 0 14px 30px rgba(14, 165, 233, 0.26);
+    }
+
+    .btn.line {
+      color: #fff;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      box-shadow: 0 14px 30px rgba(34, 197, 94, 0.26);
+    }
+
+    .btn.ghost {
+      color: #0f172a;
+      border: 1px solid rgba(15, 23, 42, 0.2);
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    .btn.ink {
+      color: #fff;
+      background: linear-gradient(135deg, #111827, #1f2937);
+      box-shadow: 0 14px 30px rgba(17, 24, 39, 0.26);
+    }
+
+    .layout {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 14px;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      backdrop-filter: blur(8px);
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-size: clamp(22px, 3vw, 30px);
+      letter-spacing: 0.01em;
+    }
+
+    .panel-sub {
+      margin: 8px 0 0;
+      color: var(--sub);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .diag-grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .diag-card {
+      border-radius: var(--radius-md);
+      border: 1px solid var(--line);
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.86);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .diag-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 3px;
+      background: var(--diag-accent, #94a3b8);
+      opacity: 0.9;
+    }
+
+    .diag-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .source-chip {
+      display: inline-flex;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #0f172a;
+      background: rgba(148, 163, 184, 0.18);
+      border: 1px solid rgba(148, 163, 184, 0.34);
+      border-radius: 999px;
+      padding: 5px 8px;
+      text-transform: uppercase;
+    }
+
+    .diag-date {
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    .diag-title {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    .diag-type {
+      margin: 6px 0 0;
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      color: #475569;
+      text-transform: uppercase;
+    }
+
+    .axis-row {
+      margin-top: 10px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .axis-item {
+      display: grid;
+      grid-template-columns: 16px 1fr 38px;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      color: #475569;
+    }
+
+    .axis-track {
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.26);
+      overflow: hidden;
+    }
+
+    .axis-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(14, 165, 233, 0.85), rgba(249, 115, 22, 0.85));
+    }
+
+    .compat-list {
+      margin-top: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .compat-item {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.9);
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .compat-name {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .compat-rank {
+      margin-top: 3px;
+      font-size: 12px;
+      color: var(--sub);
+    }
+
+    .score-pill {
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: 0.02em;
+      color: #0f172a;
+      min-width: 74px;
+      text-align: right;
+    }
+
+    .section {
+      margin-top: 14px;
+    }
+
+    .compare-box {
+      margin-top: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .compare-box input {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 11px 12px;
+      font-size: 13px;
+    }
+
+    .compare-result {
+      margin-top: 10px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.92);
+      padding: 12px;
+      display: none;
+    }
+
+    .compare-score {
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-size: 34px;
+      line-height: 1;
+      margin: 0;
+    }
+
+    .compare-meta {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--sub);
+      line-height: 1.8;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.92);
+      color: #fff;
+      font-size: 12px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      z-index: 30;
+      display: none;
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      text-align: center;
+      color: #5b6476;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      .diag-grid {
+        grid-template-columns: 1fr;
+      }
+      .stats {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <div class="hero-top">
+        <span class="kicker">Mobby Identity Archive</span>
+      </div>
+      <h1 id="heroTitle">診断を読み込み中…</h1>
+      <p class="hero-sub" id="heroSubtitle"></p>
+      <div class="stats">
+        <div class="stat">
+          <strong id="diagCount">0</strong>
+          <span>完了した診断</span>
+        </div>
+        <div class="stat">
+          <strong id="pairScore">--</strong>
+          <span>自己整合スコア</span>
+        </div>
+        <div class="stat">
+          <strong id="updatedAt">--</strong>
+          <span>最新更新日</span>
+        </div>
+      </div>
+      <div class="hero-actions">
+        <a id="shareX" class="btn ink" href="#" target="_blank" rel="noopener">Xで共有</a>
+        <a id="shareLine" class="btn line" href="#" target="_blank" rel="noopener">LINEで送る</a>
+        <button id="copyUrl" class="btn ghost" type="button">URLコピー</button>
+        <button id="saveCard" class="btn primary" type="button">画像で保存</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <section class="panel">
+        <h2>診断コレクション</h2>
+        <p class="panel-sub">あなたの複数診断を一画面で見返せる自己紹介ページ。SNSで「私こんな人です」を一発で伝えられます。</p>
+        <div class="diag-grid" id="diagnosticGrid"></div>
+      </section>
+
+      <section class="panel">
+        <h2>相性突合ボード</h2>
+        <p class="panel-sub">自分の中で診断同士がどれだけ噛み合うかを可視化。高スコアほどキャラの一貫性が強めです。</p>
+        <div class="compat-list" id="compatibilityGrid"></div>
+        <p class="footer-note" id="compatibilityEmpty" style="display:none;">2診断以上で相性突合が表示されます。</p>
+      </section>
+    </div>
+
+    <section class="panel section">
+      <h2>友だちと相性突合</h2>
+      <p class="panel-sub">友だちのマイページURLを入れるだけ。共通診断の軸差から、お互いの相性を数値化します。</p>
+      <div class="compare-box">
+        <input id="compareUrl" type="url" placeholder="友だちのマイページURLを貼り付け">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button id="compareBtn" class="btn primary" type="button">突合する</button>
+          <button id="copyCompareText" class="btn ghost" type="button">結果文をコピー</button>
+        </div>
+      </div>
+      <div id="compareResult" class="compare-result">
+        <p class="compare-score" id="compareScore">--</p>
+        <div class="compare-meta" id="compareMeta"></div>
+      </div>
+    </section>
+  </main>
+
+  <canvas id="shareCanvas" width="1200" height="630" style="display:none;"></canvas>
+  <div class="toast" id="toast"></div>
+
+  <script type="application/json" id="mobbyProfileData">{{PROFILE_JSON}}</script>
+  <script>
+    (() => {
+      const AXIS_KEYS = ["A", "B", "C", "D"];
+
+      function parseJson(id) {
+        try {
+          const el = document.getElementById(id);
+          if (!el) return {};
+          return JSON.parse(el.textContent || "{}");
+        } catch (_) {
+          return {};
+        }
+      }
+
+      function clamp(v, min, max) {
+        return Math.min(max, Math.max(min, v));
+      }
+
+      function normalizeAxes(axes) {
+        const out = {};
+        AXIS_KEYS.forEach((key) => {
+          const n = Number(axes?.[key]);
+          out[key] = Number.isFinite(n) ? clamp(Math.round(n), 0, 100) : 50;
+        });
+        return out;
+      }
+
+      function scoreAxes(left, right) {
+        const a = normalizeAxes(left);
+        const b = normalizeAxes(right);
+        const totalDiff = AXIS_KEYS.reduce((acc, key) => acc + Math.abs(a[key] - b[key]), 0);
+        return clamp(Math.round(100 - totalDiff / AXIS_KEYS.length), 0, 100);
+      }
+
+      function rank(score) {
+        if (score >= 86) return "神シンクロ";
+        if (score >= 72) return "かなり相性◎";
+        if (score >= 58) return "良いバランス";
+        if (score >= 44) return "凸凹コンビ";
+        return "真逆が武器";
+      }
+
+      function formatDate(iso) {
+        if (!iso) return "--";
+        const d = new Date(iso);
+        if (Number.isNaN(d.getTime())) return "--";
+        return d.toLocaleDateString("ja-JP", { month: "numeric", day: "numeric" });
+      }
+
+      function escapeHtml(text) {
+        return String(text || "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll("\"", "&quot;")
+          .replaceAll("'", "&#39;");
+      }
+
+      function showToast(message) {
+        const el = document.getElementById("toast");
+        el.textContent = message;
+        el.style.display = "block";
+        clearTimeout(showToast._timer);
+        showToast._timer = setTimeout(() => {
+          el.style.display = "none";
+        }, 1800);
+      }
+
+      const payload = parseJson("mobbyProfileData");
+      const diagnostics = Array.isArray(payload.diagnostics) ? payload.diagnostics : [];
+      const pairCompatibility = Array.isArray(payload.pairCompatibility) ? payload.pairCompatibility : [];
+      const userName = payload.userName || "あなた";
+      const summary = payload.summary || "";
+      const latest = diagnostics[0] || null;
+      const avgPair = pairCompatibility.length
+        ? Math.round(pairCompatibility.reduce((acc, item) => acc + Number(item.score || 0), 0) / pairCompatibility.length)
+        : null;
+
+      document.getElementById("heroTitle").textContent = `${userName}のモビー自己紹介ページ`;
+      document.getElementById("heroSubtitle").textContent = summary || "複数診断を横断して、あなたらしさを1枚にまとめたプロフィールです。";
+      document.getElementById("diagCount").textContent = String(diagnostics.length);
+      document.getElementById("pairScore").textContent = avgPair == null ? "--" : `${avgPair}`;
+      document.getElementById("updatedAt").textContent = formatDate(payload.generatedAt || latest?.createdAt);
+
+      const diagnosticGrid = document.getElementById("diagnosticGrid");
+      if (diagnostics.length === 0) {
+        diagnosticGrid.innerHTML = "<p style=\"margin:0;color:#64748b;font-size:13px;\">診断データがありません。</p>";
+      } else {
+        diagnosticGrid.innerHTML = diagnostics.map((diag) => {
+          const axes = normalizeAxes(diag.axes);
+          const axisRows = AXIS_KEYS.map((key) => {
+            const value = axes[key];
+            return (
+              `<div class="axis-item">` +
+              `<span>${key}</span>` +
+              `<div class="axis-track"><div class="axis-fill" style="width:${value}%;"></div></div>` +
+              `<strong>${value}</strong>` +
+              `</div>`
+            );
+          }).join("");
+
+          return (
+            `<article class="diag-card" style="--diag-accent:${escapeHtml(diag.accent || "#94a3b8")}">` +
+              `<div class="diag-head">` +
+                `<span class="source-chip">${escapeHtml(diag.sourceShortLabel || diag.sourceLabel || diag.source)}</span>` +
+                `<span class="diag-date">${formatDate(diag.createdAt)}</span>` +
+              `</div>` +
+              `<p class="diag-title">${escapeHtml(diag.diagnosisType || "診断結果")}</p>` +
+              `<p class="diag-type">${escapeHtml(diag.type || "TYPE未設定")}</p>` +
+              `<div class="axis-row">${axisRows}</div>` +
+            `</article>`
+          );
+        }).join("");
+      }
+
+      const compatibilityGrid = document.getElementById("compatibilityGrid");
+      const compatibilityEmpty = document.getElementById("compatibilityEmpty");
+      if (pairCompatibility.length === 0) {
+        compatibilityEmpty.style.display = "block";
+      } else {
+        compatibilityGrid.innerHTML = pairCompatibility.map((pair) => {
+          const score = Number(pair.score || 0);
+          return (
+            `<article class="compat-item">` +
+              `<div>` +
+                `<div class="compat-name">${escapeHtml(pair.leftLabel)} × ${escapeHtml(pair.rightLabel)}</div>` +
+                `<div class="compat-rank">${escapeHtml(pair.rank || rank(score))}</div>` +
+              `</div>` +
+              `<div class="score-pill">${score}</div>` +
+            `</article>`
+          );
+        }).join("");
+      }
+
+      const pageUrl = window.location.href;
+      const shareHeadline = diagnostics.length > 0
+        ? `${userName}の診断まとめ`
+        : `${userName}のモビー自己紹介`;
+      const shareText = `${shareHeadline}｜${diagnostics.length}診断を1ページで公開中`;
+      const shareX = document.getElementById("shareX");
+      const shareLine = document.getElementById("shareLine");
+      shareX.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(pageUrl)}`;
+      shareLine.href = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(shareText)}`;
+
+      document.getElementById("copyUrl").addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(pageUrl);
+          showToast("URLをコピーしました");
+        } catch (_) {
+          window.prompt("URLをコピーしてください", pageUrl);
+        }
+      });
+
+      document.getElementById("saveCard").addEventListener("click", () => {
+        const canvas = document.getElementById("shareCanvas");
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        grad.addColorStop(0, "#e0f2fe");
+        grad.addColorStop(0.5, "#fff7ed");
+        grad.addColorStop(1, "#dcfce7");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "rgba(255,255,255,0.85)";
+        ctx.strokeStyle = "rgba(15,23,42,0.08)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(46, 42, canvas.width - 92, canvas.height - 84, 32);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "800 54px Bricolage Grotesque, sans-serif";
+        ctx.fillText(`${userName}のモビー自己紹介`, 88, 140);
+
+        ctx.fillStyle = "#475569";
+        ctx.font = "500 30px Noto Sans JP, sans-serif";
+        ctx.fillText(`完了診断: ${diagnostics.length} / 自己整合: ${avgPair == null ? "--" : `${avgPair}`}`, 88, 190);
+
+        const rows = diagnostics.slice(0, 4);
+        rows.forEach((diag, idx) => {
+          const y = 250 + idx * 88;
+          ctx.fillStyle = diag.accent || "#94a3b8";
+          ctx.fillRect(88, y - 26, 8, 48);
+          ctx.fillStyle = "#0f172a";
+          ctx.font = "700 33px Noto Sans JP, sans-serif";
+          ctx.fillText(`${diag.sourceShortLabel || diag.sourceLabel}: ${diag.diagnosisType || "診断結果"}`, 112, y);
+          ctx.fillStyle = "#64748b";
+          ctx.font = "500 24px Bricolage Grotesque, sans-serif";
+          ctx.fillText(diag.type || "TYPE未設定", 112, y + 31);
+        });
+
+        ctx.fillStyle = "#334155";
+        ctx.font = "500 22px Noto Sans JP, sans-serif";
+        ctx.fillText("mobby.online", canvas.width - 220, canvas.height - 54);
+
+        const a = document.createElement("a");
+        a.href = canvas.toDataURL("image/png");
+        a.download = `mobby-profile-${Date.now()}.png`;
+        a.click();
+      });
+
+      function extractProfileJson(html) {
+        const match = html.match(/<script type="application\\/json" id="mobbyProfileData">([\\s\\S]*?)<\\/script>/i);
+        if (!match) {
+          throw new Error("相手ページから診断データを取得できませんでした");
+        }
+        return JSON.parse(match[1]);
+      }
+
+      function compareWithOther(otherData) {
+        const myMap = new Map(diagnostics.map((item) => [item.source, item]));
+        const otherDiagnostics = Array.isArray(otherData?.diagnostics) ? otherData.diagnostics : [];
+        const otherMap = new Map(otherDiagnostics.map((item) => [item.source, item]));
+        const commonSources = [...myMap.keys()].filter((source) => otherMap.has(source));
+        if (commonSources.length === 0) {
+          return { score: null, detail: "共通して受けた診断が見つかりませんでした。" };
+        }
+
+        const rows = commonSources.map((source) => {
+          const left = myMap.get(source);
+          const right = otherMap.get(source);
+          const score = scoreAxes(left?.axes, right?.axes);
+          return {
+            source,
+            label: left?.sourceShortLabel || left?.sourceLabel || source,
+            score
+          };
+        });
+
+        const total = rows.reduce((acc, item) => acc + item.score, 0);
+        const average = Math.round(total / rows.length);
+        const detail = rows
+          .map((item) => `${item.label}: ${item.score}`)
+          .join(" / ");
+        return { score: average, detail, commonCount: rows.length };
+      }
+
+      async function runCompare() {
+        const urlInput = document.getElementById("compareUrl");
+        const resultBox = document.getElementById("compareResult");
+        const resultScore = document.getElementById("compareScore");
+        const resultMeta = document.getElementById("compareMeta");
+        const rawUrl = String(urlInput.value || "").trim();
+        if (!rawUrl) {
+          showToast("URLを入力してください");
+          return;
+        }
+
+        try {
+          const res = await fetch(rawUrl, { cache: "no-store" });
+          if (!res.ok) throw new Error("ページ取得に失敗しました");
+          const html = await res.text();
+          const other = extractProfileJson(html);
+          const compared = compareWithOther(other);
+
+          resultBox.style.display = "block";
+          if (compared.score == null) {
+            resultScore.textContent = "--";
+            resultMeta.textContent = compared.detail;
+          } else {
+            resultScore.textContent = `${compared.score}`;
+            resultMeta.innerHTML =
+              `${rank(compared.score)}<br>` +
+              `共通診断 ${compared.commonCount} 件: ${escapeHtml(compared.detail)}`;
+          }
+        } catch (error) {
+          resultBox.style.display = "block";
+          resultScore.textContent = "--";
+          resultMeta.textContent = `突合に失敗しました: ${error.message || "不明なエラー"}`;
+        }
+      }
+
+      document.getElementById("compareBtn").addEventListener("click", runCompare);
+      document.getElementById("copyCompareText").addEventListener("click", async () => {
+        const scoreText = document.getElementById("compareScore").textContent || "--";
+        const metaText = document.getElementById("compareMeta").textContent || "";
+        const text = `${userName}の診断相性突合結果: ${scoreText}\n${metaText}\n${window.location.href}`;
+        try {
+          await navigator.clipboard.writeText(text);
+          showToast("突合結果テキストをコピーしました");
+        } catch (_) {
+          window.prompt("以下をコピーしてください", text);
+        }
+      });
+
+      const params = new URLSearchParams(window.location.search);
+      const preset = params.get("vs");
+      if (preset) {
+        try {
+          document.getElementById("compareUrl").value = decodeURIComponent(preset);
+          runCompare();
+        } catch (_) {}
+      }
+    })();
+  </script>
+</body>
+</html>
+

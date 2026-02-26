@@ -1400,7 +1400,31 @@
         document.getElementById("navCharacters").onclick = (e) => { e.preventDefault(); state.step = "characters"; saveState(); render(); };
         document.getElementById("btnReset").onclick = () => { if (confirm("診断をリセットしますか？")) { resetState(); render(); } };
         document.getElementById("btnTypeGuide").onclick = () => { showTypeGuide(); };
-        loadState(); render();
+        const ENABLE_MYPAGE_ENTRY = false; // Set true to show the launcher again.
+
+        function mountMyPageLauncher() {
+            if (!ENABLE_MYPAGE_ENTRY) return;
+            if (document.getElementById("mobbyMyPageLauncher")) return;
+            const launcher = document.createElement("a");
+            launcher.id = "mobbyMyPageLauncher";
+            launcher.href = "/mypage-register.html";
+            launcher.textContent = "診断まとめページ";
+            launcher.style.position = "fixed";
+            launcher.style.right = "12px";
+            launcher.style.bottom = "12px";
+            launcher.style.zIndex = "95";
+            launcher.style.padding = "10px 14px";
+            launcher.style.borderRadius = "999px";
+            launcher.style.fontSize = "12px";
+            launcher.style.fontWeight = "700";
+            launcher.style.letterSpacing = "0.04em";
+            launcher.style.textDecoration = "none";
+            launcher.style.color = "#fff";
+            launcher.style.background = "linear-gradient(135deg,#0ea5e9,#0284c7)";
+            launcher.style.boxShadow = "0 12px 24px rgba(14,165,233,0.34)";
+            document.body.appendChild(launcher);
+        }
+        loadState(); render(); mountMyPageLauncher();
     </script>
     <noscript>
         <div style="padding:40px 20px;max-width:800px;margin:0 auto;font-family:sans-serif;">

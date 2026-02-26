@@ -3082,6 +3082,7 @@
           <a class="btn btn-primary" href="16stan/index.html">推し活モビー診断</a>
           <a class="btn btn-primary" href="16night/index.html">夜職モビー診断</a>
           <a class="btn btn-primary" href="16school/mama/index.html">ママモビー診断</a>
+          <a class="btn btn-primary" href="/mypage-register.html">診断まとめマイページ作成</a>
         </div>
       </div>
     </div>
@@ -5156,6 +5157,16 @@
         }, 300);
       }
     })();
+  </script>
+  <script>
+    window.MOBBY_FLAGS = window.MOBBY_FLAGS || {};
+    window.MOBBY_FLAGS.enableMyPageEntry = false; // Set true to show entry links again.
+
+    if (!window.MOBBY_FLAGS.enableMyPageEntry) {
+      document.querySelectorAll('a[href="/mypage-register.html"]').forEach((link) => {
+        link.style.display = "none";
+      });
+    }
   </script>
 </body>
 
