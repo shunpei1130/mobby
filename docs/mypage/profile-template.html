@@ -711,7 +711,7 @@
       });
 
       function extractProfileJson(html) {
-        const match = html.match(/<script type="application\\/json" id="mobbyProfileData">([\\s\\S]*?)<\\/script>/i);
+        const match = html.match(/<script type="application\/json" id="mobbyProfileData">([\s\S]*?)<\/script>/i);
         if (!match) {
           throw new Error("相手ページから診断データを取得できませんでした");
         }
@@ -806,4 +806,3 @@
   </script>
 </body>
 </html>
-
