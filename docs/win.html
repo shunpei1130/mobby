@@ -2276,7 +2276,7 @@
                 // Seed from hour & minute for natural-looking fluctuation
                 const seed = Math.sin(h * 137.5 + m * 7.3) * 10000;
                 const raw = Math.abs(seed) % 1; // 0~1
-                return Math.floor(45 + raw * 22); // 45~66
+                return Math.floor(5 + raw * 22); // 45~66
             }
 
             function update() {
