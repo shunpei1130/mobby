@@ -2456,6 +2456,18 @@
                 }
             }
 
+            try {
+                sendToGoogleSheet(buildStripeSheetPayloadFromStorage({
+                    event: 'page_view',
+                    pageTitle: document.title || 'win.html',
+                    pageReferrer: document.referrer || '',
+                    pagePath: window.location.pathname || '',
+                    pageSearch: window.location.search || '',
+                    pageHash: window.location.hash || ''
+                }));
+            } catch (_) {
+            }
+
             function initStripeButtonTracking({
                 buttonId,
                 productType = '',
