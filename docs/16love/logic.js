@@ -59,6 +59,14 @@ function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 function resetState() { state.step = "intro"; state.page = 0; state.answers = {}; state.questionOrder = null; state.profile = { name: "", email: "" }; state.sentToSheet = false; localStorage.removeItem(STORAGE_KEY); render(); }
 function isRegistered() { return !!(state.profile && state.profile.name && state.profile.email); }
 function isQuizCompleted() { return Object.keys(state.answers || {}).length >= QUESTIONS.length; }
+const SNS_IMAGE_CODE_ALIAS = { "ゆつすひ": "ゆつふひ" };
+function getSnsImagePathByCode(code) {
+    if (!code) return "";
+    const resolvedCode = SNS_IMAGE_CODE_ALIAS[code] || code;
+    return `img/sns/${encodeURIComponent(resolvedCode)}.png`;
+}
+function sanitizeDownloadName(name) { return (name || "mobby-result").replace(/[\\/:*?"<>|]/g, "_"); }
+function isIOSLikeDevice() { return /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1); }
 
 function computeResult() {
     const raw = { A: 0, B: 0, C: 0, D: 0 }, cnt = { A: 0, B: 0, C: 0, D: 0 };
@@ -226,7 +234,7 @@ function renderResult() {
       <a id="stripeBuyButtonAcrylic" data-stripe-product-type="acrylic_keyholder" data-stripe-product-label="アクリルキーホルダー" href="https://buy.stripe.com/bJe14n8lf7Y11yecNNao80a" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border-radius:999px;font-size:14px;font-weight:600;text-decoration:none;background:linear-gradient(135deg,#f472b6,#ec4899);color:#fff;box-shadow:0 14px 30px rgba(244,114,182,0.28);transition:transform 0.2s ease;">限定アイテムを手に取る →</a>
     </section>
   </div>
-  <div class="panel fade-in" style="margin-top:40px;text-align:center;"><p class="kicker" style="margin-bottom:12px;">📱 結果をシェアして話題にしよう！</p><div class="share-buttons"><a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" rel="noopener" style="text-decoration:none;"><button class="share-btn share-x">𝕏 でシェア</button></a><a href="https://social-plugins.line.me/lineit/share?url=${shareUrl}&text=${shareText}" target="_blank" rel="noopener" style="text-decoration:none;"><button class="share-btn share-line">LINEで送る</button></a></div></div>`;
+  <div class="panel fade-in" style="margin-top:40px;text-align:center;"><p class="kicker" style="margin-bottom:12px;">📱 結果をシェアして話題にしよう！</p><div class="sns-save-wrap"><button id="btnSaveSnsImage" class="sns-save-btn">📸 SNS投稿用画像を保存</button><div id="snsSaveBox" class="sns-save-box"><p id="snsSaveHint" class="sns-save-hint">画像を読み込み中です...</p><div class="sns-save-preview-wrap"><img id="snsSavePreview" class="sns-save-preview" alt="SNS投稿用画像" loading="eager" decoding="async"></div><p id="snsSaveFallback" class="sns-save-fallback">このタイプのSNS画像は準備中です。結果画面をスクショして投稿してください。</p></div></div><div class="share-buttons"><a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" rel="noopener" style="text-decoration:none;"><button class="share-btn share-x">𝕏 でシェア</button></a><a href="https://social-plugins.line.me/lineit/share?url=${shareUrl}&text=${shareText}" target="_blank" rel="noopener" style="text-decoration:none;"><button class="share-btn share-line">LINEで送る</button></a></div></div>`;
 
     const resultProductTabButtons = Array.from(document.querySelectorAll(".result-product-tab[data-result-product-tab]"));
     const resultProductPanels = Array.from(document.querySelectorAll(".result-product-content[data-result-product-panel]"));
@@ -262,6 +270,56 @@ function renderResult() {
         });
     });
     if (resultProductTabButtons.length > 0) activateResultProductTab("plush");
+
+    const snsImagePath = getSnsImagePathByCode(res.code);
+    const snsSaveBtn = document.getElementById("btnSaveSnsImage");
+    const snsSaveBox = document.getElementById("snsSaveBox");
+    const snsSaveHint = document.getElementById("snsSaveHint");
+    const snsSavePreview = document.getElementById("snsSavePreview");
+    const snsSaveFallback = document.getElementById("snsSaveFallback");
+    if (snsSaveBtn && snsSaveBox && snsSaveHint && snsSavePreview && snsSaveFallback) {
+        snsSaveBtn.onclick = () => {
+            snsSaveBox.style.display = "block";
+            snsSavePreview.style.display = "none";
+            snsSaveFallback.style.display = "none";
+            if (!snsImagePath) {
+                snsSaveHint.textContent = "画像が見つからないため、結果画面をスクショして保存してください。";
+                snsSaveFallback.style.display = "block";
+                return;
+            }
+            const iosLike = isIOSLikeDevice();
+            if (!iosLike) {
+                snsSaveHint.textContent = "保存を開始しました。うまくいかない場合は結果画面をスクショしてください。";
+                const dl = document.createElement("a");
+                dl.href = snsImagePath;
+                dl.download = `${sanitizeDownloadName(ch.name)}-sns.png`;
+                dl.rel = "noopener";
+                document.body.appendChild(dl);
+                dl.click();
+                document.body.removeChild(dl);
+                return;
+            }
+            snsSaveHint.textContent = "iPhoneは画像を長押しして「写真に保存」を選んでください。";
+            snsSavePreview.alt = `${ch.name} SNS投稿用画像`;
+            if (snsSavePreview.src && decodeURIComponent(snsSavePreview.src).endsWith(decodeURIComponent(snsImagePath))) {
+                snsSavePreview.style.display = "block";
+                snsSaveFallback.style.display = "none";
+                snsSaveBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                return;
+            }
+            snsSavePreview.onload = () => {
+                snsSavePreview.style.display = "block";
+                snsSaveFallback.style.display = "none";
+            };
+            snsSavePreview.onerror = () => {
+                snsSavePreview.style.display = "none";
+                snsSaveFallback.style.display = "block";
+                snsSaveHint.textContent = "このタイプのSNS画像は準備中です。結果画面をスクショして投稿してください。";
+            };
+            snsSavePreview.src = snsImagePath;
+            snsSaveBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        };
+    }
 
     const stripeButtons = Array.from(document.querySelectorAll("[data-stripe-product-type]"));
     stripeButtons.forEach(stripeBtn => {
