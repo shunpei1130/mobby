@@ -486,6 +486,63 @@
             margin-bottom: 20px;
         }
 
+        .product-tabs {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+            margin: 0 auto 18px;
+            max-width: 520px;
+            padding: 6px;
+            border-radius: 14px;
+            background: rgba(218, 165, 32, 0.12);
+            border: 1px solid rgba(218, 165, 32, 0.28);
+        }
+
+        .product-tab {
+            border: 1px solid transparent;
+            border-radius: 10px;
+            padding: 10px 8px;
+            font-family: var(--font-ja);
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: #6a5130;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .product-tab[aria-selected="true"] {
+            background: #fff;
+            color: var(--color-forest);
+            border-color: rgba(47, 79, 79, 0.2);
+            box-shadow: 0 8px 16px rgba(47, 79, 79, 0.08);
+        }
+
+        .product-tab[aria-selected="false"] {
+            opacity: 0.82;
+        }
+
+        .product-tab:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.28);
+        }
+
+        .product-tab-price {
+            display: block;
+            font-size: 0.74rem;
+            font-weight: 700;
+            margin-top: 2px;
+            opacity: 0.9;
+        }
+
+        .product-panel {
+            display: none;
+        }
+
+        .product-panel.is-active {
+            display: block;
+        }
+
         .product-gallery {
             margin: 0 auto 24px;
             max-width: 520px;
@@ -1340,6 +1397,15 @@
                 font-size: 0.9rem;
             }
 
+            .product-tab {
+                font-size: 0.8rem;
+                padding: 10px 6px;
+            }
+
+            .product-tab-price {
+                font-size: 0.7rem;
+            }
+
             .price-current {
                 font-size: 1.8rem;
             }
@@ -1846,7 +1912,7 @@
                 <span class="gold">先行公開アイテム</span>をお届け
             </h1>
             <p class="hero-subtitle reveal delay-2">
-                抽選に当選されたあなただけがアクセスできる<br>ぬいぐるみキーホルダー先行販売ページです。<br>今だけアクリルキーホルダーをセットで同梱します。
+                抽選に当選されたあなただけがアクセスできる<br>ぬいぐるみキーホルダー先行販売ページです。<br>アクリルセット（¥5,200）と単体（¥4,800）から選べます。
             </p>
         </section>
 
@@ -1874,7 +1940,7 @@
         <!-- Product -->
         <section class="product-section">
             <div class="section-tag reveal">🏷️ 先行販売アイテム</div>
-            <h2 class="product-title reveal delay-1">Mobby ぬいぐるみキーホルダー</h2>
+            <h2 class="product-title reveal delay-1">Mobby キーホルダー販売</h2>
 
             <div class="product-gallery reveal delay-2">
                 <div class="image-carousel">
@@ -1897,107 +1963,188 @@
                     <span class="carousel-dot"></span>
                 </div>
             </div>
-            <div class="product-details reveal">
-                <div class="product-name">🧸 Mobby（モビー）ぬいぐるみキーホルダー</div>
-                <p class="product-desc">
-                    ふわふわの手触りが最高なMobbyのぬいぐるみキーホルダー。<br>
-                    バッグやリュックにつければ、いつでもMobbyと一緒。<br>
-                    今ならアクリルキーホルダーをセットで同梱します。
-                </p>
-                <div class="bundle-highlight">
-                    <div class="bundle-main-label">ぬいぐるみキーホルダー（¥4,800 税込）</div>
-                    <p class="bundle-sub-label">
-                        期間限定で、診断結果デザインのアクリルキーホルダー（通常 ¥1,900）を無料でお届けします。
+            <div class="product-tabs reveal delay-2" role="tablist" aria-label="購入タイプ">
+                <button id="productTabSet" class="product-tab" type="button" role="tab" aria-selected="true"
+                    aria-controls="productPanelSet" data-product-tab="set">
+                    セット購入
+                    <span class="product-tab-price">¥5,200</span>
+                </button>
+                <button id="productTabSingle" class="product-tab" type="button" role="tab" aria-selected="false"
+                    aria-controls="productPanelSingle" data-product-tab="single" tabindex="-1">
+                    単体購入
+                    <span class="product-tab-price">¥4,800</span>
+                </button>
+            </div>
+
+            <div class="reveal">
+                <section id="productPanelSet" class="product-details product-panel is-active" role="tabpanel"
+                    aria-labelledby="productTabSet" data-product-panel="set">
+                    <div class="product-name">🎁 Mobby アクリルセット</div>
+                    <p class="product-desc">
+                        ぬいぐるみキーホルダーに、診断結果デザインのアクリルキーホルダーを同梱したセットです。<br>
+                        セットは診断時の情報入力が必須です。
                     </p>
-                </div>
+                    <div class="bundle-highlight">
+                        <div class="bundle-main-label">ぬいぐるみ + アクリルセット（¥5,200 税込）</div>
+                        <p class="bundle-sub-label">
+                            診断結果に合わせたアクリルキーホルダーを含む、当選者限定セットです。
+                        </p>
+                    </div>
 
-                <details class="bundle-details" id="bundleDetails">
-                    <summary>
-                        <div class="bundle-summary-main">
-                            <span class="bundle-summary-title" id="bundleSummaryTitle">セット特典入力（必須）</span>
-                            <span class="bundle-summary-sub" id="bundleSummarySub">タップして入力フォームを開く</span>
-                        </div>
-                        <span class="bundle-summary-icon" aria-hidden="true">▼</span>
-                    </summary>
-                    <div class="bundle-details-body">
-                        <div class="set-preview-card">
-                            <div class="set-preview-title">セット特典：アクリルキーホルダー</div>
-                            <p class="set-preview-copy">
-                                表面はあなたの診断キャラクター、裏面は診断結果ページへアクセスできるQRデザインです。
-                            </p>
-                            <div class="set-preview-images">
-                                <figure class="set-preview-figure">
-                                    <img id="acrylicFrontPreview" src="16school/key/購買前たまり場モビー.jpg" alt="アクリルキーホルダー 表面（サンプル）">
-                                    <figcaption>表面（診断タイプ別）</figcaption>
-                                </figure>
-                                <figure class="set-preview-figure">
-                                    <img src="16school/key/ura.jpg" alt="アクリルキーホルダー 裏面">
-                                    <figcaption>裏面（QRデザイン）</figcaption>
-                                </figure>
+                    <details class="bundle-details" id="bundleDetails">
+                        <summary>
+                            <div class="bundle-summary-main">
+                                <span class="bundle-summary-title" id="bundleSummaryTitle">セット特典入力（必須）</span>
+                                <span class="bundle-summary-sub" id="bundleSummarySub">タップして入力フォームを開く</span>
                             </div>
-                        </div>
+                            <span class="bundle-summary-icon" aria-hidden="true">▼</span>
+                        </summary>
+                        <div class="bundle-details-body">
+                            <div class="set-preview-card">
+                                <div class="set-preview-title">セット特典：アクリルキーホルダー</div>
+                                <p class="set-preview-copy">
+                                    表面はあなたの診断キャラクター、裏面は診断結果ページへアクセスできるQRデザインです。
+                                </p>
+                                <div class="set-preview-images">
+                                    <figure class="set-preview-figure">
+                                        <img id="acrylicFrontPreview" src="16school/key/購買前たまり場モビー.jpg"
+                                            alt="アクリルキーホルダー 表面（サンプル）">
+                                        <figcaption>表面（診断タイプ別）</figcaption>
+                                    </figure>
+                                    <figure class="set-preview-figure">
+                                        <img src="16school/key/ura.jpg" alt="アクリルキーホルダー 裏面">
+                                        <figcaption>裏面（QRデザイン）</figcaption>
+                                    </figure>
+                                </div>
+                            </div>
 
-                        <div class="set-form-card" id="acrylicInfoCard">
-                            <div class="set-form-title">セット特典入力（必須）</div>
-                            <p class="set-form-help">
-                                アクリルキーホルダーのセット特典確認のため、診断時に使用したニックネームとメールアドレスを入力してください。入力後に購入ボタンが有効になります。
-                            </p>
-                            <div class="form-group">
-                                <label class="form-label" for="acrylicNickname">診断時のニックネーム</label>
-                                <input class="form-input" id="acrylicNickname" type="text" autocomplete="name" placeholder="例）モビー太郎">
+                            <div class="set-form-card" id="acrylicInfoCard">
+                                <div class="set-form-title">セット特典入力（必須）</div>
+                                <p class="set-form-help">
+                                    アクリルキーホルダーのセット特典確認のため、診断時に使用したニックネームとメールアドレスを入力してください。入力後に購入ボタンが有効になります。
+                                </p>
+                                <div class="form-group">
+                                    <label class="form-label" for="acrylicNickname">診断時のニックネーム</label>
+                                    <input class="form-input" id="acrylicNickname" type="text" autocomplete="name"
+                                        placeholder="例）モビー太郎">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="acrylicEmail">診断時のメールアドレス</label>
+                                    <input class="form-input" id="acrylicEmail" type="email" autocomplete="email"
+                                        placeholder="example@gmail.com">
+                                </div>
+                                <button class="set-save-btn" id="saveAcrylicInfoBtn" type="button">入力内容を確定する</button>
+                                <p class="set-form-status" id="acrylicStatusText"></p>
+                                <a class="diag-link" href="16school/index.html" target="_blank" rel="noopener">
+                                    診断がまだの方や、入力メアドが不明な方は先に学校モビー診断をする
+                                </a>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label" for="acrylicEmail">診断時のメールアドレス</label>
-                                <input class="form-input" id="acrylicEmail" type="email" autocomplete="email" placeholder="example@gmail.com">
-                            </div>
-                            <button class="set-save-btn" id="saveAcrylicInfoBtn" type="button">入力内容を確定する</button>
-                            <p class="set-form-status" id="acrylicStatusText"></p>
-                            <a class="diag-link" href="16school/index.html" target="_blank" rel="noopener">
-                                診断がまだの方や、入力メアドが不明な方は先に学校モビー診断をする
-                            </a>
+                        </div>
+                    </details>
+
+                    <div class="product-features">
+                        <span class="feature-tag">🧵 ふわふわ素材</span>
+                        <span class="feature-tag">🎨 診断デザイン</span>
+                        <span class="feature-tag">📦 丁寧梱包</span>
+                    </div>
+
+                    <table class="specs-table">
+                        <tr>
+                            <th>セット内容</th>
+                            <td>ぬいぐるみキーホルダー1点 + アクリルキーホルダー1点</td>
+                        </tr>
+                        <tr>
+                            <th>ぬいぐるみサイズ</th>
+                            <td>約 10cm × 10cm</td>
+                        </tr>
+                        <tr>
+                            <th>仕様</th>
+                            <td>ボールチェーン付き</td>
+                        </tr>
+                    </table>
+
+                    <div class="stock-indicator">
+                        <span class="stock-dot"></span>
+                        残り <span style="font-weight:800; font-size:1.1em; color:#d32f2f;">85</span> セット — お早めに！
+                    </div>
+                    <div class="price-row">
+                        <span class="price-current">¥5,200</span>
+                        <span class="price-tax">（税込）</span>
+                    </div>
+
+                    <div class="payment-note">PayPay・クレジットカード・Apple Pay・Google Pay 対応</div>
+
+                    <button class="buy-btn disabled" id="buySetBtn" type="button" aria-disabled="true" disabled
+                        style="text-decoration:none; text-align:center;">
+                        🛒 入力を完了して購入する
+                    </button>
+                    <p class="buy-note" id="buySetUnlockNote">先に「セット特典入力（必須）」を完了してください。</p>
+                </section>
+
+                <section id="productPanelSingle" class="product-details product-panel" role="tabpanel"
+                    aria-labelledby="productTabSingle" data-product-panel="single" hidden>
+                    <div class="product-name">🧸 Mobby ぬいぐるみキーホルダー（単体）</div>
+                    <p class="product-desc">
+                        ふわふわの手触りが最高なMobbyのぬいぐるみキーホルダー。<br>
+                        バッグやリュックにつければ、いつでもMobbyと一緒。<br>
+                        単体購入は診断結果や情報入力なしで、そのまま購入できます。
+                    </p>
+                    <div class="bundle-highlight">
+                        <div class="bundle-main-label">ぬいぐるみキーホルダー単体（¥4,800 税込）</div>
+                        <p class="bundle-sub-label">
+                            当選者限定で、ぬいぐるみキーホルダー単体を先行販売しています。
+                        </p>
+                    </div>
+
+                    <div class="set-preview-card">
+                        <div class="set-preview-title">単体商品イメージ</div>
+                        <p class="set-preview-copy">こちらはぬいぐるみキーホルダーのみの販売です。</p>
+                        <div class="set-preview-images">
+                            <figure class="set-preview-figure">
+                                <img src="img/nui/nui.jpeg" alt="ぬいぐるみキーホルダー">
+                                <figcaption>ぬいぐるみ単体</figcaption>
+                            </figure>
                         </div>
                     </div>
-                </details>
 
-                <div class="product-features">
-                    <span class="feature-tag">🧵 ふわふわ素材</span>
-                    <span class="feature-tag">📦 丁寧梱包</span>
-                </div>
+                    <div class="product-features">
+                        <span class="feature-tag">🧵 ふわふわ素材</span>
+                        <span class="feature-tag">🎒 持ち運びやすい</span>
+                        <span class="feature-tag">📦 丁寧梱包</span>
+                    </div>
 
-                <!-- B: Specs -->
-                <table class="specs-table">
-                    <tr>
-                        <th>サイズ</th>
-                        <td>約 10cm × 10cm</td>
-                    </tr>
-                    <tr>
-                        <th>素材</th>
-                        <td>ソフトボア</td>
-                    </tr>
-                    <tr>
-                        <th>仕様</th>
-                        <td>ボールチェーン付き</td>
-                    </tr>
-                </table>
+                    <table class="specs-table">
+                        <tr>
+                            <th>サイズ</th>
+                            <td>約 10cm × 10cm</td>
+                        </tr>
+                        <tr>
+                            <th>素材</th>
+                            <td>ソフトボア</td>
+                        </tr>
+                        <tr>
+                            <th>仕様</th>
+                            <td>ボールチェーン付き</td>
+                        </tr>
+                    </table>
 
-                <div class="stock-indicator">
-                    <span class="stock-dot"></span>
-                    残り <span style="font-weight:800; font-size:1.1em; color:#d32f2f;">85</span> 個 — お早めに！
-                </div>
-                <div class="price-row">
-                    <span class="price-current">¥4,800</span>
-                    <span class="price-tax">（税込）</span>
-                </div>
+                    <div class="stock-indicator">
+                        <span class="stock-dot"></span>
+                        残り <span style="font-weight:800; font-size:1.1em; color:#d32f2f;">85</span> 個 — お早めに！
+                    </div>
+                    <div class="price-row">
+                        <span class="price-current">¥4,800</span>
+                        <span class="price-tax">（税込）</span>
+                    </div>
 
-                <!-- E: Payment Methods -->
-                <div class="payment-note">PayPay・クレジットカード・Apple Pay・Google Pay 対応</div>
+                    <div class="payment-note">PayPay・クレジットカード・Apple Pay・Google Pay 対応</div>
 
-                <button class="buy-btn disabled" id="buyBtn" type="button" aria-disabled="true" disabled
-                    style="text-decoration:none; text-align:center;">
-                    🛒 入力を完了して購入する
-                </button>
-                <p class="buy-note" id="buyUnlockNote">先に「セット特典入力（必須）」を完了してください。</p>
-
+                    <button class="buy-btn" id="buySingleBtn" type="button"
+                        style="text-decoration:none; text-align:center;">
+                        🛒 今すぐ購入する
+                    </button>
+                    <p class="buy-note">単体購入は入力不要で、そのまま決済へ進めます。</p>
+                </section>
             </div>
         </section>
 
@@ -2070,8 +2217,8 @@
                         <div class="faq-a">A. お客様都合によるキャンセルは原則お受けできませんが、万が一商品に不良があった場合は、到着後7日以内にご連絡いただければ返金・交換対応いたします。</div>
                     </div>
                     <div class="faq-item">
-                        <div class="faq-q">Q. セットのアクリルキーホルダーには何を入力すればいいですか？</div>
-                        <div class="faq-a">A. 学校モビー診断で使用したニックネームとメールアドレスを入力してください。診断がまだの方は、先に診断をしてからご購入ください。</div>
+                        <div class="faq-q">Q. 購入前に入力は必要ですか？</div>
+                        <div class="faq-a">A. アクリルセット（¥5,200）は診断時のニックネームとメールアドレス入力が必須です。ぬいぐるみ単体（¥4,800）は入力不要でそのまま購入できます。</div>
                     </div>
                 </div>
             </details>
@@ -2088,7 +2235,8 @@
                         <li>転売目的のご購入はお断りしております</li>
                         <li>発送まで2〜3週間ほどお時間をいただきます（ひとつひとつ手作業で梱包しているため）</li>
                         <li>万が一不良品があった場合は返金・交換対応いたします</li>
-                        <li>アクリルキーホルダーは診断時情報（ニックネーム・メール）入力後に購入へ進めます</li>
+                        <li>アクリルセット（¥5,200）は診断時情報（ニックネーム・メール）入力後に購入へ進めます</li>
+                        <li>ぬいぐるみ単体（¥4,800）は入力不要で購入へ進めます</li>
                         <li>カメラ型キーホルダーが当選した場合再度お手紙を送付します</li>
                         <li>レビューをしていただける方はinfo@mobby.onlineまでご連絡ください</li>
                     </ul>
@@ -2265,6 +2413,57 @@
             updateDots();
         })();
 
+        // ===== PRODUCT TABS =====
+        (function initProductTabs() {
+            const tabButtons = Array.from(document.querySelectorAll('.product-tab[data-product-tab]'));
+            const panels = Array.from(document.querySelectorAll('.product-panel[data-product-panel]'));
+            if (!tabButtons.length || !panels.length) return;
+
+            function activateTab(tabKey) {
+                if (!tabKey) return;
+
+                tabButtons.forEach((button) => {
+                    const isActive = button.dataset.productTab === tabKey;
+                    button.setAttribute('aria-selected', isActive ? 'true' : 'false');
+                    button.tabIndex = isActive ? 0 : -1;
+                });
+
+                panels.forEach((panel) => {
+                    const isActive = panel.dataset.productPanel === tabKey;
+                    panel.classList.toggle('is-active', isActive);
+                    panel.hidden = !isActive;
+                });
+            }
+
+            tabButtons.forEach((button, index) => {
+                button.addEventListener('click', () => {
+                    activateTab(button.dataset.productTab || '');
+                });
+
+                button.addEventListener('keydown', (event) => {
+                    if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return;
+                    event.preventDefault();
+
+                    let nextIndex = index;
+                    if (event.key === 'ArrowRight') nextIndex = (index + 1) % tabButtons.length;
+                    if (event.key === 'ArrowLeft') nextIndex = (index - 1 + tabButtons.length) % tabButtons.length;
+                    if (event.key === 'Home') nextIndex = 0;
+                    if (event.key === 'End') nextIndex = tabButtons.length - 1;
+
+                    const nextButton = tabButtons[nextIndex];
+                    if (!nextButton) return;
+
+                    activateTab(nextButton.dataset.productTab || '');
+                    nextButton.focus();
+                });
+            });
+
+            const defaultTab = tabButtons.find((button) => button.dataset.productTab === 'set')?.dataset.productTab
+                || tabButtons[0]?.dataset.productTab
+                || '';
+            activateTab(defaultTab);
+        })();
+
         // ===== STOCK DISPLAY =====
 
         // ===== VIEWER COUNTER =====
@@ -2298,7 +2497,7 @@
 
         // ===== TYPEWRITER =====
         function startTypewriter() {
-            const text = 'この度は、抽選にご応募いただきありがとうございました！\nそして、ぬいぐるみキーホルダーに当選しました！\n当選おめでとうございます🎉\n\nMobbyを応援してくださる皆さんへの感謝の気持ちを込めて、今回当選された方だけの特別セットをご用意しました。\n\nこのぬいぐるみキーホルダーは、先着限定のスペシャルアイテムです。\nさらに今だけ、診断結果デザインのアクリルキーホルダーを同梱してお届けします。';
+            const text = 'この度は、抽選にご応募いただきありがとうございました！\nそして、ぬいぐるみキーホルダーに当選しました！\n当選おめでとうございます🎉\n\nMobbyを応援してくださる皆さんへの感謝の気持ちを込めて、今回は「アクリルセット（¥5,200）」と「ぬいぐるみ単体（¥4,800）」をご用意しました。\n\nどちらも先着限定のスペシャルアイテムです。';
             const el = document.getElementById('typewriter');
             let i = 0;
             function type() {
@@ -2318,8 +2517,8 @@
             setTimeout(type, 800);
         }
 
-        // ===== ACRYLIC SET INPUT =====
-        (function initAcrylicSetForm() {
+        // ===== BUY FLOW =====
+        (function initBuyFlow() {
             const DIAGNOSIS_STORAGE_KEY = 'school_char_diag_v1';
             const DIAGNOSIS_PENDING_KEY = 'mobby_school_diag_pending_v1';
             const WIN_ACRYLIC_STORAGE_KEY = 'mobby_win_acrylic_set_v1';
@@ -2336,8 +2535,9 @@
             const emailInput = document.getElementById('acrylicEmail');
             const saveBtn = document.getElementById('saveAcrylicInfoBtn');
             const statusEl = document.getElementById('acrylicStatusText');
-            const buyBtn = document.getElementById('buyBtn');
-            const buyNote = document.getElementById('buyUnlockNote');
+            const buySetBtn = document.getElementById('buySetBtn');
+            const buySetNote = document.getElementById('buySetUnlockNote');
+            const buySingleBtn = document.getElementById('buySingleBtn');
             const frontPreview = document.getElementById('acrylicFrontPreview');
             const bundleDetails = document.getElementById('bundleDetails');
             const bundleSummaryTitle = document.getElementById('bundleSummaryTitle');
@@ -2345,11 +2545,15 @@
             const checkoutOverlay = document.getElementById('checkoutOverlay');
             const checkoutMount = document.getElementById('checkoutMount');
             const checkoutCloseBtn = document.getElementById('checkoutCloseBtn');
-            if (!nicknameInput || !emailInput || !saveBtn || !statusEl || !buyBtn || !buyNote || !frontPreview || !bundleDetails || !bundleSummaryTitle || !bundleSummarySub || !checkoutOverlay || !checkoutMount || !checkoutCloseBtn) return;
+            if (!buySingleBtn || !checkoutOverlay || !checkoutMount || !checkoutCloseBtn) return;
+            const hasSetForm = Boolean(
+                nicknameInput && emailInput && saveBtn && statusEl && buySetBtn && buySetNote &&
+                frontPreview && bundleDetails && bundleSummaryTitle && bundleSummarySub
+            );
 
             let stripeLoaderPromise = null;
             let embeddedCheckoutInstance = null;
-            let isBuyReady = false;
+            let isSetBuyReady = false;
 
             function isEmail(value) {
                 return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || '').trim());
@@ -2401,8 +2605,8 @@
                 const data = diagnosis.data || {};
                 const pendingData = pending.data || {};
                 const setData = loadJson(WIN_ACRYLIC_STORAGE_KEY) || {};
-                const currentName = String(nicknameInput.value || '').trim();
-                const currentEmail = String(emailInput.value || '').trim();
+                const currentName = hasSetForm ? String(nicknameInput.value || '').trim() : '';
+                const currentEmail = hasSetForm ? String(emailInput.value || '').trim() : '';
 
                 return {
                     event: 'stripe_click',
@@ -2475,7 +2679,6 @@
             }) {
                 const btn = document.getElementById(buttonId);
                 if (!btn) return;
-
                 btn.addEventListener('click', () => {
                     if (btn.getAttribute('aria-disabled') === 'true') return;
                     const payload = buildStripeSheetPayloadFromStorage({
@@ -2529,14 +2732,19 @@
                 checkoutMount.innerHTML = '';
             }
 
-            async function createEmbeddedCheckoutSession() {
+            async function createEmbeddedCheckoutSession({
+                productType,
+                productLabel,
+                name = '',
+                email = ''
+            }) {
                 const payload = {
-                    name: String(nicknameInput.value || '').trim(),
-                    email: String(emailInput.value || '').trim(),
-                    productType: 'plush_keyholder_set_with_acrylic',
-                    productLabel: 'ぬいぐるみキーホルダー（アクリル特典付き）',
+                    productType,
+                    productLabel,
                     source: 'win'
                 };
+                if (name) payload.name = name;
+                if (email) payload.email = email;
 
                 const response = await fetch(CHECKOUT_SESSION_ENDPOINT, {
                     method: 'POST',
@@ -2550,16 +2758,30 @@
                 return data;
             }
 
-            async function openEmbeddedCheckout() {
-                if (!isBuyReady) return;
-
-                const originalLabel = buyBtn.textContent;
-                buyBtn.disabled = true;
-                buyBtn.textContent = '決済画面を準備中...数秒で表示されます。';
-                setStatus('warn', '決済画面を準備しています。しばらくお待ちください。');
+            async function openEmbeddedCheckout({
+                triggerButton,
+                productType,
+                productLabel,
+                name = '',
+                email = '',
+                setStatusOnStart = false,
+                setStatusOnSuccess = false
+            }) {
+                const targetButton = triggerButton || buySingleBtn;
+                const originalLabel = targetButton.textContent;
+                targetButton.disabled = true;
+                targetButton.textContent = '決済画面を準備中...数秒で表示されます。';
+                if (setStatusOnStart && hasSetForm) {
+                    setStatus('warn', '決済画面を準備しています。しばらくお待ちください。');
+                }
 
                 try {
-                    const session = await createEmbeddedCheckoutSession();
+                    const session = await createEmbeddedCheckoutSession({
+                        productType,
+                        productLabel,
+                        name,
+                        email
+                    });
                     const StripeCtor = await loadStripeJs();
                     const stripe = StripeCtor(session.publishableKey);
                     if (!stripe) {
@@ -2576,31 +2798,44 @@
                     checkoutOverlay.classList.add('show');
                     checkoutOverlay.setAttribute('aria-hidden', 'false');
                     document.body.style.overflow = 'hidden';
-                    setStatus('success', '決済画面を表示しました。');
+                    if (setStatusOnSuccess && hasSetForm) {
+                        setStatus('success', '決済画面を表示しました。');
+                    }
                 } catch (error) {
-                    setStatus('error', error?.message || '決済画面の表示に失敗しました。');
+                    const message = error?.message || '決済画面の表示に失敗しました。';
+                    if (targetButton === buySetBtn && hasSetForm) {
+                        setStatus('error', message);
+                    } else {
+                        window.alert(message);
+                    }
                 } finally {
-                    buyBtn.textContent = originalLabel;
-                    buyBtn.disabled = !isBuyReady;
+                    targetButton.textContent = originalLabel;
+                    if (targetButton === buySetBtn && hasSetForm) {
+                        targetButton.disabled = !isSetBuyReady;
+                    } else {
+                        targetButton.disabled = false;
+                    }
                 }
             }
 
             function setStatus(kind, text) {
+                if (!hasSetForm) return;
                 statusEl.className = 'set-form-status';
                 if (kind) statusEl.classList.add(kind);
                 statusEl.textContent = text;
             }
 
-            function setBuyUnlocked(unlocked) {
-                isBuyReady = unlocked;
-                buyBtn.classList.toggle('disabled', !unlocked);
-                buyBtn.setAttribute('aria-disabled', unlocked ? 'false' : 'true');
-                buyBtn.disabled = !unlocked;
-                buyBtn.textContent = unlocked ? '🛒 今すぐ購入する' : '🛒 入力を完了して購入する';
-                buyNote.textContent = unlocked
-                    ? 'セット特典入力を確認しました。アクリルキーホルダーを同梱してお届けします。'
+            function setSetBuyUnlocked(unlocked) {
+                if (!hasSetForm) return;
+                isSetBuyReady = unlocked;
+                buySetBtn.classList.toggle('disabled', !unlocked);
+                buySetBtn.setAttribute('aria-disabled', unlocked ? 'false' : 'true');
+                buySetBtn.disabled = !unlocked;
+                buySetBtn.textContent = unlocked ? '🛒 今すぐ購入する' : '🛒 入力を完了して購入する';
+                buySetNote.textContent = unlocked
+                    ? 'セット特典入力を確認しました。アクリルセットを購入できます。'
                     : '先に「セット特典入力（必須）」を完了してください。';
-                buyNote.classList.toggle('is-ready', unlocked);
+                buySetNote.classList.toggle('is-ready', unlocked);
                 bundleSummaryTitle.textContent = unlocked ? 'セット特典入力（入力済み）' : 'セット特典入力（必須）';
                 bundleSummarySub.textContent = unlocked ? '必要ならタップして入力内容を編集' : 'タップして入力フォームを開く';
                 if (unlocked) {
@@ -2628,6 +2863,7 @@
             }
 
             function setFrontPreview(path) {
+                if (!hasSetForm) return;
                 frontPreview.src = encodeURI(path);
                 frontPreview.onerror = () => {
                     frontPreview.onerror = null;
@@ -2635,90 +2871,129 @@
                 };
             }
 
-            function markAsPending() {
-                setBuyUnlocked(false);
+            function markSetAsPending() {
+                if (!hasSetForm) return;
+                setSetBuyUnlocked(false);
                 setStatus('warn', '入力内容を確認して「入力内容を確定する」を押してください。');
                 bundleDetails.open = true;
             }
 
-            const diagnosisState = loadJson(DIAGNOSIS_STORAGE_KEY);
-            const savedSetInfo = loadJson(WIN_ACRYLIC_STORAGE_KEY);
-            setFrontPreview(getDiagnosisAcrylicFrontImage(diagnosisState));
+            if (hasSetForm) {
+                const diagnosisState = loadJson(DIAGNOSIS_STORAGE_KEY);
+                const savedSetInfo = loadJson(WIN_ACRYLIC_STORAGE_KEY);
+                setFrontPreview(getDiagnosisAcrylicFrontImage(diagnosisState));
 
-            const diagnosisName = String(diagnosisState?.profile?.name || '').trim();
-            const diagnosisEmail = String(diagnosisState?.profile?.email || '').trim();
-            if (diagnosisName && !nicknameInput.value) nicknameInput.value = diagnosisName;
-            if (diagnosisEmail && !emailInput.value) emailInput.value = diagnosisEmail;
+                const diagnosisName = String(diagnosisState?.profile?.name || '').trim();
+                const diagnosisEmail = String(diagnosisState?.profile?.email || '').trim();
+                if (diagnosisName && !nicknameInput.value) nicknameInput.value = diagnosisName;
+                if (diagnosisEmail && !emailInput.value) emailInput.value = diagnosisEmail;
 
-            if (savedSetInfo?.name && !nicknameInput.value) nicknameInput.value = String(savedSetInfo.name).trim();
-            if (savedSetInfo?.email && !emailInput.value) emailInput.value = String(savedSetInfo.email).trim();
+                if (savedSetInfo?.name && !nicknameInput.value) nicknameInput.value = String(savedSetInfo.name).trim();
+                if (savedSetInfo?.email && !emailInput.value) emailInput.value = String(savedSetInfo.email).trim();
 
-            const diagnosisReady = Boolean(diagnosisName && diagnosisEmail && isEmail(diagnosisEmail));
-            if (diagnosisReady) {
-                setStatus('warn', '診断データを読み込みました。内容を確認して入力を確定してください。');
-            } else {
-                setStatus('warn', '診断データが見つかりません。先に診断を完了してから入力してください。');
-            }
-
-            if (savedSetInfo?.confirmed && savedSetInfo.name && isEmail(savedSetInfo.email)) {
-                setBuyUnlocked(true);
-                setStatus('success', '入力済みです。変更する場合は再入力して確定してください。');
-            } else {
-                setBuyUnlocked(false);
-            }
-
-            nicknameInput.addEventListener('input', markAsPending);
-            emailInput.addEventListener('input', markAsPending);
-
-            saveBtn.addEventListener('click', () => {
-                const nickname = String(nicknameInput.value || '').trim();
-                const email = String(emailInput.value || '').trim();
-
-                if (!nickname) {
-                    setStatus('error', 'ニックネームを入力してください。');
-                    nicknameInput.focus();
-                    return;
-                }
-                if (!email) {
-                    setStatus('error', 'メールアドレスを入力してください。');
-                    emailInput.focus();
-                    return;
-                }
-                if (!isEmail(email)) {
-                    setStatus('error', 'メールアドレスの形式が正しくありません。');
-                    emailInput.focus();
-                    return;
-                }
-
-                const normalizedDiagnosisEmail = normalizeEmail(diagnosisEmail);
-                const normalizedInputEmail = normalizeEmail(email);
-                if (normalizedDiagnosisEmail && normalizedDiagnosisEmail !== normalizedInputEmail) {
-                    setStatus('warn', '診断時のメールアドレスと異なる可能性があります。内容を確認してから購入してください。');
+                const diagnosisReady = Boolean(diagnosisName && diagnosisEmail && isEmail(diagnosisEmail));
+                if (diagnosisReady) {
+                    setStatus('warn', '診断データを読み込みました。内容を確認して入力を確定してください。');
                 } else {
-                    setStatus('success', '入力を保存しました。購入へ進めます。');
+                    setStatus('warn', '診断データが見つかりません。先に診断を完了してから入力してください。');
                 }
 
-                saveJson(WIN_ACRYLIC_STORAGE_KEY, {
-                    name: nickname,
-                    email,
-                    confirmed: true,
-                    updatedAt: new Date().toISOString()
+                if (savedSetInfo?.confirmed && savedSetInfo.name && isEmail(savedSetInfo.email)) {
+                    setSetBuyUnlocked(true);
+                    setStatus('success', '入力済みです。変更する場合は再入力して確定してください。');
+                } else {
+                    setSetBuyUnlocked(false);
+                }
+
+                nicknameInput.addEventListener('input', markSetAsPending);
+                emailInput.addEventListener('input', markSetAsPending);
+
+                saveBtn.addEventListener('click', () => {
+                    const nickname = String(nicknameInput.value || '').trim();
+                    const email = String(emailInput.value || '').trim();
+
+                    if (!nickname) {
+                        setStatus('error', 'ニックネームを入力してください。');
+                        nicknameInput.focus();
+                        return;
+                    }
+                    if (!email) {
+                        setStatus('error', 'メールアドレスを入力してください。');
+                        emailInput.focus();
+                        return;
+                    }
+                    if (!isEmail(email)) {
+                        setStatus('error', 'メールアドレスの形式が正しくありません。');
+                        emailInput.focus();
+                        return;
+                    }
+
+                    const normalizedDiagnosisEmail = normalizeEmail(diagnosisEmail);
+                    const normalizedInputEmail = normalizeEmail(email);
+                    if (normalizedDiagnosisEmail && normalizedDiagnosisEmail !== normalizedInputEmail) {
+                        setStatus('warn', '診断時のメールアドレスと異なる可能性があります。内容を確認してから購入してください。');
+                    } else {
+                        setStatus('success', '入力を保存しました。購入へ進めます。');
+                    }
+
+                    saveJson(WIN_ACRYLIC_STORAGE_KEY, {
+                        name: nickname,
+                        email,
+                        confirmed: true,
+                        updatedAt: new Date().toISOString()
+                    });
+
+                    sendToGoogleSheet(buildStripeSheetPayloadFromStorage({
+                        event: 'win_set_input_confirm',
+                        clickedButtonId: 'saveAcrylicInfoBtn',
+                        clickedProductType: 'plush_keyholder_set_with_acrylic',
+                        clickedProductLabel: 'ぬいぐるみキーホルダー＋アクリルセット（¥5,200）'
+                    }));
+
+                    setSetBuyUnlocked(true);
                 });
 
-                sendToGoogleSheet(buildStripeSheetPayloadFromStorage({
-                    event: 'win_set_input_confirm',
-                    clickedButtonId: 'saveAcrylicInfoBtn',
-                    clickedProductType: 'plush_keyholder_set_with_acrylic',
-                    clickedProductLabel: 'ぬいぐるみキーホルダー（アクリル特典付き）'
-                }));
+                initStripeButtonTracking({
+                    buttonId: 'buySetBtn',
+                    productType: 'plush_keyholder_set_with_acrylic',
+                    productLabel: 'ぬいぐるみキーホルダー＋アクリルセット（¥5,200）'
+                });
 
-                setBuyUnlocked(true);
-            });
+                buySetBtn.addEventListener('click', (event) => {
+                    if (buySetBtn.getAttribute('aria-disabled') === 'true') {
+                        event.preventDefault();
+                        setStatus('error', '購入前にセット特典入力（必須）を完了してください。');
+                        bundleDetails.open = true;
+                        const card = document.getElementById('acrylicInfoCard');
+                        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        return;
+                    }
+                    event.preventDefault();
+                    openEmbeddedCheckout({
+                        triggerButton: buySetBtn,
+                        productType: 'plush_keyholder_set_with_acrylic',
+                        productLabel: 'ぬいぐるみキーホルダー＋アクリルセット（¥5,200）',
+                        name: String(nicknameInput.value || '').trim(),
+                        email: String(emailInput.value || '').trim(),
+                        setStatusOnStart: true,
+                        setStatusOnSuccess: true
+                    });
+                });
+            }
 
             initStripeButtonTracking({
-                buttonId: 'buyBtn',
-                productType: 'plush_keyholder_set_with_acrylic',
-                productLabel: 'ぬいぐるみキーホルダー（アクリル特典付き）'
+                buttonId: 'buySingleBtn',
+                productType: 'plush_keyholder',
+                productLabel: 'ぬいぐるみキーホルダー（単体 ¥4,800）'
+            });
+
+            buySingleBtn.addEventListener('click', (event) => {
+                event.preventDefault();
+                openEmbeddedCheckout({
+                    triggerButton: buySingleBtn,
+                    productType: 'plush_keyholder',
+                    productLabel: 'ぬいぐるみキーホルダー（単体 ¥4,800）'
+                });
             });
 
             checkoutCloseBtn.addEventListener('click', closeCheckoutOverlay);
@@ -2731,19 +3006,6 @@
                 if (event.key === 'Escape' && checkoutOverlay.classList.contains('show')) {
                     closeCheckoutOverlay();
                 }
-            });
-
-            buyBtn.addEventListener('click', (event) => {
-                if (buyBtn.getAttribute('aria-disabled') === 'true') {
-                    event.preventDefault();
-                    setStatus('error', '購入前にセット特典入力（必須）を完了してください。');
-                    bundleDetails.open = true;
-                    const card = document.getElementById('acrylicInfoCard');
-                    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    return;
-                }
-                event.preventDefault();
-                openEmbeddedCheckout();
             });
         })();
 
