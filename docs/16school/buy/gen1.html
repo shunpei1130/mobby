@@ -1202,11 +1202,15 @@
         </a>
         <a id="goMobbyOutfit" href="../../mobby-custom/index.html" style="padding-right:6px; font-size:13px; padding:6px 18px;margin-right: 6px; border-radius:20px; border:1px solid #e0e0e0; background:#fff8e8; color:#0071e3; cursor:pointer; text-decoration:none; display:inline-block;">Mobby Outfit</a>
         <div class="logo" id="logoHome"></div>
-        <div class="title">
-          <h1 id="titleHome">学校モビー診断</h1>
-          <div id="titleMenu" class="title-menu">
-            <button id="btnOpenMamaFromTitle" type="button">ママモビー診断</button>
-          </div>
+        <div class="title" style="position: relative;">
+          <h1 id="titleHome">モビー診断一覧</h1>
+<div id="titleMenu" class="title-menu" style="display:none; position:absolute; top:calc(100% + 8px); left:0; min-width:210px; padding:8px; border:1px solid var(--line, #d2d2d7); border-radius:12px; background:var(--surface, #ffffff); box-shadow:var(--shadow-sm, 0 2px 8px rgba(0,0,0,0.15)); z-index:30;">
+  <a href="/16school/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main, #1d1d1f); text-decoration:none; font-size:12px;">学校モビー診断</a>
+  <a href="/16school/mama/" id="btnOpenMamaFromTitle" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main, #1d1d1f); text-decoration:none; font-size:12px;">ママモビー診断</a>
+  <a href="/16love/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main, #1d1d1f); text-decoration:none; font-size:12px;">メンヘラモビー診断</a>
+  <a href="/16night/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main, #1d1d1f); text-decoration:none; font-size:12px;">夜職モビー診断</a>
+  <a href="/16stan/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main, #1d1d1f); text-decoration:none; font-size:12px;">推し活モビー診断</a>
+</div>
         </div>
       </div>
       <div style="display: flex; align-items: center; gap: 10px;">
@@ -4153,5 +4157,24 @@ function renderGate(){
       });
     })();
   </script>
+<script>
+(function mobbyDiagnosisMenuInit() {
+  const titleHome = document.getElementById("titleHome");
+  const titleMenu = document.getElementById("titleMenu");
+  if (!titleHome || !titleMenu) return;
+  titleHome.style.cursor = "pointer";
+  titleHome.onclick = function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    titleMenu.style.display = titleMenu.style.display === "block" ? "none" : "block";
+  };
+  titleMenu.addEventListener("click", function (e) {
+    e.stopPropagation();
+  });
+  document.addEventListener("click", function () {
+    titleMenu.style.display = "none";
+  });
+})();
+</script>
 </body>
 </html>
