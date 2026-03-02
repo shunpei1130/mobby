@@ -1107,6 +1107,25 @@
       }
     };
 
+    const MAMA_ASSET_NAME_BY_CODE = {
+      "がやみそ": "連絡網即断司令塔モビー",
+      "がやみう": "運動会タイムキーパーモビー",
+      "がやこそ": "放課後相談ホットラインモビー",
+      "がやこう": "校門あいさつ隊モビー",
+      "がおみそ": "面談前リサーチモビー",
+      "がおみう": "LINE既読熟考モビー",
+      "がおこそ": "友だち関係ナビモビー",
+      "がおこう": "ランチ会聞き役モビー",
+      "なやみそ": "家庭内スケジュール司令モビー",
+      "なやみう": "テスト前だけ直球モビー",
+      "なやこそ": "親子直球作戦会議モビー",
+      "なやこう": "送迎車内サクッと相談モビー",
+      "なおみそ": "成績表こっそり分析モビー",
+      "なおみう": "影の進路リサーチモビー",
+      "なおこそ": "寝る前そっとカウンセルモビー",
+      "なおこう": "後方席静観モビー"
+    };
+
     // State
     const PAGE_SIZE = 5;
     const STORAGE_KEY = "mamaMobbyState";
@@ -2109,7 +2128,7 @@
         return `
           <div class="char-card">
             <div class="char-card-image">
-              <img src="img/${char.name}.jpg" alt="${char.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:#86868b;font-size:12px;\'>画像準備中</div>'">
+              <img src="${getMamaCharacterImagePath(code, char.name)}" alt="${char.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:#86868b;font-size:12px;\'>画像準備中</div>'">
             </div>
             <div class="char-card-code">${code}</div>
             <div class="char-card-name">${char.name}</div>
@@ -2144,7 +2163,7 @@
           <div class="char-modal" style="max-height:85vh; overflow-y:auto;">
             <button class="char-modal-close" id="charModalClose">×</button>
             <div class="char-modal-image">
-              <img src="img/${char.name}.jpg" alt="${char.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:#86868b;\'>画像準備中</div>'">
+              <img src="${getMamaCharacterImagePath(code, char.name)}" alt="${char.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:#86868b;\'>画像準備中</div>'">
             </div>
             <div style="text-align:center; margin-bottom:20px;">
               <div class="char-modal-type">TYPE: ${code}</div>
@@ -2204,15 +2223,25 @@
       };
     }
 
-    function getKeyImagePath(name) {
-      return name ? `../key/mama/${name}.jpg` : "";
+    function getMamaAssetName(code, fallbackName = "") {
+      return MAMA_ASSET_NAME_BY_CODE[code] || fallbackName;
+    }
+
+    function getMamaCharacterImagePath(code, fallbackName = "") {
+      const assetName = getMamaAssetName(code, fallbackName);
+      return assetName ? `/korea/16school/mama/img/${assetName}.jpg` : "";
+    }
+
+    function getKeyImagePath(code, name) {
+      const assetName = getMamaAssetName(code, name);
+      return assetName ? `/korea/16school/key/mama/${assetName}.jpg` : "";
     }
 
     function renderResult(){
       const res = computeResult();
       const char = res.char;
       const personalInsights = generatePersonalizedInsights(res);
-      const keyImagePath = getKeyImagePath(char?.name);
+      const keyImagePath = getKeyImagePath(res.code, char?.name);
 
       app.innerHTML = `
         <div class="panel fade-in">
@@ -2231,7 +2260,7 @@
             </p>` : ``}
 
             <div class="char-image-placeholder">
-              <img src="img/${char.name}.jpg" alt="${char.name}" loading="eager" onerror="this.style.display='none'; var s=this.nextElementSibling; if(s) s.style.display='block';" />
+              <img src="${getMamaCharacterImagePath(res.code, char.name)}" alt="${char.name}" loading="eager" onerror="this.style.display='none'; var s=this.nextElementSibling; if(s) s.style.display='block';" />
               <span style="display:none; color:var(--text-sub); font-size:13px;">画像準備中</span>
             </div>
              
@@ -2449,7 +2478,7 @@
               <div style="width:45%; max-width:140px; position:relative; overflow:hidden;">
                 <img src="${keyImagePath}" alt="아크릴키홀더 表面" style="width:100%; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
               </div>
-              <img src="../key/ura.jpg" alt="아크릴키홀더 裏面" style="width:45%; max-width:140px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
+              <img src="/korea/16school/key/ura.jpg" alt="아크릴키홀더 裏面" style="width:45%; max-width:140px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
             </div>
             <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
               <span style="font-size:20px; color:#b65174; font-weight:700; letter-spacing:0.04em;">1,900엔</span>
@@ -2622,11 +2651,11 @@
       const resultProductTabButtons = Array.from(document.querySelectorAll(".result-product-tab[data-result-product-tab]"));
       const resultProductPanels = Array.from(document.querySelectorAll(".result-product-content[data-result-product-panel]"));
       const PLUSH_RESERVATION_IMAGES = [
-        "../../img/nui/nui.jpeg",
-        "../../img/nui/1.jpg",
-        "../../img/nui/2.jpg",
-        "../../img/nui/3.jpg",
-        "../../img/nui/4.jpg"
+        "/img/nui/nui.jpeg",
+        "/img/nui/1.jpg",
+        "/img/nui/2.jpg",
+        "/img/nui/3.jpg",
+        "/img/nui/4.jpg"
       ];
       let syncPlushReservationGallery = () => {};
 

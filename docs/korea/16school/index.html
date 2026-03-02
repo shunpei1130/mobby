@@ -1327,6 +1327,25 @@ function gotoDiagnosisHome(){
       "なやみそ": "qjtp2", "なやみう": "qjti2", "なやこそ": "qjlp2", "なやこう": "qjli2",
     };
 
+    const FEMALE_KEY_IMAGE_BY_CODE = {
+      "がおみそ": "文化祭広報モビー",
+      "がおみう": "昼休みお弁当会モビー",
+      "がおこそ": "帰り道デートモビー",
+      "がおこう": "屋上ひみつ恋モビー",
+      "がやみそ": "プリクラ拡散モビー",
+      "がやみう": "購買前たまり場モビー",
+      "がやこそ": "カップル自撮りモビー",
+      "がやこう": "放課後即レスモビー",
+      "なおみそ": "クラスアルバム映えモビー",
+      "なおみう": "図書室まったりモビー",
+      "なおこそ": "ストーリー匂わせモビー",
+      "なおこう": "ロッカー手紙モビー",
+      "なやみそ": "ストーリー撮影班モビー",
+      "なやみう": "ネイルこだわりモビー",
+      "なやこそ": "匂わせプリクラモビー",
+      "なやこう": "放課後こっそり通話モビー"
+    };
+
     // 学校版では直接コードを使用（変換マッピング不要）
 
     const ANS_LABEL = {1:"그렇다고 생각한다", 2:"약간 그렇다고 생각한다", 3:"조금 그렇다고 생각한다", 4:"어느 쪽도 아니다", 5:"조금 그렇다고 생각하지 않는다", 6:"약간 그렇다고 생각하지 않는다", 7:"그렇다고 생각하지 않는다"};
@@ -3310,10 +3329,11 @@ function renderGate(){
 
     function getKeyImagePath(code, isFemale, name) {
       if (isFemale) {
-        return name ? `key/${name}.jpg` : '';
+        const keyName = FEMALE_KEY_IMAGE_BY_CODE[code] || name;
+        return keyName ? `/korea/16school/key/${keyName}.jpg` : '';
       }
       const imgCode = CODE_TO_IMAGE[code];
-      return imgCode ? `key/男/${imgCode}.jpg` : '';
+      return imgCode ? `/korea/16school/key/男/${imgCode}.jpg` : '';
     }
 
     function getSnsImagePaths(isFemale, name) {
@@ -3868,7 +3888,7 @@ function renderGate(){
                 <div style="width:45%; max-width:140px; position:relative; overflow:hidden;">
                   <img src="${keyImagePath}" alt="アクリルキーホルダー 表面" style="width:100%; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
                 </div>
-                <img src="key/ura.jpg" alt="アクリルキーホルダー 裏面" style="width:45%; max-width:140px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
+                <img src="/korea/16school/key/ura.jpg" alt="アクリルキーホルダー 裏面" style="width:45%; max-width:140px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
               </div>
               <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
                 <span style="font-size:20px; color:#b65174; font-weight:700; letter-spacing:0.04em;">1,900円</span>
@@ -4059,11 +4079,11 @@ function renderGate(){
       const resultProductTabButtons = Array.from(document.querySelectorAll(".result-product-tab[data-result-product-tab]"));
       const resultProductPanels = Array.from(document.querySelectorAll(".result-product-content[data-result-product-panel]"));
       const PLUSH_RESERVATION_IMAGES = [
-        "../img/nui/nui.jpeg",
-        "../img/nui/1.jpg",
-        "../img/nui/2.jpg",
-        "../img/nui/3.jpg",
-        "../img/nui/4.jpg"
+        "/img/nui/nui.jpeg",
+        "/img/nui/1.jpg",
+        "/img/nui/2.jpg",
+        "/img/nui/3.jpg",
+        "/img/nui/4.jpg"
       ];
       let syncPlushReservationGallery = () => {};
 

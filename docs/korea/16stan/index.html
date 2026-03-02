@@ -1282,6 +1282,35 @@
                 proof: "전체의 매력을 한마디 남기기/테마를 좁혀 오래 쫓기"
             }
         };
+        const STAN_ASSET_NAME_BY_CODE = {
+            "こうしひ": "やさしい見守り推しモビー",
+            "こうしみ": "尊い記録係推しモビー",
+            "こうはひ": "リアクション職人推しモビー",
+            "こうはみ": "布教うまい推しモビー",
+            "こなしひ": "ソロ神聖視推しモビー",
+            "こなしみ": "作品反復推しモビー",
+            "こなはひ": "現場至上主義推しモビー",
+            "こなはみ": "箱推し熱心モビー",
+            "まうしひ": "ガチ分析推しモビー",
+            "まうしみ": "箱ごと見守り推しモビー",
+            "まうはひ": "一気見感想投下推しモビー",
+            "まうはみ": "情報収集ガチ推しモビー",
+            "まなしひ": "1コンテンツ一点突破推しモビー",
+            "まなしみ": "成長見守り推しモビー",
+            "まなはひ": "ご褒美課金推しモビー",
+            "まなはみ": "まとめ読み推しモビー"
+        };
+        function getStanAssetName(code, fallbackName = "") {
+            return STAN_ASSET_NAME_BY_CODE[code] || fallbackName;
+        }
+        function getStanImagePath(code, fallbackName = "") {
+            const assetName = getStanAssetName(code, fallbackName);
+            return assetName ? `/korea/16stan/img/${assetName}.jpg` : "";
+        }
+        function getStanKeyImagePath(code, ext, fallbackName = "") {
+            const assetName = getStanAssetName(code, fallbackName);
+            return assetName ? `/korea/16stan/img/key/${assetName}.${ext}` : "";
+        }
         const STORAGE_KEY = "stan_char_diag_korea_v1", PAGE_SIZE = 5;
         const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzu8ZWwvtKHWIwqnjqlKkdbPTWN1o7oSxpsBZ-Crdv6zlmCbSeWFlMDZ3sjU9SgCsFOgQ/exec";
         const state = { step: "intro", page: 0, answers: {}, questionOrder: null, profile: { name: "", email: "", age: "" }, sentToSheet: false };
@@ -1467,11 +1496,11 @@
         function renderResult() {
             const { code, pcts } = computeResult(); const rawCh = CH[code]; const ch = normalizeStanCharacter(rawCh); if (!ch) { renderIntro(); return; } const app = document.getElementById("app");
             const displayName = ch.displayName || ch.name;
-            const imgPath = `img/${ch.name}.jpg`;
-            const keyImageFrontPath = `img/key/${ch.name}.png`;
-            const keyImageFrontWebpPath = `img/key/${ch.name}.webp`;
-            const keyImageBackPath = "img/key/ura.jpg";
-            const keyImageBackWebpPath = "img/key/ura.webp";
+            const imgPath = getStanImagePath(code, ch.name);
+            const keyImageFrontPath = getStanKeyImagePath(code, "png", ch.name);
+            const keyImageFrontWebpPath = getStanKeyImagePath(code, "webp", ch.name);
+            const keyImageBackPath = "/korea/16stan/img/key/ura.jpg";
+            const keyImageBackWebpPath = "/korea/16stan/img/key/ura.webp";
             const snsImagePaths = getSnsImagePaths(code);
             let html = `<div class="fade-in"><div class="panel result-hero">
     <p class="kicker">당신의 덕질 타입은...</p>
@@ -1506,7 +1535,7 @@
     <h3 style="font-size:20px;margin:0 0 8px;color:var(--text-main);">폭신폭신 인형 키홀더</h3>
     <p style="display:inline-block;font-size:12px;font-weight:700;color:#ffffff;background:#ff4d8d;padding:6px 12px;border-radius:999px;margin:0 0 12px;letter-spacing:0.03em;">선착순 100개 한정</p>
     <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px;margin-bottom:14px;"><span style="font-size:14px;color:rgba(82,62,62,0.72);text-decoration:line-through;text-decoration-thickness:2px;">일반가 6,000엔</span><span style="font-size:17px;color:#b65174;font-weight:700;letter-spacing:0.04em;background:rgba(255,77,141,0.1);border:1px solid rgba(255,77,141,0.24);padding:6px 12px;border-radius:999px;">특별가 4,800엔</span></div>
-    <div style="margin-bottom:14px;background:linear-gradient(145deg,#fff7fb,#fff2e2);border-radius:16px;padding:16px;border:1px solid rgba(255,255,255,0.9);text-align:center;"><img src="../img/nui/nui.jpeg" alt="인형키홀더" style="width:min(100%,220px);max-height:180px;object-fit:contain;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.12);" onerror="this.style.display='none';"></div>
+    <div style="margin-bottom:14px;background:linear-gradient(145deg,#fff7fb,#fff2e2);border-radius:16px;padding:16px;border:1px solid rgba(255,255,255,0.9);text-align:center;"><img src="/img/nui/nui.jpeg" alt="인형키홀더" style="width:min(100%,220px);max-height:180px;object-fit:contain;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.12);" onerror="this.style.display='none';"></div>
     <p class="text-body" style="font-size:14px;line-height:1.8;margin:0 0 14px;">폭신하고 가벼운 질감으로, 가방에 달기만 하면 기분이 올라가는 한정 인형 키홀더입니다.</p>
     <ul style="margin:0 0 18px;padding-left:18px;color:var(--text-sub);line-height:1.8;font-size:13px;"><li>사진 잘 나오는 페미닌한 배색</li><li>매일 쓰기 좋은 컴팩트 사이즈</li><li>기간·수량 모두 한정의 특별 사양</li></ul>
     <a id="stripeBuyButtonPlush" data-stripe-product-type="plush_keyholder" data-stripe-product-label="인형키홀더" href="https://buy.stripe.com/28EaEX30Vfqt6SybJJao80b" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border-radius:999px;font-size:14px;font-weight:600;text-decoration:none;background:linear-gradient(135deg,#ff4d8d,#ff7aa8);color:#fff;box-shadow:0 14px 30px rgba(255,77,141,0.3);transition:transform 0.2s ease;">기간 한정 아이템 확인하기 →</a>
@@ -1657,7 +1686,7 @@
                 const c = normalizeStanCharacter(CH[code]);
                 const displayName = c.displayName || c.name;
                 html += `<div class="char-card" onclick="showCharDetail('${code}')">
-    <div class="char-card-image"><img src="img/${c.name}.jpg" alt="${displayName}" onerror="this.style.display='none'"></div>
+    <div class="char-card-image"><img src="${getStanImagePath(code, c.name)}" alt="${displayName}" onerror="this.style.display='none'"></div>
     <div class="char-card-name">${displayName}</div>
     <span class="char-card-type">${toDisplayTypeCode(code)}</span>
     <p class="char-card-desc">${c.catch}</p></div>`;
@@ -1672,7 +1701,7 @@
             overlay.innerHTML = `<div class="char-modal">
     <button class="char-modal-close" onclick="this.closest('.char-modal-overlay').remove()">✕</button>
     <div style="text-align:center;margin-bottom:20px;">
-    <div class="char-image-placeholder" style="max-width:240px;"><img src="img/${c.name}.jpg" alt="${displayName}" onerror="this.parentElement.innerHTML='Image'"></div>
+    <div class="char-image-placeholder" style="max-width:240px;"><img src="${getStanImagePath(code, c.name)}" alt="${displayName}" onerror="this.parentElement.innerHTML='Image'"></div>
     <h2 style="margin:12px 0 4px;font-size:22px;">${displayName}</h2>
     <p style="font-family:monospace;color:var(--text-sub);font-size:12px;">${toDisplayTypeCode(code)}</p></div>
     <p style="color:var(--accent);font-weight:600;margin-bottom:8px;">${c.catch}</p>
