@@ -1242,8 +1242,10 @@
             }
         };
         const STORAGE_KEY = "stan_char_diag_v1", PAGE_SIZE = 5;
+        const AGE_OPTIONS = ["16歳未満", "16歳", "17歳", "18歳", "19歳", "20歳", "21歳", "22歳", "23歳", "24歳", "25歳", "26歳", "27歳", "28歳", "29歳以上"];
         const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzu8ZWwvtKHWIwqnjqlKkdbPTWN1o7oSxpsBZ-Crdv6zlmCbSeWFlMDZ3sjU9SgCsFOgQ/exec";
         const state = { step: "intro", page: 0, answers: {}, questionOrder: null, profile: { name: "", email: "", age: "" }, sentToSheet: false };
+        let gateAgeOutsideHandler = null;
         const ANS_LABEL = { 1: "そう思う", 2: "ややそう思う", 3: "少しそう思う", 4: "どちらでもない", 5: "少しそう思わない", 6: "ややそう思わない", 7: "そう思わない" };
         const SNS_IMAGE_PATHS = {
             "こうしひ": "img/sns/こうしひ.png",
@@ -1265,7 +1267,38 @@
         };
         function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; }
         function getQuestionOrder() { return shuffleArray([...Array(QUESTIONS.length).keys()]); }
-        function loadState() { try { const s = localStorage.getItem(STORAGE_KEY); if (s) { const p = JSON.parse(s); Object.assign(state, p); } } catch (e) { } }
+        function normalizeAgeValue(age) {
+            const normalized = (age || "").trim();
+            if (!normalized) return "";
+            const legacyMap = {
+                "~14": "16歳未満",
+                "15-17": "17歳",
+                "18-19": "19歳",
+                "20-24": "24歳",
+                "25-29": "29歳以上",
+                "30-39": "29歳以上",
+                "40+": "29歳以上"
+            };
+            if (legacyMap[normalized]) return legacyMap[normalized];
+            if (AGE_OPTIONS.includes(normalized)) return normalized;
+            if (/^\d+$/.test(normalized)) return `${normalized}歳`;
+            if (/^\d+以上$/.test(normalized)) return normalized.replace("以上", "歳以上");
+            return normalized;
+        }
+        function loadState() {
+            try {
+                const s = localStorage.getItem(STORAGE_KEY);
+                if (s) {
+                    const p = JSON.parse(s);
+                    Object.assign(state, p);
+                }
+            } catch (e) { }
+            state.profile = {
+                name: state.profile?.name || "",
+                email: state.profile?.email || "",
+                age: normalizeAgeValue(state.profile?.age || "")
+            };
+        }
         function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
         function resetState() { state.step = "intro"; state.page = 0; state.answers = {}; state.questionOrder = null; state.profile = { name: "", email: "", age: "" }; state.sentToSheet = false; saveState(); }
         function computeResult() {
@@ -1339,7 +1372,19 @@
             } catch (_) { }
         }
         function updateNavActive() { document.getElementById("navDiagnosis").classList.toggle("active", state.step !== "characters"); document.getElementById("navCharacters").classList.toggle("active", state.step === "characters"); }
-        function render() { window.scrollTo(0, 0); updateNavActive(); if (state.step === "intro") renderIntro(); else if (state.step === "quiz") renderQuiz(); else if (state.step === "gate") renderGate(); else if (state.step === "characters") renderCharacters(); else renderResult(); }
+        function render() {
+            window.scrollTo(0, 0);
+            if (state.step !== "gate" && gateAgeOutsideHandler) {
+                document.removeEventListener("click", gateAgeOutsideHandler);
+                gateAgeOutsideHandler = null;
+            }
+            updateNavActive();
+            if (state.step === "intro") renderIntro();
+            else if (state.step === "quiz") renderQuiz();
+            else if (state.step === "gate") renderGate();
+            else if (state.step === "characters") renderCharacters();
+            else renderResult();
+        }
         function renderIntro() {
             const app = document.getElementById("app"); app.innerHTML = `
     <div class="panel fade-in" style="text-align:center;">
@@ -1380,6 +1425,7 @@
             const finBtn = document.getElementById("btnFinish"); if (finBtn) finBtn.onclick = () => { state.step = "gate"; saveState(); render(); };
         }
         function renderGate() {
+            const ageOptionHtml = AGE_OPTIONS.map(age => `<button type="button" class="age-option" data-age="${age}" style="width:100%;text-align:left;padding:10px 12px;border:0;border-bottom:1px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:14px;">${age}</button>`).join("");
             const app = document.getElementById("app"); app.innerHTML = `
     <div class="panel fade-in" style="text-align:center;">
     <p class="kicker">あと少し！</p>
@@ -1389,32 +1435,69 @@
     <div style="font-size:12px;color:var(--text-sub);margin-bottom:6px;">ニックネーム（必須）</div>
     <input id="inName" placeholder="例）はるか" value="${state.profile.name}" style="width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:15px;margin-bottom:12px;font-family:var(--font-main);box-sizing:border-box;">
     <div style="font-size:12px;color:var(--text-sub);margin-bottom:6px;">年齢（必須）</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
-    <button type="button" class="age-btn" data-age="~14" style="padding:8px 14px;border-radius:10px;border:2px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:13px;cursor:pointer;transition:all 0.2s;">14歳以下</button>
-    <button type="button" class="age-btn" data-age="15-17" style="padding:8px 14px;border-radius:10px;border:2px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:13px;cursor:pointer;transition:all 0.2s;">15〜17歳</button>
-    <button type="button" class="age-btn" data-age="18-19" style="padding:8px 14px;border-radius:10px;border:2px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:13px;cursor:pointer;transition:all 0.2s;">18〜19歳</button>
-    <button type="button" class="age-btn" data-age="20-24" style="padding:8px 14px;border-radius:10px;border:2px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:13px;cursor:pointer;transition:all 0.2s;">20〜24歳</button>
-    <button type="button" class="age-btn" data-age="25-29" style="padding:8px 14px;border-radius:10px;border:2px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:13px;cursor:pointer;transition:all 0.2s;">25〜29歳</button>
-    <button type="button" class="age-btn" data-age="30-39" style="padding:8px 14px;border-radius:10px;border:2px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:13px;cursor:pointer;transition:all 0.2s;">30代</button>
-    <button type="button" class="age-btn" data-age="40+" style="padding:8px 14px;border-radius:10px;border:2px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:13px;cursor:pointer;transition:all 0.2s;">40歳以上</button>
-    </div>
     <input type="hidden" id="inAge" value="${state.profile.age || ''}">
+    <div id="inAgePicker" style="position:relative;margin-bottom:12px;">
+    <button id="inAgeTrigger" type="button" aria-haspopup="listbox" aria-expanded="false" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:15px;font-family:var(--font-main);">
+    <span id="inAgeLabel">選択してください。</span><span style="color:var(--text-sub);font-size:12px;">▼</span></button>
+    <div id="inAgeMenu" role="listbox" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 6px);max-height:132px;overflow-y:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface2);box-shadow:var(--shadow-lg);z-index:40;">${ageOptionHtml}</div>
+    </div>
     <div style="font-size:12px;color:var(--text-sub);margin-bottom:6px;">メールアドレス（必須）</div>
     <input id="inEmail" type="email" placeholder="example@gmail.com" value="${state.profile.email}" style="width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:15px;margin-bottom:20px;font-family:var(--font-main);box-sizing:border-box;">
     <button class="primary" id="btnResult" style="width:100%;font-size:16px;padding:14px;">結果を見る ✨</button>
     </div><p id="gateError" style="color:var(--danger);font-size:13px;margin-top:12px;text-align:center;"></p>
     </div>`;
             const ageEl = document.getElementById("inAge");
-            document.querySelectorAll(".age-btn").forEach(btn => {
-                if (btn.dataset.age === ageEl.value) { btn.style.background = "var(--accent)"; btn.style.borderColor = "var(--accent)"; btn.style.color = "#fff"; }
-                btn.onclick = () => {
-                    document.querySelectorAll(".age-btn").forEach(b => { b.style.background = "var(--surface2)"; b.style.borderColor = "var(--line)"; b.style.color = "var(--text-main)"; });
-                    btn.style.background = "var(--accent)"; btn.style.borderColor = "var(--accent)"; btn.style.color = "#fff";
-                    ageEl.value = btn.dataset.age;
+            const agePickerEl = document.getElementById("inAgePicker");
+            const ageTriggerEl = document.getElementById("inAgeTrigger");
+            const ageLabelEl = document.getElementById("inAgeLabel");
+            const ageMenuEl = document.getElementById("inAgeMenu");
+            const ageOptionEls = Array.from(document.querySelectorAll(".age-option[data-age]"));
+            let ageMenuOpen = false;
+            const closeAgeMenu = () => {
+                ageMenuOpen = false;
+                ageMenuEl.style.display = "none";
+                ageTriggerEl.setAttribute("aria-expanded", "false");
+            };
+            const openAgeMenu = () => {
+                ageMenuOpen = true;
+                ageMenuEl.style.display = "block";
+                ageTriggerEl.setAttribute("aria-expanded", "true");
+            };
+            const refreshAgeView = () => {
+                const selectedAge = (ageEl.value || "").trim();
+                ageLabelEl.textContent = selectedAge || "選択してください。";
+                ageOptionEls.forEach(optionEl => {
+                    const selected = optionEl.dataset.age === selectedAge;
+                    optionEl.style.background = selected ? "rgba(232,106,175,0.2)" : "var(--surface2)";
+                    optionEl.style.color = selected ? "var(--accent)" : "var(--text-main)";
+                    optionEl.style.fontWeight = selected ? "700" : "500";
+                });
+            };
+            if (gateAgeOutsideHandler) {
+                document.removeEventListener("click", gateAgeOutsideHandler);
+                gateAgeOutsideHandler = null;
+            }
+            gateAgeOutsideHandler = (e) => {
+                if (!agePickerEl.contains(e.target)) closeAgeMenu();
+            };
+            document.addEventListener("click", gateAgeOutsideHandler);
+            ageTriggerEl.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (ageMenuOpen) closeAgeMenu();
+                else openAgeMenu();
+            };
+            ageOptionEls.forEach(optionEl => {
+                optionEl.onclick = () => {
+                    ageEl.value = optionEl.dataset.age || "";
+                    refreshAgeView();
+                    closeAgeMenu();
                 };
             });
+            refreshAgeView();
             document.getElementById("btnResult").onclick = async () => {
                 const name = document.getElementById("inName").value.trim(); const email = document.getElementById("inEmail").value.trim(); const age = document.getElementById("inAge").value; const err = document.getElementById("gateError");
+                err.textContent = "";
                 if (!name) { err.textContent = "ニックネームを入力してください"; return; }
                 if (!age) { err.textContent = "年齢を選択してください"; return; }
                 if (!email || !email.includes("@")) { err.textContent = "メールアドレスを入力してください"; return; }
