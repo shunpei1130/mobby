@@ -1,8 +1,10 @@
 const ANS_LABEL = { 1: "とても当てはまる", 2: "当てはまる", 3: "やや当てはまる", 4: "どちらでもない", 5: "やや当てはまらない", 6: "当てはまらない", 7: "全く当てはまらない" };
 const STORAGE_KEY = "love_char_diag_v1";
 const PAGE_SIZE = 5;
-const state = { step: "intro", page: 0, answers: {}, questionOrder: null, profile: { name: "", email: "" }, sentToSheet: false };
+const AGE_OPTIONS = ["16歳未満", "16歳", "17歳", "18歳", "19歳", "20歳", "21歳", "22歳", "23歳", "24歳", "25歳", "26歳", "27歳", "28歳", "29歳以上"];
+const state = { step: "intro", page: 0, answers: {}, questionOrder: null, profile: { name: "", email: "", age: "" }, sentToSheet: false };
 const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzu8ZWwvtKHWIwqnjqlKkdbPTWN1o7oSxpsBZ-Crdv6zlmCbSeWFlMDZ3sjU9SgCsFOgQ/exec";
+let gateAgeOutsideHandler = null;
 
 function buildStripeSheetPayload(res, extraPayload = {}) {
     const questionAnswers = {};
@@ -19,6 +21,7 @@ function buildStripeSheetPayload(res, extraPayload = {}) {
         userAgent: navigator.userAgent,
         name: state.profile?.name || "",
         email: state.profile?.email || "",
+        age: state.profile?.age || "",
         type: res?.code || "",
         diagnosisName: res?.char?.name || "",
         menheraScore: res?.menheraScore ?? "",
@@ -54,10 +57,19 @@ function sendToGoogleSheet(payload) {
 function shuffleArray(a) { const s = [...a]; for (let i = s.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[s[i], s[j]] = [s[j], s[i]]; } return s; }
 function getQuestionOrder() { if (state.questionOrder && state.questionOrder.length === QUESTIONS.length) return state.questionOrder; const idx = Array.from({ length: QUESTIONS.length }, (_, i) => i); state.questionOrder = shuffleArray(idx); saveState(); return state.questionOrder; }
 function getShuffledQuestions() { return getQuestionOrder().map(i => QUESTIONS[i]); }
-function loadState() { try { const r = localStorage.getItem(STORAGE_KEY); if (r) Object.assign(state, JSON.parse(r)); } catch (e) { } }
+function normalizeAgeValue(age) {
+    const normalized = (age || "").trim();
+    if (!normalized) return "";
+    if (AGE_OPTIONS.includes(normalized)) return normalized;
+    if (/^\d+$/.test(normalized)) return `${normalized}歳`;
+    if (/^\d+以上$/.test(normalized)) return normalized.replace("以上", "歳以上");
+    return normalized;
+}
+function normalizeProfile(profile) { return { name: profile?.name || "", email: profile?.email || "", age: normalizeAgeValue(profile?.age || "") }; }
+function loadState() { try { const r = localStorage.getItem(STORAGE_KEY); if (r) Object.assign(state, JSON.parse(r)); } catch (e) { } state.profile = normalizeProfile(state.profile); }
 function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-function resetState() { state.step = "intro"; state.page = 0; state.answers = {}; state.questionOrder = null; state.profile = { name: "", email: "" }; state.sentToSheet = false; localStorage.removeItem(STORAGE_KEY); render(); }
-function isRegistered() { return !!(state.profile && state.profile.name && state.profile.email); }
+function resetState() { state.step = "intro"; state.page = 0; state.answers = {}; state.questionOrder = null; state.profile = { name: "", email: "", age: "" }; state.sentToSheet = false; localStorage.removeItem(STORAGE_KEY); render(); }
+function isRegistered() { return !!(state.profile && state.profile.name && state.profile.email && state.profile.age); }
 function isQuizCompleted() { return Object.keys(state.answers || {}).length >= QUESTIONS.length; }
 const SNS_IMAGE_CODE_ALIAS = { "ゆつすひ": "ゆつふひ" };
 function getSnsImagePathByCode(code) {
@@ -134,7 +146,19 @@ function renderTypeGuideContent() {
 document.getElementById("navDiagnosis").onclick = e => { e.preventDefault(); if (isQuizCompleted()) { state.step = "result"; render(); } else { state.step = "intro"; render(); } };
 document.getElementById("navCharacters").onclick = e => { e.preventDefault(); state.step = "characters"; render(); };
 function updateNavActive() { const isD = ["intro", "quiz", "gate", "result"].includes(state.step); document.getElementById("navDiagnosis").classList.toggle("active", isD); document.getElementById("navCharacters").classList.toggle("active", state.step === "characters"); }
-function render() { window.scrollTo(0, 0); updateNavActive(); if (state.step === "intro") renderIntro(); else if (state.step === "quiz") renderQuiz(); else if (state.step === "gate") renderGate(); else if (state.step === "characters") renderCharacters(); else renderResult(); }
+function render() {
+    window.scrollTo(0, 0);
+    if (state.step !== "gate" && gateAgeOutsideHandler) {
+        document.removeEventListener("click", gateAgeOutsideHandler);
+        gateAgeOutsideHandler = null;
+    }
+    updateNavActive();
+    if (state.step === "intro") renderIntro();
+    else if (state.step === "quiz") renderQuiz();
+    else if (state.step === "gate") renderGate();
+    else if (state.step === "characters") renderCharacters();
+    else renderResult();
+}
 
 function renderIntro() {
     const c = Object.keys(state.answers).length;
@@ -154,28 +178,81 @@ function renderQuiz() {
 function renderGate() {
     if (isRegistered()) { state.step = "result"; saveState(); render(); return; }
     const res = computeResult();
-    app.innerHTML = `<div class="panel fade-in"><p class="kicker">あと少しで結果が見れます！</p><h2 class="big">結果の閲覧には登録が必要です</h2><p class="text-body" style="margin-top:-6px;">入力後すぐにあなたの恋愛メンヘラタイプを表示します💜</p><div style="margin-top:22px;display:grid;gap:12px;max-width:520px;"><div><div style="font-size:12px;color:var(--text-sub);margin-bottom:6px;">ニックネーム</div><input id="regName" type="text" placeholder="例）るな" style="width:100%;padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:14px;"></div><div><div style="font-size:12px;color:var(--text-sub);margin-bottom:6px;">メールアドレス</div><input id="regEmail" type="email" placeholder="example@gmail.com" style="width:100%;padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:14px;"></div><label style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--text-sub);"><input id="regConsent" type="checkbox" style="margin-top:3px;"><span>入力した情報を連絡・改善のために保存することに同意します。</span></label><div id="regErr" style="display:none;color:var(--danger);font-size:12px;"></div><div style="display:flex;gap:10px;margin-top:8px;"><button id="btnGateBack" style="background:transparent;color:var(--text-sub);">戻る</button><button class="primary" id="btnGateGo" style="flex:1;padding:14px 18px;">結果を見る</button></div><div style="margin-top:10px;font-size:11px;color:var(--text-sub);">送信される内容：ニックネーム、メール、診断TYPE（${res.code}）</div></div></div>`;
+    const ageOptionHtml = AGE_OPTIONS.map(age => `<button type="button" class="reg-age-option" data-age="${age}" style="width:100%;text-align:left;padding:10px 12px;border:0;border-bottom:1px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:14px;">${age}</button>`).join("");
+    app.innerHTML = `<div class="panel fade-in"><p class="kicker">あと少しで結果が見れます！</p><h2 class="big">結果の閲覧には登録が必要です</h2><p class="text-body" style="margin-top:-6px;">入力後すぐにあなたの恋愛メンヘラタイプを表示します💜</p><div style="margin-top:22px;display:grid;gap:12px;max-width:520px;"><div><div style="font-size:12px;color:var(--text-sub);margin-bottom:6px;">ニックネーム</div><input id="regName" type="text" placeholder="例）るな" style="width:100%;padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:14px;"></div><div><div style="font-size:12px;color:var(--text-sub);margin-bottom:6px;">メールアドレス</div><input id="regEmail" type="email" placeholder="example@gmail.com" style="width:100%;padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:14px;"></div><div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><div style="font-size:12px;color:var(--text-sub);">年齢（選択に応じて結果が変わります。）</div><div style="font-size:11px;color:var(--accent);font-weight:700;">必須</div></div><input id="regAge" type="hidden" value=""><div id="regAgePicker" style="position:relative;"><button id="regAgeTrigger" type="button" aria-haspopup="listbox" aria-expanded="false" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:14px;"><span id="regAgeLabel">選択してください。</span><span style="color:var(--text-sub);font-size:12px;">▼</span></button><div id="regAgeMenu" role="listbox" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 6px);max-height:132px;overflow-y:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface2);box-shadow:var(--shadow-lg);z-index:40;">${ageOptionHtml}</div></div></div><label style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--text-sub);"><input id="regConsent" type="checkbox" style="margin-top:3px;"><span>入力した情報を連絡・改善のために保存することに同意します。</span></label><div id="regErr" style="display:none;color:var(--danger);font-size:12px;"></div><div style="display:flex;gap:10px;margin-top:8px;"><button id="btnGateBack" style="background:transparent;color:var(--text-sub);">戻る</button><button class="primary" id="btnGateGo" style="flex:1;padding:14px 18px;">結果を見る</button></div><div style="margin-top:10px;font-size:11px;color:var(--text-sub);">送信される内容：ニックネーム、年齢、メール、診断TYPE（${res.code}）</div></div></div>`;
     const nameEl = document.getElementById("regName"), emailEl = document.getElementById("regEmail");
     nameEl.value = state.profile?.name || ""; emailEl.value = state.profile?.email || "";
+    const ageEl = document.getElementById("regAge");
+    ageEl.value = state.profile?.age || "";
+    const agePickerEl = document.getElementById("regAgePicker");
+    const ageTriggerEl = document.getElementById("regAgeTrigger");
+    const ageLabelEl = document.getElementById("regAgeLabel");
+    const ageMenuEl = document.getElementById("regAgeMenu");
+    const ageOptionEls = Array.from(document.querySelectorAll(".reg-age-option[data-age]"));
+    let ageMenuOpen = false;
+    const closeAgeMenu = () => {
+        ageMenuOpen = false;
+        ageMenuEl.style.display = "none";
+        ageTriggerEl.setAttribute("aria-expanded", "false");
+    };
+    const openAgeMenu = () => {
+        ageMenuOpen = true;
+        ageMenuEl.style.display = "block";
+        ageTriggerEl.setAttribute("aria-expanded", "true");
+    };
+    const refreshAgeView = () => {
+        const selectedAge = (ageEl.value || "").trim();
+        ageLabelEl.textContent = selectedAge || "選択してください。";
+        ageOptionEls.forEach(optionEl => {
+            const selected = optionEl.dataset.age === selectedAge;
+            optionEl.style.background = selected ? "rgba(167,139,250,0.2)" : "var(--surface2)";
+            optionEl.style.color = selected ? "var(--accent)" : "var(--text-main)";
+            optionEl.style.fontWeight = selected ? "700" : "500";
+        });
+    };
+    if (gateAgeOutsideHandler) {
+        document.removeEventListener("click", gateAgeOutsideHandler);
+        gateAgeOutsideHandler = null;
+    }
+    gateAgeOutsideHandler = (e) => {
+        if (!agePickerEl.contains(e.target)) closeAgeMenu();
+    };
+    document.addEventListener("click", gateAgeOutsideHandler);
+    ageTriggerEl.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (ageMenuOpen) closeAgeMenu();
+        else openAgeMenu();
+    };
+    ageOptionEls.forEach(optionEl => {
+        optionEl.onclick = () => {
+            ageEl.value = optionEl.dataset.age || "";
+            refreshAgeView();
+            closeAgeMenu();
+        };
+    });
+    refreshAgeView();
     document.getElementById("btnGateBack").onclick = () => { state.step = "quiz"; saveState(); render(); };
     document.getElementById("btnGateGo").onclick = () => {
         const errEl = document.getElementById("regErr"); errEl.style.display = "none";
-        const name = (nameEl.value || "").trim(), email = (emailEl.value || "").trim(), consent = document.getElementById("regConsent").checked;
+        const name = (nameEl.value || "").trim(), email = (emailEl.value || "").trim(), age = (ageEl.value || "").trim(), consent = document.getElementById("regConsent").checked;
         if (!name) { errEl.textContent = "ニックネームを入力してください"; errEl.style.display = "block"; return; }
         if (!email) { errEl.textContent = "メールアドレスを入力してください"; errEl.style.display = "block"; return; }
+        if (!age) { errEl.textContent = "年齢を選択してください"; errEl.style.display = "block"; return; }
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { errEl.textContent = "メールアドレスを正しく入力してください"; errEl.style.display = "block"; return; }
         if (!consent) { errEl.textContent = "同意にチェックしてください"; errEl.style.display = "block"; return; }
-        state.profile = { name, email }; state.step = "result"; saveState(); render();
+        state.profile = { name, email, age }; state.step = "result"; saveState(); render();
     };
 }
 
 function renderResult() {
+    if (!isRegistered()) { state.step = "gate"; saveState(); render(); return; }
     const res = computeResult(), ch = res.char;
     if (!state.sentToSheet && state.profile && state.profile.name) {
         state.sentToSheet = true; saveState();
         try {
             const questionAnswers = {}; QUESTIONS.forEach(q => { if (state.answers[q.id]) questionAnswers[q.id] = state.answers[q.id]; });
-            const payload = { name: state.profile.name, email: state.profile.email, type: res.code, axes: res.leftPct, answers: questionAnswers, source: "16love", menheraScore: res.menheraScore, menheraLevel: res.level, createdAt: new Date().toISOString() };
+            const payload = { name: state.profile.name, email: state.profile.email, age: state.profile.age, type: res.code, axes: res.leftPct, answers: questionAnswers, source: "16love", menheraScore: res.menheraScore, menheraLevel: res.level, createdAt: new Date().toISOString() };
             submitLead(payload).catch(e => console.error("[Love] Lead failed:", e));
             submitDiagnosis({ ...payload, diagnosis_type: ch ? ch.name : res.code }).catch(e => console.error("[Love] Diag failed:", e));
         } catch (e) { console.error("[Love] API error:", e); }
