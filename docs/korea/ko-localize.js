@@ -116,6 +116,7 @@
   const SKIP_TAGS = new Set(["SCRIPT", "STYLE", "NOSCRIPT", "CODE", "PRE", "TEXTAREA"]);
   let applying = false;
   let scheduled = false;
+  const NO_LOCALIZE_SELECTOR = '[data-no-localize="true"]';
 
   function mapHiraganaCodes(value) {
     return value.replace(/[ぁ-ん]/g, (char) => HIRA_CODE_MAP[char] || char);
@@ -170,6 +171,7 @@
 
   function localizeAttributes(root) {
     root.querySelectorAll("*").forEach((el) => {
+      if (el.closest && el.closest(NO_LOCALIZE_SELECTOR)) return;
       ATTRS.forEach((attr) => {
         const value = el.getAttribute(attr);
         if (!value || !JP_RE.test(value)) return;
@@ -186,6 +188,7 @@
         }
         const parent = node.parentElement;
         if (!parent) return NodeFilter.FILTER_REJECT;
+        if (parent.closest && parent.closest(NO_LOCALIZE_SELECTOR)) return NodeFilter.FILTER_REJECT;
         if (SKIP_TAGS.has(parent.tagName)) return NodeFilter.FILTER_REJECT;
         return NodeFilter.FILTER_ACCEPT;
       }
