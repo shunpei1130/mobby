@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>モビーガチャ | MOBBY CAPSULE CLUB</title>
+  <meta name="description" content="モビーガチャ。毎日1回無料で回して、モビーのカードを集められます。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="top-strip card-surface">
+      <div class="top-strip-row">
+        <a class="home-link" href="../index.html">ホームへ戻る</a>
+        <span class="banner-chip" id="bannerName">シークレットガチャ</span>
+      </div>
+      <div class="top-strip-main">
+        <div class="top-copy">
+          <p class="hero-kicker">MOBBY CAPSULE CLUB</p>
+          <h1>モビーガチャ</h1>
+          <p class="hero-lead">毎日1回無料。気になるモビーを回して、今日の1枚を受け取ろう。</p>
+        </div>
+        <div class="spark-row" aria-label="ガチャの特徴">
+          <span class="spark-pill">毎日1回無料</span>
+          <span class="spark-pill">全288枚</span>
+          <span class="spark-pill">SSR演出あり</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="experience-grid">
+      <section class="machine-panel card-surface">
+        <div class="panel-head compact-head">
+          <div>
+            <p class="section-kicker">Spin Now</p>
+            <h2>カプセルを回す</h2>
+          </div>
+          <div class="mode-switch" role="tablist" aria-label="抽選モード">
+            <button class="mode-button is-active" id="freeModeButton" type="button">無料デイリー</button>
+            <button class="mode-button" id="paidModeButton" type="button">スタンダード</button>
+          </div>
+        </div>
+        <div class="mode-status" id="modeStatus">本日の無料デイリーが使えます。</div>
+        <div class="machine-stage">
+          <div class="gacha-marquee">
+            <span>毎日1回無料</span>
+            <span>全288枚</span>
+            <span>SSR演出あり</span>
+          </div>
+          <div class="gacha-machine" id="gachaMachine">
+            <div class="gacha-machine-top">
+              <div class="gacha-brand-badge" id="machineBannerLabel">MOBBY CAPSULE</div>
+              <div class="gacha-dome">
+                <div class="gacha-capsule-cloud" aria-hidden="true">
+                  <span class="gacha-mini-capsule capsule-coral"></span>
+                  <span class="gacha-mini-capsule capsule-mint"></span>
+                  <span class="gacha-mini-capsule capsule-lemon"></span>
+                  <span class="gacha-mini-capsule capsule-sky"></span>
+                  <span class="gacha-mini-capsule capsule-rose"></span>
+                  <span class="gacha-mini-capsule capsule-coral"></span>
+                  <span class="gacha-mini-capsule capsule-mint"></span>
+                  <span class="gacha-mini-capsule capsule-lemon"></span>
+                  <span class="gacha-mini-capsule capsule-sky"></span>
+                </div>
+                <div class="gacha-dome-reflection" aria-hidden="true"></div>
+              </div>
+            </div>
+            <div class="gacha-machine-body">
+              <div class="gacha-control-panel">
+                <div class="gacha-handle-wrap">
+                  <button class="gacha-handle" id="startGachaButton" type="button" aria-label="ガチャを回す">
+                    <span class="gacha-handle-core"></span>
+                    <span class="gacha-handle-arm"></span>
+                    <span class="gacha-handle-knob"></span>
+                  </button>
+                  <div class="gacha-status" id="gachaStatus" aria-live="polite">回して今日の1枚を開けよう。</div>
+                </div>
+              </div>
+              <div class="gacha-chute">
+                <div class="gacha-chute-window">
+                  <div class="gacha-capsule-drop" id="gachaCapsuleDrop">
+                    <div class="gacha-capsule-shell">
+                      <div class="gacha-capsule-top"></div>
+                      <div class="gacha-capsule-bottom"></div>
+                    </div>
+                  </div>
+                  <div class="gacha-chute-sparkle" aria-hidden="true"></div>
+                </div>
+                <div class="gacha-chute-ramp" aria-hidden="true"></div>
+                <div class="gacha-tray">
+                  <div class="gacha-tray-copy" id="gachaTrayCopy">まだカプセルは出ていません</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="result-panel">
+        <div class="result-card card-surface is-idle" id="resultCard">
+          <div class="result-head compact-head">
+            <div>
+              <p class="section-kicker">Today&apos;s Card</p>
+              <h2>今日の1枚</h2>
+            </div>
+            <div class="result-progress-pill" id="collectionProgressPill">キャラ 0 / 96</div>
+          </div>
+          <div class="result-empty" id="resultEmpty">
+            <p>結果はここに表示されます。</p>
+          </div>
+          <div class="result-filled" id="resultFilled" hidden>
+            <div class="result-art" id="resultArtWrap">
+              <img id="resultImage" src="" alt="モビーカード">
+              <div class="result-badge-row">
+                <span class="rarity-pill" id="resultRarity">SSR</span>
+                <span class="status-pill" id="resultOwnership">NEW</span>
+              </div>
+            </div>
+            <h3 class="result-title" id="resultTitle">カード名</h3>
+            <p class="result-line" id="resultLine"></p>
+            <p class="result-detail" id="resultDetail"></p>
+            <div class="result-actions">
+              <button class="action-button primary" id="spinAgainButton" type="button">もう1回回す</button>
+              <button class="action-button secondary" id="jumpCollectionButton" type="button">コレクションを見る</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <section class="drawer-stack">
+
+      <details class="drawer card-surface" id="collectionSection">
+        <summary>
+          <div class="drawer-title-wrap">
+            <p class="drawer-kicker">Collection</p>
+            <h3>コレクション</h3>
+          </div>
+          <div class="drawer-summary-side">
+            <span class="collection-summary" id="collectionSummary">0 / 96</span>
+            <span class="drawer-toggle-badge" aria-hidden="true">+</span>
+          </div>
+        </summary>
+        <div class="drawer-body">
+          <div class="collection-tabs" id="collectionTabs" role="tablist" aria-label="診断別コレクション"></div>
+          <p class="collection-lead" id="collectionLead">シェアに入れたい子だけ右上の + で選べます。最大4人まで。</p>
+          <div class="progress-bar" aria-hidden="true">
+            <div class="progress-bar-fill" id="collectionProgressBar"></div>
+          </div>
+          <div class="collection-grid" id="collectionGrid"></div>
+        </div>
+      </details>
+
+      <details class="drawer card-surface" id="shareSection">
+        <summary>
+          <div class="drawer-title-wrap">
+            <p class="drawer-kicker">Share</p>
+            <h3>シェアボード</h3>
+          </div>
+          <div class="drawer-summary-side">
+            <span class="drawer-note" id="shareSummaryNote">選択 0 / 4</span>
+            <span class="drawer-toggle-badge" aria-hidden="true">+</span>
+          </div>
+        </summary>
+        <div class="drawer-body share-drawer-body">
+          <div class="share-stage" id="shareStage">
+            <div class="share-stage-head">
+              <div>
+                <p class="share-stage-kicker">MY MOBBY DROP</p>
+                <h3 class="share-stage-title" id="shareHeadline">うちのモビー見て</h3>
+              </div>
+              <div class="share-stage-count" id="shareOwnedCount">0 / 96</div>
+            </div>
+            <p class="share-stage-subline" id="shareSubline">コレクションの右上の + で、見せたい子だけ選んでね。</p>
+            <div class="share-stage-grid" id="shareStageGrid"></div>
+            <div class="share-stage-tags" id="shareStageTags"></div>
+          </div>
+          <div class="share-actions">
+            <button class="action-button primary" id="downloadShareButton" type="button">画像を保存</button>
+            <button class="action-button secondary" id="nativeShareButton" type="button">SNSでシェア</button>
+          </div>
+          <p class="share-help" id="shareHelpText">選んだ子だけでシェア画像を作れます。</p>
+          <canvas id="shareCanvas" width="1080" height="1350" hidden></canvas>
+        </div>
+      </details>
+
+
+    </section>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

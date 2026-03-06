@@ -373,7 +373,8 @@
     @media (max-width: 768px) {
 
       #goMobbyDiagnosis,
-      #goKoreanVersion {
+      #goKoreanVersion,
+      #goGachaPage {
         font-size: 12px !important;
         padding: 8px 18px !important;
       }
@@ -3055,8 +3056,6 @@
         </div>
       </div>
     </div>
-
-
     <!-- ポップアップボタン（最下部） -->
     <div class="popup-buttons-bar">
       <div class="container">
@@ -3083,6 +3082,7 @@
         style="font-size:14px;padding:10px 24px;">モビー診断</button>
       <a class="btn btn-primary" id="goKoreanVersion" href="korea/index.html"
         style="font-size:14px;padding:10px 24px;">한국판</a>
+      <button class="btn btn-primary" id="goGachaPage" type="button" aria-label="リリース予定"`r`n        style="font-size:14px;padding:10px 24px;">リリース予定</button>
     </div>
 
     <!-- 右下の法的リンク -->
@@ -4318,7 +4318,6 @@
       { key: "stan", label: "🎤 推し活", color: "#9b6dff" },
       { key: "love", label: "💜 メンヘラ", color: "#b86cff" },
     ];
-
     let encyclopediaActiveTab = "all";
 
     function initEncyclopedia() {
