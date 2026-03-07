@@ -35,7 +35,8 @@ body {
 }
 
 body.is-lineup-open,
-body.is-collection-open {
+body.is-collection-open,
+body.is-checkout-open {
   overflow: hidden;
 }
 
@@ -1658,6 +1659,71 @@ body.is-share-open {
   overflow: hidden;
 }
 
+.checkout-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 170;
+  display: grid;
+  place-items: center;
+  padding: 12px;
+}
+
+.checkout-overlay[hidden] {
+  display: none !important;
+}
+
+.checkout-overlay-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  margin: 0;
+  background: rgba(37, 24, 13, 0.58);
+}
+
+.checkout-panel {
+  position: relative;
+  z-index: 1;
+  width: min(860px, 100%);
+  max-height: 92vh;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 14px;
+  border-radius: 24px;
+}
+
+.checkout-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.checkout-panel-head h3 {
+  margin: 4px 0 0;
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+}
+
+.checkout-close-button {
+  flex-shrink: 0;
+}
+
+.checkout-mount {
+  min-height: 420px;
+  max-height: min(70vh, 720px);
+  overflow: auto;
+  margin-top: 12px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.checkout-panel-note {
+  margin: 12px 0 0;
+  color: #885a36;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.55;
+}
 .info-drawer-body {
   display: grid;
   gap: 12px;
@@ -2095,6 +2161,7 @@ body.is-share-open {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   overflow: hidden;
 }
 
@@ -2106,6 +2173,7 @@ body.is-share-open {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   overflow: hidden;
 }
 
@@ -2717,6 +2785,7 @@ body.is-share-open {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   overflow: hidden;
 }
 @media (max-width: 1080px) {
@@ -3457,6 +3526,27 @@ body.is-share-open {
   .share-modal-actions {
     gap: 6px;
   }
+
+  .checkout-overlay {
+    align-items: end;
+    padding: 8px;
+  }
+
+  .checkout-panel {
+    width: 100%;
+    max-height: 90vh;
+    padding: 12px;
+    border-radius: 20px;
+  }
+
+  .checkout-panel-head {
+    align-items: center;
+  }
+
+  .checkout-mount {
+    min-height: 360px;
+  }
+
   .mode-economy {
     padding: 10px;
     border-radius: 16px;

@@ -195,6 +195,20 @@
       <button class="action-button primary gacha-lineup-spin" id="lineupSpinButton" type="button">このまま回す</button>
     </section>
   </div>
+  <div class="checkout-overlay" id="checkoutOverlay" hidden>
+    <button class="checkout-overlay-backdrop" id="checkoutOverlayBackdrop" type="button" aria-label="決済パネルを閉じる"></button>
+    <section class="checkout-panel card-surface" role="dialog" aria-modal="true" aria-labelledby="checkoutPanelTitle">
+      <div class="checkout-panel-head">
+        <div>
+          <p class="drawer-kicker">Payment</p>
+          <h3 id="checkoutPanelTitle">50連を購入</h3>
+        </div>
+        <button class="action-button secondary checkout-close-button" id="checkoutCloseButton" type="button">閉じる</button>
+      </div>
+      <div class="checkout-mount" id="checkoutMount"></div>
+      <p class="checkout-panel-note">カード決済はこの画面内で完了します。本人認証や一部の決済手段では外部画面に移動する場合があります。</p>
+    </section>
+  </div>
 
   <script src="data.js"></script>
   <script src="app.js"></script>

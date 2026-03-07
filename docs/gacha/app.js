@@ -48,6 +48,15 @@
   let isCollectionModalOpen = false;
   let isShareModalOpen = false;
   let handleTouchFeedbackTimer = null;
+  const GACHA_FIFTY_PACK_PRODUCT_TYPE = 'gacha_fifty_pack';
+  const GACHA_CHECKOUT_SESSION_ENDPOINT = '/api/gacha-checkout-session';
+  const GACHA_CHECKOUT_STATUS_ENDPOINT = '/api/gacha-checkout-status';
+  const GACHA_CHECKOUT_GRANT_STORAGE_KEY = 'mobby-gacha-checkout-grants-v1';
+  let economyStatusMessage = '';
+  let isCheckoutPending = false;
+  let isCheckoutModalOpen = false;
+  let stripeLoaderPromise = null;
+  let embeddedCheckoutInstance = null;
 
   ensureStarterExperienceDom();
 
@@ -81,6 +90,10 @@
     shareModal: document.getElementById('shareModal'),
     shareModalBackdrop: document.getElementById('shareModalBackdrop'),
     closeShareModalButton: document.getElementById('closeShareModalButton'),
+    checkoutOverlay: document.getElementById('checkoutOverlay'),
+    checkoutOverlayBackdrop: document.getElementById('checkoutOverlayBackdrop'),
+    checkoutCloseButton: document.getElementById('checkoutCloseButton'),
+    checkoutMount: document.getElementById('checkoutMount'),
     gachaStatus: document.getElementById('gachaStatus'),
     gachaTrayCopy: document.getElementById('gachaTrayCopy'),
     resultCard: document.getElementById('resultCard'),
@@ -214,12 +227,14 @@
     els.openShareModalButton?.addEventListener('click', openShareSection);
     els.shareModalBackdrop?.addEventListener('click', closeShareModal);
     els.closeShareModalButton?.addEventListener('click', closeShareModal);
-
+    els.checkoutOverlayBackdrop?.addEventListener('click', closeCheckoutOverlay);
+    els.checkoutCloseButton?.addEventListener('click', closeCheckoutOverlay);
     document.addEventListener('keydown', (event) => {
       if (event.key !== 'Escape') return;
       if (isLineupModalOpen) closeGachaLineupModal();
       if (isCollectionModalOpen) closeCollectionSection();
       if (isShareModalOpen) closeShareModal();
+      if (isCheckoutModalOpen) closeCheckoutOverlay();
     });
 
     els.historyList?.addEventListener('click', (event) => {
@@ -1513,8 +1528,9 @@
     const fiftyButton = document.getElementById('buyFiftyPackButton');
     if (fiftyButton && !fiftyButton.dataset.boundEconomy) {
       fiftyButton.dataset.boundEconomy = '1';
-      fiftyButton.addEventListener('click', purchaseFiftyPack);
-    }
+      fiftyButton.addEventListener('click', (event) => {
+        void purchaseFiftyPack(event.currentTarget);
+      });    }
 
     const ticketButton = document.getElementById('buyKujiTicketButton');
     if (ticketButton && !ticketButton.dataset.boundEconomy) {
@@ -1544,6 +1560,7 @@
 
   function renderModeState(options = {}) {
     const { resetMachineText = false, statusMessage = '' } = options;
+    if (statusMessage) economyStatusMessage = statusMessage;
     const paidModeReleased = isPaidModeReleased();
     if (!paidModeReleased && state.selectedMode === 'paid') {
       state.selectedMode = 'free';
@@ -1621,19 +1638,20 @@
 
     panel.hidden = false;
     ticketStock.hidden = true;
-    note.hidden = true;
+    note.hidden = false;
 
     buyFiftyButton.hidden = !isFreeMode;
     buyKujiTicketButton.hidden = isFreeMode;
-    buyFiftyButton.disabled = isSpinning;
+    buyFiftyButton.disabled = isSpinning || isCheckoutPending;
     buyKujiTicketButton.disabled = isSpinning;
 
     if (isFreeMode) {
-      buyFiftyButton.textContent = '50連（2000円）を購入';
+      buyFiftyButton.textContent = isCheckoutPending ? '決済ページを準備中...' : '50連（2000円）を購入';
     } else {
       buyKujiTicketButton.textContent = 'チケット1枚（500円）を購入';
     }
-  }
+    note.textContent = economyStatusMessage || (isFreeMode ? '決済完了後に50連1セットが追加されます。' : '');
+    note.hidden = !note.textContent;  }
   function renderDomeHint() {
     if (!els.gachaDome || !els.gachaDomeHint) return;
     const isFreeMode = state.selectedMode === 'free';
@@ -1912,18 +1930,47 @@
     }, 980);
   }
 
-  function purchaseFiftyPack() {
-    if (isSpinning) return;
-    state.fiftyPackStock = toSafeInt(state.fiftyPackStock) + 1;
-    saveState();
-    const stock = state.fiftyPackStock;
-    const message = stock === 1
-      ? '50連を購入しました。取っ手を回すと一気に開封します。'
-      : `50連を追加購入しました。現在${stock}セット。取っ手を回すと1セットずつ開封します。`;
-    renderModeState({ statusMessage: message });
-    if (isLineupModalOpen) renderGachaLineupModalContents();
-  }
+  async function purchaseFiftyPack(triggerButton = null) {
+    if (isSpinning || isCheckoutPending) return;
+    if (!els.checkoutMount || !els.checkoutOverlay) {
+      economyStatusMessage = '決済パネルの表示先が見つかりませんでした。';
+      renderModeState();
+      return;
+    }
 
+    isCheckoutPending = true;
+    economyStatusMessage = '決済パネルを準備しています。数秒お待ちください。';
+    renderModeState();
+    if (isLineupModalOpen) renderGachaLineupModalContents();
+
+    try {
+      const session = await createEmbeddedCheckoutSession();
+      const StripeCtor = await loadStripeJs();
+      const stripe = StripeCtor(session.publishableKey);
+      if (!stripe) {
+        throw new Error('Stripeの初期化に失敗しました。');
+      }
+
+      teardownEmbeddedCheckout();
+      els.checkoutMount.innerHTML = '';
+      embeddedCheckoutInstance = await stripe.initEmbeddedCheckout({
+        fetchClientSecret: async () => session.clientSecret,
+        onComplete: () => {
+          void finalizeCheckoutSession(session.sessionId, { closeOverlay: true });
+        },
+      });
+      embeddedCheckoutInstance.mount('#checkoutMount');
+      openCheckoutOverlay();
+      economyStatusMessage = '決済パネルを表示しました。支払い完了後に50連が反映されます。';
+    } catch (error) {
+      economyStatusMessage = error?.message || '決済パネルの表示に失敗しました。';
+    } finally {
+      isCheckoutPending = false;
+      if (triggerButton && typeof triggerButton.blur === 'function') triggerButton.blur();
+      renderModeState();
+      if (isLineupModalOpen) renderGachaLineupModalContents();
+    }
+  }
   function runPurchasedFiftyPack() {
     if (isSpinning) return;
 
@@ -2013,6 +2060,165 @@
     saveState();
     renderModeState({ statusMessage: `チケット1枚（500円）を仮購入しました。所持 ${state.ichibanTickets}枚。` });
     if (isLineupModalOpen) renderGachaLineupModalContents();
+  }
+
+  function loadStripeJs() {
+    if (window.Stripe) return Promise.resolve(window.Stripe);
+    if (stripeLoaderPromise) return stripeLoaderPromise;
+
+    stripeLoaderPromise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://js.stripe.com/clover/stripe.js';
+      script.async = true;
+      script.onload = () => {
+        if (window.Stripe) resolve(window.Stripe);
+        else reject(new Error('Stripe.jsの読み込みに失敗しました。'));
+      };
+      script.onerror = () => reject(new Error('Stripe.jsの読み込みに失敗しました。'));
+      document.head.appendChild(script);
+    });
+
+    return stripeLoaderPromise;
+  }
+
+  function teardownEmbeddedCheckout() {
+    if (!embeddedCheckoutInstance) return;
+    try {
+      if (typeof embeddedCheckoutInstance.unmount === 'function') {
+        embeddedCheckoutInstance.unmount();
+      }
+      if (typeof embeddedCheckoutInstance.destroy === 'function') {
+        embeddedCheckoutInstance.destroy();
+      }
+    } catch {}
+    embeddedCheckoutInstance = null;
+  }
+
+  function openCheckoutOverlay() {
+    if (!els.checkoutOverlay) return;
+    isCheckoutModalOpen = true;
+    els.checkoutOverlay.hidden = false;
+    document.body.classList.add('is-checkout-open');
+  }
+
+  function closeCheckoutOverlay() {
+    if (!els.checkoutOverlay) return;
+    isCheckoutModalOpen = false;
+    els.checkoutOverlay.hidden = true;
+    document.body.classList.remove('is-checkout-open');
+    teardownEmbeddedCheckout();
+    if (els.checkoutMount) els.checkoutMount.innerHTML = '';
+  }
+
+  async function createEmbeddedCheckoutSession() {
+    const response = await fetch(GACHA_CHECKOUT_SESSION_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ source: 'gacha' }),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || !data?.clientSecret || !data?.publishableKey || !data?.sessionId) {
+      throw new Error(data?.error || '決済セッションの作成に失敗しました。');
+    }
+    return data;
+  }
+
+  function loadGrantedCheckoutSessionIds() {
+    try {
+      const raw = window.localStorage.getItem(GACHA_CHECKOUT_GRANT_STORAGE_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed)
+        ? parsed.filter((value) => typeof value === 'string' && value.startsWith('cs_')).slice(-40)
+        : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function hasGrantedCheckoutSession(sessionId) {
+    return loadGrantedCheckoutSessionIds().includes(sessionId);
+  }
+
+  function rememberGrantedCheckoutSession(sessionId) {
+    if (!sessionId) return;
+    const next = unique([...loadGrantedCheckoutSessionIds(), sessionId]).slice(-40);
+    try {
+      window.localStorage.setItem(GACHA_CHECKOUT_GRANT_STORAGE_KEY, JSON.stringify(next));
+    } catch {}
+  }
+
+  function clearCheckoutQueryParams() {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('checkout');
+    url.searchParams.delete('session_id');
+    const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+    window.history.replaceState({}, document.title, nextUrl);
+  }
+
+  async function finalizeCheckoutSession(sessionId, options = {}) {
+    const { closeOverlay = false, clearUrl = false } = options;
+    if (!sessionId) return;
+
+    if (hasGrantedCheckoutSession(sessionId)) {
+      economyStatusMessage = 'この50連はすでに反映済みです。';
+      if (closeOverlay) closeCheckoutOverlay();
+      if (clearUrl) clearCheckoutQueryParams();
+      renderModeState();
+      return;
+    }
+
+    isCheckoutPending = true;
+    economyStatusMessage = '決済完了を確認しています。';
+    renderModeState();
+
+    try {
+      const response = await fetch(GACHA_CHECKOUT_STATUS_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data?.error || '決済結果を確認できませんでした。');
+      }
+      if (!data?.ok || data?.productType !== GACHA_FIFTY_PACK_PRODUCT_TYPE) {
+        throw new Error('50連の決済として確認できませんでした。');
+      }
+
+      if (data?.paid) {
+        state.fiftyPackStock = toSafeInt(state.fiftyPackStock) + 1;
+        saveState();
+        rememberGrantedCheckoutSession(sessionId);
+        economyStatusMessage = '50連（2000円）の決済が完了しました。取っ手を回すと1セット開封できます。';
+        if (closeOverlay) closeCheckoutOverlay();
+      } else {
+        economyStatusMessage = data?.message || '決済はまだ完了していません。';
+      }
+
+      if (clearUrl) clearCheckoutQueryParams();
+    } catch (error) {
+      economyStatusMessage = error?.message || '決済結果を確認できませんでした。';
+    } finally {
+      isCheckoutPending = false;
+      renderModeState();
+      if (isLineupModalOpen) renderGachaLineupModalContents();
+    }
+  }
+
+  async function handleReturnedCheckout() {
+    const url = new URL(window.location.href);
+    const checkoutState = (url.searchParams.get('checkout') || '').trim().toLowerCase();
+    const sessionId = (url.searchParams.get('session_id') || '').trim();
+
+    if (checkoutState === 'cancel' && !sessionId) {
+      economyStatusMessage = '50連の決済をキャンセルしました。';
+      clearCheckoutQueryParams();
+      renderModeState();
+      return;
+    }
+
+    if (!sessionId) return;
+    await finalizeCheckoutSession(sessionId, { clearUrl: true, closeOverlay: true });
   }
 
   function pushHistoryCard(cardId, source) {
@@ -2262,4 +2468,5 @@
   }
   bindEconomyExtras();
   renderModeState({ resetMachineText: true });
+  void handleReturnedCheckout();
 })();;
