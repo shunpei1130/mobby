@@ -3772,36 +3772,37 @@ function renderGate(){
 
             <div class="result-product-tabs" role="tablist" aria-label="限定キーホルダー">
               <button
-                id="resultProductTabPlush"
-                class="result-product-tab"
-                type="button"
-                role="tab"
-                aria-selected="true"
-                aria-controls="resultProductPanelPlush"
-                data-result-product-tab="plush"
-              >
-                ぬいぐるみ<br>キーホルダー
-              </button>
-              <button
                 id="resultProductTabAcrylic"
                 class="result-product-tab"
                 type="button"
                 role="tab"
-                aria-selected="false"
+                aria-selected="true"
                 aria-controls="resultProductPanelAcrylic"
                 data-result-product-tab="acrylic"
-                tabindex="-1"
               >
                 アクリル<br>キーホルダー
+              </button>
+              <button
+                id="resultProductTabPlush"
+                class="result-product-tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="resultProductPanelPlush"
+                data-result-product-tab="plush"
+                tabindex="-1"
+              >
+                ぬいぐるみ<br>キーホルダー
               </button>
             </div>
 
             <section
               id="resultProductPanelPlush"
-              class="result-product-content is-active"
+              class="result-product-content"
               role="tabpanel"
               aria-labelledby="resultProductTabPlush"
               data-result-product-panel="plush"
+              hidden
             >
               <h3 style="font-size:20px; margin:0 0 8px; color:var(--text-main);">ふわふわぬいぐるみキーホルダー</h3>
               <p style="display:inline-block; font-size:12px; font-weight:700; color:#ffffff; background:#ff4d8d; padding:6px 12px; border-radius:999px; margin:0 0 12px; letter-spacing:0.03em;">
@@ -3853,11 +3854,10 @@ function renderGate(){
 
             <section
               id="resultProductPanelAcrylic"
-              class="result-product-content"
+              class="result-product-content is-active"
               role="tabpanel"
               aria-labelledby="resultProductTabAcrylic"
               data-result-product-panel="acrylic"
-              hidden
             >
               <h3 style="font-size:20px; margin:0 0 8px; color:var(--text-main);">アクリルキーホルダー</h3>
               <p style="display:inline-block; font-size:15px; font-weight:700; color:#ff4d8d; background:rgba(255,77,141,0.08); padding:6px 14px; border-radius:999px; margin:0 0 18px; letter-spacing:0.03em;">
@@ -4295,7 +4295,7 @@ function renderGate(){
       initPlushReservationGallery();
 
       if (resultProductTabButtons.length > 0) {
-        const defaultTab = resultProductTabButtons.find((button) => button.dataset.resultProductTab === "plush")?.dataset.resultProductTab
+        const defaultTab = resultProductTabButtons.find((button) => button.dataset.resultProductTab === "acrylic")?.dataset.resultProductTab
           || resultProductTabButtons[0]?.dataset.resultProductTab
           || "";
         activateResultProductTab(defaultTab);
