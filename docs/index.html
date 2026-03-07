@@ -748,6 +748,241 @@
       right: -10px;
     }
 
+    /* ===== モビーガチャボタン ===== */
+    .gacha-btn-wrap {
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      z-index: 25;
+      animation: gachaWiggle 3s ease-in-out infinite;
+    }
+
+    .gacha-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 18px 10px 14px;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 999px;
+      font-family: var(--font-ja);
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: #fff;
+      background: linear-gradient(135deg, #ff5e94, #d946ef, #a855f7, #6366f1);
+      background-size: 300% 300%;
+      animation: gachaGradient 4s ease infinite;
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        0 4px 18px rgba(217, 70, 239, 0.4),
+        0 0 25px rgba(255, 94, 148, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+      transform-origin: center;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    /* シマー光エフェクト */
+    .gacha-btn::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -80%;
+      width: 50%;
+      height: 200%;
+      background: linear-gradient(105deg,
+          transparent 25%,
+          rgba(255, 255, 255, 0.5) 40%,
+          rgba(255, 255, 255, 0.8) 50%,
+          rgba(255, 255, 255, 0.5) 60%,
+          transparent 75%);
+      animation: gachaShimmer 2.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    /* キラキラ粒子エフェクト */
+    .gacha-btn::after {
+      content: "✦";
+      position: absolute;
+      top: -4px;
+      right: -2px;
+      font-size: 12px;
+      color: #fde047;
+      animation: gachaSparkle 1.5s ease-in-out infinite;
+      pointer-events: none;
+      text-shadow: 0 0 6px rgba(253, 224, 71, 0.8);
+      filter: none;
+      background: none;
+      width: auto;
+      height: auto;
+    }
+
+    /* NEWバッジ */
+    .gacha-badge {
+      position: absolute;
+      top: 0px;
+      right: 7px;
+      background: linear-gradient(135deg, #ff3366, #ff6b35);
+      color: #fff;
+      font-size: 0.55rem;
+      font-weight: 900;
+      padding: 2px 7px;
+      border-radius: 999px;
+      letter-spacing: 0.08em;
+      line-height: 1.4;
+      box-shadow: 0 2px 8px rgba(255, 51, 102, 0.5);
+      animation: gachaBadgePulse 1.2s ease-in-out infinite;
+      z-index: 2;
+      border: 1.5px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .gacha-btn:hover {
+      transform: scale(1.12) translateY(-3px) rotate(-1deg);
+      box-shadow:
+        0 8px 30px rgba(217, 70, 239, 0.55),
+        0 0 40px rgba(255, 94, 148, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+
+    .gacha-btn:active {
+      transform: scale(0.92) rotate(0deg);
+      transition-duration: 0.08s;
+    }
+
+    .gacha-btn .gacha-icon {
+      font-size: 1.15em;
+      display: inline-block;
+      animation: gachaBounceIcon 2s ease-in-out infinite;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+    }
+
+    /* ぷるぷる揺れるアニメーション */
+    @keyframes gachaWiggle {
+
+      0%,
+      100% {
+        transform: rotate(0deg) scale(1);
+      }
+
+      15% {
+        transform: rotate(-4deg) scale(1.04);
+      }
+
+      30% {
+        transform: rotate(3deg) scale(1.02);
+      }
+
+      45% {
+        transform: rotate(-2deg) scale(1.03);
+      }
+
+      60% {
+        transform: rotate(1deg) scale(1);
+      }
+
+      75%,
+      100% {
+        transform: rotate(0deg) scale(1);
+      }
+    }
+
+    @keyframes gachaGradient {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    @keyframes gachaShimmer {
+      0% {
+        left: -80%;
+      }
+
+      35% {
+        left: 130%;
+      }
+
+      100% {
+        left: 130%;
+      }
+    }
+
+    @keyframes gachaSparkle {
+
+      0%,
+      100% {
+        opacity: 0.4;
+        transform: scale(0.7) rotate(0deg);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.2) rotate(180deg);
+      }
+    }
+
+    @keyframes gachaBadgePulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.15);
+      }
+    }
+
+    @keyframes gachaBounceIcon {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      25% {
+        transform: translateY(-3px) rotate(-10deg);
+      }
+
+      50% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      75% {
+        transform: translateY(-2px) rotate(8deg);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .gacha-btn-wrap {
+        top: 2%;
+        right: auto;
+        left: -8%;
+      }
+
+      .gacha-btn {
+        font-size: 0.72rem;
+        padding: 8px 14px 8px 10px;
+      }
+
+      .gacha-badge {
+        top: 0px;
+        right: 9px;
+        font-size: 0.5rem;
+        padding: 1px 5px;
+      }
+    }
+
     /* カルーセル右上のタップヒント */
     .carousel-tap-hint {
       position: absolute;
@@ -2548,6 +2783,37 @@
       /* クリック/スワイプを邪魔しない */
       display: block;
     }
+
+    /* ===== ページ遷移フェード ===== */
+    .page-transition-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: var(--color-cream, #FFF8E7);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .page-transition-overlay.fade-out {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .page-transition-overlay.fade-in {
+      opacity: 1;
+      animation: pageFadeIn 0.6s ease forwards;
+    }
+
+    @keyframes pageFadeIn {
+      from {
+        opacity: 1;
+      }
+
+      to {
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 
@@ -2585,6 +2851,12 @@
 
         <!-- 4色カルーセル -->
         <div class="hero-carousel floating reveal delay-200" id="heroCarousel" aria-label="Mobby カラーギャラリー">
+          <div class="gacha-btn-wrap">
+            <a href="/gacha/index.html" class="gacha-btn" id="goGachaPage">
+              <span class="gacha-icon">🎰</span>モビーガチャ
+              <span class="gacha-badge">NEW</span>
+            </a>
+          </div>
           <div class="carousel-tap-hint">タップ</div>
           <button class="carousel-btn prev" type="button" aria-label="前の色">‹</button>
 
@@ -5134,6 +5406,47 @@
         link.style.display = "none";
       });
     }
+  </script>
+
+  <!-- ページ遷移フェード -->
+  <div class="page-transition-overlay" id="pageTransitionOverlay"></div>
+  <script>
+    (function () {
+      var overlay = document.getElementById('pageTransitionOverlay');
+      // ページ読み込み時フェードイン
+      window.addEventListener('pageshow', function () {
+        overlay.classList.add('fade-in');
+        overlay.classList.remove('fade-out');
+      });
+      overlay.addEventListener('animationend', function () {
+        overlay.classList.remove('fade-in');
+      });
+
+      // フェードアウト遷移の共通処理
+      function fadeNavigate(href) {
+        overlay.classList.add('fade-out');
+        setTimeout(function () {
+          window.location.href = href;
+        }, 500);
+      }
+
+      // ガチャボタン
+      var gachaBtn = document.getElementById('goGachaPage');
+      if (gachaBtn) {
+        gachaBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          fadeNavigate(gachaBtn.getAttribute('href'));
+        });
+      }
+
+      // 診断オプション（5つの診断リンク）
+      document.querySelectorAll('.diagnosis-options a').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          fadeNavigate(link.getAttribute('href'));
+        });
+      });
+    })();
   </script>
 </body>
 

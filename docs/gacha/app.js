@@ -874,7 +874,7 @@
     if (els.shareSubline) {
       els.shareSubline.textContent = !ownedCount
         ? 'ガチャを回すと持っているカードがここに全部並びます。'
-        : '持っているカードを一覧で見せられます。SNSでそのまま自慢しよう。';
+        : '持っているカードがここに全部並びます。SNSに画像を載せよう。';
     }
     els.shareStageGrid.innerHTML = ownedCount
       ? ownedStates.map((item, index) => renderShareCard(item, index)).join('')
