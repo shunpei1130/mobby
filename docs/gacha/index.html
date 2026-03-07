@@ -18,25 +18,31 @@
       <section class="machine-panel card-surface">
         <div class="panel-head compact-head">
           <div>
-            <p class="section-kicker">Spin Now</p>
-             <h2>カプセルを回す</h2>
+            <button class="section-kicker home-back-button" type="button" onclick="window.location.href='../index.html'">Homeに戻る</button>
+             <h2>モビーガチャ</h2>
           </div>
            <div class="mode-switch" role="tablist" aria-label="モード切り替え">
-             <button class="mode-button is-active" id="freeModeButton" type="button">無料ガチャ</button>
+             <button class="mode-button is-active" id="freeModeButton" type="button">ガチャガチャ</button>
              <button class="mode-button" id="paidModeButton" type="button">一番くじ</button>
           </div>
         </div>
          <div class="mode-status" id="modeStatus">読み込み中...</div>
-        <div class="mode-economy card-surface" id="modeEconomy">
-          <div class="mode-economy-head">
-            <p class="section-kicker">Economy</p>
-            <p class="mode-economy-stock" id="ticketStock">一番くじチケット: 0枚</p>
+        <div class="mode-economy-row">
+          <div class="mode-economy card-surface" id="modeEconomy">
+            <div class="mode-economy-head">
+              <p class="section-kicker">購入</p>
+              <p class="mode-economy-stock" id="ticketStock">一番くじチケット: 0枚</p>
+            </div>
+            <div class="mode-economy-actions">
+              <button class="action-button secondary" id="buyFiftyPackButton" type="button">50連（2000円）を購入</button>
+              <button class="action-button secondary" id="buyKujiTicketButton" type="button">チケット1枚（500円）を購入</button>
+            </div>
+            <p class="mode-economy-note" id="modeEconomyNote"></p>
           </div>
-          <div class="mode-economy-actions">
-            <button class="action-button secondary" id="buyFiftyPackButton" type="button">50連（2000円）を購入</button>
-            <button class="action-button secondary" id="buyKujiTicketButton" type="button">チケット1枚（500円）を購入</button>
+          <div class="mode-share-launch card-surface">
+            <p class="section-kicker">Share</p>
+            <button class="action-button primary mode-share-open-button" id="openShareModalButton" type="button">シェアを開く</button>
           </div>
-          <p class="mode-economy-note" id="modeEconomyNote"></p>
         </div>
         <div class="machine-stage">
           <div class="gacha-machine" id="gachaMachine">
@@ -110,24 +116,25 @@
             <p class="result-detail" id="resultDetail"></p>
             <div class="result-actions">
                <button class="action-button primary" id="spinAgainButton" type="button">もう1回回す</button>
-               <button class="action-button secondary" id="jumpCollectionButton" type="button">コレクションを見る</button>
             </div>
           </div>
         </div>
       </section>
     </main>
-    <section class="drawer-stack">
-      <details class="drawer card-surface" id="shareSection" open>
-        <summary>
+    <div class="share-modal" id="shareModal" hidden>
+      <button class="share-modal-backdrop" id="shareModalBackdrop" type="button" aria-label="シェアを閉じる"></button>
+      <section class="share-modal-sheet card-surface" id="shareSection" role="dialog" aria-modal="true" aria-labelledby="shareModalTitle">
+        <div class="share-modal-head">
           <div class="drawer-title-wrap">
             <p class="drawer-kicker">Share</p>
-             <h3>シェア</h3>
+            <h3 id="shareModalTitle">シェア</h3>
           </div>
-          <div class="drawer-summary-side">
+          <div class="share-modal-actions">
             <span class="drawer-note" id="shareSummaryNote">所持 0 / 96</span>
+            <button class="action-button secondary share-modal-close" id="closeShareModalButton" type="button">閉じる</button>
           </div>
-        </summary>
-        <div class="drawer-body share-drawer-body">
+        </div>
+        <div class="share-modal-body share-drawer-body">
           <div class="share-stage" id="shareStage">
             <div class="share-stage-head">
               <div>
@@ -140,14 +147,14 @@
             <div class="share-stage-grid share-owned-grid" id="shareStageGrid"></div>
           </div>
           <div class="share-actions">
-             <button class="action-button primary" id="downloadShareButton" type="button">コレクション画像を保存</button>
-             <button class="action-button secondary" id="nativeShareButton" type="button">SNSでシェア</button>
+            <button class="action-button primary" id="downloadShareButton" type="button">コレクション画像を保存</button>
+            <button class="action-button secondary" id="nativeShareButton" type="button">SNSでシェア</button>
           </div>
-           <p class="share-help" id="shareHelpText">集めたカードを一覧で見せてシェアできます。</p>
+          <p class="share-help" id="shareHelpText">集めたカードを一覧で見せてシェアできます。</p>
           <canvas id="shareCanvas" width="1080" height="1350" hidden></canvas>
         </div>
-      </details>
-    </section>
+      </section>
+    </div>
   </div>
   <div class="collection-modal" id="collectionModal" hidden>
     <button class="collection-modal-backdrop" id="collectionModalBackdrop" type="button" aria-label="コレクションを閉じる"></button>

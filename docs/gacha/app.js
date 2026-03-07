@@ -5,6 +5,8 @@
   const STORAGE_KEY = 'mobby-gacha-state-v2';
   const LEGACY_STORAGE_KEY = 'mobby-gacha-state-v1';
   const ACTIVE_BANNER_ID = 'love_truth_mvp';
+  const PAID_MODE_RELEASE_DATE_JST = '2026-03-10';
+  const PAID_MODE_RELEASE_LABEL = '3月10日リリース予定';
   const MAX_HISTORY = 5;
   const MAX_SHOWCASE_CHARACTERS = 4;
   const RARITY_WEIGHT = { N: 1, R: 2, SSR: 3 };
@@ -44,6 +46,7 @@
   let currentMultiResultEntries = [];
   let isLineupModalOpen = false;
   let isCollectionModalOpen = false;
+  let isShareModalOpen = false;
   let handleTouchFeedbackTimer = null;
 
   ensureStarterExperienceDom();
@@ -59,7 +62,6 @@
     modeStatus: document.getElementById('modeStatus'),
     startGachaButton: document.getElementById('startGachaButton'),
     spinAgainButton: document.getElementById('spinAgainButton'),
-    jumpCollectionButton: document.getElementById('jumpCollectionButton'),
     gachaMachine: document.getElementById('gachaMachine'),
     gachaDome: document.getElementById('gachaDome'),
     gachaDomeHint: document.getElementById('gachaDomeHint'),
@@ -75,6 +77,10 @@
     collectionModal: document.getElementById('collectionModal'),
     collectionModalBackdrop: document.getElementById('collectionModalBackdrop'),
     closeCollectionModalButton: document.getElementById('closeCollectionModalButton'),
+    openShareModalButton: document.getElementById('openShareModalButton'),
+    shareModal: document.getElementById('shareModal'),
+    shareModalBackdrop: document.getElementById('shareModalBackdrop'),
+    closeShareModalButton: document.getElementById('closeShareModalButton'),
     gachaStatus: document.getElementById('gachaStatus'),
     gachaTrayCopy: document.getElementById('gachaTrayCopy'),
     resultCard: document.getElementById('resultCard'),
@@ -166,6 +172,7 @@
     });
 
     els.paidModeButton?.addEventListener('click', () => {
+      if (!isPaidModeReleased()) return;
       state.selectedMode = 'paid';
       shareFeedbackMessage = '';
       saveState();
@@ -204,26 +211,15 @@
 
     els.collectionModalBackdrop?.addEventListener('click', closeCollectionSection);
     els.closeCollectionModalButton?.addEventListener('click', closeCollectionSection);
+    els.openShareModalButton?.addEventListener('click', openShareSection);
+    els.shareModalBackdrop?.addEventListener('click', closeShareModal);
+    els.closeShareModalButton?.addEventListener('click', closeShareModal);
 
     document.addEventListener('keydown', (event) => {
       if (event.key !== 'Escape') return;
       if (isLineupModalOpen) closeGachaLineupModal();
       if (isCollectionModalOpen) closeCollectionSection();
-    });
-
-    if (els.shareSection?.tagName === 'DETAILS') {
-      els.shareSection.open = true;
-      els.shareSection.addEventListener('toggle', () => {
-        if (!els.shareSection.open) els.shareSection.open = true;
-      });
-    }
-
-    els.jumpCollectionButton?.addEventListener('click', () => {
-      openCollectionSection();
-      if (!state.lastCardId) return;
-      const currentCard = getCardViewModel(cardsById.get(state.lastCardId));
-      if (!currentCard) return;
-      window.requestAnimationFrame(() => highlightCollectionCharacter(currentCard.characterId, true));
+      if (isShareModalOpen) closeShareModal();
     });
 
     els.historyList?.addEventListener('click', (event) => {
@@ -487,7 +483,14 @@
     const startDisabled = isSpinning || (isFreeMode && !freeAvailable);
 
     els.freeModeButton?.classList.toggle('is-active', isFreeMode);
-    els.paidModeButton?.classList.toggle('is-active', !isFreeMode);
+    els.paidModeButton?.classList.toggle('is-active', paidModeReleased && !isFreeMode);
+    if (els.paidModeButton) {
+      els.paidModeButton.disabled = !paidModeReleased || isSpinning;
+      els.paidModeButton.classList.toggle('is-release-locked', !paidModeReleased);
+      const paidLabel = paidModeReleased ? '一番くじに切り替える' : PAID_MODE_RELEASE_LABEL;
+      els.paidModeButton.setAttribute('aria-label', paidLabel);
+      els.paidModeButton.title = paidLabel;
+    }
     if (els.startGachaButton) els.startGachaButton.disabled = startDisabled;
     if (els.spinAgainButton) els.spinAgainButton.disabled = startDisabled;
     if (els.starterTenPullButton) els.starterTenPullButton.disabled = isSpinning || !starterAvailable;
@@ -521,18 +524,18 @@
     if (els.starterBonusCopy) els.starterBonusCopy.textContent = '初回だけ無料で10連。10枠目はR以上確定。';
   }
 
-  function removeStarterBonus() {
-    if (els.starterBonus) {
-      els.starterBonus.remove();
-      els.starterBonus = null;
-    }
-    els.starterBonusCopy = null;
-    els.starterTenPullButton = null;
-  }
-
+  
   function getJstDateKey() {
-    const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Tokyo',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).formatToParts(new Date());
     return `${parts.find((item) => item.type === 'year')?.value}-${parts.find((item) => item.type === 'month')?.value}-${parts.find((item) => item.type === 'day')?.value}`;
+  }
+  function isPaidModeReleased() {
+    return getJstDateKey() >= PAID_MODE_RELEASE_DATE_JST;
   }
 
     function canUseStarterTenPull() {
@@ -1197,7 +1200,18 @@
   }
 
   function openShareSection() {
-    if (els.shareSection?.tagName === 'DETAILS') els.shareSection.open = true;
+    if (!els.shareModal) return;
+    renderShareStage();
+    isShareModalOpen = true;
+    els.shareModal.hidden = false;
+    document.body.classList.add('is-share-open');
+  }
+
+  function closeShareModal() {
+    if (!els.shareModal) return;
+    isShareModalOpen = false;
+    els.shareModal.hidden = true;
+    document.body.classList.remove('is-share-open');
   }
 
   function highlightCollectionCharacter(characterId, scrollIntoView) {
@@ -1530,7 +1544,12 @@
 
   function renderModeState(options = {}) {
     const { resetMachineText = false, statusMessage = '' } = options;
-    const isFreeMode = state.selectedMode === 'free';
+    const paidModeReleased = isPaidModeReleased();
+    if (!paidModeReleased && state.selectedMode === 'paid') {
+      state.selectedMode = 'free';
+      saveState();
+    }
+    const isFreeMode = !paidModeReleased || state.selectedMode === 'free';
     const freeAvailable = canUseFreeDaily();
     const fiftyPackStock = toSafeInt(state.fiftyPackStock);
     const freeRemaining = freeAvailable ? 1 : 0;
@@ -1539,7 +1558,14 @@
     state.fiftyPackStock = fiftyPackStock;
 
     els.freeModeButton?.classList.toggle('is-active', isFreeMode);
-    els.paidModeButton?.classList.toggle('is-active', !isFreeMode);
+    els.paidModeButton?.classList.toggle('is-active', paidModeReleased && !isFreeMode);
+    if (els.paidModeButton) {
+      els.paidModeButton.disabled = !paidModeReleased || isSpinning;
+      els.paidModeButton.classList.toggle('is-release-locked', !paidModeReleased);
+      const paidLabel = paidModeReleased ? '一番くじに切り替える' : PAID_MODE_RELEASE_LABEL;
+      els.paidModeButton.setAttribute('aria-label', paidLabel);
+      els.paidModeButton.title = paidLabel;
+    }
 
     if (els.startGachaButton) {
       ensureStartHandleButtonDom();
