@@ -1426,6 +1426,26 @@
         function isIOSLikeDevice() {
             return /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
         }
+        function isLineAppShareTarget() {
+            return /Android/i.test(navigator.userAgent || "") || isIOSLikeDevice();
+        }
+        function buildLineAppShareUrl(shareText, shareUrl = "") {
+            const safeText = typeof shareText === "string" ? shareText : "";
+            const safeUrl = typeof shareUrl === "string" ? shareUrl : "";
+            const separator = safeText && safeUrl && !/\s$/.test(safeText) ? "\n" : "";
+            return `https://line.me/R/share?text=${encodeURIComponent(`${safeText}${separator}${safeUrl}`)}`;
+        }
+        function buildLineWebShareUrl(shareText, shareUrl = "") {
+            const safeText = typeof shareText === "string" ? shareText : "";
+            const safeUrl = typeof shareUrl === "string" && shareUrl ? shareUrl : window.location.href;
+            return `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(safeUrl)}&text=${encodeURIComponent(safeText)}`;
+        }
+        function getPreferredLineShareUrl(shareText, shareUrl = "") {
+            return isLineAppShareTarget() ? buildLineAppShareUrl(shareText, shareUrl) : buildLineWebShareUrl(shareText, shareUrl);
+        }
+        function getPreferredLineShareTarget() {
+            return isLineAppShareTarget() ? "_self" : "_blank";
+        }
         function buildStripeSheetPayload(res, extraPayload = {}) {
             const questionAnswers = {};
             QUESTIONS.forEach(q => {
@@ -1622,6 +1642,13 @@
             const keyImageBackPath = "img/key/ura.jpg";
             const keyImageBackWebpPath = "img/key/ura.webp";
             const snsImagePaths = getSnsImagePaths(code);
+            const shareXText = `推し活モビー診断の結果は「${displayName}」でした！🎤✨\n${ch.catch}\n`;
+            const shareUrl = "https://www.mobby.online/16stan";
+            const shareLineText = `推し活モビー診断の結果は「${displayName}」でした！`;
+            const encodedShareXText = encodeURIComponent(shareXText);
+            const encodedShareUrl = encodeURIComponent(shareUrl);
+            const lineShareHref = getPreferredLineShareUrl(shareLineText, shareUrl);
+            const lineShareTarget = getPreferredLineShareTarget();
             let html = `<div class="fade-in"><div class="panel result-hero">
     <p class="kicker">あなたの推し活タイプは…</p>
     <h2 class="big" style="font-size:28px;">🎤 ${displayName}</h2>
@@ -1696,8 +1723,8 @@
     </div>
     </div>
     <div class="share-buttons">
-    <a class="share-btn share-x" href="https://twitter.com/intent/tweet?text=${encodeURIComponent(`推し活モビー診断の結果は「${displayName}」でした！🎤✨\n${ch.catch}\n`)}&url=${encodeURIComponent("https://www.mobby.online/16stan")}" target="_blank" rel="noopener">𝕏 でシェア</a>
-    <a class="share-btn share-line" href="https://social-plugins.line.me/lineit/share?url=${encodeURIComponent("https://www.mobby.online/16stan")}&text=${encodeURIComponent(`推し活モビー診断の結果は「${displayName}」でした！`)}" target="_blank" rel="noopener">LINE でシェア</a>
+    <a class="share-btn share-x" href="https://twitter.com/intent/tweet?text=${encodedShareXText}&url=${encodedShareUrl}" target="_blank" rel="noopener">𝕏 でシェア</a>
+    <a class="share-btn share-line" href="${lineShareHref}" target="${lineShareTarget}" rel="noopener">LINE でシェア</a>
     </div></div>
     <div style="text-align:center;margin-top:24px;"><button onclick="resetState();render();" style="font-size:14px;">もう一度診断する</button></div>
     </div>`; app.innerHTML = html;

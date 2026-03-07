@@ -79,6 +79,22 @@ function getSnsImagePathByCode(code) {
 }
 function sanitizeDownloadName(name) { return (name || "mobby-result").replace(/[\\/:*?"<>|]/g, "_"); }
 function isIOSLikeDevice() { return /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1); }
+function isLineAppShareTarget() { return /Android/i.test(navigator.userAgent || "") || isIOSLikeDevice(); }
+function buildLineAppShareUrl(shareText, shareUrl = "") {
+    const safeText = typeof shareText === "string" ? shareText : "";
+    const safeUrl = typeof shareUrl === "string" ? shareUrl : "";
+    const separator = safeText && safeUrl && !/\s$/.test(safeText) ? "\n" : "";
+    return `https://line.me/R/share?text=${encodeURIComponent(`${safeText}${separator}${safeUrl}`)}`;
+}
+function buildLineWebShareUrl(shareText, shareUrl = "") {
+    const safeText = typeof shareText === "string" ? shareText : "";
+    const safeUrl = typeof shareUrl === "string" && shareUrl ? shareUrl : window.location.href;
+    return `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(safeUrl)}&text=${encodeURIComponent(safeText)}`;
+}
+function getPreferredLineShareUrl(shareText, shareUrl = "") {
+    return isLineAppShareTarget() ? buildLineAppShareUrl(shareText, shareUrl) : buildLineWebShareUrl(shareText, shareUrl);
+}
+function getPreferredLineShareTarget() { return isLineAppShareTarget() ? "_self" : "_blank"; }
 
 function computeResult() {
     const raw = { A: 0, B: 0, C: 0, D: 0 }, cnt = { A: 0, B: 0, C: 0, D: 0 };
@@ -269,8 +285,12 @@ function renderResult() {
     const strengthsHtml = ch.strengths ? ch.strengths.map(s => `<li>${s}</li>`).join("") : "";
     const cautionsHtml = ch.cautions ? ch.cautions.map(c => `<li>${c}</li>`).join("") : "";
     const adviceHtml = ch.advice ? ch.advice.map(a => `<li>${a}</li>`).join("") : "";
-    const shareText = encodeURIComponent(`恋愛メンヘラモビー診断の結果は「${ch.name}」でした！😈💜\n恋愛メンヘラ度：Lv${res.level}（${res.menheraLevel.name}）\n${ch.catch}\n\n好きな人への重さ、あなたも診断してみて👇`);
-    const shareUrl = encodeURIComponent(window.location.href.split("?")[0]);
+    const shareTextRaw = `恋愛メンヘラモビー診断の結果は「${ch.name}」でした！😈💜\n恋愛メンヘラ度：Lv${res.level}（${res.menheraLevel.name}）\n${ch.catch}\n\n好きな人への重さ、あなたも診断してみて👇`;
+    const shareUrlRaw = window.location.href.split("?")[0];
+    const shareText = encodeURIComponent(shareTextRaw);
+    const shareUrl = encodeURIComponent(shareUrlRaw);
+    const lineShareHref = getPreferredLineShareUrl(shareTextRaw, shareUrlRaw);
+    const lineShareTarget = getPreferredLineShareTarget();
     const keyImageWebpPath = `img/key/${ch.name}.webp`;
     const keyImagePngPath = `img/key/${ch.name}.png`;
     const keyImageBackPath = "img/key/ura.jpg";
@@ -311,7 +331,7 @@ function renderResult() {
       <a id="stripeBuyButtonAcrylic" data-stripe-product-type="acrylic_keyholder" data-stripe-product-label="アクリルキーホルダー" href="https://buy.stripe.com/bJe14n8lf7Y11yecNNao80a" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border-radius:999px;font-size:14px;font-weight:600;text-decoration:none;background:linear-gradient(135deg,#f472b6,#ec4899);color:#fff;box-shadow:0 14px 30px rgba(244,114,182,0.28);transition:transform 0.2s ease;">限定アイテムを手に取る →</a>
     </section>
   </div>
-  <div class="panel fade-in" style="margin-top:40px;text-align:center;"><p class="kicker" style="margin-bottom:12px;">📱 結果をシェアして話題にしよう！</p><div class="sns-save-wrap"><button id="btnSaveSnsImage" class="sns-save-btn">📸 SNS投稿用画像を保存</button><div id="snsSaveBox" class="sns-save-box"><p id="snsSaveHint" class="sns-save-hint">画像を読み込み中です...</p><div class="sns-save-preview-wrap"><img id="snsSavePreview" class="sns-save-preview" alt="SNS投稿用画像" loading="eager" decoding="async"></div><p id="snsSaveFallback" class="sns-save-fallback">このタイプのSNS画像は準備中です。結果画面をスクショして投稿してください。</p></div></div><div class="share-buttons"><a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" rel="noopener" style="text-decoration:none;"><button class="share-btn share-x">𝕏 でシェア</button></a><a href="https://social-plugins.line.me/lineit/share?url=${shareUrl}&text=${shareText}" target="_blank" rel="noopener" style="text-decoration:none;"><button class="share-btn share-line">LINEで送る</button></a></div></div>`;
+  <div class="panel fade-in" style="margin-top:40px;text-align:center;"><p class="kicker" style="margin-bottom:12px;">📱 結果をシェアして話題にしよう！</p><div class="sns-save-wrap"><button id="btnSaveSnsImage" class="sns-save-btn">📸 SNS投稿用画像を保存</button><div id="snsSaveBox" class="sns-save-box"><p id="snsSaveHint" class="sns-save-hint">画像を読み込み中です...</p><div class="sns-save-preview-wrap"><img id="snsSavePreview" class="sns-save-preview" alt="SNS投稿用画像" loading="eager" decoding="async"></div><p id="snsSaveFallback" class="sns-save-fallback">このタイプのSNS画像は準備中です。結果画面をスクショして投稿してください。</p></div></div><div class="share-buttons"><a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" rel="noopener" style="text-decoration:none;"><button class="share-btn share-x">𝕏 でシェア</button></a><a href="${lineShareHref}" target="${lineShareTarget}" rel="noopener" style="text-decoration:none;"><button class="share-btn share-line">LINEで送る</button></a></div></div>`;
 
     const resultProductTabButtons = Array.from(document.querySelectorAll(".result-product-tab[data-result-product-tab]"));
     const resultProductPanels = Array.from(document.querySelectorAll(".result-product-content[data-result-product-panel]"));

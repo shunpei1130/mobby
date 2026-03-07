@@ -2591,11 +2591,27 @@
       const shareCopyBtn = document.getElementById("shareCopy");
       const shareXBtn = document.getElementById("shareX");
       const shareCopied = document.getElementById("shareCopied");
+      function isLineAppShareTarget() {
+        const ua = navigator.userAgent || "";
+        const isIOSLike = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+        return /Android/i.test(ua) || isIOSLike;
+      }
+      function openLineShare(shareTextValue, shareUrlValue) {
+        const safeText = typeof shareTextValue === "string" ? shareTextValue : "";
+        const safeUrl = typeof shareUrlValue === "string" ? shareUrlValue : "";
+        const separator = safeText && safeUrl && !/\s$/.test(safeText) ? "\n" : "";
+        const appUrl = `https://line.me/R/share?text=${encodeURIComponent(`${safeText}${separator}${safeUrl}`)}`;
+        const webUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(safeUrl || window.location.href)}&text=${encodeURIComponent(safeText)}`;
+        if (isLineAppShareTarget()) {
+          window.location.href = appUrl;
+          return;
+        }
+        window.open(webUrl, "_blank", "noopener");
+      }
 
       if(shareLineBtn){
         shareLineBtn.onclick = () => {
-          const lineUrl = `https://line.me/R/msg/text/?${encodeURIComponent(shareText + " " + shareUrl)}`;
-          window.open(lineUrl, "_blank");
+          openLineShare(shareText, shareUrl);
         };
       }
       if(shareXBtn){

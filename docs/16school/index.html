@@ -3332,6 +3332,30 @@ function renderGate(){
     function isIOSLikeDevice() {
       return /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
     }
+    function isLineAppShareTarget() {
+      return /Android/i.test(navigator.userAgent || "") || isIOSLikeDevice();
+    }
+    function buildLineAppShareUrl(shareText, shareUrl = "") {
+      const safeText = typeof shareText === "string" ? shareText : "";
+      const safeUrl = typeof shareUrl === "string" ? shareUrl : "";
+      const separator = safeText && safeUrl && !/\s$/.test(safeText) ? "\n" : "";
+      return `https://line.me/R/share?text=${encodeURIComponent(`${safeText}${separator}${safeUrl}`)}`;
+    }
+    function buildLineWebShareUrl(shareText, shareUrl = "") {
+      const safeText = typeof shareText === "string" ? shareText : "";
+      const safeUrl = typeof shareUrl === "string" && shareUrl ? shareUrl : window.location.href;
+      return `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(safeUrl)}&text=${encodeURIComponent(safeText)}`;
+    }
+    function openLineShare(shareText, shareUrl = "") {
+      const lineUrl = isLineAppShareTarget()
+        ? buildLineAppShareUrl(shareText, shareUrl)
+        : buildLineWebShareUrl(shareText, shareUrl);
+      if (isLineAppShareTarget()) {
+        window.location.href = lineUrl;
+        return;
+      }
+      window.open(lineUrl, "_blank", "noopener");
+    }
 
     function renderCharacters(){
       const characters = charListGender === "female" ? CHARACTERS_FEMALE : CHARACTERS;
@@ -4380,8 +4404,6 @@ function renderGate(){
       const mamaLineBtn = document.getElementById("btnShareMamaLine");
       if (mamaLineBtn) {
         mamaLineBtn.onclick = async () => {
-          const lineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(mamaLink)}&text=${encodeURIComponent(mamaShareText)}`;
-
           state.shareCount++;
           saveState();
 
@@ -4395,7 +4417,7 @@ function renderGate(){
             gender: state.gender
           }).catch(e => console.error("Share event error:", e));
 
-          window.open(lineUrl, "_blank");
+          openLineShare(mamaShareText, mamaLink);
         };
       }
 
@@ -4529,8 +4551,6 @@ function renderGate(){
       
       // LINE共有
       document.getElementById("btnShareLine").onclick = async () => {
-        const lineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareLink)}&text=${encodeURIComponent(shareText)}`;
-        
         // 共有イベントを記録
         state.shareCount++;
         saveState();
@@ -4545,7 +4565,7 @@ function renderGate(){
           gender: state.gender
         }).catch(e => console.error("共有イベント送信エラー:", e));
         
-        window.open(lineUrl, '_blank');
+        openLineShare(shareText, shareLink);
       };
       
       // Twitter/X共有
