@@ -13,9 +13,9 @@
     { key: 'all', label: 'ぜんぶ', cats: ['school_m', 'school_f', 'mama', 'night', 'stan', 'love'] },
     { key: 'school', label: '学校', cats: ['school_m', 'school_f'] },
     { key: 'mama', label: 'ママ', cats: ['mama'] },
-    { key: 'night', label: '夜職', cats: ['night'] },
+    { key: 'night', label: 'ナイト', cats: ['night'] },
     { key: 'stan', label: '推し活', cats: ['stan'] },
-    { key: 'love', label: 'メンヘラ', cats: ['love'] },
+    { key: 'love', label: '恋愛', cats: ['love'] },
   ];
   const collectionTabMap = new Map(COLLECTION_TABS.map((tab) => [tab.key, { ...tab, catSet: new Set(tab.cats) }]));
 
@@ -42,6 +42,9 @@
   let timers = [];
   let shareFeedbackMessage = '';
   let currentMultiResultEntries = [];
+  let isLineupModalOpen = false;
+  let isCollectionModalOpen = false;
+  let handleTouchFeedbackTimer = null;
 
   ensureStarterExperienceDom();
 
@@ -58,7 +61,20 @@
     spinAgainButton: document.getElementById('spinAgainButton'),
     jumpCollectionButton: document.getElementById('jumpCollectionButton'),
     gachaMachine: document.getElementById('gachaMachine'),
+    gachaDome: document.getElementById('gachaDome'),
+    gachaDomeHint: document.getElementById('gachaDomeHint'),
     gachaCapsuleDrop: document.getElementById('gachaCapsuleDrop'),
+    gachaLineupModal: document.getElementById('gachaLineupModal'),
+    gachaLineupBackdrop: document.getElementById('gachaLineupBackdrop'),
+    closeGachaLineupButton: document.getElementById('closeGachaLineupButton'),
+    gachaLineupModeLabel: document.getElementById('gachaLineupModeLabel'),
+    gachaLineupNote: document.getElementById('gachaLineupNote'),
+    gachaLineupRates: document.getElementById('gachaLineupRates'),
+    gachaLineupGrid: document.getElementById('gachaLineupGrid'),
+    lineupSpinButton: document.getElementById('lineupSpinButton'),
+    collectionModal: document.getElementById('collectionModal'),
+    collectionModalBackdrop: document.getElementById('collectionModalBackdrop'),
+    closeCollectionModalButton: document.getElementById('closeCollectionModalButton'),
     gachaStatus: document.getElementById('gachaStatus'),
     gachaTrayCopy: document.getElementById('gachaTrayCopy'),
     resultCard: document.getElementById('resultCard'),
@@ -146,6 +162,7 @@
       shareFeedbackMessage = '';
       saveState();
       renderModeState({ resetMachineText: true });
+      if (isLineupModalOpen) renderGachaLineupModalContents();
     });
 
     els.paidModeButton?.addEventListener('click', () => {
@@ -153,17 +170,59 @@
       shareFeedbackMessage = '';
       saveState();
       renderModeState({ resetMachineText: true });
+      if (isLineupModalOpen) renderGachaLineupModalContents();
     });
 
     els.startGachaButton?.addEventListener('click', startSpin);
     els.spinAgainButton?.addEventListener('click', startSpin);
     els.starterTenPullButton?.addEventListener('click', startStarterTenPull);
+    const handleWrap = els.startGachaButton?.closest('.gacha-handle-wrap');
+    handleWrap?.addEventListener('pointerdown', (event) => {
+      if (event.pointerType === 'mouse' && event.button !== 0) return;
+      triggerHandleTouchFeedback();
+    });
+    handleWrap?.addEventListener('touchstart', () => {
+      triggerHandleTouchFeedback();
+    }, { passive: true });
+    els.startGachaButton?.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      triggerHandleTouchFeedback();
+    });
+
+    els.gachaDome?.addEventListener('click', openGachaLineupModal);
+    els.gachaDome?.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      openGachaLineupModal();
+    });
+    els.gachaLineupBackdrop?.addEventListener('click', closeGachaLineupModal);
+    els.closeGachaLineupButton?.addEventListener('click', closeGachaLineupModal);
+    els.lineupSpinButton?.addEventListener('click', () => {
+      closeGachaLineupModal();
+      startSpin();
+    });
+
+    els.collectionModalBackdrop?.addEventListener('click', closeCollectionSection);
+    els.closeCollectionModalButton?.addEventListener('click', closeCollectionSection);
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      if (isLineupModalOpen) closeGachaLineupModal();
+      if (isCollectionModalOpen) closeCollectionSection();
+    });
+
+    if (els.shareSection?.tagName === 'DETAILS') {
+      els.shareSection.open = true;
+      els.shareSection.addEventListener('toggle', () => {
+        if (!els.shareSection.open) els.shareSection.open = true;
+      });
+    }
 
     els.jumpCollectionButton?.addEventListener('click', () => {
+      openCollectionSection();
       if (!state.lastCardId) return;
       const currentCard = getCardViewModel(cardsById.get(state.lastCardId));
       if (!currentCard) return;
-      openCollectionSection();
       window.requestAnimationFrame(() => highlightCollectionCharacter(currentCard.characterId, true));
     });
 
@@ -229,17 +288,17 @@
     els.downloadShareButton?.addEventListener('click', async () => {
       const blob = await createShareImageBlob();
       if (!blob) {
-        setShareFeedback('まだ保存できるボードがありません。まずは1回引いてみて。');
+        setShareFeedback('まだ保存できる画像がありません。まずは1回引いてみて。');
         return;
       }
       downloadBlob(blob, buildShareFileName());
-      setShareFeedback('画像を保存したよ。ストーリーや投稿にそのまま使えます。');
+      setShareFeedback('画像を保存したよ。SNSやストーリーにそのまま使えます。');
     });
 
     els.nativeShareButton?.addEventListener('click', async () => {
       const blob = await createShareImageBlob();
       if (!blob) {
-        setShareFeedback('まだシェアできるボードがありません。まずは1回引いてみて。');
+        setShareFeedback('まだシェアできる画像がありません。まずは1回引いてみて。');
         return;
       }
 
@@ -272,6 +331,19 @@
     });
   }
 
+  function triggerHandleTouchFeedback() {
+    const handleWrap = els.startGachaButton?.closest('.gacha-handle-wrap');
+    if (!handleWrap) return;
+    handleWrap.classList.remove('is-touching');
+    void handleWrap.offsetWidth;
+    handleWrap.classList.add('is-touching');
+    if (handleTouchFeedbackTimer) window.clearTimeout(handleTouchFeedbackTimer);
+    handleTouchFeedbackTimer = window.setTimeout(() => {
+      handleWrap.classList.remove('is-touching');
+      handleTouchFeedbackTimer = null;
+    }, 460);
+  }
+
   function renderStaticSections() {
     if (els.bannerName) els.bannerName.textContent = activeBanner.name;
     if (els.bannerDescription) els.bannerDescription.textContent = activeBanner.description;
@@ -294,6 +366,91 @@
     });
   }
 
+  function openGachaLineupModal() {
+    renderGachaLineupModalContents();
+    if (!els.gachaLineupModal) return;
+    isLineupModalOpen = true;
+    els.gachaLineupModal.hidden = false;
+    document.body.classList.add('is-lineup-open');
+  }
+
+  function closeGachaLineupModal() {
+    if (!els.gachaLineupModal) return;
+    isLineupModalOpen = false;
+    els.gachaLineupModal.hidden = true;
+    document.body.classList.remove('is-lineup-open');
+  }
+
+  function renderDomeHint() {
+    if (!els.gachaDome || !els.gachaDomeHint) return;
+    const isFreeMode = state.selectedMode === 'free';
+    const modeName = isFreeMode ? '無料ガチャ' : '一番くじ';
+    els.gachaDome.setAttribute('aria-label', `${modeName}のラインナップを見る`);
+    els.gachaDomeHint.innerHTML = `
+      <span class="gacha-dome-hint-main">タップで${escapeHtml(modeName)}一覧</span>
+      <span class="gacha-dome-hint-sub">何が出るか先にチェック</span>
+    `;
+  }
+
+  function renderGachaLineupModalContents() {
+    const isFreeMode = state.selectedMode === 'free';
+    const modeName = isFreeMode ? '無料ガチャ' : '一番くじ';
+    const rates = isFreeMode ? activeBanner.freeRates : activeBanner.paidRates;
+    const freeAvailable = canUseFreeDaily();
+    const lineupStates = bannerCharacters
+      .map((character) => {
+        const cards = bannerCardsByCharacterId.get(character.id) ?? [];
+        const previewCard = cards[0] ?? null;
+        return { character, previewCard, rarityList: RARITY_DISPLAY_ORDER.filter((rarity) => cards.some((card) => card.rarity === rarity)) };
+      })
+      .sort((left, right) => left.character.name.localeCompare(right.character.name, 'ja'));
+
+    if (els.gachaLineupModeLabel) els.gachaLineupModeLabel.textContent = `${modeName}のラインナップ`;
+    if (els.gachaLineupNote) {
+      const totalCards = lineupStates.reduce((sum, item) => sum + item.rarityList.length, 0);
+      els.gachaLineupNote.textContent = `${lineupStates.length}キャラ × 3レア = ${totalCards}カード。モードごとに確率が違います。`;
+    }
+
+    if (els.gachaLineupRates) {
+      els.gachaLineupRates.innerHTML = RARITY_DISPLAY_ORDER.slice().reverse().map((rarity) => {
+        const rateValue = ((rates[rarity] ?? 0) * 100).toFixed(1);
+        return `
+          <article class="lineup-rate-card rarity-${escapeHtml(rarity)}">
+            <p class="lineup-rate-rarity">${escapeHtml(rarity)}</p>
+            <p class="lineup-rate-value">${escapeHtml(rateValue)}%</p>
+          </article>
+        `;
+      }).join('');
+    }
+
+    if (els.gachaLineupGrid) {
+      els.gachaLineupGrid.innerHTML = lineupStates.map((item) => {
+        const previewSrc = item.previewCard ? resolveAssetPath(item.previewCard.imageUrl) : '';
+        const rarityPills = item.rarityList.map((rarity) => `<span class="lineup-rarity-pill rarity-${escapeHtml(rarity)}">${escapeHtml(rarity)}</span>`).join('');
+        return `
+          <article class="lineup-item-card">
+            <div class="lineup-item-thumb">${previewSrc ? `<img src="${escapeHtml(previewSrc)}" alt="${escapeHtml(item.character.name)}">` : ''}</div>
+            <div class="lineup-item-copy">
+              <h4>${escapeHtml(item.character.name)}</h4>
+              <p>${escapeHtml(item.character.categoryLabel)}</p>
+              <div class="lineup-rarity-row">${rarityPills}</div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    if (els.lineupSpinButton) {
+      const canSpinInCurrentMode = !isFreeMode || freeAvailable;
+      els.lineupSpinButton.disabled = isSpinning || !canSpinInCurrentMode;
+      if (isFreeMode && !freeAvailable) {
+        els.lineupSpinButton.textContent = '無料は本日分を使用済み。一番くじに切り替えて回せます。';
+      } else {
+        els.lineupSpinButton.textContent = isFreeMode ? 'このまま無料で回す' : 'このまま一番くじを引く';
+      }
+    }
+  }
+
       function ensureStarterExperienceDom() {
     if (!document.getElementById('starterBonus')) {
       const modeStatus = document.getElementById('modeStatus');
@@ -301,10 +458,10 @@
         <div class="starter-bonus" id="starterBonus" hidden>
           <div class="starter-bonus-copy">
             <p class="starter-bonus-kicker">FIRST 10</p>
-            <h3>初回だけの無料10連</h3>
-            <p class="starter-bonus-note" id="starterBonusCopy">初回だけ無料。10枚目はR以上。</p>
+            <h3>初回だけ無料10連</h3>
+            <p class="starter-bonus-note" id="starterBonusCopy">初回だけ無料で10連。10枠目はR以上確定。</p>
           </div>
-          <button class="action-button primary starter-bonus-button" id="starterTenPullButton" type="button">初回10連をひく</button>
+          <button class="action-button primary starter-bonus-button" id="starterTenPullButton" type="button">初回10連を引く</button>
         </div>
       `);
     }
@@ -336,15 +493,17 @@
     if (els.starterTenPullButton) els.starterTenPullButton.disabled = isSpinning || !starterAvailable;
 
     if (isFreeMode) {
-      if (els.modeStatus) els.modeStatus.textContent = freeAvailable ? '今日の無料1回が使えます。' : '無料1回は受け取り済み。スタンダードなら続けて回せます。';
+      if (els.modeStatus) els.modeStatus.textContent = freeAvailable ? '本日の無料ガチャが使えます。' : '無料ガチャは使用済み。スタンダードな通常モードで回せます。';
     } else {
-      if (els.modeStatus) els.modeStatus.textContent = 'もっと引きたい時のモード。';
+      if (els.modeStatus) els.modeStatus.textContent = 'もっと続けたい時のモード。';
     }
 
+    renderDomeHint();
+    if (isLineupModalOpen) renderGachaLineupModalContents();
     syncStarterBonus(starterAvailable);
 
     if (options.resetMachineText && !isSpinning) {
-      if (els.gachaStatus) els.gachaStatus.textContent = '回して今日の1枚を開けよう。';
+      if (els.gachaStatus) els.gachaStatus.textContent = '回して本日の1枚を開けよう。';
       if (els.gachaTrayCopy) els.gachaTrayCopy.textContent = 'まだカプセルは出ていません';
     }
   }
@@ -359,7 +518,7 @@
       return;
     }
     if (els.starterBonus) els.starterBonus.hidden = false;
-    if (els.starterBonusCopy) els.starterBonusCopy.textContent = '初回だけ無料。10枚目はR以上。';
+    if (els.starterBonusCopy) els.starterBonusCopy.textContent = '初回だけ無料で10連。10枠目はR以上確定。';
   }
 
   function removeStarterBonus() {
@@ -409,7 +568,7 @@
 
     schedule(() => {
       els.gachaMachine?.classList.add('has-capsule');
-      if (els.gachaStatus) els.gachaStatus.textContent = pulledCard.rarity === 'SSR' ? 'きらっと光った。レアな気配。' : 'カプセルが出てきた。';
+      if (els.gachaStatus) els.gachaStatus.textContent = pulledCard.rarity === 'SSR' ? 'きらっと光った。レアな予感。' : 'カプセルが出てきた。';
       if (els.gachaTrayCopy) els.gachaTrayCopy.textContent = 'あと少しでオープン';
     }, 1450);
 
@@ -499,7 +658,7 @@
     hideMultiResult();
     showCard(card, { ownership: isNew ? 'new' : 'duplicate' });
     if (els.gachaStatus) els.gachaStatus.textContent = `${card.rarity} を引きました。`;
-    if (els.gachaTrayCopy) els.gachaTrayCopy.textContent = isNew ? '新しいキャラをお迎えしたよ' : 'すでに持っているキャラでした';
+    if (els.gachaTrayCopy) els.gachaTrayCopy.textContent = isNew ? '新しいキャラをお迎えしました。' : 'すでに持っているキャラでした。';
     renderModeState();
     renderHistory();
     renderCollection();
@@ -526,7 +685,7 @@
     showCard(featured.card, { ownership: featured.isNew ? 'new' : 'duplicate' });
     renderMultiResult(results, featured.card.id);
     if (els.gachaStatus) els.gachaStatus.textContent = '初回10連を開封したよ。';
-    if (els.gachaTrayCopy) els.gachaTrayCopy.textContent = '気になる1枚をタップして見られるよ';
+    if (els.gachaTrayCopy) els.gachaTrayCopy.textContent = '横にならぶ10枚をタップして見られるよ。';
     renderModeState();
     renderHistory();
     renderCollection();
@@ -560,8 +719,7 @@
     if (els.resultEmpty) els.resultEmpty.hidden = false;
     if (els.resultFilled) els.resultFilled.hidden = true;
   }
-
-    function renderHistory() {
+  function renderHistory() {
     if (!els.historyList) return;
     if (!state.history.length) {
       els.historyList.innerHTML = '<div class="history-empty">結果が出るとここに並びます。</div>';
@@ -571,7 +729,13 @@
     els.historyList.innerHTML = state.history.map((entry) => {
       const card = getCardViewModel(cardsById.get(entry.cardId));
       if (!card) return '';
-      const modeLabel = entry.mode === 'free' ? '無料デイリー' : entry.mode === 'starter' ? '初回10連' : 'スタンダード';
+      const modeLabel = entry.mode === 'free'
+        ? '無料ガチャ'
+        : entry.mode === 'starter'
+          ? '初回10連'
+          : entry.mode === 'multi50'
+            ? '50連'
+            : 'ガチャ';
       const freshness = entry.isNew ? ' / NEW' : '';
       return `
         <button class="history-item" type="button" data-history-card-id="${escapeHtml(card.id)}">
@@ -588,7 +752,6 @@
   function renderCollection() {
     if (!els.collectionGrid) return;
     const characterStates = getBannerCharacterStates();
-    const { selectedStates } = getShareSelection(characterStates);
     const ownedCount = characterStates.filter((item) => item.isOwned).length;
     const totalCount = characterStates.length;
     const progressRatio = totalCount ? (ownedCount / totalCount) * 100 : 0;
@@ -600,11 +763,11 @@
     renderCollectionTabs(characterStates);
     if (els.collectionLead) {
       if (!ownedCount) {
-        els.collectionLead.textContent = 'まずは1回引いてみて。集まったらシェアする4人を選べるよ。';
-      } else if (selectedStates.length) {
-        els.collectionLead.textContent = `選択中 ${selectedStates.length} / ${MAX_SHOWCASE_CHARACTERS}。番号がついた子だけシェアに入るよ。`;
+        els.collectionLead.textContent = 'まだコレクションがありません。まずは1回引いてみて。';
+      } else if (ownedCount < totalCount) {
+        els.collectionLead.textContent = `現在 ${ownedCount} / ${totalCount}。まだ出会えていないキャラもいます。`;
       } else {
-        els.collectionLead.textContent = 'シェアに入れたい子だけ右上の + を押してね。最大4人まで。';
+        els.collectionLead.textContent = 'コンプリート達成。全キャラ解放済みです。';
       }
     }
     els.collectionGrid.innerHTML = visibleStates.map(renderCollectionCard).join('');
@@ -649,8 +812,8 @@
     const displayRarity = item.strongestOwned?.rarity ?? 'N';
     const rarityClass = item.isOwned ? `rarity-${displayRarity}` : 'is-lock';
     const rarityLabel = item.isOwned ? displayRarity : 'LOCK';
-    const title = item.isOwned ? item.character.name : '？？？';
-    const caption = item.isOwned ? truncateText(item.strongestOwned.lineText, 34) : 'まだ会えていないキャラ';
+    const title = item.isOwned ? item.character.name : '???';
+    const caption = item.isOwned ? truncateText(item.strongestOwned.lineText, 34) : 'まだ出会えていないキャラ';
     const ownedChips = RARITY_DISPLAY_ORDER.map((rarity) => {
       const isOn = item.ownedRarities.includes(rarity);
       return `<span class="collection-owned-pill ${isOn ? `is-on rarity-${rarity}` : ''}">${rarity}</span>`;
@@ -682,41 +845,48 @@
 
   function renderShareStage() {
     if (!els.shareStageGrid) return;
-    const { characterStates, ownedStates, selectedStates, previewStates, slots } = getShareSelection();
-    const chosenCount = selectedStates.length;
-    if (els.shareSummaryNote) els.shareSummaryNote.textContent = `選択 ${chosenCount} / ${MAX_SHOWCASE_CHARACTERS}`;
+    const { ownedStates, previewStates } = getShareSelection();
+    const ownedCount = ownedStates.length;
+    const totalCardCount = activeBanner.poolCardIds.length;
+    if (els.shareSummaryNote) els.shareSummaryNote.textContent = `所持 ${ownedCount} / ${totalCardCount}`;
     if (els.shareHeadline) {
-      els.shareHeadline.textContent = !ownedStates.length ? 'まだ0人。最初のモビー引こ' : !chosenCount ? 'シェアする4人を選ぼ' : chosenCount < MAX_SHOWCASE_CHARACTERS ? `あと${MAX_SHOWCASE_CHARACTERS - chosenCount}人で完成` : 'この4人でシェア完成';
+      els.shareHeadline.textContent = !ownedCount ? 'まだコレクション0枚' : `コレクション ${ownedCount}枚`;
     }
-    if (els.shareOwnedCount) els.shareOwnedCount.textContent = `シェア ${chosenCount} / ${MAX_SHOWCASE_CHARACTERS}`;
+    if (els.shareOwnedCount) els.shareOwnedCount.textContent = `${ownedCount} / ${totalCardCount}`;
     if (els.shareSubline) {
-      els.shareSubline.textContent = !ownedStates.length ? 'ガチャで引いたキャラがここに並ぶよ。' : !chosenCount ? 'コレクションの右上の + で、見せたい子だけ選んでね。' : '番号がついた子だけここに出るよ。もう一度押すと外せる。';
+      els.shareSubline.textContent = !ownedCount
+        ? 'ガチャを回すと持っているカードがここに全部並びます。'
+        : '持っているカードを一覧で見せられます。SNSでそのまま自慢しよう。';
     }
-    els.shareStageGrid.innerHTML = slots.map((item, index) => item ? renderShareCard(item, index) : renderSharePlaceholder(index)).join('');
+    els.shareStageGrid.innerHTML = ownedCount
+      ? ownedStates.map((item, index) => renderShareCard(item, index)).join('')
+      : renderSharePlaceholder(0);
     if (els.shareStageTags) {
-      els.shareStageTags.innerHTML = buildShareTags(ownedStates, selectedStates, previewStates).map((tag) => `<span class="share-tag">${escapeHtml(tag)}</span>`).join('');
+      els.shareStageTags.innerHTML = buildShareTags(ownedStates, previewStates).map((tag) => `<span class="share-tag">${escapeHtml(tag)}</span>`).join('');
     }
     if (els.downloadShareButton) els.downloadShareButton.disabled = !previewStates.length;
     if (els.nativeShareButton) {
       els.nativeShareButton.disabled = !previewStates.length;
       els.nativeShareButton.textContent = supportsNativeShare() ? 'SNSでシェア' : '保存してシェア';
     }
-    const defaultHelp = !ownedStates.length ? 'まだシェアできるキャラがいません。まずは1回引いてみて。' : chosenCount ? '選んだ子だけで画像を作れます。4人そろうとかなり見せやすい。' : 'シェアに使いたい子だけ選んでね。選んだ順に1〜4の番号がつくよ。';
+    const defaultHelp = !ownedCount
+      ? 'まだシェアできるカードがありません。まずは1回引いてみて。'
+      : `いまの所持カード ${ownedCount}枚 を一覧で見せられます。`;
     if (els.shareHelpText) els.shareHelpText.textContent = shareFeedbackMessage || defaultHelp;
   }
 
   function renderShareCard(item, index) {
     const tilts = [-2.2, 1.9, -1.5, 1.4];
+    const tilt = tilts[index % tilts.length] ?? 0;
     return `
-      <article class="share-showcase-card" data-rarity="${escapeHtml(item.strongestOwned.rarity)}" style="--card-tilt:${tilts[index] ?? 0}deg">
+      <article class="share-showcase-card is-owned-list" data-rarity="${escapeHtml(item.strongestOwned.rarity)}" style="--card-tilt:${tilt}deg">
         <div class="share-showcase-media">
           <img src="${escapeHtml(resolveAssetPath(item.strongestOwned.imageUrl))}" alt="${escapeHtml(item.character.name)}">
           <span class="collection-rarity share-showcase-rarity rarity-${escapeHtml(item.strongestOwned.rarity)}">${escapeHtml(item.strongestOwned.rarity)}</span>
+          <span class="share-showcase-order-badge">#${escapeHtml(String(index + 1).padStart(2, '0'))}</span>
         </div>
         <div class="share-showcase-copy">
           <h4 class="share-showcase-name">${escapeHtml(item.character.name)}</h4>
-          <p class="share-showcase-line">${escapeHtml(truncateText(item.strongestOwned.lineText, 38))}</p>
-          <p class="share-showcase-note">そろったレア ${escapeHtml(item.ownedRarities.join(' / '))}</p>
         </div>
       </article>
     `;
@@ -726,35 +896,42 @@
     return `
       <article class="share-showcase-card is-empty" style="--card-tilt:${index % 2 === 0 ? '-1.2deg' : '1.2deg'}">
         <div class="share-empty-copy">
-          <strong>ここに入るよ</strong>
-          <span>コレクションの右上にある + で追加してね。</span>
+          <strong>まだカードがありません</strong>
+          <span>ガチャを回すとここに所持カードが一覧で並びます。</span>
         </div>
       </article>
     `;
   }
 
   function getShareSelection(characterStates = getBannerCharacterStates()) {
-    const ownedStates = characterStates.filter((item) => item.isOwned);
-    const ownedByCharacterId = new Map(ownedStates.map((item) => [item.character.id, item]));
-    const selectedStates = state.showcaseCharacterIds
-      .map((characterId) => ownedByCharacterId.get(characterId))
+    const ownedCards = state.ownedCardIds
+      .map((cardId) => getCardViewModel(cardsById.get(cardId)))
       .filter(Boolean)
-      .slice(0, MAX_SHOWCASE_CHARACTERS);
-    const previewStates = [...selectedStates];
+      .sort((left, right) => {
+        const rarityDiff = getRarityWeight(right.rarity) - getRarityWeight(left.rarity);
+        if (rarityDiff) return rarityDiff;
+        return left.characterName.localeCompare(right.characterName, 'ja');
+      });
+    const entries = ownedCards.map((card) => ({
+      card,
+      character: { name: card.characterName },
+      strongestOwned: { rarity: card.rarity, imageUrl: card.imageUrl, lineText: card.lineText },
+      ownedRarities: [card.rarity],
+    }));
     return {
       characterStates,
-      ownedStates,
-      selectedStates,
-      previewStates,
-      slots: Array.from({ length: MAX_SHOWCASE_CHARACTERS }, (_, index) => selectedStates[index] ?? null),
+      ownedStates: entries,
+      selectedStates: entries,
+      previewStates: entries,
+      slots: entries.slice(0, MAX_SHOWCASE_CHARACTERS),
     };
   }
 
-  function buildShareTags(ownedStates, selectedStates, previewStates) {
-    const tags = ['#MOBBYCAPSULE', `#${ownedStates.length}人コレクション`];
-    if (selectedStates.length) tags.push(`#${selectedStates.length}人選抜`);
+  function buildShareTags(ownedStates, previewStates) {
+    const tags = ['#MOBBYCAPSULE', `#${ownedStates.length}枚コレクション`];
     const ssrCount = previewStates.filter((item) => item.strongestOwned.rarity === 'SSR').length;
     if (ssrCount) tags.push(`#SSR${ssrCount}`);
+    if (ownedStates.length >= 24) tags.push('#推し自慢');
     return tags.slice(0, 4);
   }
 
@@ -781,9 +958,10 @@
       }, 100);
     }
   }
+
   async function createShareImageBlob() {
     if (!els.shareCanvas) return null;
-    const { ownedStates, selectedStates, previewStates, slots } = getShareSelection();
+    const { ownedStates, previewStates, slots } = getShareSelection();
     if (!previewStates.length) return null;
     const canvas = els.shareCanvas;
     const ctx = canvas.getContext('2d');
@@ -808,10 +986,10 @@
     ctx.fillText('MY MOBBY DROP', 104, 108);
     ctx.fillStyle = '#4d3423';
     ctx.font = '900 76px "Zen Maru Gothic", sans-serif';
-    ctx.fillText('うちのモビー見て', 104, 184);
+    ctx.fillText('モビーコレクション', 104, 184);
     ctx.fillStyle = '#7b5b43';
     ctx.font = '700 30px "Zen Maru Gothic", sans-serif';
-    ctx.fillText(`集めたキャラ ${ownedStates.length} / ${bannerCharacters.length}`, 104, 232);
+    ctx.fillText(`持ってるカード ${ownedStates.length} / ${activeBanner.poolCardIds.length}`, 104, 232);
     const positions = [
       { x: 82, y: 300, tilt: -0.045 },
       { x: 546, y: 322, tilt: 0.038 },
@@ -819,7 +997,7 @@
       { x: 536, y: 814, tilt: 0.028 },
     ];
     positions.forEach((position, index) => drawShareCanvasCard(ctx, position, slots[index], images[index]));
-    drawCanvasTags(ctx, buildShareTags(ownedStates, selectedStates, previewStates).slice(0, 3), 104, 1246);
+    drawCanvasTags(ctx, buildShareTags(ownedStates, previewStates).slice(0, 3), 104, 1246);
     ctx.fillStyle = '#8e6547';
     ctx.font = '700 22px "Zen Maru Gothic", sans-serif';
     ctx.fillText('MOBBY CAPSULE CLUB', 104, 1310);
@@ -841,7 +1019,7 @@
       ctx.font = '900 28px "Zen Maru Gothic", sans-serif';
       ctx.fillText('NEXT DROP', 0, -8);
       ctx.font = '700 22px "Zen Maru Gothic", sans-serif';
-      ctx.fillText('あと1人でシェア完成', 0, 34);
+      ctx.fillText('あと1人でシェア解放', 0, 34);
       ctx.textAlign = 'left';
       ctx.restore();
       return;
@@ -1004,7 +1182,18 @@
   }
 
   function openCollectionSection() {
-    if (els.collectionSection?.tagName === 'DETAILS') els.collectionSection.open = true;
+    if (!els.collectionModal) return;
+    renderCollection();
+    isCollectionModalOpen = true;
+    els.collectionModal.hidden = false;
+    document.body.classList.add('is-collection-open');
+  }
+
+  function closeCollectionSection() {
+    if (!els.collectionModal) return;
+    isCollectionModalOpen = false;
+    els.collectionModal.hidden = true;
+    document.body.classList.remove('is-collection-open');
   }
 
   function openShareSection() {
@@ -1077,7 +1266,9 @@
 
   function buildShareText(previewStates) {
     const names = previewStates.slice(0, 2).map((item) => item.character.name).join(' / ');
-    return `${names ? `${names} がいる` : 'うちのモビー見て'} #MOBBYCAPSULE`;
+    const count = previewStates.length;
+    if (!count) return 'いまのモビーコレクション #MOBBYCAPSULE';
+    return `MOBBYで${count}枚コレクション中。${names ? `${names} がいるよ。` : ''} #MOBBYCAPSULE`;
   }
 
   function setShareFeedback(message) {
@@ -1133,8 +1324,8 @@
   }
 
   function fitTextWithEllipsis(ctx, text, maxWidth) {
-    let output = `${text}…`;
-    while (output.length > 1 && ctx.measureText(output).width > maxWidth) output = `${output.slice(0, -2)}…`;
+    let output = `${text}...`;
+    while (output.length > 1 && ctx.measureText(output).width > maxWidth) output = `${output.slice(0, -4)}...`;
     return output;
   }
 
@@ -1218,7 +1409,7 @@
   }
 
   function truncateText(text, maxLength) {
-    return text.length > maxLength ? `${text.slice(0, maxLength - 1)}…` : text;
+    return text.length > maxLength ? `${text.slice(0, maxLength - 3)}...` : text;
   }
 
   function unique(items) {
@@ -1241,4 +1432,808 @@
     timers.forEach((timer) => window.clearTimeout(timer));
     timers = [];
   }
-})();
+
+  function loadState() {
+    const fallback = {
+      selectedMode: 'free',
+      ownedCardIds: [],
+      history: [],
+      lastCardId: null,
+      dailyClaimDateJst: null,
+      selectedCollectionTab: 'all',
+      showcaseCharacterIds: [],
+      starterTenPullClaimed: false,
+      lastStarterPullCardIds: [],
+      lastPullType: 'single',
+      ichibanTickets: 0,
+      fiftyPackStock: 0,
+      kujiBoostRemaining: 0,
+      kujiPrizeHistory: [],
+    };
+
+    try {
+      const raw = window.localStorage.getItem(STORAGE_KEY) ?? window.localStorage.getItem(LEGACY_STORAGE_KEY);
+      return raw ? { ...fallback, ...JSON.parse(raw) } : fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  function normalizeState(rawState) {
+    const ownedCardIds = unique((rawState.ownedCardIds ?? []).filter((id) => cardsById.has(id)));
+    const history = Array.isArray(rawState.history)
+      ? rawState.history
+          .filter((entry) => entry && typeof entry.cardId === 'string' && cardsById.has(entry.cardId))
+          .slice(0, MAX_HISTORY)
+      : [];
+    const hasExistingProgress = ownedCardIds.length > 0 || history.length > 0 || Boolean(rawState.dailyClaimDateJst) || Boolean(rawState.lastCardId);
+    const kujiPrizeHistory = Array.isArray(rawState.kujiPrizeHistory)
+      ? rawState.kujiPrizeHistory.filter((entry) => entry && typeof entry.name === 'string').slice(0, 30)
+      : [];
+
+    return {
+      selectedMode: rawState.selectedMode === 'paid' ? 'paid' : 'free',
+      ownedCardIds,
+      history,
+      lastCardId: typeof rawState.lastCardId === 'string' && cardsById.has(rawState.lastCardId) ? rawState.lastCardId : null,
+      dailyClaimDateJst: typeof rawState.dailyClaimDateJst === 'string' ? rawState.dailyClaimDateJst : null,
+      selectedCollectionTab: normalizeCollectionTabKey(rawState.selectedCollectionTab),
+      showcaseCharacterIds: unique((rawState.showcaseCharacterIds ?? []).filter((id) => bannerCharacterIdSet.has(id))).slice(0, MAX_SHOWCASE_CHARACTERS),
+      starterTenPullClaimed: typeof rawState.starterTenPullClaimed === 'boolean' ? rawState.starterTenPullClaimed : hasExistingProgress,
+      lastStarterPullCardIds: (rawState.lastStarterPullCardIds ?? []).filter((id) => cardsById.has(id)).slice(0, 10),
+      lastPullType: rawState.lastPullType === 'starter' || rawState.lastPullType === 'multi50' ? rawState.lastPullType : 'single',
+      ichibanTickets: toSafeInt(rawState.ichibanTickets),
+      fiftyPackStock: toSafeInt(rawState.fiftyPackStock),
+      kujiBoostRemaining: toSafeInt(rawState.kujiBoostRemaining),
+      kujiPrizeHistory,
+    };
+  }
+
+  function toSafeInt(value) {
+    const num = Number(value);
+    if (!Number.isFinite(num)) return 0;
+    return Math.max(0, Math.floor(num));
+  }
+
+  function bindEconomyExtras() {
+    const fiftyButton = document.getElementById('buyFiftyPackButton');
+    if (fiftyButton && !fiftyButton.dataset.boundEconomy) {
+      fiftyButton.dataset.boundEconomy = '1';
+      fiftyButton.addEventListener('click', purchaseFiftyPack);
+    }
+
+    const ticketButton = document.getElementById('buyKujiTicketButton');
+    if (ticketButton && !ticketButton.dataset.boundEconomy) {
+      ticketButton.dataset.boundEconomy = '1';
+      ticketButton.addEventListener('click', purchaseKujiTicket);
+    }
+  }
+
+  function getStandardCardRates() {
+    return activeBanner.freeRates ?? activeBanner.paidRates ?? { N: 0.79, R: 0.2, SSR: 0.01 };
+  }
+
+  function getIchibanPrizes() {
+    return [
+      { code: 'A', name: '商品A', description: '限定フィギュア', accent: '#ff8b8b' },
+      { code: 'B', name: '商品B', description: 'ロゴ入りタンブラー', accent: '#ffb36b' },
+      { code: 'C', name: '商品C', description: 'アクリルライト', accent: '#ffd36b' },
+      { code: 'D', name: '商品D', description: '特製トートバッグ', accent: '#84d89a' },
+      { code: 'E', name: '商品E', description: 'ステッカーセット', accent: '#74c4ff' },
+      { code: 'F', name: '商品F', description: 'クリアポーチ', accent: '#c8a2ff' },
+    ];
+  }
+
+  function getCurrentKujiWinRate() {
+    return state.kujiBoostRemaining > 0 ? 0.1 : 0.03;
+  }
+
+  function renderModeState(options = {}) {
+    const { resetMachineText = false, statusMessage = '' } = options;
+    const isFreeMode = state.selectedMode === 'free';
+    const freeAvailable = canUseFreeDaily();
+    const fiftyPackStock = toSafeInt(state.fiftyPackStock);
+    const freeRemaining = freeAvailable ? 1 : 0;
+    const ticketCount = toSafeInt(state.ichibanTickets);
+    const remainingSummary = `無料${freeRemaining}回 / 50連${fiftyPackStock}回 / チケット${ticketCount}枚`;
+    state.fiftyPackStock = fiftyPackStock;
+
+    els.freeModeButton?.classList.toggle('is-active', isFreeMode);
+    els.paidModeButton?.classList.toggle('is-active', !isFreeMode);
+
+    if (els.startGachaButton) {
+      ensureStartHandleButtonDom();
+      if (isFreeMode) {
+        const canSpinFreeHandle = freeAvailable || fiftyPackStock > 0;
+        const handleActionLabel = fiftyPackStock > 0
+          ? `購入済み50連を開封（残り${fiftyPackStock}）`
+          : '無料ガチャを回す';
+        els.startGachaButton.setAttribute('aria-label', handleActionLabel);
+        els.startGachaButton.title = handleActionLabel;
+        els.startGachaButton.disabled = isSpinning || !canSpinFreeHandle;
+      } else {
+        els.startGachaButton.setAttribute('aria-label', 'チケットで一番くじを引く');
+        els.startGachaButton.title = 'チケットで一番くじを引く';
+        els.startGachaButton.disabled = isSpinning || ticketCount <= 0;
+      }
+    }
+
+    if (els.modeStatus) {
+      els.modeStatus.textContent = remainingSummary;
+    }
+
+    renderEconomyPanel();
+    renderDomeHint();
+
+    if (resetMachineText && !isSpinning) {
+      resetMachineVisual();
+      els.gachaMachine?.classList.remove('is-ticket-jackpot');
+      els.resultCard?.classList.remove('is-ticket-jackpot');
+    }
+  }
+  function ensureStartHandleButtonDom() {
+    if (!els.startGachaButton) return;
+    if (els.startGachaButton.querySelector('.gacha-handle-core')) return;
+    els.startGachaButton.innerHTML = `
+      <span class="gacha-handle-core"></span>
+      <span class="gacha-handle-arm"></span>
+      <span class="gacha-handle-knob"></span>
+    `;
+  }
+
+  function renderEconomyPanel() {
+    const panel = document.getElementById('modeEconomy');
+    const ticketStock = document.getElementById('ticketStock');
+    const buyFiftyButton = document.getElementById('buyFiftyPackButton');
+    const buyKujiTicketButton = document.getElementById('buyKujiTicketButton');
+    const note = document.getElementById('modeEconomyNote');
+    if (!panel || !ticketStock || !buyFiftyButton || !buyKujiTicketButton || !note) return;
+
+    const isFreeMode = state.selectedMode === 'free';
+    const fiftyPackStock = toSafeInt(state.fiftyPackStock);
+    state.fiftyPackStock = fiftyPackStock;
+
+    panel.hidden = false;
+    ticketStock.hidden = true;
+    note.hidden = true;
+
+    buyFiftyButton.hidden = !isFreeMode;
+    buyKujiTicketButton.hidden = isFreeMode;
+    buyFiftyButton.disabled = isSpinning;
+    buyKujiTicketButton.disabled = isSpinning;
+
+    if (isFreeMode) {
+      buyFiftyButton.textContent = '50連（2000円）を購入';
+    } else {
+      buyKujiTicketButton.textContent = 'チケット1枚（500円）を購入';
+    }
+  }
+  function renderDomeHint() {
+    if (!els.gachaDome || !els.gachaDomeHint) return;
+    const isFreeMode = state.selectedMode === 'free';
+    const modeName = isFreeMode ? '無料ガチャ' : '一番くじ';
+    els.gachaDome.setAttribute('aria-label', `${modeName}のラインナップを見る`);
+    els.gachaDomeHint.innerHTML = `
+      <span class="gacha-dome-hint-main">タップで${escapeHtml(modeName)}一覧</span>
+      <span class="gacha-dome-hint-sub">何が出るか先にチェック</span>
+    `;
+  }
+
+  function renderGachaLineupModalContents() {
+    const isFreeMode = state.selectedMode === 'free';
+
+    if (isFreeMode) {
+      const rates = getStandardCardRates();
+      const lineupStates = bannerCharacters
+        .map((character) => {
+          const cards = bannerCardsByCharacterId.get(character.id) ?? [];
+          const previewCard = cards[0] ?? null;
+          return {
+            character,
+            previewCard,
+            rarityList: RARITY_DISPLAY_ORDER.filter((rarity) => cards.some((card) => card.rarity === rarity)),
+          };
+        })
+        .sort((left, right) => left.character.name.localeCompare(right.character.name, 'ja'));
+
+      if (els.gachaLineupModeLabel) els.gachaLineupModeLabel.textContent = '無料ガチャ ラインナップ';
+      if (els.gachaLineupNote) {
+        els.gachaLineupNote.textContent = '無料ガチャは1日1回。0.1%で一番くじチケットが追加で出現。SSRは必ずチケット1枚付き。';
+      }
+
+      if (els.gachaLineupRates) {
+        els.gachaLineupRates.innerHTML = RARITY_DISPLAY_ORDER.slice().reverse().map((rarity) => {
+          const value = Math.round((rates[rarity] ?? 0) * 1000) / 10;
+          return `
+            <article class="lineup-rate-card rarity-${escapeHtml(rarity)}">
+              <p class="lineup-rate-rarity">${escapeHtml(rarity)}</p>
+              <p class="lineup-rate-value">${escapeHtml(String(value))}%</p>
+            </article>
+          `;
+        }).join('');
+      }
+
+      if (els.gachaLineupGrid) {
+        els.gachaLineupGrid.innerHTML = lineupStates.map((item) => {
+          const previewSrc = item.previewCard ? resolveAssetPath(item.previewCard.imageUrl) : '';
+          return `
+            <article class="lineup-item-card">
+              <div class="lineup-item-thumb">${previewSrc ? `<img src="${escapeHtml(previewSrc)}" alt="${escapeHtml(item.character.name)}">` : ''}</div>
+              <div class="lineup-item-copy">
+                <h4>${escapeHtml(item.character.name)}</h4>
+                <p>${escapeHtml(item.character.categoryLabel)}</p>
+                <div class="lineup-rarity-row">
+                  ${item.rarityList.map((rarity) => `<span class="lineup-rarity-pill rarity-${escapeHtml(rarity)}">${escapeHtml(rarity)}</span>`).join('')}
+                </div>
+              </div>
+            </article>
+          `;
+        }).join('');
+      }
+
+      if (els.lineupSpinButton) {
+        const freeAvailable = canUseFreeDaily();
+        const fiftyPackStock = toSafeInt(state.fiftyPackStock);
+        const canSpinFromLineup = freeAvailable || fiftyPackStock > 0;
+        els.lineupSpinButton.textContent = fiftyPackStock > 0
+          ? `購入済み50連を開封（残り${fiftyPackStock}）`
+          : freeAvailable
+            ? 'このまま無料で回す'
+            : '本日は回し済み';
+        els.lineupSpinButton.disabled = isSpinning || !canSpinFromLineup;
+      }
+      return;
+    }
+
+    const prizes = getIchibanPrizes();
+    const rate = getCurrentKujiWinRate();
+    const rateText = `${Math.round(rate * 1000) / 10}%`;
+
+    if (els.gachaLineupModeLabel) els.gachaLineupModeLabel.textContent = '一番くじ ラインナップ';
+    if (els.gachaLineupNote) {
+      els.gachaLineupNote.textContent = `チケット1枚で1回挑戦。現在の当選率は${rateText}。`;
+    }
+
+    if (els.gachaLineupRates) {
+      const loseRate = Math.max(0, 1 - rate);
+      els.gachaLineupRates.innerHTML = `
+        <article class="lineup-rate-card rarity-SSR">
+          <p class="lineup-rate-rarity">当選率</p>
+          <p class="lineup-rate-value">${escapeHtml(rateText)}</p>
+        </article>
+        <article class="lineup-rate-card rarity-N">
+          <p class="lineup-rate-rarity">非当選</p>
+          <p class="lineup-rate-value">${escapeHtml(String(Math.round(loseRate * 1000) / 10))}%</p>
+        </article>
+        <article class="lineup-rate-card rarity-R">
+          <p class="lineup-rate-rarity">必要チケット</p>
+          <p class="lineup-rate-value">1枚 / 回</p>
+        </article>
+      `;
+    }
+
+    if (els.gachaLineupGrid) {
+      els.gachaLineupGrid.innerHTML = prizes.map((prize) => `
+        <article class="lineup-item-card">
+          <div class="lineup-item-thumb" style="background: linear-gradient(135deg, ${escapeHtml(prize.accent)}, #ffffff)"></div>
+          <div class="lineup-item-copy">
+            <h4>${escapeHtml(prize.name)}</h4>
+            <p>${escapeHtml(prize.description)}</p>
+            <div class="lineup-rarity-row"><span class="lineup-rarity-pill rarity-SSR">商品</span></div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    if (els.lineupSpinButton) {
+      els.lineupSpinButton.textContent = state.ichibanTickets > 0 ? 'チケットで引く' : 'チケット不足';
+      els.lineupSpinButton.disabled = isSpinning || state.ichibanTickets <= 0;
+    }
+  }
+
+  function drawCard() {
+    const rates = getStandardCardRates();
+    const roll = Math.random();
+    const ssrCut = rates.SSR ?? 0;
+    const rCut = ssrCut + (rates.R ?? 0);
+
+    let targetRarity = 'N';
+    if (roll < ssrCut) targetRarity = 'SSR';
+    else if (roll < rCut) targetRarity = 'R';
+
+    const rarityPool = bannerPool.filter((card) => card.rarity === targetRarity);
+    if (rarityPool.length) return pickRandom(rarityPool);
+
+    const fallbackPool = bannerPool.filter((card) => card.rarity === 'N');
+    return pickRandom(fallbackPool.length ? fallbackPool : bannerPool);
+  }
+
+  function startSpin() {
+    if (isSpinning) return;
+    if (state.selectedMode === 'paid') {
+      runIchibanKujiSpin();
+      return;
+    }
+    if (toSafeInt(state.fiftyPackStock) > 0) {
+      runPurchasedFiftyPack();
+      return;
+    }
+    runFreeGachaSpin();
+  }
+
+  function runFreeGachaSpin() {
+    if (!canUseFreeDaily()) {
+      renderModeState({ statusMessage: '本日の無料ガチャは使用済みです。翌日0:00（JST）に再挑戦できます。' });
+      return;
+    }
+
+    const card = drawCard();
+    if (!card) {
+      renderModeState({ statusMessage: 'カードを引けませんでした。時間をおいて再試行してください。' });
+      return;
+    }
+
+    clearTimers();
+    isSpinning = true;
+
+    state.dailyClaimDateJst = getJstDateKey();
+    state.lastPullType = 'single';
+    state.lastCardId = card.id;
+
+    const wasOwned = state.ownedCardIds.includes(card.id);
+    if (!wasOwned) state.ownedCardIds.push(card.id);
+
+    const rewardMessages = [];
+    if (card.rarity === 'SSR') {
+      state.ichibanTickets += 1;
+      rewardMessages.push('SSR特典でチケット+1');
+    }
+
+    let luckyTicket = false;
+    if (Math.random() < 0.001) {
+      state.ichibanTickets += 1;
+      luckyTicket = true;
+      rewardMessages.push('0.1%当選でチケット+1');
+    }
+
+    pushHistoryCard(card.id, 'free');
+    saveState();
+
+    if (els.startGachaButton) els.startGachaButton.disabled = true;
+    resetMachineVisual();
+    els.gachaMachine?.classList.remove('is-ticket-jackpot');
+    els.resultCard?.classList.remove('is-ticket-jackpot');
+    if (els.gachaMachine) els.gachaMachine.dataset.rarity = card.rarity;
+    els.gachaMachine?.classList.add('is-spinning');
+    applyCapsulePalette(card.rarity);
+
+    schedule(() => {
+      els.gachaMachine?.classList.add('has-capsule');
+    }, 340);
+
+    schedule(() => {
+      els.gachaMachine?.classList.remove('is-spinning');
+      els.gachaMachine?.classList.add('is-revealed');
+      showCard(card, { ownership: wasOwned ? 'owned' : 'new' });
+      hideMultiResult();
+      renderHistory();
+      renderCollection();
+      renderShareStage();
+
+      if (luckyTicket) {
+        els.gachaMachine?.classList.add('is-ticket-jackpot');
+        els.resultCard?.classList.add('is-ticket-jackpot');
+        schedule(() => {
+          els.gachaMachine?.classList.remove('is-ticket-jackpot');
+          els.resultCard?.classList.remove('is-ticket-jackpot');
+        }, 1800);
+      }
+
+      const baseMessage = wasOwned ? '同じカードでした。' : '新しいカードを獲得。';
+      const bonusMessage = rewardMessages.length ? ` ${rewardMessages.join(' / ')}` : '';
+      isSpinning = false;
+      renderModeState({ statusMessage: `${baseMessage}${bonusMessage}` });
+    }, 1020);
+  }
+
+  function runIchibanKujiSpin() {
+    if (state.ichibanTickets <= 0) {
+      renderModeState({ statusMessage: '一番くじチケットが不足しています。チケットを購入してください。' });
+      return;
+    }
+
+    clearTimers();
+    isSpinning = true;
+
+    const winRate = getCurrentKujiWinRate();
+    const prizes = getIchibanPrizes();
+    const isBoosted = state.kujiBoostRemaining > 0;
+
+    state.ichibanTickets = Math.max(0, state.ichibanTickets - 1);
+    if (isBoosted) state.kujiBoostRemaining = Math.max(0, state.kujiBoostRemaining - 1);
+
+    const isHit = Math.random() < winRate;
+    const prize = isHit ? pickRandom(prizes) : null;
+
+    if (prize) {
+      state.kujiPrizeHistory.unshift({ name: prize.name, at: Date.now() });
+      state.kujiPrizeHistory = state.kujiPrizeHistory.slice(0, 30);
+    }
+
+    saveState();
+
+    if (els.startGachaButton) els.startGachaButton.disabled = true;
+    resetMachineVisual();
+    els.gachaMachine?.classList.remove('is-ticket-jackpot');
+    els.resultCard?.classList.remove('is-ticket-jackpot');
+    els.gachaMachine?.classList.add('is-spinning');
+    applyCapsulePalette(isHit ? 'SSR' : 'N');
+
+    schedule(() => {
+      els.gachaMachine?.classList.add('has-capsule');
+    }, 320);
+
+    schedule(() => {
+      els.gachaMachine?.classList.remove('is-spinning');
+      els.gachaMachine?.classList.add('is-revealed');
+      showIchibanResult(prize, isHit, winRate);
+      const status = isHit
+        ? `${prize.name} 当選。チケット残り ${state.ichibanTickets}枚。`
+        : `今回ははずれ。チケット残り ${state.ichibanTickets}枚。`;
+      isSpinning = false;
+      renderModeState({ statusMessage: status });
+      renderShareStage();
+    }, 980);
+  }
+
+  function purchaseFiftyPack() {
+    if (isSpinning) return;
+    state.fiftyPackStock = toSafeInt(state.fiftyPackStock) + 1;
+    saveState();
+    const stock = state.fiftyPackStock;
+    const message = stock === 1
+      ? '50連を購入しました。取っ手を回すと一気に開封します。'
+      : `50連を追加購入しました。現在${stock}セット。取っ手を回すと1セットずつ開封します。`;
+    renderModeState({ statusMessage: message });
+    if (isLineupModalOpen) renderGachaLineupModalContents();
+  }
+
+  function runPurchasedFiftyPack() {
+    if (isSpinning) return;
+
+    const ssrPool = bannerPool.filter((card) => card.rarity === 'SSR');
+    if (!bannerPool.length) {
+      renderModeState({ statusMessage: 'カードプールが見つかりませんでした。' });
+      return;
+    }
+
+    state.fiftyPackStock = Math.max(0, toSafeInt(state.fiftyPackStock) - 1);
+    isSpinning = true;
+    clearTimers();
+    if (els.startGachaButton) els.startGachaButton.disabled = true;
+    resetMachineVisual();
+    els.gachaMachine?.classList.remove('is-ticket-jackpot');
+    els.resultCard?.classList.remove('is-ticket-jackpot');
+
+    const pulledCards = Array.from({ length: 50 }, () => drawCard()).filter(Boolean);
+    if (!pulledCards.length) {
+      isSpinning = false;
+      renderModeState({ statusMessage: '50連を実行できませんでした。' });
+      return;
+    }
+
+    if (ssrPool.length && !pulledCards.some((card) => card.rarity === 'SSR')) {
+      pulledCards[pulledCards.length - 1] = pickRandom(ssrPool);
+    }
+
+    const ownedSet = new Set(state.ownedCardIds);
+    let ticketGain = 0;
+    const results = pulledCards.map((card) => {
+      const isNew = !ownedSet.has(card.id);
+      if (isNew) {
+        ownedSet.add(card.id);
+        state.ownedCardIds.push(card.id);
+      }
+      if (card.rarity === 'SSR') ticketGain += 1;
+      return { card, isNew };
+    });
+
+    state.ichibanTickets += ticketGain;
+    state.kujiBoostRemaining += 50;
+    state.lastPullType = 'multi50';
+
+    const featured = pickFeaturedStarterResult(results);
+    if (featured?.card?.id) {
+      state.lastCardId = featured.card.id;
+      pushHistoryCard(featured.card.id, 'multi50');
+      if (els.gachaMachine) els.gachaMachine.dataset.rarity = featured.card.rarity;
+      applyCapsulePalette(featured.card.rarity);
+    } else {
+      applyCapsulePalette('N');
+    }
+
+    saveState();
+    els.gachaMachine?.classList.add('is-spinning');
+
+    schedule(() => {
+      els.gachaMachine?.classList.add('has-capsule');
+    }, 280);
+
+    schedule(() => {
+      els.gachaMachine?.classList.remove('is-spinning');
+      els.gachaMachine?.classList.add('is-revealed');
+
+      if (featured?.card?.id) {
+        showCard(featured.card, { ownership: featured.isNew ? 'new' : 'owned' });
+        renderMultiResult(results, featured.card.id);
+      } else {
+        hideMultiResult();
+      }
+
+      renderHistory();
+      renderCollection();
+      renderShareStage();
+      isSpinning = false;
+      renderModeState({
+        statusMessage: `50連を開封。SSR特典でチケット+${ticketGain}。`,
+      });
+
+    }, 940);
+  }
+
+  function purchaseKujiTicket() {
+    if (isSpinning) return;
+    state.ichibanTickets += 1;
+    saveState();
+    renderModeState({ statusMessage: `チケット1枚（500円）を仮購入しました。所持 ${state.ichibanTickets}枚。` });
+    if (isLineupModalOpen) renderGachaLineupModalContents();
+  }
+
+  function pushHistoryCard(cardId, source) {
+    state.history.unshift({ cardId, source, at: Date.now() });
+    state.history = state.history.slice(0, MAX_HISTORY);
+  }
+
+  function showIchibanResult(prize, isHit, winRate) {
+    hideMultiResult();
+
+    if (els.resultCard) {
+      els.resultCard.classList.remove('is-idle');
+      els.resultCard.dataset.rarity = isHit ? 'SSR' : 'N';
+      els.resultCard.classList.toggle('is-ticket-jackpot', isHit);
+    }
+
+    if (els.resultEmpty) els.resultEmpty.hidden = true;
+    if (els.resultFilled) els.resultFilled.hidden = false;
+
+    if (els.resultImage) {
+      const title = isHit && prize ? prize.name : 'TRY AGAIN';
+      const accent = isHit && prize ? prize.accent : '#b8b8b8';
+      els.resultImage.src = buildKujiPrizeImageDataUrl(title, accent);
+      els.resultImage.alt = isHit && prize ? prize.name : '一番くじ結果';
+    }
+
+    if (els.resultRarity) {
+      els.resultRarity.textContent = isHit ? 'KUJI WIN' : 'KUJI';
+      els.resultRarity.className = 'rarity-pill';
+    }
+
+    if (els.resultOwnership) {
+      els.resultOwnership.textContent = isHit ? 'WIN' : 'LOSE';
+      els.resultOwnership.className = 'status-pill';
+    }
+
+    if (els.resultTitle) {
+      els.resultTitle.textContent = isHit && prize ? `${prize.name} 当選` : '今回ははずれ';
+    }
+
+    if (els.resultLine) {
+      els.resultLine.textContent = isHit && prize
+        ? `${prize.description} を獲得しました。`
+        : '次のチケットで商品A〜Fを狙おう。';
+    }
+
+    if (els.resultDetail) {
+      els.resultDetail.textContent = `現在の当選率 ${Math.round(winRate * 1000) / 10}%`;
+    }
+
+    scrollResultCardIntoView();
+  }
+
+  function buildKujiPrizeImageDataUrl(title, accent) {
+    const safeTitle = escapeHtml(title);
+    const safeAccent = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(accent) ? accent : '#ff9b7a';
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="768" height="768" viewBox="0 0 768 768"><defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="${safeAccent}"/><stop offset="1" stop-color="#ffffff"/></linearGradient></defs><rect width="768" height="768" fill="url(#g)"/><rect x="24" y="24" width="720" height="720" rx="56" fill="rgba(255,255,255,0.72)"/><text x="384" y="320" text-anchor="middle" font-family="'Zen Maru Gothic', sans-serif" font-size="64" font-weight="900" fill="#5e3312">一番くじ</text><text x="384" y="430" text-anchor="middle" font-family="'Zen Maru Gothic', sans-serif" font-size="72" font-weight="900" fill="#3d2210">${safeTitle}</text></svg>`;
+    return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+  }
+
+  async function createShareImageBlob() {
+    if (!els.shareCanvas) return null;
+    const { ownedStates } = getShareSelection();
+    if (!ownedStates.length) return null;
+    const canvas = els.shareCanvas;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    const visibleCards = ownedStates;
+    const images = await Promise.all(
+      visibleCards.map((item) => loadImage(resolveAssetPath(item.strongestOwned.imageUrl)).catch(() => null)),
+    );
+
+    const width = canvas.width;
+    const height = canvas.height;
+    ctx.clearRect(0, 0, width, height);
+
+    const bgGradient = ctx.createLinearGradient(0, 0, width, height);
+    bgGradient.addColorStop(0, '#fff5f0');
+    bgGradient.addColorStop(0.52, '#ffeccf');
+    bgGradient.addColorStop(1, '#ffdbe5');
+    ctx.fillStyle = bgGradient;
+    ctx.fillRect(0, 0, width, height);
+
+    for (let y = 26; y < height; y += 72) {
+      for (let x = 24; x < width; x += 72) {
+        drawCircle(ctx, x, y, 3, 'rgba(255, 255, 255, 0.28)');
+      }
+    }
+
+    const sheetX = 48;
+    const sheetY = 42;
+    const sheetWidth = width - 96;
+    const sheetHeight = height - 84;
+    fillRoundedRect(ctx, sheetX, sheetY, sheetWidth, sheetHeight, 42, 'rgba(255, 253, 248, 0.88)');
+    fillRoundedRect(ctx, sheetX + 18, sheetY + 18, sheetWidth - 36, sheetHeight - 36, 34, 'rgba(255, 248, 241, 0.76)');
+
+    for (let index = 0; index < 5; index += 1) {
+      const holeY = 180 + index * 216;
+      drawCircle(ctx, 90, holeY, 17, 'rgba(224, 196, 173, 0.78)');
+      drawCircle(ctx, 90, holeY, 8, 'rgba(255, 255, 255, 0.96)');
+    }
+
+    fillRoundedRect(ctx, width - 286, 78, 184, 58, 29, 'rgba(255, 255, 255, 0.94)');
+    ctx.fillStyle = '#6a4426';
+    ctx.font = '900 28px "Zen Maru Gothic", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${ownedStates.length} / ${activeBanner.poolCardIds.length}`, width - 194, 116);
+    ctx.textAlign = 'left';
+
+    const gridX = 130;
+    const gridY = 164;
+    const gridWidth = width - gridX - 68;
+    const gridHeight = height - gridY - 92;
+    const layout = getShareStickerLayout(visibleCards.length);
+    const gapX = layout.gap;
+    const gapY = layout.gap;
+    const cellWidth = layout.columns === 1 ? Math.min(gridWidth * 0.82, 560) : (gridWidth - gapX * (layout.columns - 1)) / layout.columns;
+    const cellHeight = layout.rows === 1 ? Math.min(gridHeight * 0.82, 780) : (gridHeight - gapY * (layout.rows - 1)) / layout.rows;
+
+    for (let row = 0; row < layout.rows; row += 1) {
+      const rowStartIndex = row * layout.columns;
+      const rowItems = visibleCards.slice(rowStartIndex, rowStartIndex + layout.columns);
+      const rowWidth = rowItems.length * cellWidth + Math.max(0, rowItems.length - 1) * gapX;
+      const rowStartX = gridX + (gridWidth - rowWidth) / 2;
+
+      rowItems.forEach((item, column) => {
+        const index = rowStartIndex + column;
+        const frame = {
+          x: rowStartX + column * (cellWidth + gapX),
+          y: gridY + row * (cellHeight + gapY),
+          width: cellWidth,
+          height: cellHeight,
+          tilt: ((row + column) % 2 === 0 ? -1 : 1) * Math.min(0.012 + (index % 3) * 0.004, 0.02),
+        };
+        drawShareCanvasCard(ctx, frame, item, images[index] ?? null);
+      });
+    }
+
+    ctx.fillStyle = 'rgba(120, 82, 55, 0.34)';
+    ctx.font = '900 18px "Zen Maru Gothic", sans-serif';
+    ctx.fillText('MOBBY CAPSULE', width - 244, height - 42);
+    return canvasToBlob(canvas);
+  }
+
+  function drawShareCanvasCard(ctx, frame, item, image) {
+    const { x, y, width, height, tilt = 0 } = frame;
+    const palette = getSharePalette(item?.strongestOwned?.rarity);
+    const radius = Math.max(12, Math.min(28, Math.min(width, height) * 0.12));
+    const mediaInsetX = Math.max(7, Math.min(14, width * 0.065));
+    const mediaInsetY = Math.max(9, Math.min(18, height * 0.09));
+    const mediaX = -width / 2 + mediaInsetX;
+    const mediaY = -height / 2 + mediaInsetY;
+    const mediaWidth = width - mediaInsetX * 2;
+    const mediaHeight = height - mediaInsetY - Math.max(14, height * 0.12);
+    const badgeWidth = Math.max(34, Math.min(54, width * 0.36));
+    const badgeHeight = Math.max(18, Math.min(24, height * 0.17));
+    const badgeRadius = badgeHeight / 2;
+    const badgeFont = Math.max(9, Math.min(14, Math.min(width, height) * 0.09));
+    const tapeWidthPrimary = Math.max(36, width * 0.34);
+    const tapeWidthSecondary = Math.max(28, width * 0.24);
+    const sparkleSize = Math.max(1.8, Math.min(4, width * 0.025));
+    ctx.save();
+    ctx.translate(x + width / 2, y + height / 2);
+    ctx.rotate(tilt);
+
+    if (!item) {
+      fillRoundedRect(ctx, -width / 2, -height / 2, width, height, radius, 'rgba(255, 255, 255, 0.5)');
+      strokeRoundedRect(ctx, -width / 2, -height / 2, width, height, radius, 'rgba(161, 114, 73, 0.22)', 3, [14, 10]);
+      drawStickerTape(ctx, -width * 0.18, -height / 2 + 4, tapeWidthPrimary, -0.12, 'rgba(255, 244, 199, 0.76)');
+      ctx.restore();
+      return;
+    }
+
+    ctx.shadowColor = palette.shadow;
+    ctx.shadowBlur = Math.max(12, Math.min(18, width * 0.08));
+    ctx.shadowOffsetY = Math.max(8, Math.min(11, height * 0.06));
+    fillRoundedRect(ctx, -width / 2, -height / 2, width, height, radius, palette.cardBackground);
+    ctx.shadowColor = 'transparent';
+    strokeRoundedRect(ctx, -width / 2, -height / 2, width, height, radius, palette.edge, Math.max(2, Math.min(4, width * 0.018)));
+    drawStickerTape(ctx, -width * 0.2, -height / 2 + Math.max(4, height * 0.03), tapeWidthPrimary, -0.12, palette.tape);
+    drawStickerTape(ctx, width * 0.08, -height / 2 + Math.max(8, height * 0.05), tapeWidthSecondary, 0.14, 'rgba(255, 255, 255, 0.48)');
+    fillRoundedRect(ctx, mediaX, mediaY, mediaWidth, mediaHeight, Math.max(10, radius - 6), palette.mediaBackground);
+    if (image) drawImageCover(ctx, image, mediaX, mediaY, mediaWidth, mediaHeight, Math.max(10, radius - 6));
+
+    fillRoundedRect(ctx, mediaX + 8, mediaY + 8, badgeWidth, badgeHeight, badgeRadius, palette.badgeBackground);
+    ctx.fillStyle = palette.badgeText;
+    ctx.font = `900 ${badgeFont}px "Zen Maru Gothic", sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText(item.strongestOwned.rarity, mediaX + 8 + badgeWidth / 2, mediaY + 8 + badgeHeight * 0.72);
+
+    if (item.strongestOwned.rarity === 'SSR') {
+      drawCircle(ctx, width / 2 - 22, -height / 2 + 28, sparkleSize, 'rgba(255, 192, 88, 0.95)');
+      drawCircle(ctx, width / 2 - 36, -height / 2 + 44, sparkleSize * 0.7, 'rgba(255, 135, 175, 0.9)');
+      drawCircle(ctx, width / 2 - 18, -height / 2 + 50, sparkleSize * 0.6, 'rgba(132, 208, 255, 0.92)');
+    }
+
+    ctx.textAlign = 'left';
+    ctx.restore();
+  }
+
+  function getSharePalette(rarity) {
+    if (rarity === 'SSR') return { cardBackground: 'rgba(255, 252, 254, 0.99)', mediaBackground: 'rgba(255, 232, 244, 0.98)', badgeBackground: 'rgba(255, 229, 241, 0.98)', badgeText: '#d85186', shadow: 'rgba(255, 120, 164, 0.18)', edge: 'rgba(255, 203, 223, 0.95)', tape: 'rgba(255, 243, 197, 0.82)' };
+    if (rarity === 'R') return { cardBackground: 'rgba(255, 252, 247, 0.99)', mediaBackground: 'rgba(255, 238, 219, 0.98)', badgeBackground: 'rgba(255, 244, 226, 0.98)', badgeText: '#cf7520', shadow: 'rgba(255, 173, 96, 0.16)', edge: 'rgba(255, 214, 167, 0.94)', tape: 'rgba(255, 236, 204, 0.8)' };
+    return { cardBackground: 'rgba(255, 254, 251, 0.99)', mediaBackground: 'rgba(244, 235, 226, 0.98)', badgeBackground: 'rgba(244, 238, 232, 0.98)', badgeText: '#7b6656', shadow: 'rgba(161, 125, 94, 0.1)', edge: 'rgba(223, 207, 191, 0.94)', tape: 'rgba(250, 239, 211, 0.78)' };
+  }
+
+  function getShareStickerLayout(count) {
+    if (count <= 1) return { columns: 1, rows: 1, gap: 0 };
+    const aspect = 1.22;
+    const columns = Math.max(1, Math.ceil(Math.sqrt(count / aspect)));
+    const rows = Math.max(1, Math.ceil(count / columns));
+    const gap = count <= 4 ? 24 : count <= 12 ? 18 : count <= 30 ? 12 : count <= 60 ? 8 : 6;
+    return { columns, rows, gap };
+  }
+
+  function drawShareCanvasSummarySticker(ctx, frame, count) {
+    const { x, y, width, height, tilt = 0 } = frame;
+    ctx.save();
+    ctx.translate(x + width / 2, y + height / 2);
+    ctx.rotate(tilt);
+    ctx.shadowColor = 'rgba(126, 86, 48, 0.12)';
+    ctx.shadowBlur = 18;
+    ctx.shadowOffsetY = 11;
+    fillRoundedRect(ctx, -width / 2, -height / 2, width, height, 28, 'rgba(255, 252, 247, 0.98)');
+    ctx.shadowColor = 'transparent';
+    strokeRoundedRect(ctx, -width / 2, -height / 2, width, height, 28, 'rgba(228, 204, 173, 0.96)', 4);
+    drawStickerTape(ctx, -width * 0.16, -height / 2 + 4, width * 0.32, -0.1, 'rgba(255, 245, 211, 0.82)');
+    fillRoundedRect(ctx, -width / 2 + 14, -height / 2 + 18, width - 28, height - 54, 22, 'rgba(255, 237, 213, 0.72)');
+    drawCircle(ctx, 0, 2, 44, 'rgba(255, 255, 255, 0.56)');
+    drawCircle(ctx, -36, -28, 8, 'rgba(255, 191, 104, 0.62)');
+    drawCircle(ctx, 42, 24, 10, 'rgba(255, 154, 182, 0.46)');
+    ctx.fillStyle = '#6f4020';
+    ctx.font = '900 58px "Zen Maru Gothic", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`+${count}`, 0, 18);
+    ctx.textAlign = 'left';
+    ctx.restore();
+  }
+
+  function drawStickerTape(ctx, x, y, width, rotation, color) {
+    ctx.save();
+    ctx.translate(x + width / 2, y + 9);
+    ctx.rotate(rotation);
+    fillRoundedRect(ctx, -width / 2, -9, width, 18, 9, color);
+    ctx.restore();
+  }
+  bindEconomyExtras();
+  renderModeState({ resetMachineText: true });
+})();;
