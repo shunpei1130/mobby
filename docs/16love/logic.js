@@ -248,8 +248,23 @@ function renderGate() {
         };
     });
     refreshAgeView();
-    document.getElementById("btnGateBack").onclick = () => { state.step = "quiz"; saveState(); render(); };
-    document.getElementById("btnGateGo").onclick = () => {
+const gateSubmitButton = document.getElementById("btnGateGo");
+const gatePendingMsg = document.createElement("div");
+gatePendingMsg.id = "gatePendingMsg";
+gatePendingMsg.style.display = "none";
+gatePendingMsg.style.fontSize = "12px";
+gatePendingMsg.style.color = "var(--text-sub)";
+gatePendingMsg.style.textAlign = "center";
+gatePendingMsg.textContent = "\u9001\u4fe1\u3092\u53d7\u3051\u4ed8\u3051\u307e\u3057\u305f\u3002\u7d50\u679c\u3092\u6e96\u5099\u3057\u3066\u3044\u307e\u3059...";
+gateSubmitButton.parentElement.insertAdjacentElement("afterend", gatePendingMsg);
+const setGatePending = (pending) => {
+    gateSubmitButton.disabled = pending;
+    gateSubmitButton.textContent = pending ? "\u7d50\u679c\u3092\u6e96\u5099\u4e2d..." : "\u7d50\u679c\u3092\u898b\u308b";
+    gateSubmitButton.setAttribute("aria-busy", pending ? "true" : "false");
+    gatePendingMsg.style.display = pending ? "block" : "none";
+};
+document.getElementById("btnGateBack").onclick = () => { state.step = "quiz"; saveState(); render(); };
+gateSubmitButton.onclick = () => {
         const errEl = document.getElementById("regErr"); errEl.style.display = "none";
         const name = (nameEl.value || "").trim(), email = (emailEl.value || "").trim(), age = (ageEl.value || "").trim(), consent = document.getElementById("regConsent").checked;
         if (!name) { errEl.textContent = "ニックネームを入力してください"; errEl.style.display = "block"; return; }
@@ -257,7 +272,11 @@ function renderGate() {
         if (!age) { errEl.textContent = "年齢を選択してください"; errEl.style.display = "block"; return; }
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { errEl.textContent = "メールアドレスを正しく入力してください"; errEl.style.display = "block"; return; }
         if (!consent) { errEl.textContent = "同意にチェックしてください"; errEl.style.display = "block"; return; }
-        state.profile = { name, email, age }; state.step = "result"; saveState(); render();
+        setGatePending(true);
+state.profile = { name, email, age };
+state.step = "result";
+saveState();
+requestAnimationFrame(() => render());
     };
 }
 

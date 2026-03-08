@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350" fill="none">
+  <defs>
+    <linearGradient id="bgCollection" x1="104" y1="80" x2="964" y2="1280" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF9F4"/>
+      <stop offset="0.5" stop-color="#F5F0FF"/>
+      <stop offset="1" stop-color="#EAF8FF"/>
+    </linearGradient>
+    <linearGradient id="phoneBody" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#3F2231"/>
+      <stop offset="1" stop-color="#5D3B52"/>
+    </linearGradient>
+    <pattern id="collectionDots" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="4" cy="4" r="2.2" fill="#FFFFFF" fill-opacity="0.66"/>
+    </pattern>
+  </defs>
+  <rect width="1080" height="1350" rx="52" fill="url(#bgCollection)"/>
+  <rect width="1080" height="1350" rx="52" fill="url(#collectionDots)" opacity="0.45"/>
+  <circle cx="180" cy="1118" r="216" fill="#FFD96F" fill-opacity="0.18"/>
+  <circle cx="898" cy="228" r="202" fill="#79D8FF" fill-opacity="0.24"/>
+  <circle cx="834" cy="310" r="122" fill="#FF8AB8" fill-opacity="0.2"/>
+
+  <g transform="translate(76 78)">
+    <rect width="328" height="58" rx="29" fill="#FFFDF9"/>
+    <text x="164" y="38" text-anchor="middle" fill="#A55B2A" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="24" font-weight="700" letter-spacing="3.2">SAVE &amp; SHARE POST</text>
+  </g>
+
+  <text x="78" y="246" fill="#3F2231" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="92" font-weight="700">SSR出たら、</text>
+  <text x="78" y="350" fill="#3F2231" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="92" font-weight="700">投稿までがセット。</text>
+
+  <text x="82" y="430" fill="#6E5362" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="34" font-weight="700">コレクション画像を保存して、そのままSNSに出せる。</text>
+  <text x="82" y="476" fill="#6E5362" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="34" font-weight="700">引いて終わりじゃなく、増えるほど見せ方が強くなる。</text>
+
+  <g transform="translate(80 566)">
+    <rect width="404" height="430" rx="42" fill="#FFFDF9"/>
+    <text x="34" y="70" fill="#3F2231" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="34" font-weight="700">この1枚で伝えたいこと</text>
+    <g transform="translate(34 118)">
+      <circle cx="12" cy="12" r="12" fill="#FF6FAA"/>
+      <text x="40" y="20" fill="#5D4252" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="28" font-weight="700">毎日1回無料で始めやすい</text>
+    </g>
+    <g transform="translate(34 182)">
+      <circle cx="12" cy="12" r="12" fill="#79D8FF"/>
+      <text x="40" y="20" fill="#5D4252" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="28" font-weight="700">SSRが出た瞬間を保存できる</text>
+    </g>
+    <g transform="translate(34 246)">
+      <circle cx="12" cy="12" r="12" fill="#FFD96F"/>
+      <text x="40" y="20" fill="#5D4252" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="28" font-weight="700">コレクション進捗も見せられる</text>
+    </g>
+    <g transform="translate(34 310)">
+      <circle cx="12" cy="12" r="12" fill="#8CE4C8"/>
+      <text x="40" y="20" fill="#5D4252" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="28" font-weight="700">スクショだけで投稿素材になる</text>
+    </g>
+  </g>
+
+  <g transform="translate(570 520)">
+    <rect width="380" height="670" rx="58" fill="url(#phoneBody)"/>
+    <rect x="24" y="22" width="332" height="626" rx="42" fill="#FFF8F4"/>
+    <rect x="112" y="44" width="156" height="20" rx="10" fill="#E3D4DA"/>
+    <text x="50" y="110" fill="#B14C74" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="24" font-weight="700">MY COLLECTION</text>
+    <text x="290" y="110" text-anchor="end" fill="#6E5362" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="24" font-weight="700">18 / 96</text>
+    <g transform="translate(46 144)">
+      <rect width="82" height="116" rx="18" fill="#FFE4E7"/>
+      <rect x="102" width="82" height="116" rx="18" fill="#EAF8FF"/>
+      <rect x="204" width="82" height="116" rx="18" fill="#FFF2C6"/>
+      <rect y="136" width="82" height="116" rx="18" fill="#F4E8FF"/>
+      <rect x="102" y="136" width="82" height="116" rx="18" fill="#FFE4E7"/>
+      <rect x="204" y="136" width="82" height="116" rx="18" fill="#EAF8FF"/>
+      <rect y="272" width="82" height="116" rx="18" fill="#FFF2C6"/>
+      <rect x="102" y="272" width="82" height="116" rx="18" fill="#F4E8FF"/>
+      <rect x="204" y="272" width="82" height="116" rx="18" fill="#FFE4E7"/>
+    </g>
+    <g transform="translate(46 566)">
+      <rect width="286" height="42" rx="21" fill="#3F2231"/>
+      <text x="143" y="29" text-anchor="middle" fill="#FFF7F3" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="22" font-weight="700">保存してそのままシェア</text>
+    </g>
+  </g>
+
+  <g transform="translate(78 1094)">
+    <rect width="310" height="72" rx="36" fill="#FFFDF9"/>
+    <text x="155" y="46" text-anchor="middle" fill="#8D5267" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="28" font-weight="700">保存向け</text>
+  </g>
+  <g transform="translate(404 1094)">
+    <rect width="310" height="72" rx="36" fill="#FFFDF9"/>
+    <text x="155" y="46" text-anchor="middle" fill="#8D5267" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="28" font-weight="700">カルーセル向け</text>
+  </g>
+  <g transform="translate(730 1094)">
+    <rect width="274" height="72" rx="36" fill="#FFFDF9"/>
+    <text x="137" y="46" text-anchor="middle" fill="#8D5267" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="28" font-weight="700">再投稿向け</text>
+  </g>
+
+  <g transform="translate(78 1226)">
+    <rect width="924" height="70" rx="35" fill="#3F2231"/>
+    <text x="462" y="46" text-anchor="middle" fill="#FFF7F3" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="29" font-weight="700">引いた瞬間の熱を、そのまま投稿素材に変える。</text>
+  </g>
+</svg>

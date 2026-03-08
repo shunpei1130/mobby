@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350" fill="none">
+  <defs>
+    <linearGradient id="bgLaunch" x1="84" y1="72" x2="968" y2="1266" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF6E8"/>
+      <stop offset="0.56" stop-color="#FFE8DA"/>
+      <stop offset="1" stop-color="#FFF3F6"/>
+    </linearGradient>
+    <linearGradient id="cardFill" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#FFFDF9"/>
+      <stop offset="1" stop-color="#FFF0E7"/>
+    </linearGradient>
+    <linearGradient id="capsuleTop" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#FF6FAA"/>
+      <stop offset="1" stop-color="#FF9C4A"/>
+    </linearGradient>
+    <linearGradient id="capsuleBottom" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#79D8FF"/>
+      <stop offset="1" stop-color="#8CE4C8"/>
+    </linearGradient>
+    <pattern id="dotPattern" width="18" height="18" patternUnits="userSpaceOnUse">
+      <circle cx="3" cy="3" r="2.1" fill="#FFFFFF" fill-opacity="0.72"/>
+    </pattern>
+  </defs>
+  <rect width="1080" height="1350" rx="52" fill="url(#bgLaunch)"/>
+  <rect width="1080" height="1350" rx="52" fill="url(#dotPattern)" opacity="0.42"/>
+  <circle cx="912" cy="196" r="208" fill="#FFD96F" fill-opacity="0.46"/>
+  <circle cx="828" cy="252" r="146" fill="#79D8FF" fill-opacity="0.28"/>
+  <circle cx="176" cy="1142" r="188" fill="#FF8AB8" fill-opacity="0.14"/>
+
+  <g transform="translate(72 72)">
+    <rect width="372" height="58" rx="29" fill="#FFFDF9"/>
+    <text x="186" y="38" text-anchor="middle" fill="#A55B2A" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="24" font-weight="700" letter-spacing="3.4">MOBBY CAPSULE CLUB</text>
+  </g>
+
+  <text x="76" y="248" fill="#3F2231" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="100" font-weight="700">今日の本音、</text>
+  <text x="76" y="362" fill="#3F2231" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="100" font-weight="700">ガチャで出る。</text>
+
+  <text x="82" y="444" fill="#6E5362" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="35" font-weight="700">学校 / 恋愛 / 推し活 / ナイト / ママまで。</text>
+  <text x="82" y="492" fill="#6E5362" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="35" font-weight="700">96キャラ / 288カードを、毎日1回無料で引ける。</text>
+  <text x="82" y="540" fill="#6E5362" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="35" font-weight="700">結果もコレクション画像も、そのままSNSへ。</text>
+
+  <g transform="translate(76 592)">
+    <rect width="246" height="72" rx="36" fill="#FFFDF9"/>
+    <text x="123" y="46" text-anchor="middle" fill="#8D5267" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="30" font-weight="700">毎日1回無料</text>
+  </g>
+  <g transform="translate(338 592)">
+    <rect width="280" height="72" rx="36" fill="#FFFDF9"/>
+    <text x="140" y="46" text-anchor="middle" fill="#8D5267" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="30" font-weight="700">結果をそのまま保存</text>
+  </g>
+  <g transform="translate(636 592)">
+    <rect width="290" height="72" rx="36" fill="#FFFDF9"/>
+    <text x="145" y="46" text-anchor="middle" fill="#8D5267" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="30" font-weight="700">友だちと見せ合い</text>
+  </g>
+
+  <g transform="translate(74 770) rotate(-8 0 0)">
+    <rect x="0" y="0" width="282" height="376" rx="34" fill="url(#cardFill)" stroke="#F1D6C6" stroke-width="4"/>
+    <rect x="22" y="22" width="238" height="218" rx="28" fill="#FFE5E2"/>
+    <rect x="42" y="44" width="198" height="174" rx="24" fill="#FFD96F" fill-opacity="0.62"/>
+    <rect x="36" y="266" width="112" height="34" rx="17" fill="#FFFDF9"/>
+    <text x="92" y="289" text-anchor="middle" fill="#A55B2A" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="18" font-weight="700">School</text>
+    <text x="36" y="334" fill="#3F2231" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="32" font-weight="700">回したら</text>
+    <text x="36" y="374" fill="#6E5362" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="22" font-weight="700">「わかる」が出る。</text>
+  </g>
+
+  <g transform="translate(278 828) rotate(4 0 0)">
+    <rect x="0" y="0" width="288" height="384" rx="34" fill="url(#cardFill)" stroke="#F1D6C6" stroke-width="4"/>
+    <rect x="22" y="22" width="244" height="224" rx="28" fill="#EAF8FF"/>
+    <rect x="42" y="44" width="204" height="180" rx="24" fill="#79D8FF" fill-opacity="0.56"/>
+    <rect x="36" y="272" width="96" height="34" rx="17" fill="#FFFDF9"/>
+    <text x="84" y="295" text-anchor="middle" fill="#A55B2A" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="18" font-weight="700">Love</text>
+    <text x="36" y="342" fill="#3F2231" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="32" font-weight="700">スクショで</text>
+    <text x="36" y="382" fill="#6E5362" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="22" font-weight="700">会話が始まる。</text>
+  </g>
+
+  <g transform="translate(670 744)">
+    <circle cx="194" cy="194" r="196" fill="#FFFDF9"/>
+    <path d="M28 194C28 103.425 101.425 30 192 30C282.575 30 356 103.425 356 194H28Z" fill="url(#capsuleTop)"/>
+    <path d="M28 194H356C356 284.575 282.575 358 192 358C101.425 358 28 284.575 28 194Z" fill="url(#capsuleBottom)"/>
+    <rect x="62" y="188" width="260" height="12" rx="6" fill="#FFFFFF" fill-opacity="0.84"/>
+    <circle cx="124" cy="118" r="24" fill="#FFF8F4" fill-opacity="0.7"/>
+    <circle cx="254" cy="278" r="20" fill="#FFF8F4" fill-opacity="0.44"/>
+    <rect x="82" y="396" width="220" height="66" rx="33" fill="#FFFDF9"/>
+    <text x="192" y="439" text-anchor="middle" fill="#8D5267" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="28" font-weight="700">回して、見せて、沼る。</text>
+  </g>
+
+  <g transform="translate(74 1226)">
+    <rect width="934" height="70" rx="35" fill="#3F2231"/>
+    <text x="467" y="46" text-anchor="middle" fill="#FFF7F3" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="29" font-weight="700">MOBBY CAPSULE CLUB  |  1回引くだけで、会話のきっかけまで完成。</text>
+  </g>
+</svg>

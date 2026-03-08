@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350" fill="none">
+  <defs>
+    <linearGradient id="bgFriend" x1="92" y1="66" x2="970" y2="1270" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF9F2"/>
+      <stop offset="0.58" stop-color="#FFE7E2"/>
+      <stop offset="1" stop-color="#FFF0D9"/>
+    </linearGradient>
+    <pattern id="friendDots" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="4" cy="4" r="2.2" fill="#FFFFFF" fill-opacity="0.68"/>
+    </pattern>
+  </defs>
+  <rect width="1080" height="1350" rx="52" fill="url(#bgFriend)"/>
+  <rect width="1080" height="1350" rx="52" fill="url(#friendDots)" opacity="0.45"/>
+  <circle cx="172" cy="232" r="182" fill="#FFD96F" fill-opacity="0.28"/>
+  <circle cx="928" cy="1088" r="214" fill="#79D8FF" fill-opacity="0.2"/>
+
+  <g transform="translate(76 78)">
+    <rect width="330" height="58" rx="29" fill="#FFFDF9"/>
+    <text x="165" y="38" text-anchor="middle" fill="#A55B2A" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="24" font-weight="700" letter-spacing="3.2">CONVERSATION POST</text>
+  </g>
+
+  <text x="78" y="246" fill="#3F2231" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="92" font-weight="700">友だちと引くと、</text>
+  <text x="78" y="350" fill="#3F2231" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="92" font-weight="700">会話が増える。</text>
+
+  <text x="82" y="430" fill="#6E5362" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="34" font-weight="700">「それっぽすぎ」「それ欲しい」が出やすいから、</text>
+  <text x="82" y="476" fill="#6E5362" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="34" font-weight="700">ガチャ結果そのものがDMとストーリーのネタになる。</text>
+
+  <g transform="translate(78 540)">
+    <rect width="234" height="64" rx="32" fill="#FFFDF9"/>
+    <text x="117" y="41" text-anchor="middle" fill="#8D5267" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="28" font-weight="700">親友LINE向き</text>
+  </g>
+  <g transform="translate(326 540)">
+    <rect width="248" height="64" rx="32" fill="#FFFDF9"/>
+    <text x="124" y="41" text-anchor="middle" fill="#8D5267" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="28" font-weight="700">ストーリー向き</text>
+  </g>
+  <g transform="translate(590 540)">
+    <rect width="300" height="64" rx="32" fill="#FFFDF9"/>
+    <text x="150" y="41" text-anchor="middle" fill="#8D5267" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="28" font-weight="700">結果見せ合い向き</text>
+  </g>
+
+  <g transform="translate(80 676)">
+    <rect width="420" height="154" rx="42" fill="#FFFDF9"/>
+    <text x="42" y="64" fill="#B14C74" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="28" font-weight="700">わたし</text>
+    <text x="42" y="108" fill="#3F2231" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="36" font-weight="700">「これ、うちすぎて無理」</text>
+    <text x="42" y="142" fill="#6E5362" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="24" font-weight="700">ガチャ結果をそのまま送るだけで成立。</text>
+  </g>
+
+  <g transform="translate(548 732)">
+    <rect width="430" height="154" rx="42" fill="#3F2231"/>
+    <text x="42" y="64" fill="#FFD96F" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="28" font-weight="700">友だち</text>
+    <text x="42" y="108" fill="#FFF7F2" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="36" font-weight="700">「それ絶対似合うやつ」</text>
+    <text x="42" y="142" fill="#FFE9DC" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="24" font-weight="700">返信まで含めて遊びになるのが強い。</text>
+  </g>
+
+  <g transform="translate(86 928) rotate(-6 0 0)">
+    <rect width="286" height="286" rx="34" fill="#FFFDF9" stroke="#F1D6C6" stroke-width="4"/>
+    <rect x="22" y="22" width="242" height="164" rx="24" fill="#FFE4E7"/>
+    <text x="30" y="226" fill="#3F2231" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="30" font-weight="700">まず結果を送る</text>
+    <text x="30" y="262" fill="#6E5362" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="22" font-weight="700">スクショが会話の入口になる。</text>
+  </g>
+
+  <g transform="translate(406 980) rotate(4 0 0)">
+    <rect width="286" height="286" rx="34" fill="#FFFDF9" stroke="#F1D6C6" stroke-width="4"/>
+    <rect x="22" y="22" width="242" height="164" rx="24" fill="#EAF8FF"/>
+    <text x="30" y="226" fill="#3F2231" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="30" font-weight="700">リアクションが返る</text>
+    <text x="30" y="262" fill="#6E5362" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="22" font-weight="700">「それわかる」で熱が伸びる。</text>
+  </g>
+
+  <g transform="translate(726 928) rotate(-2 0 0)">
+    <rect width="286" height="286" rx="34" fill="#FFFDF9" stroke="#F1D6C6" stroke-width="4"/>
+    <rect x="22" y="22" width="242" height="164" rx="24" fill="#FFF2C6"/>
+    <text x="30" y="226" fill="#3F2231" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="30" font-weight="700">そのまま再投稿</text>
+    <text x="30" y="262" fill="#6E5362" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="22" font-weight="700">ストーリーまで自然につながる。</text>
+  </g>
+
+  <g transform="translate(78 1226)">
+    <rect width="924" height="70" rx="35" fill="#3F2231"/>
+    <text x="462" y="46" text-anchor="middle" fill="#FFF7F3" font-family="Yu Gothic, Yu Gothic UI, sans-serif" font-size="29" font-weight="700">見せるためのガチャではなく、見せたくなるガチャ。</text>
+  </g>
+</svg>
