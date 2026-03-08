@@ -48,6 +48,7 @@
   let isCollectionModalOpen = false;
   let isShareModalOpen = false;
   let handleTouchFeedbackTimer = null;
+  let sharePreviewUrl = '';
   const GACHA_FIFTY_PACK_PRODUCT_TYPE = 'gacha_fifty_pack';
   const GACHA_CHECKOUT_SESSION_ENDPOINT = '/api/gacha-checkout-session';
   const GACHA_CHECKOUT_STATUS_ENDPOINT = '/api/gacha-checkout-status';
@@ -122,6 +123,9 @@
     shareSubline: document.getElementById('shareSubline'),
     shareOwnedCount: document.getElementById('shareOwnedCount'),
     shareHelpText: document.getElementById('shareHelpText'),
+    sharePreviewPanel: document.getElementById('sharePreviewPanel'),
+    sharePreviewHint: document.getElementById('sharePreviewHint'),
+    sharePreviewImage: document.getElementById('sharePreviewImage'),
     downloadShareButton: document.getElementById('downloadShareButton'),
     nativeShareButton: document.getElementById('nativeShareButton'),
     starterBonus: document.getElementById('starterBonus'),
@@ -302,7 +306,20 @@
         setShareFeedback('まだ保存できる画像がありません。まずは1回引いてみて。');
         return;
       }
-      downloadBlob(blob, buildShareFileName());
+      const fileName = buildShareFileName();
+      const result = await handleShareImageSave(blob, fileName);
+      if (result === 'shared') {
+        setShareFeedback('共有シートを開いたよ。「画像を保存」で端末に保存できます。');
+        return;
+      }
+      if (result === 'preview') {
+        setShareFeedback('保存用画像を表示したよ。長押しして保存してね。');
+        return;
+      }
+      if (result === 'cancelled') {
+        setShareFeedback('保存をキャンセルしたよ。もう一度押すとやり直せます。');
+        return;
+      }
       setShareFeedback('画像を保存したよ。SNSやストーリーにそのまま使えます。');
     });
 
@@ -315,30 +332,20 @@
 
       const fileName = buildShareFileName();
       const shareText = buildShareText(getShareSelection().previewStates);
-
-      if (!supportsNativeShare()) {
-        downloadBlob(blob, fileName);
-        setShareFeedback('この端末では画像共有に未対応だったので、保存できるようにしたよ。');
-        return;
-      }
-
-      const file = new File([blob], fileName, { type: 'image/png' });
-      const canShareFiles = typeof navigator.canShare !== 'function' || navigator.canShare({ files: [file] });
-      if (!canShareFiles) {
-        downloadBlob(blob, fileName);
-        setShareFeedback('この端末では画像共有に未対応だったので、保存できるようにしたよ。');
-        return;
-      }
-
-      try {
-        await navigator.share({ title: 'MOBBY CAPSULE', text: shareText, files: [file] });
+      const result = await shareImageOrFallback(blob, fileName, shareText);
+      if (result === 'shared') {
         setShareFeedback('シェアシートを開いたよ。');
-      } catch (error) {
-        if (error?.name !== 'AbortError') {
-          downloadBlob(blob, fileName);
-          setShareFeedback('共有が開けなかったので、保存できるようにしたよ。');
-        }
+        return;
       }
+      if (result === 'preview') {
+        setShareFeedback('共有に未対応だったので、保存用画像を表示したよ。長押し保存してSNSで使ってね。');
+        return;
+      }
+      if (result === 'cancelled') {
+        setShareFeedback('シェアをキャンセルしたよ。');
+        return;
+      }
+      setShareFeedback('この端末では画像共有に未対応だったので、保存できるようにしたよ。');
     });
   }
 
@@ -1227,6 +1234,7 @@
     isShareModalOpen = false;
     els.shareModal.hidden = true;
     document.body.classList.remove('is-share-open');
+    hideSharePreview();
   }
 
   function highlightCollectionCharacter(characterId, scrollIntoView) {
@@ -1307,6 +1315,77 @@
 
   function supportsNativeShare() {
     return typeof navigator !== 'undefined' && typeof navigator.share === 'function' && typeof File === 'function';
+  }
+
+  function prefersMobileSaveFlow() {
+    if (typeof window === 'undefined') return false;
+    return isMobileViewport() || window.matchMedia('(pointer: coarse)').matches;
+  }
+
+  function createShareFile(blob, fileName) {
+    if (typeof File !== 'function') return null;
+    try {
+      return new File([blob], fileName, { type: blob.type || 'image/png' });
+    } catch {
+      return null;
+    }
+  }
+
+  function canShareFile(file) {
+    if (!file || !supportsNativeShare()) return false;
+    return typeof navigator.canShare !== 'function' || navigator.canShare({ files: [file] });
+  }
+
+  async function handleShareImageSave(blob, fileName) {
+    if (prefersMobileSaveFlow()) {
+      const shareResult = await shareImageOrFallback(blob, fileName, 'MOBBYのコレクション画像を保存');
+      if (shareResult === 'shared' || shareResult === 'preview' || shareResult === 'cancelled') return shareResult;
+    }
+    hideSharePreview();
+    downloadBlob(blob, fileName);
+    return 'downloaded';
+  }
+
+  async function shareImageOrFallback(blob, fileName, shareText) {
+    const file = createShareFile(blob, fileName);
+    if (canShareFile(file)) {
+      try {
+        hideSharePreview();
+        await navigator.share({ title: 'MOBBY CAPSULE', text: shareText, files: [file] });
+        return 'shared';
+      } catch (error) {
+        if (error?.name === 'AbortError') return 'cancelled';
+      }
+    }
+    if (prefersMobileSaveFlow() && showSharePreview(blob, '画像を長押しして保存できます。保存後にSNSへ投稿してください。')) {
+      return 'preview';
+    }
+    hideSharePreview();
+    downloadBlob(blob, fileName);
+    return 'downloaded';
+  }
+
+  function showSharePreview(blob, message) {
+    if (!els.sharePreviewPanel || !els.sharePreviewImage) return false;
+    hideSharePreview();
+    sharePreviewUrl = URL.createObjectURL(blob);
+    els.sharePreviewImage.src = sharePreviewUrl;
+    els.sharePreviewPanel.hidden = false;
+    if (els.sharePreviewHint) els.sharePreviewHint.textContent = message;
+    window.setTimeout(() => {
+      els.sharePreviewPanel?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 32);
+    return true;
+  }
+
+  function hideSharePreview() {
+    if (sharePreviewUrl) {
+      URL.revokeObjectURL(sharePreviewUrl);
+      sharePreviewUrl = '';
+    }
+    if (els.sharePreviewImage) els.sharePreviewImage.removeAttribute('src');
+    if (els.sharePreviewHint) els.sharePreviewHint.textContent = '画像を長押しして保存できます。';
+    if (els.sharePreviewPanel) els.sharePreviewPanel.hidden = true;
   }
 
   function downloadBlob(blob, fileName) {
@@ -1571,7 +1650,8 @@
     const fiftyPackStock = toSafeInt(state.fiftyPackStock);
     const freeRemaining = freeAvailable ? 1 : 0;
     const ticketCount = toSafeInt(state.ichibanTickets);
-    const remainingSummary = `無料${freeRemaining}回 / 50連${fiftyPackStock}回 / チケット${ticketCount}枚`;
+    const freeModeSummary = `ガチャガチャ: 本日の無料 残り${freeRemaining}回 / 購入済み50連 残り${fiftyPackStock}回`;
+    const paidModeSummary = `一番くじ: チケット 残り${ticketCount}枚`;
     state.fiftyPackStock = fiftyPackStock;
 
     els.freeModeButton?.classList.toggle('is-active', isFreeMode);
@@ -1602,7 +1682,7 @@
     }
 
     if (els.modeStatus) {
-      els.modeStatus.textContent = remainingSummary;
+      els.modeStatus.textContent = isFreeMode ? freeModeSummary : paidModeSummary;
     }
 
     renderEconomyPanel();

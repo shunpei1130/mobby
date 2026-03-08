@@ -26,7 +26,6 @@
              <button class="mode-button" id="paidModeButton" type="button">一番くじ</button>
           </div>
         </div>
-         <div class="mode-status" id="modeStatus">読み込み中...</div>
         <div class="mode-economy-row">
           <div class="mode-economy card-surface" id="modeEconomy">
             <div class="mode-economy-head">
@@ -42,6 +41,7 @@
           <div class="mode-share-launch card-surface">
             <p class="section-kicker">Share</p>
             <button class="action-button primary mode-share-open-button" id="openShareModalButton" type="button">シェアを開く</button>
+            <p class="mode-economy-note">コレクション画像が保存できます</p>
           </div>
         </div>
         <div class="machine-stage">
@@ -89,6 +89,7 @@
                 </div>
               </div>
             </div>
+            <div class="mode-status" id="modeStatus">読み込み中...</div>
             </div>
           </div>
         </div>
@@ -123,22 +124,14 @@
     </main>
     <div class="share-modal" id="shareModal" hidden>
       <button class="share-modal-backdrop" id="shareModalBackdrop" type="button" aria-label="シェアを閉じる"></button>
-      <section class="share-modal-sheet card-surface" id="shareSection" role="dialog" aria-modal="true" aria-labelledby="shareModalTitle">
-        <div class="share-modal-head">
-          <div class="drawer-title-wrap">
-            <p class="drawer-kicker">Share</p>
-            <h3 id="shareModalTitle">シェア</h3>
-          </div>
-          <div class="share-modal-actions">
-            <button class="action-button secondary share-modal-close" id="closeShareModalButton" type="button">閉じる</button>
-          </div>
-        </div>
+      <section class="share-modal-sheet card-surface" id="shareSection" role="dialog" aria-modal="true">
         <div class="share-modal-body share-drawer-body">
           <div class="share-stage" id="shareStage">
             <div class="share-stage-head">
               <div class="share-stage-title-row">
                 <h3 class="share-stage-title" id="shareHeadline">MY MOBBY DROP</h3>
                 <div class="share-stage-count" id="shareOwnedCount">0 / 96</div>
+                <button class="action-button secondary share-modal-close share-stage-close" id="closeShareModalButton" type="button">閉じる</button>
               </div>
             </div>
             <p class="share-stage-subline" id="shareSubline">持っているカードがここに全部並びます。SNSに画像を載せよう。</p>
@@ -149,6 +142,10 @@
             <button class="action-button secondary" id="nativeShareButton" type="button">SNSでシェア</button>
           </div>
           <p class="share-help" id="shareHelpText">集めたカードを一覧で見せてシェアできます。</p>
+          <div class="share-preview-panel" id="sharePreviewPanel" hidden>
+            <p class="share-preview-hint" id="sharePreviewHint">画像を長押しして保存できます。</p>
+            <img class="share-preview-image" id="sharePreviewImage" src="" alt="保存用のシェア画像プレビュー">
+          </div>
           <canvas id="shareCanvas" width="1080" height="1350" hidden></canvas>
         </div>
       </section>
@@ -183,7 +180,7 @@
       <div class="gacha-lineup-head">
         <div>
           <p class="gacha-lineup-kicker" id="gachaLineupModeLabel">ラインナップ</p>
-          <h3 id="gachaLineupTitle">このガチャで出るアイテム一覧</h3>
+          <h3 id="gachaLineupTitle">アイテム一覧</h3>
         </div>
         <button class="action-button secondary gacha-lineup-close" id="closeGachaLineupButton" type="button">閉じる</button>
       </div>
