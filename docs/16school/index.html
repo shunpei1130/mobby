@@ -1093,10 +1093,26 @@
       animation: modalSlideIn 0.2s ease forwards;
     }
     @media (max-width: 600px) {
+      .char-modal-overlay {
+        align-items: flex-start;
+        padding: 12px;
+      }
       .char-modal {
         padding: 24px 16px;
-        max-height: 85vh;
+        max-height: min(88dvh, calc(100vh - 24px));
       }
+    }
+    .char-modal::-webkit-scrollbar {
+      width: 10px;
+    }
+    .char-modal::-webkit-scrollbar-track {
+      background: rgba(232, 242, 255, 0.72);
+      border-radius: 999px;
+    }
+    .char-modal::-webkit-scrollbar-thumb {
+      background: rgba(0, 113, 227, 0.35);
+      border-radius: 999px;
+      border: 2px solid rgba(232, 242, 255, 0.72);
     }
     @keyframes modalSlideIn {
       to {
@@ -2442,7 +2458,7 @@ const means = {};
           <div style="display:grid; gap:16px;">
             <div class="info-card" style="margin:0;">
               <h3 style="color:var(--accent); margin-bottom:12px;">軸A：キャラタイプ</h3>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
                 <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #2f9e73;">
                   <div style="font-size:24px; font-weight:700; color:#2f9e73;">が</div>
                   <div style="font-size:13px; font-weight:600; margin:4px 0;">陽キャラ</div>
@@ -2458,7 +2474,7 @@ const means = {};
             
             <div class="info-card" style="margin:0;">
               <h3 style="color:var(--accent); margin-bottom:12px;">軸B：雰囲気</h3>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
                 <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #2f9e73;">
                   <div style="font-size:24px; font-weight:700; color:#2f9e73;">や</div>
                   <div style="font-size:13px; font-weight:600; margin:4px 0;">やんちゃ</div>
@@ -2474,7 +2490,7 @@ const means = {};
             
             <div class="info-card" style="margin:0;">
               <h3 style="color:var(--accent); margin-bottom:12px;">軸C：行動スタイル</h3>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
                 <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #2f9e73;">
                   <div style="font-size:24px; font-weight:700; color:#2f9e73;">み</div>
                   <div style="font-size:13px; font-weight:600; margin:4px 0;">仲間重視</div>
@@ -2490,7 +2506,7 @@ const means = {};
             
             <div class="info-card" style="margin:0;">
               <h3 style="color:var(--accent); margin-bottom:12px;">軸D：評価基準</h3>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
                 <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #2f9e73;">
                   <div style="font-size:24px; font-weight:700; color:#2f9e73;">そ</div>
                   <div style="font-size:13px; font-weight:600; margin:4px 0;">外（他者評価）</div>
@@ -2519,7 +2535,7 @@ const means = {};
           <div style="display:grid; gap:16px;">
             <div class="info-card" style="margin:0;">
               <h3 style="color:#ec407a; margin-bottom:12px;">軸A：キャラタイプ</h3>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
                 <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #2f9e73;">
                   <div style="font-size:24px; font-weight:700; color:#2f9e73;">が</div>
                   <div style="font-size:13px; font-weight:600; margin:4px 0;">陽キャラ</div>
@@ -2535,7 +2551,7 @@ const means = {};
             
             <div class="info-card" style="margin:0;">
               <h3 style="color:#ec407a; margin-bottom:12px;">軸B：雰囲気</h3>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
                 <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #2f9e73;">
                   <div style="font-size:24px; font-weight:700; color:#2f9e73;">お</div>
                   <div style="font-size:13px; font-weight:600; margin:4px 0;">清楚</div>
@@ -2551,7 +2567,7 @@ const means = {};
             
             <div class="info-card" style="margin:0;">
               <h3 style="color:#ec407a; margin-bottom:12px;">軸C：関係性</h3>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
                 <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #2f9e73;">
                   <div style="font-size:24px; font-weight:700; color:#2f9e73;">み</div>
                   <div style="font-size:13px; font-weight:600; margin:4px 0;">友達優先</div>
@@ -2567,7 +2583,7 @@ const means = {};
             
             <div class="info-card" style="margin:0;">
               <h3 style="color:#ec407a; margin-bottom:12px;">軸D：評価基準</h3>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
                 <div style="background:#fff; padding:12px; border-radius:12px; border-left:4px solid #2f9e73;">
                   <div style="font-size:24px; font-weight:700; color:#2f9e73;">そ</div>
                   <div style="font-size:13px; font-weight:600; margin:4px 0;">評価重視</div>

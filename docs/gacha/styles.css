@@ -594,6 +594,10 @@ a {
   max-height: min(88vh, 920px);
   display: grid;
   gap: 12px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 124, 109, 0.52) rgba(255, 241, 226, 0.92);
   padding: 16px;
   border-radius: 24px;
 }
@@ -667,6 +671,10 @@ a {
   max-height: min(88vh, 860px);
   display: grid;
   gap: 12px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 124, 109, 0.52) rgba(255, 241, 226, 0.92);
   padding: 16px;
   border-radius: 24px;
 }
@@ -811,6 +819,9 @@ a {
   max-height: min(40vh, 420px);
   padding-right: 4px;
   overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 124, 109, 0.52) rgba(255, 241, 226, 0.92);
 }
 
 .lineup-item-card {
@@ -884,6 +895,27 @@ a {
 
 .gacha-lineup-spin {
   width: 100%;
+}
+
+.collection-modal-sheet::-webkit-scrollbar,
+.gacha-lineup-sheet::-webkit-scrollbar,
+.gacha-lineup-grid::-webkit-scrollbar {
+  width: 10px;
+}
+
+.collection-modal-sheet::-webkit-scrollbar-track,
+.gacha-lineup-sheet::-webkit-scrollbar-track,
+.gacha-lineup-grid::-webkit-scrollbar-track {
+  background: rgba(255, 241, 226, 0.92);
+  border-radius: 999px;
+}
+
+.collection-modal-sheet::-webkit-scrollbar-thumb,
+.gacha-lineup-sheet::-webkit-scrollbar-thumb,
+.gacha-lineup-grid::-webkit-scrollbar-thumb {
+  background: rgba(255, 124, 109, 0.52);
+  border-radius: 999px;
+  border: 2px solid rgba(255, 241, 226, 0.92);
 }
 .gacha-machine-body {
   position: relative;
@@ -3385,10 +3417,11 @@ body.is-share-open {
 
   .gacha-lineup-sheet {
     width: 100%;
-    max-height: 90vh;
+    max-height: min(90dvh, calc(100vh - 16px));
     padding: 12px;
     border-radius: 20px;
     gap: 9px;
+    padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
   }
 
   .gacha-lineup-head {
@@ -3419,7 +3452,7 @@ body.is-share-open {
   }
 
   .gacha-lineup-grid {
-    max-height: 43vh;
+    max-height: min(44dvh, 360px);
   }
 
   .lineup-feature-item,
@@ -3447,7 +3480,7 @@ body.is-share-open {
 @media (max-width: 768px) {
   .share-stage-grid.share-owned-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    max-height: 46vh;
+    max-height: min(48dvh, 420px);
     gap: 8px;
     padding-right: 2px;
   }
@@ -3472,10 +3505,11 @@ body.is-share-open {
 
   .collection-modal-sheet {
     width: 100%;
-    max-height: 90vh;
+    max-height: min(90dvh, calc(100vh - 16px));
     padding: 12px;
     border-radius: 20px;
     gap: 9px;
+    padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
   }
 
   .collection-modal-head {
@@ -3488,7 +3522,7 @@ body.is-share-open {
 
   .collection-modal .collection-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    height: 46vh;
+    height: min(48dvh, 420px);
   }
 }
 
@@ -3617,9 +3651,10 @@ body.is-share-open {
 
   .share-modal-sheet {
     width: 100%;
-    max-height: 90vh;
+    max-height: min(90dvh, calc(100vh - 16px));
     padding: 12px;
     border-radius: 20px;
+    padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
   }
 
   .share-modal-head {
@@ -3637,7 +3672,7 @@ body.is-share-open {
 
   .checkout-panel {
     width: 100%;
-    max-height: 90vh;
+    max-height: min(90dvh, calc(100vh - 16px));
     padding: 12px;
     border-radius: 20px;
   }
