@@ -152,6 +152,12 @@
     },
   };
 
+  function buildGachaImageUrl(character, index) {
+    const extensionMatch = /\.[a-zA-Z0-9]+$/.exec(character.img || '');
+    const extension = extensionMatch ? extensionMatch[0].toLowerCase() : '.jpg';
+    return `gacha/assets/cards/character_${String(index + 1).padStart(3, '0')}${extension}`;
+  }
+
   const characters = rawCharacters.map((character, index) => {
     const category = categories.find((item) => item.key === character.cat) || { key: character.cat, label: 'MOBBY', color: '#6b7280' };
     const theme = themeDefinitions[character.cat] || { key: 'misc', label: 'モビー編', bannerLabel: 'Mobby', accent: category.color };
@@ -168,7 +174,7 @@
       themeAccent: theme.accent,
       summary: character.summary,
       catch: character.catch,
-      imageUrl: character.img,
+      imageUrl: buildGachaImageUrl(character, index),
       releaseStatus: 'released',
     };
   });
