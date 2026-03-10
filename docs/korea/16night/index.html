@@ -1101,7 +1101,52 @@
         const ANS_LABEL = { 1: "그렇게 생각한다", 2: "약간 그렇게 생각한다", 3: "조금 그렇게 생각한다", 4: "어느 쪽도 아니다", 5: "조금 그렇게 생각하지 않는다", 6: "약간 그렇게 생각하지 않는다", 7: "그렇게 생각하지 않는다" };
         const STORAGE_KEY = "night_char_diag_korea_v1";
         const PAGE_SIZE = 5;
+        const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzu8ZWwvtKHWIwqnjqlKkdbPTWN1o7oSxpsBZ-Crdv6zlmCbSeWFlMDZ3sjU9SgCsFOgQ/exec";
         const state = { step: "intro", page: 0, answers: {}, questionOrder: null, profile: { name: "", email: "" }, sentToSheet: false };
+        function buildStripeSheetPayload(res, extraPayload = {}) {
+            const questionAnswers = {};
+            QUESTIONS.forEach(q => { if (state.answers[q.id]) questionAnswers[q.id] = state.answers[q.id]; });
+            let storageRaw = "";
+            try { storageRaw = localStorage.getItem(STORAGE_KEY) || ""; } catch (_) { }
+            let stateSnapshot = null;
+            try { stateSnapshot = JSON.parse(JSON.stringify(state)); } catch (_) { stateSnapshot = state; }
+            return {
+                event: "stripe_click",
+                source: "korea_16night",
+                createdAt: new Date().toISOString(),
+                pageUrl: window.location.href,
+                userAgent: navigator.userAgent,
+                name: state.profile?.name || "",
+                email: state.profile?.email || "",
+                type: res?.code || "",
+                diagnosisName: res?.char?.name || "",
+                bestJob: res?.char?.bestJob || "",
+                axes: res?.leftPct || {},
+                answers: questionAnswers,
+                storageKey: STORAGE_KEY,
+                storageRaw,
+                stateSnapshot,
+                ...extraPayload
+            };
+        }
+        function sendToGoogleSheet(payload) {
+            if (!GAS_WEBAPP_URL) return;
+            try {
+                const body = JSON.stringify(payload);
+                if (navigator.sendBeacon) {
+                    const blob = new Blob([body], { type: "text/plain" });
+                    navigator.sendBeacon(GAS_WEBAPP_URL, blob);
+                    return;
+                }
+                fetch(GAS_WEBAPP_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "text/plain" },
+                    body,
+                    keepalive: true
+                }).catch(() => { });
+            } catch (_) { }
+        }
         function shuffleArray(a) { const s = [...a]; for (let i = s.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[s[i], s[j]] = [s[j], s[i]]; } return s; }
         function getQuestionOrder() { if (state.questionOrder && state.questionOrder.length === QUESTIONS.length) return state.questionOrder; const idx = Array.from({ length: QUESTIONS.length }, (_, i) => i); state.questionOrder = shuffleArray(idx); saveState(); return state.questionOrder; }
         function getShuffledQuestions() { return getQuestionOrder().map(i => QUESTIONS[i]); }
@@ -1454,6 +1499,18 @@
             if (resultProductTabButtons.length > 0) {
                 activateResultProductTab("plush");
             }
+
+            const stripeButtons = Array.from(document.querySelectorAll("[data-stripe-product-type]"));
+            stripeButtons.forEach((stripeBtn) => {
+                stripeBtn.addEventListener("click", () => {
+                    const payload = buildStripeSheetPayload(res, {
+                        clickedProductType: stripeBtn.dataset.stripeProductType || "",
+                        clickedProductLabel: stripeBtn.dataset.stripeProductLabel || "",
+                        clickedButtonId: stripeBtn.id || ""
+                    });
+                    sendToGoogleSheet(payload);
+                });
+            });
 
             const snsImagePath = getSnsImagePathByCode(res.code);
             const snsSaveBtn = document.getElementById("btnSaveSnsImage");

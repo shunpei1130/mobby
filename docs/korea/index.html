@@ -184,27 +184,6 @@
       opacity: 1;
     }
 
-    /* モビータイトル上のサブテキスト */
-    .mobby-subtitle {
-      text-align: center;
-      font-size: 0.85rem;
-      font-weight: 600;
-      font-family: var(--font-ja);
-      color: var(--color-forest);
-      opacity: 0.75;
-      padding-top: 28px;
-      padding-bottom: 4px;
-      letter-spacing: 0.1em;
-    }
-
-    @media (max-width: 768px) {
-      .mobby-subtitle {
-        font-size: 0.75rem;
-        padding-top: 20px;
-        padding-bottom: 2px;
-      }
-    }
-
     /* モビータイトル */
     .mobby-title {
       text-align: center;
@@ -275,11 +254,6 @@
       color: #fff;
     }
 
-    #openColorsPopup {
-      background-color: #f0b99f;
-      color: #fff;
-    }
-
     #openPricePopup {
       background-color: #f6d49c;
       color: #fff;
@@ -338,8 +312,8 @@
     }
 
     #openFaqPopup {
-      background-color: #fdeed7;
-      color: #827b6a;
+      background-color: #f28bb3;
+      color: #fff;
     }
 
     #openVideoPopup {
@@ -2574,7 +2548,6 @@
   </script>
 
   <div id="main-content">
-    <div class="mobby-subtitle">카메라형 키홀더</div>
     <div class="mobby-title">Mobby</div>
     <h1 class="headline reveal delay-200">간직하고 싶은 5가지 추억</h1>
     <section class="hero">
@@ -3059,7 +3032,6 @@
       <div class="container">
         <div class="popup-buttons">
           <button class="btn btn-secondary" id="openMessagePopup">메시지</button>
-          <button class="btn btn-secondary" id="openColorsPopup">4색</button>
           <div class="btn-with-counter">
             <div class="reservation-counter" id="reservationCounter" aria-live="polite">
               2월 예약 수: <span id="reservationCount">0</span>
@@ -4446,7 +4418,6 @@
 
     /* Popup buttons */
     document.getElementById('openMessagePopup')?.addEventListener('click', () => openPopup('messagePopup'));
-    document.getElementById('openColorsPopup')?.addEventListener('click', () => openPopup('colorsPopup'));
     document.getElementById('openPricePopup')?.addEventListener('click', () => {
       activateReservationTab("camera");
       openPopup('pricePopup');

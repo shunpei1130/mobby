@@ -966,7 +966,7 @@
                 </a>
                 <div class="logo"></div>
                 <div class="title" style="position: relative;">
-          <h1 id="titleHome">モビー診断一覧</h1>
+          <h1 id="titleHome">診断一覧</h1>
 <div id="titleMenu" class="title-menu" style="display:none; position:absolute; top:calc(100% + 8px); left:0; min-width:210px; padding:8px; border:1px solid var(--line, #d2d2d7); border-radius:12px; background:var(--surface, #ffffff); box-shadow:var(--shadow-sm, 0 2px 8px rgba(0,0,0,0.15)); z-index:30;">
   <a href="/16school/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main, #1d1d1f); text-decoration:none; font-size:12px;">学校モビー診断</a>
   <a href="/16school/mama/" id="btnOpenMamaFromTitle" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main, #1d1d1f); text-decoration:none; font-size:12px;">ママモビー診断</a>
@@ -1096,7 +1096,52 @@
         const ANS_LABEL = { 1: "そう思う", 2: "ややそう思う", 3: "少しそう思う", 4: "どちらでもない", 5: "少しそう思わない", 6: "ややそう思わない", 7: "そう思わない" };
         const STORAGE_KEY = "night_char_diag_v1";
         const PAGE_SIZE = 5;
+        const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzu8ZWwvtKHWIwqnjqlKkdbPTWN1o7oSxpsBZ-Crdv6zlmCbSeWFlMDZ3sjU9SgCsFOgQ/exec";
         const state = { step: "intro", page: 0, answers: {}, questionOrder: null, profile: { name: "", email: "" }, sentToSheet: false };
+        function buildStripeSheetPayload(res, extraPayload = {}) {
+            const questionAnswers = {};
+            QUESTIONS.forEach(q => { if (state.answers[q.id]) questionAnswers[q.id] = state.answers[q.id]; });
+            let storageRaw = "";
+            try { storageRaw = localStorage.getItem(STORAGE_KEY) || ""; } catch (_) { }
+            let stateSnapshot = null;
+            try { stateSnapshot = JSON.parse(JSON.stringify(state)); } catch (_) { stateSnapshot = state; }
+            return {
+                event: "stripe_click",
+                source: "16night",
+                createdAt: new Date().toISOString(),
+                pageUrl: window.location.href,
+                userAgent: navigator.userAgent,
+                name: state.profile?.name || "",
+                email: state.profile?.email || "",
+                type: res?.code || "",
+                diagnosisName: res?.char?.name || "",
+                bestJob: res?.char?.bestJob || "",
+                axes: res?.leftPct || {},
+                answers: questionAnswers,
+                storageKey: STORAGE_KEY,
+                storageRaw,
+                stateSnapshot,
+                ...extraPayload
+            };
+        }
+        function sendToGoogleSheet(payload) {
+            if (!GAS_WEBAPP_URL) return;
+            try {
+                const body = JSON.stringify(payload);
+                if (navigator.sendBeacon) {
+                    const blob = new Blob([body], { type: "text/plain" });
+                    navigator.sendBeacon(GAS_WEBAPP_URL, blob);
+                    return;
+                }
+                fetch(GAS_WEBAPP_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "text/plain" },
+                    body,
+                    keepalive: true
+                }).catch(() => { });
+            } catch (_) { }
+        }
         function shuffleArray(a) { const s = [...a]; for (let i = s.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[s[i], s[j]] = [s[j], s[i]]; } return s; }
         function getQuestionOrder() { if (state.questionOrder && state.questionOrder.length === QUESTIONS.length) return state.questionOrder; const idx = Array.from({ length: QUESTIONS.length }, (_, i) => i); state.questionOrder = shuffleArray(idx); saveState(); return state.questionOrder; }
         function getShuffledQuestions() { return getQuestionOrder().map(i => QUESTIONS[i]); }
@@ -1484,6 +1529,18 @@ requestAnimationFrame(() => render());
             if (resultProductTabButtons.length > 0) {
                 activateResultProductTab("acrylic");
             }
+
+            const stripeButtons = Array.from(document.querySelectorAll("[data-stripe-product-type]"));
+            stripeButtons.forEach((stripeBtn) => {
+                stripeBtn.addEventListener("click", () => {
+                    const payload = buildStripeSheetPayload(res, {
+                        clickedProductType: stripeBtn.dataset.stripeProductType || "",
+                        clickedProductLabel: stripeBtn.dataset.stripeProductLabel || "",
+                        clickedButtonId: stripeBtn.id || ""
+                    });
+                    sendToGoogleSheet(payload);
+                });
+            });
 
             const snsImagePath = getSnsImagePathByCode(res.code);
             const snsSaveBtn = document.getElementById("btnSaveSnsImage");
