@@ -1,5 +1,9 @@
 {
   "rewrites": [
+    { "source": "/img/fav.jpg", "destination": "/img/favicon/fav.jpg" },
+    { "source": "/16school/fav.jpg", "destination": "/16school/favicon/fav.jpg" },
+    { "source": "/korea/16school/fav.jpg", "destination": "/korea/16school/favicon/fav.jpg" },
+    { "source": "/favicon/:path*", "destination": "/img/favicon/:path*" },
     { "source": "/terms", "destination": "/legal/terms.html" },
     { "source": "/privacy", "destination": "/legal/privacy.html" },
     { "source": "/tokusho", "destination": "/legal/tokusho.html" },
