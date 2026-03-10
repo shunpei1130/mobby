@@ -1,5 +1,21 @@
 {
   "rewrites": [
+    { "source": "/terms", "destination": "/legal/terms.html" },
+    { "source": "/privacy", "destination": "/legal/privacy.html" },
+    { "source": "/tokusho", "destination": "/legal/tokusho.html" },
+    { "source": "/company", "destination": "/legal/company.html" },
+    { "source": "/terms.html", "destination": "/legal/terms.html" },
+    { "source": "/privacy.html", "destination": "/legal/privacy.html" },
+    { "source": "/tokusho.html", "destination": "/legal/tokusho.html" },
+    { "source": "/company.html", "destination": "/legal/company.html" },
+    { "source": "/mobby_pink.jpg", "destination": "/img/mobby/mobby_pink.jpg" },
+    { "source": "/mobby_purple.jpg", "destination": "/img/mobby/mobby_purple.jpg" },
+    { "source": "/mobby_blue.jpg", "destination": "/img/mobby/mobby_blue.jpg" },
+    { "source": "/mobby_orange.jpg", "destination": "/img/mobby/mobby_orange.jpg" },
+    { "source": "/mobby_pink2.jpg", "destination": "/img/mobby/mobby_pink2.jpg" },
+    { "source": "/mobby_yellow.jpg", "destination": "/img/mobby/mobby_yellow.jpg" },
+    { "source": "/mobby_purple2.jpg", "destination": "/img/mobby/mobby_purple2.jpg" },
+    { "source": "/mobby_blue2.jpg", "destination": "/img/mobby/mobby_blue2.jpg" },
     { "source": "/16school/((?!api|.*\\..*).*)", "destination": "/16school/index.html" },
     { "source": "/((?!api|.*\\..*).*)", "destination": "/index.html" }
   ],
