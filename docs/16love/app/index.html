@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心の整理箱 - つらいことを吐き出そう</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4f63c9 0%, #5f368f 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .home-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 20;
+            padding: 10px 16px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.18);
+            border: 1px solid rgba(255,255,255,0.32);
+            color: white;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 10px 24px rgba(16, 18, 46, 0.18);
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .home-button:hover {
+            transform: translateY(-1px);
+            background: rgba(255,255,255,0.24);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            perspective: 1000px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .input-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .input-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            padding: 15px;
+            font-family: inherit;
+            font-size: 0.95em;
+            resize: none;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
+        }
+
+        button {
+            width: 100%;
+            margin-top: 15px;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .stats {
+            color: white;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        .stats-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .capsule-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 500px;
+            animation: slideUp 0.8s ease-out 0.2s both;
+        }
+
+        .capsule {
+            width: min(100%, 460px);
+            height: 500px;
+            position: relative;
+            overflow: visible;
+            perspective: 1200px;
+            filter: drop-shadow(0 30px 50px rgba(14, 19, 48, 0.22));
+        }
+
+        .capsule::before {
+            content: "";
+            position: absolute;
+            inset: 2% 10% 4%;
+            border-radius: 999px;
+            background:
+                radial-gradient(circle at 30% 20%, rgba(255,255,255,0.88), rgba(255,255,255,0.18) 28%, transparent 36%),
+                linear-gradient(180deg, rgba(255,255,255,0.88) 0%, rgba(223,236,255,0.55) 12%, rgba(164,196,255,0.2) 42%, rgba(125,157,225,0.18) 100%),
+                linear-gradient(135deg, rgba(184,214,255,0.18), rgba(255,209,233,0.16));
+            border: 2px solid rgba(255,255,255,0.58);
+            box-shadow:
+                inset 0 16px 38px rgba(255,255,255,0.55),
+                inset 0 -20px 32px rgba(112,146,219,0.14),
+                0 24px 44px rgba(28, 39, 92, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transform: rotateX(8deg) rotateY(-6deg);
+        }
+
+        .capsule::after {
+            content: "";
+            position: absolute;
+            inset: 47.5% 12% auto;
+            height: 7px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.16), rgba(255,255,255,0.92) 24%, rgba(186,208,255,0.82) 50%, rgba(255,255,255,0.92) 76%, rgba(255,255,255,0.16));
+            box-shadow:
+                0 0 0 1px rgba(139,166,216,0.15),
+                0 3px 10px rgba(91, 121, 185, 0.16);
+        }
+
+        .capsule-content {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            padding: 12px;
+            display: block;
+            transform-style: preserve-3d;
+            position: relative;
+            z-index: 1;
+            isolation: isolate;
+        }
+
+        .capsule-content::before {
+            content: "";
+            position: absolute;
+            inset: 3.5% 11.5% 5%;
+            border-radius: 999px;
+            background:
+                radial-gradient(circle at 50% 24%, rgba(255,255,255,0.46), transparent 34%),
+                radial-gradient(circle at 50% 100%, rgba(113,148,226,0.12), transparent 38%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .text-bubble {
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: inline-block;
+            max-width: min(42%, 156px);
+            color: var(--bubble-text, #51354f);
+            font-size: 0.84rem;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: 0.02em;
+            word-break: break-word;
+            text-align: center;
+            background: none;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            text-shadow:
+                0 1px 0 rgba(255,255,255,0.5),
+                0 2px 0 rgba(255,255,255,0.26),
+                0 3px 0 rgba(255,255,255,0.12),
+                0 10px 18px var(--bubble-shadow, rgba(84, 93, 160, 0.24));
+            transform-style: preserve-3d;
+            will-change: transform;
+            user-select: none;
+        }
+
+        .empty-message {
+            color: rgba(255,255,255,0.6);
+            text-align: center;
+            position: absolute;
+            inset: 50% 0 auto;
+            transform: translateY(-50%);
+            font-size: 0.9em;
+            width: 100%;
+        }
+
+        .clear-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.5);
+            color: #1f2937;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .action-buttons {
+            display: contents;
+        }
+
+        .clear-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                min-height: 100svh;
+                height: 100svh;
+                align-items: flex-start;
+                padding: 16px;
+                overflow: hidden;
+            }
+
+            .home-button {
+                top: 14px;
+                left: 14px;
+                padding: 8px 13px;
+                font-size: 0.78rem;
+            }
+
+            .container {
+                max-width: 100%;
+                height: calc(100svh - 32px);
+                display: grid;
+                grid-template-rows: auto 1fr;
+            }
+
+            .content {
+                height: 100%;
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "capsule"
+                    "input";
+                grid-template-rows: minmax(0, 1fr) auto;
+                gap: 12px;
+                align-items: stretch;
+            }
+
+            .header h1 {
+                font-size: 1.45em;
+                margin-bottom: 4px;
+            }
+
+            .header {
+                margin-bottom: 10px;
+            }
+
+            .header p {
+                font-size: 0.8em;
+            }
+
+            .input-section {
+                grid-area: input;
+                padding: 12px 14px;
+                border-radius: 18px;
+                opacity: 0.96;
+                box-shadow: 0 12px 28px rgba(0,0,0,0.16);
+                display: grid;
+                gap: 8px;
+            }
+
+            .input-section h2 {
+                display: none;
+            }
+
+            textarea {
+                height: 58px;
+                padding: 10px 12px;
+                border-radius: 12px;
+                font-size: 0.82em;
+            }
+
+            .action-buttons {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+
+            button {
+                margin-top: 0;
+                padding: 9px 12px;
+                border-radius: 12px;
+                font-size: 0.82em;
+                width: 100%;
+            }
+
+            .clear-btn {
+                margin-top: 0;
+                color: #1f2937;
+            }
+
+            .stats {
+                display: none;
+            }
+
+            .capsule-section {
+                grid-area: capsule;
+                min-height: 0;
+                align-items: center;
+                margin-top: 0;
+                width: 100%;
+            }
+
+            .capsule {
+                width: 100%;
+                height: min(54svh, 350px);
+            }
+
+            .capsule::before {
+                inset: 2.5% 8% 4%;
+                box-shadow:
+                    inset 0 14px 28px rgba(255,255,255,0.42),
+                    0 18px 30px rgba(10, 14, 35, 0.14);
+            }
+
+            .capsule::after {
+                inset: 47% 9% auto;
+            }
+
+            .capsule-content {
+                padding: 10px 6px;
+            }
+
+            .text-bubble {
+                font-size: 0.7em;
+                line-height: 1.1;
+                max-width: min(44%, 120px);
+            }
+
+            .empty-message {
+                font-size: 0.78em;
+                align-self: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a class="home-button" href="../index.html">home</a>
+    <div class="container">
+        <div class="header">
+            <h1>ふーちゃんの部屋</h1>
+            <p>思ったこと（いいことも悪いことも）</p>
+        </div>
+
+        <div class="content">
+            <div class="input-section">
+                <h2>📝 つらいことを書く</h2>
+                <textarea id="textInput" placeholder="ここにつらかったことを書いてね..."></textarea>
+                <div class="action-buttons">
+                    <button onclick="addText()">吐き出す！</button>
+                    <button class="clear-btn" onclick="clearAll()">🔄 すべてクリア</button>
+                </div>
+                <div class="stats">
+                    <div>乗り越えた数</div>
+                    <div class="stats-number" id="count">0</div>
+                </div>
+            </div>
+
+            <div class="capsule-section">
+                <div class="capsule">
+                    <div class="capsule-content" id="capsuleContent">
+                        <div class="empty-message">✨ つらいこと</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="application/json">
+        const textInput = document.getElementById('textInput');
+        const capsuleContent = document.getElementById('capsuleContent');
+        const countDisplay = document.getElementById('count');
+
+        // ローカルストレージキー
+        const STORAGE_KEY = 'heartCapsule_texts';
+
+        // 初期化
+        function init() {
+            loadData();
+        }
+
+        // テキスト追加
+        function addText() {
+            const text = textInput.value.trim();
+            if (text === '') {
+                alert('何か書いてね！');
+                return;
+            }
+
+            // ローカルストレージに保存
+            let texts = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            texts.push({
+                text: text,
+                date: new Date().toLocaleString('ja-JP')
+            });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(texts));
+
+            // UIを更新
+            textInput.value = '';
+            loadData();
+        }
+
+        // データを読み込んで表示
+        function loadData() {
+            const texts = getStoredTexts();
+            const existingBodies = new Map(
+                simulation.bodies.map((body) => [body.element.dataset.textId, body])
+            );
+            
+            capsuleContent.innerHTML = '';
+            
+            if (texts.length === 0) {
+                simulation.bodies = [];
+                simulation.bodies = [];
+                simulation.bodies = [];
+                simulation.bodies = [];
+                capsuleContent.innerHTML = '<div class="empty-message">つらいこと</div>';
+            } else {
+                texts.forEach((item, index) => {
+                    const bubble = document.createElement('div');
+                    bubble.className = 'text-bubble';
+                    bubble.textContent = item.text;
+                    bubble.style.setProperty('--rx', `${-16 + (index % 5) * 5}deg`);
+                    bubble.style.setProperty('--ry', `${10 - (index % 4) * 6}deg`);
+                    bubble.style.setProperty('--rz', `${-4 + (index % 6) * 1.5}deg`);
+                    bubble.style.setProperty('--depth', `${18 + (index % 5) * 5}px`);
+                    bubble.style.setProperty('--duration', `${5.2 + (index % 4) * 0.55}s`);
+                    bubble.style.setProperty('--delay', `${index * 0.12}s`);
+                    capsuleContent.appendChild(bubble);
+                });
+                capsuleContent.scrollTop = capsuleContent.scrollHeight;
+            }
+
+            countDisplay.textContent = texts.length;
+        }
+
+        // すべてクリア
+        function clearAll() {
+            if (confirm('本当にクリアしますか？')) {
+                localStorage.removeItem(STORAGE_KEY);
+                loadData();
+            }
+        }
+
+        // Enterキーで送信
+        textInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                addText();
+            }
+        });
+
+        // ページ読み込み時に初期化
+        init();
+    </script>
+    <script>
+        const textInput = document.getElementById('textInput');
+        const capsuleContent = document.getElementById('capsuleContent');
+        const countDisplay = document.getElementById('count');
+        const STORAGE_KEY = 'heartCapsule_texts';
+        const simulation = {
+            bodies: [],
+            frameId: null,
+            width: 0,
+            height: 0,
+            lastTime: 0
+        };
+        const BUBBLE_THEMES = [
+            {
+                fill: 'linear-gradient(135deg, #ffe1ef 0%, #ffd1db 100%)',
+                border: 'rgba(255,255,255,0.82)',
+                text: '#c22f6b',
+                shadow: 'rgba(214, 106, 155, 0.24)'
+            },
+            {
+                fill: 'linear-gradient(135deg, #fff0c8 0%, #ffdba1 100%)',
+                border: 'rgba(255,248,220,0.86)',
+                text: '#cc6b00',
+                shadow: 'rgba(212, 155, 52, 0.22)'
+            },
+            {
+                fill: 'linear-gradient(135deg, #dbf7ff 0%, #c6ddff 100%)',
+                border: 'rgba(255,255,255,0.84)',
+                text: '#1e66d0',
+                shadow: 'rgba(94, 142, 214, 0.24)'
+            },
+            {
+                fill: 'linear-gradient(135deg, #e8e2ff 0%, #d8cdff 100%)',
+                border: 'rgba(255,255,255,0.84)',
+                text: '#7443d6',
+                shadow: 'rgba(123, 97, 224, 0.22)'
+            },
+            {
+                fill: 'linear-gradient(135deg, #ddf8ec 0%, #c3f0da 100%)',
+                border: 'rgba(248,255,251,0.84)',
+                text: '#15925d',
+                shadow: 'rgba(67, 173, 132, 0.2)'
+            }
+        ];
+
+        function createTextId() {
+            return `bubble-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+        }
+
+        function pickBubbleThemeIndex() {
+            return Math.floor(Math.random() * BUBBLE_THEMES.length);
+        }
+
+        function getStoredTexts() {
+            const texts = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            let changed = false;
+            const normalized = texts.map((item) => {
+                if (item && typeof item === 'object') {
+                    if (item.id && Number.isInteger(item.themeIndex)) {
+                        return item;
+                    }
+                    changed = true;
+                    return {
+                        ...item,
+                        id: item.id || createTextId(),
+                        themeIndex: Number.isInteger(item.themeIndex) ? item.themeIndex : pickBubbleThemeIndex()
+                    };
+                }
+
+                changed = true;
+                return {
+                    id: createTextId(),
+                    text: String(item || ''),
+                    date: new Date().toLocaleString('ja-JP'),
+                    themeIndex: pickBubbleThemeIndex()
+                };
+            });
+
+            if (changed) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
+            }
+
+            return normalized;
+        }
+
+        function applyBubbleTheme(element, themeIndex) {
+            const theme = BUBBLE_THEMES[themeIndex % BUBBLE_THEMES.length] || BUBBLE_THEMES[0];
+            element.style.setProperty('--bubble-fill', theme.fill);
+            element.style.setProperty('--bubble-border', theme.border);
+            element.style.setProperty('--bubble-text', theme.text);
+            element.style.setProperty('--bubble-shadow', theme.shadow);
+        }
+
+        function createBubbleElement(item) {
+            const bubble = document.createElement('div');
+            bubble.className = 'text-bubble';
+            bubble.dataset.textId = item.id;
+            bubble.textContent = item.text;
+            applyBubbleTheme(bubble, item.themeIndex);
+            return bubble;
+        }
+
+        function init() {
+            loadData();
+            window.addEventListener('resize', handleResize);
+        }
+
+        function handleResize() {
+            if (!simulation.bodies.length) {
+                return;
+            }
+            clearTimeout(handleResize.timer);
+            handleResize.timer = setTimeout(() => {
+                startSimulation();
+            }, 120);
+        }
+
+        function stopSimulation() {
+            if (simulation.frameId) {
+                cancelAnimationFrame(simulation.frameId);
+                simulation.frameId = null;
+            }
+        }
+
+        function getCapsuleGeometry() {
+            const centerX = simulation.width * 0.5;
+            const centerY = simulation.height * 0.5;
+            const radiusX = Math.max(138, Math.min(simulation.width * 0.42, simulation.height * 0.39));
+            const radiusY = Math.max(156, simulation.height * 0.46);
+            return {
+                centerX,
+                centerY,
+                radiusX,
+                radiusY,
+                paddingX: 4,
+                paddingY: 16,
+                curvePower: 2.35
+            };
+        }
+
+        function getCapsuleWallRange(centerY, bodyWidth) {
+            const geometry = getCapsuleGeometry();
+            const normalizedY = Math.min(1, Math.abs(centerY - geometry.centerY) / geometry.radiusY);
+            const halfWidth = geometry.radiusX * Math.pow(
+                Math.max(0, 1 - Math.pow(normalizedY, geometry.curvePower)),
+                1 / geometry.curvePower
+            );
+            const usableHalfWidth = Math.max(bodyWidth * 0.5 + 6, halfWidth - geometry.paddingX);
+            return {
+                minCenterX: geometry.centerX - usableHalfWidth + bodyWidth * 0.5,
+                maxCenterX: geometry.centerX + usableHalfWidth - bodyWidth * 0.5
+            };
+        }
+
+        function createBody(element, index) {
+            const width = element.offsetWidth;
+            const height = element.offsetHeight;
+            const geometry = getCapsuleGeometry();
+            const spawnY = geometry.centerY - geometry.radiusY * 0.55 + height * 0.5;
+            const startRange = getCapsuleWallRange(spawnY, width);
+            const availableWidth = Math.max(0, startRange.maxCenterX - startRange.minCenterX);
+            const spreadRatio = ((index * 53 + 19) % 97) / 96;
+            const targetX = startRange.minCenterX + availableWidth * spreadRatio - width * 0.5;
+            return {
+                element,
+                width,
+                height,
+                x: targetX,
+                y: -height - index * 28,
+                vx: ((index % 7) - 3) * 18,
+                vy: 0,
+                rotation: -8 + (index % 7) * 2.6,
+                vr: ((index % 4) - 1.5) * 8,
+                rx: -15 + (index % 5) * 4,
+                ry: 12 - (index % 4) * 5,
+                depth: 14 + (index % 5) * 4,
+                targetX,
+                spreadStrength: 2.8 + (index % 5) * 0.35
+            };
+        }
+
+        function applyBounds(body) {
+            const geometry = getCapsuleGeometry();
+            const centerY = body.y + body.height * 0.5;
+            const wallRange = getCapsuleWallRange(centerY, body.width);
+            const minX = wallRange.minCenterX - body.width * 0.5;
+            const maxX = wallRange.maxCenterX - body.width * 0.5;
+            if (body.x < minX) {
+                body.x = minX;
+                body.vx *= -0.32;
+            }
+            if (body.x > maxX) {
+                body.x = maxX;
+                body.vx *= -0.32;
+            }
+
+            const ceiling = geometry.centerY - geometry.radiusY + geometry.paddingY;
+            if (body.y < ceiling) {
+                body.y = ceiling;
+                body.vy = Math.max(body.vy * -0.08, 10);
+            }
+
+            const floor = geometry.centerY + geometry.radiusY - geometry.paddingY - body.height;
+            if (body.y > floor) {
+                body.y = floor;
+                body.vy *= -0.08;
+                body.vx *= 0.96;
+                body.vr *= 0.94;
+            }
+        }
+
+        function resolveCollisions() {
+            for (let iteration = 0; iteration < 3; iteration += 1) {
+                for (let i = 0; i < simulation.bodies.length; i += 1) {
+                    for (let j = i + 1; j < simulation.bodies.length; j += 1) {
+                        const a = simulation.bodies[i];
+                        const b = simulation.bodies[j];
+                        const overlapX = Math.min(a.x + a.width, b.x + b.width) - Math.max(a.x, b.x);
+                        const overlapY = Math.min(a.y + a.height, b.y + b.height) - Math.max(a.y, b.y);
+                        if (overlapX <= 0 || overlapY <= 0) {
+                            continue;
+                        }
+
+                        if (overlapY < overlapX) {
+                            const push = overlapY / 2;
+                            if (a.y < b.y) {
+                                a.y -= push;
+                                b.y += push;
+                            } else {
+                                a.y += push;
+                                b.y -= push;
+                            }
+                            const transfer = (a.vx + b.vx) * 0.5;
+                            a.vy *= 0.18;
+                            b.vy *= 0.18;
+                            a.vx = a.vx * 0.9 + transfer * 0.1;
+                            b.vx = b.vx * 0.9 + transfer * 0.1;
+                        } else {
+                            const push = (overlapX + 1.5) / 2;
+                            if (a.x < b.x) {
+                                a.x -= push;
+                                b.x += push;
+                                const impulse = Math.min(22, overlapX * 0.9);
+                                a.vx -= impulse;
+                                b.vx += impulse;
+                            } else {
+                                a.x += push;
+                                b.x -= push;
+                                const impulse = Math.min(22, overlapX * 0.9);
+                                a.vx += impulse;
+                                b.vx -= impulse;
+                            }
+                        }
+
+                        applyBounds(a);
+                        applyBounds(b);
+                    }
+                }
+            }
+        }
+
+        function renderBodies() {
+            simulation.bodies.forEach((body) => {
+                body.element.style.transform =
+                    `translate3d(${body.x}px, ${body.y}px, ${body.depth}px) rotateX(${body.rx}deg) rotateY(${body.ry}deg) rotateZ(${body.rotation}deg)`;
+            });
+        }
+
+        function step(timestamp) {
+            const delta = Math.min((timestamp - simulation.lastTime) / 1000, 0.032) || 0.016;
+            simulation.lastTime = timestamp;
+
+            simulation.bodies.forEach((body) => {
+                body.vy += 980 * delta;
+                if (typeof body.targetX === 'number') {
+                    body.vx += (body.targetX - body.x) * body.spreadStrength * delta;
+                }
+                body.x += body.vx * delta;
+                body.y += body.vy * delta;
+                body.rotation += body.vr * delta;
+                body.vx *= 0.995;
+                body.vr *= 0.992;
+                applyBounds(body);
+            });
+
+            resolveCollisions();
+            renderBodies();
+            simulation.frameId = requestAnimationFrame(step);
+        }
+
+        function startSimulation() {
+            stopSimulation();
+            simulation.width = capsuleContent.clientWidth;
+            simulation.height = capsuleContent.clientHeight;
+            simulation.bodies = Array.from(capsuleContent.querySelectorAll('.text-bubble')).map((element, index) => createBody(element, index));
+            if (!simulation.bodies.length) {
+                return;
+            }
+            simulation.lastTime = performance.now();
+            renderBodies();
+            simulation.frameId = requestAnimationFrame(step);
+        }
+
+        function addText() {
+            const text = textInput.value.trim();
+            if (text === '') {
+                alert('テキストを入力してください。');
+                return;
+            }
+
+            const texts = getStoredTexts();
+            texts.push({
+                id: createTextId(),
+                text,
+                date: new Date().toLocaleString('ja-JP'),
+                themeIndex: pickBubbleThemeIndex()
+            });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(texts));
+
+            textInput.value = '';
+            loadData();
+        }
+
+        function loadData() {
+            const texts = getStoredTexts();
+            const existingBodies = new Map(
+                simulation.bodies.map((body) => [body.element.dataset.textId, body])
+            );
+
+            stopSimulation();
+            capsuleContent.innerHTML = '';
+
+            if (texts.length === 0) {
+                capsuleContent.innerHTML = '<div class="empty-message">つらいこと</div>';
+            } else {
+                simulation.width = capsuleContent.clientWidth;
+                simulation.height = capsuleContent.clientHeight;
+                simulation.bodies = texts.map((item, index) => {
+                    const existingBody = existingBodies.get(item.id);
+                    const bubble = existingBody?.element || createBubbleElement(item);
+                    bubble.dataset.textId = item.id;
+                    bubble.textContent = item.text;
+                    applyBubbleTheme(bubble, item.themeIndex);
+                    capsuleContent.appendChild(bubble);
+
+                    if (existingBody) {
+                        existingBody.width = bubble.offsetWidth;
+                        existingBody.height = bubble.offsetHeight;
+                        if (typeof existingBody.targetX !== 'number') {
+                            const currentRange = getCapsuleWallRange(existingBody.y + existingBody.height * 0.5, existingBody.width);
+                            const availableWidth = Math.max(0, currentRange.maxCenterX - currentRange.minCenterX);
+                            const spreadRatio = ((index * 53 + 19) % 97) / 96;
+                            existingBody.targetX = currentRange.minCenterX + availableWidth * spreadRatio - existingBody.width * 0.5;
+                            existingBody.spreadStrength = 2.8 + (index % 5) * 0.35;
+                        }
+                        applyBounds(existingBody);
+                        return existingBody;
+                    }
+
+                    return createBody(bubble, index);
+                });
+                requestAnimationFrame(() => {
+                    simulation.width = capsuleContent.clientWidth;
+                    simulation.height = capsuleContent.clientHeight;
+                    simulation.bodies.forEach((body) => {
+                        body.width = body.element.offsetWidth;
+                        body.height = body.element.offsetHeight;
+                        applyBounds(body);
+                    });
+                    simulation.lastTime = performance.now();
+                    renderBodies();
+                    simulation.frameId = requestAnimationFrame(step);
+                });
+            }
+
+            countDisplay.textContent = texts.length;
+        }
+
+        function clearAll() {
+            if (confirm('すべてクリアしますか？')) {
+                localStorage.removeItem(STORAGE_KEY);
+                loadData();
+            }
+        }
+
+        textInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                addText();
+            }
+        });
+
+        init();
+    </script>
+</body>
+</html>

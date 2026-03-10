@@ -5,8 +5,8 @@
   const STORAGE_KEY = 'mobby-gacha-state-v2';
   const LEGACY_STORAGE_KEY = 'mobby-gacha-state-v1';
   const ACTIVE_BANNER_ID = 'love_truth_mvp';
-  const PAID_MODE_RELEASE_DATE_JST = '2026-03-10';
-  const PAID_MODE_RELEASE_LABEL = '3月10日リリース予定';
+  const PAID_MODE_RELEASE_DATE_JST = '2026-03-15';
+  const PAID_MODE_RELEASE_LABEL = '3月15日リリース予定';
   const MAX_HISTORY = 5;
   const MAX_SHOWCASE_CHARACTERS = 4;
   const RARITY_WEIGHT = { N: 1, R: 2, SSR: 3 };

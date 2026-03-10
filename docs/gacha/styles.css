@@ -302,7 +302,7 @@ a {
 }
 
 .mode-button.is-release-locked::after {
-  content: "3月10日リリース予定";
+  content: "3月15日リリース予定";
   position: absolute;
   top: -9px;
   left: 50%;
@@ -3730,4 +3730,3 @@ body.is-share-open {
     transition: none !important;
   }
 }
-
