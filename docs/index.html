@@ -5387,7 +5387,6 @@
     /* Close buttons */
     document.getElementById('closeMessagePopup')?.addEventListener('click', () => closePopup('messagePopup'));
     document.getElementById('closeColorsPopup')?.addEventListener('click', () => closePopup('colorsPopup'));
-    document.getElementById('checkoutCloseBtn')?.addEventListener('click', () => closePopup('pricePopup'));
     document.getElementById('closePricePopup')?.addEventListener('click', () => closePopup('pricePopup'));
     document.getElementById('closeFaqPopup')?.addEventListener('click', () => closePopup('faqPopup'));
     document.getElementById('closeEncyclopediaPopup')?.addEventListener('click', () => closePopup('encyclopediaPopup'));
@@ -6005,6 +6004,7 @@
         });
         plushEmbeddedCheckoutInstance.mount('#checkoutMount');
 
+        closePopup('pricePopup');
         overlay.classList.add('show');
         overlay.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
@@ -6434,7 +6434,6 @@
 
     bindReservationForm("priceReservationFormCamera");
     initAcrylicStripeButton();
-    initPlushStripeButton();
 
     /* faqContactForm */
     document.getElementById("faqContactForm")?.addEventListener("submit", async (e) => {
@@ -6590,6 +6589,9 @@
       </div>
     </div>
   </div>
+  <script>
+    initPlushStripeButton();
+  </script>
 </body>
 
 </html>
