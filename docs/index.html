@@ -3241,7 +3241,7 @@
     .checkout-overlay {
       position: fixed;
       inset: 0;
-      z-index: 10020;
+      z-index: 100002;
       background: rgba(12, 18, 20, 0.62);
       display: none;
       align-items: center;
@@ -3253,7 +3253,7 @@
       display: flex;
     }
 
-    .checkout-panel {
+    .embedded-checkout-panel {
       width: min(820px, 100%);
       max-height: min(92vh, 880px);
       background: #fff;
@@ -3265,7 +3265,7 @@
       grid-template-rows: auto 1fr auto;
     }
 
-    .checkout-panel-header {
+    .embedded-checkout-panel-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -3275,7 +3275,7 @@
       border-bottom: 1px solid rgba(47, 79, 79, 0.1);
     }
 
-    .checkout-panel-title {
+    .embedded-checkout-panel-title {
       font-size: 0.9rem;
       font-weight: 700;
       color: var(--color-earth);
@@ -3302,7 +3302,7 @@
       min-height: 420px;
     }
 
-    .checkout-panel-note {
+    .embedded-checkout-panel-note {
       font-size: 0.74rem;
       line-height: 1.6;
       color: rgba(47, 79, 79, 0.85);
@@ -3509,9 +3509,9 @@
 
 
     <!-- PRICE ポップアップ -->
-    <div id="pricePopup" class="popup-overlay checkout-panel" aria-hidden="true">
+    <div id="pricePopup" class="popup-overlay" aria-hidden="true">
       <div class="popup-content">
-        <button class="popup-close" id="checkoutCloseBtn" aria-label="閉じる">×</button>
+        <button class="popup-close" id="closePricePopup" aria-label="閉じる">×</button>
         <div class="container">
           <h2>購入・予約</h2>
 
@@ -6579,13 +6579,13 @@
   </script>
 
   <div class="checkout-overlay" id="checkoutOverlay" aria-hidden="true">
-    <div class="checkout-panel" role="dialog" aria-modal="true" aria-label="埋め込み決済">
-      <div class="checkout-panel-header">
-        <div class="checkout-panel-title">Stripe決済</div>
+    <div class="embedded-checkout-panel" role="dialog" aria-modal="true" aria-label="埋め込み決済">
+      <div class="embedded-checkout-panel-header">
+        <div class="embedded-checkout-panel-title">Stripe決済</div>
         <button class="checkout-close-btn" id="checkoutCloseBtn" type="button">閉じる</button>
       </div>
       <div class="checkout-mount" id="checkoutMount"></div>
-      <div class="checkout-panel-note">
+      <div class="embedded-checkout-panel-note">
         一部の決済手段（銀行アプリ承認など）は、本人認証のため外部ページに遷移する場合があります。
       </div>
     </div>
