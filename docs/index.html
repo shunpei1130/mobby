@@ -3237,6 +3237,78 @@
         opacity: 0;
       }
     }
+
+    .checkout-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10020;
+      background: rgba(12, 18, 20, 0.62);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .checkout-overlay.show {
+      display: flex;
+    }
+
+    .checkout-panel {
+      width: min(820px, 100%);
+      max-height: min(92vh, 880px);
+      background: #fff;
+      border-radius: 18px;
+      border: 1px solid rgba(47, 79, 79, 0.16);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.28);
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .checkout-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      background: rgba(255, 248, 231, 0.72);
+      border-bottom: 1px solid rgba(47, 79, 79, 0.1);
+    }
+
+    .checkout-panel-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--color-earth);
+    }
+
+    .checkout-close-btn {
+      border: none;
+      background: #fff;
+      color: var(--color-forest);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid rgba(47, 79, 79, 0.18);
+    }
+
+    .checkout-close-btn:hover {
+      opacity: 0.85;
+    }
+
+    .checkout-mount {
+      overflow: auto;
+      min-height: 420px;
+    }
+
+    .checkout-panel-note {
+      font-size: 0.74rem;
+      line-height: 1.6;
+      color: rgba(47, 79, 79, 0.85);
+      padding: 8px 12px 10px;
+      border-top: 1px solid rgba(47, 79, 79, 0.08);
+    }
   </style>
 </head>
 
@@ -5828,12 +5900,157 @@
       });
     }
 
-    function initPlushStripeButton() {
-      initStripeButtonTracking({
-        buttonId: "plushStripeBuyButton",
-        productType: "plush_keyholder",
-        productLabel: "ぬいぐるみキーホルダー"
+    const PLUSH_CHECKOUT_SESSION_ENDPOINT = '/api/checkout-session';
+    let plushStripeLoaderPromise = null;
+    let plushEmbeddedCheckoutInstance = null;
+
+    function plushLoadStripeJs() {
+      if (window.Stripe) return Promise.resolve(window.Stripe);
+      if (plushStripeLoaderPromise) return plushStripeLoaderPromise;
+
+      plushStripeLoaderPromise = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://js.stripe.com/v3/';
+        script.async = true;
+        script.onload = () => {
+          if (window.Stripe) resolve(window.Stripe);
+          else reject(new Error('Stripe.jsの読み込みに失敗しました。'));
+        };
+        script.onerror = () => reject(new Error('Stripe.jsの読み込みに失敗しました。'));
+        document.head.appendChild(script);
       });
+
+      return plushStripeLoaderPromise;
+    }
+
+    function plushTeardownEmbeddedCheckout() {
+      if (!plushEmbeddedCheckoutInstance) return;
+      try {
+        if (typeof plushEmbeddedCheckoutInstance.unmount === 'function') {
+          plushEmbeddedCheckoutInstance.unmount();
+        }
+        if (typeof plushEmbeddedCheckoutInstance.destroy === 'function') {
+          plushEmbeddedCheckoutInstance.destroy();
+        }
+      } catch (_) {
+        // Ignore errors during teardown to avoid masking the original error
+      } finally {
+        plushEmbeddedCheckoutInstance = null;
+      }
+    }
+
+    function plushCloseCheckoutOverlay() {
+      const overlay = document.getElementById('checkoutOverlay');
+      const mount = document.getElementById('checkoutMount');
+      if (!overlay || !mount) return;
+      overlay.classList.remove('show');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      plushTeardownEmbeddedCheckout();
+      mount.innerHTML = '';
+    }
+
+    async function plushCreateEmbeddedCheckoutSession({
+      productType = 'plush_keyholder',
+      productLabel = 'ぬいぐるみキーホルダー'
+    } = {}) {
+      const payload = {
+        name: '',
+        email: '',
+        productType: String(productType || '').trim(),
+        productLabel: String(productLabel || '').trim(),
+        source: 'index'
+      };
+
+      const response = await fetch(PLUSH_CHECKOUT_SESSION_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data?.clientSecret || !data?.publishableKey) {
+        throw new Error(data?.error || '決済セッションの作成に失敗しました。');
+      }
+      return data;
+    }
+
+    async function plushOpenEmbeddedCheckout({ triggerBtn = null } = {}) {
+      const overlay = document.getElementById('checkoutOverlay');
+      const mount = document.getElementById('checkoutMount');
+      if (!overlay || !mount) return;
+
+      const originalLabel = triggerBtn?.textContent || '';
+      if (triggerBtn) {
+        triggerBtn.disabled = true;
+        triggerBtn.textContent = '決済画面を準備中...数秒で表示されます。';
+      }
+
+      try {
+        const session = await plushCreateEmbeddedCheckoutSession({
+          productType: 'plush_keyholder',
+          productLabel: 'ぬいぐるみキーホルダー'
+        });
+        const StripeCtor = await plushLoadStripeJs();
+        const stripe = StripeCtor(session.publishableKey);
+        if (!stripe) {
+          throw new Error('Stripeの初期化に失敗しました。');
+        }
+
+        plushTeardownEmbeddedCheckout();
+        mount.innerHTML = '';
+        plushEmbeddedCheckoutInstance = await stripe.initEmbeddedCheckout({
+          clientSecret: session.clientSecret
+        });
+        plushEmbeddedCheckoutInstance.mount('#checkoutMount');
+
+        overlay.classList.add('show');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      } catch (error) {
+        alert(error?.message || '決済画面の表示に失敗しました。');
+      } finally {
+        if (triggerBtn) {
+          triggerBtn.disabled = false;
+          triggerBtn.textContent = originalLabel;
+        }
+      }
+    }
+
+    let plushCheckoutListenersBound = false;
+
+    function initPlushStripeButton() {
+      const plushBtn = document.getElementById('plushStripeBuyButton');
+      const overlay = document.getElementById('checkoutOverlay');
+      const closeBtn = document.getElementById('checkoutCloseBtn');
+
+      if (!plushBtn) return;
+
+      plushBtn.addEventListener('click', (event) => {
+        event.preventDefault();
+        plushOpenEmbeddedCheckout({ triggerBtn: plushBtn });
+      });
+
+      if (!plushCheckoutListenersBound) {
+        plushCheckoutListenersBound = true;
+
+        if (closeBtn) {
+          closeBtn.addEventListener('click', plushCloseCheckoutOverlay);
+        }
+
+        if (overlay) {
+          overlay.addEventListener('click', (event) => {
+            if (event.target === overlay) {
+              plushCloseCheckoutOverlay();
+            }
+          });
+        }
+
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && overlay?.classList.contains('show')) {
+            plushCloseCheckoutOverlay();
+          }
+        });
+      }
     }
 
     let refreshReservationCount = null;
@@ -6358,6 +6575,19 @@
       });
     })();
   </script>
+
+  <div class="checkout-overlay" id="checkoutOverlay" aria-hidden="true">
+    <div class="checkout-panel" role="dialog" aria-modal="true" aria-label="埋め込み決済">
+      <div class="checkout-panel-header">
+        <div class="checkout-panel-title">Stripe決済</div>
+        <button class="checkout-close-btn" id="checkoutCloseBtn" type="button">閉じる</button>
+      </div>
+      <div class="checkout-mount" id="checkoutMount"></div>
+      <div class="checkout-panel-note">
+        一部の決済手段（銀行アプリ承認など）は、本人認証のため外部ページに遷移する場合があります。
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>
