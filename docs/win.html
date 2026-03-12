@@ -1006,7 +1006,7 @@
         .checkout-overlay {
             position: fixed;
             inset: 0;
-            z-index: 10020;
+            z-index: 100120;
             background: rgba(12, 18, 20, 0.62);
             display: none;
             align-items: center;
@@ -1028,6 +1028,9 @@
             overflow: hidden;
             display: grid;
             grid-template-rows: auto 1fr auto;
+            position: relative;
+            z-index: 1;
+            isolation: isolate;
         }
 
         .checkout-panel-header {
@@ -1038,6 +1041,8 @@
             padding: 10px 12px;
             background: rgba(255, 248, 231, 0.72);
             border-bottom: 1px solid rgba(47, 79, 79, 0.1);
+            position: relative;
+            z-index: 3;
         }
 
         .checkout-panel-title {
@@ -1056,6 +1061,8 @@
             font-weight: 700;
             cursor: pointer;
             border: 1px solid rgba(47, 79, 79, 0.18);
+            position: relative;
+            z-index: 4;
         }
 
         .checkout-close-btn:hover {
@@ -1065,6 +1072,8 @@
         .checkout-mount {
             overflow: auto;
             min-height: 420px;
+            position: relative;
+            z-index: 1;
         }
 
         .checkout-panel-note {
@@ -1073,6 +1082,8 @@
             color: rgba(47, 79, 79, 0.85);
             padding: 8px 12px 10px;
             border-top: 1px solid rgba(47, 79, 79, 0.08);
+            position: relative;
+            z-index: 2;
         }
 
         /* Trust / Info Section */
@@ -2718,6 +2729,14 @@
                 checkoutMount.innerHTML = '';
             }
 
+            function handleCheckoutClose(event) {
+                if (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                closeCheckoutOverlay();
+            }
+
             async function createEmbeddedCheckoutSession({
                 name = '',
                 email = '',
@@ -2936,15 +2955,15 @@
                 productLabel: 'ぬいぐるみキーホルダー（単体）'
             });
 
-            checkoutCloseBtn.addEventListener('click', closeCheckoutOverlay);
+            checkoutCloseBtn.addEventListener('click', handleCheckoutClose);
             checkoutOverlay.addEventListener('click', (event) => {
                 if (event.target === checkoutOverlay) {
-                    closeCheckoutOverlay();
+                    handleCheckoutClose(event);
                 }
             });
             document.addEventListener('keydown', (event) => {
                 if (event.key === 'Escape' && checkoutOverlay.classList.contains('show')) {
-                    closeCheckoutOverlay();
+                    handleCheckoutClose(event);
                 }
             });
 

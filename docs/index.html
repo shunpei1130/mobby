@@ -2161,7 +2161,7 @@
     .popup-overlay {
       position: fixed;
       inset: 0;
-      z-index: 99998;
+      z-index: 100001;
       display: none;
       background: rgba(47, 79, 79, 0.85);
       backdrop-filter: blur(4px);
@@ -3509,9 +3509,9 @@
 
 
     <!-- PRICE ポップアップ -->
-    <div id="pricePopup" class="popup-overlay" aria-hidden="true">
+    <div id="pricePopup" class="popup-overlay checkout-panel" aria-hidden="true">
       <div class="popup-content">
-        <button class="popup-close" id="closePricePopup" aria-label="閉じる">×</button>
+        <button class="popup-close" id="checkoutCloseBtn" aria-label="閉じる">×</button>
         <div class="container">
           <h2>購入・予約</h2>
 
@@ -4084,6 +4084,7 @@
         url: "https://www.tiktok.com/@mobbyofficial"
       }
     };
+    const PLUSH_STRIPE_URL = "https://buy.stripe.com/28EaEX30Vfqt6SybJJao80b";
 
     /* 色メタ */
     document.querySelectorAll("[data-social-link]").forEach((link) => {
@@ -5386,6 +5387,7 @@
     /* Close buttons */
     document.getElementById('closeMessagePopup')?.addEventListener('click', () => closePopup('messagePopup'));
     document.getElementById('closeColorsPopup')?.addEventListener('click', () => closePopup('colorsPopup'));
+    document.getElementById('checkoutCloseBtn')?.addEventListener('click', () => closePopup('pricePopup'));
     document.getElementById('closePricePopup')?.addEventListener('click', () => closePopup('pricePopup'));
     document.getElementById('closeFaqPopup')?.addEventListener('click', () => closePopup('faqPopup'));
     document.getElementById('closeEncyclopediaPopup')?.addEventListener('click', () => closePopup('encyclopediaPopup'));
