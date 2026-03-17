@@ -39,6 +39,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Nunito:wght@400;700&display=swap"
     rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
 
   <!-- 構造化データ -->
   <script type="application/ld+json">
@@ -592,178 +593,52 @@
       }
     }
 
-    /* ===== Hero Carousel (3D Rotating Ring) ===== */
+    /* ===== Hero Model Viewer ===== */
     .hero-carousel-shell {
-      width: min(380px, 96vw);
+      width: min(420px, 96vw);
       margin: 14px auto 10px;
       position: relative;
     }
 
-    .hero-carousel {
+    .hero-model-stage {
       width: 100%;
-      margin: 0;
       position: relative;
-      user-select: none;
-      touch-action: pan-y pinch-zoom;
-      /* 横スワイプのみカルーセルで処理 */
-      perspective: 1300px;
-    }
-
-    .carousel-viewport {
-      position: relative;
-      height: 300px;
+      padding: 0;
+      border-radius: 0;
       overflow: visible;
-    }
-
-    .carousel-track {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform-style: preserve-3d;
-      transition: transform 0.7s var(--ease-soft);
-      will-change: transform;
-      backface-visibility: hidden;
-    }
-
-    .carousel-slide {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 300px;
-      height: 300px;
-      transform-style: preserve-3d;
-      transition: opacity 0.35s var(--ease-soft), filter 0.35s var(--ease-soft);
-      cursor: pointer;
-      will-change: transform, opacity;
-      backface-visibility: hidden;
-    }
-
-    .carousel-slide.dim {
-      opacity: 0.55;
-      filter: blur(0.6px);
-    }
-
-    .hero-illustration {
-      width: 100%;
-      height: 100%;
       background: transparent;
       border: none;
-      border-radius: 20px;
-      overflow: hidden;
-      position: relative;
+      box-shadow: none;
+      isolation: auto;
     }
 
-    .hero-illustration img {
+    .hero-model-stage::before {
+      content: none;
+    }
+
+    .hero-model-viewer {
+      display: block;
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: 360px;
+      position: relative;
+      z-index: 1;
+      background: transparent;
+      --poster-color: transparent;
     }
 
-    .carousel-slide[data-slide="camera"] .hero-illustration {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    @media (max-width: 768px) {
+      .hero-carousel-shell {
+        width: min(300px, 92vw);
+      }
 
-    .carousel-slide[data-slide="camera"] .hero-illustration img {
-      width: 82%;
-      height: 82%;
-      object-fit: contain;
-    }
+      .hero-model-stage {
+        padding: 0;
+        border-radius: 0;
+      }
 
-    /* カルーセル内のホットスポット */
-    .carousel-eye-hotspot {
-      position: absolute;
-      top: 23%;
-      left: 52%;
-      width: 22%;
-      min-width: 52px;
-      height: auto;
-      min-height: 52px;
-      aspect-ratio: 1/1;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.01);
-      border: none;
-      cursor: pointer;
-      z-index: 15;
-      pointer-events: auto;
-      transform: translateZ(0);
-    }
-
-    .carousel-eye-hotspot:hover {
-      outline: 2px solid rgba(255, 255, 255, 0.4);
-    }
-
-    .carousel-eye-hotspot::before {
-      content: "";
-      position: absolute;
-      inset: -18%;
-      border-radius: 50%;
-      border: 2px dashed rgba(255, 255, 255, 0.65);
-      animation: pulse 2.2s ease-in-out infinite;
-    }
-
-    .carousel-eye-shutter {
-      position: absolute;
-      top: 34%;
-      left: 58%;
-      width: 22%;
-      aspect-ratio: 1/1;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 16;
-      background:
-        conic-gradient(from 0deg,
-          #111 0 10%,
-          #222 10% 20%,
-          #111 20% 30%,
-          #222 30% 40%,
-          #111 40% 50%,
-          #222 50% 60%,
-          #111 60% 70%,
-          #222 70% 80%,
-          #111 80% 90%,
-          #222 90% 100%);
-      transform: scale(0);
-      opacity: 0;
-    }
-
-    .carousel-eye-shutter.play {
-      animation: shutter 220ms ease-in-out forwards;
-    }
-
-    .carousel-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 44px;
-      height: 44px;
-      border-radius: 999px;
-      border: 1px solid rgba(47, 79, 79, 0.18);
-      background: rgba(255, 255, 255, 0.75);
-      color: var(--color-forest);
-      font-size: 26px;
-      font-weight: 700;
-      cursor: pointer;
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform .2s var(--ease-soft), background .2s var(--ease-soft);
-      box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.06);
-    }
-
-    .carousel-btn:hover {
-      transform: translateY(-50%) scale(1.04);
-      background: rgba(255, 255, 255, 0.88);
-    }
-
-    .carousel-btn.prev {
-      left: -10px;
-    }
-
-    .carousel-btn.next {
-      right: -10px;
+      .hero-model-viewer {
+        height: 300px;
+      }
     }
 
     /* ===== モビーガチャボタン ===== */
@@ -998,100 +873,6 @@
         right: 9px;
         font-size: 0.5rem;
         padding: 1px 5px;
-      }
-    }
-
-    /* カルーセル右上のタップヒント */
-    .carousel-tap-hint {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--color-forest);
-      background: rgba(255, 255, 255, 0.85);
-      border: 1px solid rgba(47, 79, 79, 0.15);
-      padding: 4px 10px;
-      border-radius: 12px;
-      box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.05);
-      z-index: 20;
-      pointer-events: none;
-      font-family: var(--font-ja);
-      letter-spacing: 0.05em;
-      animation: tapHintPulse 2s ease-in-out infinite;
-      opacity: 0.9;
-    }
-
-    @keyframes tapHintPulse {
-
-      0%,
-      100% {
-        transform: scale(1);
-        opacity: 0.9;
-      }
-
-      50% {
-        transform: scale(1.05);
-        opacity: 1;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .carousel-tap-hint {
-        font-size: 0.7rem;
-        padding: 3px 8px;
-        top: 12%;
-        right: 12%;
-      }
-    }
-
-    .carousel-caption {
-      display: inline-block;
-      font-family: var(--font-en), var(--font-ja);
-      font-weight: 700;
-      color: var(--color-forest);
-      background: rgba(255, 255, 255, 0.78);
-      border: 1px solid rgba(47, 79, 79, 0.12);
-      box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.04);
-      padding: 6px 10px;
-      border-radius: 999px;
-    }
-
-    .carousel-dots {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .carousel-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(47, 79, 79, 0.18);
-      background: rgba(255, 255, 255, 0.55);
-      cursor: pointer;
-    }
-
-    .carousel-dot.active {
-      background: rgba(240, 230, 140, 0.75);
-      border-color: rgba(240, 230, 140, 0.95);
-    }
-
-    @media (max-width: 768px) {
-      .carousel-viewport {
-        height: 290px;
-      }
-
-      .carousel-slide {
-        width: 290px;
-        height: 290px;
-      }
-
-      .carousel-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 24px;
       }
     }
 
@@ -2656,11 +2437,7 @@
 
     @media (max-width: 768px) {
       .hero-carousel-shell {
-        width: min(266px, 92vw);
-      }
-
-      .hero-carousel {
-        width: 100%;
+        width: min(300px, 92vw);
       }
 
       .grid-3,
@@ -3362,65 +3139,19 @@
           </a>
         </div>
         <div class="hero-carousel-shell floating reveal delay-200">
-          <div class="hero-carousel" id="heroCarousel" aria-label="Mobby 注目コンテンツ">
-          <button class="carousel-btn prev" type="button" aria-label="前のコンテンツ">‹</button>
-
-          <div class="carousel-viewport">
-            <div class="carousel-track" id="heroTrack">
-              <div class="carousel-slide" data-slide="plush" data-caption="ぬいぐるみキーホルダー" data-popup-target="pricePopup" data-reservation-tab="plush">
-                <div class="hero-illustration hero-card hero-card-plush hero-card-image-only">
-                  <div class="hero-card-visual">
-                    <picture>
-                      <source srcset="img/touka.avif" type="image/avif">
-                      <source srcset="img/touka.webp" type="image/webp">
-                      <img src="img/touka.png" alt="ぬいぐるみキーホルダー" loading="lazy" decoding="async" onerror="this.style.display='none';">
-                    </picture>
-                  </div>
-                </div>
-              </div>
-              <div class="carousel-slide" data-slide="camera" data-caption="Mobby Camera" data-hotspot="true" data-tap-hint="true">
-                <div class="hero-illustration"><img src="img/mobby/mobby_pink2.jpg" alt="Mobby カメラ型キーホルダー" loading="eager"></div>
-              </div>
-              <div class="carousel-slide" data-slide="social" data-caption="SNS">
-                <div class="hero-illustration hero-card hero-card-social">
-                  <div class="social-card-stage" aria-hidden="true">
-                    <div class="social-card-link social-card-link-static tiktok">
-                      <span class="social-card-link-label">TikTok</span>
-                      <span class="social-card-link-handle">@mobbyofficial</span>
-                    </div>
-                    <div class="social-card-link social-card-link-static instagram">
-                      <span class="social-card-link-label">Instagram</span>
-                      <span class="social-card-link-handle">@mobby.official</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="carousel-slide" data-slide="acrylic" data-caption="アクリルキーホルダー" data-popup-target="pricePopup" data-reservation-tab="acrylic">
-                <div class="hero-illustration hero-card hero-card-acrylic hero-card-image-only">
-                  <div class="hero-card-visual duo">
-                    <img src="16school/key/プリクラ拡散モビー.jpg" alt="アクリルキーホルダー 表面" loading="lazy" decoding="async" onerror="this.style.display='none';">
-                    <img src="16school/key/ura.jpg" alt="アクリルキーホルダー 裏面" loading="lazy" decoding="async" onerror="this.style.display='none';">
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="hero-social-overlay" id="heroSocialOverlay" aria-hidden="true" hidden>
-              <div class="social-card-actions">
-                <button class="social-card-link tiktok" type="button" data-social-link="tiktok" aria-label="TikTok公式アカウントを開く">
-                  <span class="social-card-link-label">TikTok</span>
-                  <span class="social-card-link-handle">@mobbyofficial</span>
-                </button>
-                <button class="social-card-link instagram" type="button" data-social-link="instagram" aria-label="Instagram公式アカウントを開く">
-                  <span class="social-card-link-label">Instagram</span>
-                  <span class="social-card-link-handle">@mobby.official</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <button class="carousel-btn next" type="button" aria-label="次のコンテンツ">›</button>
-
-          <div class="carousel-caption" id="heroCaption">ぬいぐるみキーホルダー</div>
+          <div class="hero-model-stage" aria-label="Mobby 3D モデル">
+            <model-viewer
+              id="heroModelViewer"
+              class="hero-model-viewer"
+              src="./3d/models/character.glb"
+              alt="Mobby 3D model"
+              camera-controls
+              auto-rotate
+              shadow-intensity="1"
+              exposure="1"
+              environment-image="neutral"
+              interaction-prompt="none"
+            ></model-viewer>
           </div>
         </div>
       </div>
@@ -4148,504 +3879,14 @@
     const buyStudentBtn = document.getElementById('buyStudent');
     const selectedPreviewImg = document.getElementById('selectedPreviewImg');
 
-    /* ===== Hero Carousel (3D Rotating Ring) ===== */
-    const heroCarousel = document.getElementById("heroCarousel");
-    const heroTrack = document.getElementById("heroTrack");
-    // const heroDots = document.getElementById("heroDots"); // Removed in current UI
-    const heroCaption = document.getElementById("heroCaption"); /*
-    // const heroDots = document.getElementById("heroDots"); // 削除されたためコメントアウト
-    const heroCaption = document.getElementById("heroCaption");
-    */
-    const heroSocialOverlay = document.getElementById("heroSocialOverlay");
-    const socialOverlayButtons = heroSocialOverlay
-      ? Array.from(heroSocialOverlay.querySelectorAll(".social-card-link[data-social-link]"))
-      : [];
-    const prevBtn = heroCarousel.querySelector(".carousel-btn.prev");
-    const nextBtn = heroCarousel.querySelector(".carousel-btn.next");
-
-    const heroSlides = [...heroTrack.querySelectorAll(".carousel-slide")];
-    const n = heroSlides.length;
-    const angle = 360 / n;
-
-    let heroIndex = ORDER.indexOf(selectedColor);
-    let prevHeroIndex = heroIndex; // 前回のインデックスを保持（初期値は現在のインデックス）
-    let currdeg = -heroIndex * angle; // シンプルな角度管理
-    let currentRot = currdeg; // 後方互換性のため保持
-    let displayedRot = currdeg; // 実際にCSS transformに適用されている角度を保持
-    let ringRadius = 190;
-
-    function mod(a, m) { return ((a % m) + m) % m; }
-    function degToRad(d) { return d * Math.PI / 180; }
-
-    // 角度を-360度から0度の範囲に正規化（-360は0に）
-    function normalizeAngle(deg) {
-      const original = deg;
-      deg = deg % 360;
-      if (deg > 0) deg -= 360;
-      // -360を0に、-0を0に統一
-      if (deg === -360 || Object.is(deg, -0)) deg = 0;
-      if (original !== deg) {
-        console.log('[CAROUSEL] normalizeAngle:', original, '→', deg);
-      }
-      return deg;
+    /* ===== Hero Model Viewer ===== */
+    const heroModelViewer = document.getElementById("heroModelViewer");
+    if (heroModelViewer) {
+      const modelPath = window.location.pathname.includes('/3d/')
+        ? './models/character.glb'
+        : './3d/models/character.glb';
+      heroModelViewer.setAttribute('src', modelPath);
     }
-
-    // 最短経路で角度を計算（-180度から180度の範囲で）
-    function getShortestRotationAngle(fromIndex, toIndex, angleStep, currentAngle) {
-      const fromAngle = -fromIndex * angleStep;
-      const toAngle = -toIndex * angleStep;
-      let diff = toAngle - currentAngle;
-      while (diff > 180) diff -= 360;
-      while (diff < -180) diff += 360;
-      return currentAngle + diff;
-    }
-
-    // ホットスポットのハンドラーをグローバルに保存
-    const hotspotHandlers = new Map();
-
-    /* function renderHeroDots() {
-      // 色ボタンは削除されたため、この関数は何もしない
-    }
-
-    }
-
-    } */
-
-    function renderHeroDots() {
-      // 色ボタンは削除されたため、この関数は何もしない
-    }
-
-    /* legacy renderHeroDots definition removed */
-
-    function renderHeroDots() {}
-
-    function syncHeroSocialOverlay(key = ORDER[heroIndex]) {
-      if (!heroSocialOverlay) return;
-      const isSocial = key === "social";
-      heroSocialOverlay.hidden = !isSocial;
-      heroSocialOverlay.classList.toggle("is-active", isSocial);
-      heroSocialOverlay.setAttribute("aria-hidden", isSocial ? "false" : "true");
-      heroSocialOverlay.inert = !isSocial;
-      socialOverlayButtons.forEach((button) => {
-        button.disabled = !isSocial;
-        button.tabIndex = isSocial ? 0 : -1;
-      });
-    }
-
-    function layoutRing() {
-      console.log('[CAROUSEL] layoutRing: 開始, n=', n, 'angle=', angle);
-      const slide = heroSlides[0];
-      const w = slide ? slide.getBoundingClientRect().width : 276;
-      ringRadius = Math.round((w / 2) / Math.tan(Math.PI / n) + (w * 0.25));
-      console.log('[CAROUSEL] layoutRing: ringRadius=', ringRadius, 'slideWidth=', w);
-
-      heroSlides.forEach((s, i) => {
-        const h = s.getBoundingClientRect().height || w;
-        s.style.transform =
-          `translate(${-w / 2}px, ${-h / 2}px) rotateY(${i * angle}deg) translateZ(${ringRadius}px)`;
-
-        // ホットスポットとシャッターを追加（まだない場合）
-        const illustration = s.querySelector('.hero-illustration');
-        if (illustration) {
-          illustration.querySelectorAll('.carousel-eye-hotspot, .carousel-eye-shutter').forEach((node) => node.remove());
-        }
-        if (illustration && s.dataset.hotspot === "true") {
-          const hotspot = document.createElement('button');
-          hotspot.className = 'carousel-eye-hotspot';
-          hotspot.setAttribute('aria-label', '右目をタップして覗く');
-          hotspot.type = 'button';
-
-          const shutter = document.createElement('div');
-          shutter.className = 'carousel-eye-shutter';
-          shutter.setAttribute('aria-hidden', 'true');
-
-          illustration.appendChild(hotspot);
-          illustration.appendChild(shutter);
-
-          const handleHotspotPointerDown = (e) => {
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-            e.preventDefault();
-
-            shutter.classList.remove('play');
-            void shutter.offsetWidth;
-            shutter.classList.add('play');
-
-            setTimeout(() => {
-              if (typeof window.openViewfinder === 'function') {
-                window.openViewfinder(shutter);
-              } else {
-                console.error('[DEBUG] openViewfinderが関数ではありません:', window.openViewfinder);
-              }
-            }, 180);
-          };
-
-          hotspotHandlers.set(hotspot, handleHotspotPointerDown);
-
-          hotspot.addEventListener('pointerdown', handleHotspotPointerDown, true);
-          hotspot.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-            e.preventDefault();
-            handleHotspotPointerDown(e);
-          }, true);
-
-          hotspot.addEventListener('touchend', (e) => {
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-            e.preventDefault();
-
-            shutter.classList.remove('play');
-            void shutter.offsetWidth;
-            shutter.classList.add('play');
-
-            setTimeout(() => {
-              if (typeof window.openViewfinder === 'function') {
-                window.openViewfinder(shutter);
-              }
-            }, 180);
-          }, true);
-        }
-      });
-
-      updateRing(true);
-    }
-
-    function updateRing(skipTransition = false) {
-      console.log('[CAROUSEL] updateRing: 開始, heroIndex=', heroIndex, 'prevHeroIndex=', prevHeroIndex, 'skipTransition=', skipTransition, 'currentRot=', currentRot, 'displayedRot=', displayedRot);
-      const key = ORDER[heroIndex];
-
-      if (skipTransition) heroTrack.style.transition = "none";
-      else heroTrack.style.transition = "transform 0.7s var(--ease-soft)";
-
-      const targetRot = -heroIndex * angle;
-      console.log('[CAROUSEL] updateRing: targetRot=', targetRot);
-
-      currdeg = targetRot;
-      currentRot = targetRot;
-      displayedRot = targetRot;
-
-      prevHeroIndex = heroIndex;
-
-      console.log('[CAROUSEL] updateRing: 適用前 currdeg=', currdeg, 'currentRot=', currentRot, 'displayedRot=', displayedRot);
-      heroTrack.style.transform = `translate(-50%, -50%) rotateY(${currdeg}deg)`;
-      console.log('[CAROUSEL] updateRing: transform適用完了');
-
-      heroSlides.forEach((s, i) => {
-        const world = i * angle + currdeg;
-        const frontness = Math.cos(degToRad(world));
-        s.classList.toggle("dim", frontness < 0.4);
-        s.style.zIndex = String(Math.round(1000 * (frontness + 1)));
-      });
-
-      if (heroCaption) heroCaption.textContent = COLOR_META[key].name;
-      syncHeroSocialOverlay(key);
-
-      if (skipTransition) {
-        requestAnimationFrame(() => { heroTrack.style.transition = "transform 0.7s var(--ease-soft)"; });
-      }
-      console.log('[CAROUSEL] updateRing: 完了, heroIndex=', heroIndex, 'prevHeroIndex=', prevHeroIndex, 'currentRot=', currentRot);
-    }
-
-    function setHeroIndex(i, fromUser) {
-      const oldIndex = heroIndex;
-      heroIndex = mod(i, n);
-      console.log('[CAROUSEL] setHeroIndex: i=', i, 'oldIndex=', oldIndex, 'newIndex=', heroIndex, 'fromUser=', fromUser);
-      updateRing(false);
-
-      if (fromUser) {
-        syncing = true;
-        setSelectedColor(ORDER[heroIndex]);
-        syncing = false;
-      }
-    }
-
-    function setHeroByColor(colorKey) {
-      console.log('[CAROUSEL] setHeroByColor: colorKey=', colorKey, 'currentIndex=', heroIndex);
-      const idx = ORDER.indexOf(colorKey);
-      if (idx < 0) {
-        console.log('[CAROUSEL] setHeroByColor: 色が見つかりませんでした');
-        return;
-      }
-      prevHeroIndex = heroIndex;
-      heroIndex = idx;
-      console.log('[CAROUSEL] setHeroByColor: prevHeroIndex=', prevHeroIndex, 'newIndex=', heroIndex);
-      updateRing(false);
-    }
-
-    function rotate(direction) {
-      const fromIndex = heroIndex;
-      let targetIndex = heroIndex;
-      if (direction === "n") {
-        targetIndex = mod(heroIndex + 1, n);
-      } else if (direction === "p") {
-        targetIndex = mod(heroIndex - 1, n);
-      }
-
-      const nextDeg = getShortestRotationAngle(fromIndex, targetIndex, angle, displayedRot);
-      prevHeroIndex = fromIndex;
-      heroIndex = targetIndex;
-      currdeg = nextDeg;
-      currentRot = nextDeg;
-      displayedRot = nextDeg;
-
-      heroTrack.style.transition = "transform 0.7s var(--ease-soft)";
-      heroTrack.style.transform = `translate(-50%, -50%) rotateY(${currdeg}deg)`;
-
-      heroSlides.forEach((s, i) => {
-        const world = i * angle + currdeg;
-        const frontness = Math.cos(degToRad(world));
-        s.classList.toggle("dim", frontness < 0.4);
-        s.style.zIndex = String(Math.round(1000 * (frontness + 1)));
-      });
-
-      const key = ORDER[heroIndex];
-      if (heroCaption) heroCaption.textContent = COLOR_META[key].name;
-      syncHeroSocialOverlay(key);
-
-      syncing = true;
-      setSelectedColor(key);
-      syncing = false;
-
-      console.log('[CAROUSEL] rotate: direction=', direction, 'heroIndex=', heroIndex, 'currdeg=', currdeg);
-    }
-
-    prevBtn.addEventListener("click", () => {
-      rotate("p");
-    });
-    nextBtn.addEventListener("click", () => {
-      rotate("n");
-    });
-
-    heroSlides.forEach((slide) => {
-      slide.addEventListener("click", (e) => {
-        const clickedHotspot = e.target.closest('.carousel-eye-hotspot');
-        const clickedBtn = e.target.closest('.carousel-btn');
-        const clickedLink = e.target.closest('a, button');
-        if (clickedHotspot || clickedBtn || clickedLink) return;
-
-        const allHotspots = slide.querySelectorAll('.carousel-eye-hotspot');
-        for (const hotspot of allHotspots) {
-          const rect = hotspot.getBoundingClientRect();
-          const x = e.clientX;
-          const y = e.clientY;
-
-          if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            const radius = Math.max(rect.width, rect.height) / 2;
-            const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
-            if (distance <= radius) return;
-          }
-        }
-
-        const popupTarget = slide.dataset.popupTarget;
-        const reservationTab = slide.dataset.reservationTab;
-        if (popupTarget === 'pricePopup') {
-          if (reservationTab) activateReservationTab(reservationTab);
-          openPopup('pricePopup');
-        }
-      });
-    });
-
-    let startX = 0, startRot = 0, dragging = false, isDragged = false;
-    let activePointerId = null;
-    let rafId = null;
-    let lastX = 0;
-
-    function endDrag(e) {
-      if (!dragging) return;
-
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-        rafId = null;
-      }
-
-      dragging = false;
-      activePointerId = null;
-
-      if (isDragged) {
-        currdeg = displayedRot;
-        currentRot = displayedRot;
-
-        const endX = (e && e.clientX) ? e.clientX : (lastX || startX);
-        const dx = endX - startX;
-        const minSwipeDistance = 10;
-
-        let targetIndex = heroIndex;
-        if (Math.abs(dx) > minSwipeDistance) {
-          if (dx > 0) {
-            targetIndex = mod(heroIndex - 1, n);
-          } else {
-            targetIndex = mod(heroIndex + 1, n);
-          }
-        }
-
-        if (targetIndex === heroIndex) {
-          currdeg = startRot;
-          currentRot = startRot;
-          displayedRot = startRot;
-        } else {
-          const fromIndex = heroIndex;
-          const nextDeg = getShortestRotationAngle(fromIndex, targetIndex, angle, displayedRot);
-
-          prevHeroIndex = fromIndex;
-          heroIndex = targetIndex;
-          currdeg = nextDeg;
-          currentRot = nextDeg;
-          displayedRot = nextDeg;
-        }
-
-        heroTrack.style.transition = "transform 0.7s var(--ease-soft)";
-        heroTrack.style.transform = `translate(-50%, -50%) rotateY(${currdeg}deg)`;
-
-        heroSlides.forEach((s, i) => {
-          const world = i * angle + currdeg;
-          const frontness = Math.cos(degToRad(world));
-          s.classList.toggle("dim", frontness < 0.4);
-          s.style.zIndex = String(Math.round(1000 * (frontness + 1)));
-        });
-
-        const key = ORDER[heroIndex];
-        if (heroCaption) heroCaption.textContent = COLOR_META[key].name;
-        syncHeroSocialOverlay(key);
-
-        syncing = true;
-        setSelectedColor(key);
-        syncing = false;
-      } else {
-        heroTrack.style.transition = "transform 0.7s var(--ease-soft)";
-        syncHeroSocialOverlay(ORDER[heroIndex]);
-      }
-
-      isDragged = false;
-
-      if (heroCarousel.releasePointerCapture && e && e.pointerId !== undefined) {
-        try { heroCarousel.releasePointerCapture(e.pointerId); } catch (_) { }
-      }
-    }
-
-    heroCarousel.addEventListener("pointerdown", (e) => {
-      if (dragging) return;
-
-      const allHotspots = heroCarousel.querySelectorAll('.carousel-eye-hotspot');
-      let clickedHotspot = null;
-
-      for (const hotspot of allHotspots) {
-        const rect = hotspot.getBoundingClientRect();
-        const x = e.clientX;
-        const y = e.clientY;
-
-        if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
-          const centerX = rect.left + rect.width / 2;
-          const centerY = rect.top + rect.height / 2;
-          const radius = Math.max(rect.width, rect.height) / 2;
-          const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
-
-          if (distance <= radius) {
-            clickedHotspot = hotspot;
-            break;
-          }
-        }
-      }
-
-      if (clickedHotspot) {
-        e.stopPropagation();
-        e.preventDefault();
-        const handler = hotspotHandlers.get(clickedHotspot);
-        if (handler) handler(e);
-        return;
-      }
-
-      const isBtn = e.target.closest('.carousel-btn');
-      const isInteractive = e.target.closest('a, button');
-      if (isBtn || isInteractive) return;
-
-      e.preventDefault();
-      dragging = true;
-      activePointerId = e.pointerId;
-      startX = e.clientX || 0;
-      lastX = startX;
-
-      currdeg = -heroIndex * angle;
-      currentRot = currdeg;
-      displayedRot = currdeg;
-      startRot = currdeg;
-
-      isDragged = false;
-      heroTrack.style.transition = "none";
-
-      if (heroCarousel.setPointerCapture) {
-        try { heroCarousel.setPointerCapture(e.pointerId); } catch (_) { }
-      }
-    });
-
-    function handlePointerMove(e) {
-      if (!dragging) return;
-      if (activePointerId !== null && e.pointerId !== activePointerId) return;
-      if (rafId) return;
-
-      rafId = requestAnimationFrame(() => {
-        rafId = null;
-
-        const currentX = e.clientX || startX;
-        lastX = currentX;
-        const dx = currentX - startX;
-
-        if (Math.abs(dx) > 3) isDragged = true;
-
-        const rot = startRot + dx * 0.2;
-        currdeg = rot;
-        currentRot = rot;
-        displayedRot = rot;
-
-        heroTrack.style.transform = `translate(-50%, -50%) rotateY(${rot}deg)`;
-
-        heroSlides.forEach((s, i) => {
-          const world = i * angle + rot;
-          const frontness = Math.cos(degToRad(world));
-          s.classList.toggle("dim", frontness < 0.4);
-          s.style.zIndex = String(Math.round(1000 * (frontness + 1)));
-        });
-      });
-
-      e.preventDefault();
-    }
-
-    heroCarousel.addEventListener("pointermove", handlePointerMove);
-    document.addEventListener("pointermove", handlePointerMove);
-
-    function handlePointerUp(e) {
-      if (!dragging) return;
-      if (activePointerId !== null && e.pointerId !== activePointerId) return;
-      endDrag(e);
-    }
-
-    heroCarousel.addEventListener("pointerup", handlePointerUp);
-    document.addEventListener("pointerup", handlePointerUp);
-
-    function handlePointerCancel(e) {
-      if (!dragging) return;
-      if (activePointerId !== null && e.pointerId !== activePointerId) return;
-      endDrag(e);
-    }
-
-    heroCarousel.addEventListener("pointercancel", handlePointerCancel);
-    document.addEventListener("pointercancel", handlePointerCancel);
-
-    heroCarousel.addEventListener("lostpointercapture", endDrag);
-
-    /* 初期化 */
-    renderHeroDots();
-
-    let resizeTimer = null;
-    window.addEventListener("resize", () => {
-      if (resizeTimer) clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        layoutRing();
-        updateRing(true);
-      }, 150);
-    }, { passive: true });
 
     /* 選択色の反映 */
     function setSelectedColor(key) {
@@ -4665,7 +3906,6 @@
         selectedPreviewImg.alt = `Mobby ${meta.name}`;
       }
 
-      if (!syncing) setHeroByColor(key);
     }
 
     function goBuy(url) {
@@ -4697,8 +3937,6 @@
     });
 
     /* 初期描画 */
-    prevHeroIndex = heroIndex;
-    setHeroByColor(selectedColor);
     syncing = true;
     setSelectedColor(selectedColor);
     syncing = false;
@@ -5048,8 +4286,6 @@
         if (e.key === 'Escape') close();
       });
     })();
-
-    layoutRing();
 
     /* ===== ポップアップ制御 ===== */
     let typingInterval = null;
