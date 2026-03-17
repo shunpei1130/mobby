@@ -3822,94 +3822,9 @@ gateSubmitButton.onclick = async () => {
             <div style="position:absolute; top:18px; right:-44px; transform:rotate(20deg); background:linear-gradient(135deg, #ffb347, #ffd27f); color:#fff; font-size:11px; letter-spacing:0.18em; padding:6px 48px; text-transform:uppercase;">LIMITED</div>
             <p class="kicker" style="margin-bottom:12px; color:#ff4d8d;">🎀 限定アクセサリー</p>
 
-            <div class="result-product-tabs" role="tablist" aria-label="限定キーホルダー">
-              <button
-                id="resultProductTabAcrylic"
-                class="result-product-tab"
-                type="button"
-                role="tab"
-                aria-selected="true"
-                aria-controls="resultProductPanelAcrylic"
-                data-result-product-tab="acrylic"
-              >
-                アクリル<br>キーホルダー
-              </button>
-              <button
-                id="resultProductTabPlush"
-                class="result-product-tab"
-                type="button"
-                role="tab"
-                aria-selected="false"
-                aria-controls="resultProductPanelPlush"
-                data-result-product-tab="plush"
-                tabindex="-1"
-              >
-                ぬいぐるみ<br>キーホルダー
-              </button>
-            </div>
-
-            <section
-              id="resultProductPanelPlush"
-              class="result-product-content"
-              role="tabpanel"
-              aria-labelledby="resultProductTabPlush"
-              data-result-product-panel="plush"
-              hidden
-            >
-              <h3 style="font-size:20px; margin:0 0 8px; color:var(--text-main);">ふわふわぬいぐるみキーホルダー</h3>
-              <p style="display:inline-block; font-size:12px; font-weight:700; color:#ffffff; background:#ff4d8d; padding:6px 12px; border-radius:999px; margin:0 0 12px; letter-spacing:0.03em;">
-                先着100個限定
-              </p>
-              <div style="display:flex; flex-wrap:wrap; align-items:flex-end; gap:10px; margin-bottom:14px;">
-                <span style="font-size:14px; color:rgba(82,62,62,0.72); text-decoration:line-through; text-decoration-thickness:2px;">通常価格 6,000円</span>
-                <span style="font-size:17px; color:#b65174; font-weight:700; letter-spacing:0.04em; background:rgba(255,77,141,0.1); border:1px solid rgba(255,77,141,0.24); padding:6px 12px; border-radius:999px;">特別価格 4,800円</span>
-              </div>
-              <div class="plush-gallery" id="plushGallery">
-                <div class="plush-gallery-swipe-hint" id="plushGalleryHint" aria-hidden="true">
-                  <span class="plush-gallery-swipe-icon">⇆</span>
-                  左右にスワイプして全ての写真を見る
-                </div>
-                <div
-                  class="plush-gallery-viewport"
-                  id="plushGalleryViewport"
-                  tabindex="0"
-                  aria-label="ぬいぐるみキーホルダー画像ギャラリー"
-                >
-                  <div class="plush-gallery-track" id="plushGalleryTrack"></div>
-                </div>
-                <div class="plush-gallery-controls" aria-label="ぬいぐるみ画像ナビゲーション">
-                  <button class="plush-gallery-nav" type="button" id="plushGalleryPrev" aria-label="前の画像">‹</button>
-                  <div class="plush-gallery-dots" id="plushGalleryDots"></div>
-                  <button class="plush-gallery-nav" type="button" id="plushGalleryNext" aria-label="次の画像">›</button>
-                </div>
-              </div>
-              <p class="text-body" style="font-size:14px; line-height:1.8; margin:0 0 14px;">
-                ふわっと軽い質感で、バッグにつけるだけで気分が上がる限定ぬいぐるみキーホルダーです。
-              </p>
-              <ul style="margin:0 0 18px; padding-left:18px; color:var(--text-sub); line-height:1.8; font-size:13px;">
-                <li>写真映えするフェミニンな配色</li>
-                <li>毎日使いやすいコンパクトサイズ</li>
-                <li>期間・数量ともに限定の特別仕様</li>
-              </ul>
-              <a
-                id="stripeBuyButtonPlush"
-                data-stripe-product-type="plush_keyholder"
-                data-stripe-product-label="ぬいぐるみキーホルダー"
-                href="https://buy.stripe.com/28EaEX30Vfqt6SybJJao80b"
-                target="_blank"
-                rel="noopener"
-                style="display:inline-flex; align-items:center; gap:10px; padding:14px 28px; border-radius:999px; font-size:14px; font-weight:600; text-decoration:none; background:linear-gradient(135deg, #ff4d8d, #ff7aa8); color:#fff; box-shadow:0 14px 30px rgba(255, 77, 141, 0.3); transition:transform 0.2s ease;"
-              >
-                期間限定アイテムを確認する →
-              </a>
-            </section>
-
             <section
               id="resultProductPanelAcrylic"
               class="result-product-content is-active"
-              role="tabpanel"
-              aria-labelledby="resultProductTabAcrylic"
-              data-result-product-panel="acrylic"
             >
               <h3 style="font-size:20px; margin:0 0 8px; color:var(--text-main);">アクリルキーホルダー</h3>
               <p style="display:inline-block; font-size:15px; font-weight:700; color:#ff4d8d; background:rgba(255,77,141,0.08); padding:6px 14px; border-radius:999px; margin:0 0 18px; letter-spacing:0.03em;">
