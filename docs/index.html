@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 
 <head>
@@ -39,7 +39,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Nunito:wght@400;700&display=swap"
     rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
-  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+  <link href="compositing/compositing.css" rel="stylesheet">
 
   <!-- 構造化データ -->
   <script type="application/ld+json">
@@ -130,7 +130,7 @@
 
     body {
       font-family: var(--font-ja);
-      background-color: var(--color-cream);
+      background: #faf1e2;
       color: var(--color-forest);
       overflow-x: hidden;
       line-height: 1.7;
@@ -142,6 +142,7 @@
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
+      display: none;
     }
 
     /* Splash */
@@ -154,12 +155,16 @@
       overflow: hidden;
 
       /* ▼ 小さく表示＋余白は白 */
-      background-color: #f9f5f4;
+      background:
+        radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 24%),
+        radial-gradient(circle at 85% 18%, rgba(255, 196, 166, 0.38), rgba(255, 196, 166, 0) 28%),
+        linear-gradient(135deg, #fff8ef 0%, #f6ecda 55%, #ead8ba 100%);
       /* 余白を白に */
       background-image: url('img/favicon/背景.jpg');
       background-repeat: no-repeat;
       background-position: center;
       background-size: 50% auto;
+      background-image: none;
       /* 横幅50%で固定 */
       /* 拡大しない・必ず収まる */
     }
@@ -173,27 +178,95 @@
 
     .instruction {
       position: absolute;
-      top: 60%;
+      top: 73%;
       left: 50%;
       transform: translateX(-50%);
-      color: rgba(255, 255, 255, 0.9);
+      color: rgba(92, 67, 46, 0.92);
       pointer-events: none;
       font-family: var(--font-en), var(--font-ja);
       font-weight: 700;
-      font-size: 1rem;
-      letter-spacing: 0.04em;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(8px);
+      font-size: 1.12rem;
+      letter-spacing: 0.12em;
+      padding: 0;
       user-select: none;
       white-space: nowrap;
       z-index: 3;
+      text-shadow: 0 2px 10px rgba(84, 59, 39, 0.12);
+    }
+
+    .splash-word {
+      position: absolute;
+      top: 48%;
+      left: 50%;
+      display: flex;
+      gap: clamp(8px, 1vw, 18px);
+      transform: translate(-50%, -50%);
+      z-index: 4;
+      perspective: 1200px;
+      pointer-events: none;
+    }
+
+    .splash-letter {
+      display: block;
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(4.8rem, 11vw, 9.4rem);
+      font-weight: 900;
+      line-height: 0.92;
+      letter-spacing: -0.08em;
+      text-shadow: 0 6px 16px rgba(120, 81, 44, 0.08);
+      transform-origin: center 72%;
+      animation: splashRollIn var(--roll-duration, 1.25s) cubic-bezier(0.2, 0.9, 0.22, 1) both;
+      animation-delay: var(--roll-delay, 0s);
+    }
+
+    .splash-letter:nth-child(1) { color: #ff3e9a; --roll-delay: 0.02s; --roll-duration: 1.06s; }
+    .splash-letter:nth-child(2) { color: #1f78e8; --roll-delay: 0.18s; --roll-duration: 1.34s; }
+    .splash-letter:nth-child(3) { color: #702dbb; --roll-delay: 0.34s; --roll-duration: 1.18s; }
+    .splash-letter:nth-child(4) { color: #ffca1f; --roll-delay: 0.50s; --roll-duration: 1.42s; }
+    .splash-letter:nth-child(5) { color: #0d9ca4; --roll-delay: 0.66s; --roll-duration: 1.12s; }
+
+    #splash-screen.is-bursting .splash-letter {
+      animation: splashBurst 0.78s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation-delay: calc(var(--letter-index) * 0.04s);
+    }
+
+    @keyframes splashRollIn {
+      0% {
+        opacity: 0;
+        transform: translate3d(calc(72vw + var(--roll-x, 0px)), 0, 0) rotate(880deg) scale(0.3);
+      }
+
+      68% {
+        opacity: 1;
+        transform: translate3d(calc(-2vw + var(--settle-x, 0px)), 0, 0) rotate(-18deg) scale(1.06);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+      }
+    }
+
+    @keyframes splashBurst {
+      0% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+      }
+
+      100% {
+        opacity: 0;
+        transform:
+          translate3d(calc(var(--burst-x) * 1px), calc(var(--burst-y) * 1px), 0)
+          rotate(calc(var(--burst-rotate) * 1deg))
+          scale(0.42);
+      }
     }
 
     #main-content {
       opacity: 0;
       transition: opacity 1.5s ease;
+      background: #faf1e2;
+      min-height: 100vh;
     }
 
     #main-content.visible {
@@ -206,18 +279,47 @@
       font-size: clamp(6.2rem, 5vw, 4.5rem);
       font-weight: 900;
       font-family: 'Montserrat', sans-serif;
-      color: var(--color-forest);
-      padding-top: 28px;
+      padding-top: 126px;
       padding-bottom: 8px;
       opacity: 0.95;
       line-height: 1;
+      display: flex;
+      justify-content: center;
+      gap: 0.02em;
+      letter-spacing: 0.08em;
+      text-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.75),
+        0 8px 18px rgba(72, 93, 126, 0.12);
     }
+
+    .mobby-title-letter {
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .mobby-title-letter-y {
+      cursor: pointer;
+      transform-origin: center;
+    }
+
+    .mobby-title-letter-y.is-rolling {
+      transform: translate(30px, 40px) rotate(96deg);
+    }
+
+    .mobby-title-letter:nth-child(1) { color: #ff3e9a; }
+    .mobby-title-letter:nth-child(2) { color: #1f78e8; }
+    .mobby-title-letter:nth-child(3) { color: #702dbb; }
+    .mobby-title-letter:nth-child(4) { color: #ffca1f; }
+    .mobby-title-letter:nth-child(5) { color: #0d9ca4; }
 
     @media (max-width: 768px) {
       .mobby-title {
         font-size: clamp(3.2rem, 6vw, 3.5rem);
-        padding-top: 20px;
+        padding-top: 84px;
         padding-bottom: 6px;
+      }
+
+      .mobby-title-letter-y.is-rolling {
+        transform: translate(14px, 24px) rotate(94deg);
       }
     }
 
@@ -229,6 +331,12 @@
       letter-spacing: 0.05em;
       line-height: 1.2;
       color: var(--color-earth);
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.92), 0 8px 18px rgba(139, 69, 19, 0.12);
+    }
+
+    .headline {
+      color: #111;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8), 0 6px 14px rgba(0, 0, 0, 0.08);
     }
 
     p {
@@ -250,19 +358,61 @@
       font-weight: 700;
       font-family: var(--font-en);
       transition: all 0.4s var(--ease-soft);
-      border: 2px solid transparent;
-      box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        0 5px 0 rgba(74, 55, 40, 0.18),
+        0 14px 28px rgba(47, 79, 79, 0.16);
       cursor: pointer;
+      transform: translateY(0);
     }
 
     .btn-secondary {
       border: none;
-      box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.15);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.92),
+        0 5px 0 rgba(74, 55, 40, 0.14),
+        0 16px 26px rgba(0, 0, 0, 0.14);
     }
 
     .btn-secondary:hover {
-      transform: translateY(-2px) rotate(-1deg);
-      opacity: 0.9;
+      transform: translateY(-4px) rotate(-1deg);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.92),
+        0 8px 0 rgba(74, 55, 40, 0.16),
+        0 22px 30px rgba(0, 0, 0, 0.16);
+      opacity: 0.98;
+    }
+
+    .action-box-btn {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.38);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.42),
+        inset 0 -16px 28px rgba(18, 68, 78, 0.14),
+        0 7px 0 rgba(47, 96, 106, 0.18),
+        0 18px 32px rgba(34, 92, 106, 0.2);
+      letter-spacing: 0.04em;
+    }
+
+    .action-box-btn::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0) 45%),
+        radial-gradient(circle at top right, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 48%);
+      pointer-events: none;
+    }
+
+    .action-box-btn:hover {
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.46),
+        inset 0 -18px 30px rgba(18, 68, 78, 0.18),
+        0 10px 0 rgba(47, 96, 106, 0.16),
+        0 24px 36px rgba(34, 92, 106, 0.22);
     }
 
     #openMessagePopup {
@@ -271,13 +421,15 @@
     }
 
     #openPricePopup {
-      background-color: #f6d49c;
-      color: #fff;
+      background:
+        linear-gradient(145deg, #3c7f8a 0%, #62a8b2 52%, #b8e7eb 100%);
+      color: #f5feff;
     }
 
     #openEncyclopediaPopup {
-      background-color: #f28bb3;
-      color: #fff;
+      background:
+        linear-gradient(145deg, #468995 0%, #70b4bc 52%, #c5eef0 100%);
+      color: #f5feff;
     }
 
     /* 図鑑一覧タブ：スマホでコンパクト表示 */
@@ -328,8 +480,9 @@
     }
 
     #openFaqPopup {
-      background-color: #9bb5ae;
-      color: #fff;
+      background:
+        linear-gradient(145deg, #417f89 0%, #69adb4 52%, #bee8eb 100%);
+      color: #f5feff;
     }
 
     #openVideoPopup {
@@ -344,7 +497,11 @@
 
     .btn-primary:hover {
       background-color: var(--color-earth);
-      transform: translateY(-2px) rotate(1deg);
+      transform: translateY(-4px) rotate(1deg);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.28),
+        0 8px 0 rgba(74, 55, 40, 0.18),
+        0 24px 34px rgba(139, 69, 19, 0.24);
     }
 
     .btn:disabled,
@@ -374,7 +531,6 @@
     @media (max-width: 768px) {
 
       #goMobbyDiagnosis,
-      #goKoreanVersion,
       #goGachaPage {
         font-size: 12px !important;
         padding: 8px 18px !important;
@@ -444,12 +600,14 @@
       text-align: center;
       position: relative;
       padding-top: 0;
+      background: #faf1e2;
     }
 
     .headline {
-      font-size: clamp(0.9rem, 2.8vw, 2.4rem);
+      font-size: clamp(1.15rem, 3.4vw, 2.6rem);
       margin-top: 8px;
       text-align: center;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.95), 0 12px 26px rgba(47, 79, 79, 0.14);
     }
 
     .subhead {
@@ -593,7 +751,7 @@
       }
     }
 
-    /* ===== Hero Model Viewer ===== */
+    /* ===== Hero Image ===== */
     .hero-carousel-shell {
       width: min(420px, 96vw);
       margin: 14px auto 10px;
@@ -609,7 +767,48 @@
       background: transparent;
       border: none;
       box-shadow: none;
-      isolation: auto;
+      isolation: isolate;
+    }
+
+    .hero-model-carousel {
+      position: relative;
+      width: 100%;
+      height: 360px;
+      z-index: 1;
+      overflow: hidden;
+      touch-action: pan-y;
+      -webkit-mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, 0.9) 5%, #000 11%, #000 89%, rgba(0, 0, 0, 0.9) 95%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, 0.9) 5%, #000 11%, #000 89%, rgba(0, 0, 0, 0.9) 95%, transparent 100%);
+    }
+
+    .hero-model-slide {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 74%;
+      height: 100%;
+      opacity: var(--slide-opacity, 0);
+      transform: translateX(calc(-50% + var(--slide-offset, 0%))) scale(var(--slide-scale, 0.9));
+      transition: opacity 0.55s ease, transform 0.55s ease, filter 0.55s ease;
+      filter: saturate(var(--slide-saturate, 0.82));
+      pointer-events: none;
+      z-index: var(--slide-z, 1);
+    }
+
+    .hero-model-slide::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: var(--hero-image);
+      background-repeat: no-repeat;
+      background-position: center bottom;
+      background-size: contain;
+      filter: drop-shadow(0 10px 20px rgba(73, 54, 37, 0.12));
+      pointer-events: none;
+    }
+
+    .hero-model-slide.is-active {
+      pointer-events: auto;
     }
 
     .hero-model-stage::before {
@@ -617,13 +816,174 @@
     }
 
     .hero-model-viewer {
-      display: block;
-      width: 100%;
-      height: 360px;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .hero-character-row {
+      width: min(340px, calc(100% - 24px));
+      margin: 8px auto 0;
+      display: grid;
+      grid-template-columns: 56px minmax(0, 1fr) 56px;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hero-character-name {
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-earth);
+      letter-spacing: 0.06em;
+      line-height: 1.4;
+    }
+
+    .hero-character-action {
+      width: 56px;
+      height: 56px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: 18px;
+      background: linear-gradient(145deg, #fff8ee 0%, #efe2cf 100%);
+      color: #856555;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        0 8px 18px rgba(89, 70, 52, 0.14);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .hero-character-action:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        0 12px 24px rgba(89, 70, 52, 0.18);
+    }
+
+    .hero-character-action.mode {
       position: relative;
-      z-index: 1;
-      background: transparent;
-      --poster-color: transparent;
+      font-size: 0.78rem;
+      letter-spacing: 0.03em;
+      line-height: 1.15;
+      flex-direction: row;
+      padding-bottom: 0;
+    }
+
+    .hero-character-action.mode::after {
+      content: "";
+      position: absolute;
+      right: -5px;
+      bottom: -4px;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background-color: rgba(255, 248, 239, 0.96);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236c5240' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 7a8 8 0 0 0-13.66-2.34L4 7'/%3E%3Cpath d='M4 3v4h4'/%3E%3Cpath d='M4 17a8 8 0 0 0 13.66 2.34L20 17'/%3E%3Cpath d='M20 21v-4h-4'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 12px 12px;
+      box-shadow:
+        0 3px 8px rgba(89, 70, 52, 0.16),
+        inset 0 0 0 1px rgba(108, 82, 64, 0.18);
+      opacity: 0.82;
+      pointer-events: none;
+      transform: rotate(0deg) scale(1);
+      transition: transform 0.35s ease, box-shadow 0.35s ease, background-color 0.35s ease;
+    }
+
+    .hero-character-action.mode.is-switching::after {
+      transform: rotate(180deg) scale(1.14);
+      background-color: rgba(255, 255, 255, 1);
+      box-shadow:
+        0 5px 12px rgba(89, 70, 52, 0.22),
+        0 0 0 4px rgba(255, 214, 160, 0.28),
+        inset 0 0 0 1px rgba(108, 82, 64, 0.2);
+    }
+
+    .hero-smoke-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 12;
+      pointer-events: none;
+      touch-action: manipulation;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .hero-smoke-glow {
+      position: absolute;
+      left: 22%;
+      top: 34%;
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(255, 234, 205, 0.45) 0%, rgba(255, 234, 205, 0) 72%);
+      filter: blur(6px);
+      z-index: 2;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    #openMessagePopup {
+      background: linear-gradient(145deg, #f39bc0, #e182a7);
+      color: #fff7ef;
+    }
+
+    #openPricePopup {
+      background:
+        linear-gradient(145deg, #3c7f8a 0%, #62a8b2 52%, #b8e7eb 100%);
+      color: #f5feff;
+    }
+
+    #openFaqPopup {
+      background:
+        linear-gradient(145deg, #417f89 0%, #69adb4 52%, #bee8eb 100%);
+      color: #f5feff;
+    }
+
+    #openEncyclopediaPopup {
+      background:
+        linear-gradient(145deg, #468995 0%, #70b4bc 52%, #c5eef0 100%);
+      color: #f5feff;
+    }
+
+    #openVideoPopup {
+      background: linear-gradient(145deg, #7fc2be, #5fa4a0);
+      color: #fff7ef;
+    }
+
+    #openVideoPopup,
+    #openMessagePopup,
+    #videoPopup,
+    #reservationCounter {
+      display: none !important;
+    }
+
+    .hero-quote,
+    .card,
+    .popup-content,
+    .price-reservation-form,
+    .product-tab-card,
+    .acrylic-series-card,
+    .acrylic-status-card,
+    .acrylic-summary-card,
+    .price-card,
+    .faq-item,
+    .notice,
+    .try-card {
+      background: rgba(255, 246, 235, 0.92) !important;
+      border-color: rgba(139, 90, 60, 0.16) !important;
     }
 
     @media (max-width: 768px) {
@@ -636,8 +996,14 @@
         border-radius: 0;
       }
 
-      .hero-model-viewer {
+      .hero-model-carousel {
         height: 300px;
+        -webkit-mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, 0.84) 10%, #000 20%, #000 80%, rgba(0, 0, 0, 0.84) 90%, transparent 100%);
+        mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, 0.84) 10%, #000 20%, #000 80%, rgba(0, 0, 0, 0.84) 90%, transparent 100%);
+      }
+
+      .hero-model-viewer {
+        height: 100%;
       }
     }
 
@@ -899,7 +1265,10 @@
       border: 1px solid rgba(47, 79, 79, 0.12);
       border-radius: 26px;
       padding: 18px 16px;
-      box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.06);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.92),
+        0 8px 0 rgba(74, 55, 40, 0.08),
+        0 24px 40px rgba(0, 0, 0, 0.1);
       text-align: left;
     }
 
@@ -1926,27 +2295,525 @@
 
     /* ポップアップボタンバー（最下部） */
     .popup-buttons-bar {
-      background-color: var(--color-cream);
-      padding: 24px 0;
+      background: #faf1e2;
+      padding: 16px 0 10px;
+    }
+
+    .gacha-btn-wrap,
+    #mobbyDiagnosisWrapper {
+      display: none !important;
     }
 
     .popup-buttons {
+      width: min(420px, 96vw);
+      margin: 0 auto;
       display: flex;
       flex-wrap: nowrap;
       gap: 12px;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
+      padding-left: 56px;
     }
 
     .popup-buttons .btn {
-      width: 50px;
-      height: 50px;
+      width: 56px;
+      height: 56px;
       padding: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       aspect-ratio: 1/1;
       border-radius: 18px;
+      font-size: 13px;
+    }
+
+    .popup-buttons > .btn.action-box-btn,
+    .popup-buttons > .btn-with-counter {
+      display: none !important;
+    }
+
+    .gift-fan-menu {
+      position: relative;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+      --gift-diagnosis-origin-x: 76px;
+      --gift-diagnosis-origin-y: 0px;
+    }
+
+    .gift-fan-trigger {
+      position: relative;
+      width: 56px;
+      height: 56px;
+      border: none;
+      border-radius: 18px;
+      background: linear-gradient(145deg, #fffdf8 0%, #eadbc7 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.98),
+        0 0 0 1px rgba(133, 101, 85, 0.1),
+        0 12px 24px rgba(89, 70, 52, 0.18);
+      cursor: pointer;
+      transition: transform 0.24s ease, box-shadow 0.24s ease;
+    }
+
+    .gift-fan-trigger:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.98),
+        0 0 0 1px rgba(133, 101, 85, 0.14),
+        0 16px 30px rgba(89, 70, 52, 0.22);
+    }
+
+    .gift-fan-menu > .btn {
+      position: relative;
+      width: 56px;
+      height: 56px;
+      padding: 0;
+      border: none;
+      border-radius: 18px;
+      background: linear-gradient(145deg, #fff8ee 0%, #efe2cf 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        0 8px 18px rgba(89, 70, 52, 0.14);
+      color: transparent;
+      font-size: 0;
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .gift-fan-menu > .btn:hover {
+      transform: translateY(-2px) rotate(-3deg);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        0 12px 24px rgba(89, 70, 52, 0.18);
+    }
+
+    .gift-fan-menu > .btn::before {
+      content: "";
+      position: absolute;
+      width: 24px;
+      height: 18px;
+      left: 50%;
+      top: 54%;
+      transform: translate(-50%, -50%);
+      border-radius: 4px;
+      background: #856555;
+      box-shadow: inset 0 0 0 2px rgba(133, 101, 85, 0.08);
+    }
+
+    .gift-fan-menu > .btn::after {
+      content: "";
+      position: absolute;
+      width: 4px;
+      height: 26px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 999px;
+      background: #856555;
+      box-shadow: 0 0 0 999px transparent, 0 0 0 0 #856555;
+    }
+
+    .gift-fan-trigger-icon {
+      font-size: 1.42rem;
+      font-weight: 900;
+      line-height: 1;
+      color: #5a6167;
+      position: absolute;
+      inset: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.78),
+        0 0 10px rgba(160, 235, 255, 0.26);
+      letter-spacing: -0.04em;
+    }
+
+    .gift-fan-actions {
+      position: absolute;
+      inset: 0;
+      font-size: 0;
+      color: transparent;
+      pointer-events: none;
+    }
+
+    .gift-fan-diagnosis-actions {
+      position: absolute;
+      inset: 0;
+      font-size: 0;
+      color: transparent;
+      pointer-events: none;
+      transform: translate(var(--gift-diagnosis-origin-x), var(--gift-diagnosis-origin-y));
+    }
+
+    .gift-fan-action {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 56px;
+      height: 56px;
+      border: none !important;
+      border-radius: 18px !important;
+      background: linear-gradient(145deg, #fff8ee 0%, #efe2cf 100%) !important;
+      color: #856555 !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        0 8px 18px rgba(89, 70, 52, 0.14) !important;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(0, 0) scale(0.38);
+      transition:
+        transform 0.34s cubic-bezier(0.18, 1, 0.32, 1),
+        opacity 0.2s ease,
+        box-shadow 0.24s ease;
+      will-change: transform, opacity;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .gift-fan-action.has-new-badge {
+      overflow: visible;
+    }
+
+    .gift-fan-new-badge {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 248, 239, 0.98);
+      font-size: 9px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.04em;
+      box-shadow:
+        0 3px 8px rgba(89, 70, 52, 0.16),
+        inset 0 0 0 1px rgba(47, 79, 79, 0.18);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .gift-fan-new-badge .badge-n { color: #ff3e9a; }
+    .gift-fan-new-badge .badge-e { color: #1f78e8; }
+    .gift-fan-new-badge .badge-w { color: #ffca1f; }
+    .gift-fan-new-badge .badge-mark { color: var(--color-forest); }
+
+    .gift-fan-diagnosis-action {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 76px;
+      height: 52px;
+      padding: 0 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      line-height: 1.2;
+      border: none !important;
+      border-radius: 18px !important;
+      background: linear-gradient(145deg, #fff8ee 0%, #efe2cf 100%) !important;
+      color: #856555 !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        0 8px 18px rgba(89, 70, 52, 0.14) !important;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(0, 0) scale(0.3);
+      transition:
+        transform 0.34s cubic-bezier(0.18, 1, 0.32, 1),
+        opacity 0.2s ease;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .gift-fan-menu.is-open .gift-fan-action {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .gift-fan-action[data-fan-item="price"] {
+      transition-delay: 0s;
+    }
+
+    .gift-fan-action[data-fan-item="faq"] {
+      transition-delay: 0.2s;
+    }
+
+    .gift-fan-action[data-fan-item="encyclopedia"] {
+      transition-delay: 0.1s;
+    }
+
+    .gift-fan-action[data-fan-item="vote"] {
+      transition-delay: 0.15s;
+    }
+
+    .gift-fan-action[data-fan-item="compositing"] {
+      transition-delay: 0.05s;
+    }
+
+    .gift-fan-menu.is-open .gift-fan-action[data-fan-item="price"] {
+      transform: translate(76px, 0) scale(1.04);
+    }
+
+    .gift-fan-menu.is-open .gift-fan-action[data-fan-item="faq"] {
+      transform: translate(348px, 0) scale(1.04);
+    }
+
+    .gift-fan-menu.is-open .gift-fan-action[data-fan-item="encyclopedia"] {
+      transform: translate(212px, 0) scale(1.04);
+    }
+
+    .gift-fan-menu.is-open .gift-fan-action[data-fan-item="vote"] {
+      transform: translate(280px, 0) scale(1.04);
+    }
+
+    .gift-fan-menu.is-open .gift-fan-action[data-fan-item="compositing"] {
+      transform: translate(144px, 0) scale(1.04);
+    }
+
+    .gift-fan-menu.is-diagnosis-open .gift-fan-action[data-fan-item="price"] {
+      background: linear-gradient(145deg, #f2e3cc 0%, #dcc1a1 100%) !important;
+      color: #74533f !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        0 10px 22px rgba(89, 70, 52, 0.18),
+        0 0 0 2px rgba(184, 144, 104, 0.22) !important;
+    }
+
+    .gift-fan-menu.is-diagnosis-open .gift-fan-action:not([data-fan-item="price"]) {
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(0, 0) scale(0.28);
+    }
+
+    .gift-fan-menu.is-open .gift-fan-trigger {
+      transform: scale(1.08);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.98),
+        0 0 0 1px rgba(133, 101, 85, 0.14),
+        0 16px 30px rgba(89, 70, 52, 0.22);
+    }
+
+    .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .gift-fan-menu.is-diagnosis-closing .gift-fan-diagnosis-action {
+      opacity: 1;
+      pointer-events: none;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="school"] {
+      transition-delay: 0s;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="love"] {
+      transition-delay: 0.05s;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] {
+      transition-delay: 0.1s;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="night"] {
+      transition-delay: 0.15s;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="mama"] {
+      transition-delay: 0.2s;
+    }
+
+    .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="school"] {
+      transform: translate(76px, 64px) scale(1);
+    }
+
+    .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="love"] {
+      transform: translate(144px, 64px) scale(1);
+    }
+
+    .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] {
+      transform: translate(212px, 64px) scale(1);
+    }
+
+    .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="night"] {
+      transform: translate(280px, 64px) scale(1);
+    }
+
+    .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="mama"] {
+      transform: translate(348px, 64px) scale(1);
+    }
+
+    .gift-fan-menu.is-open > .btn {
+      transform: scale(0.94) rotate(6deg);
+    }
+
+    .vote-popup-shell {
+      display: grid;
+      gap: 26px;
+    }
+
+    .vote-popup-header {
+      text-align: center;
+    }
+
+    .vote-popup-header h2 {
+      margin: 0 0 8px;
+    }
+
+    .vote-popup-header p {
+      font-size: 0.95rem;
+      color: rgba(47, 79, 79, 0.82);
+    }
+
+    .vote-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .vote-card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(47, 79, 79, 0.12);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.92),
+        0 16px 32px rgba(47, 79, 79, 0.08);
+    }
+
+    .vote-rank-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 2;
+      min-width: 54px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(20, 29, 32, 0.78);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-align: center;
+      backdrop-filter: blur(8px);
+    }
+
+    .vote-card-image {
+      aspect-ratio: 1 / 1;
+      background: #f3ede5;
+      overflow: hidden;
+    }
+
+    .vote-card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .vote-card-body {
+      padding: 14px 14px 16px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .vote-card-name {
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: #4a3728;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    .vote-card-points {
+      font-size: 0.84rem;
+      color: rgba(47, 79, 79, 0.78);
+      text-align: center;
+    }
+
+    .vote-submit-btn {
+      width: 100%;
+      border: none;
+      border-radius: 16px;
+      padding: 12px 14px;
+      background: linear-gradient(145deg, #3c7f8a 0%, #62a8b2 52%, #b8e7eb 100%);
+      color: #f8feff;
+      font-weight: 800;
+      font-family: var(--font-en), var(--font-ja);
+      cursor: pointer;
+      box-shadow: 0 10px 22px rgba(60, 127, 138, 0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .vote-submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px rgba(60, 127, 138, 0.24);
+    }
+
+    .vote-ranking {
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(47, 79, 79, 0.12);
+      border-radius: 24px;
+      padding: 18px 18px 14px;
+      box-shadow: 0 10px 24px rgba(47, 79, 79, 0.08);
+    }
+
+    .vote-ranking h3 {
+      margin: 0 0 14px;
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    .vote-ranking-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .vote-ranking-item {
+      display: grid;
+      grid-template-columns: 58px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: rgba(255, 248, 239, 0.82);
+    }
+
+    .vote-ranking-place {
+      font-weight: 800;
+      color: #3c7f8a;
+    }
+
+    .vote-ranking-name {
+      font-size: 0.94rem;
+      color: #4a3728;
+      font-weight: 700;
+    }
+
+    .vote-ranking-score {
+      font-size: 0.9rem;
+      color: rgba(47, 79, 79, 0.82);
+      font-weight: 800;
+    }
+
+    .vote-feedback {
+      min-height: 1.4em;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #3c7f8a;
+      font-weight: 700;
     }
 
     /* ポップアップオーバーレイ */
@@ -1980,7 +2847,10 @@
       width: 100%;
       max-height: 90vh;
       overflow-y: auto;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        0 12px 0 rgba(74, 55, 40, 0.08),
+        0 32px 80px rgba(0, 0, 0, 0.28);
       margin: auto;
     }
 
@@ -2009,6 +2879,306 @@
       transform: scale(1.05);
     }
 
+    .peek-heart-wrap {
+      display: flex;
+      justify-content: center;
+      margin: -8px 0 18px;
+    }
+
+    .peek-heart-btn {
+      z-index: 14;
+    }
+
+    @media (max-width: 768px) {
+      .hero-character-row {
+        width: min(320px, calc(100% - 16px));
+        grid-template-columns: 50px minmax(0, 1fr) 50px;
+        gap: 10px;
+      }
+
+      .hero-character-action {
+        width: 50px;
+        height: 50px;
+        font-size: 0.98rem;
+      }
+
+      .hero-character-action.mode {
+        font-size: 0.68rem;
+        padding-bottom: 0;
+      }
+
+      .hero-character-action.mode::after {
+        right: -4px;
+        bottom: -3px;
+        width: 16px;
+        height: 16px;
+        background-size: 10px 10px;
+      }
+    }
+
+    .note-popup {
+      width: min(100%, 520px);
+      margin: 0 auto;
+      max-height: min(74vh, 780px);
+      background:
+        linear-gradient(180deg, rgba(255, 252, 247, 0.98) 0%, rgba(250, 244, 235, 0.98) 100%);
+      border: 1px solid rgba(152, 128, 104, 0.16);
+      border-radius: 22px;
+      padding: 0 28px 0;
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        0 18px 38px rgba(75, 58, 45, 0.1),
+        0 2px 0 rgba(255, 255, 255, 0.78) inset;
+    }
+
+    .note-popup.is-quote-page {
+      max-height: min(78vh, 840px);
+    }
+
+    .note-popup::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.5), transparent 34%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0));
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .note-popup::after {
+      display: none;
+    }
+
+    .note-popup-inner {
+      position: relative;
+      z-index: 1;
+      padding-left: 4px;
+      padding-top: 0;
+      padding-bottom: 4px;
+      max-height: calc(min(74vh, 780px) - 24px);
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .note-tabs {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      padding-top: 8px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(152, 128, 104, 0.16);
+    }
+
+    .note-tabs[hidden] {
+      display: none !important;
+    }
+
+    .note-tab-btn {
+      border: 1px solid rgba(152, 128, 104, 0.18);
+      border-bottom: none;
+      background: linear-gradient(180deg, rgba(245, 235, 221, 0.9) 0%, rgba(236, 224, 207, 0.9) 100%);
+      color: rgba(95, 73, 58, 0.66);
+      border-radius: 14px 14px 0 0;
+      padding: 8px 16px 7px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      line-height: 1;
+      transform: translateY(1px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+
+    .note-tab-btn.is-active {
+      background: linear-gradient(180deg, rgba(255, 251, 244, 0.98) 0%, rgba(250, 244, 235, 0.98) 100%);
+      color: #6a4c39;
+      border-color: rgba(133, 101, 85, 0.22);
+      transform: translateY(0);
+      position: relative;
+      z-index: 1;
+    }
+
+    .note-tab-btn.is-active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 2px;
+      background: rgba(250, 244, 235, 0.98);
+    }
+
+    .note-popup.is-quote-page .note-popup-inner {
+      max-height: calc(min(78vh, 840px) - 24px);
+      padding-top: 10px;
+      padding-bottom: 6px;
+    }
+
+    .heart-note-inline .popup-close {
+      top: 12px;
+      right: 12px;
+      width: 34px;
+      height: 34px;
+      font-size: 22px;
+    }
+
+    .note-popup-kicker {
+      display: none;
+    }
+
+    .note-popup h2 {
+      display: none;
+    }
+
+    .note-popup p {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 2.1;
+      color: #5c4739;
+      white-space: pre-wrap;
+    }
+
+    .note-body.is-turning {
+      animation: notePageTurn 0.36s ease;
+      transform-origin: left center;
+      backface-visibility: hidden;
+    }
+
+    .note-popup.is-quote-page p {
+      font-size: 0.96rem;
+      line-height: 1.8;
+      color: #3f2f24;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .quote-page-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .quote-page-controls[hidden] {
+      display: none !important;
+    }
+
+    .quote-page-btn {
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(139, 69, 19, 0.18);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.78);
+      color: #6a4c39;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .quote-page-btn:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+
+    .quote-page-indicator {
+      min-width: 54px;
+      text-align: center;
+      font-size: 0.86rem;
+      color: rgba(95, 73, 58, 0.78);
+      font-weight: 700;
+    }
+
+    .character-note-fields {
+      display: grid;
+      gap: 18px;
+      margin-top: -28px;
+    }
+
+    .character-note-field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .character-note-label {
+      font-size: 0.92rem;
+      letter-spacing: 0.14em;
+      color: rgba(95, 73, 58, 0.72);
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .character-note-value {
+      font-size: 1.22rem;
+      line-height: 1.6;
+      color: #3f2f24;
+      font-weight: 800;
+    }
+
+    .heart-note-inline {
+      width: 100%;
+      padding: 10px 0 4px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .heart-note-inline[hidden] {
+      display: none !important;
+    }
+
+    @media (max-width: 768px) {
+      .note-popup {
+        width: min(100%, 92vw);
+        padding: 0 22px 0;
+      }
+
+      .note-popup-inner {
+        padding-left: 2px;
+        padding-top: 0;
+        padding-bottom: 2px;
+      }
+
+      .note-popup.is-quote-page .note-popup-inner {
+        max-height: calc(min(78vh, 840px) - 20px);
+        padding-top: 8px;
+        padding-bottom: 6px;
+      }
+
+      .note-tabs {
+        padding-top: 8px;
+        margin-bottom: 12px;
+      }
+
+      .note-tab-btn {
+        padding: 7px 13px 6px;
+        font-size: 0.83rem;
+      }
+
+      .heart-note-inline .popup-close {
+        top: 10px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        font-size: 19px;
+      }
+    }
+
+    @keyframes notePageTurn {
+      0% {
+        opacity: 0.55;
+        transform: perspective(700px) rotateY(-24deg) translateX(-8px);
+      }
+      100% {
+        opacity: 1;
+        transform: perspective(700px) rotateY(0deg) translateX(0);
+      }
+    }
+
+    .popup-buttons-bar.is-note-open .popup-buttons {
+      display: none;
+    }
+
     .diagnosis-popup-title {
       text-align: center;
       font-size: 1.4rem;
@@ -2026,16 +3196,74 @@
     }
 
     .diagnosis-options {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
+      position: relative;
+      width: min(100%, 520px);
+      height: 360px;
+      margin: 0 auto;
     }
 
     .diagnosis-options .btn {
-      min-width: 180px;
-      font-size: 1rem;
-      padding: 12px 22px;
+      position: absolute;
+      left: 50%;
+      bottom: 24px;
+      width: 140px;
+      min-height: 52px;
+      font-size: 0.96rem;
+      padding: 10px 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      line-height: 1.35;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        0 8px 18px rgba(89, 70, 52, 0.14);
+    }
+
+    .diagnosis-options .btn:nth-of-type(1) {
+      transform: translate(-220px, -44px);
+    }
+
+    .diagnosis-options .btn:nth-of-type(2) {
+      transform: translate(-188px, -150px);
+    }
+
+    .diagnosis-options .btn:nth-of-type(3) {
+      transform: translate(-82px, -224px);
+    }
+
+    .diagnosis-options .btn:nth-of-type(4) {
+      transform: translate(44px, -224px);
+    }
+
+    .diagnosis-options .btn:nth-of-type(5) {
+      transform: translate(150px, -150px);
+    }
+
+    .diagnosis-options .btn:nth-of-type(6) {
+      transform: translate(182px, -44px);
+    }
+
+    .diagnosis-fan-core {
+      position: absolute;
+      left: 50%;
+      bottom: 18px;
+      width: 78px;
+      height: 78px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, #fffdf8 0%, #eadbc7 100%);
+      color: #856555;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.98),
+        0 0 0 1px rgba(133, 101, 85, 0.1),
+        0 12px 24px rgba(89, 70, 52, 0.16);
+      pointer-events: none;
     }
 
     @media (max-width: 768px) {
@@ -2045,8 +3273,11 @@
       }
 
       .popup-buttons {
+        width: min(420px, 92vw);
         flex-wrap: wrap;
         gap: 10px;
+        justify-content: flex-start;
+        padding-left: 36px;
       }
 
       .popup-buttons .btn {
@@ -2055,10 +3286,167 @@
         max-width: none;
       }
 
+      .gift-fan-menu {
+        width: 50px;
+        height: 50px;
+        --gift-diagnosis-origin-x: 64px;
+        --gift-diagnosis-origin-y: 0px;
+      }
+
+      .gift-fan-trigger {
+        width: 50px;
+        height: 50px;
+      }
+
+      .gift-fan-menu > .btn {
+        width: 50px;
+        height: 50px;
+      }
+
+      .gift-fan-action {
+        width: 50px;
+        height: 50px;
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="price"] {
+        transform: translate(64px, 0) scale(1.02);
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="faq"] {
+        transform: translate(296px, 0) scale(1.02);
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="encyclopedia"] {
+        transform: translate(180px, 0) scale(1.02);
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="vote"] {
+        transform: translate(238px, 0) scale(1.02);
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="compositing"] {
+        transform: translate(122px, 0) scale(1.02);
+      }
+
+      .gift-fan-diagnosis-action {
+        width: 66px;
+        height: 46px;
+        padding: 0 8px;
+        font-size: 11px;
+      }
+
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="school"] {
+        transform: translate(64px, 56px) scale(0.98);
+      }
+
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="love"] {
+        transform: translate(122px, 56px) scale(0.98);
+      }
+
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] {
+        transform: translate(180px, 56px) scale(0.98);
+      }
+
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="night"] {
+        transform: translate(238px, 56px) scale(0.98);
+      }
+
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="mama"] {
+        transform: translate(296px, 56px) scale(0.98);
+      }
+
+      @media (max-width: 520px) {
+        .gift-fan-menu {
+          --gift-diagnosis-origin-x: 0px;
+          --gift-diagnosis-origin-y: 58px;
+        }
+
+        .gift-fan-menu.is-open .gift-fan-action[data-fan-item="price"] {
+          transform: translate(0, 58px) scale(1.02);
+        }
+
+        .gift-fan-menu.is-open .gift-fan-action[data-fan-item="faq"] {
+          transform: translate(208px, 58px) scale(1.02);
+        }
+
+        .gift-fan-menu.is-open .gift-fan-action[data-fan-item="encyclopedia"] {
+          transform: translate(104px, 58px) scale(1.02);
+        }
+
+        .gift-fan-menu.is-open .gift-fan-action[data-fan-item="vote"] {
+          transform: translate(156px, 58px) scale(1.02);
+        }
+
+        .gift-fan-menu.is-open .gift-fan-action[data-fan-item="compositing"] {
+          transform: translate(52px, 58px) scale(1.02);
+        }
+
+        .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="school"] {
+          transform: translate(0, 54px) scale(0.98);
+        }
+
+        .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="love"] {
+          transform: translate(52px, 54px) scale(0.98);
+        }
+
+        .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] {
+          transform: translate(104px, 54px) scale(0.98);
+        }
+
+        .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="night"] {
+          transform: translate(156px, 54px) scale(0.98);
+        }
+
+        .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="mama"] {
+          transform: translate(208px, 54px) scale(0.98);
+        }
+      }
+
+      .vote-ranking-item {
+        grid-template-columns: 48px 1fr auto;
+      }
+
       .diagnosis-options .btn {
-        width: 100%;
-        max-width: 260px;
-        text-align: center;
+        width: 114px;
+        min-height: 48px;
+        padding: 8px 10px;
+        font-size: 0.78rem;
+      }
+
+      .diagnosis-options {
+        width: min(100%, 320px);
+        height: 300px;
+      }
+
+      .diagnosis-options .btn:nth-of-type(1) {
+        transform: translate(-156px, -36px);
+      }
+
+      .diagnosis-options .btn:nth-of-type(2) {
+        transform: translate(-132px, -118px);
+      }
+
+      .diagnosis-options .btn:nth-of-type(3) {
+        transform: translate(-54px, -176px);
+      }
+
+      .diagnosis-options .btn:nth-of-type(4) {
+        transform: translate(20px, -176px);
+      }
+
+      .diagnosis-options .btn:nth-of-type(5) {
+        transform: translate(98px, -118px);
+      }
+
+      .diagnosis-options .btn:nth-of-type(6) {
+        transform: translate(122px, -36px);
+      }
+
+      .diagnosis-fan-core {
+        width: 68px;
+        height: 68px;
+        bottom: 14px;
+        font-size: 0.8rem;
       }
 
       .price-reservation-form {
@@ -2972,29 +4360,6 @@
       opacity: 0.82;
       color: rgba(255, 255, 255, 0.82);
     }
-
-
-    #splash-screen canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-    }
-
-    /* ===== Sky & Birds background (behind everything) ===== */
-    #sky-canvas {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-      /* 最背面 */
-      pointer-events: none;
-      /* クリック/スワイプを邪魔しない */
-      display: block;
-    }
-
     /* ===== ページ遷移フェード ===== */
     .page-transition-overlay {
       position: fixed;
@@ -3101,31 +4466,27 @@
 </head>
 
 <body>
-  <canvas id="sky-canvas" aria-hidden="true"></canvas>
-
   <!-- Splash -->
   <div id="splash-screen">
-    <div class="instruction">TAP！！</div>
+    <div class="splash-word" aria-hidden="true">
+      <span class="splash-letter" style="--letter-index:0; --roll-x: 20px; --settle-x: -2px;">M</span>
+      <span class="splash-letter" style="--letter-index:1; --roll-x: 120px; --settle-x: 4px;">o</span>
+      <span class="splash-letter" style="--letter-index:2; --roll-x: 56px; --settle-x: -3px;">b</span>
+      <span class="splash-letter" style="--letter-index:3; --roll-x: 168px; --settle-x: 3px;">b</span>
+      <span class="splash-letter" style="--letter-index:4; --roll-x: 88px; --settle-x: -1px;">y</span>
+    </div>
+    <div class="instruction">TAP!</div>
   </div>
 
-  <script>
-    // スプラッシュスキップ処理（URLにskipSplash=1があれば即座に非表示）
-    (function () {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get('skipSplash') === '1') {
-        const splash = document.getElementById('splash-screen');
-        if (splash) {
-          splash.style.display = 'none';
-          splash.remove();
-        }
-        document.body.style.overflowY = 'auto';
-      }
-    })();
-  </script>
-
   <div id="main-content">
-    <div class="mobby-title">Mobby</div>
-    <h1 class="headline reveal delay-200">閉じ込めたい５つの思い出</h1>
+    <div class="mobby-title" aria-label="Mobby">
+      <span class="mobby-title-letter">M</span>
+      <span class="mobby-title-letter">o</span>
+      <span class="mobby-title-letter">b</span>
+      <span class="mobby-title-letter">b</span>
+      <span class="mobby-title-letter mobby-title-letter-y is-rolling" id="mobbyTitleY">y</span>
+    </div>
+    <h1 class="headline reveal delay-200">心の沈黙に耳を澄ませる</h1>
     <section class="hero">
       <div class="container reveal">
 
@@ -3140,18 +4501,14 @@
         </div>
         <div class="hero-carousel-shell floating reveal delay-200">
           <div class="hero-model-stage" aria-label="Mobby 3D モデル">
-            <model-viewer
-              id="heroModelViewer"
-              class="hero-model-viewer"
-              src="./3d/models/character.glb"
-              alt="Mobby 3D model"
-              camera-controls
-              auto-rotate
-              shadow-intensity="1"
-              exposure="1"
-              environment-image="neutral"
-              interaction-prompt="none"
-            ></model-viewer>
+            <div class="hero-model-carousel" id="heroModelCarousel" aria-live="polite"></div>
+            <div class="hero-smoke-glow" aria-hidden="true"></div>
+            <canvas id="heroSmokeCanvas" class="hero-smoke-canvas" aria-hidden="true"></canvas>
+          </div>
+          <div class="hero-character-row">
+            <button class="hero-character-action peek-heart-btn" id="openHeartNote" type="button" aria-label="心を覗く">&#128269;&#65038;</button>
+            <div class="hero-character-name" id="heroCharacterName">もびりん</div>
+            <button class="hero-character-action mode" id="heroCarouselModeButton" type="button" aria-label="カルーセル表示を切り替える">通常</button>
           </div>
         </div>
       </div>
@@ -3201,7 +4558,7 @@
               <div class="selected-badge">選択中</div>
               <div class="swatch" style="background:#F7A7C6;"></div>
               <div class="color-card-content">
-                <img class="product-thumb" src="carousel/t1.jpg" alt="Mobby Peach Pink">
+                <img class="product-thumb" src="carousel/after/mobby_fact_man_toka.webp" alt="Mobby Peach Pink">
                 <div class="color-title">Peach Pink <span class="mini-tag">直感</span></div>
               </div>
               <div class="color-desc">好きに正直。</div>
@@ -3211,7 +4568,7 @@
               <div class="selected-badge">選択中</div>
               <div class="swatch" style="background:#9C7BFF;"></div>
               <div class="color-card-content">
-                <img class="product-thumb" src="carousel/t2.jpg" alt="Mobby Twilight Violet">
+                <img class="product-thumb" src="carousel/after/mobby_gal_toka.webp" alt="Mobby Twilight Violet">
                 <div class="color-title">Twilight Violet <span class="mini-tag">世界観</span></div>
               </div>
               <div class="color-desc">こだわり強め。</div>
@@ -3221,7 +4578,7 @@
               <div class="selected-badge">選択中</div>
               <div class="swatch" style="background:#8FD7FF;"></div>
               <div class="color-card-content">
-                <img class="product-thumb" src="carousel/t3.jpg" alt="Mobby Aqua Sky">
+                <img class="product-thumb" src="carousel/after/mobby_yami_toka.webp" alt="Mobby Aqua Sky">
                 <div class="color-title">Aqua Sky <span class="mini-tag">冒険</span></div>
               </div>
               <div class="color-desc">フッ軽。</div>
@@ -3231,7 +4588,7 @@
               <div class="selected-badge">選択中</div>
               <div class="swatch" style="background:#FFA24A;"></div>
               <div class="color-card-content">
-                <img class="product-thumb" src="carousel/t4.jpg" alt="Mobby Sunny Orange">
+                <img class="product-thumb" src="carousel/after/mobby_yanki_toak.webp" alt="Mobby Sunny Orange">
                 <div class="color-title">Sunny Orange <span class="mini-tag">勇気</span></div>
               </div>
               <div class="color-desc">前に進める。</div>
@@ -3281,7 +4638,7 @@
               <h3>カメラ型キーホルダー<br>無料抽選予約</h3>
               <div class="camera-tab-hero">
                 <div class="camera-tab-hero-image">
-                  <img src="carousel/t1.jpg" alt="カメラ型キーホルダーのイメージ" loading="lazy">
+                  <img src="carousel/after/mobby_fact_man_toka.webp" alt="カメラ型キーホルダーのイメージ" loading="lazy">
                 </div>
                 <p class="camera-tab-hero-text">
                   抽選に当たったら、当選の手紙を送るビィ。<br>
@@ -3514,35 +4871,88 @@
       </div>
     </div>
 
+    <div id="votePopup" class="popup-overlay" aria-hidden="true">
+      <div class="popup-content" style="max-width:980px;">
+        <button class="popup-close" id="closeVotePopup" aria-label="閉じる">×</button>
+        <div class="vote-popup-shell">
+          <div class="vote-popup-header">
+            <h2>モビー投票</h2>
+            <p>メインの4体から選んで投票できます。何回でも投票できます。</p>
+          </div>
+          <div class="vote-feedback" id="voteFeedback" aria-live="polite"></div>
+          <div class="vote-grid" id="voteGrid"></div>
+          <div class="vote-ranking">
+            <h3>現在のランキング</h3>
+            <div class="vote-ranking-list" id="voteRankingList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="compositingPopup" class="popup-overlay" aria-hidden="true">
+      <div class="popup-content" style="max-width:1100px;">
+        <button class="popup-close" id="closeCompositingPopup" aria-label="閉じる">×</button>
+        <div class="compositing-shell">
+          <div id="compositingLoadingOverlay" class="compositing-loading-overlay" hidden>
+            <div class="compositing-loading-spinner" aria-hidden="true"></div>
+            <p class="compositing-loading-text">画像を処理しています...</p>
+          </div>
+          <div class="compositing-head">
+            <h2>画像合成</h2>
+            <p>画像をアップロードすると、背景を自動で抜いてテンプレ右下へ配置します。配置後はドラッグして位置調整できます。</p>
+          </div>
+          <div class="compositing-layout">
+            <div class="compositing-stage-card">
+              <div class="compositing-stage-wrap">
+                <canvas id="compositingCanvas" class="compositing-canvas" width="1080" height="1080" aria-label="合成プレビュー"></canvas>
+              </div>
+              <p class="compositing-stage-hint">人物をつまんで移動。右下配置から始まります。</p>
+            </div>
+            <div class="compositing-controls-card">
+              <div class="compositing-section is-open" data-compositing-section="template">
+                <button type="button" class="compositing-toggle" data-compositing-toggle="template" aria-expanded="true">
+                  <span>テンプレート</span>
+                </button>
+                <div class="compositing-section-body" data-compositing-body="template">
+                  <div id="compositingTemplateGrid" class="compositing-template-grid"></div>
+                  <button id="compositingTemplateConfirmButton" class="btn btn-primary compositing-confirm-btn" type="button">このテンプレートで決定する</button>
+                </div>
+              </div>
+              <div class="compositing-section" data-compositing-section="upload" hidden>
+                <div class="compositing-section-body" data-compositing-body="upload" hidden>
+                  <div class="compositing-upload">
+                    <input id="compositingFileInput" type="file" accept="image/*">
+                    <button id="compositingUploadButton" class="btn btn-primary compositing-upload-btn" type="button">画像をアップロード</button>
+                  </div>
+                </div>
+              </div>
+              <div id="compositingScaleBlock" hidden>
+                <p class="compositing-label">人物サイズ</p>
+                <input id="compositingScale" class="compositing-range" type="range" min="20" max="80" value="30">
+              </div>
+              <div class="compositing-section" data-compositing-section="subtitle" hidden>
+                <div class="compositing-section-body" data-compositing-body="subtitle" hidden>
+                  <div class="compositing-copy">
+                    <input id="compositingSubtitle" class="compositing-text-input" type="text" maxlength="28" placeholder="サブタイトルを入力">
+                  </div>
+                </div>
+              </div>
+              <div id="compositingActions" class="compositing-actions" hidden>
+                <button id="compositingDownloadButton" class="btn btn-secondary compositing-download-btn" type="button">画像を保存</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- FAQ ポップアップ -->
     <div id="faqPopup" class="popup-overlay" aria-hidden="true">
       <div class="popup-content">
         <button class="popup-close" id="closeFaqPopup" aria-label="閉じる">×</button>
         <div class="container">
-          <h2>よくある質問</h2>
-
-          <div class="faq reveal delay-200">
-            <details class="faq-item">
-              <summary>いつ届くの？</summary>
-              <p>次回入荷（３月末）後、順番にお届けするビィ</p>
-            </details>
-            <details class="faq-item">
-              <summary>どこで買えるの？</summary>
-              <p>現在はオンライン限定販売ビィ。今後、実店舗での販売も検討しているビィ</p>
-            </details>
-            <details class="faq-item">
-              <summary>支払い方法は？</summary>
-              <p>PayPay、クレジットカード、デビットカード、Apple Pay、Google Payなどビィ</p>
-            </details>
-            <details class="faq-item">
-              <summary>返品・交換はできる？</summary>
-              <p>初期不良の場合は交換対応するビィ。お届けから7日以内にお問い合わせフォームから連絡してビィ</p>
-            </details>
-
-          </div>
-
           <!-- お問い合わせフォーム -->
-          <div class="faq-contact-form reveal delay-200" style="margin-top:32px;">
+          <div class="faq-contact-form reveal delay-200">
             <h3 style="font-size:1.2rem;margin-bottom:16px;color:var(--color-forest);">お問い合わせ</h3>
             <form id="faqContactForm">
               <div class="form-group">
@@ -3619,9 +5029,10 @@
           <div class="reveal delay-200" style="margin-top:24px;">
             <div style="position:relative; width:100%; padding-top:182.3%; overflow:hidden;">
               <iframe
-                src="https://player.vimeo.com/video/1151893669?badge=0&amp;autopause=0&amp;autoplay=1&amp;muted=1&amp;player_id=0&amp;app_id=58479"
+                src="https://player.vimeo.com/video/1151893669?badge=0&amp;autopause=0&amp;autoplay=0&amp;muted=1&amp;player_id=0&amp;app_id=58479"
                 title="first"
-                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                loading="lazy"
+                allow="fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
                 referrerpolicy="strict-origin-when-cross-origin"
                 style="position:absolute; inset:0; width:100%; height:100%; border:0;"></iframe>
             </div>
@@ -3636,6 +5047,7 @@
         <div class="diagnosis-popup-title">モビー診断</div>
         <div class="diagnosis-popup-subtitle">診断タイプを選んでください</div>
         <div class="diagnosis-options">
+          <div class="diagnosis-fan-core" aria-hidden="true">診断</div>
           <a class="btn btn-primary" href="16school/index.html">学校モビー診断</a>
           <a class="btn btn-primary" href="16love/index.html">メンヘラモビー診断</a>
           <a class="btn btn-primary" href="16stan/index.html">推し活モビー診断</a>
@@ -3648,17 +5060,48 @@
     <!-- ポップアップボタン（最下部） -->
     <div class="popup-buttons-bar">
       <div class="container">
+        <div class="peek-heart-wrap">
+          <div class="heart-note-inline" id="heartNoteInline" hidden>
+            <div class="note-popup">
+              <button class="popup-close" id="closeHeartNoteInline" aria-label="Close note">×</button>
+              <div class="note-popup-inner">
+                <div class="note-tabs" id="heartNoteTabs" hidden></div>
+                <div class="note-popup-kicker">Private Note</div>
+                <h2 id="heartNoteTitle">心を覗く</h2>
+                <p id="heartNoteBody" class="note-body">ここに差し込みたい文章を置けるようにしてあります。
+ノートをそっと開いて、内側を読むような見え方です。
+
+あとでこの本文をそのまま差し替えれば使えます。</p>
+                <div class="quote-page-controls" id="heartNoteQuotePager" hidden>
+                  <button type="button" class="quote-page-btn" id="heartNoteQuotePrev">←</button>
+                  <div class="quote-page-indicator" id="heartNoteQuoteIndicator">1 / 1</div>
+                  <button type="button" class="quote-page-btn" id="heartNoteQuoteNext">→</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="popup-buttons">
           <button class="btn btn-secondary" id="openMessagePopup">文章</button>
-          <div class="btn-with-counter">
-            <div class="reservation-counter" id="reservationCounter" aria-live="polite">
-              2月の予約数：<span id="reservationCount">0</span>
+          <div class="gift-fan-menu" id="giftFanMenu">
+            <div class="gift-fan-actions" aria-hidden="true">
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openPricePopup" data-fan-item="price">診断</button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openFaqPopup" data-fan-item="faq">お問い合わせ</button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openEncyclopediaPopup" data-fan-item="encyclopedia">図鑑</button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openVotePopup" data-fan-item="vote">投票<span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openCompositingPopup" data-fan-item="compositing">合成<span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></button>
             </div>
-            <button class="btn btn-secondary" id="openPricePopup">購入</button>
+            <div class="gift-fan-diagnosis-actions" aria-hidden="true">
+              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16school/index.html" data-diagnosis-item="school">学校</a>
+              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16love/index.html" data-diagnosis-item="love">メンヘラ</a>
+              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16stan/index.html" data-diagnosis-item="oshi">推し</a>
+              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16night/index.html" data-diagnosis-item="night">夜職</a>
+              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16school/mama/index.html" data-diagnosis-item="mama">ママ</a>
+            </div>
+            <button class="gift-fan-trigger" id="giftFanToggle" type="button" aria-label="メニューを開く" aria-expanded="false">
+              <span class="gift-fan-trigger-icon" aria-hidden="true">☰</span>
+            </button>
           </div>
-
-          <button class="btn btn-secondary" id="openFaqPopup">FAQ</button>
-          <button class="btn btn-secondary" id="openEncyclopediaPopup">図鑑</button>
           <button class="btn btn-secondary" id="openVideoPopup">動画</button>
         </div>
       </div>
@@ -3683,124 +5126,10 @@
 
 
   <!-- Matter.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <!-- EmailJS -->
+  <script src="compositing/background-removal.js"></script>
+  <script src="compositing/compositing.js"></script>
   <script>
-    /* =========================
-     Sky & Birds (background)
-     - 目的：軌跡を残さない（毎フレーム完全クリア）
-     ========================= */
-    (() => {
-      const canvas = document.getElementById("sky-canvas");
-      if (!canvas) return;
-
-      // 動きが苦手な人向け（OS設定で軽減）
-      const reduceMotion =
-        window.matchMedia &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (reduceMotion) return;
-
-      const ctx = canvas.getContext("2d", { alpha: true });
-
-      let bw = 0, bh = 0, dpr = 1;
-
-      function resizeSky() {
-        dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1)); // 上限2で負荷抑制
-        bw = window.innerWidth;
-        bh = window.innerHeight;
-
-        canvas.width = Math.floor(bw * dpr);
-        canvas.height = Math.floor(bh * dpr);
-        canvas.style.width = bw + "px";
-        canvas.style.height = bh + "px";
-
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // CSS px基準で描画
-      }
-
-      window.addEventListener("resize", resizeSky, { passive: true });
-      resizeSky();
-
-      class Bird {
-        constructor(randomStart = true) { this.init(randomStart); }
-        init(randomStart = false) {
-          this.x = randomStart ? Math.random() * bw : -30;
-          this.y = Math.random() * bh * 0.7;
-
-          this.vx = Math.random() * 1.8 + 0.9;  // 右へ
-          this.vy = Math.random() * 0.5 - 0.25; // ゆらぎ
-
-          this.size = Math.random() * 4 + 4;
-          this.flapSpeed = Math.random() * 0.10 + 0.05;
-          this.flap = Math.random() * Math.PI * 2;
-          this.opacity = Math.random() * 0.25 + 0.55;
-          this.lineW = Math.random() * 0.8 + 1.2;
-        }
-
-        update() {
-          this.x += this.vx;
-          this.y += this.vy;
-          this.flap += this.flapSpeed;
-
-          this.vy += (Math.random() - 0.5) * 0.05; // ランダムゆらぎ
-
-          // 右へ抜けたら左に戻す
-          if (this.x > bw + 30) {
-            this.x = -30;
-            this.y = Math.random() * bh * 0.7;
-            this.vy = Math.random() * 0.5 - 0.25;
-          }
-
-          // 上下はループ
-          if (this.y < -40) this.y = bh + 40;
-          if (this.y > bh + 40) this.y = -40;
-        }
-
-        draw() {
-          ctx.save();
-          ctx.translate(this.x, this.y);
-
-          const angle = Math.atan2(this.vy, this.vx);
-          ctx.rotate(angle);
-
-          const wingY = Math.sin(this.flap) * this.size * 0.8;
-
-          ctx.beginPath();
-          ctx.moveTo(-this.size, -wingY);
-          ctx.lineTo(this.size / 2, 0);
-          ctx.lineTo(-this.size, wingY);
-
-          ctx.strokeStyle = `rgba(160, 210, 235, ${this.opacity})`; // 淡い水色
-
-          ctx.lineWidth = this.lineW;
-          ctx.lineCap = "round";
-          ctx.lineJoin = "round";
-          ctx.stroke();
-
-          ctx.restore();
-        }
-      }
-
-      // 画面サイズで鳥の数を調整（負荷対策）
-      const base = 12;
-      const extra = bw >= 1200 ? 8 : bw >= 800 ? 5 : 2;
-      const birdCount = base + extra;
-
-      const birds = Array.from({ length: birdCount }, () => new Bird(true));
-
-      function tick() {
-        // ★ここが修正点：毎フレーム完全クリア（軌跡ゼロ）
-        ctx.clearRect(0, 0, bw, bh);
-
-        for (const b of birds) {
-          b.update();
-          b.draw();
-        }
-        requestAnimationFrame(tick);
-      }
-
-      tick();
-    })();
-
     /* reveal */
     function initScrollObserver() {
       const revealElements = document.querySelectorAll('.reveal');
@@ -3879,14 +5208,536 @@
     const buyStudentBtn = document.getElementById('buyStudent');
     const selectedPreviewImg = document.getElementById('selectedPreviewImg');
 
-    /* ===== Hero Model Viewer ===== */
-    const heroModelViewer = document.getElementById("heroModelViewer");
-    if (heroModelViewer) {
-      const modelPath = window.location.pathname.includes('/3d/')
-        ? './models/character.glb'
-        : './3d/models/character.glb';
-      heroModelViewer.setAttribute('src', modelPath);
-    }
+    /* ===== Hero Visual ===== */
+    (() => {
+      const carousel = document.getElementById("heroModelCarousel");
+      const stage = carousel?.closest(".hero-model-stage");
+      const heroCharacterName = document.getElementById("heroCharacterName");
+      const modeButton = document.getElementById("heroCarouselModeButton");
+      if (!carousel || !stage || !heroCharacterName || !modeButton) return;
+
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const HERO_CAROUSEL_SETS = [
+        {
+          id: "default",
+          buttonLabel: "通常",
+          items: [
+            { id: "fact-yellow", name: "もびりん", image: "carousel/after/mobby_fact_man_toka.webp", alt: "Mobby Fact Yellow", smokeSource: true },
+            { id: "gal", name: "もびち", image: "carousel/after/mobby_gal_toka.webp", alt: "Mobby Gal" },
+            { id: "yami-purple", name: "病みモビー", image: "carousel/after/mobby_yami_toka.webp", alt: "Mobby Yami Purple" },
+            { id: "yanki", name: "もびやん", image: "carousel/after/mobby_yanki_toak.webp", alt: "Mobby Yanki" }
+          ]
+        },
+        {
+          id: "school-man",
+          buttonLabel: "学校男",
+          items: [
+            { id: "school-man-01", name: "もしランキングモビー", image: "carousel/shcool/man/もしランキングモビー.png", alt: "もしランキングモビー" },
+            { id: "school-man-02", name: "体育祭モビー", image: "carousel/shcool/man/体育祭モビー.png", alt: "体育祭モビー" },
+            { id: "school-man-03", name: "制服アレンジモビー", image: "carousel/shcool/man/制服アレンジモビー.png", alt: "制服アレンジモビー" },
+            { id: "school-man-04", name: "図書委員モビー", image: "carousel/shcool/man/図書委員モビー.png", alt: "図書委員モビー" },
+            { id: "school-man-05", name: "学級委員モビー", image: "carousel/shcool/man/学級委員モビー.png", alt: "学級委員モビー" },
+            { id: "school-man-06", name: "屋上自由時間モビー", image: "carousel/shcool/man/屋上自由時間モビー.png", alt: "屋上自由時間モビー" },
+            { id: "school-man-07", name: "廊下ランウェイモビー", image: "carousel/shcool/man/廊下ランウェイモビー.png", alt: "廊下ランウェイモビー" },
+            { id: "school-man-08", name: "応援団長モビー", image: "carousel/shcool/man/応援団長モビー.png", alt: "応援団長モビー" },
+            { id: "school-man-09", name: "成績掲示板モビー", image: "carousel/shcool/man/成績掲示板モビー.png", alt: "成績掲示板モビー" },
+            { id: "school-man-10", name: "教科書落書きモビー", image: "carousel/shcool/man/教科書落書きモビー.png", alt: "教科書落書きモビー" },
+            { id: "school-man-11", name: "文化祭センターステージモビー", image: "carousel/shcool/man/文化祭センターステージモビー.png", alt: "文化祭センターステージモビー" },
+            { id: "school-man-12", name: "理科室研究モビー", image: "carousel/shcool/man/理科室研究モビー.png", alt: "理科室研究モビー" },
+            { id: "school-man-13", name: "自習室モビー", image: "carousel/shcool/man/自習室モビー.png", alt: "自習室モビー" },
+            { id: "school-man-14", name: "舞台袖実行委員モビー", image: "carousel/shcool/man/舞台袖実行委員モビー.png", alt: "舞台袖実行委員モビー" },
+            { id: "school-man-15", name: "裏垢拡散モビー", image: "carousel/shcool/man/裏垢拡散モビー.png", alt: "裏垢拡散モビー" },
+            { id: "school-man-16", name: "部室たまり場モビー", image: "carousel/shcool/man/部室たまり場モビー.png", alt: "部室たまり場モビー" }
+          ]
+        },
+        {
+          id: "school-woman",
+          buttonLabel: "学校女",
+          items: [
+            { id: "school-woman-01", name: "カップル自撮りモビー", image: "carousel/shcool/woman/カップル自撮りモビー.png", alt: "カップル自撮りモビー" },
+            { id: "school-woman-02", name: "クラスアルバム映えモビー", image: "carousel/shcool/woman/クラスアルバム映えモビー.png", alt: "クラスアルバム映えモビー" },
+            { id: "school-woman-03", name: "ストーリー匂わせモビー", image: "carousel/shcool/woman/ストーリー匂わせモビー.png", alt: "ストーリー匂わせモビー" },
+            { id: "school-woman-04", name: "ストーリー撮影班モビー", image: "carousel/shcool/woman/ストーリー撮影班モビー.png", alt: "ストーリー撮影班モビー" },
+            { id: "school-woman-05", name: "ネイルこだわりモビー", image: "carousel/shcool/woman/ネイルこだわりモビー .png", alt: "ネイルこだわりモビー" },
+            { id: "school-woman-06", name: "プリクラ拡散モビー", image: "carousel/shcool/woman/プリクラ拡散モビー.png", alt: "プリクラ拡散モビー" },
+            { id: "school-woman-07", name: "ロッカー手紙モビー", image: "carousel/shcool/woman/ロッカー手紙モビー.png", alt: "ロッカー手紙モビー" },
+            { id: "school-woman-08", name: "匂わせプリクラモビー", image: "carousel/shcool/woman/匂わせプリクラモビー.png", alt: "匂わせプリクラモビー" },
+            { id: "school-woman-09", name: "図書室まったりモビー", image: "carousel/shcool/woman/図書室まったりモビー.png", alt: "図書室まったりモビー" },
+            { id: "school-woman-10", name: "屋上ひみつ恋モビー", image: "carousel/shcool/woman/屋上ひみつ恋モビー.png", alt: "屋上ひみつ恋モビー" },
+            { id: "school-woman-11", name: "帰り道デートモビー", image: "carousel/shcool/woman/帰り道デートモビー.png", alt: "帰り道デートモビー" },
+            { id: "school-woman-12", name: "放課後こっそり通話モビー", image: "carousel/shcool/woman/放課後こっそり通話モビー.png", alt: "放課後こっそり通話モビー" },
+            { id: "school-woman-13", name: "放課後即レスモビー", image: "carousel/shcool/woman/放課後即レスモビー.png", alt: "放課後即レスモビー" },
+            { id: "school-woman-14", name: "文化祭広報モビー", image: "carousel/shcool/woman/文化祭広報モビー.png", alt: "文化祭広報モビー" },
+            { id: "school-woman-15", name: "昼休みお弁当会モビー", image: "carousel/shcool/woman/昼休みお弁当会モビー.png", alt: "昼休みお弁当会モビー" },
+            { id: "school-woman-16", name: "購買前溜まり場モビー", image: "carousel/shcool/woman/購買前溜まり場モビー.png", alt: "購買前溜まり場モビー" }
+          ]
+        }
+      ];
+      let currentSetIndex = 0;
+      let slides = [];
+      let activeIndex = 0;
+      let autoTimer = 0;
+      let gestureStartX = 0;
+      let gestureStartY = 0;
+      let gestureTracking = false;
+      let gestureMoved = false;
+      let dragProgress = 0;
+
+      function getCurrentSet() {
+        return HERO_CAROUSEL_SETS[currentSetIndex] || HERO_CAROUSEL_SETS[0];
+      }
+
+      function buildSlides() {
+        const currentSet = getCurrentSet();
+        carousel.innerHTML = currentSet.items.map((item, index) => `
+          <div class="hero-model-slide${index === 0 ? " is-active" : ""}" data-index="${index}" data-image="${item.image}"${item.smokeSource ? ' data-smoke-source="true"' : ""}>
+            <img class="hero-model-viewer" src="${item.image}" alt="${item.alt || item.name}" loading="${index === 0 ? "eager" : "lazy"}" />
+          </div>
+        `).join("");
+        slides = Array.from(carousel.querySelectorAll(".hero-model-slide"));
+        slides.forEach((slide) => {
+          const imageUrl = slide.dataset.image;
+          if (imageUrl) {
+            slide.style.setProperty("--hero-image", `url("${imageUrl}")`);
+          }
+        });
+        modeButton.textContent = currentSet.buttonLabel;
+      }
+
+      function getCircularDelta(index, currentIndex) {
+        const total = slides.length;
+        let delta = index - currentIndex;
+        if (delta > total / 2) delta -= total;
+        if (delta < -total / 2) delta += total;
+        return delta;
+      }
+
+      function renderSlides(centerIndex, progress = 0) {
+        slides.forEach((slide, slideIndex) => {
+          const delta = getCircularDelta(slideIndex, centerIndex) + progress;
+          const absDelta = Math.abs(delta);
+          let offset = `${delta * 72}%`;
+          let opacity = "0";
+          let scale = "0.82";
+          let saturate = "0.78";
+          let zIndex = "1";
+
+          if (absDelta < 0.001) {
+            offset = "0%";
+            opacity = "1";
+            scale = "1";
+            saturate = "1";
+            zIndex = "3";
+          } else if (absDelta < 1.15) {
+            const blend = Math.min(absDelta, 1);
+            offset = `${delta * 63}%`;
+            opacity = String(1 - blend * 0.66);
+            scale = String(1 - blend * 0.24);
+            saturate = String(1 - blend * 0.2);
+            zIndex = absDelta < 0.5 ? "3" : "2";
+          } else {
+            offset = `${delta * 96}%`;
+          }
+
+          slide.classList.toggle("is-active", delta === 0);
+          slide.style.setProperty("--slide-offset", offset);
+          slide.style.setProperty("--slide-opacity", opacity);
+          slide.style.setProperty("--slide-scale", scale);
+          slide.style.setProperty("--slide-saturate", saturate);
+          slide.style.setProperty("--slide-z", zIndex);
+        });
+      }
+
+      function syncActiveState() {
+        window.__activeHeroSlide = slides[activeIndex];
+        const smokeActive = slides[activeIndex].dataset.smokeSource === "true";
+        const activeImage = slides[activeIndex]?.querySelector(".hero-model-viewer");
+        const activeItem = getCurrentSet().items[activeIndex];
+        heroCharacterName.textContent = activeItem?.name || activeImage?.alt || "";
+        stage.classList.toggle("is-smoke-active", smokeActive);
+        window.dispatchEvent(new CustomEvent("hero-slide-change", {
+          detail: {
+            slide: slides[activeIndex],
+            index: activeIndex,
+            mode: getCurrentSet().id
+          }
+        }));
+        window.dispatchEvent(new CustomEvent("hero-smoke-toggle", {
+          detail: { active: smokeActive }
+        }));
+      }
+
+      function setActiveSlide(index) {
+        activeIndex = (index + slides.length) % slides.length;
+        dragProgress = 0;
+        renderSlides(activeIndex, 0);
+        syncActiveState();
+      }
+
+      function stopAutoRotate() {
+        if (!autoTimer) return;
+        window.clearInterval(autoTimer);
+        autoTimer = 0;
+      }
+
+      function startAutoRotate() {
+        stopAutoRotate();
+      }
+
+      function switchCarouselSet(nextSetIndex) {
+        currentSetIndex = (nextSetIndex + HERO_CAROUSEL_SETS.length) % HERO_CAROUSEL_SETS.length;
+        activeIndex = 0;
+        dragProgress = 0;
+        buildSlides();
+        renderSlides(activeIndex, 0);
+        syncActiveState();
+        startAutoRotate();
+      }
+
+      carousel.addEventListener("pointerdown", (event) => {
+        gestureStartX = event.clientX;
+        gestureStartY = event.clientY;
+        gestureTracking = true;
+        gestureMoved = false;
+        stopAutoRotate();
+      });
+
+      carousel.addEventListener("pointermove", (event) => {
+        if (!gestureTracking) return;
+        const dx = event.clientX - gestureStartX;
+        const dy = event.clientY - gestureStartY;
+        if (Math.abs(dx) > 6 || Math.abs(dy) > 6) {
+          gestureMoved = true;
+        }
+        if (Math.abs(dx) > Math.abs(dy) * 0.8) {
+          const width = Math.max(1, carousel.clientWidth);
+          dragProgress = Math.max(-1, Math.min(1, dx / width));
+          renderSlides(activeIndex, -dragProgress);
+        }
+      });
+
+      carousel.addEventListener("pointerup", (event) => {
+        if (!gestureTracking) return;
+        gestureTracking = false;
+        const dx = event.clientX - gestureStartX;
+        const dy = event.clientY - gestureStartY;
+        if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 0.8) {
+          if (dx < 0) {
+            setActiveSlide(activeIndex + 1);
+          } else {
+            setActiveSlide(activeIndex - 1);
+          }
+        } else if (!gestureMoved) {
+          const rect = carousel.getBoundingClientRect();
+          const localX = event.clientX - rect.left;
+          if (localX < rect.width / 2) {
+            setActiveSlide(activeIndex - 1);
+          } else {
+            setActiveSlide(activeIndex + 1);
+          }
+        } else {
+          renderSlides(activeIndex, 0);
+        }
+        startAutoRotate();
+      });
+
+      carousel.addEventListener("pointercancel", () => {
+        gestureTracking = false;
+        renderSlides(activeIndex, 0);
+        startAutoRotate();
+      });
+
+      carousel.addEventListener("pointerenter", stopAutoRotate);
+      carousel.addEventListener("pointerleave", startAutoRotate);
+      reduceMotion.addEventListener("change", startAutoRotate);
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          stopAutoRotate();
+          return;
+        }
+        startAutoRotate();
+      });
+
+      modeButton.addEventListener("click", () => {
+        modeButton.classList.remove("is-switching");
+        void modeButton.offsetWidth;
+        modeButton.classList.add("is-switching");
+        window.setTimeout(() => {
+          modeButton.classList.remove("is-switching");
+        }, 380);
+        switchCarouselSet(currentSetIndex + 1);
+      });
+
+      buildSlides();
+      setActiveSlide(0);
+      startAutoRotate();
+    })();
+
+    (() => {
+      const canvas = document.getElementById("heroSmokeCanvas");
+      const stage = canvas?.closest(".hero-model-stage");
+      const glow = stage?.querySelector(".hero-smoke-glow");
+      if (!canvas || !stage) return;
+
+      if (canvas.parentElement !== document.body) {
+        document.body.appendChild(canvas);
+      }
+      canvas.style.opacity = "0";
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      const smoke = [];
+      const clearBursts = [];
+      const source = { x: 0.18, y: 0.34 };
+      let sourceX = 0;
+      let sourceY = 0;
+      let width = 0;
+      let height = 0;
+      let lastTs = 0;
+      let spawnCarry = 0;
+      let smokeFrame = 0;
+      let smokeEnabled = stage.classList.contains("is-smoke-active");
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      let quality = getSmokeQuality();
+
+      function syncSmokeVisibility() {
+        const splash = document.getElementById("splash-screen");
+        const splashHidden = !splash || splash.classList.contains("hidden");
+        const targetOpacity = smokeEnabled && splashHidden ? "1" : "0";
+        canvas.style.opacity = targetOpacity;
+        if (glow) glow.style.opacity = smokeEnabled ? "1" : "0";
+      }
+
+      function getSmokeQuality() {
+        const reduced = prefersReducedMotion.matches;
+        const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+        const compactViewport = window.innerWidth < 768;
+
+        if (reduced) {
+          return {
+            spawnRate: 0.024,
+            emitCount: 1,
+            blur: 0,
+            maxParticles: 40,
+            streak: true,
+            densityRange: 0.24
+          };
+        }
+
+        if (coarsePointer || compactViewport) {
+          return {
+            spawnRate: 0.038,
+            emitCount: 1,
+            blur: 3,
+            maxParticles: 68,
+            streak: true,
+            densityRange: 0.28
+          };
+        }
+
+        return {
+          spawnRate: 0.068,
+          emitCount: 2,
+          blur: 6,
+          maxParticles: 132,
+          streak: true,
+          densityRange: 0.34
+        };
+      }
+
+      function resizeSmoke() {
+        quality = getSmokeQuality();
+        const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+        width = Math.max(1, Math.round(window.innerWidth));
+        height = Math.max(1, Math.round(window.innerHeight));
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const rect = stage.getBoundingClientRect();
+        sourceX = rect.left + rect.width * source.x;
+        sourceY = rect.top + rect.height * source.y;
+      }
+
+      function emitSmoke(count) {
+        for (let i = 0; i < count; i += 1) {
+          smoke.push({
+            x: sourceX + (Math.random() * 16 - 8),
+            y: sourceY + (Math.random() * 8 - 4),
+            vx: -1.1 - Math.random() * 1.1,
+            vy: -0.55 - Math.random() * 1.4,
+            radius: 18 + Math.random() * 34,
+            life: 0,
+            ttl: 260 + Math.random() * 220,
+            alpha: 0.11 + Math.random() * 0.08,
+            seed: Math.random() * Math.PI * 2
+          });
+        }
+      }
+
+      function addClearBurst(clientX, clientY) {
+        const rect = canvas.getBoundingClientRect();
+        clearBursts.push({
+          x: clientX - rect.left,
+          y: clientY - rect.top,
+          radius: 10,
+          maxRadius: Math.max(90, width * 0.22),
+          strength: 1
+        });
+      }
+
+      window.addEventListener("pointerdown", (event) => {
+        const splash = document.getElementById("splash-screen");
+        if (splash && !splash.classList.contains("hidden")) return;
+        addClearBurst(event.clientX, event.clientY);
+      });
+
+      function drawSmoke(ts) {
+        if (!lastTs) lastTs = ts;
+        const dt = Math.min(32, ts - lastTs || 16);
+        lastTs = ts;
+
+        if (smokeEnabled) {
+          spawnCarry += dt * quality.spawnRate;
+        }
+        while (spawnCarry >= 1 && smoke.length < quality.maxParticles) {
+          emitSmoke(quality.emitCount);
+          spawnCarry -= 1;
+        }
+
+        ctx.clearRect(0, 0, width, height);
+        ctx.save();
+        ctx.globalCompositeOperation = "source-over";
+        ctx.filter = quality.blur > 0 ? `blur(${quality.blur}px)` : "none";
+
+        for (let i = clearBursts.length - 1; i >= 0; i -= 1) {
+          const burst = clearBursts[i];
+          burst.radius += 4.5;
+          burst.strength *= 0.975;
+          if (burst.radius > burst.maxRadius) {
+            clearBursts.splice(i, 1);
+          }
+        }
+
+        for (let i = smoke.length - 1; i >= 0; i -= 1) {
+          const puff = smoke[i];
+          puff.life += dt * 0.06;
+          const drift = Math.sin(puff.seed + puff.life * 0.09) * 0.18;
+          puff.x += puff.vx * (dt / 16);
+          puff.y += (puff.vy + drift) * (dt / 16);
+          puff.vx += (Math.random() - 0.5) * 0.03;
+          puff.vy -= 0.002 * (dt / 16);
+          puff.radius += 0.26 * (dt / 16);
+
+          let localFade = 1;
+          for (let j = 0; j < clearBursts.length; j += 1) {
+            const burst = clearBursts[j];
+            const dx = puff.x - burst.x;
+            const dy = puff.y - burst.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < burst.radius) {
+              const force = (1 - distance / burst.radius) * burst.strength;
+              const angle = Math.atan2(dy || 0.001, dx || 0.001);
+              puff.x += Math.cos(angle) * force * 8;
+              puff.y += Math.sin(angle) * force * 8 - force * 2;
+              puff.vx += Math.cos(angle) * force * 0.2;
+              puff.vy += Math.sin(angle) * force * 0.16;
+              localFade *= Math.max(0.12, 1 - force * 0.9);
+            }
+          }
+
+          const ageRatio = puff.life / puff.ttl;
+          const sourceDistance = Math.hypot(puff.x - sourceX, puff.y - sourceY);
+          const sourceDensity = Math.max(0.45, 1 - sourceDistance / (width * quality.densityRange));
+          const alpha = puff.alpha * Math.max(0, 1 - ageRatio) * localFade * sourceDensity;
+          if (alpha < 0.008 || puff.y < -height * 0.25 || puff.x > width * 1.25 || puff.x < -width * 0.25) {
+            smoke.splice(i, 1);
+            continue;
+          }
+
+          const tailX = puff.x + puff.vx * 11;
+          const tailY = puff.y + puff.vy * 8;
+          if (quality.streak) {
+            const streak = ctx.createLinearGradient(puff.x, puff.y, tailX, tailY);
+            streak.addColorStop(0, `rgba(132,132,132,${alpha * 0.28})`);
+            streak.addColorStop(0.45, `rgba(148,148,148,${alpha * 0.16})`);
+            streak.addColorStop(1, "rgba(132,132,132,0)");
+            ctx.strokeStyle = streak;
+            ctx.lineWidth = Math.max(3, puff.radius * 0.24);
+            ctx.beginPath();
+            ctx.moveTo(puff.x, puff.y);
+            ctx.lineTo(tailX, tailY);
+            ctx.stroke();
+          }
+
+          const gradient = ctx.createRadialGradient(
+            puff.x,
+            puff.y,
+            puff.radius * 0.08,
+            puff.x,
+            puff.y,
+            puff.radius * 0.72
+          );
+          gradient.addColorStop(0, `rgba(118,118,118,${alpha * 0.52})`);
+          gradient.addColorStop(0.18, `rgba(156,156,156,${alpha * 0.28})`);
+          gradient.addColorStop(0.46, `rgba(196,196,196,${alpha * 0.12})`);
+          gradient.addColorStop(1, "rgba(210,210,210,0)");
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.ellipse(
+            puff.x,
+            puff.y,
+            puff.radius * 0.42,
+            puff.radius * 0.18,
+            Math.atan2(puff.vy, puff.vx),
+            0,
+            Math.PI * 2
+          );
+          ctx.fill();
+        }
+
+        ctx.restore();
+
+        smokeFrame = requestAnimationFrame(drawSmoke);
+      }
+
+      function startSmokeLoop() {
+        if (smokeFrame) return;
+        lastTs = 0;
+        smokeFrame = requestAnimationFrame(drawSmoke);
+      }
+
+      function stopSmokeLoop() {
+        if (!smokeFrame) return;
+        cancelAnimationFrame(smokeFrame);
+        smokeFrame = 0;
+        lastTs = 0;
+      }
+
+      resizeSmoke();
+      emitSmoke(18);
+      syncSmokeVisibility();
+      startSmokeLoop();
+      window.addEventListener("resize", resizeSmoke, { passive: true });
+      window.addEventListener("hero-smoke-toggle", (event) => {
+        smokeEnabled = Boolean(event.detail?.active);
+        if (!smokeEnabled) {
+          spawnCarry = 0;
+        }
+        syncSmokeVisibility();
+      });
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          stopSmokeLoop();
+          return;
+        }
+        startSmokeLoop();
+        syncSmokeVisibility();
+      });
+      prefersReducedMotion.addEventListener("change", resizeSmoke);
+    })();
 
     /* 選択色の反映 */
     function setSelectedColor(key) {
@@ -3953,157 +5804,67 @@
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
-    /* Splash (Matter.js) */
-    const ICON_URLS = [
-      "img/mobby/mobby_pink.jpg",
-      "img/mobby/mobby_purple.jpg",
-      "img/mobby/mobby_blue.jpg",
-      "img/mobby/mobby_orange.jpg",
-      "img/mobby/mobby_pink2.jpg",
-      "img/mobby/mobby_yellow.jpg",
-      "img/mobby/mobby_purple2.jpg",
-      "img/mobby/mobby_blue2.jpg"
-    ];
-    const ICON_SIZE = window.innerWidth <= 768 ? 75 : 150;
-    const SPAWN_RATE = 100;
-    const TOTAL_ICONS = 50;
-
-    const Engine = Matter.Engine;
-    const Render = Matter.Render;
-    const Runner = Matter.Runner;
-    const Bodies = Matter.Bodies;
-    const Composite = Matter.Composite;
-    const Body = Matter.Body;
+    /* Splash */
 
     const splashElement = document.getElementById('splash-screen');
     const mainContent = document.getElementById('main-content');
     const stickyCta = document.querySelector('.sticky-cta');
 
-    // skipSplash=1の場合はスプラッシュアニメーションをスキップ
-    const shouldSkipSplash = new URLSearchParams(window.location.search).get('skipSplash') === '1';
+    const shouldSkipSplash = false;
 
     if (shouldSkipSplash) {
       // スプラッシュをスキップする場合は即座にメイン表示
       if (mainContent) mainContent.classList.add('visible');
       document.body.style.overflowY = 'auto';
       if (stickyCta) stickyCta.style.display = 'block';
+      window.dispatchEvent(new CustomEvent('hero-smoke-toggle', {
+        detail: {
+          active: document.querySelector('.hero-model-stage')?.classList.contains('is-smoke-active')
+        }
+      }));
       initScrollObserver();
     }
 
     if (!shouldSkipSplash && splashElement) {
-      const engine = Engine.create();
-      engine.world.gravity.y = 1.5;
-      const world = engine.world;
+      const splashLetters = Array.from(splashElement.querySelectorAll('.splash-letter'));
+      let splashDone = false;
 
-      let width = window.innerWidth;
-      let height = window.innerHeight;
-
-      const render = Render.create({
-        element: splashElement,
-        engine: engine,
-        options: { width, height, background: 'transparent', wireframes: false }
+      splashLetters.forEach((letter, index) => {
+        const direction = index - (splashLetters.length - 1) / 2;
+        letter.style.setProperty('--burst-x', String(direction * 110 + (Math.random() * 70 - 35)));
+        letter.style.setProperty('--burst-y', String(-170 - Math.random() * 140));
+        letter.style.setProperty('--burst-rotate', String(direction * 95 + (Math.random() * 120 - 60)));
       });
 
-      const wallOptions = { isStatic: true, render: { visible: false } };
-      const floor = Bodies.rectangle(width / 2, height + 50, width + 200, 100, wallOptions);
-      const leftWall = Bodies.rectangle(-60, height / 2, 120, height + 200, wallOptions);
-      const rightWall = Bodies.rectangle(width + 60, height / 2, 120, height + 200, wallOptions);
-      Composite.add(world, [floor, leftWall, rightWall]);
+      const exitSplash = () => {
+        if (splashDone) return;
+        splashDone = true;
+        splashElement.classList.add('is-bursting');
 
-      function preloadImages(urls) {
-        const tasks = urls.map(url => new Promise(resolve => {
-          const img = new Image();
-          img.onload = () => resolve({ url, ok: true });
-          img.onerror = () => resolve({ url, ok: false });
-          img.src = url;
-        }));
-        return Promise.all(tasks);
-      }
-
-      let AVAILABLE_ICON_URLS = [];
-      let count = 0;
-      let dropTimer = null;
-
-      function startDropping() {
-        dropTimer = setInterval(() => {
-          if (count >= TOTAL_ICONS) { clearInterval(dropTimer); return; }
-
-          const xPos = Math.random() * (width - 120) + 60;
-          const hasSprite = AVAILABLE_ICON_URLS.length > 0;
-          const texture = hasSprite ? AVAILABLE_ICON_URLS[Math.floor(Math.random() * AVAILABLE_ICON_URLS.length)] : null;
-
-          const opts = { restitution: 0.55, friction: 0.08, frictionAir: 0.03, render: {} };
-
-          if (hasSprite) {
-            opts.render.sprite = { texture, xScale: ICON_SIZE / 512, yScale: ICON_SIZE / 512 };
-          } else {
-            const fallbackColors = ['#8FD7FF', '#F7A7C6', '#FFA24A', '#9C7BFF'];
-            opts.render.fillStyle = fallbackColors[Math.floor(Math.random() * fallbackColors.length)];
-            opts.render.strokeStyle = 'rgba(255,255,255,0.35)';
-            opts.render.lineWidth = 2;
-          }
-
-          const icon = Bodies.circle(xPos, -60, ICON_SIZE / 2, opts);
-          Composite.add(world, icon);
-          count++;
-        }, SPAWN_RATE);
-      }
-
-      Render.run(render);
-      const runner = Runner.create();
-      Runner.run(runner, engine);
-
-      preloadImages(ICON_URLS).then(results => {
-        AVAILABLE_ICON_URLS = results.filter(r => r.ok).map(r => r.url);
-        startDropping();
-      });
-
-      splashElement?.addEventListener('click', () => {
-        if (dropTimer) clearInterval(dropTimer);
-
-        const bodies = Composite.allBodies(world);
-        bodies.forEach(body => {
-          if (!body.isStatic) {
-            const force = 0.5 * body.mass;
-            Body.applyForce(body, body.position, {
-              x: (Math.random() - 0.5) * force,
-              y: (Math.random() - 1.5) * force
-            });
-          }
-        });
-
-        setTimeout(() => {
+        window.setTimeout(() => {
           splashElement.classList.add('hidden');
-          mainContent.classList.add('visible');
+          if (mainContent) mainContent.classList.add('visible');
           document.body.style.overflowY = 'auto';
-          initScrollObserver();
           if (stickyCta) stickyCta.style.display = 'block';
+          window.dispatchEvent(new CustomEvent('hero-smoke-toggle', {
+            detail: {
+              active: document.querySelector('.hero-model-stage')?.classList.contains('is-smoke-active')
+            }
+          }));
+          initScrollObserver();
+        }, 420);
 
-          setTimeout(() => {
-            Render.stop(render);
-            Runner.stop(runner);
-            engine.enabled = false;
-            splashElement.remove();
-          }, 1200);
-        }, 500);
-      });
-    } // end if(!shouldSkipSplash)
+        window.setTimeout(() => {
+          splashElement.remove();
+        }, 1180);
+      };
+
+      splashElement.addEventListener('click', exitSplash, { once: true });
+      splashElement.addEventListener('pointerdown', exitSplash, { once: true });
+      splashElement.addEventListener('touchstart', exitSplash, { once: true, passive: true });
+    }
 
     window.addEventListener('resize', () => {
-      if (!shouldSkipSplash && typeof render !== 'undefined') {
-        width = window.innerWidth;
-        height = window.innerHeight;
-
-        render.canvas.width = width;
-        render.canvas.height = height;
-        render.options.width = width;
-        render.options.height = height;
-
-        Body.setPosition(floor, { x: width / 2, y: height + 50 });
-        Body.setPosition(leftWall, { x: -60, y: height / 2 });
-        Body.setPosition(rightWall, { x: width + 60, y: height / 2 });
-      }
-
       const imagePopup = document.getElementById('imagePopup');
       if (imagePopup && imagePopup.classList.contains('is-open')) {
         updateImageGallery();
@@ -4332,24 +6093,24 @@
         }
       }
 
-      if (popupId === 'videoPopup') {
-        const video = popup.querySelector('#mobbyVideo');
-        if (video) {
-          setTimeout(() => {
-            video.currentTime = 0;
-            video.play().catch(() => { });
-          }, 300);
-        }
-      }
-
       if (popupId === 'encyclopediaPopup') {
         setTimeout(() => { initEncyclopedia(); }, 100);
+      }
+    }
+
+    function blurIfFocusedInside(container) {
+      const activeElement = document.activeElement;
+      if (!container || !activeElement || !(activeElement instanceof HTMLElement)) return;
+      if (container.contains(activeElement)) {
+        activeElement.blur();
       }
     }
 
     function closePopup(popupId) {
       const popup = document.getElementById(popupId);
       if (!popup) return;
+
+      blurIfFocusedInside(popup);
 
       if (typingInterval) {
         clearInterval(typingInterval);
@@ -4368,13 +6129,6 @@
         }
       }
 
-      if (popupId === 'videoPopup') {
-        const video = popup.querySelector('#mobbyVideo');
-        if (video) {
-          video.pause();
-          video.currentTime = 0;
-        }
-      }
     }
 
     /* ===== Encyclopedia (図鑑) ===== */
@@ -4492,6 +6246,28 @@
       { key: "stan", label: "🎤 推し活", color: "#9b6dff" },
       { key: "love", label: "💜 メンヘラ", color: "#b86cff" },
     ];
+
+    const SCHOOL_NOTE_NAME_ALIASES = {
+      "もしランキングモビー": "模試ランキングモビー",
+      "教科書落書きモビー": "教科書裏落書きモビー",
+      "裏垢拡散モビー": "裏アカ拡散モビー",
+      "購買前溜まり場モビー": "購買前たまり場モビー"
+    };
+
+    function normalizeSchoolNoteName(rawName = "") {
+      return String(rawName || "")
+        .replace(/\.[^.]+$/, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    const SCHOOL_NOTE_LOOKUP = ENCYCLOPEDIA_DATA
+      .filter((item) => item.cat === "school_m" || item.cat === "school_f")
+      .reduce((acc, item) => {
+        acc[normalizeSchoolNoteName(item.name)] = item;
+        return acc;
+      }, {});
+
     let encyclopediaActiveTab = "all";
 
     function initEncyclopedia() {
@@ -4622,15 +6398,497 @@
     }
 
     /* Popup buttons */
+    const heartNoteInline = document.getElementById('heartNoteInline');
+    const popupButtons = document.querySelector('.popup-buttons');
+    const popupButtonsBar = document.querySelector('.popup-buttons-bar');
+    const mobbyTitleY = document.getElementById('mobbyTitleY');
+    const giftFanMenu = document.getElementById('giftFanMenu');
+    const giftFanToggle = document.getElementById('giftFanToggle');
+    const giftFanActions = Array.from(document.querySelectorAll('#giftFanMenu .gift-fan-action'));
+    const giftFanDiagnosisActions = Array.from(document.querySelectorAll('#giftFanMenu .gift-fan-diagnosis-action'));
+    const diagnosisFanTrigger = document.getElementById('openPricePopup');
+    const heartNoteTabs = document.getElementById('heartNoteTabs');
+    const heartNoteQuotePager = document.getElementById('heartNoteQuotePager');
+    const heartNoteQuotePrev = document.getElementById('heartNoteQuotePrev');
+    const heartNoteQuoteNext = document.getElementById('heartNoteQuoteNext');
+    const heartNoteQuoteIndicator = document.getElementById('heartNoteQuoteIndicator');
+    let heartNotePages = [];
+    let heartNoteActiveTab = 'character';
+    let heartNoteQuoteIndex = 0;
+    const VOTE_STORAGE_KEY = 'mobby_vote_ranking_v1';
+    const VOTE_CANDIDATES = [
+      { id: 'fact-yellow', name: 'もびりん', image: 'carousel/after/mobby_fact_man_toka.webp' },
+      { id: 'gal', name: 'もびち', image: 'carousel/after/mobby_gal_toka.webp' },
+      { id: 'yami-purple', name: '病みモビー', image: 'carousel/after/mobby_yami_toka.webp' },
+      { id: 'yanki', name: 'もびやん', image: 'carousel/after/mobby_yanki_toak.webp' }
+    ];
+
+    function getVoteState() {
+      try {
+        const raw = localStorage.getItem(VOTE_STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : {};
+        return VOTE_CANDIDATES.reduce((acc, candidate) => {
+          acc[candidate.id] = Number(parsed?.[candidate.id] || 0);
+          return acc;
+        }, {});
+      } catch {
+        return VOTE_CANDIDATES.reduce((acc, candidate) => {
+          acc[candidate.id] = 0;
+          return acc;
+        }, {});
+      }
+    }
+
+    function setVoteState(nextState) {
+      localStorage.setItem(VOTE_STORAGE_KEY, JSON.stringify(nextState));
+    }
+
+    function getVoteRanking(state = getVoteState()) {
+      return VOTE_CANDIDATES
+        .map((candidate) => ({ ...candidate, score: Number(state[candidate.id] || 0) }))
+        .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name, 'ja'));
+    }
+
+    function renderVotePopup(feedbackMessage = '') {
+      const voteGrid = document.getElementById('voteGrid');
+      const voteRankingList = document.getElementById('voteRankingList');
+      const voteFeedback = document.getElementById('voteFeedback');
+      if (!voteGrid || !voteRankingList || !voteFeedback) return;
+
+      const state = getVoteState();
+      const ranking = getVoteRanking(state);
+      const rankMap = ranking.reduce((acc, item, index) => {
+        acc[item.id] = index + 1;
+        return acc;
+      }, {});
+
+      voteGrid.innerHTML = VOTE_CANDIDATES.map((candidate) => `
+        <article class="vote-card">
+          <div class="vote-rank-badge">#${rankMap[candidate.id]}</div>
+          <div class="vote-card-image">
+            <img src="${candidate.image}" alt="${candidate.name}" loading="lazy">
+          </div>
+          <div class="vote-card-body">
+            <div class="vote-card-name">${candidate.name}</div>
+            <div class="vote-card-points">${state[candidate.id] || 0} pt</div>
+            <button class="vote-submit-btn" type="button" data-vote-id="${candidate.id}">投票する</button>
+          </div>
+        </article>
+      `).join('');
+
+      voteRankingList.innerHTML = ranking.map((item, index) => `
+        <div class="vote-ranking-item">
+          <div class="vote-ranking-place">#${index + 1}</div>
+          <div class="vote-ranking-name">${item.name}</div>
+          <div class="vote-ranking-score">${item.score} pt</div>
+        </div>
+      `).join('');
+
+      voteFeedback.textContent = feedbackMessage;
+
+      voteGrid.querySelectorAll('[data-vote-id]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const voteId = button.getAttribute('data-vote-id');
+          if (!voteId) return;
+          const nextState = getVoteState();
+          nextState[voteId] = Number(nextState[voteId] || 0) + 1;
+          setVoteState(nextState);
+          const voted = VOTE_CANDIDATES.find((candidate) => candidate.id === voteId);
+          renderVotePopup(voted ? `${voted.name} に1票入りました。` : '1票入りました。');
+        });
+      });
+    }
+
+    function closeGiftFanMenu() {
+      if (!giftFanMenu) return;
+      blurIfFocusedInside(giftFanMenu);
+      giftFanMenu.classList.remove('is-open');
+      giftFanMenu.classList.remove('is-diagnosis-open');
+      giftFanMenu.classList.remove('is-diagnosis-closing');
+      if (giftFanToggle) giftFanToggle.setAttribute('aria-expanded', 'false');
+      const actions = giftFanMenu.querySelector('.gift-fan-actions');
+      if (actions) actions.setAttribute('aria-hidden', 'true');
+      const diagnosisActions = giftFanMenu.querySelector('.gift-fan-diagnosis-actions');
+      if (diagnosisActions) diagnosisActions.setAttribute('aria-hidden', 'true');
+    }
+
+    function toggleGiftFanMenu() {
+      if (!giftFanMenu) return;
+      const willOpen = !giftFanMenu.classList.contains('is-open');
+      giftFanMenu.classList.toggle('is-open', willOpen);
+      if (!willOpen) giftFanMenu.classList.remove('is-diagnosis-open');
+      if (giftFanToggle) giftFanToggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      const actions = giftFanMenu.querySelector('.gift-fan-actions');
+      if (actions) actions.setAttribute('aria-hidden', willOpen ? 'false' : 'true');
+      const diagnosisActions = giftFanMenu.querySelector('.gift-fan-diagnosis-actions');
+      if (diagnosisActions) diagnosisActions.setAttribute('aria-hidden', 'true');
+    }
+
+    function toggleGiftDiagnosisMenu() {
+      if (!giftFanMenu || !giftFanMenu.classList.contains('is-open')) return;
+      const willOpen = !giftFanMenu.classList.contains('is-diagnosis-open');
+      giftFanMenu.classList.remove('is-diagnosis-closing');
+      giftFanMenu.classList.toggle('is-diagnosis-open', willOpen);
+      if (!willOpen) {
+        giftFanMenu.classList.add('is-diagnosis-closing');
+        window.setTimeout(() => {
+          giftFanMenu?.classList.remove('is-diagnosis-closing');
+        }, 340);
+      }
+      const diagnosisActions = giftFanMenu.querySelector('.gift-fan-diagnosis-actions');
+      if (diagnosisActions) diagnosisActions.setAttribute('aria-hidden', willOpen ? 'false' : 'true');
+    }
+
+    function renderHeartNotePage() {
+      const noteTitle = document.getElementById('heartNoteTitle');
+      const noteBody = document.getElementById('heartNoteBody');
+      const notePopup = document.querySelector('#heartNoteInline .note-popup');
+      const characterPage = heartNotePages[0] || { title: '', body: '' };
+      const quotePages = heartNotePages.slice(1);
+      const hasQuoteTab = quotePages.length > 0;
+      if (heartNoteActiveTab === 'quote' && !hasQuoteTab) {
+        heartNoteActiveTab = 'character';
+      }
+      const page = heartNoteActiveTab === 'quote'
+        ? (quotePages[heartNoteQuoteIndex] || quotePages[0] || { title: '', body: '' })
+        : characterPage;
+      if (noteTitle) noteTitle.textContent = page.title || '';
+      if (noteBody) {
+        if (page.html) {
+          noteBody.innerHTML = page.html;
+        } else {
+          noteBody.textContent = page.body || '';
+        }
+      }
+      if (notePopup) notePopup.classList.toggle('is-quote-page', heartNoteActiveTab === 'quote');
+      if (heartNoteTabs) {
+        const tabs = [
+          { id: 'character', label: 'キャラ' },
+          ...(hasQuoteTab ? [{ id: 'quote', label: '名言' }] : [])
+        ];
+        heartNoteTabs.hidden = tabs.length <= 1;
+        heartNoteTabs.innerHTML = tabs.map((tab) => `
+          <button type="button" class="note-tab-btn ${tab.id === heartNoteActiveTab ? 'is-active' : ''}" data-note-tab="${tab.id}">
+            ${tab.label}
+          </button>
+        `).join('');
+        heartNoteTabs.querySelectorAll('[data-note-tab]').forEach((button) => {
+          button.addEventListener('click', () => {
+            const nextTab = button.getAttribute('data-note-tab');
+            if (!nextTab || nextTab === heartNoteActiveTab) return;
+            heartNoteActiveTab = nextTab;
+            if (nextTab === 'quote') heartNoteQuoteIndex = 0;
+            renderHeartNotePage();
+          });
+        });
+      }
+      if (heartNoteQuotePager) {
+        const showQuotePager = heartNoteActiveTab === 'quote' && quotePages.length > 1;
+        heartNoteQuotePager.hidden = !showQuotePager;
+        if (showQuotePager) {
+          if (heartNoteQuotePrev) heartNoteQuotePrev.disabled = heartNoteQuoteIndex <= 0;
+          if (heartNoteQuoteNext) heartNoteQuoteNext.disabled = heartNoteQuoteIndex >= quotePages.length - 1;
+          if (heartNoteQuoteIndicator) heartNoteQuoteIndicator.textContent = `${heartNoteQuoteIndex + 1} / ${quotePages.length}`;
+        }
+      }
+    }
+
+    function syncHeartNoteContent() {
+      const activeSlide = window.__activeHeroSlide;
+      const imagePath = activeSlide?.dataset.image || '';
+      const normalizedImagePath = String(imagePath || "").replace(/\\/g, "/");
+      const rawSchoolName = normalizeSchoolNoteName(normalizedImagePath.split("/").pop() || "");
+      const schoolLookupName = SCHOOL_NOTE_NAME_ALIASES[rawSchoolName] || rawSchoolName;
+      const schoolNote = SCHOOL_NOTE_LOOKUP[schoolLookupName];
+      if (normalizedImagePath.includes("carousel/shcool/") && schoolNote) {
+        heartNotePages = [
+          {
+            title: "",
+            html: `
+              <div class="character-note-fields">
+                <div class="character-note-field">
+                  <div class="character-note-label">キャラ名</div>
+                  <div class="character-note-value">${schoolNote.name}</div>
+                </div>
+                <div class="character-note-field">
+                  <div class="character-note-label">特徴</div>
+                  <div class="character-note-value">${schoolNote.summary || ""}</div>
+                </div>
+              </div>
+            `
+          }
+        ];
+        heartNoteActiveTab = 'character';
+        heartNoteQuoteIndex = 0;
+        renderHeartNotePage();
+        return;
+      }
+      const cleanNoteMap = {
+        'mobby_fact_man_toka.png': {
+          pages: [
+            {
+              title: '',
+              html: `
+                <div class="character-note-fields">
+                  <div class="character-note-field">
+                    <div class="character-note-label">キャラ名</div>
+                    <div class="character-note-value">もびりん</div>
+                  </div>
+                  <div class="character-note-field">
+                    <div class="character-note-label">特徴</div>
+                    <div class="character-note-value">静かで知的なおじ気味モビー</div>
+                  </div>
+                </div>
+              `
+            },
+            {
+              title: '',
+              body: '「真実というのは我々が捉えたと思ったその時に真実ではなくなる」'
+            },
+            {
+              title: '',
+              body: '「過ぎる季節に嘘はない。葉が付き花が咲き、やがて枯れ落ちる。」'
+            },
+            {
+              title: '',
+              body: '「本当に大切なものは説明されないものの中にあるのかもしれない。」'
+            },
+            {
+              title: '',
+              body: '「身体というのは我々が決して真実に辿り着けないように課せられた、檻のようなものであるのかもしれない。」'
+            },
+            {
+              title: '',
+              body: '「悲しみが私を追い回す。いいや、私が悲しみを連れ回しているのだ。」'
+            }
+          ]
+        },
+        'mobby_gal_toka.png': {
+          pages: [
+            {
+              title: '',
+              html: `
+                <div class="character-note-fields">
+                  <div class="character-note-field">
+                    <div class="character-note-label">キャラ名</div>
+                    <div class="character-note-value">もびち</div>
+                  </div>
+                  <div class="character-note-field">
+                    <div class="character-note-label">特徴</div>
+                    <div class="character-note-value">気ままで気さく</div>
+                  </div>
+                </div>
+              `
+            },
+            {
+              title: '',
+              body: '「スキなものはスキ、イヤなものはイヤ。けど、スキがたくさんあったら最高。」'
+            }
+          ]
+        },
+        'mobby_yanki_toak.png': {
+          pages: [
+            {
+              title: '',
+              html: `
+                <div class="character-note-fields">
+                  <div class="character-note-field">
+                    <div class="character-note-label">キャラ名</div>
+                    <div class="character-note-value">もびやん</div>
+                  </div>
+                  <div class="character-note-field">
+                    <div class="character-note-label">特徴</div>
+                    <div class="character-note-value">信念は曲げない</div>
+                  </div>
+                </div>
+              `
+            },
+            {
+              title: '',
+              body: '「己のやりたいことすら言い訳してやらない奴、隠す奴は最低だ」'
+            },
+            {
+              title: '',
+              body: '「やりたいのに、やらない言い訳ばかりする。\nダサくて最低だな。」'
+            },
+            {
+              title: '',
+              body: '「普通でいい？何だ、特別になれない奴の言い訳か」'
+            },
+            {
+              title: '',
+              body: '「出来るわけない？違うな、やってるやつはいくらでもいる」'
+            },
+            {
+              title: '',
+              body: '「やらない言い訳をしていつまでも何もやらないならずっとそうしていればいい。ダサいやつに興味はない。」'
+            },
+            {
+              title: '',
+              body: '「夢はサラリーマンになってお金持ちになること？つまらん、どこかへ行け。」'
+            }
+          ]
+        },
+        'mobby_yami_toka.png': {
+          pages: [
+            {
+              title: '',
+              html: `
+                <div class="character-note-fields">
+                  <div class="character-note-field">
+                    <div class="character-note-label">キャラ名</div>
+                    <div class="character-note-value">病みモビー</div>
+                  </div>
+                  <div class="character-note-field">
+                    <div class="character-note-label">特徴</div>
+                    <div class="character-note-value">自信なし、必要とされたい</div>
+                  </div>
+                </div>
+              `
+            },
+            {
+              title: '',
+              body: '「誰も喋らなければいいのにな」'
+            }
+          ]
+        }
+      };
+      const cleanFileName = imagePath.split('/').pop();
+      const cleanNoteLookupKey = cleanFileName?.replace(/\.webp$/i, '.png') || cleanFileName;
+      const cleanNote = cleanNoteMap[cleanNoteLookupKey] || {
+        pages: [{ title: '', body: 'このキャラのノートはまだ差し込み前です。ここに個別の文章を入れていけます。' }]
+      };
+      heartNotePages = cleanNote.pages || [];
+      heartNoteActiveTab = 'character';
+      heartNoteQuoteIndex = 0;
+      renderHeartNotePage();
+      return;
+
+      const noteMap = {
+        'mobby_fact_man_toka.png': {
+          title: '心の沈黙',
+          body: '水溜りに移り込んだ空はやがて小さくなっていき消えていく。窓の中の小さな夜をいつまでも閉じ込めてしまいたいと、どれだけ強く願ってみてもそれは叶わないのです。\n色彩を待たぬはずの暗闇がいつまでも鮮やかでありますように、私の沈黙の中に願う。'
+        },
+        'mobby_gal_toka.png': {
+          title: '好き！',
+          body: '大切なものを今よりもっともっと大切にしたい。\nずっと大切に出来たら素敵だなと思う。'
+        },
+        'mobby_yanki_toak.png': {
+          title: '今の世の中はクソだ',
+          body: '周りの目やつまらない評価でやりたいこともわからぬまま生きていく、そんな世界はクソだ'
+        },
+        'mobby_yami_toka.png': {
+          title: '満たされたい',
+          body: '抱えた膝の中から顔を上げた。口を開けた一匹の白映りの鯉が私の足元で揺れ透ける地面から顔を出している。口を開けたり閉じたりする音がぱかぱかと、不思議と心地の良いリズムだった。遣る餌もないので私は右の人差し指を差し出してみる。丁度爪一枚を齧って持っていかれたが痛みはなく、血も出ていない。私のそれを喰らった白映りの鯉は満足そうに尾を振り上げ地面を揺らし去っていった。すると今度、先程の鯉が仲間の白映りの鯉を連れやってきた。二匹で口を開けては閉じ、また心地の良いリズムで私を誘った。私はまた同じように右の人差し指を差し遣る。私の人差し指は小指よりも短くなった。二匹の鯉はその陰陽のぼんやりとした白映りの躰を滑らかに魅せ、また大きく尾を振り上げ歪む地面の中へと去った。やがて私の両手両足は消え失せた。群がる白映りの鯉たちはたゆたう様子で私を喰らう。やがて痛みがやってきたがどこが痛むのかも分からず、またその痛みを解消する術も浮かばぬまま、とうとう悲鳴を上げて助けを求めることもできなかった。私の口はもうなかったから。'
+        }
+      };
+
+      const fileName = imagePath.split('/').pop();
+      const note = noteMap[fileName] || {
+        title: '心を覗く',
+        body: 'このキャラのノートはまだ差し込み前です。ここに個別の文章を入れていけます。'
+      };
+
+      if (noteTitle) noteTitle.textContent = note.title;
+      if (noteBody) noteBody.textContent = note.body;
+    }
+
+    function openInlineHeartNote() {
+      syncHeartNoteContent();
+      if (heartNoteInline) heartNoteInline.hidden = false;
+      if (popupButtons) popupButtons.hidden = true;
+      if (popupButtonsBar) popupButtonsBar.classList.add('is-note-open');
+    }
+
+    function closeInlineHeartNote() {
+      if (heartNoteInline) heartNoteInline.hidden = true;
+      if (popupButtons) popupButtons.hidden = false;
+      if (popupButtonsBar) popupButtonsBar.classList.remove('is-note-open');
+    }
+
+    window.addEventListener('hero-slide-change', () => {
+      if (heartNoteInline?.hidden) return;
+      syncHeartNoteContent();
+    });
+
+    document.getElementById('openHeartNote')?.addEventListener('click', () => {
+      if (!heartNoteInline?.hidden) {
+        closeInlineHeartNote();
+        return;
+      }
+      openInlineHeartNote();
+    });
+    document.getElementById('closeHeartNoteInline')?.addEventListener('click', closeInlineHeartNote);
+    heartNoteQuotePrev?.addEventListener('click', () => {
+      if (heartNoteQuoteIndex <= 0) return;
+      const noteBody = document.getElementById('heartNoteBody');
+      noteBody?.classList.remove('is-turning');
+      void noteBody?.offsetWidth;
+      if (noteBody) noteBody.classList.add('is-turning');
+      heartNoteQuoteIndex -= 1;
+      renderHeartNotePage();
+    });
+    heartNoteQuoteNext?.addEventListener('click', () => {
+      const quotePageCount = Math.max(heartNotePages.length - 1, 0);
+      if (heartNoteQuoteIndex >= quotePageCount - 1) return;
+      const noteBody = document.getElementById('heartNoteBody');
+      noteBody?.classList.remove('is-turning');
+      void noteBody?.offsetWidth;
+      if (noteBody) noteBody.classList.add('is-turning');
+      heartNoteQuoteIndex += 1;
+      renderHeartNotePage();
+    });
+    giftFanToggle?.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleGiftFanMenu();
+    });
+    giftFanActions.forEach((action) => {
+      action.addEventListener('click', () => {
+        if (action.id === 'openPricePopup') return;
+        closeGiftFanMenu();
+      });
+    });
+    giftFanDiagnosisActions.forEach((action) => {
+      action.addEventListener('click', () => {
+        closeGiftFanMenu();
+      });
+    });
+    if (typeof window.initCompositingTool === 'function') {
+      window.initCompositingTool();
+    } else {
+      window.addEventListener('compositing:ready', () => {
+        if (typeof window.initCompositingTool === 'function') {
+          window.initCompositingTool();
+        }
+      }, { once: true });
+    }
+    mobbyTitleY?.addEventListener('click', () => {
+      mobbyTitleY.classList.remove('is-rolling');
+    });
     document.getElementById('openMessagePopup')?.addEventListener('click', () => openPopup('messagePopup'));
-    document.getElementById('openPricePopup')?.addEventListener('click', () => {
-      activateReservationTab("camera");
-      openPopup('pricePopup');
+    diagnosisFanTrigger?.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleGiftDiagnosisMenu();
     });
     document.getElementById('openFaqPopup')?.addEventListener('click', () => openPopup('faqPopup'));
     document.getElementById('openEncyclopediaPopup')?.addEventListener('click', () => openPopup('encyclopediaPopup'));
-    document.getElementById('openVideoPopup')?.addEventListener('click', () => openPopup('videoPopup'));
+    document.getElementById('openVotePopup')?.addEventListener('click', () => {
+      renderVotePopup();
+      openPopup('votePopup');
+    });
+    document.getElementById('openCompositingPopup')?.addEventListener('click', () => {
+      openPopup('compositingPopup');
+    });
     document.getElementById('goMobbyDiagnosis')?.addEventListener('click', () => openPopup('diagnosisPopup'));
+    const diagnosisLauncher = document.getElementById('openPricePopup');
+    if (diagnosisLauncher) diagnosisLauncher.textContent = '診断';
+    document.addEventListener('click', (e) => {
+      if (!giftFanMenu?.classList.contains('is-open')) return;
+      if (giftFanMenu.contains(e.target)) return;
+      closeGiftFanMenu();
+    });
 
     /* Close buttons */
     document.getElementById('closeMessagePopup')?.addEventListener('click', () => closePopup('messagePopup'));
@@ -4638,8 +6896,9 @@
     document.getElementById('closePricePopup')?.addEventListener('click', () => closePopup('pricePopup'));
     document.getElementById('closeFaqPopup')?.addEventListener('click', () => closePopup('faqPopup'));
     document.getElementById('closeEncyclopediaPopup')?.addEventListener('click', () => closePopup('encyclopediaPopup'));
-    document.getElementById('closeVideoPopup')?.addEventListener('click', () => closePopup('videoPopup'));
     document.getElementById('closeDiagnosisPopup')?.addEventListener('click', () => closePopup('diagnosisPopup'));
+    document.getElementById('closeVotePopup')?.addEventListener('click', () => closePopup('votePopup'));
+    document.getElementById('closeCompositingPopup')?.addEventListener('click', () => closePopup('compositingPopup'));
 
     /* Overlay click to close */
     document.getElementById('messagePopup')?.addEventListener('click', (e) => {
@@ -4657,11 +6916,14 @@
     document.getElementById('encyclopediaPopup')?.addEventListener('click', (e) => {
       if (e.target.id === 'encyclopediaPopup') closePopup('encyclopediaPopup');
     });
-    document.getElementById('videoPopup')?.addEventListener('click', (e) => {
-      if (e.target.id === 'videoPopup') closePopup('videoPopup');
-    });
     document.getElementById('diagnosisPopup')?.addEventListener('click', (e) => {
       if (e.target.id === 'diagnosisPopup') closePopup('diagnosisPopup');
+    });
+    document.getElementById('votePopup')?.addEventListener('click', (e) => {
+      if (e.target.id === 'votePopup') closePopup('votePopup');
+    });
+    document.getElementById('compositingPopup')?.addEventListener('click', (e) => {
+      if (e.target.id === 'compositingPopup') closePopup('compositingPopup');
     });
 
     /* ESC */
@@ -4672,8 +6934,9 @@
         if (document.getElementById('pricePopup')?.classList.contains('is-open')) closePopup('pricePopup');
         if (document.getElementById('faqPopup')?.classList.contains('is-open')) closePopup('faqPopup');
         if (document.getElementById('encyclopediaPopup')?.classList.contains('is-open')) closePopup('encyclopediaPopup');
-        if (document.getElementById('videoPopup')?.classList.contains('is-open')) closePopup('videoPopup');
         if (document.getElementById('diagnosisPopup')?.classList.contains('is-open')) closePopup('diagnosisPopup');
+        if (document.getElementById('votePopup')?.classList.contains('is-open')) closePopup('votePopup');
+        if (document.getElementById('compositingPopup')?.classList.contains('is-open')) closePopup('compositingPopup');
       }
     });
 
@@ -4788,7 +7051,7 @@
         source: "16love",
         storageKey: "love_char_diag_v1",
         diagnosisUrl: "16love/index.html",
-        fallbackImage: "16love/img/key/量産型メンヘラモビー.png",
+        fallbackImage: "16love/img/key/量産型メンヘラモビー.webp",
         backImage: "16love/img/key/ura.jpg",
         resolveReady(data) {
           if (!data || typeof data !== "object") return false;
@@ -4816,7 +7079,7 @@
         },
         resolveImage(summary) {
           const diagnosisName = String(summary?.diagnosisName || "").trim();
-          return diagnosisName ? `16love/img/key/${diagnosisName}.png` : "16love/img/key/量産型メンヘラモビー.png";
+          return diagnosisName ? `16love/img/key/${diagnosisName}.webp` : "16love/img/key/量産型メンヘラモビー.webp";
         }
       },
       {
@@ -4825,7 +7088,7 @@
         source: "16stan",
         storageKey: "stan_char_diag_v1",
         diagnosisUrl: "16stan/index.html",
-        fallbackImage: "16stan/img/key/現場至上主義推しモビー.png",
+        fallbackImage: "16stan/img/key/現場至上主義推しモビー.webp",
         backImage: "16stan/img/key/ura.jpg",
         resolveReady(data) {
           if (!data || typeof data !== "object") return false;
@@ -4854,7 +7117,7 @@
         },
         resolveImage(summary) {
           const diagnosisName = String(summary?.diagnosisName || "").trim();
-          return diagnosisName ? `16stan/img/key/${diagnosisName}.png` : "16stan/img/key/現場至上主義推しモビー.png";
+          return diagnosisName ? `16stan/img/key/${diagnosisName}.webp` : "16stan/img/key/現場至上主義推しモビー.webp";
         }
       },
       {
@@ -5844,3 +8107,4 @@
 </body>
 
 </html>
+
