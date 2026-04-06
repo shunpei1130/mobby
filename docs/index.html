@@ -4901,7 +4901,7 @@
           </div>
           <div class="compositing-head">
             <h2>画像合成</h2>
-            <p>画像をアップロードすると、背景を自動で抜いてテンプレ右下へ配置します。配置後はドラッグして位置調整できます。</p>
+            <p>背景を抜くかそのまま使うかを選んで、テンプレや部屋コースに配置できます。配置後はドラッグして位置調整できます。</p>
           </div>
           <div class="compositing-layout">
             <div class="compositing-stage-card">
@@ -4922,9 +4922,13 @@
               </div>
               <div class="compositing-section" data-compositing-section="upload" hidden>
                 <div class="compositing-section-body" data-compositing-body="upload" hidden>
+                  <button id="compositingBackButton" class="compositing-back-btn" type="button" aria-label="テンプレート選択に戻る">← テンプレートに戻る</button>
                   <div class="compositing-upload">
                     <input id="compositingFileInput" type="file" accept="image/*">
-                    <button id="compositingUploadButton" class="btn btn-primary compositing-upload-btn" type="button">画像をアップロード</button>
+                    <div class="compositing-upload-actions">
+                      <button id="compositingUploadButton" class="btn btn-primary compositing-upload-btn" type="button">背景を抜いて使う</button>
+                      <button id="compositingUploadOriginalButton" class="btn btn-secondary compositing-upload-btn compositing-upload-btn-secondary" type="button">画像をそのまま使う</button>
+                    </div>
                   </div>
                 </div>
               </div>
