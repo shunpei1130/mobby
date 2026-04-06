@@ -279,8 +279,8 @@
       font-size: clamp(6.2rem, 5vw, 4.5rem);
       font-weight: 900;
       font-family: 'Montserrat', sans-serif;
-      padding-top: 126px;
-      padding-bottom: 8px;
+      padding-top: 30px;
+      padding-bottom: 2px;
       opacity: 0.95;
       line-height: 1;
       display: flex;
@@ -314,8 +314,8 @@
     @media (max-width: 768px) {
       .mobby-title {
         font-size: clamp(3.2rem, 6vw, 3.5rem);
-        padding-top: 84px;
-        padding-bottom: 6px;
+        padding-top: 18px;
+        padding-bottom: 2px;
       }
 
       .mobby-title-letter-y.is-rolling {
@@ -605,7 +605,7 @@
 
     .headline {
       font-size: clamp(1.15rem, 3.4vw, 2.6rem);
-      margin-top: 8px;
+      margin-top: 0;
       text-align: center;
       text-shadow: 0 1px 0 rgba(255, 255, 255, 0.95), 0 12px 26px rgba(47, 79, 79, 0.14);
     }
@@ -754,7 +754,7 @@
     /* ===== Hero Image ===== */
     .hero-carousel-shell {
       width: min(420px, 96vw);
-      margin: 14px auto 10px;
+      margin: -12px auto 10px;
       position: relative;
     }
 
@@ -2334,6 +2334,7 @@
 
     .gift-fan-menu {
       position: relative;
+      top: -4px;
       width: 56px;
       height: 56px;
       display: flex;
@@ -3287,6 +3288,7 @@
       }
 
       .gift-fan-menu {
+        top: -4px;
         width: 50px;
         height: 50px;
         --gift-diagnosis-origin-x: 64px;
@@ -4558,7 +4560,7 @@
               <div class="selected-badge">選択中</div>
               <div class="swatch" style="background:#F7A7C6;"></div>
               <div class="color-card-content">
-                <img class="product-thumb" src="carousel/after/mobby_fact_man_toka.png" alt="Mobby Peach Pink">
+                <img class="product-thumb" src="carousel/after/mobby_fact_man_toka.webp" alt="Mobby Peach Pink">
                 <div class="color-title">Peach Pink <span class="mini-tag">直感</span></div>
               </div>
               <div class="color-desc">好きに正直。</div>
@@ -4568,7 +4570,7 @@
               <div class="selected-badge">選択中</div>
               <div class="swatch" style="background:#9C7BFF;"></div>
               <div class="color-card-content">
-                <img class="product-thumb" src="carousel/after/mobby_gal_toka.png" alt="Mobby Twilight Violet">
+                <img class="product-thumb" src="carousel/after/mobby_gal_toka.webp" alt="Mobby Twilight Violet">
                 <div class="color-title">Twilight Violet <span class="mini-tag">世界観</span></div>
               </div>
               <div class="color-desc">こだわり強め。</div>
@@ -4578,7 +4580,7 @@
               <div class="selected-badge">選択中</div>
               <div class="swatch" style="background:#8FD7FF;"></div>
               <div class="color-card-content">
-                <img class="product-thumb" src="carousel/after/mobby_yami_toka.png" alt="Mobby Aqua Sky">
+                <img class="product-thumb" src="carousel/after/mobby_yami_toka.webp" alt="Mobby Aqua Sky">
                 <div class="color-title">Aqua Sky <span class="mini-tag">冒険</span></div>
               </div>
               <div class="color-desc">フッ軽。</div>
@@ -4588,7 +4590,7 @@
               <div class="selected-badge">選択中</div>
               <div class="swatch" style="background:#FFA24A;"></div>
               <div class="color-card-content">
-                <img class="product-thumb" src="carousel/after/mobby_yanki_toak.png" alt="Mobby Sunny Orange">
+                <img class="product-thumb" src="carousel/after/mobby_yanki_toak.webp" alt="Mobby Sunny Orange">
                 <div class="color-title">Sunny Orange <span class="mini-tag">勇気</span></div>
               </div>
               <div class="color-desc">前に進める。</div>
@@ -4638,7 +4640,7 @@
               <h3>カメラ型キーホルダー<br>無料抽選予約</h3>
               <div class="camera-tab-hero">
                 <div class="camera-tab-hero-image">
-                  <img src="carousel/after/mobby_fact_man_toka.png" alt="カメラ型キーホルダーのイメージ" loading="lazy">
+                  <img src="carousel/after/mobby_fact_man_toka.webp" alt="カメラ型キーホルダーのイメージ" loading="lazy">
                 </div>
                 <p class="camera-tab-hero-text">
                   抽選に当たったら、当選の手紙を送るビィ。<br>
@@ -4899,7 +4901,7 @@
           </div>
           <div class="compositing-head">
             <h2>画像合成</h2>
-            <p>画像をアップロードすると、背景を自動で抜いてテンプレ右下へ配置します。配置後はドラッグして位置調整できます。</p>
+            <p>背景を抜くかそのまま使うかを選んで、テンプレや部屋コースに配置できます。配置後はドラッグして位置調整できます。</p>
           </div>
           <div class="compositing-layout">
             <div class="compositing-stage-card">
@@ -4920,9 +4922,13 @@
               </div>
               <div class="compositing-section" data-compositing-section="upload" hidden>
                 <div class="compositing-section-body" data-compositing-body="upload" hidden>
+                  <button id="compositingBackButton" class="compositing-back-btn" type="button" aria-label="テンプレート選択に戻る">← テンプレートに戻る</button>
                   <div class="compositing-upload">
                     <input id="compositingFileInput" type="file" accept="image/*">
-                    <button id="compositingUploadButton" class="btn btn-primary compositing-upload-btn" type="button">画像をアップロード</button>
+                    <div class="compositing-upload-actions">
+                      <button id="compositingUploadButton" class="btn btn-primary compositing-upload-btn" type="button">背景を抜いて使う</button>
+                      <button id="compositingUploadOriginalButton" class="btn btn-secondary compositing-upload-btn compositing-upload-btn-secondary" type="button">画像をそのまま使う</button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -5222,54 +5228,54 @@
           id: "default",
           buttonLabel: "通常",
           items: [
-            { id: "fact-yellow", name: "もびりん", image: "carousel/after/mobby_fact_man_toka.png", alt: "Mobby Fact Yellow", smokeSource: true },
-            { id: "gal", name: "もびち", image: "carousel/after/mobby_gal_toka.png", alt: "Mobby Gal" },
-            { id: "yami-purple", name: "病みモビー", image: "carousel/after/mobby_yami_toka.png", alt: "Mobby Yami Purple" },
-            { id: "yanki", name: "もびやん", image: "carousel/after/mobby_yanki_toak.png", alt: "Mobby Yanki" }
+            { id: "fact-yellow", name: "もびりん", image: "carousel/after/mobby_fact_man_toka.webp", alt: "Mobby Fact Yellow", smokeSource: true },
+            { id: "gal", name: "もびち", image: "carousel/after/mobby_gal_toka.webp", alt: "Mobby Gal" },
+            { id: "yami-purple", name: "病みモビー", image: "carousel/after/mobby_yami_toka.webp", alt: "Mobby Yami Purple" },
+            { id: "yanki", name: "もびやん", image: "carousel/after/mobby_yanki_toak.webp", alt: "Mobby Yanki" }
           ]
         },
         {
           id: "school-man",
           buttonLabel: "学校男",
           items: [
-            { id: "school-man-01", name: "もしランキングモビー", image: "carousel/shcool/man/もしランキングモビー.png", alt: "もしランキングモビー" },
-            { id: "school-man-02", name: "体育祭モビー", image: "carousel/shcool/man/体育祭モビー.png", alt: "体育祭モビー" },
-            { id: "school-man-03", name: "制服アレンジモビー", image: "carousel/shcool/man/制服アレンジモビー.png", alt: "制服アレンジモビー" },
-            { id: "school-man-04", name: "図書委員モビー", image: "carousel/shcool/man/図書委員モビー.png", alt: "図書委員モビー" },
-            { id: "school-man-05", name: "学級委員モビー", image: "carousel/shcool/man/学級委員モビー.png", alt: "学級委員モビー" },
-            { id: "school-man-06", name: "屋上自由時間モビー", image: "carousel/shcool/man/屋上自由時間モビー.png", alt: "屋上自由時間モビー" },
-            { id: "school-man-07", name: "廊下ランウェイモビー", image: "carousel/shcool/man/廊下ランウェイモビー.png", alt: "廊下ランウェイモビー" },
-            { id: "school-man-08", name: "応援団長モビー", image: "carousel/shcool/man/応援団長モビー.png", alt: "応援団長モビー" },
-            { id: "school-man-09", name: "成績掲示板モビー", image: "carousel/shcool/man/成績掲示板モビー.png", alt: "成績掲示板モビー" },
-            { id: "school-man-10", name: "教科書落書きモビー", image: "carousel/shcool/man/教科書落書きモビー.png", alt: "教科書落書きモビー" },
-            { id: "school-man-11", name: "文化祭センターステージモビー", image: "carousel/shcool/man/文化祭センターステージモビー.png", alt: "文化祭センターステージモビー" },
-            { id: "school-man-12", name: "理科室研究モビー", image: "carousel/shcool/man/理科室研究モビー.png", alt: "理科室研究モビー" },
-            { id: "school-man-13", name: "自習室モビー", image: "carousel/shcool/man/自習室モビー.png", alt: "自習室モビー" },
-            { id: "school-man-14", name: "舞台袖実行委員モビー", image: "carousel/shcool/man/舞台袖実行委員モビー.png", alt: "舞台袖実行委員モビー" },
-            { id: "school-man-15", name: "裏垢拡散モビー", image: "carousel/shcool/man/裏垢拡散モビー.png", alt: "裏垢拡散モビー" },
-            { id: "school-man-16", name: "部室たまり場モビー", image: "carousel/shcool/man/部室たまり場モビー.png", alt: "部室たまり場モビー" }
+            { id: "school-man-01", name: "もしランキングモビー", image: "carousel/shcool/man/もしランキングモビー.webp", alt: "もしランキングモビー" },
+            { id: "school-man-02", name: "体育祭モビー", image: "carousel/shcool/man/体育祭モビー.webp", alt: "体育祭モビー" },
+            { id: "school-man-03", name: "制服アレンジモビー", image: "carousel/shcool/man/制服アレンジモビー.webp", alt: "制服アレンジモビー" },
+            { id: "school-man-04", name: "図書委員モビー", image: "carousel/shcool/man/図書委員モビー.webp", alt: "図書委員モビー" },
+            { id: "school-man-05", name: "学級委員モビー", image: "carousel/shcool/man/学級委員モビー.webp", alt: "学級委員モビー" },
+            { id: "school-man-06", name: "屋上自由時間モビー", image: "carousel/shcool/man/屋上自由時間モビー.webp", alt: "屋上自由時間モビー" },
+            { id: "school-man-07", name: "廊下ランウェイモビー", image: "carousel/shcool/man/廊下ランウェイモビー.webp", alt: "廊下ランウェイモビー" },
+            { id: "school-man-08", name: "応援団長モビー", image: "carousel/shcool/man/応援団長モビー.webp", alt: "応援団長モビー" },
+            { id: "school-man-09", name: "成績掲示板モビー", image: "carousel/shcool/man/成績掲示板モビー.webp", alt: "成績掲示板モビー" },
+            { id: "school-man-10", name: "教科書落書きモビー", image: "carousel/shcool/man/教科書落書きモビー.webp", alt: "教科書落書きモビー" },
+            { id: "school-man-11", name: "文化祭センターステージモビー", image: "carousel/shcool/man/文化祭センターステージモビー.webp", alt: "文化祭センターステージモビー" },
+            { id: "school-man-12", name: "理科室研究モビー", image: "carousel/shcool/man/理科室研究モビー.webp", alt: "理科室研究モビー" },
+            { id: "school-man-13", name: "自習室モビー", image: "carousel/shcool/man/自習室モビー.webp", alt: "自習室モビー" },
+            { id: "school-man-14", name: "舞台袖実行委員モビー", image: "carousel/shcool/man/舞台袖実行委員モビー.webp", alt: "舞台袖実行委員モビー" },
+            { id: "school-man-15", name: "裏垢拡散モビー", image: "carousel/shcool/man/裏垢拡散モビー.webp", alt: "裏垢拡散モビー" },
+            { id: "school-man-16", name: "部室たまり場モビー", image: "carousel/shcool/man/部室たまり場モビー.webp", alt: "部室たまり場モビー" }
           ]
         },
         {
           id: "school-woman",
           buttonLabel: "学校女",
           items: [
-            { id: "school-woman-01", name: "カップル自撮りモビー", image: "carousel/shcool/woman/カップル自撮りモビー.png", alt: "カップル自撮りモビー" },
-            { id: "school-woman-02", name: "クラスアルバム映えモビー", image: "carousel/shcool/woman/クラスアルバム映えモビー.png", alt: "クラスアルバム映えモビー" },
-            { id: "school-woman-03", name: "ストーリー匂わせモビー", image: "carousel/shcool/woman/ストーリー匂わせモビー.png", alt: "ストーリー匂わせモビー" },
-            { id: "school-woman-04", name: "ストーリー撮影班モビー", image: "carousel/shcool/woman/ストーリー撮影班モビー.png", alt: "ストーリー撮影班モビー" },
-            { id: "school-woman-05", name: "ネイルこだわりモビー", image: "carousel/shcool/woman/ネイルこだわりモビー .png", alt: "ネイルこだわりモビー" },
-            { id: "school-woman-06", name: "プリクラ拡散モビー", image: "carousel/shcool/woman/プリクラ拡散モビー.png", alt: "プリクラ拡散モビー" },
-            { id: "school-woman-07", name: "ロッカー手紙モビー", image: "carousel/shcool/woman/ロッカー手紙モビー.png", alt: "ロッカー手紙モビー" },
-            { id: "school-woman-08", name: "匂わせプリクラモビー", image: "carousel/shcool/woman/匂わせプリクラモビー.png", alt: "匂わせプリクラモビー" },
-            { id: "school-woman-09", name: "図書室まったりモビー", image: "carousel/shcool/woman/図書室まったりモビー.png", alt: "図書室まったりモビー" },
-            { id: "school-woman-10", name: "屋上ひみつ恋モビー", image: "carousel/shcool/woman/屋上ひみつ恋モビー.png", alt: "屋上ひみつ恋モビー" },
-            { id: "school-woman-11", name: "帰り道デートモビー", image: "carousel/shcool/woman/帰り道デートモビー.png", alt: "帰り道デートモビー" },
-            { id: "school-woman-12", name: "放課後こっそり通話モビー", image: "carousel/shcool/woman/放課後こっそり通話モビー.png", alt: "放課後こっそり通話モビー" },
-            { id: "school-woman-13", name: "放課後即レスモビー", image: "carousel/shcool/woman/放課後即レスモビー.png", alt: "放課後即レスモビー" },
-            { id: "school-woman-14", name: "文化祭広報モビー", image: "carousel/shcool/woman/文化祭広報モビー.png", alt: "文化祭広報モビー" },
-            { id: "school-woman-15", name: "昼休みお弁当会モビー", image: "carousel/shcool/woman/昼休みお弁当会モビー.png", alt: "昼休みお弁当会モビー" },
-            { id: "school-woman-16", name: "購買前溜まり場モビー", image: "carousel/shcool/woman/購買前溜まり場モビー.png", alt: "購買前溜まり場モビー" }
+            { id: "school-woman-01", name: "カップル自撮りモビー", image: "carousel/shcool/woman/カップル自撮りモビー.webp", alt: "カップル自撮りモビー" },
+            { id: "school-woman-02", name: "クラスアルバム映えモビー", image: "carousel/shcool/woman/クラスアルバム映えモビー.webp", alt: "クラスアルバム映えモビー" },
+            { id: "school-woman-03", name: "ストーリー匂わせモビー", image: "carousel/shcool/woman/ストーリー匂わせモビー.webp", alt: "ストーリー匂わせモビー" },
+            { id: "school-woman-04", name: "ストーリー撮影班モビー", image: "carousel/shcool/woman/ストーリー撮影班モビー.webp", alt: "ストーリー撮影班モビー" },
+            { id: "school-woman-05", name: "ネイルこだわりモビー", image: "carousel/shcool/woman/ネイルこだわりモビー .webp", alt: "ネイルこだわりモビー" },
+            { id: "school-woman-06", name: "プリクラ拡散モビー", image: "carousel/shcool/woman/プリクラ拡散モビー.webp", alt: "プリクラ拡散モビー" },
+            { id: "school-woman-07", name: "ロッカー手紙モビー", image: "carousel/shcool/woman/ロッカー手紙モビー.webp", alt: "ロッカー手紙モビー" },
+            { id: "school-woman-08", name: "匂わせプリクラモビー", image: "carousel/shcool/woman/匂わせプリクラモビー.webp", alt: "匂わせプリクラモビー" },
+            { id: "school-woman-09", name: "図書室まったりモビー", image: "carousel/shcool/woman/図書室まったりモビー.webp", alt: "図書室まったりモビー" },
+            { id: "school-woman-10", name: "屋上ひみつ恋モビー", image: "carousel/shcool/woman/屋上ひみつ恋モビー.webp", alt: "屋上ひみつ恋モビー" },
+            { id: "school-woman-11", name: "帰り道デートモビー", image: "carousel/shcool/woman/帰り道デートモビー.webp", alt: "帰り道デートモビー" },
+            { id: "school-woman-12", name: "放課後こっそり通話モビー", image: "carousel/shcool/woman/放課後こっそり通話モビー.webp", alt: "放課後こっそり通話モビー" },
+            { id: "school-woman-13", name: "放課後即レスモビー", image: "carousel/shcool/woman/放課後即レスモビー.webp", alt: "放課後即レスモビー" },
+            { id: "school-woman-14", name: "文化祭広報モビー", image: "carousel/shcool/woman/文化祭広報モビー.webp", alt: "文化祭広報モビー" },
+            { id: "school-woman-15", name: "昼休みお弁当会モビー", image: "carousel/shcool/woman/昼休みお弁当会モビー.webp", alt: "昼休みお弁当会モビー" },
+            { id: "school-woman-16", name: "購買前溜まり場モビー", image: "carousel/shcool/woman/購買前溜まり場モビー.webp", alt: "購買前溜まり場モビー" }
           ]
         }
       ];
@@ -6417,10 +6423,10 @@
     let heartNoteQuoteIndex = 0;
     const VOTE_STORAGE_KEY = 'mobby_vote_ranking_v1';
     const VOTE_CANDIDATES = [
-      { id: 'fact-yellow', name: 'もびりん', image: 'carousel/after/mobby_fact_man_toka.png' },
-      { id: 'gal', name: 'もびち', image: 'carousel/after/mobby_gal_toka.png' },
-      { id: 'yami-purple', name: '病みモビー', image: 'carousel/after/mobby_yami_toka.png' },
-      { id: 'yanki', name: 'もびやん', image: 'carousel/after/mobby_yanki_toak.png' }
+      { id: 'fact-yellow', name: 'もびりん', image: 'carousel/after/mobby_fact_man_toka.webp' },
+      { id: 'gal', name: 'もびち', image: 'carousel/after/mobby_gal_toka.webp' },
+      { id: 'yami-purple', name: '病みモビー', image: 'carousel/after/mobby_yami_toka.webp' },
+      { id: 'yanki', name: 'もびやん', image: 'carousel/after/mobby_yanki_toak.webp' }
     ];
 
     function getVoteState() {
@@ -6754,7 +6760,8 @@
         }
       };
       const cleanFileName = imagePath.split('/').pop();
-      const cleanNote = cleanNoteMap[cleanFileName] || {
+      const cleanNoteLookupKey = cleanFileName?.replace(/\.webp$/i, '.png') || cleanFileName;
+      const cleanNote = cleanNoteMap[cleanNoteLookupKey] || {
         pages: [{ title: '', body: 'このキャラのノートはまだ差し込み前です。ここに個別の文章を入れていけます。' }]
       };
       heartNotePages = cleanNote.pages || [];
@@ -7050,7 +7057,7 @@
         source: "16love",
         storageKey: "love_char_diag_v1",
         diagnosisUrl: "16love/index.html",
-        fallbackImage: "16love/img/key/量産型メンヘラモビー.png",
+        fallbackImage: "16love/img/key/量産型メンヘラモビー.webp",
         backImage: "16love/img/key/ura.jpg",
         resolveReady(data) {
           if (!data || typeof data !== "object") return false;
@@ -7078,7 +7085,7 @@
         },
         resolveImage(summary) {
           const diagnosisName = String(summary?.diagnosisName || "").trim();
-          return diagnosisName ? `16love/img/key/${diagnosisName}.png` : "16love/img/key/量産型メンヘラモビー.png";
+          return diagnosisName ? `16love/img/key/${diagnosisName}.webp` : "16love/img/key/量産型メンヘラモビー.webp";
         }
       },
       {
@@ -7087,7 +7094,7 @@
         source: "16stan",
         storageKey: "stan_char_diag_v1",
         diagnosisUrl: "16stan/index.html",
-        fallbackImage: "16stan/img/key/現場至上主義推しモビー.png",
+        fallbackImage: "16stan/img/key/現場至上主義推しモビー.webp",
         backImage: "16stan/img/key/ura.jpg",
         resolveReady(data) {
           if (!data || typeof data !== "object") return false;
@@ -7116,7 +7123,7 @@
         },
         resolveImage(summary) {
           const diagnosisName = String(summary?.diagnosisName || "").trim();
-          return diagnosisName ? `16stan/img/key/${diagnosisName}.png` : "16stan/img/key/現場至上主義推しモビー.png";
+          return diagnosisName ? `16stan/img/key/${diagnosisName}.webp` : "16stan/img/key/現場至上主義推しモビー.webp";
         }
       },
       {

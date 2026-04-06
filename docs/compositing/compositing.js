@@ -1,27 +1,68 @@
+const ROOM_TEMPLATE_SRC = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <defs>
+    <linearGradient id="wall" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f7efe4"/>
+      <stop offset="100%" stop-color="#eadcca"/>
+    </linearGradient>
+    <linearGradient id="floor" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#c58a57"/>
+      <stop offset="100%" stop-color="#8a5c38"/>
+    </linearGradient>
+    <linearGradient id="window" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#dff3ff"/>
+      <stop offset="100%" stop-color="#9fd0f1"/>
+    </linearGradient>
+  </defs>
+  <rect width="1080" height="760" fill="url(#wall)"/>
+  <rect y="760" width="1080" height="320" fill="url(#floor)"/>
+  <rect x="92" y="92" width="250" height="320" rx="20" fill="#fff7ee" stroke="#c9b39e" stroke-width="10"/>
+  <rect x="120" y="122" width="194" height="260" rx="12" fill="url(#window)"/>
+  <line x1="217" y1="122" x2="217" y2="382" stroke="#ffffff" stroke-width="8" opacity="0.85"/>
+  <line x1="120" y1="252" x2="314" y2="252" stroke="#ffffff" stroke-width="8" opacity="0.85"/>
+  <rect x="720" y="120" width="230" height="280" rx="24" fill="#fdf4eb" stroke="#d8bfaa" stroke-width="10"/>
+  <rect x="750" y="150" width="170" height="170" rx="18" fill="#ffd8e7"/>
+  <circle cx="835" cy="235" r="42" fill="#ff86ad"/>
+  <rect x="772" y="338" width="126" height="18" rx="9" fill="#c89e7f"/>
+  <rect x="620" y="618" width="310" height="70" rx="35" fill="#efe2d2"/>
+  <rect x="652" y="650" width="246" height="20" rx="10" fill="#d8c0ac"/>
+  <rect x="140" y="640" width="250" height="130" rx="24" fill="#d46e5e"/>
+  <rect x="170" y="612" width="80" height="48" rx="20" fill="#f3c4bb"/>
+  <rect x="268" y="612" width="80" height="48" rx="20" fill="#f3c4bb"/>
+  <ellipse cx="540" cy="842" rx="330" ry="62" fill="#5b3926" opacity="0.18"/>
+</svg>
+`)}`;
+
 const COMPOSITING_TEMPLATES = [
   {
     id: "mobby-fact",
     name: "もびりん",
-    description: "Fact template",
+    description: "通常テンプレ",
     src: "compositing/template/mobby_fact_compositing.jpg"
   },
   {
     id: "mobby-gal",
     name: "もびち",
-    description: "Gal template",
+    description: "通常テンプレ",
     src: "compositing/template/mobby_gal_compositing.jpg"
   },
   {
     id: "mobby-yami",
     name: "病みモビー",
-    description: "テンプレ右下に人物を重ねて配置",
+    description: "通常テンプレ",
     src: "compositing/template/mobby_yami_compositing.png"
   },
   {
     id: "mobby-yanki",
     name: "もびやん",
-    description: "Yanki template",
+    description: "通常テンプレ",
     src: "compositing/template/mobby_yanki_compositing.jpg"
+  },
+  {
+    id: "room-course",
+    name: "部屋コース",
+    description: "部屋に合成できるコース",
+    src: ROOM_TEMPLATE_SRC
   }
 ];
 
@@ -92,17 +133,19 @@ function setCompositingFlow(templateConfirmed) {
   const subtitleBody = document.querySelector('[data-compositing-body="subtitle"]');
   const scaleBlock = document.getElementById("compositingScaleBlock");
   const actions = document.getElementById("compositingActions");
+
   if (!templateConfirmed) {
     if (templateSection) templateSection.hidden = false;
     if (uploadSection) uploadSection.hidden = true;
     if (uploadBody) uploadBody.hidden = true;
     if (subtitleSection) subtitleSection.hidden = true;
     if (subtitleBody) subtitleBody.hidden = true;
-    setCompositingSection("template", true);
     if (scaleBlock) scaleBlock.hidden = true;
     if (actions) actions.hidden = true;
+    setCompositingSection("template", true);
     return;
   }
+
   if (templateSection) templateSection.hidden = true;
   if (uploadSection) uploadSection.hidden = false;
   if (uploadBody) uploadBody.hidden = false;
@@ -172,6 +215,7 @@ function renderCompositingPreview() {
   const canvas = getCompositingCanvas();
   const ctx = getCompositingContext();
   if (!canvas || !ctx) return;
+
   if (compositingState.templateImage) {
     const templateWidth = compositingState.templateImage.naturalWidth || compositingState.templateImage.width || canvas.width;
     const templateHeight = compositingState.templateImage.naturalHeight || compositingState.templateImage.height || canvas.height;
@@ -180,13 +224,17 @@ function renderCompositingPreview() {
       canvas.height = templateHeight;
     }
   }
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "#f6eee4";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
   if (compositingState.templateImage) {
     ctx.drawImage(compositingState.templateImage, 0, 0);
   }
+
   drawCompositingSubtitle(ctx, canvas);
+
   const rect = getSubjectPixelRect(canvas);
   if (compositingState.subjectCanvas && rect) {
     ctx.drawImage(compositingState.subjectCanvas, rect.x, rect.y, rect.width, rect.height);
@@ -200,6 +248,16 @@ function loadImage(src) {
     image.onerror = reject;
     image.src = src;
   });
+}
+
+function createImageCanvas(image) {
+  const canvas = document.createElement("canvas");
+  canvas.width = image.naturalWidth || image.width || 1;
+  canvas.height = image.naturalHeight || image.height || 1;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Canvas context unavailable.");
+  ctx.drawImage(image, 0, 0);
+  return canvas;
 }
 
 async function setActiveCompositingTemplate(templateId) {
@@ -235,6 +293,12 @@ function renderCompositingTemplates() {
 }
 
 function resetCompositingSubjectPosition() {
+  if (compositingState.templateId === "room-course") {
+    compositingState.subject.x = 0.45;
+    compositingState.subject.y = 0.42;
+    compositingState.subject.scale = Number(document.getElementById("compositingScale")?.value || 34) / 100;
+    return;
+  }
   compositingState.subject.x = 0.66;
   compositingState.subject.y = 0.67;
   compositingState.subject.scale = Number(document.getElementById("compositingScale")?.value || 30) / 100;
@@ -250,23 +314,27 @@ async function loadUserImage(file) {
   return loadImage(src);
 }
 
-async function handleCompositingUploadV2(file) {
+async function processCompositingFile(file, { removeBackground }) {
   if (!file) return;
-  setCompositingStatus("画像を処理しています...");
+  setCompositingStatus(removeBackground ? "画像の背景を処理しています..." : "画像を読み込んでいます...");
   setCompositingLoading(true);
+
   try {
     const image = await loadUserImage(file);
-    const segmentPerson = await getSegmentPerson();
-    compositingState.subjectCanvas = await segmentPerson(image);
+    compositingState.subjectCanvas = removeBackground
+      ? await (await getSegmentPerson())(image)
+      : createImageCanvas(image);
     resetCompositingSubjectPosition();
     renderCompositingPreview();
+
     const subtitleSection = document.querySelector('[data-compositing-section="subtitle"]');
     const scaleBlock = document.getElementById("compositingScaleBlock");
     const actions = document.getElementById("compositingActions");
     if (subtitleSection) subtitleSection.hidden = false;
     if (scaleBlock) scaleBlock.hidden = false;
     if (actions) actions.hidden = false;
-    setCompositingStatus("画像を配置しました。ドラッグで位置調整、スライダーでサイズ調整ができます。");
+
+    setCompositingStatus(removeBackground ? "背景を抜いて配置しました。ドラッグで位置調整できます。" : "画像をそのまま配置しました。ドラッグで位置調整できます。");
     setCompositingSection("subtitle", true);
   } catch (error) {
     console.error(error);
@@ -278,33 +346,22 @@ async function handleCompositingUploadV2(file) {
   }
 }
 
-async function handleCompositingUpload(file) {
-  if (!file) return;
-  setCompositingStatus("人物を抽出しています...");
-  try {
-    const image = await loadUserImage(file);
-    const segmentPerson = await getSegmentPerson();
-    compositingState.subjectCanvas = await segmentPerson(image);
-    resetCompositingSubjectPosition();
-    renderCompositingPreview();
-    setCompositingStatus("人物を抽出しました。ドラッグで位置調整、スライダーでサイズ調整ができます。");
-  } catch (error) {
-    console.error(error);
-    compositingState.subjectCanvas = null;
-    renderCompositingPreview();
-    setCompositingStatus(`人物抽出に失敗しました: ${error?.message || "unknown error"}`);
-  }
-}
-
 function initCompositingTool() {
   const canvas = getCompositingCanvas();
   const scaleInput = document.getElementById("compositingScale");
   const subtitleInput = document.getElementById("compositingSubtitle");
   const uploadButton = document.getElementById("compositingUploadButton");
+  const uploadOriginalButton = document.getElementById("compositingUploadOriginalButton");
+  const backButton = document.getElementById("compositingBackButton");
   const fileInput = document.getElementById("compositingFileInput");
   const downloadButton = document.getElementById("compositingDownloadButton");
   const templateConfirmButton = document.getElementById("compositingTemplateConfirmButton");
-  if (!canvas || !scaleInput || !subtitleInput || !uploadButton || !fileInput || !downloadButton || !templateConfirmButton) return;
+
+  if (!canvas || !scaleInput || !subtitleInput || !uploadButton || !uploadOriginalButton || !backButton || !fileInput || !downloadButton || !templateConfirmButton) {
+    return;
+  }
+
+  let pendingUploadMode = "remove";
 
   setCompositingLoading(false);
   setCompositingFlow(false);
@@ -325,6 +382,11 @@ function initCompositingTool() {
     setCompositingFlow(true);
   });
 
+  backButton.addEventListener("click", () => {
+    setCompositingFlow(false);
+    setCompositingStatus("テンプレートを選び直せます。");
+  });
+
   scaleInput.addEventListener("input", () => {
     compositingState.subject.scale = Number(scaleInput.value || 30) / 100;
     renderCompositingPreview();
@@ -335,10 +397,19 @@ function initCompositingTool() {
     renderCompositingPreview();
   });
 
-  uploadButton.addEventListener("click", () => fileInput.click());
+  uploadButton.addEventListener("click", () => {
+    pendingUploadMode = "remove";
+    fileInput.click();
+  });
+
+  uploadOriginalButton.addEventListener("click", () => {
+    pendingUploadMode = "keep";
+    fileInput.click();
+  });
+
   fileInput.addEventListener("change", async () => {
     const file = fileInput.files?.[0];
-    await handleCompositingUploadV2(file);
+    await processCompositingFile(file, { removeBackground: pendingUploadMode !== "keep" });
     fileInput.value = "";
   });
 
@@ -366,12 +437,16 @@ function initCompositingTool() {
     const rect = canvas.getBoundingClientRect();
     const px = ((event.clientX - rect.left) / rect.width) * canvas.width;
     const py = ((event.clientY - rect.top) / rect.height) * canvas.height;
-    if (px < subjectRect.x || py < subjectRect.y || px > subjectRect.x + subjectRect.width || py > subjectRect.y + subjectRect.height) return;
+    if (px < subjectRect.x || py < subjectRect.y || px > subjectRect.x + subjectRect.width || py > subjectRect.y + subjectRect.height) {
+      return;
+    }
     compositingState.dragPointerId = event.pointerId;
     compositingState.dragOffsetX = px - subjectRect.x;
     compositingState.dragOffsetY = py - subjectRect.y;
     canvas.classList.add("is-dragging");
-    try { canvas.setPointerCapture(event.pointerId); } catch (_) {}
+    try {
+      canvas.setPointerCapture(event.pointerId);
+    } catch (_) {}
   });
 
   canvas.addEventListener("pointermove", (event) => {
@@ -383,7 +458,9 @@ function initCompositingTool() {
     if (compositingState.dragPointerId !== event.pointerId) return;
     compositingState.dragPointerId = null;
     canvas.classList.remove("is-dragging");
-    try { canvas.releasePointerCapture(event.pointerId); } catch (_) {}
+    try {
+      canvas.releasePointerCapture(event.pointerId);
+    } catch (_) {}
   };
 
   canvas.addEventListener("pointerup", endDrag);
