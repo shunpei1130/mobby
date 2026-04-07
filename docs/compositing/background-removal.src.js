@@ -1,4 +1,4 @@
-import { FilesetResolver, ImageSegmenter } from "../node_modules/@mediapipe/tasks-vision/vision_bundle.mjs";
+import { FilesetResolver, ImageSegmenter } from "./vendor/tasks-vision/vision_bundle.mjs";
 
 function getScriptBaseUrl() {
   const currentScript = document.currentScript;
@@ -9,7 +9,7 @@ function getScriptBaseUrl() {
 }
 
 const SCRIPT_BASE_URL = getScriptBaseUrl();
-const WASM_ROOT = new URL("../node_modules/@mediapipe/tasks-vision/wasm", SCRIPT_BASE_URL).href;
+const WASM_ROOT = new URL("./vendor/tasks-vision/wasm", SCRIPT_BASE_URL).href;
 const MODEL_ASSET_PATH = new URL("./models/deeplabv3.tflite", SCRIPT_BASE_URL).href;
 
 let segmenterPromise = null;

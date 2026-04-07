@@ -4011,7 +4011,7 @@
     return new URL("./", window.location.href);
   }
   var SCRIPT_BASE_URL = getScriptBaseUrl();
-  var WASM_ROOT = new URL("../node_modules/@mediapipe/tasks-vision/wasm", SCRIPT_BASE_URL).href;
+  var WASM_ROOT = new URL("./vendor/tasks-vision/wasm", SCRIPT_BASE_URL).href;
   var MODEL_ASSET_PATH = new URL("./models/deeplabv3.tflite", SCRIPT_BASE_URL).href;
   var segmenterPromise = null;
   function ensureImageBitmapSource(input) {

@@ -47,7 +47,7 @@
   background-position: 0 0, 12px 12px;
   background-size: 24px 24px;
   border: 1px solid rgba(133, 101, 85, 0.14);
-  touch-action: none;
+  touch-action: pan-y pinch-zoom;
 }
 
 .compositing-canvas {
@@ -55,6 +55,7 @@
   width: 100%;
   height: auto;
   cursor: grab;
+  touch-action: pan-y pinch-zoom;
 }
 
 .compositing-canvas.is-dragging {
