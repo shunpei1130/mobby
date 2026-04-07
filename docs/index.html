@@ -4901,7 +4901,7 @@
           </div>
           <div class="compositing-head">
             <h2>画像合成</h2>
-            <p>背景を抜くかそのまま使うかを選んで、テンプレや部屋コースに配置できます。配置後はドラッグして位置調整できます。</p>
+            <p>背景を抜くかそのまま使うかを選んで、テンプレに配置できます。配置後はドラッグして位置調整できます。</p>
           </div>
           <div class="compositing-layout">
             <div class="compositing-stage-card">
@@ -5133,6 +5133,7 @@
 
   <!-- Matter.js -->
   <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="compositing/background-removal.js"></script>
   <script src="compositing/compositing.js"></script>
   <script>
@@ -6421,47 +6422,114 @@
     let heartNotePages = [];
     let heartNoteActiveTab = 'character';
     let heartNoteQuoteIndex = 0;
-    const VOTE_STORAGE_KEY = 'mobby_vote_ranking_v1';
+    const VOTE_SUPABASE_URL = 'https://jwigpieoyyqvvmlmaxtl.supabase.co';
+    const VOTE_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_kGUIKSR_7-5kulCSuNl5AA_YWjJ9DPJ';
+    const VOTE_SESSION_STORAGE_KEY = 'mobby_vote_session_id_v1';
     const VOTE_CANDIDATES = [
       { id: 'fact-yellow', name: 'もびりん', image: 'carousel/after/mobby_fact_man_toka.webp' },
       { id: 'gal', name: 'もびち', image: 'carousel/after/mobby_gal_toka.webp' },
       { id: 'yami-purple', name: '病みモビー', image: 'carousel/after/mobby_yami_toka.webp' },
       { id: 'yanki', name: 'もびやん', image: 'carousel/after/mobby_yanki_toak.webp' }
     ];
+    const voteSupabase = window.supabase?.createClient
+      ? window.supabase.createClient(VOTE_SUPABASE_URL, VOTE_SUPABASE_PUBLISHABLE_KEY)
+      : null;
+    let voteStateCache = createEmptyVoteState();
+    let voteFeedbackMessage = '';
+    let voteIsLoading = false;
+    let votePendingId = '';
 
-    function getVoteState() {
+    function createEmptyVoteState() {
+      return VOTE_CANDIDATES.reduce((acc, candidate) => {
+        acc[candidate.id] = 0;
+        return acc;
+      }, {});
+    }
+
+    function getVoteSessionId() {
+      const saved = localStorage.getItem(VOTE_SESSION_STORAGE_KEY);
+      if (saved) return saved;
+      const nextId = (window.crypto?.randomUUID?.() || `vote-${Date.now()}-${Math.random().toString(16).slice(2)}`);
+      localStorage.setItem(VOTE_SESSION_STORAGE_KEY, nextId);
+      return nextId;
+    }
+
+    async function fetchVoteState() {
+      if (!voteSupabase) {
+        throw new Error('Supabase client is not available.');
+      }
+      const { data, error } = await voteSupabase
+        .from('vote_totals')
+        .select('character_id, vote_count');
+      if (error) throw error;
+      const nextState = createEmptyVoteState();
+      (data || []).forEach((row) => {
+        if (row?.character_id in nextState) {
+          nextState[row.character_id] = Number(row.vote_count || 0);
+        }
+      });
+      return nextState;
+    }
+
+    async function syncVoteState(successMessage = '') {
+      voteIsLoading = true;
+      voteFeedbackMessage = '投票状況を読み込み中です...';
+      renderVotePopup();
       try {
-        const raw = localStorage.getItem(VOTE_STORAGE_KEY);
-        const parsed = raw ? JSON.parse(raw) : {};
-        return VOTE_CANDIDATES.reduce((acc, candidate) => {
-          acc[candidate.id] = Number(parsed?.[candidate.id] || 0);
-          return acc;
-        }, {});
-      } catch {
-        return VOTE_CANDIDATES.reduce((acc, candidate) => {
-          acc[candidate.id] = 0;
-          return acc;
-        }, {});
+        voteStateCache = await fetchVoteState();
+        voteFeedbackMessage = successMessage;
+      } catch (error) {
+        console.error('Failed to fetch votes:', error);
+        voteFeedbackMessage = '投票状況を取得できませんでした。時間をおいて再読み込みしてください。';
+      } finally {
+        voteIsLoading = false;
+        renderVotePopup();
       }
     }
 
-    function setVoteState(nextState) {
-      localStorage.setItem(VOTE_STORAGE_KEY, JSON.stringify(nextState));
+    async function submitVote(voteId) {
+      if (!voteSupabase) {
+        throw new Error('Supabase client is not available.');
+      }
+      const { error } = await voteSupabase
+        .from('votes')
+        .insert({
+          character_id: voteId,
+          session_id: getVoteSessionId()
+        });
+      if (error) throw error;
     }
 
-    function getVoteRanking(state = getVoteState()) {
+    function getVoteRanking(state = voteStateCache) {
       return VOTE_CANDIDATES
         .map((candidate) => ({ ...candidate, score: Number(state[candidate.id] || 0) }))
         .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name, 'ja'));
     }
 
-    function renderVotePopup(feedbackMessage = '') {
+    async function handleVoteSubmit(voteId) {
+      const voted = VOTE_CANDIDATES.find((candidate) => candidate.id === voteId);
+      votePendingId = voteId;
+      voteFeedbackMessage = '投票中です...';
+      renderVotePopup();
+      try {
+        await submitVote(voteId);
+        await syncVoteState(voted ? `${voted.name} に1票入りました。` : '1票入りました。');
+      } catch (error) {
+        console.error('Failed to submit vote:', error);
+        voteFeedbackMessage = '投票に失敗しました。時間をおいてもう一度試してください。';
+      } finally {
+        votePendingId = '';
+        renderVotePopup();
+      }
+    }
+
+    function renderVotePopup() {
       const voteGrid = document.getElementById('voteGrid');
       const voteRankingList = document.getElementById('voteRankingList');
       const voteFeedback = document.getElementById('voteFeedback');
       if (!voteGrid || !voteRankingList || !voteFeedback) return;
 
-      const state = getVoteState();
+      const state = voteStateCache;
       const ranking = getVoteRanking(state);
       const rankMap = ranking.reduce((acc, item, index) => {
         acc[item.id] = index + 1;
@@ -6477,7 +6545,7 @@
           <div class="vote-card-body">
             <div class="vote-card-name">${candidate.name}</div>
             <div class="vote-card-points">${state[candidate.id] || 0} pt</div>
-            <button class="vote-submit-btn" type="button" data-vote-id="${candidate.id}">投票する</button>
+            <button class="vote-submit-btn" type="button" data-vote-id="${candidate.id}" ${voteIsLoading || votePendingId ? 'disabled' : ''}>${votePendingId === candidate.id ? '投票中...' : '投票する'}</button>
           </div>
         </article>
       `).join('');
@@ -6490,17 +6558,13 @@
         </div>
       `).join('');
 
-      voteFeedback.textContent = feedbackMessage;
+      voteFeedback.textContent = voteFeedbackMessage;
 
       voteGrid.querySelectorAll('[data-vote-id]').forEach((button) => {
         button.addEventListener('click', () => {
           const voteId = button.getAttribute('data-vote-id');
-          if (!voteId) return;
-          const nextState = getVoteState();
-          nextState[voteId] = Number(nextState[voteId] || 0) + 1;
-          setVoteState(nextState);
-          const voted = VOTE_CANDIDATES.find((candidate) => candidate.id === voteId);
-          renderVotePopup(voted ? `${voted.name} に1票入りました。` : '1票入りました。');
+          if (!voteId || voteIsLoading || votePendingId) return;
+          handleVoteSubmit(voteId);
         });
       });
     }
@@ -6880,9 +6944,10 @@
     });
     document.getElementById('openFaqPopup')?.addEventListener('click', () => openPopup('faqPopup'));
     document.getElementById('openEncyclopediaPopup')?.addEventListener('click', () => openPopup('encyclopediaPopup'));
-    document.getElementById('openVotePopup')?.addEventListener('click', () => {
+    document.getElementById('openVotePopup')?.addEventListener('click', async () => {
       renderVotePopup();
       openPopup('votePopup');
+      await syncVoteState();
     });
     document.getElementById('openCompositingPopup')?.addEventListener('click', () => {
       openPopup('compositingPopup');

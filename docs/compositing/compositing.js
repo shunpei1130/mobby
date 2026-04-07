@@ -1,38 +1,3 @@
-const ROOM_TEMPLATE_SRC = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
-  <defs>
-    <linearGradient id="wall" x1="0" x2="0" y1="0" y2="1">
-      <stop offset="0%" stop-color="#f7efe4"/>
-      <stop offset="100%" stop-color="#eadcca"/>
-    </linearGradient>
-    <linearGradient id="floor" x1="0" x2="1" y1="0" y2="1">
-      <stop offset="0%" stop-color="#c58a57"/>
-      <stop offset="100%" stop-color="#8a5c38"/>
-    </linearGradient>
-    <linearGradient id="window" x1="0" x2="0" y1="0" y2="1">
-      <stop offset="0%" stop-color="#dff3ff"/>
-      <stop offset="100%" stop-color="#9fd0f1"/>
-    </linearGradient>
-  </defs>
-  <rect width="1080" height="760" fill="url(#wall)"/>
-  <rect y="760" width="1080" height="320" fill="url(#floor)"/>
-  <rect x="92" y="92" width="250" height="320" rx="20" fill="#fff7ee" stroke="#c9b39e" stroke-width="10"/>
-  <rect x="120" y="122" width="194" height="260" rx="12" fill="url(#window)"/>
-  <line x1="217" y1="122" x2="217" y2="382" stroke="#ffffff" stroke-width="8" opacity="0.85"/>
-  <line x1="120" y1="252" x2="314" y2="252" stroke="#ffffff" stroke-width="8" opacity="0.85"/>
-  <rect x="720" y="120" width="230" height="280" rx="24" fill="#fdf4eb" stroke="#d8bfaa" stroke-width="10"/>
-  <rect x="750" y="150" width="170" height="170" rx="18" fill="#ffd8e7"/>
-  <circle cx="835" cy="235" r="42" fill="#ff86ad"/>
-  <rect x="772" y="338" width="126" height="18" rx="9" fill="#c89e7f"/>
-  <rect x="620" y="618" width="310" height="70" rx="35" fill="#efe2d2"/>
-  <rect x="652" y="650" width="246" height="20" rx="10" fill="#d8c0ac"/>
-  <rect x="140" y="640" width="250" height="130" rx="24" fill="#d46e5e"/>
-  <rect x="170" y="612" width="80" height="48" rx="20" fill="#f3c4bb"/>
-  <rect x="268" y="612" width="80" height="48" rx="20" fill="#f3c4bb"/>
-  <ellipse cx="540" cy="842" rx="330" ry="62" fill="#5b3926" opacity="0.18"/>
-</svg>
-`)}`;
-
 const COMPOSITING_TEMPLATES = [
   {
     id: "mobby-fact",
@@ -57,12 +22,6 @@ const COMPOSITING_TEMPLATES = [
     name: "もびやん",
     description: "通常テンプレ",
     src: "compositing/template/mobby_yanki_compositing.jpg"
-  },
-  {
-    id: "room-course",
-    name: "部屋コース",
-    description: "部屋に合成できるコース",
-    src: ROOM_TEMPLATE_SRC
   }
 ];
 
@@ -293,12 +252,6 @@ function renderCompositingTemplates() {
 }
 
 function resetCompositingSubjectPosition() {
-  if (compositingState.templateId === "room-course") {
-    compositingState.subject.x = 0.45;
-    compositingState.subject.y = 0.42;
-    compositingState.subject.scale = Number(document.getElementById("compositingScale")?.value || 34) / 100;
-    return;
-  }
   compositingState.subject.x = 0.66;
   compositingState.subject.y = 0.67;
   compositingState.subject.scale = Number(document.getElementById("compositingScale")?.value || 30) / 100;
