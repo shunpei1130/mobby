@@ -393,6 +393,7 @@ function initCompositingTool() {
     if (px < subjectRect.x || py < subjectRect.y || px > subjectRect.x + subjectRect.width || py > subjectRect.y + subjectRect.height) {
       return;
     }
+    event.preventDefault();
     compositingState.dragPointerId = event.pointerId;
     compositingState.dragOffsetX = px - subjectRect.x;
     compositingState.dragOffsetY = py - subjectRect.y;
@@ -404,6 +405,7 @@ function initCompositingTool() {
 
   canvas.addEventListener("pointermove", (event) => {
     if (compositingState.dragPointerId !== event.pointerId) return;
+    event.preventDefault();
     updatePositionFromPointer(event.clientX, event.clientY);
   });
 
@@ -418,6 +420,11 @@ function initCompositingTool() {
 
   canvas.addEventListener("pointerup", endDrag);
   canvas.addEventListener("pointercancel", endDrag);
+  canvas.addEventListener("touchmove", (event) => {
+    if (compositingState.dragPointerId !== null) {
+      event.preventDefault();
+    }
+  }, { passive: false });
   renderCompositingPreview();
 }
 
