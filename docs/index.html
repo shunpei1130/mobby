@@ -2688,16 +2688,20 @@
       background: rgba(255, 255, 255, 0.92);
       border: 1px solid rgba(47, 79, 79, 0.12);
       border-radius: 24px;
-      overflow: hidden;
+      overflow: visible;
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.92),
         0 16px 32px rgba(47, 79, 79, 0.08);
     }
 
+    .vote-card-image {
+      border-radius: 24px 24px 0 0;
+    }
+
     .vote-rank-badge {
       position: absolute;
-      top: 12px;
-      left: 12px;
+      top: -12px;
+      left: -12px;
       z-index: 2;
       min-width: 54px;
       padding: 6px 10px;
@@ -6531,14 +6535,10 @@
 
       const state = voteStateCache;
       const ranking = getVoteRanking(state);
-      const rankMap = ranking.reduce((acc, item, index) => {
-        acc[item.id] = index + 1;
-        return acc;
-      }, {});
 
-      voteGrid.innerHTML = VOTE_CANDIDATES.map((candidate) => `
+      voteGrid.innerHTML = ranking.map((candidate, index) => `
         <article class="vote-card">
-          <div class="vote-rank-badge">#${rankMap[candidate.id]}</div>
+          <div class="vote-rank-badge">#${index + 1}</div>
           <div class="vote-card-image">
             <img src="${candidate.image}" alt="${candidate.name}" loading="lazy">
           </div>
