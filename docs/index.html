@@ -194,71 +194,188 @@
       text-shadow: 0 2px 10px rgba(84, 59, 39, 0.12);
     }
 
-    .splash-word {
+    .splash-logo-shell {
       position: absolute;
-      top: 48%;
+      top: 50%;
       left: 50%;
-      display: flex;
-      gap: clamp(8px, 1vw, 18px);
+      width: min(86vw, 1240px);
       transform: translate(-50%, -50%);
       z-index: 4;
-      perspective: 1200px;
+      pointer-events: none;
+      filter:
+        drop-shadow(0 0 24px rgba(255, 255, 255, 0.92))
+        drop-shadow(0 22px 36px rgba(79, 71, 63, 0.16));
+      animation: splashLogoAppear 0.45s ease-out both;
+    }
+
+    .splash-logo-frame {
+      position: relative;
+      width: 100%;
+    }
+
+    .splash-logo-mask {
+      position: absolute;
+      inset: 0;
+      -webkit-mask-image: url("mobby_logo2.png");
+      mask-image: url("mobby_logo2.png");
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-position: center;
+      mask-position: center;
+      -webkit-mask-size: contain;
+      mask-size: contain;
       pointer-events: none;
     }
 
-    .splash-letter {
+    .splash-logo-img {
       display: block;
-      font-family: 'Montserrat', sans-serif;
-      font-size: clamp(4.8rem, 11vw, 9.4rem);
-      font-weight: 900;
-      line-height: 0.92;
-      letter-spacing: -0.08em;
-      text-shadow: 0 6px 16px rgba(120, 81, 44, 0.08);
-      transform-origin: center 72%;
-      animation: splashRollIn var(--roll-duration, 1.25s) cubic-bezier(0.2, 0.9, 0.22, 1) both;
-      animation-delay: var(--roll-delay, 0s);
+      width: 100%;
+      height: auto;
+      opacity: 0;
+      animation: splashLogoSettle 0.01s linear 2.1s forwards;
     }
 
-    .splash-letter:nth-child(1) { color: #ff3e9a; --roll-delay: 0.02s; --roll-duration: 1.06s; }
-    .splash-letter:nth-child(2) { color: #1f78e8; --roll-delay: 0.18s; --roll-duration: 1.34s; }
-    .splash-letter:nth-child(3) { color: #702dbb; --roll-delay: 0.34s; --roll-duration: 1.18s; }
-    .splash-letter:nth-child(4) { color: #ffca1f; --roll-delay: 0.50s; --roll-duration: 1.42s; }
-    .splash-letter:nth-child(5) { color: #0d9ca4; --roll-delay: 0.66s; --roll-duration: 1.12s; }
-
-    #splash-screen.is-bursting .splash-letter {
-      animation: splashBurst 0.78s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-      animation-delay: calc(var(--letter-index) * 0.04s);
+    .splash-logo-reveal {
+      position: absolute;
+      inset: 0;
+      background: url("mobby_logo2.png") center / contain no-repeat;
+      clip-path: inset(0 100% 0 0);
+      animation: splashLogoReveal 2.1s cubic-bezier(0.22, 1, 0.36, 1) 0.18s forwards;
     }
 
-    @keyframes splashRollIn {
+    .splash-logo-glow {
+      background:
+        radial-gradient(circle at 18% 50%, rgba(255, 105, 180, 0.22), transparent 20%),
+        radial-gradient(circle at 38% 52%, rgba(55, 110, 255, 0.18), transparent 15%),
+        radial-gradient(circle at 55% 48%, rgba(126, 52, 214, 0.2), transparent 16%),
+        radial-gradient(circle at 73% 46%, rgba(255, 214, 51, 0.24), transparent 18%),
+        radial-gradient(circle at 90% 56%, rgba(0, 170, 159, 0.22), transparent 20%);
+      mix-blend-mode: screen;
+      filter: blur(18px);
+      opacity: 0;
+      animation: splashGlowBloom 1.2s ease-out 0.35s forwards;
+    }
+
+    .splash-logo-trace {
+      inset: -4% -2%;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.26) 0%,
+          rgba(255, 255, 255, 0.16) 24%,
+          rgba(255, 255, 255, 0.06) 42%,
+          rgba(255, 255, 255, 0) 58%
+        ) top center / 100% 58% no-repeat,
+        linear-gradient(
+          100deg,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.18) 28%,
+          rgba(255, 255, 255, 0.98) 50%,
+          rgba(255, 255, 255, 0.22) 72%,
+          rgba(255, 255, 255, 0) 100%
+        ) -38% 8% / 34% 34% no-repeat;
+      filter: blur(7px);
+      opacity: 0;
+      animation: splashLogoTrace 2s cubic-bezier(0.22, 1, 0.36, 1) 0.22s forwards;
+    }
+
+    #splash-screen.is-bursting .splash-logo-shell {
+      animation: splashLogoBurst 0.78s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    #splash-screen.is-bursting .instruction {
+      animation: splashInstructionFade 0.35s ease forwards;
+    }
+
+    @keyframes splashLogoAppear {
       0% {
         opacity: 0;
-        transform: translate3d(calc(72vw + var(--roll-x, 0px)), 0, 0) rotate(880deg) scale(0.3);
-      }
-
-      68% {
-        opacity: 1;
-        transform: translate3d(calc(-2vw + var(--settle-x, 0px)), 0, 0) rotate(-18deg) scale(1.06);
+        transform: translate(-50%, -50%) scale(0.94);
       }
 
       100% {
         opacity: 1;
-        transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+        transform: translate(-50%, -50%) scale(1);
       }
     }
 
-    @keyframes splashBurst {
+    @keyframes splashLogoReveal {
       0% {
+        clip-path: inset(0 100% 0 0);
+      }
+
+      100% {
+        clip-path: inset(0 0 0 0);
+      }
+    }
+
+    @keyframes splashLogoSettle {
+      from {
+        opacity: 0;
+      }
+
+      to {
         opacity: 1;
-        transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+      }
+    }
+
+    @keyframes splashGlowBloom {
+      0% {
+        opacity: 0;
+        transform: scale(0.92);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes splashLogoTrace {
+      0% {
+        opacity: 0;
+        background-position: center top, -38% 8%;
+      }
+
+      8% {
+        opacity: 1;
+      }
+
+      78% {
+        opacity: 1;
       }
 
       100% {
         opacity: 0;
-        transform:
-          translate3d(calc(var(--burst-x) * 1px), calc(var(--burst-y) * 1px), 0)
-          rotate(calc(var(--burst-rotate) * 1deg))
-          scale(0.42);
+        background-position: center top, 132% 8%;
+      }
+    }
+
+    @keyframes splashLogoBurst {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+        filter:
+          drop-shadow(0 0 24px rgba(255, 255, 255, 0.92))
+          drop-shadow(0 22px 36px rgba(79, 71, 63, 0.16));
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -62%) scale(0.88);
+        filter:
+          drop-shadow(0 0 44px rgba(255, 255, 255, 0.98))
+          drop-shadow(0 36px 60px rgba(79, 71, 63, 0.08));
+      }
+    }
+
+    @keyframes splashInstructionFade {
+      from {
+        opacity: 1;
+      }
+
+      to {
+        opacity: 0;
       }
     }
 
@@ -276,50 +393,40 @@
     /* モビータイトル */
     .mobby-title {
       text-align: center;
-      font-size: clamp(6.2rem, 5vw, 4.5rem);
-      font-weight: 900;
-      font-family: 'Montserrat', sans-serif;
-      padding-top: 30px;
-      padding-bottom: 2px;
-      opacity: 0.95;
-      line-height: 1;
-      display: flex;
-      justify-content: center;
-      gap: 0.02em;
-      letter-spacing: 0.08em;
-      text-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.75),
-        0 8px 18px rgba(72, 93, 126, 0.12);
+      padding-top: 22px;
+      padding-bottom: 0;
+      overflow: hidden;
     }
 
-    .mobby-title-letter {
-      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    .mobby-title img {
+      display: block;
+      width: min(54vw, 470px);
+      clip-path: inset(14% 6% 16% 6%);
+      margin: -10% auto -12%;
     }
-
-    .mobby-title-letter-y {
-      cursor: pointer;
-      transform-origin: center;
-    }
-
-    .mobby-title-letter-y.is-rolling {
-      transform: translate(30px, 40px) rotate(96deg);
-    }
-
-    .mobby-title-letter:nth-child(1) { color: #ff3e9a; }
-    .mobby-title-letter:nth-child(2) { color: #1f78e8; }
-    .mobby-title-letter:nth-child(3) { color: #702dbb; }
-    .mobby-title-letter:nth-child(4) { color: #ffca1f; }
-    .mobby-title-letter:nth-child(5) { color: #0d9ca4; }
 
     @media (max-width: 768px) {
       .mobby-title {
-        font-size: clamp(3.2rem, 6vw, 3.5rem);
-        padding-top: 18px;
-        padding-bottom: 2px;
+        padding-top: 14px;
+        padding-bottom: 0;
       }
 
-      .mobby-title-letter-y.is-rolling {
-        transform: translate(14px, 24px) rotate(94deg);
+      .mobby-title img {
+        width: min(74vw, 360px);
+        clip-path: inset(12% 4% 14% 4%);
+        margin: -8% auto -10%;
+      }
+    }
+
+    @media (min-width: 769px) and (max-width: 1100px) {
+      .mobby-title {
+        padding-top: 18px;
+      }
+
+      .mobby-title img {
+        width: min(60vw, 430px);
+        clip-path: inset(12% 5% 14% 5%);
+        margin: -4% auto -4%;
       }
     }
 
@@ -335,6 +442,9 @@
     }
 
     .headline {
+      display: block;
+      margin-top: -18px;
+      margin-bottom: 0;
       color: #111;
       text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8), 0 6px 14px rgba(0, 0, 0, 0.08);
     }
@@ -622,6 +732,13 @@
       }
     }
 
+    @media (min-width: 769px) and (max-width: 1100px) {
+      .headline {
+        margin-top: 0;
+        padding: 0 20px;
+      }
+    }
+
     @keyframes float {
 
       0%,
@@ -754,7 +871,7 @@
     /* ===== Hero Image ===== */
     .hero-carousel-shell {
       width: min(420px, 96vw);
-      margin: -12px auto 10px;
+      margin: -26px auto 10px;
       position: relative;
     }
 
@@ -796,15 +913,7 @@
     }
 
     .hero-model-slide::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image: var(--hero-image);
-      background-repeat: no-repeat;
-      background-position: center bottom;
-      background-size: contain;
-      filter: drop-shadow(0 10px 20px rgba(73, 54, 37, 0.12));
-      pointer-events: none;
+      content: none;
     }
 
     .hero-model-slide.is-active {
@@ -817,10 +926,15 @@
 
     .hero-model-viewer {
       position: absolute;
-      width: 1px;
-      height: 1px;
-      opacity: 0;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center bottom;
+      filter: drop-shadow(0 10px 20px rgba(73, 54, 37, 0.12));
       pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
     }
 
     .hero-character-row {
@@ -830,6 +944,12 @@
       grid-template-columns: 56px minmax(0, 1fr) 56px;
       align-items: center;
       gap: 12px;
+    }
+
+    @media (min-width: 769px) and (max-width: 1100px) {
+      .hero-character-row {
+        margin-bottom: 56px;
+      }
     }
 
     .hero-character-name {
@@ -1004,6 +1124,16 @@
 
       .hero-model-viewer {
         height: 100%;
+      }
+    }
+
+    @media (min-width: 769px) and (max-width: 1100px) {
+      .gacha-btn-wrap {
+        margin-bottom: 12px;
+      }
+
+      .hero-carousel-shell {
+        margin-top: 0;
       }
     }
 
@@ -2299,6 +2429,41 @@
       padding: 16px 0 10px;
     }
 
+    @media (min-width: 769px) and (max-width: 1100px) {
+      .popup-buttons-bar {
+        margin-top: 28px;
+        padding-top: 8px;
+      }
+
+      .popup-buttons {
+        width: min(420px, 92vw) !important;
+      }
+
+      .gift-fan-menu {
+        top: 0 !important;
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="price"] {
+        transform: translate(0, -34px) scale(1.02) !important;
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="faq"] {
+        transform: translate(272px, -34px) scale(1.02) !important;
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="encyclopedia"] {
+        transform: translate(136px, -34px) scale(1.02) !important;
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="vote"] {
+        transform: translate(204px, -34px) scale(1.02) !important;
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="compositing"] {
+        transform: translate(68px, -34px) scale(1.02) !important;
+      }
+    }
+
     .gacha-btn-wrap,
     #mobbyDiagnosisWrapper {
       display: none !important;
@@ -2918,6 +3083,18 @@
         width: 16px;
         height: 16px;
         background-size: 10px 10px;
+      }
+    }
+
+    @media (min-width: 700px) and (max-width: 768px) {
+      .hero-character-row {
+        margin-bottom: 52px;
+      }
+    }
+
+    @media (min-width: 520px) and (max-width: 699px) {
+      .hero-character-row {
+        margin-bottom: 58px;
       }
     }
 
@@ -3607,6 +3784,72 @@
         flex: 1;
         font-size: 0.86rem;
         margin: 0;
+      }
+    }
+
+    @media (min-width: 700px) and (max-width: 768px) {
+      .popup-buttons-bar {
+        margin-top: 24px;
+      }
+
+      .gift-fan-menu {
+        top: 2px;
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="price"] {
+        transform: translate(0, -30px) scale(1.02);
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="faq"] {
+        transform: translate(232px, -30px) scale(1.02);
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="encyclopedia"] {
+        transform: translate(116px, -30px) scale(1.02);
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="vote"] {
+        transform: translate(174px, -30px) scale(1.02);
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="compositing"] {
+        transform: translate(58px, -30px) scale(1.02);
+      }
+    }
+
+    @media (min-width: 520px) and (max-width: 699px) {
+      .popup-buttons-bar {
+        margin-top: 28px;
+      }
+
+      .popup-buttons {
+        width: min(380px, calc(100vw - 28px));
+        padding-left: 36px;
+        gap: 8px;
+      }
+
+      .gift-fan-menu {
+        top: 4px;
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="price"] {
+        transform: translate(0, -24px) scale(1);
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="faq"] {
+        transform: translate(232px, -24px) scale(1);
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="encyclopedia"] {
+        transform: translate(116px, -24px) scale(1);
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="vote"] {
+        transform: translate(174px, -24px) scale(1);
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="compositing"] {
+        transform: translate(58px, -24px) scale(1);
       }
     }
 
@@ -4474,24 +4717,21 @@
 <body>
   <!-- Splash -->
   <div id="splash-screen">
-    <div class="splash-word" aria-hidden="true">
-      <span class="splash-letter" style="--letter-index:0; --roll-x: 20px; --settle-x: -2px;">M</span>
-      <span class="splash-letter" style="--letter-index:1; --roll-x: 120px; --settle-x: 4px;">o</span>
-      <span class="splash-letter" style="--letter-index:2; --roll-x: 56px; --settle-x: -3px;">b</span>
-      <span class="splash-letter" style="--letter-index:3; --roll-x: 168px; --settle-x: 3px;">b</span>
-      <span class="splash-letter" style="--letter-index:4; --roll-x: 88px; --settle-x: -1px;">y</span>
+    <div class="splash-logo-shell" aria-hidden="true">
+      <div class="splash-logo-frame">
+        <div class="splash-logo-mask splash-logo-glow"></div>
+        <div class="splash-logo-reveal"></div>
+        <div class="splash-logo-mask splash-logo-trace"></div>
+        <img class="splash-logo-img" src="mobby_logo2.png" alt="Mobby logo" />
+      </div>
     </div>
     <div class="instruction">TAP!</div>
   </div>
 
   <div id="main-content">
-    <div class="mobby-title" aria-label="Mobby">
-      <span class="mobby-title-letter">M</span>
-      <span class="mobby-title-letter">o</span>
-      <span class="mobby-title-letter">b</span>
-      <span class="mobby-title-letter">b</span>
-      <span class="mobby-title-letter mobby-title-letter-y is-rolling" id="mobbyTitleY">y</span>
-    </div>
+      <div class="mobby-title" aria-label="Mobby">
+        <img src="mobby_logo2.png" alt="Mobby" />
+      </div>
     <h1 class="headline reveal delay-200">心の沈黙に耳を澄ませる</h1>
     <section class="hero">
       <div class="container reveal">
@@ -5834,15 +6074,7 @@
     }
 
     if (!shouldSkipSplash && splashElement) {
-      const splashLetters = Array.from(splashElement.querySelectorAll('.splash-letter'));
       let splashDone = false;
-
-      splashLetters.forEach((letter, index) => {
-        const direction = index - (splashLetters.length - 1) / 2;
-        letter.style.setProperty('--burst-x', String(direction * 110 + (Math.random() * 70 - 35)));
-        letter.style.setProperty('--burst-y', String(-170 - Math.random() * 140));
-        letter.style.setProperty('--burst-rotate', String(direction * 95 + (Math.random() * 120 - 60)));
-      });
 
       const exitSplash = () => {
         if (splashDone) return;
@@ -6409,7 +6641,6 @@
     const heartNoteInline = document.getElementById('heartNoteInline');
     const popupButtons = document.querySelector('.popup-buttons');
     const popupButtonsBar = document.querySelector('.popup-buttons-bar');
-    const mobbyTitleY = document.getElementById('mobbyTitleY');
     const giftFanMenu = document.getElementById('giftFanMenu');
     const giftFanToggle = document.getElementById('giftFanToggle');
     const giftFanActions = Array.from(document.querySelectorAll('#giftFanMenu .gift-fan-action'));
@@ -6917,9 +7148,6 @@
         }
       }, { once: true });
     }
-    mobbyTitleY?.addEventListener('click', () => {
-      mobbyTitleY.classList.remove('is-rolling');
-    });
     document.getElementById('openMessagePopup')?.addEventListener('click', () => openPopup('messagePopup'));
     diagnosisFanTrigger?.addEventListener('click', (e) => {
       e.preventDefault();
