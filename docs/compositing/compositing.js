@@ -22,6 +22,30 @@ const COMPOSITING_TEMPLATES = [
     name: "もびやん",
     description: "通常テンプレ",
     src: "compositing/template/mobby_yanki_compositing.jpg"
+  },
+  {
+    id: "mobby-template1",
+    name: "template1",
+    description: "new template",
+    src: "compositing/template/mobby_template1.png"
+  },
+  {
+    id: "mobby-inthebeach",
+    name: "inthebeach",
+    description: "new template",
+    src: "compositing/template/mobby_inthebeach.png"
+  },
+  {
+    id: "mobby-onthebuilding",
+    name: "onthebuilding",
+    description: "new template",
+    src: "compositing/template/mobby_onthebuilding.png"
+  },
+  {
+    id: "mobby-onthepinkbuilding",
+    name: "onthepinkbuilding",
+    description: "new template",
+    src: "compositing/template/mobby_onthepinkbuilding.png"
   }
 ];
 
@@ -29,7 +53,6 @@ const compositingState = {
   templateId: COMPOSITING_TEMPLATES[0]?.id || "",
   templateImage: null,
   subjectCanvas: null,
-  subtitle: "",
   dragPointerId: null,
   dragOffsetX: 0,
   dragOffsetY: 0,
@@ -84,12 +107,10 @@ function setCompositingSection(sectionId, open) {
   });
 }
 
-function setCompositingFlow(templateConfirmed) {
+function setCompositingFlow(templateConfirmed, subjectReady = false) {
   const templateSection = document.querySelector('[data-compositing-section="template"]');
   const uploadSection = document.querySelector('[data-compositing-section="upload"]');
   const uploadBody = document.querySelector('[data-compositing-body="upload"]');
-  const subtitleSection = document.querySelector('[data-compositing-section="subtitle"]');
-  const subtitleBody = document.querySelector('[data-compositing-body="subtitle"]');
   const scaleBlock = document.getElementById("compositingScaleBlock");
   const actions = document.getElementById("compositingActions");
 
@@ -97,8 +118,6 @@ function setCompositingFlow(templateConfirmed) {
     if (templateSection) templateSection.hidden = false;
     if (uploadSection) uploadSection.hidden = true;
     if (uploadBody) uploadBody.hidden = true;
-    if (subtitleSection) subtitleSection.hidden = true;
-    if (subtitleBody) subtitleBody.hidden = true;
     if (scaleBlock) scaleBlock.hidden = true;
     if (actions) actions.hidden = true;
     setCompositingSection("template", true);
@@ -108,10 +127,8 @@ function setCompositingFlow(templateConfirmed) {
   if (templateSection) templateSection.hidden = true;
   if (uploadSection) uploadSection.hidden = false;
   if (uploadBody) uploadBody.hidden = false;
-  if (subtitleSection) subtitleSection.hidden = false;
-  if (subtitleBody) subtitleBody.hidden = true;
-  if (scaleBlock) scaleBlock.hidden = true;
-  if (actions) actions.hidden = true;
+  if (scaleBlock) scaleBlock.hidden = !subjectReady;
+  if (actions) actions.hidden = !subjectReady;
 }
 
 function clamp(value, min, max) {
@@ -191,8 +208,6 @@ function renderCompositingPreview() {
   if (compositingState.templateImage) {
     ctx.drawImage(compositingState.templateImage, 0, 0);
   }
-
-  drawCompositingSubtitle(ctx, canvas);
 
   const rect = getSubjectPixelRect(canvas);
   if (compositingState.subjectCanvas && rect) {
@@ -280,18 +295,13 @@ async function processCompositingFile(file, { removeBackground }) {
     resetCompositingSubjectPosition();
     renderCompositingPreview();
 
-    const subtitleSection = document.querySelector('[data-compositing-section="subtitle"]');
-    const scaleBlock = document.getElementById("compositingScaleBlock");
-    const actions = document.getElementById("compositingActions");
-    if (subtitleSection) subtitleSection.hidden = false;
-    if (scaleBlock) scaleBlock.hidden = false;
-    if (actions) actions.hidden = false;
+    setCompositingFlow(true, true);
 
     setCompositingStatus(removeBackground ? "背景を抜いて配置しました。ドラッグで位置調整できます。" : "画像をそのまま配置しました。ドラッグで位置調整できます。");
-    setCompositingSection("subtitle", true);
   } catch (error) {
     console.error(error);
     compositingState.subjectCanvas = null;
+    setCompositingFlow(true, false);
     renderCompositingPreview();
     setCompositingStatus(`画像の処理に失敗しました: ${error?.message || "unknown error"}`);
   } finally {
@@ -302,7 +312,6 @@ async function processCompositingFile(file, { removeBackground }) {
 function initCompositingTool() {
   const canvas = getCompositingCanvas();
   const scaleInput = document.getElementById("compositingScale");
-  const subtitleInput = document.getElementById("compositingSubtitle");
   const uploadButton = document.getElementById("compositingUploadButton");
   const uploadOriginalButton = document.getElementById("compositingUploadOriginalButton");
   const backButton = document.getElementById("compositingBackButton");
@@ -310,7 +319,7 @@ function initCompositingTool() {
   const downloadButton = document.getElementById("compositingDownloadButton");
   const templateConfirmButton = document.getElementById("compositingTemplateConfirmButton");
 
-  if (!canvas || !scaleInput || !subtitleInput || !uploadButton || !uploadOriginalButton || !backButton || !fileInput || !downloadButton || !templateConfirmButton) {
+  if (!canvas || !scaleInput || !uploadButton || !uploadOriginalButton || !backButton || !fileInput || !downloadButton || !templateConfirmButton) {
     return;
   }
 
@@ -332,21 +341,18 @@ function initCompositingTool() {
   });
 
   templateConfirmButton.addEventListener("click", () => {
-    setCompositingFlow(true);
+    setCompositingFlow(true, false);
   });
 
   backButton.addEventListener("click", () => {
+    compositingState.subjectCanvas = null;
     setCompositingFlow(false);
+    renderCompositingPreview();
     setCompositingStatus("テンプレートを選び直せます。");
   });
 
   scaleInput.addEventListener("input", () => {
     compositingState.subject.scale = Number(scaleInput.value || 30) / 100;
-    renderCompositingPreview();
-  });
-
-  subtitleInput.addEventListener("input", () => {
-    compositingState.subtitle = subtitleInput.value || "";
     renderCompositingPreview();
   });
 
