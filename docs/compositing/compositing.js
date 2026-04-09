@@ -1,29 +1,5 @@
 const COMPOSITING_TEMPLATES = [
   {
-    id: "mobby-fact",
-    name: "もびりん",
-    description: "通常テンプレ",
-    src: "compositing/template/mobby_fact_compositing.jpg"
-  },
-  {
-    id: "mobby-gal",
-    name: "もびち",
-    description: "通常テンプレ",
-    src: "compositing/template/mobby_gal_compositing.jpg"
-  },
-  {
-    id: "mobby-yami",
-    name: "病みモビー",
-    description: "通常テンプレ",
-    src: "compositing/template/mobby_yami_compositing.png"
-  },
-  {
-    id: "mobby-yanki",
-    name: "もびやん",
-    description: "通常テンプレ",
-    src: "compositing/template/mobby_yanki_compositing.jpg"
-  },
-  {
     id: "mobby-template1",
     name: "template1",
     description: "new template",
@@ -34,6 +10,24 @@ const COMPOSITING_TEMPLATES = [
     name: "inthebeach",
     description: "new template",
     src: "compositing/template/mobby_inthebeach.png"
+  },
+  {
+    id: "mobby-intherain",
+    name: "intherain",
+    description: "new template",
+    src: "compositing/template/mobby_intherain.png"
+  },
+  {
+    id: "mobby-intherain-black",
+    name: "intherain_black",
+    description: "new template",
+    src: "compositing/template/mobby_intherain_black.png"
+  },
+  {
+    id: "mobby-inthespaceship",
+    name: "inthespaceship",
+    description: "new template",
+    src: "compositing/template/mobby_inthespaceship.png"
   },
   {
     id: "mobby-onthebuilding",
@@ -59,7 +53,8 @@ const compositingState = {
   subject: {
     x: 0.72,
     y: 0.74,
-    scale: 0.3
+    scale: 0.3,
+    rotation: 0
   }
 };
 
@@ -111,15 +106,24 @@ function setCompositingFlow(templateConfirmed, subjectReady = false) {
   const templateSection = document.querySelector('[data-compositing-section="template"]');
   const uploadSection = document.querySelector('[data-compositing-section="upload"]');
   const uploadBody = document.querySelector('[data-compositing-body="upload"]');
+  const uploadBlock = document.getElementById("compositingUploadBlock");
   const scaleBlock = document.getElementById("compositingScaleBlock");
+  const rotationBlock = document.getElementById("compositingRotationBlock");
   const actions = document.getElementById("compositingActions");
+  const lead = document.getElementById("compositingLead");
 
   if (!templateConfirmed) {
     if (templateSection) templateSection.hidden = false;
     if (uploadSection) uploadSection.hidden = true;
     if (uploadBody) uploadBody.hidden = true;
+    if (uploadBlock) {
+      uploadBlock.hidden = false;
+      uploadBlock.style.display = "";
+    }
     if (scaleBlock) scaleBlock.hidden = true;
+    if (rotationBlock) rotationBlock.hidden = true;
     if (actions) actions.hidden = true;
+    if (lead) lead.hidden = true;
     setCompositingSection("template", true);
     return;
   }
@@ -127,8 +131,14 @@ function setCompositingFlow(templateConfirmed, subjectReady = false) {
   if (templateSection) templateSection.hidden = true;
   if (uploadSection) uploadSection.hidden = false;
   if (uploadBody) uploadBody.hidden = false;
+  if (uploadBlock) {
+    uploadBlock.hidden = subjectReady;
+    uploadBlock.style.display = subjectReady ? "none" : "";
+  }
   if (scaleBlock) scaleBlock.hidden = !subjectReady;
+  if (rotationBlock) rotationBlock.hidden = !subjectReady;
   if (actions) actions.hidden = !subjectReady;
+  if (lead) lead.hidden = false;
 }
 
 function clamp(value, min, max) {
@@ -211,7 +221,11 @@ function renderCompositingPreview() {
 
   const rect = getSubjectPixelRect(canvas);
   if (compositingState.subjectCanvas && rect) {
-    ctx.drawImage(compositingState.subjectCanvas, rect.x, rect.y, rect.width, rect.height);
+    ctx.save();
+    ctx.translate(rect.x + rect.width / 2, rect.y + rect.height / 2);
+    ctx.rotate((compositingState.subject.rotation || 0) * Math.PI / 180);
+    ctx.drawImage(compositingState.subjectCanvas, -rect.width / 2, -rect.height / 2, rect.width, rect.height);
+    ctx.restore();
   }
 }
 
@@ -270,6 +284,7 @@ function resetCompositingSubjectPosition() {
   compositingState.subject.x = 0.66;
   compositingState.subject.y = 0.67;
   compositingState.subject.scale = Number(document.getElementById("compositingScale")?.value || 30) / 100;
+  compositingState.subject.rotation = Number(document.getElementById("compositingRotation")?.value || 0);
 }
 
 async function loadUserImage(file) {
@@ -312,6 +327,7 @@ async function processCompositingFile(file, { removeBackground }) {
 function initCompositingTool() {
   const canvas = getCompositingCanvas();
   const scaleInput = document.getElementById("compositingScale");
+  const rotationInput = document.getElementById("compositingRotation");
   const uploadButton = document.getElementById("compositingUploadButton");
   const uploadOriginalButton = document.getElementById("compositingUploadOriginalButton");
   const backButton = document.getElementById("compositingBackButton");
@@ -319,7 +335,7 @@ function initCompositingTool() {
   const downloadButton = document.getElementById("compositingDownloadButton");
   const templateConfirmButton = document.getElementById("compositingTemplateConfirmButton");
 
-  if (!canvas || !scaleInput || !uploadButton || !uploadOriginalButton || !backButton || !fileInput || !downloadButton || !templateConfirmButton) {
+  if (!canvas || !scaleInput || !rotationInput || !uploadButton || !uploadOriginalButton || !backButton || !fileInput || !downloadButton || !templateConfirmButton) {
     return;
   }
 
@@ -353,6 +369,11 @@ function initCompositingTool() {
 
   scaleInput.addEventListener("input", () => {
     compositingState.subject.scale = Number(scaleInput.value || 30) / 100;
+    renderCompositingPreview();
+  });
+
+  rotationInput.addEventListener("input", () => {
+    compositingState.subject.rotation = Number(rotationInput.value || 0);
     renderCompositingPreview();
   });
 

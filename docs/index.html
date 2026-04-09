@@ -401,8 +401,8 @@
     .mobby-title img {
       display: block;
       width: min(54vw, 470px);
-      clip-path: inset(14% 6% 16% 6%);
-      margin: -10% auto -12%;
+      clip-path: inset(14% 6% 24% 6%);
+      margin: -10% auto -18%;
     }
 
     @media (max-width: 768px) {
@@ -413,8 +413,8 @@
 
       .mobby-title img {
         width: min(74vw, 360px);
-        clip-path: inset(12% 4% 14% 4%);
-        margin: -8% auto -10%;
+        clip-path: inset(12% 4% 20% 4%);
+        margin: -8% auto -14%;
       }
     }
 
@@ -425,8 +425,8 @@
 
       .mobby-title img {
         width: min(60vw, 430px);
-        clip-path: inset(12% 5% 14% 5%);
-        margin: -4% auto -4%;
+        clip-path: inset(12% 5% 22% 5%);
+        margin: -4% auto -10%;
       }
     }
 
@@ -443,7 +443,7 @@
 
     .headline {
       display: block;
-      margin-top: -18px;
+      margin-top: -72px;
       margin-bottom: 0;
       color: #111;
       text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8), 0 6px 14px rgba(0, 0, 0, 0.08);
@@ -716,6 +716,7 @@
     .headline {
       font-size: clamp(1.15rem, 3.4vw, 2.6rem);
       margin-top: 0;
+      margin-bottom: 4px;
       text-align: center;
       text-shadow: 0 1px 0 rgba(255, 255, 255, 0.95), 0 12px 26px rgba(47, 79, 79, 0.14);
     }
@@ -871,7 +872,7 @@
     /* ===== Hero Image ===== */
     .hero-carousel-shell {
       width: min(420px, 96vw);
-      margin: -26px auto 10px;
+      margin: -34px auto 10px;
       position: relative;
     }
 
@@ -893,6 +894,7 @@
       height: 360px;
       z-index: 1;
       overflow: hidden;
+      clip-path: inset(126px 0 0 0);
       touch-action: pan-y;
       -webkit-mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, 0.9) 5%, #000 11%, #000 89%, rgba(0, 0, 0, 0.9) 95%, transparent 100%);
       mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, 0.9) 5%, #000 11%, #000 89%, rgba(0, 0, 0, 0.9) 95%, transparent 100%);
@@ -1109,6 +1111,7 @@
     @media (max-width: 768px) {
       .hero-carousel-shell {
         width: min(300px, 92vw);
+        margin-top: -34px;
       }
 
       .hero-model-stage {
@@ -1118,6 +1121,7 @@
 
       .hero-model-carousel {
         height: 300px;
+        clip-path: inset(84px 0 0 0);
         -webkit-mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, 0.84) 10%, #000 20%, #000 80%, rgba(0, 0, 0, 0.84) 90%, transparent 100%);
         mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, 0.84) 10%, #000 20%, #000 80%, rgba(0, 0, 0, 0.84) 90%, transparent 100%);
       }
@@ -5145,14 +5149,13 @@
           </div>
           <div class="compositing-head">
             <h2>画像合成</h2>
-            <p>背景を抜くかそのまま使うかを選んで、テンプレに配置できます。配置後はドラッグして位置調整できます。</p>
+            <p id="compositingLead">背景を抜くかそのまま使うかを選んで、テンプレに配置できます。外部サイトで背景透過した画像を使用するときれいな画像が完成します。</p>
           </div>
           <div class="compositing-layout">
             <div class="compositing-stage-card">
               <div class="compositing-stage-wrap">
                 <canvas id="compositingCanvas" class="compositing-canvas" width="1080" height="1080" aria-label="合成プレビュー"></canvas>
               </div>
-              <p class="compositing-stage-hint">人物をつまんで移動。右下配置から始まります。</p>
             </div>
             <div class="compositing-controls-card">
               <div class="compositing-section is-open" data-compositing-section="template">
@@ -5167,7 +5170,7 @@
               <div class="compositing-section" data-compositing-section="upload" hidden>
                 <div class="compositing-section-body" data-compositing-body="upload" hidden>
                   <button id="compositingBackButton" class="compositing-back-btn" type="button" aria-label="テンプレート選択に戻る">← テンプレートに戻る</button>
-                  <div class="compositing-upload">
+                  <div id="compositingUploadBlock" class="compositing-upload">
                     <input id="compositingFileInput" type="file" accept="image/*">
                     <div class="compositing-upload-actions">
                       <button id="compositingUploadButton" class="btn btn-primary compositing-upload-btn" type="button">背景を抜いて使う</button>
@@ -5179,6 +5182,10 @@
               <div id="compositingScaleBlock" hidden>
                 <p class="compositing-label">人物サイズ</p>
                 <input id="compositingScale" class="compositing-range" type="range" min="20" max="80" value="30">
+              </div>
+              <div id="compositingRotationBlock" hidden>
+                <p class="compositing-label">角度調整</p>
+                <input id="compositingRotation" class="compositing-range" type="range" min="-180" max="180" value="0">
               </div>
               <div class="compositing-section" data-compositing-section="subtitle" hidden>
                 <div class="compositing-section-body" data-compositing-body="subtitle" hidden>
