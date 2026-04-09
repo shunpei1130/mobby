@@ -3,43 +3,43 @@ const COMPOSITING_TEMPLATES = [
     id: "mobby-template1",
     name: "template1",
     description: "new template",
-    src: "compositing/template/mobby_template1.png"
+    src: "compositing/template/mobby_template1.webp"
   },
   {
     id: "mobby-inthebeach",
     name: "inthebeach",
     description: "new template",
-    src: "compositing/template/mobby_inthebeach.png"
+    src: "compositing/template/mobby_inthebeach.webp"
   },
   {
     id: "mobby-intherain",
     name: "intherain",
     description: "new template",
-    src: "compositing/template/mobby_intherain.png"
+    src: "compositing/template/mobby_intherain.webp"
   },
   {
     id: "mobby-intherain-black",
     name: "intherain_black",
     description: "new template",
-    src: "compositing/template/mobby_intherain_black.png"
+    src: "compositing/template/mobby_intherain_black.webp"
   },
   {
     id: "mobby-inthespaceship",
     name: "inthespaceship",
     description: "new template",
-    src: "compositing/template/mobby_inthespaceship.png"
+    src: "compositing/template/mobby_inthespaceship.webp"
   },
   {
     id: "mobby-onthebuilding",
     name: "onthebuilding",
     description: "new template",
-    src: "compositing/template/mobby_onthebuilding.png"
+    src: "compositing/template/mobby_onthebuilding.webp"
   },
   {
     id: "mobby-onthepinkbuilding",
     name: "onthepinkbuilding",
     description: "new template",
-    src: "compositing/template/mobby_onthepinkbuilding.png"
+    src: "compositing/template/mobby_onthepinkbuilding.webp"
   }
 ];
 
