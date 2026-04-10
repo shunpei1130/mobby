@@ -6276,10 +6276,22 @@
     const mainContent = document.getElementById('main-content');
     const stickyCta = document.querySelector('.sticky-cta');
 
-    const shouldSkipSplash = false;
-
-    if (shouldSkipSplash) {
-      // スプラッシュをスキップする場合は即座にメイン表示
+    const splashSeenKey = 'mobby:index:splashSeen';
+    const getSplashSeen = () => {
+      try {
+        return sessionStorage.getItem(splashSeenKey) === 'true';
+      } catch (_) {
+        return false;
+      }
+    };
+    const setSplashSeen = () => {
+      try {
+        sessionStorage.setItem(splashSeenKey, 'true');
+      } catch (_) {
+        // sessionStorage may be unavailable in some private browsing modes.
+      }
+    };
+    const revealMainContent = () => {
       if (mainContent) mainContent.classList.add('visible');
       document.body.style.overflowY = 'auto';
       if (stickyCta) stickyCta.style.display = 'block';
@@ -6289,6 +6301,16 @@
         }
       }));
       initScrollObserver();
+    };
+
+    const shouldSkipSplash = getSplashSeen();
+
+    if (shouldSkipSplash) {
+      if (splashElement) {
+        splashElement.classList.add('hidden');
+        splashElement.remove();
+      }
+      revealMainContent();
     }
 
     if (!shouldSkipSplash && splashElement) {
@@ -6297,19 +6319,12 @@
       const exitSplash = () => {
         if (splashDone) return;
         splashDone = true;
+        setSplashSeen();
         splashElement.classList.add('is-bursting');
 
         window.setTimeout(() => {
           splashElement.classList.add('hidden');
-          if (mainContent) mainContent.classList.add('visible');
-          document.body.style.overflowY = 'auto';
-          if (stickyCta) stickyCta.style.display = 'block';
-          window.dispatchEvent(new CustomEvent('hero-smoke-toggle', {
-            detail: {
-              active: document.querySelector('.hero-model-stage')?.classList.contains('is-smoke-active')
-            }
-          }));
-          initScrollObserver();
+          revealMainContent();
         }, 420);
 
         window.setTimeout(() => {
@@ -6509,6 +6524,39 @@
     /* ===== ポップアップ制御 ===== */
     let typingInterval = null;
 
+    function lockPageScroll() {
+      document.body.style.overflow = 'hidden';
+      document.body.style.overflowY = 'hidden';
+    }
+
+    function unlockPageScroll() {
+      document.body.style.overflow = '';
+      document.body.style.overflowY = 'auto';
+    }
+
+    function unlockPageScrollIfSplashDone() {
+      const splash = document.getElementById('splash-screen');
+      if (splash && !splash.classList.contains('hidden')) return;
+      unlockPageScroll();
+    }
+
+    function resetTransientUiAfterHistoryRestore() {
+      document.querySelectorAll('.popup-overlay.is-open').forEach((popup) => {
+        blurIfFocusedInside(popup);
+        popup.classList.remove('is-open');
+        popup.setAttribute('aria-hidden', 'true');
+      });
+
+      const checkoutOverlay = document.getElementById('checkoutOverlay');
+      if (checkoutOverlay) {
+        checkoutOverlay.classList.remove('show');
+        checkoutOverlay.setAttribute('aria-hidden', 'true');
+      }
+
+      closeGiftFanMenu();
+      unlockPageScrollIfSplashDone();
+    }
+
     function startTypingAnimation(element) {
       if (!element) return;
       const fullText = element.getAttribute('data-text') || element.textContent.trim();
@@ -6542,7 +6590,7 @@
       if (!popup) return;
       popup.classList.add('is-open');
       popup.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
+      lockPageScroll();
 
       if (popupId === 'messagePopup') {
         const creatorText = popup.querySelector('.creator-text');
@@ -6577,7 +6625,7 @@
 
       popup.classList.remove('is-open');
       popup.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
+      unlockPageScrollIfSplashDone();
 
       if (popupId === 'messagePopup') {
         const creatorText = popup.querySelector('.creator-text');
@@ -8010,7 +8058,7 @@
       if (!overlay || !mount) return;
       overlay.classList.remove('show');
       overlay.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
+      unlockPageScrollIfSplashDone();
       plushTeardownEmbeddedCheckout();
       mount.innerHTML = '';
     }
@@ -8071,7 +8119,7 @@
         closePopup('pricePopup');
         overlay.classList.add('show');
         overlay.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
+        lockPageScroll();
       } catch (error) {
         alert(error?.message || '決済画面の表示に失敗しました。');
       } finally {
@@ -8610,6 +8658,9 @@
       window.addEventListener('pageshow', function () {
         overlay.classList.add('fade-in');
         overlay.classList.remove('fade-out');
+        if (typeof resetTransientUiAfterHistoryRestore === 'function') {
+          resetTransientUiAfterHistoryRestore();
+        }
       });
       overlay.addEventListener('animationend', function () {
         overlay.classList.remove('fade-in');
