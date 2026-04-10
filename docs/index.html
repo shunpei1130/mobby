@@ -595,6 +595,12 @@
       color: #f5feff;
     }
 
+    #openSnsPopup {
+      background:
+        linear-gradient(145deg, #d65f89 0%, #ef9a7d 54%, #f9d66d 100%);
+      color: #fffaf2;
+    }
+
     #openVideoPopup {
       background-color: #fdeed7;
       color: #827b6a;
@@ -894,7 +900,7 @@
       height: 360px;
       z-index: 1;
       overflow: hidden;
-      clip-path: inset(126px 0 0 0);
+      clip-path: inset(var(--hero-carousel-safe-clip, 0px) 0 0 0);
       touch-action: pan-y;
       -webkit-mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, 0.9) 5%, #000 11%, #000 89%, rgba(0, 0, 0, 0.9) 95%, transparent 100%);
       mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, 0.9) 5%, #000 11%, #000 89%, rgba(0, 0, 0, 0.9) 95%, transparent 100%);
@@ -1074,6 +1080,12 @@
       color: #f5feff;
     }
 
+    #openSnsPopup {
+      background:
+        linear-gradient(145deg, #d65f89 0%, #ef9a7d 54%, #f9d66d 100%);
+      color: #fffaf2;
+    }
+
     #openEncyclopediaPopup {
       background:
         linear-gradient(145deg, #468995 0%, #70b4bc 52%, #c5eef0 100%);
@@ -1121,7 +1133,7 @@
 
       .hero-model-carousel {
         height: 300px;
-        clip-path: inset(84px 0 0 0);
+        clip-path: inset(var(--hero-carousel-safe-clip, 0px) 0 0 0);
         -webkit-mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, 0.84) 10%, #000 20%, #000 80%, rgba(0, 0, 0, 0.84) 90%, transparent 100%);
         mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, 0.84) 10%, #000 20%, #000 80%, rgba(0, 0, 0, 0.84) 90%, transparent 100%);
       }
@@ -2455,6 +2467,10 @@
         transform: translate(272px, -34px) scale(1.02) !important;
       }
 
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="sns"] {
+        transform: translate(340px, -34px) scale(1.02) !important;
+      }
+
       .gift-fan-menu.is-open .gift-fan-action[data-fan-item="encyclopedia"] {
         transform: translate(136px, -34px) scale(1.02) !important;
       }
@@ -2719,6 +2735,10 @@
       transition-delay: 0.2s;
     }
 
+    .gift-fan-action[data-fan-item="sns"] {
+      transition-delay: 0.25s;
+    }
+
     .gift-fan-action[data-fan-item="encyclopedia"] {
       transition-delay: 0.1s;
     }
@@ -2737,6 +2757,10 @@
 
     .gift-fan-menu.is-open .gift-fan-action[data-fan-item="faq"] {
       transform: translate(272px, -56px) scale(1.04);
+    }
+
+    .gift-fan-menu.is-open .gift-fan-action[data-fan-item="sns"] {
+      transform: translate(340px, -56px) scale(1.04);
     }
 
     .gift-fan-menu.is-open .gift-fan-action[data-fan-item="encyclopedia"] {
@@ -3053,6 +3077,74 @@
       transform: scale(1.05);
     }
 
+    .sns-popup-shell {
+      display: grid;
+      gap: 18px;
+      text-align: center;
+    }
+
+    .sns-popup-title {
+      margin: 0;
+      color: var(--color-forest);
+      font-size: clamp(1.7rem, 4vw, 2.4rem);
+      line-height: 1.1;
+    }
+
+    .sns-popup-lead {
+      margin: 0;
+      color: rgba(74, 55, 40, 0.78);
+      font-weight: 700;
+    }
+
+    .sns-link-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 6px;
+    }
+
+    .sns-link-card {
+      display: grid;
+      gap: 8px;
+      place-items: center;
+      min-height: 116px;
+      padding: 18px 14px;
+      border-radius: 24px;
+      color: #fffaf2;
+      text-decoration: none;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.35),
+        0 12px 28px rgba(74, 55, 40, 0.18);
+      transition: transform 0.2s var(--ease-soft), box-shadow 0.2s var(--ease-soft);
+    }
+
+    .sns-link-card:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.42),
+        0 18px 34px rgba(74, 55, 40, 0.22);
+    }
+
+    .sns-link-card.instagram {
+      background: linear-gradient(135deg, #7b2ff7 0%, #f107a3 48%, #ffb86c 100%);
+    }
+
+    .sns-link-card.tiktok {
+      background: linear-gradient(135deg, #111 0%, #232323 54%, #00f2ea 120%);
+    }
+
+    .sns-link-card span {
+      font-size: 1.2rem;
+    }
+
+    .sns-link-card small {
+      color: rgba(255, 250, 242, 0.82);
+      font-size: 0.78rem;
+      letter-spacing: 0.02em;
+    }
+
     .peek-heart-wrap {
       display: flex;
       justify-content: center;
@@ -3074,6 +3166,10 @@
         width: 50px;
         height: 50px;
         font-size: 0.98rem;
+      }
+
+      .sns-link-grid {
+        grid-template-columns: 1fr;
       }
 
       .hero-character-action.mode {
@@ -3503,6 +3599,10 @@
         transform: translate(232px, -48px) scale(1.02);
       }
 
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="sns"] {
+        transform: translate(290px, -48px) scale(1.02);
+      }
+
       .gift-fan-menu.is-open .gift-fan-action[data-fan-item="encyclopedia"] {
         transform: translate(116px, -48px) scale(1.02);
       }
@@ -3554,6 +3654,10 @@
 
         .gift-fan-menu.is-open .gift-fan-action[data-fan-item="faq"] {
           transform: translate(208px, 2px) scale(1.02);
+        }
+
+        .gift-fan-menu.is-open .gift-fan-action[data-fan-item="sns"] {
+          transform: translate(260px, 2px) scale(1.02);
         }
 
         .gift-fan-menu.is-open .gift-fan-action[data-fan-item="encyclopedia"] {
@@ -3808,6 +3912,10 @@
         transform: translate(232px, -30px) scale(1.02);
       }
 
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="sns"] {
+        transform: translate(290px, -30px) scale(1.02);
+      }
+
       .gift-fan-menu.is-open .gift-fan-action[data-fan-item="encyclopedia"] {
         transform: translate(116px, -30px) scale(1.02);
       }
@@ -3842,6 +3950,10 @@
 
       .gift-fan-menu.is-open .gift-fan-action[data-fan-item="faq"] {
         transform: translate(232px, -24px) scale(1);
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="sns"] {
+        transform: translate(290px, -24px) scale(1);
       }
 
       .gift-fan-menu.is-open .gift-fan-action[data-fan-item="encyclopedia"] {
@@ -4715,6 +4827,83 @@
       padding: 8px 12px 10px;
       border-top: 1px solid rgba(47, 79, 79, 0.08);
     }
+
+    /* Center the main popup actions from the active character-name center. */
+    .gift-fan-actions {
+      position: absolute !important;
+      inset: auto auto 66px var(--gift-main-center-offset, 50%) !important;
+      width: max-content;
+      height: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: nowrap;
+      gap: 12px;
+      transform: translateX(-50%);
+      overflow: visible;
+      font-size: 0;
+      color: transparent;
+      pointer-events: none;
+    }
+
+    .gift-fan-action {
+      position: relative !important;
+      right: auto !important;
+      bottom: auto !important;
+      flex: 0 0 56px;
+      transform: scale(0.38) !important;
+    }
+
+    .gift-fan-menu.is-open .gift-fan-action[data-fan-item] {
+      transform: scale(1.04) !important;
+    }
+
+    .gift-fan-action[data-fan-item="price"] { order: 1; }
+    .gift-fan-action[data-fan-item="compositing"] { order: 2; }
+    .gift-fan-action[data-fan-item="encyclopedia"] { order: 3; }
+    .gift-fan-action[data-fan-item="vote"] { order: 4; }
+    .gift-fan-action[data-fan-item="faq"] { order: 5; }
+    .gift-fan-action[data-fan-item="sns"] { order: 6; }
+
+    .gift-fan-menu.is-diagnosis-open .gift-fan-action:not([data-fan-item="price"]) {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.28) !important;
+    }
+
+    @media (max-width: 768px) {
+      .gift-fan-actions {
+        bottom: 58px !important;
+        gap: 10px;
+      }
+
+      .gift-fan-action {
+        flex-basis: 50px;
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item] {
+        transform: scale(1.02) !important;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .gift-fan-actions {
+        bottom: 8px !important;
+        gap: 2px;
+      }
+    }
+
+    @media (min-width: 700px) and (max-width: 768px) {
+      .gift-fan-actions {
+        bottom: 40px !important;
+      }
+    }
+
+    @media (min-width: 520px) and (max-width: 699px) {
+      .gift-fan-actions {
+        bottom: 34px !important;
+      }
+    }
   </style>
 </head>
 
@@ -5236,6 +5425,27 @@
       </div>
     </div>
 
+    <!-- SNS ポップアップ -->
+    <div id="snsPopup" class="popup-overlay" aria-hidden="true">
+      <div class="popup-content" style="max-width:560px;">
+        <button class="popup-close" id="closeSnsPopup" aria-label="閉じる">×</button>
+        <div class="sns-popup-shell">
+          <h2 class="sns-popup-title">SNS</h2>
+          <p class="sns-popup-lead">Mobbyの公式アカウントはこちら</p>
+          <div class="sns-link-grid">
+            <a class="sns-link-card instagram" href="https://www.instagram.com/mobby.official?igsh=N2JhOXk5dHdlYjVz&utm_source=qr" target="_blank" rel="noopener noreferrer">
+              <span>Instagram</span>
+              <small>@mobby.official</small>
+            </a>
+            <a class="sns-link-card tiktok" href="https://www.tiktok.com/@mobbyofficial?_r=1&_t=ZS-95Q1AWozkCy" target="_blank" rel="noopener noreferrer">
+              <span>TikTok</span>
+              <small>@mobbyofficial</small>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- 文章（message from the creator）ポップアップ -->
     <div id="messagePopup" class="popup-overlay" aria-hidden="true">
       <div class="popup-content">
@@ -5344,6 +5554,7 @@
             <div class="gift-fan-actions" aria-hidden="false">
               <button class="btn btn-secondary action-box-btn gift-fan-action" id="openPricePopup" data-fan-item="price">診断</button>
               <button class="btn btn-secondary action-box-btn gift-fan-action" id="openFaqPopup" data-fan-item="faq">お問い合わせ</button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openSnsPopup" data-fan-item="sns">SNS</button>
               <button class="btn btn-secondary action-box-btn gift-fan-action" id="openEncyclopediaPopup" data-fan-item="encyclopedia">図鑑</button>
               <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openVotePopup" data-fan-item="vote">投票<span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></button>
               <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openCompositingPopup" data-fan-item="compositing">合成<span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></button>
@@ -6670,6 +6881,52 @@
       { id: 'yami-purple', name: '病みモビー', image: 'carousel/after/mobby_yami_toka.webp' },
       { id: 'yanki', name: 'もびやん', image: 'carousel/after/mobby_yanki_toak.webp' }
     ];
+
+    function updateGiftFanActionCenter() {
+      if (!giftFanMenu) return;
+      const characterName = document.getElementById('heroCharacterName');
+      const targetRect = characterName?.getBoundingClientRect();
+      const menuRect = giftFanMenu.getBoundingClientRect();
+      const targetCenter = targetRect && targetRect.width > 0
+        ? targetRect.left + targetRect.width / 2
+        : window.innerWidth / 2;
+      giftFanMenu.style.setProperty('--gift-main-center-offset', `${targetCenter - menuRect.left}px`);
+    }
+
+    requestAnimationFrame(updateGiftFanActionCenter);
+    window.addEventListener('resize', updateGiftFanActionCenter);
+    window.addEventListener('load', updateGiftFanActionCenter);
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(updateGiftFanActionCenter).catch(() => {});
+    }
+    const heroCharacterNameForActions = document.getElementById('heroCharacterName');
+    if (heroCharacterNameForActions) {
+      new MutationObserver(updateGiftFanActionCenter).observe(heroCharacterNameForActions, {
+        childList: true,
+        characterData: true,
+        subtree: true
+      });
+    }
+
+    function updateHeroCarouselSafeClip() {
+      const headline = document.querySelector('.headline');
+      const carousel = document.getElementById('heroModelCarousel');
+      if (!headline || !carousel) return;
+
+      const headlineRect = headline.getBoundingClientRect();
+      const carouselRect = carousel.getBoundingClientRect();
+      const safeGap = 4;
+      const overlap = Math.ceil(headlineRect.bottom + safeGap - carouselRect.top);
+      carousel.style.setProperty('--hero-carousel-safe-clip', `${Math.max(0, overlap)}px`);
+    }
+
+    requestAnimationFrame(updateHeroCarouselSafeClip);
+    window.addEventListener('resize', updateHeroCarouselSafeClip);
+    window.addEventListener('load', updateHeroCarouselSafeClip);
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(updateHeroCarouselSafeClip).catch(() => {});
+    }
+
     const voteSupabase = window.supabase?.createClient
       ? window.supabase.createClient(VOTE_SUPABASE_URL, VOTE_SUPABASE_PUBLISHABLE_KEY)
       : null;
@@ -7162,6 +7419,7 @@
       toggleGiftDiagnosisMenu();
     });
     document.getElementById('openFaqPopup')?.addEventListener('click', () => openPopup('faqPopup'));
+    document.getElementById('openSnsPopup')?.addEventListener('click', () => openPopup('snsPopup'));
     document.getElementById('openEncyclopediaPopup')?.addEventListener('click', () => openPopup('encyclopediaPopup'));
     document.getElementById('openVotePopup')?.addEventListener('click', async () => {
       renderVotePopup();
@@ -7185,6 +7443,7 @@
     document.getElementById('closeColorsPopup')?.addEventListener('click', () => closePopup('colorsPopup'));
     document.getElementById('closePricePopup')?.addEventListener('click', () => closePopup('pricePopup'));
     document.getElementById('closeFaqPopup')?.addEventListener('click', () => closePopup('faqPopup'));
+    document.getElementById('closeSnsPopup')?.addEventListener('click', () => closePopup('snsPopup'));
     document.getElementById('closeEncyclopediaPopup')?.addEventListener('click', () => closePopup('encyclopediaPopup'));
     document.getElementById('closeDiagnosisPopup')?.addEventListener('click', () => closePopup('diagnosisPopup'));
     document.getElementById('closeVotePopup')?.addEventListener('click', () => closePopup('votePopup'));
@@ -7202,6 +7461,9 @@
     });
     document.getElementById('faqPopup')?.addEventListener('click', (e) => {
       if (e.target.id === 'faqPopup') closePopup('faqPopup');
+    });
+    document.getElementById('snsPopup')?.addEventListener('click', (e) => {
+      if (e.target.id === 'snsPopup') closePopup('snsPopup');
     });
     document.getElementById('encyclopediaPopup')?.addEventListener('click', (e) => {
       if (e.target.id === 'encyclopediaPopup') closePopup('encyclopediaPopup');
@@ -7223,6 +7485,7 @@
         if (document.getElementById('colorsPopup')?.classList.contains('is-open')) closePopup('colorsPopup');
         if (document.getElementById('pricePopup')?.classList.contains('is-open')) closePopup('pricePopup');
         if (document.getElementById('faqPopup')?.classList.contains('is-open')) closePopup('faqPopup');
+        if (document.getElementById('snsPopup')?.classList.contains('is-open')) closePopup('snsPopup');
         if (document.getElementById('encyclopediaPopup')?.classList.contains('is-open')) closePopup('encyclopediaPopup');
         if (document.getElementById('diagnosisPopup')?.classList.contains('is-open')) closePopup('diagnosisPopup');
         if (document.getElementById('votePopup')?.classList.contains('is-open')) closePopup('votePopup');

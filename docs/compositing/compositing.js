@@ -1,11 +1,5 @@
 const COMPOSITING_TEMPLATES = [
   {
-    id: "mobby-template1",
-    name: "template1",
-    description: "new template",
-    src: "compositing/template/mobby_template1.webp"
-  },
-  {
     id: "mobby-inthebeach",
     name: "inthebeach",
     description: "new template",
