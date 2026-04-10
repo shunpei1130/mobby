@@ -2667,11 +2667,15 @@
 
     .gift-fan-new-badge {
       position: absolute;
-      top: -10px;
-      right: -10px;
-      width: 34px;
-      height: 34px;
-      border-radius: 999px;
+      top: -12px;
+      right: auto;
+      left: 50%;
+      transform: translateX(-50%);
+      width: auto;
+      min-width: 38px;
+      height: 20px;
+      padding: 0 7px;
+      border-radius: 6px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -2679,7 +2683,7 @@
       font-size: 9px;
       font-weight: 900;
       line-height: 1;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.08em;
       box-shadow:
         0 3px 8px rgba(89, 70, 52, 0.16),
         inset 0 0 0 1px rgba(47, 79, 79, 0.18);
@@ -5315,7 +5319,7 @@
         <button class="popup-close" id="closeVotePopup" aria-label="閉じる">×</button>
         <div class="vote-popup-shell">
           <div class="vote-popup-header">
-            <h2>モビー投票</h2>
+            <h2>モビー人気投票</h2>
             <p>メインの4体から選んで投票できます。何回でも投票できます。</p>
           </div>
           <div class="vote-feedback" id="voteFeedback" aria-live="polite"></div>
@@ -5337,13 +5341,13 @@
             <p class="compositing-loading-text">画像を処理しています...</p>
           </div>
           <div class="compositing-head">
-            <h2>画像合成</h2>
+            <h2>ポスター作成</h2>
             <p id="compositingLead">背景を抜くかそのまま使うかを選んで、テンプレに配置できます。外部サイトで背景透過した画像を使用するときれいな画像が完成します。</p>
           </div>
           <div class="compositing-layout">
             <div class="compositing-stage-card">
               <div class="compositing-stage-wrap">
-                <canvas id="compositingCanvas" class="compositing-canvas" width="1080" height="1080" aria-label="合成プレビュー"></canvas>
+                <canvas id="compositingCanvas" class="compositing-canvas" width="1080" height="1080" aria-label="ポスター作成プレビュー"></canvas>
               </div>
             </div>
             <div class="compositing-controls-card">
@@ -5557,7 +5561,7 @@
               <button class="btn btn-secondary action-box-btn gift-fan-action" id="openSnsPopup" data-fan-item="sns">SNS</button>
               <button class="btn btn-secondary action-box-btn gift-fan-action" id="openEncyclopediaPopup" data-fan-item="encyclopedia">図鑑</button>
               <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openVotePopup" data-fan-item="vote">投票<span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></button>
-              <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openCompositingPopup" data-fan-item="compositing">合成<span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openCompositingPopup" data-fan-item="compositing">ポスター作成<span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></button>
             </div>
             <div class="gift-fan-diagnosis-actions" aria-hidden="true">
               <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16school/index.html" data-diagnosis-item="school">学校</a>
