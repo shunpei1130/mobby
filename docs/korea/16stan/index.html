@@ -1316,22 +1316,22 @@
         const state = { step: "intro", page: 0, answers: {}, questionOrder: null, profile: { name: "", email: "", age: "" }, sentToSheet: false };
         const ANS_LABEL = { 1: "그렇게 생각한다", 2: "약간 그렇게 생각한다", 3: "조금 그렇게 생각한다", 4: "어느 쪽도 아니다", 5: "조금 그렇게 생각하지 않는다", 6: "약간 그렇게 생각하지 않는다", 7: "그렇게 생각하지 않는다" };
         const SNS_IMAGE_PATHS = {
-            "こうしひ": "img/sns/こうしひ.png",
-            "こうしみ": "img/sns/こうしみ.png",
-            "こうはひ": "img/sns/こうはひ.png",
-            "こうはみ": "img/sns/こうはみ.png",
-            "こなしひ": "img/sns/こなしひ.png",
-            "こなしみ": "img/sns/こなしみ.png",
-            "こなはひ": "img/sns/こなはひ.png",
-            "こなはみ": "img/sns/こなはみ.png",
-            "まうしひ": "img/sns/まうしひ.png",
-            "まうしみ": "img/sns/まうしみ.png",
-            "まうはひ": "img/sns/まうはひ.png",
-            "まうはみ": "img/sns/まうはみ.png",
-            "まなしひ": "img/sns/まなしひ.png",
-            "まなしみ": "img/sns/まなしみ.png",
-            "まなはひ": "img/sns/まなはひ.png",
-            "まなはみ": "img/sns/まなはみ.png"
+            "こうしひ": "img/sns/こうしひ.webp",
+            "こうしみ": "img/sns/こうしみ.webp",
+            "こうはひ": "img/sns/こうはひ.webp",
+            "こうはみ": "img/sns/こうはみ.webp",
+            "こなしひ": "img/sns/こなしひ.webp",
+            "こなしみ": "img/sns/こなしみ.webp",
+            "こなはひ": "img/sns/こなはひ.webp",
+            "こなはみ": "img/sns/こなはみ.webp",
+            "まうしひ": "img/sns/まうしひ.webp",
+            "まうしみ": "img/sns/まうしみ.webp",
+            "まうはひ": "img/sns/まうはひ.webp",
+            "まうはみ": "img/sns/まうはみ.webp",
+            "まなしひ": "img/sns/まなしひ.webp",
+            "まなしみ": "img/sns/まなしみ.webp",
+            "まなはひ": "img/sns/まなはひ.webp",
+            "まなはみ": "img/sns/まなはみ.webp"
         };
         function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; }
         function getQuestionOrder() { return shuffleArray([...Array(QUESTIONS.length).keys()]); }

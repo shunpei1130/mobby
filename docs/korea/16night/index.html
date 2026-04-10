@@ -1155,7 +1155,7 @@
         function resetState() { state.step = "intro"; state.page = 0; state.answers = {}; state.questionOrder = null; state.profile = { name: "", email: "" }; state.sentToSheet = false; localStorage.removeItem(STORAGE_KEY); render(); }
         function isRegistered() { return !!(state.profile && state.profile.name && state.profile.email); }
         function isQuizCompleted() { return Object.keys(state.answers || {}).length >= QUESTIONS.length; }
-        function getSnsImagePathByCode(code) { return code ? `img/sns/${encodeURIComponent(code)}.png` : ""; }
+        function getSnsImagePathByCode(code) { return code ? `img/sns/${encodeURIComponent(code)}.webp` : ""; }
         function sanitizeDownloadName(name) { return (name || "mobby-result").replace(/[\\/:*?"<>|]/g, "_"); }
         function isIOSLikeDevice() { return /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1); }
         function computeResult() {

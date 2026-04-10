@@ -67,7 +67,7 @@ function toDisplayTypeCode(code) {
 function getSnsImagePathByCode(code) {
     if (!code) return "";
     const resolvedCode = SNS_IMAGE_CODE_ALIAS[code] || code;
-    return `img/sns/${encodeURIComponent(resolvedCode)}.png`;
+    return `img/sns/${encodeURIComponent(resolvedCode)}.webp`;
 }
 function sanitizeDownloadName(name) { return (name || "mobby-result").replace(/[\\/:*?"<>|]/g, "_"); }
 function isIOSLikeDevice() { return /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1); }
