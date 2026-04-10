@@ -6,16 +6,16 @@ const COMPOSITING_TEMPLATES = [
     src: "compositing/template/mobby_inthebeach.webp"
   },
   {
-    id: "mobby-intherain",
-    name: "intherain",
+    id: "intherain-yami",
+    name: "intherainyami",
     description: "new template",
-    src: "compositing/template/mobby_intherain.webp"
+    src: "compositing/template/intherainyami.webp"
   },
   {
-    id: "mobby-intherain-black",
-    name: "intherain_black",
+    id: "intherain-black",
+    name: "intherainblack",
     description: "new template",
-    src: "compositing/template/mobby_intherain_black.webp"
+    src: "compositing/template/intherainblack.webp"
   },
   {
     id: "mobby-inthespaceship",
@@ -30,10 +30,10 @@ const COMPOSITING_TEMPLATES = [
     src: "compositing/template/mobby_onthebuilding.webp"
   },
   {
-    id: "mobby-onthepinkbuilding",
+    id: "onthepinkbuilding",
     name: "onthepinkbuilding",
     description: "new template",
-    src: "compositing/template/mobby_onthepinkbuilding.webp"
+    src: "compositing/template/onthepinkbuilding.webp"
   }
 ];
 

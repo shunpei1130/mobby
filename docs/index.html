@@ -6276,21 +6276,6 @@
     const mainContent = document.getElementById('main-content');
     const stickyCta = document.querySelector('.sticky-cta');
 
-    const splashSeenKey = 'mobby:index:splashSeen';
-    const getSplashSeen = () => {
-      try {
-        return sessionStorage.getItem(splashSeenKey) === 'true';
-      } catch (_) {
-        return false;
-      }
-    };
-    const setSplashSeen = () => {
-      try {
-        sessionStorage.setItem(splashSeenKey, 'true');
-      } catch (_) {
-        // sessionStorage may be unavailable in some private browsing modes.
-      }
-    };
     const revealMainContent = () => {
       if (mainContent) mainContent.classList.add('visible');
       document.body.style.overflowY = 'auto';
@@ -6303,7 +6288,7 @@
       initScrollObserver();
     };
 
-    const shouldSkipSplash = getSplashSeen();
+    const shouldSkipSplash = false;
 
     if (shouldSkipSplash) {
       if (splashElement) {
@@ -6319,7 +6304,6 @@
       const exitSplash = () => {
         if (splashDone) return;
         splashDone = true;
-        setSplashSeen();
         splashElement.classList.add('is-bursting');
 
         window.setTimeout(() => {
