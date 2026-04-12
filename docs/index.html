@@ -36,9 +36,9 @@
   <link rel="apple-touch-icon" href="img/Mobby.png">
 
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Nunito:wght@400;700&display=swap"
-    rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
   <link href="compositing/compositing.css" rel="stylesheet">
 
   <!-- 構造化データ -->
@@ -102,10 +102,6 @@
     }
   }
   </script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Yomogi&display=swap');
-  </style>
-
   <style>
     :root {
       --color-cream: #FFF8E7;
@@ -216,8 +212,8 @@
     .splash-logo-mask {
       position: absolute;
       inset: 0;
-      -webkit-mask-image: url("mobby_logo2.png");
-      mask-image: url("mobby_logo2.png");
+      -webkit-mask-image: url("mobby_logo2.webp");
+      mask-image: url("mobby_logo2.webp");
       -webkit-mask-repeat: no-repeat;
       mask-repeat: no-repeat;
       -webkit-mask-position: center;
@@ -238,7 +234,7 @@
     .splash-logo-reveal {
       position: absolute;
       inset: 0;
-      background: url("mobby_logo2.png") center / contain no-repeat;
+      background: url("mobby_logo2.webp") center / contain no-repeat;
       clip-path: inset(0 100% 0 0);
       animation: splashLogoReveal 2.1s cubic-bezier(0.22, 1, 0.36, 1) 0.18s forwards;
     }
@@ -390,19 +386,43 @@
       opacity: 1;
     }
 
+    .hero-intro {
+      position: relative;
+    }
+
+    @media (min-width: 769px) {
+      .hero-intro {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: clamp(20px, 4vh, 40px) 0 clamp(28px, 6vh, 56px);
+      }
+
+      .hero-intro .hero {
+        flex: 1 0 auto;
+      }
+    }
+
+    @media (min-width: 1101px) {
+      .hero-intro {
+        min-height: min(100vh, 980px);
+      }
+    }
+
     /* モビータイトル */
     .mobby-title {
       text-align: center;
       padding-top: 22px;
       padding-bottom: 0;
-      overflow: hidden;
+      overflow: visible;
     }
 
     .mobby-title img {
       display: block;
-      width: min(54vw, 470px);
-      clip-path: inset(14% 6% 24% 6%);
-      margin: -10% auto -18%;
+      width: min(46vw, 400px);
+      height: auto;
+      margin: 0 auto -6%;
     }
 
     @media (max-width: 768px) {
@@ -413,8 +433,7 @@
 
       .mobby-title img {
         width: min(74vw, 360px);
-        clip-path: inset(12% 4% 20% 4%);
-        margin: -8% auto -14%;
+        margin: 0 auto -10%;
       }
     }
 
@@ -424,9 +443,8 @@
       }
 
       .mobby-title img {
-        width: min(60vw, 430px);
-        clip-path: inset(12% 5% 22% 5%);
-        margin: -4% auto -10%;
+        width: min(52vw, 360px);
+        margin: 0 auto -8%;
       }
     }
 
@@ -720,8 +738,8 @@
     }
 
     .headline {
-      font-size: clamp(1.15rem, 3.4vw, 2.6rem);
-      margin-top: 0;
+      font-size: clamp(0.9rem, 2.2vw, 1.8rem);
+      margin-top: 44px;
       margin-bottom: 4px;
       text-align: center;
       text-shadow: 0 1px 0 rgba(255, 255, 255, 0.95), 0 12px 26px rgba(47, 79, 79, 0.14);
@@ -737,12 +755,25 @@
       .hero {
         padding-top: 5%;
       }
+
+      .headline {
+        margin-top: 30px;
+      }
     }
 
     @media (min-width: 769px) and (max-width: 1100px) {
       .headline {
-        margin-top: 0;
+        margin-top: 56px;
+      }
+
+      .headline {
         padding: 0 20px;
+      }
+    }
+
+    @media (min-width: 1101px) {
+      .headline {
+        margin-top: 60px;
       }
     }
 
@@ -4919,43 +4950,45 @@
         <div class="splash-logo-mask splash-logo-glow"></div>
         <div class="splash-logo-reveal"></div>
         <div class="splash-logo-mask splash-logo-trace"></div>
-        <img class="splash-logo-img" src="mobby_logo2.png" alt="Mobby logo" />
+        <img class="splash-logo-img" src="mobby_logo2.webp" alt="Mobby logo" fetchpriority="high" decoding="async" />
       </div>
     </div>
     <div class="instruction">TAP!</div>
   </div>
 
   <div id="main-content">
+    <div class="hero-intro">
       <div class="mobby-title" aria-label="Mobby">
-        <img src="mobby_logo2.png" alt="Mobby" />
-      </div>
-    <h1 class="headline reveal delay-200">心の沈黙に耳を澄ませる</h1>
-    <section class="hero">
-      <div class="container reveal">
-
-
-
-        <!-- 4色カルーセル -->
-        <div class="gacha-btn-wrap">
-          <a href="/gacha/index.html" class="gacha-btn" id="goGachaPage">
-            <span class="gacha-icon">🎰</span>モビーガチャ
-            <span class="gacha-badge">NEW</span>
-          </a>
+        <img src="mobby_logo2_trimmed.webp" alt="Mobby" fetchpriority="high" decoding="async" />
         </div>
-        <div class="hero-carousel-shell floating reveal delay-200">
-          <div class="hero-model-stage" aria-label="Mobby 3D モデル">
-            <div class="hero-model-carousel" id="heroModelCarousel" aria-live="polite"></div>
-            <div class="hero-smoke-glow" aria-hidden="true"></div>
-            <canvas id="heroSmokeCanvas" class="hero-smoke-canvas" aria-hidden="true"></canvas>
+      <h1 class="headline reveal delay-200">心の沈黙に耳を澄ませる</h1>
+      <section class="hero">
+        <div class="container reveal">
+
+
+
+          <!-- 4色カルーセル -->
+          <div class="gacha-btn-wrap">
+            <a href="/gacha/index.html" class="gacha-btn" id="goGachaPage">
+              <span class="gacha-icon">🎰</span>モビーガチャ
+              <span class="gacha-badge">NEW</span>
+            </a>
           </div>
-          <div class="hero-character-row">
-            <button class="hero-character-action peek-heart-btn" id="openHeartNote" type="button" aria-label="心を覗く">&#128269;&#65038;</button>
-            <div class="hero-character-name" id="heroCharacterName">もびりん</div>
-            <button class="hero-character-action mode" id="heroCarouselModeButton" type="button" aria-label="カルーセル表示を切り替える">通常</button>
+          <div class="hero-carousel-shell floating reveal delay-200">
+            <div class="hero-model-stage" aria-label="Mobby 3D モデル">
+              <div class="hero-model-carousel" id="heroModelCarousel" aria-live="polite"></div>
+              <div class="hero-smoke-glow" aria-hidden="true"></div>
+              <canvas id="heroSmokeCanvas" class="hero-smoke-canvas" aria-hidden="true"></canvas>
+            </div>
+            <div class="hero-character-row">
+              <button class="hero-character-action peek-heart-btn" id="openHeartNote" type="button" aria-label="心を覗く">&#128269;&#65038;</button>
+              <div class="hero-character-name" id="heroCharacterName">もびりん</div>
+              <button class="hero-character-action mode" id="heroCarouselModeButton" type="button" aria-label="カルーセル表示を切り替える">通常</button>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
 
 
     <!-- Viewfinder Overlay -->
@@ -5001,7 +5034,7 @@
               <div class="selected-badge">選択中</div>
               <div class="swatch" style="background:#F7A7C6;"></div>
               <div class="color-card-content">
-                <img class="product-thumb" src="carousel/after/mobby_fact_man_toka.webp" alt="Mobby Peach Pink">
+                <img class="product-thumb" src="carousel/after/mobby_fact_man_toka.webp" alt="Mobby Peach Pink" loading="lazy" decoding="async">
                 <div class="color-title">Peach Pink <span class="mini-tag">直感</span></div>
               </div>
               <div class="color-desc">好きに正直。</div>
@@ -5011,7 +5044,7 @@
               <div class="selected-badge">選択中</div>
               <div class="swatch" style="background:#9C7BFF;"></div>
               <div class="color-card-content">
-                <img class="product-thumb" src="carousel/after/mobby_gal_toka.webp" alt="Mobby Twilight Violet">
+                <img class="product-thumb" src="carousel/after/mobby_gal_toka.webp" alt="Mobby Twilight Violet" loading="lazy" decoding="async">
                 <div class="color-title">Twilight Violet <span class="mini-tag">世界観</span></div>
               </div>
               <div class="color-desc">こだわり強め。</div>
@@ -5021,7 +5054,7 @@
               <div class="selected-badge">選択中</div>
               <div class="swatch" style="background:#8FD7FF;"></div>
               <div class="color-card-content">
-                <img class="product-thumb" src="carousel/after/mobby_yami_toka.webp" alt="Mobby Aqua Sky">
+                <img class="product-thumb" src="carousel/after/mobby_yami_toka.webp" alt="Mobby Aqua Sky" loading="lazy" decoding="async">
                 <div class="color-title">Aqua Sky <span class="mini-tag">冒険</span></div>
               </div>
               <div class="color-desc">フッ軽。</div>
@@ -5031,7 +5064,7 @@
               <div class="selected-badge">選択中</div>
               <div class="swatch" style="background:#FFA24A;"></div>
               <div class="color-card-content">
-                <img class="product-thumb" src="carousel/after/mobby_yanki_toak.webp" alt="Mobby Sunny Orange">
+                <img class="product-thumb" src="carousel/after/mobby_yanki_toak.webp" alt="Mobby Sunny Orange" loading="lazy" decoding="async">
                 <div class="color-title">Sunny Orange <span class="mini-tag">勇気</span></div>
               </div>
               <div class="color-desc">前に進める。</div>
@@ -5596,9 +5629,6 @@
 
   <!-- Matter.js -->
   <!-- EmailJS -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="compositing/background-removal.js"></script>
-  <script src="compositing/compositing.js"></script>
   <script>
     /* reveal */
     function initScrollObserver() {
@@ -5968,15 +5998,16 @@
       let spawnCarry = 0;
       let smokeFrame = 0;
       let smokeEnabled = stage.classList.contains("is-smoke-active");
+      let smokeInView = true;
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
       let quality = getSmokeQuality();
 
       function syncSmokeVisibility() {
         const splash = document.getElementById("splash-screen");
         const splashHidden = !splash || splash.classList.contains("hidden");
-        const targetOpacity = smokeEnabled && splashHidden ? "1" : "0";
+        const targetOpacity = smokeEnabled && smokeInView && splashHidden ? "1" : "0";
         canvas.style.opacity = targetOpacity;
-        if (glow) glow.style.opacity = smokeEnabled ? "1" : "0";
+        if (glow) glow.style.opacity = smokeEnabled && smokeInView ? "1" : "0";
       }
 
       function getSmokeQuality() {
@@ -6007,13 +6038,19 @@
         }
 
         return {
-          spawnRate: 0.068,
-          emitCount: 2,
-          blur: 6,
-          maxParticles: 132,
+          spawnRate: 0.05,
+          emitCount: 1,
+          blur: 4,
+          maxParticles: 84,
           streak: true,
-          densityRange: 0.34
+          densityRange: 0.3
         };
+      }
+
+      function shouldRunSmokeLoop() {
+        const splash = document.getElementById("splash-screen");
+        const splashHidden = !splash || splash.classList.contains("hidden");
+        return splashHidden && !document.hidden && smokeInView && (smokeEnabled || smoke.length > 0 || clearBursts.length > 0);
       }
 
       function resizeSmoke() {
@@ -6061,6 +6098,7 @@
       window.addEventListener("pointerdown", (event) => {
         const splash = document.getElementById("splash-screen");
         if (splash && !splash.classList.contains("hidden")) return;
+        if (!smokeInView) return;
         addClearBurst(event.clientX, event.clientY);
       });
 
@@ -6170,11 +6208,16 @@
 
         ctx.restore();
 
-        smokeFrame = requestAnimationFrame(drawSmoke);
+        if (shouldRunSmokeLoop()) {
+          smokeFrame = requestAnimationFrame(drawSmoke);
+        } else {
+          smokeFrame = 0;
+        }
       }
 
       function startSmokeLoop() {
         if (smokeFrame) return;
+        if (!shouldRunSmokeLoop()) return;
         lastTs = 0;
         smokeFrame = requestAnimationFrame(drawSmoke);
       }
@@ -6191,22 +6234,50 @@
       syncSmokeVisibility();
       startSmokeLoop();
       window.addEventListener("resize", resizeSmoke, { passive: true });
+      new IntersectionObserver((entries) => {
+        const entry = entries[0];
+        smokeInView = Boolean(entry?.isIntersecting);
+        if (!smokeInView) {
+          spawnCarry = 0;
+        }
+        syncSmokeVisibility();
+        if (shouldRunSmokeLoop()) {
+          startSmokeLoop();
+        } else {
+          stopSmokeLoop();
+        }
+      }, {
+        threshold: 0.05,
+        rootMargin: "160px 0px"
+      }).observe(stage);
       window.addEventListener("hero-smoke-toggle", (event) => {
         smokeEnabled = Boolean(event.detail?.active);
         if (!smokeEnabled) {
           spawnCarry = 0;
         }
         syncSmokeVisibility();
+        if (shouldRunSmokeLoop()) {
+          startSmokeLoop();
+        } else {
+          stopSmokeLoop();
+        }
       });
       document.addEventListener("visibilitychange", () => {
-        if (document.hidden) {
+        if (shouldRunSmokeLoop()) {
+          startSmokeLoop();
+        } else {
           stopSmokeLoop();
-          return;
         }
-        startSmokeLoop();
         syncSmokeVisibility();
       });
-      prefersReducedMotion.addEventListener("change", resizeSmoke);
+      prefersReducedMotion.addEventListener("change", () => {
+        resizeSmoke();
+        if (shouldRunSmokeLoop()) {
+          startSmokeLoop();
+        } else {
+          stopSmokeLoop();
+        }
+      });
     })();
 
     /* 選択色の反映 */
@@ -6911,12 +6982,78 @@
     const VOTE_SUPABASE_URL = 'https://jwigpieoyyqvvmlmaxtl.supabase.co';
     const VOTE_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_kGUIKSR_7-5kulCSuNl5AA_YWjJ9DPJ';
     const VOTE_SESSION_STORAGE_KEY = 'mobby_vote_session_id_v1';
+    let voteSupabase = null;
+    let voteSupabasePromise = null;
+    let compositingInitPromise = null;
     const VOTE_CANDIDATES = [
       { id: 'fact-yellow', name: 'もびりん', image: 'carousel/after/mobby_fact_man_toka.webp' },
       { id: 'gal', name: 'もびち', image: 'carousel/after/mobby_gal_toka.webp' },
       { id: 'yami-purple', name: '病みモビー', image: 'carousel/after/mobby_yami_toka.webp' },
       { id: 'yanki', name: 'もびやん', image: 'carousel/after/mobby_yanki_toak.webp' }
     ];
+
+    function loadScriptOnce(src) {
+      const existing = document.querySelector(`script[src="${src}"]`);
+      if (existing) {
+        if (existing.dataset.loaded === 'true') return Promise.resolve(existing);
+        return new Promise((resolve, reject) => {
+          existing.addEventListener('load', () => resolve(existing), { once: true });
+          existing.addEventListener('error', () => reject(new Error(`Failed to load script: ${src}`)), { once: true });
+        });
+      }
+
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.async = true;
+        script.addEventListener('load', () => {
+          script.dataset.loaded = 'true';
+          resolve(script);
+        }, { once: true });
+        script.addEventListener('error', () => reject(new Error(`Failed to load script: ${src}`)), { once: true });
+        document.head.appendChild(script);
+      });
+    }
+
+    async function ensureVoteSupabase() {
+      if (voteSupabase) return voteSupabase;
+      if (!voteSupabasePromise) {
+        voteSupabasePromise = loadScriptOnce('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2')
+          .then(() => {
+            if (!window.supabase?.createClient) {
+              throw new Error('Supabase client is not available.');
+            }
+            voteSupabase = window.supabase.createClient(VOTE_SUPABASE_URL, VOTE_SUPABASE_PUBLISHABLE_KEY);
+            return voteSupabase;
+          })
+          .catch((error) => {
+            voteSupabasePromise = null;
+            throw error;
+          });
+      }
+      return voteSupabasePromise;
+    }
+
+    async function ensureCompositingTool() {
+      if (typeof window.initCompositingTool === 'function') {
+        window.initCompositingTool();
+        return;
+      }
+      if (!compositingInitPromise) {
+        compositingInitPromise = loadScriptOnce('compositing/compositing.js')
+          .then(() => {
+            if (typeof window.initCompositingTool !== 'function') {
+              throw new Error('Compositing tool is not available.');
+            }
+            window.initCompositingTool();
+          })
+          .catch((error) => {
+            compositingInitPromise = null;
+            throw error;
+          });
+      }
+      return compositingInitPromise;
+    }
 
     function updateGiftFanActionCenter() {
       if (!giftFanMenu) return;
@@ -6963,9 +7100,6 @@
       document.fonts.ready.then(updateHeroCarouselSafeClip).catch(() => {});
     }
 
-    const voteSupabase = window.supabase?.createClient
-      ? window.supabase.createClient(VOTE_SUPABASE_URL, VOTE_SUPABASE_PUBLISHABLE_KEY)
-      : null;
     let voteStateCache = createEmptyVoteState();
     let voteFeedbackMessage = '';
     let voteIsLoading = false;
@@ -6987,10 +7121,8 @@
     }
 
     async function fetchVoteState() {
-      if (!voteSupabase) {
-        throw new Error('Supabase client is not available.');
-      }
-      const { data, error } = await voteSupabase
+      const client = await ensureVoteSupabase();
+      const { data, error } = await client
         .from('vote_totals')
         .select('character_id, vote_count');
       if (error) throw error;
@@ -7020,10 +7152,8 @@
     }
 
     async function submitVote(voteId) {
-      if (!voteSupabase) {
-        throw new Error('Supabase client is not available.');
-      }
-      const { error } = await voteSupabase
+      const client = await ensureVoteSupabase();
+      const { error } = await client
         .from('votes')
         .insert({
           character_id: voteId,
@@ -7439,15 +7569,6 @@
         closeGiftFanMenu();
       });
     });
-    if (typeof window.initCompositingTool === 'function') {
-      window.initCompositingTool();
-    } else {
-      window.addEventListener('compositing:ready', () => {
-        if (typeof window.initCompositingTool === 'function') {
-          window.initCompositingTool();
-        }
-      }, { once: true });
-    }
     document.getElementById('openMessagePopup')?.addEventListener('click', () => openPopup('messagePopup'));
     diagnosisFanTrigger?.addEventListener('click', (e) => {
       e.preventDefault();
@@ -7462,7 +7583,14 @@
       openPopup('votePopup');
       await syncVoteState();
     });
-    document.getElementById('openCompositingPopup')?.addEventListener('click', () => {
+    document.getElementById('openCompositingPopup')?.addEventListener('click', async () => {
+      try {
+        await ensureCompositingTool();
+      } catch (error) {
+        console.error('Failed to initialize compositing tool:', error);
+        alert('ポスター作成ツールの読み込みに失敗しました。時間をおいて再度お試しください。');
+        return;
+      }
       openPopup('compositingPopup');
     });
     document.getElementById('goMobbyDiagnosis')?.addEventListener('click', () => openPopup('diagnosisPopup'));

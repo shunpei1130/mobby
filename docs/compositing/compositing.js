@@ -52,9 +52,36 @@ const compositingState = {
   }
 };
 
+function loadExternalScript(src) {
+  const existing = document.querySelector(`script[src="${src}"]`);
+  if (existing) {
+    if (existing.dataset.loaded === "true") return Promise.resolve(existing);
+    return new Promise((resolve, reject) => {
+      existing.addEventListener("load", () => resolve(existing), { once: true });
+      existing.addEventListener("error", () => reject(new Error(`Failed to load script: ${src}`)), { once: true });
+    });
+  }
+
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.async = true;
+    script.addEventListener("load", () => {
+      script.dataset.loaded = "true";
+      resolve(script);
+    }, { once: true });
+    script.addEventListener("error", () => reject(new Error(`Failed to load script: ${src}`)), { once: true });
+    document.head.appendChild(script);
+  });
+}
+
 async function getSegmentPerson() {
   let api = window.MobbyBackgroundRemoval;
   if (!api || typeof api.segmentPerson !== "function") {
+    await (window.__mobbyBackgroundRemovalPromise ||= loadExternalScript("compositing/background-removal.js").catch((error) => {
+      window.__mobbyBackgroundRemovalPromise = null;
+      throw error;
+    }));
     await new Promise((resolve) => {
       let attempts = 0;
       const timer = setInterval(() => {
@@ -332,6 +359,11 @@ function initCompositingTool() {
   if (!canvas || !scaleInput || !rotationInput || !uploadButton || !uploadOriginalButton || !backButton || !fileInput || !downloadButton || !templateConfirmButton) {
     return;
   }
+
+  if (canvas.dataset.compositingInitialized === "true") {
+    return;
+  }
+  canvas.dataset.compositingInitialized = "true";
 
   let pendingUploadMode = "remove";
 
