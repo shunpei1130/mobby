@@ -763,7 +763,7 @@
 
     @media (min-width: 769px) and (max-width: 1100px) {
       .headline {
-        margin-top: 56px;
+        margin-top: 72px;
       }
 
       .headline {
@@ -773,7 +773,7 @@
 
     @media (min-width: 1101px) {
       .headline {
-        margin-top: 60px;
+        margin-top: 84px;
       }
     }
 
@@ -1181,6 +1181,72 @@
 
       .hero-carousel-shell {
         margin-top: 0;
+      }
+    }
+
+    @media (min-width: 1101px) {
+      .hero-carousel-shell {
+        margin-top: -140px;
+      }
+
+      .popup-buttons-bar {
+        margin-top: -122px;
+        padding-top: 0;
+      }
+
+      .popup-buttons {
+        width: min(340px, 96vw);
+        padding-left: 0;
+      }
+
+      .gift-fan-menu {
+        top: -8px;
+        --gift-diagnosis-origin-x: 68px;
+        --gift-diagnosis-origin-y: -12px;
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="price"] {
+        transform: translate(0, -76px) scale(1.04);
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="faq"] {
+        transform: translate(272px, -76px) scale(1.04);
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="sns"] {
+        transform: translate(340px, -76px) scale(1.04);
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="encyclopedia"] {
+        transform: translate(136px, -76px) scale(1.04);
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="vote"] {
+        transform: translate(204px, -76px) scale(1.04);
+      }
+
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item="compositing"] {
+        transform: translate(68px, -76px) scale(1.04);
+      }
+
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="school"] {
+        transform: translate(0, 0) scale(1);
+      }
+
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="love"] {
+        transform: translate(68px, 0) scale(1);
+      }
+
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] {
+        transform: translate(136px, 0) scale(1);
+      }
+
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="night"] {
+        transform: translate(204px, 0) scale(1);
+      }
+
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="mama"] {
+        transform: translate(272px, 0) scale(1);
       }
     }
 
@@ -4904,6 +4970,62 @@
       opacity: 0;
       pointer-events: none;
       transform: scale(0.28) !important;
+    }
+
+    @media (min-width: 1101px) {
+      .gift-fan-menu {
+        --gift-diagnosis-origin-x: 0px !important;
+        --gift-diagnosis-origin-y: 0px !important;
+      }
+
+      .gift-fan-diagnosis-actions {
+        position: absolute !important;
+        left: calc(var(--gift-main-center-offset, 50%) - 130px) !important;
+        top: auto !important;
+        right: auto !important;
+        bottom: 0 !important;
+        width: max-content !important;
+        height: auto !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 12px;
+        transform: none !important;
+        overflow: visible;
+      }
+
+      .gift-fan-diagnosis-action {
+        position: relative !important;
+        right: auto !important;
+        bottom: auto !important;
+        flex: 0 0 56px;
+        width: 56px !important;
+        height: 56px !important;
+        padding: 0 !important;
+        border-radius: 18px !important;
+        font-size: 13px !important;
+        transform: scale(0.3) !important;
+      }
+
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="school"] {
+        transform: scale(1) !important;
+      }
+
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="love"] {
+        transform: scale(1) !important;
+      }
+
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] {
+        transform: scale(1) !important;
+      }
+
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="night"] {
+        transform: scale(1) !important;
+      }
+
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="mama"] {
+        transform: scale(1) !important;
+      }
     }
 
     @media (max-width: 768px) {
