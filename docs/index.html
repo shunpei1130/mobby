@@ -5978,6 +5978,15 @@
       const stage = canvas?.closest(".hero-model-stage");
       const glow = stage?.querySelector(".hero-smoke-glow");
       if (!canvas || !stage) return;
+      window.MOBBY_FLAGS = window.MOBBY_FLAGS || {};
+      if (typeof window.MOBBY_FLAGS.enableHeroSmoke !== "boolean") {
+        window.MOBBY_FLAGS.enableHeroSmoke = true;
+      }
+      if (!window.MOBBY_FLAGS.enableHeroSmoke) {
+        canvas.style.opacity = "0";
+        if (glow) glow.style.opacity = "0";
+        return;
+      }
 
       if (canvas.parentElement !== document.body) {
         document.body.appendChild(canvas);
@@ -5997,9 +6006,20 @@
       let lastTs = 0;
       let spawnCarry = 0;
       let smokeFrame = 0;
+      let smokeTimer = 0;
       let smokeEnabled = stage.classList.contains("is-smoke-active");
       let smokeInView = true;
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const maxSmokePixels = 1600 * 900;
+      const interactionIdleMs = 9000;
+      const deepIdleMs = 32000;
+      let lastInteractionTs = performance.now();
+      const perfSample = {
+        frames: 0,
+        totalDt: 0,
+        measured: false,
+        avgDt: 16.6
+      };
       let quality = getSmokeQuality();
 
       function syncSmokeVisibility() {
@@ -6014,24 +6034,49 @@
         const reduced = prefersReducedMotion.matches;
         const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
         const compactViewport = window.innerWidth < 768;
+        const logicalCores = navigator.hardwareConcurrency || 4;
+        const isDesktop = !coarsePointer && window.innerWidth >= 1024;
+        let tier = 0;
 
         if (reduced) {
+          tier = 2;
+        } else if (coarsePointer || compactViewport) {
+          tier = 1;
+        }
+
+        if (isDesktop) {
+          if (logicalCores <= 2) {
+            tier = Math.max(tier, 2);
+          } else if (logicalCores <= 4) {
+            tier = Math.max(tier, 1);
+          }
+        }
+
+        if (perfSample.measured) {
+          if (perfSample.avgDt > 24) {
+            tier = Math.max(tier, 2);
+          } else if (perfSample.avgDt > 18) {
+            tier = Math.max(tier, 1);
+          }
+        }
+
+        if (tier >= 2) {
           return {
             spawnRate: 0.024,
             emitCount: 1,
-            blur: 0,
-            maxParticles: 40,
-            streak: true,
+            blur: 0.75,
+            maxParticles: 24,
+            streak: false,
             densityRange: 0.24
           };
         }
 
-        if (coarsePointer || compactViewport) {
+        if (tier === 1) {
           return {
-            spawnRate: 0.038,
+            spawnRate: 0.036,
             emitCount: 1,
-            blur: 3,
-            maxParticles: 68,
+            blur: 2.2,
+            maxParticles: 48,
             streak: true,
             densityRange: 0.28
           };
@@ -6055,9 +6100,13 @@
 
       function resizeSmoke() {
         quality = getSmokeQuality();
-        const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-        width = Math.max(1, Math.round(window.innerWidth));
-        height = Math.max(1, Math.round(window.innerHeight));
+        const viewportWidth = Math.max(1, Math.round(window.innerWidth));
+        const viewportHeight = Math.max(1, Math.round(window.innerHeight));
+        const baseDpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+        const pixelBudgetDpr = Math.sqrt(maxSmokePixels / (viewportWidth * viewportHeight));
+        const dpr = Math.max(0.55, Math.min(baseDpr, pixelBudgetDpr));
+        width = viewportWidth;
+        height = viewportHeight;
         canvas.width = Math.round(width * dpr);
         canvas.height = Math.round(height * dpr);
         canvas.style.width = `${width}px`;
@@ -6099,12 +6148,49 @@
         const splash = document.getElementById("splash-screen");
         if (splash && !splash.classList.contains("hidden")) return;
         if (!smokeInView) return;
+        lastInteractionTs = performance.now();
         addClearBurst(event.clientX, event.clientY);
       });
 
+      function scheduleNextSmokeFrame(ts) {
+        if (!shouldRunSmokeLoop()) {
+          smokeFrame = 0;
+          smokeTimer = 0;
+          return;
+        }
+        const idleMs = ts - lastInteractionTs;
+        if (idleMs >= deepIdleMs) {
+          smokeFrame = 0;
+          smokeTimer = window.setTimeout(() => {
+            smokeTimer = 0;
+            startSmokeLoop();
+          }, 420);
+          return;
+        }
+        if (idleMs >= interactionIdleMs) {
+          smokeFrame = 0;
+          smokeTimer = window.setTimeout(() => {
+            smokeTimer = 0;
+            smokeFrame = requestAnimationFrame(drawSmoke);
+          }, 130);
+          return;
+        }
+        smokeFrame = requestAnimationFrame(drawSmoke);
+      }
+
       function drawSmoke(ts) {
         if (!lastTs) lastTs = ts;
-        const dt = Math.min(32, ts - lastTs || 16);
+        const frameDt = ts - lastTs || 16;
+        if (!perfSample.measured && frameDt > 0) {
+          perfSample.frames += 1;
+          perfSample.totalDt += frameDt;
+          if (perfSample.frames >= 24) {
+            perfSample.avgDt = perfSample.totalDt / perfSample.frames;
+            perfSample.measured = true;
+            quality = getSmokeQuality();
+          }
+        }
+        const dt = Math.min(32, frameDt);
         lastTs = ts;
 
         if (smokeEnabled) {
@@ -6208,21 +6294,21 @@
 
         ctx.restore();
 
-        if (shouldRunSmokeLoop()) {
-          smokeFrame = requestAnimationFrame(drawSmoke);
-        } else {
-          smokeFrame = 0;
-        }
+        scheduleNextSmokeFrame(ts);
       }
 
       function startSmokeLoop() {
-        if (smokeFrame) return;
+        if (smokeFrame || smokeTimer) return;
         if (!shouldRunSmokeLoop()) return;
         lastTs = 0;
         smokeFrame = requestAnimationFrame(drawSmoke);
       }
 
       function stopSmokeLoop() {
+        if (smokeTimer) {
+          clearTimeout(smokeTimer);
+          smokeTimer = 0;
+        }
         if (!smokeFrame) return;
         cancelAnimationFrame(smokeFrame);
         smokeFrame = 0;
@@ -6277,6 +6363,14 @@
         } else {
           stopSmokeLoop();
         }
+      });
+      ["pointermove", "wheel", "keydown", "touchstart"].forEach((eventName) => {
+        window.addEventListener(eventName, () => {
+          lastInteractionTs = performance.now();
+          if (shouldRunSmokeLoop()) {
+            startSmokeLoop();
+          }
+        }, { passive: true });
       });
     })();
 
@@ -8757,6 +8851,9 @@
   <script>
     window.MOBBY_FLAGS = window.MOBBY_FLAGS || {};
     window.MOBBY_FLAGS.enableMyPageEntry = false; // Set true to show entry links again.
+    if (typeof window.MOBBY_FLAGS.enableHeroSmoke !== "boolean") {
+      window.MOBBY_FLAGS.enableHeroSmoke = true; // Set false to disable hero smoke on problematic PCs.
+    }
 
     if (!window.MOBBY_FLAGS.enableMyPageEntry) {
       document.querySelectorAll('a[href="/mypage-register.html"]').forEach((link) => {
@@ -8827,4 +8924,3 @@
 </body>
 
 </html>
-
