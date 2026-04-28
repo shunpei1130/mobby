@@ -134,6 +134,45 @@
       /* splash中 */
     }
 
+    body.low-gpu .popup-overlay,
+    body.low-gpu .vf-backdrop,
+    body.low-gpu .vf-tip,
+    body.low-gpu .gallery-nav-btn,
+    body.low-gpu .image-gallery-indicator,
+    body.low-gpu .sticky-cta .bar {
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+    }
+
+    body.low-gpu .popup-overlay {
+      background: rgba(47, 79, 79, 0.9);
+    }
+
+    body.low-gpu .splash-logo-glow,
+    body.low-gpu .hero-smoke-glow,
+    body.low-gpu [class^="vf-"],
+    body.low-gpu [class*=" vf-"] {
+      filter: none !important;
+    }
+
+    body.low-gpu .gift-fan-trigger,
+    body.low-gpu .gift-fan-menu > .btn,
+    body.low-gpu .gift-fan-action,
+    body.low-gpu .gift-fan-diagnosis-action,
+    body.low-gpu .popup-content {
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        0 6px 14px rgba(47, 79, 79, 0.14) !important;
+    }
+
+    body.low-gpu .gift-fan-trigger:hover,
+    body.low-gpu .gift-fan-menu > .btn:hover,
+    body.low-gpu .vote-submit-btn:hover {
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        0 8px 18px rgba(47, 79, 79, 0.16) !important;
+    }
+
     #splash-screen.hidden {
       opacity: 0;
       visibility: hidden;
@@ -5630,6 +5669,39 @@
   <!-- Matter.js -->
   <!-- EmailJS -->
   <script>
+    (() => {
+      const reducedMotionMedia = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      function shouldEnableLowGpu() {
+        if (reducedMotionMedia.matches) return true;
+
+        const cpuCores = navigator.hardwareConcurrency || 0;
+        const memoryGb = navigator.deviceMemory || 0;
+        const saveDataEnabled = navigator.connection?.saveData === true;
+        const compactViewport = Math.min(window.innerWidth, window.innerHeight) <= 820;
+        const score =
+          (cpuCores > 0 && cpuCores <= 4 ? 1 : 0) +
+          (memoryGb > 0 && memoryGb <= 4 ? 1 : 0) +
+          (saveDataEnabled ? 1 : 0) +
+          (compactViewport ? 1 : 0);
+
+        return score >= 2;
+      }
+
+      function syncLowGpuClass() {
+        document.body.classList.toggle("low-gpu", shouldEnableLowGpu());
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", syncLowGpuClass, { once: true });
+      } else {
+        syncLowGpuClass();
+      }
+
+      reducedMotionMedia.addEventListener("change", syncLowGpuClass);
+      window.addEventListener("resize", syncLowGpuClass, { passive: true });
+    })();
+
     /* reveal */
     function initScrollObserver() {
       const revealElements = document.querySelectorAll('.reveal');
@@ -8827,4 +8899,3 @@
 </body>
 
 </html>
-
