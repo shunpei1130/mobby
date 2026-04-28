@@ -6001,6 +6001,7 @@
       let smokeInView = true;
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
       let quality = getSmokeQuality();
+      let renderScale = 1;
 
       function syncSmokeVisibility() {
         const splash = document.getElementById("splash-screen");
@@ -6014,6 +6015,9 @@
         const reduced = prefersReducedMotion.matches;
         const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
         const compactViewport = window.innerWidth < 768;
+        const cpuCores = Number(navigator.hardwareConcurrency || 4);
+        const mem = Number(navigator.deviceMemory || 0);
+        const lowSpecDesktop = !coarsePointer && !compactViewport && (cpuCores <= 4 || (mem > 0 && mem <= 4));
 
         if (reduced) {
           return {
@@ -6028,22 +6032,33 @@
 
         if (coarsePointer || compactViewport) {
           return {
-            spawnRate: 0.038,
+            spawnRate: 0.032,
             emitCount: 1,
-            blur: 3,
-            maxParticles: 68,
+            blur: 2,
+            maxParticles: 54,
             streak: true,
-            densityRange: 0.28
+            densityRange: 0.24
+          };
+        }
+
+        if (lowSpecDesktop) {
+          return {
+            spawnRate: 0.024,
+            emitCount: 1,
+            blur: 1,
+            maxParticles: 34,
+            streak: false,
+            densityRange: 0.2
           };
         }
 
         return {
-          spawnRate: 0.05,
+          spawnRate: 0.03,
           emitCount: 1,
-          blur: 4,
-          maxParticles: 84,
+          blur: 2,
+          maxParticles: 46,
           streak: true,
-          densityRange: 0.3
+          densityRange: 0.23
         };
       }
 
@@ -6055,14 +6070,22 @@
 
       function resizeSmoke() {
         quality = getSmokeQuality();
+        const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+        const compactViewport = window.innerWidth < 768;
+        const desktopMode = !coarsePointer && !compactViewport;
+        renderScale = desktopMode
+          ? Math.max(0.58, Math.min(0.78, 1366 / Math.max(window.innerWidth, 1)))
+          : 1;
         const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
         width = Math.max(1, Math.round(window.innerWidth));
         height = Math.max(1, Math.round(window.innerHeight));
-        canvas.width = Math.round(width * dpr);
-        canvas.height = Math.round(height * dpr);
+        const renderWidth = Math.max(1, Math.round(width * renderScale));
+        const renderHeight = Math.max(1, Math.round(height * renderScale));
+        canvas.width = Math.round(renderWidth * dpr);
+        canvas.height = Math.round(renderHeight * dpr);
         canvas.style.width = `${width}px`;
         canvas.style.height = `${height}px`;
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.setTransform(dpr / renderScale, 0, 0, dpr / renderScale, 0, 0);
         const rect = stage.getBoundingClientRect();
         sourceX = rect.left + rect.width * source.x;
         sourceY = rect.top + rect.height * source.y;
@@ -8827,4 +8850,3 @@
 </body>
 
 </html>
-
