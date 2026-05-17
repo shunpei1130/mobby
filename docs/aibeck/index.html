@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="format-detection" content="telephone=no,address=no,email=no">
+  <title>AIBECK推し活覚醒タイプ診断 | Mobby</title>
+  <meta name="description" content="ライブの熱量、推し方、SNSでの広げ方から、あなたのAIBECK現場タイプを診断します。">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AIBECK推し活覚醒タイプ診断">
+  <meta property="og:description" content="ライブの熱量、推し方、SNSでの広げ方から、あなたのAIBECK現場タイプを診断します。">
+  <meta property="og:url" content="https://shunpei1130.github.io/mobby/aibeck/">
+  <meta property="og:image" content="https://shunpei1130.github.io/mobby/aibeck/img/hero.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#fff8e8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-main: 'Yomogi', cursive;
+      --bg: #fff8e8;
+      --surface: #ffffff;
+      --surface2: #fff3d9;
+      --text-main: #1d1d1f;
+      --text-sub: #6e6e73;
+      --accent: #2f6f62;
+      --accent-soft: #e8f4ee;
+      --accent2: #c02655;
+      --accent3: #35b6b4;
+      --line: #d8d0c2;
+      --danger: #c2410c;
+      --shadow-sm: 0 2px 8px rgba(64, 43, 26, 0.06);
+      --shadow-lg: 0 12px 30px rgba(64, 43, 26, 0.10);
+      color-scheme: light;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-main);
+      background:
+        radial-gradient(circle at 15% 4%, color-mix(in srgb, var(--accent3) 32%, transparent), transparent 28%),
+        radial-gradient(circle at 90% 0%, color-mix(in srgb, var(--accent2) 16%, transparent), transparent 30%),
+        var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    button {
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s, box-shadow 0.2s, border-color 0.2s;
+      font-family: var(--font-main);
+    }
+    button:hover { background: #fff; transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+    button:active { transform: translateY(0) scale(0.96); }
+    button:disabled { opacity: 0.42; cursor: not-allowed; transform: none; }
+    .wrap { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
+    header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .logo { width: 30px; height: 30px; border-radius: 10px; background-image: url('../16school/logo.jpg'); background-size: cover; background-position: center; box-shadow: 0 4px 10px rgba(47, 111, 98, 0.20); margin-right: 10px; }
+    .title h1 { font-size: 14px; margin: 0; font-weight: 700; color: var(--accent); }
+    .title p { margin: 0; color: var(--text-sub); font-size: 12px; }
+    .nav { display: flex; gap: 12px; align-items: center; }
+    .nav a { color: var(--text-main); font-size: 11px; font-weight: 700; padding: 8px 16px; border-radius: 8px; transition: background 0.2s; }
+    .nav a:hover, .nav a.active { background: var(--accent-soft); color: var(--accent); }
+    .panel { background: var(--surface); border-radius: 24px; padding: 32px; box-shadow: var(--shadow-lg); border: 1px solid var(--line); }
+    .fade-in { animation: fadeIn 0.42s ease-out both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .kicker { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 800; margin: 0 0 8px; }
+    .big { font-size: clamp(30px, 6vw, 46px); line-height: 1.12; margin: 0 0 16px; letter-spacing: 0; }
+    .text-body { font-size: 15px; color: var(--text-sub); }
+    .primary { background: linear-gradient(135deg, #2f6f62, #35b6b4); color: #fff; box-shadow: 0 12px 24px rgba(47, 111, 98, 0.20); }
+    .primary:hover { filter: brightness(0.96); }
+    .home-btn { margin-right: 6px; font-size: 15px; padding: 6px 18px; border-radius: 20px; border: 1px solid var(--line); background: var(--surface); color: var(--accent); }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 22px; align-items: center; margin: 24px auto 30px; max-width: 640px; text-align: left; }
+    .hero-art { position: relative; border-radius: 20px; overflow: hidden; background: var(--surface2); min-height: 260px; box-shadow: var(--shadow-sm); border: 1px solid var(--line); }
+    .hero-art img { width: 100%; height: 100%; min-height: 260px; object-fit: cover; display: block; }
+    .hero-copy-card { display: grid; gap: 12px; }
+    .hero-note { background: var(--accent-soft); border-radius: 14px; padding: 14px; color: var(--accent); font-size: 13px; font-weight: 700; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .cta-row a { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line); background: #fff; font-size: 13px; font-weight: 700; box-shadow: var(--shadow-sm); }
+    .progress { margin: 0 0 26px; }
+    .progress-meta { display: flex; justify-content: space-between; color: var(--text-sub); font-size: 12px; margin-bottom: 8px; font-weight: 700; }
+    .progress-bar { height: 10px; border-radius: 999px; background: var(--surface2); overflow: hidden; border: 1px solid var(--line); }
+    .progress-bar span { display: block; height: 100%; width: 0%; background: linear-gradient(135deg, #2f6f62, #35b6b4); transition: width 0.25s ease; }
+    .q-card { min-height: 260px; display: grid; align-content: center; gap: 22px; }
+    .q-number { color: var(--accent); font-weight: 800; font-size: 13px; }
+    .q-title { font-size: clamp(22px, 5vw, 32px); line-height: 1.35; margin: 0; }
+    .likert7 { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; margin-top: 6px; }
+    .likert7 button { padding: 12px 6px; border-radius: 12px; background: var(--surface2); border-color: var(--line); min-height: 52px; font-size: 15px; }
+    .likert7 button.selected { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 8px 18px rgba(47, 111, 98, 0.18); }
+    .scale-labels { display: flex; justify-content: space-between; gap: 12px; color: var(--text-sub); font-size: 11px; font-weight: 700; }
+    .nav-row { display: flex; justify-content: space-between; gap: 12px; margin-top: 24px; }
+    .result-hero { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 24px; align-items: center; margin-top: 20px; }
+    .result-image { border-radius: 22px; overflow: hidden; border: 1px solid var(--line); background: var(--surface2); box-shadow: var(--shadow-sm); aspect-ratio: 1 / 1; }
+    .result-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 7px 12px; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 800; margin-bottom: 8px; }
+    .result-title { font-size: clamp(28px, 6vw, 42px); line-height: 1.12; margin: 0 0 12px; }
+    .point-list { display: grid; gap: 8px; margin: 18px 0; padding: 0; list-style: none; }
+    .point-list li { background: var(--surface2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 13px; font-weight: 700; }
+    .info-card { margin-top: 28px; padding: 20px; background: var(--accent-soft); border-radius: 18px; color: var(--accent); font-weight: 700; }
+    .char-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 24px; }
+    .char-card { background: #fff; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; box-shadow: var(--shadow-sm); }
+    .char-card img { width: 100%; aspect-ratio: 1.35 / 1; object-fit: cover; display: block; }
+    .char-card div { padding: 14px; }
+    .char-card h3 { margin: 0 0 6px; font-size: 17px; color: var(--accent); }
+    .char-card p { margin: 0; color: var(--text-sub); font-size: 12px; line-height: 1.55; }
+    .share { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .hidden { display: none !important; }
+    footer { margin-top: 38px; color: var(--text-sub); font-size: 11px; text-align: center; }
+    @media (max-width: 720px) {
+      .wrap { padding: 24px 14px 60px; }
+      header { margin-bottom: 22px; }
+      .panel { padding: 22px 16px; border-radius: 20px; }
+      .hero-grid, .result-hero { grid-template-columns: 1fr; }
+      .hero-art { min-height: 220px; }
+      .hero-art img { min-height: 220px; }
+      .likert7 { gap: 5px; }
+      .likert7 button { min-height: 46px; padding: 10px 0; }
+      .char-grid { grid-template-columns: 1fr; }
+      .nav { width: 100%; justify-content: flex-start; overflow-x: auto; padding-bottom: 4px; }
+      .nav a { flex: 0 0 auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="title">
+          <h1>Mobby</h1>
+          <p>診断コンテンツ</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="main">
+        <a class="active" href="#top">TOP</a>
+        <a href="#quiz">診断</a>
+        <a href="#types">タイプ一覧</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section id="home" class="panel fade-in">
+        <p class="kicker">AIBECK FAN ENERGY</p>
+        <h2 class="big">AIBECK推し活覚醒タイプ診断</h2>
+        <p class="text-body">AIBECKのライブを知った瞬間から、現場での沸き方、友達への勧め方、グッズの持ち方まで推し活には個性が出ます。32問に答えて、あなたがどんな形でAIBECKの熱を広げる人なのか見てみましょう。</p>
+        <div class="hero-grid">
+          <div class="hero-copy-card">
+            <div class="hero-note">AIBECK公式導線やライブ予約につながる共同企画ラフです。</div>
+            <div class="cta-row" id="homeCtas"></div>
+            <button class="primary" id="startBtn">診断をはじめる</button>
+          </div>
+          <div class="hero-art"><img src="img/hero.jpg" alt=""></div>
+        </div>
+      </section>
+
+      <section id="quiz" class="panel fade-in hidden" aria-live="polite">
+        <div class="progress">
+          <div class="progress-meta"><span id="progressText"></span><span id="progressPercent"></span></div>
+          <div class="progress-bar"><span id="progressFill"></span></div>
+        </div>
+        <div class="q-card">
+          <div class="q-number" id="qNumber"></div>
+          <h2 class="q-title" id="qText"></h2>
+          <div class="scale-labels"><span>まったく違う</span><span>とても当てはまる</span></div>
+          <div class="likert7" id="choices"></div>
+        </div>
+        <div class="nav-row">
+          <button id="backBtn">戻る</button>
+          <button id="nextBtn" class="primary">次へ</button>
+        </div>
+      </section>
+
+      <section id="result" class="panel fade-in hidden">
+        <p class="kicker">診断結果</p>
+        <div class="result-hero">
+          <div class="result-image"><img id="resultImg" src="" alt=""></div>
+          <div>
+            <span class="badge" id="resultBadge"></span>
+            <h2 class="result-title" id="resultName"></h2>
+            <p class="text-body" id="resultLead"></p>
+            <ul class="point-list" id="resultPoints"></ul>
+            <div class="share">
+              <button id="xShare">Xでシェア</button>
+              <button id="lineShare">LINEで送る</button>
+              <button id="retryBtn" class="primary">もう一度診断</button>
+            </div>
+          </div>
+        </div>
+        <div class="info-card">ライブの熱量、推し方、SNSでの広げ方から、あなたのAIBECK現場タイプを診断します。</div>
+        <div class="cta-row" id="resultCtas"></div>
+      </section>
+
+      <section id="types" class="panel fade-in" style="margin-top: 24px;">
+        <p class="kicker">8タイプ一覧</p>
+        <h2 class="big">8つのタイプ</h2>
+        <div class="char-grid" id="typeGrid"></div>
+      </section>
+    </main>
+
+    <footer>© Mobby. This is a collaboration rough draft for review.</footer>
+  </div>
+  <script>
+    const DATA = {"lang":"ja","title":"AIBECK推し活覚醒タイプ診断","shareText":"AIBECK推し活覚醒タイプ診断をやってみた","results":[{"id":"front","name":"最前沸きロック","lead":"ライブの一音目でスイッチが入る、熱量先行型の現場エンジン。","image":"type1.jpg","points":["好きが顔に出る","曲の山場で一気に沸く","初見の人も巻き込める"]},{"id":"setlist","name":"セトリ予想職人","lead":"楽曲の流れ、MC、会場の空気を読んで楽しむ分析派。","image":"type2.jpg","points":["予習が強い","余韻を言語化できる","布教文がうまい"]},{"id":"leader","name":"現場連帯リーダー","lead":"友達や新規ファンを自然に輪へ入れる、現場の温度調整役。","image":"type3.jpg","points":["待ち合わせが得意","安心感がある","現場後の共有が丁寧"]},{"id":"newcomer","name":"初見沼落ち","lead":"一度見たら一気に深く知りたくなる、発見力の高いタイプ。","image":"type4.jpg","points":["直感が鋭い","推し増ししやすい","新鮮な感想が強い"]},{"id":"merch","name":"グッズ装備隊長","lead":"Tシャツ、ペンライト、小物まで推し活の見せ方を作れる人。","image":"type5.jpg","points":["準備が楽しい","写真映えに強い","推し色を大事にする"]},{"id":"sns","name":"SNS拡散エンジン","lead":"結果、感想、ライブ情報を言葉と画像で広げるシェア担当。","image":"type6.jpg","points":["投稿が早い","タグの使い方が自然","友達を誘える"]},{"id":"dark","name":"ダークロック覚醒","lead":"強い音、鋭い表情、暗転の瞬間に一番刺さる覚醒型。","image":"type7.jpg","points":["低音に反応する","世界観重視","かっこよさに弱い"]},{"id":"quiet","name":"静かに燃える古参肌","lead":"派手に騒がなくても、長く深く支える芯のある応援タイプ。","image":"type8.jpg","points":["継続力がある","変化を見守れる","一言の感想が深い"]}],"questions":[{"axis":"front","text":"ライブでは、曲が始まった瞬間に体が先に動く。"},{"axis":"setlist","text":"セトリや演出の流れを考えながら見るのが好き。"},{"axis":"leader","text":"初めて来た友達にも現場の楽しみ方を教えたくなる。"},{"axis":"newcomer","text":"気になるグループは一気に過去動画まで見に行く。"},{"axis":"merch","text":"ライブ前の服や持ち物を考える時間も推し活の一部だ。"},{"axis":"sns","text":"良かったライブは、その日のうちにSNSで共有したい。"},{"axis":"dark","text":"暗めで鋭いロック曲や表情に強く惹かれる。"},{"axis":"quiet","text":"大きく騒ぐより、長く見続ける応援に価値を感じる。"},{"axis":"front","text":"会場の熱気が上がるほど、自分のテンションも上がる。"},{"axis":"setlist","text":"曲順の意味やライブ全体のストーリーを考える。"},{"axis":"leader","text":"現場では周りの人が楽しめているかも気になる。"},{"axis":"newcomer","text":"初見で刺さった瞬間を覚えているタイプだ。"},{"axis":"merch","text":"推しカラーやグッズを身につけると気合いが入る。"},{"axis":"sns","text":"友達に勧めるときは、動画やリンクも一緒に送る。"},{"axis":"dark","text":"激しい照明やバンドサウンドの空気が好き。"},{"axis":"quiet","text":"流行より、自分が本当に好きなものを信じたい。"},{"axis":"front","text":"ライブのコールや振りで一体感を感じるのが好き。"},{"axis":"setlist","text":"ライブ後に良かった曲をメモしたくなる。"},{"axis":"leader","text":"一人参加の人にも優しい現場が増えてほしい。"},{"axis":"newcomer","text":"知らない曲でもステージの熱で好きになれる。"},{"axis":"merch","text":"物販や特典会の時間も思い出として残したい。"},{"axis":"sns","text":"感想を短くわかりやすくまとめるのが得意。"},{"axis":"dark","text":"かわいいだけでなく、強い表現にも惹かれる。"},{"axis":"quiet","text":"推しの成長や変化を静かに見守るのが好き。"},{"axis":"front","text":"現場でしか味わえない音圧や距離感を大事にしたい。"},{"axis":"setlist","text":"友達におすすめ曲を聞かれたら理由付きで答える。"},{"axis":"leader","text":"ライブ前後の移動や集合も段取りよく進めたい。"},{"axis":"newcomer","text":"新しい推し候補を見つける瞬間が楽しい。"},{"axis":"merch","text":"推し活写真を撮るなら背景や小物にもこだわる。"},{"axis":"sns","text":"診断結果やライブ情報はシェアしたくなる。"},{"axis":"dark","text":"ステージの影や赤い照明にテンションが上がる。"},{"axis":"quiet","text":"長く好きでいるほど言葉にしすぎない良さもある。"}],"ctas":[{"label":"Official Site","url":"https://aibeck.com/"},{"label":"LIVE予約","url":"https://tiget.net/users/34391"},{"label":"Xを見る","url":"https://twitter.com/AIBECK_"}]};
+    const state = { index: 0, answers: Array(DATA.questions.length).fill(null) };
+    const $ = (id) => document.getElementById(id);
+    const home = $("home");
+    const quiz = $("quiz");
+    const result = $("result");
+    const choices = $("choices");
+    function renderCtas(targetId) {
+      $(targetId).innerHTML = DATA.ctas.map((cta) => '<a href="' + cta.url + '" target="_blank" rel="noopener">' + cta.label + '</a>').join("");
+    }
+    function renderTypes() {
+      $("typeGrid").innerHTML = DATA.results.map((item) =>
+        '<article class="char-card"><img src="img/' + item.image + '" alt=""><div><h3>' + item.name + '</h3><p>' + item.lead + '</p></div></article>'
+      ).join("");
+    }
+    function renderQuestion() {
+      const q = DATA.questions[state.index];
+      $("qNumber").textContent = "Q" + String(state.index + 1).padStart(2, "0") + " / " + DATA.questions.length;
+      $("qText").textContent = q.text;
+      $("progressText").textContent = DATA.lang === "en" ? "Progress" : "進捗";
+      const pct = Math.round((state.index / DATA.questions.length) * 100);
+      $("progressPercent").textContent = pct + "%";
+      $("progressFill").style.width = pct + "%";
+      choices.innerHTML = "";
+      for (let i = 1; i <= 7; i += 1) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = i;
+        btn.className = state.answers[state.index] === i ? "selected" : "";
+        btn.addEventListener("click", () => {
+          state.answers[state.index] = i;
+          renderQuestion();
+        });
+        choices.appendChild(btn);
+      }
+      $("backBtn").disabled = state.index === 0;
+      $("nextBtn").textContent = state.index === DATA.questions.length - 1 ? "結果を見る" : "次へ";
+      $("nextBtn").disabled = state.answers[state.index] === null;
+    }
+    function calcResult() {
+      const scores = Object.fromEntries(DATA.results.map((r) => [r.id, 0]));
+      DATA.questions.forEach((q, i) => {
+        scores[q.axis] += state.answers[i] || 0;
+      });
+      return DATA.results.slice().sort((a, b) => scores[b.id] - scores[a.id])[0];
+    }
+    function showResult() {
+      const item = calcResult();
+      quiz.classList.add("hidden");
+      result.classList.remove("hidden");
+      $("progressFill").style.width = "100%";
+      $("resultImg").src = "img/" + item.image;
+      $("resultBadge").textContent = DATA.lang === "en" ? "Your type" : "あなたのタイプ";
+      $("resultName").textContent = item.name;
+      $("resultLead").textContent = item.lead;
+      $("resultPoints").innerHTML = item.points.map((p) => "<li>" + p + "</li>").join("");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    function shareUrl(kind) {
+      const url = location.href;
+      const text = encodeURIComponent(DATA.shareText + " | Mobby");
+      const encodedUrl = encodeURIComponent(url);
+      return kind === "line"
+        ? "https://social-plugins.line.me/lineit/share?url=" + encodedUrl
+        : "https://twitter.com/intent/tweet?text=" + text + "&url=" + encodedUrl;
+    }
+    $("startBtn").addEventListener("click", () => {
+      home.classList.add("hidden");
+      quiz.classList.remove("hidden");
+      renderQuestion();
+      location.hash = "quiz";
+    });
+    $("backBtn").addEventListener("click", () => {
+      state.index = Math.max(0, state.index - 1);
+      renderQuestion();
+    });
+    $("nextBtn").addEventListener("click", () => {
+      if (state.answers[state.index] === null) return;
+      if (state.index === DATA.questions.length - 1) showResult();
+      else {
+        state.index += 1;
+        renderQuestion();
+      }
+    });
+    $("retryBtn").addEventListener("click", () => {
+      state.index = 0;
+      state.answers.fill(null);
+      result.classList.add("hidden");
+      home.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    $("xShare").addEventListener("click", () => window.open(shareUrl("x"), "_blank", "noopener"));
+    $("lineShare").addEventListener("click", () => window.open(shareUrl("line"), "_blank", "noopener"));
+    renderCtas("homeCtas");
+    renderCtas("resultCtas");
+    renderTypes();
+  </script>
+</body>
+</html>
