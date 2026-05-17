@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="format-detection" content="telephone=no,address=no,email=no">
+  <title>Your Dancefloor Energy Quiz | Mobby</title>
+  <meta name="description" content="Find the dance energy that matches your movement, mood, style, and social spark.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Your Dancefloor Energy Quiz">
+  <meta property="og:description" content="Find the dance energy that matches your movement, mood, style, and social spark.">
+  <meta property="og:url" content="https://shunpei1130.github.io/mobby/makuriya/">
+  <meta property="og:image" content="https://shunpei1130.github.io/mobby/makuriya/img/hero.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#fff8e8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-main: 'Yomogi', cursive;
+      --bg: #fff8e8;
+      --surface: #ffffff;
+      --surface2: #fff3d9;
+      --text-main: #1d1d1f;
+      --text-sub: #6e6e73;
+      --accent: #2f6f62;
+      --accent-soft: #e8f4ee;
+      --accent2: #de6246;
+      --accent3: #23a6a6;
+      --line: #d8d0c2;
+      --danger: #c2410c;
+      --shadow-sm: 0 2px 8px rgba(64, 43, 26, 0.06);
+      --shadow-lg: 0 12px 30px rgba(64, 43, 26, 0.10);
+      color-scheme: light;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-main);
+      background:
+        radial-gradient(circle at 15% 4%, color-mix(in srgb, var(--accent3) 32%, transparent), transparent 28%),
+        radial-gradient(circle at 90% 0%, color-mix(in srgb, var(--accent2) 16%, transparent), transparent 30%),
+        var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    button {
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s, box-shadow 0.2s, border-color 0.2s;
+      font-family: var(--font-main);
+    }
+    button:hover { background: #fff; transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+    button:active { transform: translateY(0) scale(0.96); }
+    button:disabled { opacity: 0.42; cursor: not-allowed; transform: none; }
+    .wrap { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
+    header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .logo { width: 30px; height: 30px; border-radius: 10px; background-image: url('../16school/logo.jpg'); background-size: cover; background-position: center; box-shadow: 0 4px 10px rgba(47, 111, 98, 0.20); margin-right: 10px; }
+    .title h1 { font-size: 14px; margin: 0; font-weight: 700; color: var(--accent); }
+    .title p { margin: 0; color: var(--text-sub); font-size: 12px; }
+    .nav { display: flex; gap: 12px; align-items: center; }
+    .nav a { color: var(--text-main); font-size: 11px; font-weight: 700; padding: 8px 16px; border-radius: 8px; transition: background 0.2s; }
+    .nav a:hover, .nav a.active { background: var(--accent-soft); color: var(--accent); }
+    .panel { background: var(--surface); border-radius: 24px; padding: 32px; box-shadow: var(--shadow-lg); border: 1px solid var(--line); }
+    .fade-in { animation: fadeIn 0.42s ease-out both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .kicker { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 800; margin: 0 0 8px; }
+    .big { font-size: clamp(30px, 6vw, 46px); line-height: 1.12; margin: 0 0 16px; letter-spacing: 0; }
+    .text-body { font-size: 15px; color: var(--text-sub); }
+    .primary { background: linear-gradient(135deg, #2f6f62, #de6246); color: #fff; box-shadow: 0 12px 24px rgba(47, 111, 98, 0.20); }
+    .primary:hover { filter: brightness(0.96); }
+    .home-btn { margin-right: 6px; font-size: 15px; padding: 6px 18px; border-radius: 20px; border: 1px solid var(--line); background: var(--surface); color: var(--accent); }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 22px; align-items: center; margin: 24px auto 30px; max-width: 640px; text-align: left; }
+    .hero-art { position: relative; border-radius: 20px; overflow: hidden; background: var(--surface2); min-height: 260px; box-shadow: var(--shadow-sm); border: 1px solid var(--line); }
+    .hero-art img { width: 100%; height: 100%; min-height: 260px; object-fit: cover; display: block; }
+    .hero-copy-card { display: grid; gap: 12px; }
+    .hero-note { background: var(--accent-soft); border-radius: 14px; padding: 14px; color: var(--accent); font-size: 13px; font-weight: 700; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .cta-row a { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line); background: #fff; font-size: 13px; font-weight: 700; box-shadow: var(--shadow-sm); }
+    .progress { margin: 0 0 26px; }
+    .progress-meta { display: flex; justify-content: space-between; color: var(--text-sub); font-size: 12px; margin-bottom: 8px; font-weight: 700; }
+    .progress-bar { height: 10px; border-radius: 999px; background: var(--surface2); overflow: hidden; border: 1px solid var(--line); }
+    .progress-bar span { display: block; height: 100%; width: 0%; background: linear-gradient(135deg, #2f6f62, #de6246); transition: width 0.25s ease; }
+    .q-card { min-height: 260px; display: grid; align-content: center; gap: 22px; }
+    .q-number { color: var(--accent); font-weight: 800; font-size: 13px; }
+    .q-title { font-size: clamp(22px, 5vw, 32px); line-height: 1.35; margin: 0; }
+    .likert7 { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; margin-top: 6px; }
+    .likert7 button { padding: 12px 6px; border-radius: 12px; background: var(--surface2); border-color: var(--line); min-height: 52px; font-size: 15px; }
+    .likert7 button.selected { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 8px 18px rgba(47, 111, 98, 0.18); }
+    .scale-labels { display: flex; justify-content: space-between; gap: 12px; color: var(--text-sub); font-size: 11px; font-weight: 700; }
+    .nav-row { display: flex; justify-content: space-between; gap: 12px; margin-top: 24px; }
+    .result-hero { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 24px; align-items: center; margin-top: 20px; }
+    .result-image { border-radius: 22px; overflow: hidden; border: 1px solid var(--line); background: var(--surface2); box-shadow: var(--shadow-sm); aspect-ratio: 1 / 1; }
+    .result-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 7px 12px; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 800; margin-bottom: 8px; }
+    .result-title { font-size: clamp(28px, 6vw, 42px); line-height: 1.12; margin: 0 0 12px; }
+    .point-list { display: grid; gap: 8px; margin: 18px 0; padding: 0; list-style: none; }
+    .point-list li { background: var(--surface2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 13px; font-weight: 700; }
+    .info-card { margin-top: 28px; padding: 20px; background: var(--accent-soft); border-radius: 18px; color: var(--accent); font-weight: 700; }
+    .char-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 24px; }
+    .char-card { background: #fff; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; box-shadow: var(--shadow-sm); }
+    .char-card img { width: 100%; aspect-ratio: 1.35 / 1; object-fit: cover; display: block; }
+    .char-card div { padding: 14px; }
+    .char-card h3 { margin: 0 0 6px; font-size: 17px; color: var(--accent); }
+    .char-card p { margin: 0; color: var(--text-sub); font-size: 12px; line-height: 1.55; }
+    .share { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .hidden { display: none !important; }
+    footer { margin-top: 38px; color: var(--text-sub); font-size: 11px; text-align: center; }
+    @media (max-width: 720px) {
+      .wrap { padding: 24px 14px 60px; }
+      header { margin-bottom: 22px; }
+      .panel { padding: 22px 16px; border-radius: 20px; }
+      .hero-grid, .result-hero { grid-template-columns: 1fr; }
+      .hero-art { min-height: 220px; }
+      .hero-art img { min-height: 220px; }
+      .likert7 { gap: 5px; }
+      .likert7 button { min-height: 46px; padding: 10px 0; }
+      .char-grid { grid-template-columns: 1fr; }
+      .nav { width: 100%; justify-content: flex-start; overflow-x: auto; padding-bottom: 4px; }
+      .nav a { flex: 0 0 auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="title">
+          <h1>Mobby</h1>
+          <p>診断コンテンツ</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="main">
+        <a class="active" href="#top">TOP</a>
+        <a href="#quiz">QUIZ</a>
+        <a href="#types">TYPES</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section id="home" class="panel fade-in">
+        <p class="kicker">MAKURIYA ENERGY</p>
+        <h2 class="big">Your Dancefloor Energy Quiz</h2>
+        <p class="text-body">Makuriya's public dance world feels warm, global, expressive, and full of Afro fusion energy. Answer 32 quick questions and find the type of dancefloor presence you bring into a studio, stage, party, or online community.</p>
+        <div class="hero-grid">
+          <div class="hero-copy-card">
+            <div class="hero-note">A rough collaboration page designed for review before publication.</div>
+            <div class="cta-row" id="homeCtas"></div>
+            <button class="primary" id="startBtn">Start the quiz</button>
+          </div>
+          <div class="hero-art"><img src="img/hero.jpg" alt=""></div>
+        </div>
+      </section>
+
+      <section id="quiz" class="panel fade-in hidden" aria-live="polite">
+        <div class="progress">
+          <div class="progress-meta"><span id="progressText"></span><span id="progressPercent"></span></div>
+          <div class="progress-bar"><span id="progressFill"></span></div>
+        </div>
+        <div class="q-card">
+          <div class="q-number" id="qNumber"></div>
+          <h2 class="q-title" id="qText"></h2>
+          <div class="scale-labels"><span>Not at all</span><span>Strongly agree</span></div>
+          <div class="likert7" id="choices"></div>
+        </div>
+        <div class="nav-row">
+          <button id="backBtn">Back</button>
+          <button id="nextBtn" class="primary">Next</button>
+        </div>
+      </section>
+
+      <section id="result" class="panel fade-in hidden">
+        <p class="kicker">YOUR RESULT</p>
+        <div class="result-hero">
+          <div class="result-image"><img id="resultImg" src="" alt=""></div>
+          <div>
+            <span class="badge" id="resultBadge"></span>
+            <h2 class="result-title" id="resultName"></h2>
+            <p class="text-body" id="resultLead"></p>
+            <ul class="point-list" id="resultPoints"></ul>
+            <div class="share">
+              <button id="xShare">Share on X</button>
+              <button id="lineShare">Share on LINE</button>
+              <button id="retryBtn" class="primary">Try again</button>
+            </div>
+          </div>
+        </div>
+        <div class="info-card">Find the dance energy that matches your movement, mood, style, and social spark.</div>
+        <div class="cta-row" id="resultCtas"></div>
+      </section>
+
+      <section id="types" class="panel fade-in" style="margin-top: 24px;">
+        <p class="kicker">All 8 types</p>
+        <h2 class="big">Eight Ways To Show Up</h2>
+        <div class="char-grid" id="typeGrid"></div>
+      </section>
+    </main>
+
+    <footer>© Mobby. This is a collaboration rough draft for review.</footer>
+  </div>
+  <script>
+    const DATA = {"lang":"en","title":"Your Dancefloor Energy Quiz","shareText":"I tried Your Dancefloor Energy Quiz","results":[{"id":"afro","name":"Afro Fusion Fire","lead":"Your energy hits first: grounded, powerful, and impossible to ignore.","image":"type1.jpg","points":["Bold rhythm","Strong presence","Instant heat"]},{"id":"sunshine","name":"Sunshine Groove","lead":"You bring joy into the room and make people feel welcome.","image":"type2.jpg","points":["Warm smile","Easy flow","Positive crowd pull"]},{"id":"choreo","name":"Choreo Queen","lead":"You love details, counts, formations, and the moment everything locks in.","image":"type3.jpg","points":["Sharp memory","Clean lines","Rehearsal focus"]},{"id":"bacardi","name":"Bacardi Bounce","lead":"Your hips, bounce, and musical playfulness make the beat feel alive.","image":"type4.jpg","points":["Loose groove","Hip rhythm","Playful confidence"]},{"id":"host","name":"Host the Room","lead":"You do not just dance; you guide the energy and bring people with you.","image":"type5.jpg","points":["MC spirit","Room control","Social spark"]},{"id":"style","name":"Style Switcher","lead":"Fashion, attitude, and movement work together in your expression.","image":"type6.jpg","points":["Visual taste","Outfit energy","Creative switch-ups"]},{"id":"fitness","name":"Fitness Flow","lead":"Your movement is strength, sweat, rhythm, and discipline in one.","image":"type7.jpg","points":["Body control","Stamina","Training mindset"]},{"id":"global","name":"Global Stage Spark","lead":"You are drawn to cross-cultural stages, travel energy, and big moments.","image":"type8.jpg","points":["Global mood","Stage ambition","Wide-open presence"]}],"questions":[{"axis":"afro","text":"When the beat drops, your body reacts before you think."},{"axis":"sunshine","text":"You like making the people around you feel comfortable."},{"axis":"choreo","text":"You enjoy learning the exact counts and details of a routine."},{"axis":"bacardi","text":"Hip movement and bounce are your favorite parts of a dance."},{"axis":"host","text":"You naturally hype people up in a group setting."},{"axis":"style","text":"Your outfit changes how you move."},{"axis":"fitness","text":"You like dance that also feels like a real workout."},{"axis":"global","text":"You are inspired by dance styles from different cultures and cities."},{"axis":"afro","text":"Strong grounded movement makes you feel powerful."},{"axis":"sunshine","text":"You prefer a warm, bright, welcoming vibe."},{"axis":"choreo","text":"You replay choreo clips to catch the small details."},{"axis":"bacardi","text":"You love playful rhythm more than perfect seriousness."},{"axis":"host","text":"You are comfortable taking the lead in a room."},{"axis":"style","text":"Accessories, color, and silhouette matter to your performance mood."},{"axis":"fitness","text":"You respect discipline, stamina, and repetition."},{"axis":"global","text":"A big international stage would excite you."},{"axis":"afro","text":"You connect most when the rhythm feels earthy and full-bodied."},{"axis":"sunshine","text":"People often read your energy as friendly or bright."},{"axis":"choreo","text":"Finishing a clean routine feels deeply satisfying."},{"axis":"bacardi","text":"You like movement that feels relaxed but still controlled."},{"axis":"host","text":"You enjoy introducing people, explaining things, or guiding the flow."},{"axis":"style","text":"You like switching from sporty to glamorous to street."},{"axis":"fitness","text":"You feel better after moving hard."},{"axis":"global","text":"You like mixing influences instead of staying in one box."},{"axis":"afro","text":"You want your dance to feel rooted and expressive."},{"axis":"sunshine","text":"Joy is one of your strongest performance tools."},{"axis":"choreo","text":"You can be patient when learning difficult steps."},{"axis":"bacardi","text":"You are drawn to a bouncy, social, party-ready groove."},{"axis":"host","text":"A microphone, DJ booth, or crowd-facing role sounds exciting."},{"axis":"style","text":"You think visual identity is part of performance."},{"axis":"fitness","text":"Training basics matter as much as the final performance."},{"axis":"global","text":"You want your movement to connect with people beyond one local scene."}],"ctas":[{"label":"TikTok","url":"https://www.tiktok.com/@makuriyaxo"},{"label":"Instagram","url":"https://www.instagram.com/makuriya_xo/"},{"label":"Workshop info","url":"https://www.studio-mission.com/workshop/8441.html"}]};
+    const state = { index: 0, answers: Array(DATA.questions.length).fill(null) };
+    const $ = (id) => document.getElementById(id);
+    const home = $("home");
+    const quiz = $("quiz");
+    const result = $("result");
+    const choices = $("choices");
+    function renderCtas(targetId) {
+      $(targetId).innerHTML = DATA.ctas.map((cta) => '<a href="' + cta.url + '" target="_blank" rel="noopener">' + cta.label + '</a>').join("");
+    }
+    function renderTypes() {
+      $("typeGrid").innerHTML = DATA.results.map((item) =>
+        '<article class="char-card"><img src="img/' + item.image + '" alt=""><div><h3>' + item.name + '</h3><p>' + item.lead + '</p></div></article>'
+      ).join("");
+    }
+    function renderQuestion() {
+      const q = DATA.questions[state.index];
+      $("qNumber").textContent = "Q" + String(state.index + 1).padStart(2, "0") + " / " + DATA.questions.length;
+      $("qText").textContent = q.text;
+      $("progressText").textContent = DATA.lang === "en" ? "Progress" : "進捗";
+      const pct = Math.round((state.index / DATA.questions.length) * 100);
+      $("progressPercent").textContent = pct + "%";
+      $("progressFill").style.width = pct + "%";
+      choices.innerHTML = "";
+      for (let i = 1; i <= 7; i += 1) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = i;
+        btn.className = state.answers[state.index] === i ? "selected" : "";
+        btn.addEventListener("click", () => {
+          state.answers[state.index] = i;
+          renderQuestion();
+        });
+        choices.appendChild(btn);
+      }
+      $("backBtn").disabled = state.index === 0;
+      $("nextBtn").textContent = state.index === DATA.questions.length - 1 ? "See result" : "Next";
+      $("nextBtn").disabled = state.answers[state.index] === null;
+    }
+    function calcResult() {
+      const scores = Object.fromEntries(DATA.results.map((r) => [r.id, 0]));
+      DATA.questions.forEach((q, i) => {
+        scores[q.axis] += state.answers[i] || 0;
+      });
+      return DATA.results.slice().sort((a, b) => scores[b.id] - scores[a.id])[0];
+    }
+    function showResult() {
+      const item = calcResult();
+      quiz.classList.add("hidden");
+      result.classList.remove("hidden");
+      $("progressFill").style.width = "100%";
+      $("resultImg").src = "img/" + item.image;
+      $("resultBadge").textContent = DATA.lang === "en" ? "Your type" : "あなたのタイプ";
+      $("resultName").textContent = item.name;
+      $("resultLead").textContent = item.lead;
+      $("resultPoints").innerHTML = item.points.map((p) => "<li>" + p + "</li>").join("");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    function shareUrl(kind) {
+      const url = location.href;
+      const text = encodeURIComponent(DATA.shareText + " | Mobby");
+      const encodedUrl = encodeURIComponent(url);
+      return kind === "line"
+        ? "https://social-plugins.line.me/lineit/share?url=" + encodedUrl
+        : "https://twitter.com/intent/tweet?text=" + text + "&url=" + encodedUrl;
+    }
+    $("startBtn").addEventListener("click", () => {
+      home.classList.add("hidden");
+      quiz.classList.remove("hidden");
+      renderQuestion();
+      location.hash = "quiz";
+    });
+    $("backBtn").addEventListener("click", () => {
+      state.index = Math.max(0, state.index - 1);
+      renderQuestion();
+    });
+    $("nextBtn").addEventListener("click", () => {
+      if (state.answers[state.index] === null) return;
+      if (state.index === DATA.questions.length - 1) showResult();
+      else {
+        state.index += 1;
+        renderQuestion();
+      }
+    });
+    $("retryBtn").addEventListener("click", () => {
+      state.index = 0;
+      state.answers.fill(null);
+      result.classList.add("hidden");
+      home.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    $("xShare").addEventListener("click", () => window.open(shareUrl("x"), "_blank", "noopener"));
+    $("lineShare").addEventListener("click", () => window.open(shareUrl("line"), "_blank", "noopener"));
+    renderCtas("homeCtas");
+    renderCtas("resultCtas");
+    renderTypes();
+  </script>
+</body>
+</html>
