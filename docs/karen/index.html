@@ -88,8 +88,8 @@
     .logo { width: 46px; height: 46px; border-radius: 16px; background: url("assets/logo.png") center/cover; box-shadow: 0 8px 22px rgba(255, 77, 109, 0.30); }
     .title h1 { margin: 0; font-family: var(--font-display); font-size: 17px; color: var(--accent-2); letter-spacing: 0.04em; }
     .title p { margin: 2px 0 0; font-size: 12px; color: var(--text-sub); }
-    .nav { display: flex; gap: 10px; flex-wrap: wrap; }
-    .nav a { padding: 10px 16px; border-radius: 999px; background: rgba(255,255,255,0.72); border: 1px solid var(--line); color: var(--text-sub); font-size: 12px; font-weight: 700; box-shadow: 0 8px 20px rgba(164, 19, 60, 0.06); }
+    .nav { display: flex; gap: 6px; flex-wrap: nowrap; align-items: center; margin-left: auto; }
+    .nav a { min-height: 32px; padding: 7px 11px; border-radius: 999px; background: rgba(255,255,255,0.72); border: 1px solid var(--line); color: var(--text-sub); font-size: 11px; font-weight: 800; box-shadow: 0 8px 20px rgba(164, 19, 60, 0.06); white-space: nowrap; }
     .nav a.active { background: var(--accent-2); color: #fff; }
     .panel { background: var(--surface); border: 1px solid rgba(255,255,255,0.72); border-radius: var(--radius-lg); padding: 28px; box-shadow: var(--shadow); backdrop-filter: blur(16px); }
     .stack { display: grid; gap: 18px; }
@@ -111,13 +111,17 @@
     .fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width 0.2s ease; }
     .qcard { padding: 18px; }
     .qindex { margin: 0 0 8px; color: var(--accent-2); font-size: 12px; font-weight: 700; }
-    .qtext { margin: 0 0 14px; line-height: 1.8; font-size: 17px; }
-    .options { display: grid; gap: 10px; }
-    .option { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: center; width: 100%; text-align: left; border-radius: 16px; padding: 13px 14px; background: rgba(255,255,255,0.72); border: 1px solid rgba(164, 19, 60, 0.12); color: var(--text-main); transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease; }
-    .option:hover { transform: translateY(-1px); border-color: rgba(164, 19, 60, 0.34); }
-    .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(164, 19, 60, 0.32); background: rgba(255,255,255,0.6); }
-    .option.selected { background: rgba(255,77,109,0.12); border-color: rgba(164, 19, 60, 0.48); }
-    .option.selected .dot { background: var(--accent-2); box-shadow: inset 0 0 0 4px #fff; }
+    .qtext { margin: 0 0 16px; line-height: 1.8; font-size: 17px; }
+    .scale-wrap { display: grid; gap: 9px; padding: 12px; border-radius: 18px; background: rgba(255,255,255,0.56); border: 1px solid rgba(164, 19, 60, 0.10); }
+    .scale-labels { display: flex; justify-content: space-between; gap: 12px; color: var(--text-sub); font-size: 11px; font-weight: 800; line-height: 1.35; }
+    .scale-labels span:nth-child(2) { text-align: center; color: rgba(124, 67, 84, 0.72); }
+    .scale-labels span:last-child { text-align: right; }
+    .options { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
+    .option { display: inline-flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 1 / 1; min-height: 42px; max-height: 54px; text-align: center; border-radius: 999px; padding: 0; background: rgba(255,255,255,0.82); border: 1px solid rgba(164, 19, 60, 0.14); color: var(--accent-2); box-shadow: inset 0 1px 0 rgba(255,255,255,0.86); transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease; }
+    .option:hover { transform: translateY(-1px); border-color: rgba(164, 19, 60, 0.34); box-shadow: 0 8px 18px rgba(164, 19, 60, 0.10); }
+    .option.selected { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border-color: transparent; color: #fff; box-shadow: 0 10px 20px rgba(164, 19, 60, 0.22); }
+    .scale-no { font-size: 15px; font-weight: 900; line-height: 1; }
+    .selected-scale { min-height: 18px; text-align: center; color: var(--accent-2); font-size: 11px; font-weight: 800; }
     .footer-row { display: flex; justify-content: space-between; gap: 12px; margin-top: 18px; }
     .type-no { width: 80px; height: 80px; border-radius: 24px; display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(145deg, rgba(255,77,109,0.18), rgba(164,19,60,0.18)); border: 1px solid rgba(164,19,60,0.16); font-family: var(--font-display); font-size: 28px; font-weight: 400; }
     .result-head { display: flex; gap: 18px; align-items: flex-start; }
@@ -148,7 +152,12 @@
       .wrap { padding: 18px 12px 64px; }
       .panel { padding: 20px 16px; }
       .footer-row, .actions { flex-direction: column-reverse; }
-      .nav { width: 100%; } .nav a, .btn, .share a, .share button { width: 100%; }
+      .nav { width: auto; margin-left: auto; } .nav a { width: auto; padding: 7px 10px; } .btn, .share a, .share button { width: 100%; }
+      .scale-wrap { padding: 10px; gap: 8px; }
+      .options { gap: 5px; }
+      .option { min-height: 34px; }
+      .scale-no { font-size: 13px; }
+      .scale-labels { font-size: 10px; }
       .result-head { flex-direction: column; }
       .type-no { width: 70px; height: 70px; }
     }
@@ -174,9 +183,18 @@
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script>
-    const DIAG = {"title": "かれんちゃんに見つかる推し活診断", "subtitle": "あなたはどんな推し方で印象に残りやすい？", "version": "1.0.0", "public_url": "https://www.mobby.online/karen-oshi/", "hashtags": ["かれん認知診断", "かれん推し活診断", "モビー診断"], "links": {"karen": "#", "mobby": "https://www.mobby.online/", "live": "#"}, "notes": "本人アカウント・ライブURLが確定したら links.karen / links.live を差し替え。公開文言では認知の確約を避ける。", "questions": [{"id": "q01", "text": "気になる投稿を見つけたとき、いちばん近い行動は？", "options": [{"label": "すぐにコメントしたくなる", "type": "comment"}, {"label": "友達に「この子見て」と送りたくなる", "type": "spread"}, {"label": "まずは静かにいいねして見守る", "type": "steady"}, {"label": "スクショや保存をして何度も見返す", "type": "visual"}]}, {"id": "q02", "text": "初めてライブや特典会に行くとしたら、いちばん近い気持ちは？", "options": [{"label": "気になるけど、少し緊張する", "type": "first-live"}, {"label": "短い時間でも印象に残したい", "type": "cheki"}, {"label": "赤っぽい服や小物を持って行きたくなる", "type": "red"}, {"label": "どうしたら見つかりやすいか考える", "type": "effort"}]}, {"id": "q03", "text": "ストーリーで投稿するとしたら、どれがいちばん近い？", "options": [{"label": "感想をすぐ文字で書きたくなる", "type": "comment"}, {"label": "友達にも「やってみて」と勧めたくなる", "type": "spread"}, {"label": "大きく騒がず、自分の記録として残したい", "type": "steady"}, {"label": "とにかくいちばんかわいい画像を使いたい", "type": "visual"}]}, {"id": "q04", "text": "特典会で会えるなら、いちばん近いのは？", "options": [{"label": "まずはその場の空気に慣れたい", "type": "first-live"}, {"label": "一言でちゃんと覚えてもらいたい", "type": "cheki"}, {"label": "担当カラーやアイドル感を楽しみたい", "type": "red"}, {"label": "次につながる応援の仕方を考えたい", "type": "effort"}]}, {"id": "q05", "text": "推し活でいちばん楽しい瞬間は？", "options": [{"label": "投稿に反応できた瞬間", "type": "comment"}, {"label": "友達が「この子いいかも」と言った瞬間", "type": "spread"}, {"label": "長く好きでいられていると感じる瞬間", "type": "steady"}, {"label": "かわいい写真や動画を見返す時間", "type": "visual"}]}, {"id": "q06", "text": "かれんちゃんを目の前にしたら、いちばん近い反応は？", "options": [{"label": "緊張して思ったより話せない", "type": "first-live"}, {"label": "短くてもちゃんと印象を残したい", "type": "cheki"}, {"label": "衣装や赤担当らしさにときめく", "type": "red"}, {"label": "次はもっと見つかりやすくなりたいと思う", "type": "effort"}]}, {"id": "q07", "text": "SNSでいちばんやりがちなことは？", "options": [{"label": "投稿直後にリアクションする", "type": "comment"}, {"label": "魅力を言語化して人に伝える", "type": "spread"}, {"label": "ずっと追いながら静かに応援する", "type": "steady"}, {"label": "気に入った投稿を保存フォルダに入れる", "type": "visual"}]}, {"id": "q08", "text": "次のライブ告知を見たとき、いちばん近いのは？", "options": [{"label": "行ってみたいけど少し不安", "type": "first-live"}, {"label": "行くなら何を話すか考える", "type": "cheki"}, {"label": "赤系コーデや持ち物を考える", "type": "red"}, {"label": "行った後もどう応援するかまで考える", "type": "effort"}]}, {"id": "q09", "text": "結果をシェアするとしたら、どれがいちばん近い？", "options": [{"label": "すぐに「私はこれだった！」と投稿する", "type": "comment"}, {"label": "友達にも「これやってみて」と回す", "type": "spread"}, {"label": "シェアは控えめでも自分の中で残したい", "type": "steady"}, {"label": "画像がかわいければ絶対保存したい", "type": "visual"}]}, {"id": "q10", "text": "理想のファン像としていちばん近いのは？", "options": [{"label": "初現場にちゃんと行ける自分", "type": "first-live"}, {"label": "一回の会話でも印象を残せる自分", "type": "cheki"}, {"label": "赤担当の世界観ごと楽しめる自分", "type": "red"}, {"label": "少しずつ覚えてもらえる存在になる自分", "type": "effort"}]}], "types": [{"id": "comment", "number": "01", "slug": "comment-frontline", "name": "コメント最前線型", "display_name": "コメント\n最前線型", "short": "投稿にすぐ反応できる、SNSで見つかりやすい推し。", "description": "あなたは、好きと思った瞬間にちゃんと反応できるタイプ。投稿へのコメントやリアクションで、存在感を自然に出しやすいのが強みです。“見てるだけ”で終わらず、推しへの気持ちを行動に変えられるファンです。", "phrase": "ちゃんと見てる気持ち、伝わるかも！", "scores": {"SNS反応力": 96, "現場印象度": 68, "継続応援力": 82, "見つかり度": 88}, "actions": ["投稿を見たら早めに反応する", "ストーリーで感想を1文つけてシェアする", "同じテンションで継続的に応援する"], "color": "#ff4d6d"}, {"id": "first-live", "number": "02", "slug": "first-live-dokidoki", "name": "初現場どきどき型", "display_name": "初現場\nどきどき型", "short": "一歩目は緊張。でも来てくれた瞬間に強い推し。", "description": "あなたは、気になっていても最初の一歩に少し勇気がいるタイプ。でも、その“気になる気持ち”はかなり本物です。現場に一度行ければ、一気に推し度が上がる可能性が高いファンです。", "phrase": "初めて来てくれるだけで、うれしいかも！", "scores": {"SNS反応力": 58, "現場印象度": 72, "継続応援力": 79, "見つかり度": 74}, "actions": ["次回ライブ日程だけでもまず保存する", "友達と一緒に現場デビューする", "特典会では「初めて来ました」だけでも伝える"], "color": "#ff8fab"}, {"id": "cheki", "number": "03", "slug": "cheki-impression", "name": "チェキで印象残す型", "display_name": "チェキで\n印象残す型", "short": "短い会話でも気持ちを残せる、対面つよめ推し。", "description": "あなたは、対面の短い時間でも印象を残しやすいタイプ。話しすぎなくても、空気感や一言でちゃんと伝わる強さがあります。特典会や現場で存在感を出しやすいファンです。", "phrase": "短くても伝わる応援、印象に残るかも！", "scores": {"SNS反応力": 67, "現場印象度": 94, "継続応援力": 70, "見つかり度": 89}, "actions": ["一言だけでも伝える内容を決めておく", "「初めまして」＋感想1つをセットで言う", "印象に残る自然なリアクションを意識する"], "color": "#ff5c8a"}, {"id": "spread", "number": "04", "slug": "spread-craft", "name": "布教職人型", "display_name": "布教職人型", "short": "好きの共有が得意。新しいファンを増やせる推し。", "description": "あなたは、自分が好きになると周りにも共有したくなるタイプ。一人で楽しむだけでなく、“推しの魅力を広げる力”を持っています。新しいファンを増やしやすい、かなり貴重な存在です。", "phrase": "魅力を広げてくれる応援、心強いかも！", "scores": {"SNS反応力": 79, "現場印象度": 64, "継続応援力": 77, "見つかり度": 84}, "actions": ["診断結果をシェアして友達にも診断を勧める", "お気に入り動画や投稿を人に共有する", "「この子気になるかも」を増やす動きをする"], "color": "#e84a5f"}, {"id": "steady", "number": "05", "slug": "steady-support", "name": "ひたむき見守り型", "display_name": "ひたむき\n見守り型", "short": "派手じゃなくても長く支える、継続力のある推し。", "description": "あなたは、目立つ応援よりも、長く静かに応援するタイプ。派手さはなくても、安定して好きでいられる継続力が強みです。推しにとっては、実はかなりありがたいファンです。", "phrase": "ずっと見ていてくれる応援、力になるかも！", "scores": {"SNS反応力": 54, "現場印象度": 60, "継続応援力": 95, "見つかり度": 73}, "actions": ["継続的に投稿へいいねや感想を送る", "無理のない頻度で現場や配信を追う", "応援の記録を自分なりに残していく"], "color": "#d6336c"}, {"id": "visual", "number": "06", "slug": "visual-save", "name": "ビジュ保存職人型", "display_name": "ビジュ保存\n職人型", "short": "かわいい瞬間を見逃さない、保存と拡散に強い推し。", "description": "あなたは、写真・動画・世界観など“見た目のときめき”に強く反応するタイプ。かわいい瞬間を見つけるのが得意で、推しの魅力をビジュアルから深めていけます。SNSとの相性がかなり良いファンです。", "phrase": "かわいい瞬間を残してくれるの、うれしいかも！", "scores": {"SNS反応力": 72, "現場印象度": 58, "継続応援力": 75, "見つかり度": 78}, "actions": ["お気に入り投稿を保存してストーリーで紹介する", "ビジュが刺さった理由を一言添えてシェアする", "衣装や世界観ごと楽しむ"], "color": "#f06595"}, {"id": "red", "number": "07", "slug": "red-tokimeki", "name": "赤担当ときめき反応型", "display_name": "赤担当\nときめき反応型", "short": "色・衣装・世界観ごと楽しめる、感度高めの推し。", "description": "あなたは、担当カラーや世界観に感情が大きく動くタイプ。赤、衣装、雰囲気、アイドルらしさにしっかり反応できるのが特徴です。“推しっぽさ”に一気にハマりやすいファンです。", "phrase": "世界観ごと楽しんでくれるの、うれしいかも！", "scores": {"SNS反応力": 74, "現場印象度": 80, "継続応援力": 71, "見つかり度": 85}, "actions": ["赤系アイテムやコーデで現場を楽しむ", "担当カラーへの反応をSNSで発信する", "“かれんちゃんらしさ”を自分なりに言葉にする"], "color": "#c9184a"}, {"id": "effort", "number": "08", "slug": "recognition-effort", "name": "認知されたい努力家型", "display_name": "認知されたい\n努力家型", "short": "見つかりたい気持ちを、前向きな応援に変える推し。", "description": "あなたは、“見つかりたい”“覚えてもらいたい”気持ちをちゃんと行動に変えたいタイプ。その気持ちを重くしすぎず、前向きな応援に変えられればかなり強いです。伸びしろが大きく、推し活を楽しみながら成長できるファンです。", "phrase": "一生懸命な応援、ちゃんと伝わるかも！", "scores": {"SNS反応力": 83, "現場印象度": 86, "継続応援力": 80, "見つかり度": 93}, "actions": ["継続的に反応する", "特典会では短く自然に気持ちを伝える", "“認知されたい”を“楽しく応援したい”に変換する"], "color": "#a4133c"}]};
-    const STORAGE_KEY = "karen_oshi_mobby_v1";
+    const DIAG = {"title":"かれんちゃんに見つかる推し活診断","subtitle":"あなたはどんな推し方で印象に残りやすい？","version":"1.0.0","public_url":"https://www.mobby.online/karen-oshi/","hashtags":["かれん認知診断","かれん推し活診断","モビー診断"],"links":{"karen":"#","mobby":"https://www.mobby.online/","live":"#"},"notes":"本人アカウント・ライブURLが確定したら links.karen / links.live を差し替え。公開文言では認知の確約を避ける。","questions":[{"id":"q01","type":"comment","text":"投稿を見たら、いいねだけでなくコメントや感想も早めに届けたい。"},{"id":"q02","type":"first-live","text":"現場や特典会に興味はあるけれど、初めて行く前は少し緊張しやすい。"},{"id":"q03","type":"cheki","text":"短い会話やチェキの時間でも、自分らしい一言で印象を残したい。"},{"id":"q04","type":"spread","text":"好きになった魅力は、友達やSNSにもつい共有したくなる。"},{"id":"q05","type":"steady","text":"派手に目立つより、無理なく長く応援し続けることを大事にしたい。"},{"id":"q06","type":"visual","text":"かわいい写真や動画、衣装、表情を見つけると保存して見返したくなる。"},{"id":"q07","type":"red","text":"赤いアイテムや担当カラー、かれんちゃんらしい世界観にときめきやすい。"},{"id":"q08","type":"effort","text":"見つかりたい気持ちを、コメントや現場での前向きな行動に変えたい。"},{"id":"q09","type":"comment","text":"投稿直後のリアクションやストーリーで、気持ちを言葉にするのが得意だ。"},{"id":"q10","type":"effort","text":"少しずつ覚えてもらえる存在になれるよう、応援の仕方を工夫したい。"}],"types":[{"id":"comment","number":"01","slug":"comment-frontline","name":"コメント最前線型","display_name":"コメント\n最前線型","short":"投稿にすぐ反応できる、SNSで見つかりやすい推し。","description":"あなたは、好きと思った瞬間にちゃんと反応できるタイプ。投稿へのコメントやリアクションで、存在感を自然に出しやすいのが強みです。“見てるだけ”で終わらず、推しへの気持ちを行動に変えられるファンです。","phrase":"ちゃんと見てる気持ち、伝わるかも！","scores":{"SNS反応力":96,"現場印象度":68,"継続応援力":82,"見つかり度":88},"actions":["投稿を見たら早めに反応する","ストーリーで感想を1文つけてシェアする","同じテンションで継続的に応援する"],"color":"#ff4d6d"},{"id":"first-live","number":"02","slug":"first-live-dokidoki","name":"初現場どきどき型","display_name":"初現場\nどきどき型","short":"一歩目は緊張。でも来てくれた瞬間に強い推し。","description":"あなたは、気になっていても最初の一歩に少し勇気がいるタイプ。でも、その“気になる気持ち”はかなり本物です。現場に一度行ければ、一気に推し度が上がる可能性が高いファンです。","phrase":"初めて来てくれるだけで、うれしいかも！","scores":{"SNS反応力":58,"現場印象度":72,"継続応援力":79,"見つかり度":74},"actions":["次回ライブ日程だけでもまず保存する","友達と一緒に現場デビューする","特典会では「初めて来ました」だけでも伝える"],"color":"#ff8fab"},{"id":"cheki","number":"03","slug":"cheki-impression","name":"チェキで印象残す型","display_name":"チェキで\n印象残す型","short":"短い会話でも気持ちを残せる、対面つよめ推し。","description":"あなたは、対面の短い時間でも印象を残しやすいタイプ。話しすぎなくても、空気感や一言でちゃんと伝わる強さがあります。特典会や現場で存在感を出しやすいファンです。","phrase":"短くても伝わる応援、印象に残るかも！","scores":{"SNS反応力":67,"現場印象度":94,"継続応援力":70,"見つかり度":89},"actions":["一言だけでも伝える内容を決めておく","「初めまして」＋感想1つをセットで言う","印象に残る自然なリアクションを意識する"],"color":"#ff5c8a"},{"id":"spread","number":"04","slug":"spread-craft","name":"布教職人型","display_name":"布教職人型","short":"好きの共有が得意。新しいファンを増やせる推し。","description":"あなたは、自分が好きになると周りにも共有したくなるタイプ。一人で楽しむだけでなく、“推しの魅力を広げる力”を持っています。新しいファンを増やしやすい、かなり貴重な存在です。","phrase":"魅力を広げてくれる応援、心強いかも！","scores":{"SNS反応力":79,"現場印象度":64,"継続応援力":77,"見つかり度":84},"actions":["診断結果をシェアして友達にも診断を勧める","お気に入り動画や投稿を人に共有する","「この子気になるかも」を増やす動きをする"],"color":"#e84a5f"},{"id":"steady","number":"05","slug":"steady-support","name":"ひたむき見守り型","display_name":"ひたむき\n見守り型","short":"派手じゃなくても長く支える、継続力のある推し。","description":"あなたは、目立つ応援よりも、長く静かに応援するタイプ。派手さはなくても、安定して好きでいられる継続力が強みです。推しにとっては、実はかなりありがたいファンです。","phrase":"ずっと見ていてくれる応援、力になるかも！","scores":{"SNS反応力":54,"現場印象度":60,"継続応援力":95,"見つかり度":73},"actions":["継続的に投稿へいいねや感想を送る","無理のない頻度で現場や配信を追う","応援の記録を自分なりに残していく"],"color":"#d6336c"},{"id":"visual","number":"06","slug":"visual-save","name":"ビジュ保存職人型","display_name":"ビジュ保存\n職人型","short":"かわいい瞬間を見逃さない、保存と拡散に強い推し。","description":"あなたは、写真・動画・世界観など“見た目のときめき”に強く反応するタイプ。かわいい瞬間を見つけるのが得意で、推しの魅力をビジュアルから深めていけます。SNSとの相性がかなり良いファンです。","phrase":"かわいい瞬間を残してくれるの、うれしいかも！","scores":{"SNS反応力":72,"現場印象度":58,"継続応援力":75,"見つかり度":78},"actions":["お気に入り投稿を保存してストーリーで紹介する","ビジュが刺さった理由を一言添えてシェアする","衣装や世界観ごと楽しむ"],"color":"#f06595"},{"id":"red","number":"07","slug":"red-tokimeki","name":"赤担当ときめき反応型","display_name":"赤担当\nときめき反応型","short":"色・衣装・世界観ごと楽しめる、感度高めの推し。","description":"あなたは、担当カラーや世界観に感情が大きく動くタイプ。赤、衣装、雰囲気、アイドルらしさにしっかり反応できるのが特徴です。“推しっぽさ”に一気にハマりやすいファンです。","phrase":"世界観ごと楽しんでくれるの、うれしいかも！","scores":{"SNS反応力":74,"現場印象度":80,"継続応援力":71,"見つかり度":85},"actions":["赤系アイテムやコーデで現場を楽しむ","担当カラーへの反応をSNSで発信する","“かれんちゃんらしさ”を自分なりに言葉にする"],"color":"#c9184a"},{"id":"effort","number":"08","slug":"recognition-effort","name":"認知されたい努力家型","display_name":"認知されたい\n努力家型","short":"見つかりたい気持ちを、前向きな応援に変える推し。","description":"あなたは、“見つかりたい”“覚えてもらいたい”気持ちをちゃんと行動に変えたいタイプ。その気持ちを重くしすぎず、前向きな応援に変えられればかなり強いです。伸びしろが大きく、推し活を楽しみながら成長できるファンです。","phrase":"一生懸命な応援、ちゃんと伝わるかも！","scores":{"SNS反応力":83,"現場印象度":86,"継続応援力":80,"見つかり度":93},"actions":["継続的に反応する","特典会では短く自然に気持ちを伝える","“認知されたい”を“楽しく応援したい”に変換する"],"color":"#a4133c"}]};
+    const STORAGE_KEY = "karen_oshi_mobby_likert_v2";
     const PAGE_SIZE = 5;
+    const LIKERT_OPTIONS = [
+      { value: 1, label: "まったく違う" },
+      { value: 2, label: "違う" },
+      { value: 3, label: "やや違う" },
+      { value: 4, label: "どちらでも" },
+      { value: 5, label: "やや当てはまる" },
+      { value: 6, label: "当てはまる" },
+      { value: 7, label: "とても当てはまる" }
+    ];
     const TYPE_MAP = Object.fromEntries(DIAG.types.map(type => [type.id, type]));
     const state = { step: "intro", page: 0, answers: {} };
 
@@ -198,19 +216,23 @@
       const start = state.page * PAGE_SIZE;
       return DIAG.questions.slice(start, start + PAGE_SIZE);
     }
-    function isCurrentPageComplete() { return pageQuestions().every(q => state.answers[q.id]); }
-    function completedCount() { return DIAG.questions.filter(q => state.answers[q.id]).length; }
-    function chooseOption(qid, type) { state.answers[qid] = type; saveState(); render(); }
+    function hasAnswer(qid) { return Number.isFinite(Number(state.answers[qid])); }
+    function isCurrentPageComplete() { return pageQuestions().every(q => hasAnswer(q.id)); }
+    function completedCount() { return DIAG.questions.filter(q => hasAnswer(q.id)).length; }
+    function chooseOption(qid, value) { state.answers[qid] = Number(value); saveState(); render(); }
     function getResult() {
       const scores = Object.fromEntries(DIAG.types.map(t => [t.id, 0]));
-      DIAG.questions.forEach(q => { const t = state.answers[q.id]; if (scores[t] !== undefined) scores[t] += 1; });
+      DIAG.questions.forEach(q => {
+        const value = Number(state.answers[q.id]);
+        if (scores[q.type] !== undefined && Number.isFinite(value)) scores[q.type] += value;
+      });
       const max = Math.max(...Object.values(scores));
       const tied = Object.keys(scores).filter(key => scores[key] === max);
       let winner = tied[0];
       if (tied.length > 1) {
         for (let i = DIAG.questions.length - 1; i >= 0; i--) {
-          const answer = state.answers[DIAG.questions[i].id];
-          if (tied.includes(answer)) { winner = answer; break; }
+          const type = DIAG.questions[i].type;
+          if (tied.includes(type)) { winner = type; break; }
         }
       }
       return { type: TYPE_MAP[winner], scores };
@@ -244,7 +266,7 @@ ${DIAG.title}
           <img class="hero-img" src="assets/anime.png" alt="かれんちゃんに見つかる推し活診断 メインビジュアル">
           <div>
             <span class="kicker">Mobby Collaboration</span>
-            <h2 class="big">あなたは、どんな推し方でかれんちゃんに見つかりやすい？</h2>
+            <h2 class="big">あなたは、どんな推し方？</h2>
             <p class="text">SNS派、現場派、布教派、見守り派。10問に答えるだけで、あなたらしい応援タイプが8タイプから分かります。</p>
           </div>
           <div class="note">
@@ -270,11 +292,15 @@ ${DIAG.title}
           <article class="qcard">
             <p class="qindex">Question ${state.page * PAGE_SIZE + index + 1}</p>
             <h3 class="qtext">${esc(q.text)}</h3>
-            <div class="options" role="group" aria-label="${esc(q.text)}">
-              ${q.options.map(opt => `
-                <button type="button" class="option ${state.answers[q.id] === opt.type ? 'selected' : ''}" onclick="chooseOption('${q.id}','${opt.type}')" aria-pressed="${state.answers[q.id] === opt.type}">
-                  <span class="dot" aria-hidden="true"></span><span>${esc(opt.label)}</span>
-                </button>`).join('')}
+            <div class="scale-wrap">
+              <div class="scale-labels" aria-hidden="true"><span>まったく違う</span><span>どちらでも</span><span>とても当てはまる</span></div>
+              <div class="options" role="group" aria-label="${esc(q.text)}">
+                ${LIKERT_OPTIONS.map(opt => `
+                  <button type="button" class="option ${Number(state.answers[q.id]) === opt.value ? 'selected' : ''}" onclick="chooseOption('${q.id}',${opt.value})" aria-label="${opt.value}: ${esc(opt.label)}" aria-pressed="${Number(state.answers[q.id]) === opt.value}">
+                    <span class="scale-no">${opt.value}</span>
+                  </button>`).join('')}
+              </div>
+              <div class="selected-scale">${hasAnswer(q.id) ? esc(LIKERT_OPTIONS.find(opt => opt.value === Number(state.answers[q.id]))?.label || '') : '1から7で気持ちに近い数字を選んでください'}</div>
             </div>
           </article>`).join('')}
         <div class="footer-row">
