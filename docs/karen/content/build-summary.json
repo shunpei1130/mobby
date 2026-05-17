@@ -1,0 +1,28 @@
+{
+  "generated_files": [
+    "index.html",
+    "README.md",
+    "DEPLOY.md",
+    "assets/logo.png",
+    "assets/favicon.png",
+    "assets/ogp.png",
+    "assets/hero.png",
+    "content/diagnosis-data.json",
+    "assets/cards/01_comment-frontline.png",
+    "assets/cards/02_first-live-dokidoki.png",
+    "assets/cards/03_cheki-impression.png",
+    "assets/cards/04_spread-craft.png",
+    "assets/cards/05_steady-support.png",
+    "assets/cards/06_visual-save.png",
+    "assets/cards/07_red-tokimeki.png",
+    "assets/cards/08_recognition-effort.png"
+  ],
+  "question_count": 10,
+  "type_count": 8,
+  "image_count": 12,
+  "notes": [
+    "index.html has embedded CSS/JS",
+    "result card download is included",
+    "CTA links are configurable"
+  ]
+}
