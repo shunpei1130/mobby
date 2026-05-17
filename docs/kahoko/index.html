@@ -1,171 +1,508 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="format-detection" content="telephone=no,address=no,email=no" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="format-detection" content="telephone=no,address=no,email=no">
   <title>Kahokoに変身メイクされるなら？診断 | Mobby</title>
-  <meta name="description" content="Kahokoさんのコスプレメイクや変身感をテーマにした、ファン参加型のMobby診断ラフです。" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Kahokoに変身メイクされるなら？診断" />
-  <meta property="og:description" content="あなたがKahokoに変身メイクされるなら、どんな世界観になる？" />
-  <meta property="og:url" content="https://shunpei1130.github.io/mobby/kahoko/" />
-  <meta name="theme-color" content="#ff5c9f" />
+  <meta name="description" content="Kahokoさんのコスプレメイクや変身感をテーマにした、ファン参加型のMobby診断ラフです。">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Kahokoに変身メイクされるなら？診断">
+  <meta property="og:description" content="あなたがKahokoさんに変身メイクされるなら、どんな世界観になる？">
+  <meta property="og:url" content="https://shunpei1130.github.io/mobby/kahoko/">
+  <meta property="og:image" content="https://shunpei1130.github.io/mobby/kahoko/kahoko-collab-hero-site.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
   <style>
     :root {
-      --ink: #1b1820;
-      --muted: #615968;
-      --paper: #fff8ef;
-      --hot: #ff4f9a;
-      --blue: #45c8f1;
-      --lemon: #ffd84d;
-      --green: #6fd28b;
-      --violet: #8055ff;
-      --line: rgba(27, 24, 32, 0.14);
-      --shadow: 0 22px 60px rgba(35, 25, 52, 0.16);
-      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, system-ui, sans-serif;
-      color: var(--ink);
+      --color-cream: #FFF8E7;
+      --color-forest: #2F4F4F;
+      --color-sky: #AEC6CF;
+      --color-earth: #8B4513;
+      --color-accent-red: #D2691E;
+      --color-soft-yellow: #F0E68C;
+      --paper: #faf1e2;
+      --white: rgba(255, 255, 255, 0.88);
+      --line: rgba(47, 79, 79, 0.14);
+      --shadow: 0 18px 45px rgba(85, 64, 43, 0.13);
+      --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: 'Yomogi', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', Meiryo, cursive;
+      color: var(--color-forest);
       background: var(--paper);
     }
+
     * { box-sizing: border-box; }
-    html, body { margin: 0; min-height: 100%; }
+
     body {
+      min-height: 100vh;
+      margin: 0;
       background:
-        linear-gradient(180deg, rgba(255,248,236,.96), rgba(255,255,255,.92) 36%, rgba(255,244,247,.96)),
-        repeating-linear-gradient(90deg, rgba(255,79,154,.07) 0 1px, transparent 1px 54px),
-        repeating-linear-gradient(0deg, rgba(69,200,241,.06) 0 1px, transparent 1px 54px);
+        radial-gradient(circle at 18% 14%, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0) 24%),
+        radial-gradient(circle at 90% 8%, rgba(174, 198, 207, 0.32), rgba(174, 198, 207, 0) 28%),
+        linear-gradient(135deg, #fff8ef 0%, #faf1e2 58%, #ead8ba 100%);
+      line-height: 1.72;
       overflow-x: hidden;
     }
+
     button, a { -webkit-tap-highlight-color: transparent; font: inherit; }
-    .page { width: min(1120px, calc(100% - 32px)); margin: 0 auto; padding: 18px 0 52px; }
-    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; margin-bottom: 14px; }
-    .brand { display: inline-flex; align-items: center; gap: 9px; color: var(--ink); text-decoration: none; font-weight: 900; }
-    .brand-mark { display: grid; width: 34px; height: 34px; place-items: center; border: 2px solid var(--ink); border-radius: 8px; background: linear-gradient(135deg, var(--lemon), #fff 48%, var(--blue)); box-shadow: 4px 4px 0 var(--ink); }
-    .brand-mark svg { width: 22px; height: 22px; }
-    .status-pill { display: inline-flex; align-items: center; min-height: 32px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.76); color: var(--muted); font-size: .82rem; font-weight: 800; white-space: nowrap; }
-    .app-shell { display: grid; grid-template-columns: minmax(0,.92fr) minmax(320px,1.08fr); gap: 18px; align-items: stretch; min-height: min(760px, calc(100vh - 92px)); }
-    .visual-stage, .diagnosis-panel { border: 2px solid var(--ink); border-radius: 8px; background: rgba(255,255,255,.86); box-shadow: var(--shadow); overflow: hidden; }
-    .visual-stage { position: relative; display: grid; min-height: 620px; background: linear-gradient(130deg, rgba(255,216,77,.88), rgba(255,255,255,.98) 38%, rgba(69,200,241,.72) 67%, rgba(255,79,154,.66)); }
-    .poster { display: grid; grid-template-rows: auto 1fr auto; min-height: 100%; padding: clamp(18px, 4vw, 36px); isolation: isolate; }
-    .poster-kicker { width: fit-content; padding: 7px 11px; border: 2px solid var(--ink); border-radius: 999px; background: #fff; box-shadow: 4px 4px 0 var(--ink); font-size: .78rem; font-weight: 900; }
-    .hero-copy { align-self: center; z-index: 2; }
-    .hero-copy h1 { max-width: 10ch; margin: 18px 0 14px; font-size: clamp(2.9rem, 8.8vw, 5.85rem); line-height: .92; letter-spacing: 0; }
-    .hero-copy p { max-width: 30rem; margin: 0; color: #2a2330; font-size: clamp(1rem, 2.6vw, 1.28rem); font-weight: 800; line-height: 1.8; }
-    .portrait-wrap { position: absolute; right: clamp(-34px, -3vw, -16px); bottom: 70px; width: min(58%, 360px); z-index: 1; filter: drop-shadow(16px 22px 0 rgba(27,24,32,.14)); }
-    .portrait-wrap svg { display: block; width: 100%; height: auto; }
-    .poster-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; z-index: 3; }
-    .tag { padding: 7px 9px; border: 2px solid var(--ink); border-radius: 999px; background: #fff; font-size: .78rem; font-weight: 900; box-shadow: 3px 3px 0 var(--ink); }
-    .tag:nth-child(2) { background: #c9f3ff; }
-    .tag:nth-child(3) { background: #ffe2ef; }
-    .diagnosis-panel { display: grid; min-height: 620px; background: rgba(255,255,255,.94); }
-    .panel-inner { display: grid; grid-template-rows: auto 1fr; padding: clamp(18px, 3vw, 30px); }
-    .progress { display: grid; gap: 9px; margin-bottom: 18px; }
-    .progress-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: .86rem; font-weight: 900; }
-    .bar { height: 10px; border: 2px solid var(--ink); border-radius: 999px; overflow: hidden; background: #f5f0e9; }
-    .bar-fill { width: 0%; height: 100%; background: linear-gradient(90deg, var(--hot), var(--lemon), var(--blue)); transition: width .22s ease; }
-    .screen { display: none; }
-    .screen.active { display: grid; align-content: center; gap: 18px; }
-    .intro h2, .question h2, .result h2 { margin: 0; font-size: clamp(1.82rem, 4vw, 3.05rem); line-height: 1.08; letter-spacing: 0; }
-    .intro p, .question p, .result p { margin: 0; color: var(--muted); line-height: 1.8; font-weight: 700; }
-    .start-stack, .choice-list { display: grid; gap: 10px; margin-top: 8px; }
-    .primary-button, .secondary-button, .choice-button, .social-link { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; gap: 8px; border: 2px solid var(--ink); border-radius: 8px; background: #fff; color: var(--ink); text-decoration: none; font-weight: 900; line-height: 1.35; cursor: pointer; box-shadow: 5px 5px 0 var(--ink); transition: transform .14s ease, box-shadow .14s ease; }
-    .primary-button { background: var(--hot); color: #fff; }
-    .secondary-button { background: #eaf9ff; }
-    .primary-button:hover, .primary-button:focus-visible, .secondary-button:hover, .secondary-button:focus-visible, .choice-button:hover, .choice-button:focus-visible, .social-link:hover, .social-link:focus-visible { transform: translate(2px,2px); box-shadow: 3px 3px 0 var(--ink); outline: none; }
-    .choice-button { justify-content: flex-start; width: 100%; padding: 12px 14px; text-align: left; }
-    .choice-button:nth-child(2n) { background: #fff8d8; }
-    .choice-button:nth-child(3n) { background: #eaf9ff; }
-    .choice-index { display: grid; width: 30px; height: 30px; flex: 0 0 auto; place-items: center; border: 2px solid var(--ink); border-radius: 999px; background: #fff; font-size: .78rem; }
-    .result { align-content: start; }
-    .result-card { display: grid; grid-template-columns: 156px minmax(0,1fr); gap: 16px; align-items: center; margin: 4px 0 2px; padding: 12px; border: 2px solid var(--ink); border-radius: 8px; background: #fff; box-shadow: 6px 6px 0 var(--ink); }
-    .result-art { aspect-ratio: 4 / 5; border: 2px solid var(--ink); border-radius: 8px; overflow: hidden; background: var(--lemon); }
-    .result-art svg { display: block; width: 100%; height: 100%; }
-    .result-meta { display: grid; gap: 8px; min-width: 0; }
-    .result-meta h3 { margin: 0; font-size: clamp(1.28rem, 3.2vw, 2rem); line-height: 1.15; letter-spacing: 0; }
-    .result-type { width: fit-content; padding: 5px 8px; border: 2px solid var(--ink); border-radius: 999px; background: #fff2a6; font-size: .76rem; font-weight: 900; }
-    .social-row { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 9px; margin-top: 6px; }
-    .social-link { min-height: 42px; box-shadow: 3px 3px 0 var(--ink); font-size: .86rem; }
-    .result-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
-    .note-box { margin-top: 6px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: #fffaf2; color: var(--muted); font-size: .88rem; font-weight: 700; line-height: 1.65; }
-    .result-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; margin-top: 10px; }
-    .mini-card { min-height: 74px; padding: 8px; border: 2px solid var(--ink); border-radius: 8px; background: #fff; font-size: .74rem; font-weight: 900; line-height: 1.35; }
-    .mini-card:nth-child(3n+1) { background: #ffe4f0; }
-    .mini-card:nth-child(3n+2) { background: #e7f9ff; }
-    .mini-card:nth-child(3n) { background: #fff4b8; }
-    .toast { position: fixed; left: 50%; bottom: 18px; z-index: 10; transform: translate(-50%,120px); max-width: min(92vw,420px); padding: 10px 14px; border: 2px solid var(--ink); border-radius: 999px; background: var(--ink); color: #fff; font-size: .86rem; font-weight: 900; opacity: 0; transition: transform .22s ease, opacity .22s ease; }
-    .toast.show { transform: translate(-50%,0); opacity: 1; }
-    @media (max-width: 860px) {
-      .page { width: min(100% - 22px, 620px); padding-top: 10px; }
-      .status-pill { display: none; }
-      .app-shell { grid-template-columns: 1fr; min-height: 0; }
-      .visual-stage { min-height: 74vh; }
-      .diagnosis-panel { min-height: 0; }
-      .panel-inner { min-height: 560px; }
-      .portrait-wrap { right: -28px; bottom: 86px; width: min(57%, 260px); }
-      .poster { padding: 18px; }
-      .hero-copy h1 { max-width: 9ch; font-size: clamp(3rem, 16vw, 5.3rem); }
-      .hero-copy p { max-width: 22rem; }
-      .result-card { grid-template-columns: 112px minmax(0,1fr); gap: 12px; }
-      .social-row { grid-template-columns: 1fr; }
+
+    .page {
+      width: min(1120px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 16px 0 54px;
     }
-    @media (max-width: 430px) {
-      .visual-stage { min-height: 620px; }
-      .hero-copy h1 { font-size: 3.45rem; }
-      .tag { font-size: .72rem; }
-      .panel-inner { min-height: 600px; padding: 16px; }
-      .result-card { grid-template-columns: 1fr; }
-      .result-art { width: min(230px,100%); margin: 0 auto; }
-      .result-actions { grid-template-columns: 1fr; }
-      .result-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--color-forest);
+      text-decoration: none;
+      font-weight: 800;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border-radius: 16px;
+      background: linear-gradient(145deg, #fff8ee, #efe2cf);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 8px 18px rgba(89, 70, 52, 0.14);
+    }
+
+    .brand-mark svg { width: 27px; height: 27px; }
+
+    .status-pill {
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      color: rgba(92, 67, 46, 0.92);
+      font-size: 0.82rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 0.94fr) minmax(320px, 1.06fr);
+      gap: clamp(18px, 3vw, 30px);
+      align-items: center;
+      min-height: min(780px, calc(100vh - 92px));
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 18px;
+      align-content: center;
+      padding: clamp(4px, 2vw, 18px) 0;
+    }
+
+    .kicker {
+      width: fit-content;
+      padding: 7px 13px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--color-earth);
+      font-size: 0.88rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      box-shadow: 0 8px 18px rgba(89, 70, 52, 0.08);
+    }
+
+    h1 {
+      max-width: 11ch;
+      margin: 0;
+      font-size: clamp(3.1rem, 8.8vw, 6.25rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+      color: var(--color-forest);
+    }
+
+    .lead {
+      max-width: 34rem;
+      margin: 0;
+      color: rgba(47, 79, 79, 0.9);
+      font-size: clamp(1.04rem, 2.3vw, 1.28rem);
+      font-weight: 700;
+    }
+
+    .summary-card {
+      max-width: 36rem;
+      padding: 20px 18px;
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.76);
+      box-shadow: var(--shadow);
+    }
+
+    .summary-card p {
+      margin: 0;
+      color: rgba(92, 67, 46, 0.94);
+      font-weight: 700;
+    }
+
+    .hero-media {
+      position: relative;
+      width: min(520px, 100%);
+      justify-self: center;
+    }
+
+    .hero-image-frame {
+      position: relative;
+      overflow: hidden;
+      border-radius: 34px;
+      background: rgba(255, 255, 255, 0.54);
+      box-shadow: 0 26px 70px rgba(89, 70, 52, 0.18);
+    }
+
+    .hero-image-frame img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .image-note {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 16px;
+      padding: 12px 14px;
+      border-radius: 24px;
+      background: rgba(255, 248, 239, 0.88);
+      color: var(--color-earth);
+      font-size: 0.9rem;
+      font-weight: 800;
+      box-shadow: 0 10px 24px rgba(89, 70, 52, 0.12);
+    }
+
+    .diagnosis {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 0.82fr);
+      gap: 18px;
+      margin-top: 22px;
+      align-items: start;
+    }
+
+    .panel, .result-list {
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .panel {
+      min-height: 560px;
+      padding: clamp(18px, 3vw, 28px);
+    }
+
+    .progress {
+      display: grid;
+      gap: 9px;
+      margin-bottom: 18px;
+    }
+
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      color: var(--color-earth);
+      font-weight: 800;
+      font-size: 0.92rem;
+    }
+
+    .bar {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(139, 69, 19, 0.12);
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      width: 0;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--color-soft-yellow), var(--color-sky), #d7c2a4);
+      transition: width 240ms var(--ease-soft);
+    }
+
+    .screen { display: none; }
+    .screen.active { display: grid; gap: 18px; align-content: center; min-height: 460px; }
+
+    h2 {
+      margin: 0;
+      color: var(--color-forest);
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      line-height: 1.16;
+      letter-spacing: 0;
+    }
+
+    .screen p {
+      margin: 0;
+      color: rgba(47, 79, 79, 0.88);
+      font-weight: 700;
+    }
+
+    .button-row, .choice-list, .result-actions, .social-row {
+      display: grid;
+      gap: 10px;
+    }
+
+    .choice-list { margin-top: 4px; }
+
+    .primary-button, .secondary-button, .choice-button, .social-link {
+      min-height: 50px;
+      border: 0;
+      border-radius: 18px;
+      color: var(--color-earth);
+      background: linear-gradient(145deg, #fff8ee 0%, #efe2cf 100%);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 8px 18px rgba(89, 70, 52, 0.14);
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 800;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .primary-button {
+      color: #fff8ef;
+      background: linear-gradient(145deg, #8b5a2f 0%, #c7773d 100%);
+    }
+
+    .choice-button {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 11px 13px;
+      text-align: left;
+    }
+
+    .choice-index {
+      display: grid;
+      width: 30px;
+      height: 30px;
+      place-items: center;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--color-earth);
+      font-size: 0.82rem;
+    }
+
+    .primary-button:hover, .secondary-button:hover, .choice-button:hover, .social-link:hover,
+    .primary-button:focus-visible, .secondary-button:focus-visible, .choice-button:focus-visible, .social-link:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 12px 24px rgba(89, 70, 52, 0.18);
+      outline: none;
+    }
+
+    .result-card {
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+      border-radius: 26px;
+      background: rgba(255, 248, 239, 0.72);
+    }
+
+    .result-type {
+      width: fit-content;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(240, 230, 140, 0.44);
+      color: var(--color-earth);
+      font-size: 0.84rem;
+      font-weight: 800;
+    }
+
+    .result-card h3 {
+      margin: 0;
+      font-size: clamp(1.55rem, 3.3vw, 2.28rem);
+      line-height: 1.22;
+      color: var(--color-forest);
+    }
+
+    .result-actions { grid-template-columns: 1fr 1fr; }
+
+    .social-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .social-link { display: grid; place-items: center; min-height: 44px; }
+
+    .result-list {
+      padding: 18px;
+    }
+
+    .result-list h2 {
+      margin-bottom: 12px;
+      font-size: 1.52rem;
+    }
+
+    .mini-grid {
+      display: grid;
+      gap: 9px;
+    }
+
+    .mini-card {
+      min-height: 64px;
+      padding: 11px 12px;
+      border-radius: 20px;
+      background: rgba(255, 248, 239, 0.72);
+      color: rgba(47, 79, 79, 0.92);
+      font-weight: 800;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
+    }
+
+    .mini-card:nth-child(2n) { background: rgba(174, 198, 207, 0.22); }
+    .mini-card:nth-child(3n) { background: rgba(240, 230, 140, 0.28); }
+
+    .mail-note {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.68);
+      color: rgba(92, 67, 46, 0.94);
+      font-weight: 800;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      z-index: 10;
+      transform: translate(-50%, 120px);
+      max-width: min(92vw, 420px);
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(47, 79, 79, 0.96);
+      color: #fff8ef;
+      font-size: 0.9rem;
+      font-weight: 800;
+      opacity: 0;
+      transition: transform 220ms ease, opacity 220ms ease;
+    }
+
+    .toast.show { transform: translate(-50%, 0); opacity: 1; }
+
+    @media (max-width: 860px) {
+      .page { width: min(100% - 20px, 620px); padding-top: 10px; }
+      .status-pill { display: none; }
+      .hero, .diagnosis { grid-template-columns: 1fr; min-height: 0; }
+      .hero { gap: 14px; }
+      .hero-copy { order: 2; }
+      .hero-media { order: 1; width: min(100%, 480px); }
+      .hero-image-frame { border-radius: 28px; }
+      h1 { max-width: 10ch; font-size: clamp(3.1rem, 14vw, 5.25rem); }
+      .panel { min-height: 530px; }
+      .screen.active { min-height: 420px; }
+      .social-row, .result-actions { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <div class="page">
-    <header class="topbar" aria-label="ページ情報">
+    <header class="topbar">
       <a class="brand" href="../" aria-label="Mobbyトップへ戻る">
-        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="10" y="20" width="44" height="31" rx="8" fill="#fff" stroke="#1b1820" stroke-width="5"/><circle cx="32" cy="36" r="10" fill="#45c8f1" stroke="#1b1820" stroke-width="5"/><rect x="19" y="12" width="18" height="12" rx="4" fill="#ff4f9a" stroke="#1b1820" stroke-width="5"/></svg></span>
-        <span>Mobby Collab</span>
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 64 64" role="img">
+            <rect x="10" y="20" width="44" height="31" rx="8" fill="#fff8ef" stroke="#8B4513" stroke-width="4"/>
+            <circle cx="32" cy="36" r="10" fill="#AEC6CF" stroke="#8B4513" stroke-width="4"/>
+            <rect x="19" y="13" width="18" height="12" rx="4" fill="#F0E68C" stroke="#8B4513" stroke-width="4"/>
+          </svg>
+        </span>
+        <span>Mobby診断</span>
       </a>
-      <div class="status-pill">Kahokoさん向けラフ / 1か月無料運用想定</div>
+      <div class="status-pill">Kahokoさん専用ラフ / 画像添付予定</div>
     </header>
-    <main class="app-shell">
-      <section class="visual-stage" aria-label="Kahoko診断のビジュアル">
-        <div class="poster">
-          <div class="poster-kicker">COSPLAY MAKEUP x MOBBY</div>
-          <div class="hero-copy">
-            <h1>Kahokoに変身メイクされるなら？診断</h1>
-            <p>コスプレメイク、変身、ギャップ、ポップな世界観。あなたがKahokoさんの手でキャラ化されるなら、どのタイプ？</p>
-          </div>
-          <div class="portrait-wrap" aria-hidden="true">
-            <svg viewBox="0 0 360 520">
-              <defs><linearGradient id="hair" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#242026"/><stop offset=".5" stop-color="#45334f"/><stop offset="1" stop-color="#ff5c9f"/></linearGradient><linearGradient id="paint" x1="0" x2="1"><stop offset="0" stop-color="#45c8f1"/><stop offset=".5" stop-color="#ffd84d"/><stop offset="1" stop-color="#ff4f9a"/></linearGradient></defs>
-              <path d="M80 190c8-84 58-132 123-132 72 0 116 54 116 132 0 114-42 205-122 205-82 0-130-91-117-205Z" fill="url(#hair)" stroke="#1b1820" stroke-width="9"/>
-              <path d="M96 228c-9 42 2 89 31 120 21 22 45 33 76 33 32 0 55-12 74-34 27-31 36-79 24-121-14-52-45-85-102-85-56 0-90 32-103 87Z" fill="#ffd7c6" stroke="#1b1820" stroke-width="7"/>
-              <path d="M124 231c28-26 109-31 154-1-3-57-34-92-79-92-47 0-74 34-75 93Z" fill="#241f28"/>
-              <path d="M126 265c22-18 43-18 64 0M217 265c22-18 43-18 64 0" fill="none" stroke="#1b1820" stroke-width="8" stroke-linecap="round"/>
-              <path d="M128 279c22 8 43 8 63 0" fill="none" stroke="#ff4f9a" stroke-width="8" stroke-linecap="round"/><path d="M218 279c22 8 43 8 63 0" fill="none" stroke="#45c8f1" stroke-width="8" stroke-linecap="round"/>
-              <path d="M196 286c-6 21-11 34-21 47 11 8 31 8 45 0M158 352c27 18 62 18 91-1" fill="none" stroke="#1b1820" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M89 166c56-77 139-96 211-12" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round"/>
-              <path d="M73 423c31-42 219-43 258 2l-11 74H85l-12-76Z" fill="#fff" stroke="#1b1820" stroke-width="8"/><path d="M103 430c33 27 72 42 115 42 34 0 65-10 91-31" fill="none" stroke="url(#paint)" stroke-width="22" stroke-linecap="round"/>
-              <path d="M60 111l33-68 18 71M287 82l47-49-1 72" fill="#ffd84d" stroke="#1b1820" stroke-width="7" stroke-linejoin="round"/><path d="M34 320c25 4 51 20 70 44M326 304c-24 16-45 39-59 67" fill="none" stroke="#8055ff" stroke-width="11" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <div class="poster-tags"><span class="tag">変身メイク</span><span class="tag">コスプレ</span><span class="tag">シェア診断</span><span class="tag">SNS導線つき</span></div>
+
+    <main class="hero">
+      <section class="hero-copy">
+        <div class="kicker">KAHOKO x MOBBY COLLAB</div>
+        <h1>Kahokoに変身メイクされるなら？診断</h1>
+        <p class="lead">コスプレメイク、変身、ギャップ、ポップな世界観。Kahokoさんの魅力を、ファンが自分ごと化して遊べる診断にしました。</p>
+        <div class="summary-card">
+          <p>まずは1か月、Mobby側で制作・運用・拡散を行う想定です。Kahokoさん側では、公開前の確認と方向性のご意見だけいただければ進められます。</p>
         </div>
       </section>
-      <section class="diagnosis-panel" aria-label="診断">
-        <div class="panel-inner">
-          <div class="progress"><div class="progress-top"><span id="progressText">START</span><span id="progressCount">0 / 6</span></div><div class="bar"><div class="bar-fill" id="barFill"></div></div></div>
-          <section class="screen intro active" id="introScreen"><h2>あなたに似合うKahokoメイク世界観を診断</h2><p>6問に答えると、Kahokoさんに変身メイクされるならどんなキャラになるかを結果カードで表示します。</p><div class="start-stack"><button class="primary-button" type="button" id="startButton">診断をはじめる</button><div class="note-box">ラフ段階のサンプルです。結果画面にはTikTok、Instagram、YouTubeへの導線を置いています。</div></div></section>
-          <section class="screen question" id="questionScreen" aria-live="polite"><h2 id="questionTitle"></h2><p id="questionLead"></p><div class="choice-list" id="choiceList"></div></section>
-          <section class="screen result" id="resultScreen" aria-live="polite"><h2>診断結果</h2><div class="result-card"><div class="result-art" id="resultArt"></div><div class="result-meta"><span class="result-type" id="resultType"></span><h3 id="resultTitle"></h3><p id="resultText"></p></div></div><div class="social-row"><a class="social-link" href="https://www.tiktok.com/@kaho7911" target="_blank" rel="noopener">TikTok</a><a class="social-link" href="https://www.instagram.com/kaho7911/" target="_blank" rel="noopener">Instagram</a><a class="social-link" href="https://www.youtube.com/@kahoko6607" target="_blank" rel="noopener">YouTube</a></div><div class="result-actions"><button class="primary-button" type="button" id="shareButton">結果をコピー</button><button class="secondary-button" type="button" id="restartButton">もう一度診断</button></div><div class="note-box">イベント、商品ページ、告知ページなど任意の導線をここに追加できます。</div></section>
+
+      <section class="hero-media" aria-label="Kahokoさん専用生成画像">
+        <div class="hero-image-frame">
+          <img src="kahoko-collab-hero-site.jpg" alt="Kahokoさん向けモビー診断の専用ビジュアル">
+          <div class="image-note">メール添付用にも使える専用ビジュアル案</div>
         </div>
       </section>
     </main>
-    <section class="result-grid" aria-label="結果タイプ一覧"><div class="mini-card">二次元再現職人</div><div class="mini-card">家にあるもので天才変身</div><div class="mini-card">爆笑ギャップメイク</div><div class="mini-card">ヒロイン透明感メイク</div><div class="mini-card">ダークキャラ覚醒</div><div class="mini-card">ユニコーンポップ</div><div class="mini-card">映画級ラスボス</div><div class="mini-card">友達巻き込みワイワイ</div></section>
+
+    <section class="diagnosis">
+      <div class="panel">
+        <div class="progress" aria-label="進行状況">
+          <div class="progress-top">
+            <span id="progressText">START</span>
+            <span id="progressCount">0 / 6</span>
+          </div>
+          <div class="bar" aria-hidden="true"><div class="bar-fill" id="barFill"></div></div>
+        </div>
+
+        <section class="screen intro active" id="introScreen">
+          <h2>あなたに似合うKahokoメイク世界観を診断</h2>
+          <p>6問に答えると、Kahokoさんに変身メイクされるならどんなキャラになるかを結果カードで表示します。</p>
+          <div class="button-row">
+            <button class="primary-button" type="button" id="startButton">診断をはじめる</button>
+          </div>
+        </section>
+
+        <section class="screen question" id="questionScreen" aria-live="polite">
+          <h2 id="questionTitle"></h2>
+          <p id="questionLead"></p>
+          <div class="choice-list" id="choiceList"></div>
+        </section>
+
+        <section class="screen result" id="resultScreen" aria-live="polite">
+          <h2>診断結果</h2>
+          <div class="result-card">
+            <span class="result-type" id="resultType"></span>
+            <h3 id="resultTitle"></h3>
+            <p id="resultText"></p>
+          </div>
+          <div class="social-row">
+            <a class="social-link" href="https://www.tiktok.com/@kaho7911" target="_blank" rel="noopener">TikTok</a>
+            <a class="social-link" href="https://www.instagram.com/kaho7911/" target="_blank" rel="noopener">Instagram</a>
+            <a class="social-link" href="https://www.youtube.com/@kahoko6607" target="_blank" rel="noopener">YouTube</a>
+          </div>
+          <div class="result-actions">
+            <button class="primary-button" type="button" id="shareButton">結果をコピー</button>
+            <button class="secondary-button" type="button" id="restartButton">もう一度診断</button>
+          </div>
+        </section>
+      </div>
+
+      <aside class="result-list" aria-label="結果タイプ一覧">
+        <h2>結果タイプ</h2>
+        <div class="mini-grid">
+          <div class="mini-card">二次元再現職人</div>
+          <div class="mini-card">家にあるもので天才変身</div>
+          <div class="mini-card">爆笑ギャップメイク</div>
+          <div class="mini-card">ヒロイン透明感メイク</div>
+          <div class="mini-card">ダークキャラ覚醒</div>
+          <div class="mini-card">ユニコーンポップ</div>
+          <div class="mini-card">映画級ラスボス</div>
+          <div class="mini-card">友達巻き込みワイワイ</div>
+        </div>
+        <div class="mail-note">診断結果画面から、TikTok・Instagram・YouTubeへ自然に導線を置いています。</div>
+      </aside>
+    </section>
   </div>
+
   <div class="toast" id="toast" role="status" aria-live="polite">コピーしました</div>
+
   <script>
     const questions = [
       { title: "変身するなら、最初に欲しい要素は？", lead: "Kahokoさんのメイクで一番テンションが上がる入口を選んでください。", choices: [["原作そのままの再現度", "craft"], ["家にあるもので作る発想力", "hack"], ["見た瞬間笑えるギャップ", "comedy"], ["透明感と盛れるかわいさ", "heroine"]] },
@@ -175,28 +512,110 @@
       { title: "Kahokoさんの投稿で刺さるところは？", lead: "診断テーマの軸にしたい魅力です。", choices: [["細部まで寄せる観察力", "craft"], ["道具を工夫する身近さ", "hack"], ["ビフォーアフターの破壊力", "comedy"], ["完成後の華やかさ", "heroine"]] },
       { title: "友達に送るなら、どの結果が嬉しい？", lead: "最後は直感で選んでください。", choices: [["強キャラになれる結果", "dark"], ["かわいくて保存したい結果", "unicorn"], ["インパクト重視の結果", "villain"], ["一緒に遊べる結果", "party"]] }
     ];
+
     const results = {
-      craft: { type: "再現度MAX", title: "二次元再現職人", text: "細部へのこだわりで、推しキャラの空気までまとえるタイプ。Kahokoさんの観察力と相性抜群の本格変身です。", colors: ["#ff4f9a", "#45c8f1", "#fff"] },
-      hack: { type: "発想力MAX", title: "家にあるもので天才変身", text: "限られた道具から最高の見せ場を作れるタイプ。身近なのに真似したくなる、Kahokoさんらしい工夫系メイクです。", colors: ["#6fd28b", "#ffd84d", "#fff"] },
-      comedy: { type: "ギャップMAX", title: "爆笑ギャップメイク", text: "ビフォーアフターで一気に空気を持っていくタイプ。友達に送りたくなる、拡散向きのインパクト担当です。", colors: ["#ffd84d", "#ff4f9a", "#45c8f1"] },
-      heroine: { type: "かわいさMAX", title: "ヒロイン透明感メイク", text: "柔らかさと華やかさで、画面に出た瞬間に目を引くタイプ。保存したくなる結果カードに向いています。", colors: ["#ffd8e8", "#45c8f1", "#fff"] },
-      dark: { type: "覚醒MAX", title: "ダークキャラ覚醒", text: "強い目元と影のある世界観で、一気に別人感が出るタイプ。動画のサムネでも強い結果です。", colors: ["#1b1820", "#8055ff", "#ff4f9a"] },
-      unicorn: { type: "ポップMAX", title: "ユニコーンポップ", text: "カラフルで非日常、でも親しみやすいタイプ。Kahokoさんの明るい変身感をファン参加型に広げやすい結果です。", colors: ["#45c8f1", "#ff4f9a", "#ffd84d"] },
-      villain: { type: "迫力MAX", title: "映画級ラスボス", text: "完成した瞬間に物語が始まりそうなタイプ。強いビジュアルで、診断結果の中でも一番スクショ映えします。", colors: ["#1b1820", "#ffd84d", "#ffffff"] },
-      party: { type: "参加感MAX", title: "友達巻き込みワイワイ", text: "一人で終わらず、友達にも診断を回したくなるタイプ。コメント欄やストーリーで広がりやすい結果です。", colors: ["#6fd28b", "#45c8f1", "#ff4f9a"] }
+      craft: { type: "再現度MAX", title: "二次元再現職人", text: "細部へのこだわりで、推しキャラの空気までまとえるタイプ。Kahokoさんの観察力と相性抜群の本格変身です。" },
+      hack: { type: "発想力MAX", title: "家にあるもので天才変身", text: "限られた道具から最高の見せ場を作れるタイプ。身近なのに真似したくなる、Kahokoさんらしい工夫系メイクです。" },
+      comedy: { type: "ギャップMAX", title: "爆笑ギャップメイク", text: "ビフォーアフターで一気に空気を持っていくタイプ。友達に送りたくなる、拡散向きのインパクト担当です。" },
+      heroine: { type: "かわいさMAX", title: "ヒロイン透明感メイク", text: "柔らかさと華やかさで、画面に出た瞬間に目を引くタイプ。保存したくなる結果カードに向いています。" },
+      dark: { type: "覚醒MAX", title: "ダークキャラ覚醒", text: "強い目元と影のある世界観で、一気に別人感が出るタイプ。動画のサムネでも強い結果です。" },
+      unicorn: { type: "ポップMAX", title: "ユニコーンポップ", text: "カラフルで非日常、でも親しみやすいタイプ。Kahokoさんの明るい変身感をファン参加型に広げやすい結果です。" },
+      villain: { type: "迫力MAX", title: "映画級ラスボス", text: "完成した瞬間に物語が始まりそうなタイプ。強いビジュアルで、診断結果の中でも一番スクショ映えします。" },
+      party: { type: "参加感MAX", title: "友達巻き込みワイワイ", text: "一人で終わらず、友達にも診断を回したくなるタイプ。コメント欄やストーリーで広がりやすい結果です。" }
     };
+
     const state = { index: 0, scores: Object.fromEntries(Object.keys(results).map((key) => [key, 0])), currentResult: null };
     const $ = (id) => document.getElementById(id);
-    const introScreen = $("introScreen"), questionScreen = $("questionScreen"), resultScreen = $("resultScreen"), progressText = $("progressText"), progressCount = $("progressCount"), barFill = $("barFill"), questionTitle = $("questionTitle"), questionLead = $("questionLead"), choiceList = $("choiceList"), resultArt = $("resultArt"), resultType = $("resultType"), resultTitle = $("resultTitle"), resultText = $("resultText"), toast = $("toast");
-    function setScreen(screen) { [introScreen, questionScreen, resultScreen].forEach((item) => item.classList.remove("active")); screen.classList.add("active"); }
-    function updateProgress() { const total = questions.length; const current = Math.min(state.index, total); progressText.textContent = current === total ? "RESULT" : current === 0 ? "START" : `QUESTION ${current + 1}`; progressCount.textContent = `${current} / ${total}`; barFill.style.width = `${(current / total) * 100}%`; }
-    function startDiagnosis() { state.index = 0; Object.keys(state.scores).forEach((key) => { state.scores[key] = 0; }); updateProgress(); renderQuestion(); setScreen(questionScreen); }
-    function renderQuestion() { const question = questions[state.index]; questionTitle.textContent = question.title; questionLead.textContent = question.lead; choiceList.textContent = ""; question.choices.forEach(([label, key], choiceIndex) => { const button = document.createElement("button"); button.className = "choice-button"; button.type = "button"; button.innerHTML = `<span class="choice-index">${choiceIndex + 1}</span><span>${label}</span>`; button.addEventListener("click", () => answerQuestion(key)); choiceList.appendChild(button); }); updateProgress(); }
-    function answerQuestion(key) { state.scores[key] += 1; state.index += 1; if (state.index >= questions.length) { showResult(); return; } renderQuestion(); }
-    function showResult() { const winner = Object.entries(state.scores).sort((a, b) => b[1] - a[1])[0][0]; const result = results[winner]; state.currentResult = result; resultType.textContent = result.type; resultTitle.textContent = result.title; resultText.textContent = result.text; resultArt.innerHTML = makeResultSvg(result); updateProgress(); setScreen(resultScreen); }
-    function makeResultSvg(result) { const [main, accent, base] = result.colors; const safeTitle = result.title.replace(/[&<>"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" })[char]); return `<svg viewBox="0 0 320 400" role="img" aria-label="${safeTitle}"><rect width="320" height="400" fill="${base}"/><path d="M0 52C64 18 94 88 158 52s97-20 162 22v326H0Z" fill="${main}" opacity=".9"/><path d="M0 304c68-42 126-11 172-38 62-36 91-12 148 20v114H0Z" fill="${accent}" opacity=".9"/><rect x="28" y="28" width="264" height="344" rx="16" fill="rgba(255,255,255,.88)" stroke="#1b1820" stroke-width="8"/><path d="M94 152c5-51 36-86 71-86 41 0 69 35 72 86 3 72-25 123-72 123-46 0-78-51-71-123Z" fill="#2a2330" stroke="#1b1820" stroke-width="7"/><path d="M98 164c12-38 35-58 69-58 36 0 57 23 66 58 11 46-14 91-67 91-50 0-82-43-68-91Z" fill="#ffd7c6" stroke="#1b1820" stroke-width="6"/><path d="M117 164c31-23 69-24 98 1-2-38-22-60-50-60-29 0-47 21-48 59Z" fill="#1b1820"/><path d="M115 190c19-11 36-11 54 0" fill="none" stroke="${main}" stroke-width="9" stroke-linecap="round"/><path d="M178 190c19-11 36-11 54 0" fill="none" stroke="${accent}" stroke-width="9" stroke-linecap="round"/><path d="M139 229c19 13 39 13 60 0" fill="none" stroke="#1b1820" stroke-width="6" stroke-linecap="round"/><path d="M84 298c31-34 133-35 165 1l-6 48H91Z" fill="#fff" stroke="#1b1820" stroke-width="7"/><text x="160" y="334" text-anchor="middle" font-size="22" font-weight="900" fill="#1b1820" font-family="sans-serif">${safeTitle}</text><text x="160" y="359" text-anchor="middle" font-size="13" font-weight="900" fill="#5f5965" font-family="sans-serif">Kahoko x Mobby</text><circle cx="62" cy="80" r="15" fill="${accent}" stroke="#1b1820" stroke-width="6"/><path d="M250 66l27 24-32 17Z" fill="${main}" stroke="#1b1820" stroke-width="6" stroke-linejoin="round"/></svg>`; }
-    async function shareResult() { const result = state.currentResult; if (!result) return; const text = `Kahokoに変身メイクされるなら？診断の結果は「${result.title}」でした。 https://shunpei1130.github.io/mobby/kahoko/`; try { await navigator.clipboard.writeText(text); showToast("結果をコピーしました"); } catch (error) { showToast(text); } }
-    function showToast(message) { toast.textContent = message; toast.classList.add("show"); window.clearTimeout(showToast.timer); showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2200); }
+    const introScreen = $("introScreen");
+    const questionScreen = $("questionScreen");
+    const resultScreen = $("resultScreen");
+    const progressText = $("progressText");
+    const progressCount = $("progressCount");
+    const barFill = $("barFill");
+    const questionTitle = $("questionTitle");
+    const questionLead = $("questionLead");
+    const choiceList = $("choiceList");
+    const resultType = $("resultType");
+    const resultTitle = $("resultTitle");
+    const resultText = $("resultText");
+    const toast = $("toast");
+
+    function setScreen(screen) {
+      [introScreen, questionScreen, resultScreen].forEach((item) => item.classList.remove("active"));
+      screen.classList.add("active");
+    }
+
+    function updateProgress() {
+      const total = questions.length;
+      const current = Math.min(state.index, total);
+      progressText.textContent = current === total ? "RESULT" : current === 0 ? "START" : `QUESTION ${current + 1}`;
+      progressCount.textContent = `${current} / ${total}`;
+      barFill.style.width = `${(current / total) * 100}%`;
+    }
+
+    function startDiagnosis() {
+      state.index = 0;
+      Object.keys(state.scores).forEach((key) => { state.scores[key] = 0; });
+      updateProgress();
+      renderQuestion();
+      setScreen(questionScreen);
+    }
+
+    function renderQuestion() {
+      const question = questions[state.index];
+      questionTitle.textContent = question.title;
+      questionLead.textContent = question.lead;
+      choiceList.textContent = "";
+      question.choices.forEach(([label, key], choiceIndex) => {
+        const button = document.createElement("button");
+        button.className = "choice-button";
+        button.type = "button";
+        button.innerHTML = `<span class="choice-index">${choiceIndex + 1}</span><span>${label}</span>`;
+        button.addEventListener("click", () => answerQuestion(key));
+        choiceList.appendChild(button);
+      });
+      updateProgress();
+    }
+
+    function answerQuestion(key) {
+      state.scores[key] += 1;
+      state.index += 1;
+      if (state.index >= questions.length) {
+        showResult();
+        return;
+      }
+      renderQuestion();
+    }
+
+    function showResult() {
+      const winner = Object.entries(state.scores).sort((a, b) => b[1] - a[1])[0][0];
+      const result = results[winner];
+      state.currentResult = result;
+      resultType.textContent = result.type;
+      resultTitle.textContent = result.title;
+      resultText.textContent = result.text;
+      updateProgress();
+      setScreen(resultScreen);
+    }
+
+    async function shareResult() {
+      if (!state.currentResult) return;
+      const text = `Kahokoに変身メイクされるなら？診断の結果は「${state.currentResult.title}」でした。 https://shunpei1130.github.io/mobby/kahoko/`;
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast("結果をコピーしました");
+      } catch (error) {
+        showToast(text);
+      }
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
     $("startButton").addEventListener("click", startDiagnosis);
     $("restartButton").addEventListener("click", startDiagnosis);
     $("shareButton").addEventListener("click", shareResult);
