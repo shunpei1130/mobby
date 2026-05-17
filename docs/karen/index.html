@@ -371,11 +371,11 @@ ${DIAG.title}
           ${DIAG.types.map(type => `
             <details class="type-item">
               <summary>
+                <div class="type-sample">
+                  <img src="assets/kekka.png" alt="${esc(type.name)}のサンプル結果画像">
+                </div>
                 <div class="type-head"><div><h3>${esc(type.number)}｜${esc(type.name)}</h3><p>${esc(type.short)}</p></div></div>
               </summary>
-              <div class="type-sample">
-                <img src="assets/kekka.png" alt="${esc(type.name)}のサンプル結果画像">
-              </div>
               <p>${esc(type.description)}</p>
               <p style="margin-top:8px"><strong>一言風：</strong>「${esc(type.phrase)}」</p>
             </details>`).join('')}
