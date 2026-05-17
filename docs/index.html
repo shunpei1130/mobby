@@ -735,6 +735,18 @@
       color: #827b6a;
     }
 
+    #goAiBuddy {
+      background:
+        linear-gradient(145deg, #3c8c74 0%, #72bd8f 54%, #dff4cf 100%);
+      color: #fffaf2;
+      line-height: 1.15;
+      text-align: center;
+    }
+
+    #goAiBuddy span {
+      display: block;
+    }
+
     .btn-primary {
       background-color: var(--color-accent-red);
       color: var(--color-cream);
@@ -776,7 +788,8 @@
     @media (max-width: 768px) {
 
       #goMobbyDiagnosis,
-      #goGachaPage {
+      #goGachaPage,
+      #goAiBuddy {
         font-size: 12px !important;
         padding: 8px 18px !important;
       }
@@ -2765,6 +2778,119 @@
       font-size: 0.95rem;
     }
 
+    .karen-collab-link {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 13px 24px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ff4d6d, #a4133c);
+      color: #fff;
+      font-family: var(--font-ja);
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      text-decoration: none;
+      box-shadow: 0 14px 32px rgba(164, 19, 60, 0.24);
+      border: 1px solid rgba(255, 255, 255, 0.64);
+      isolation: isolate;
+      overflow: hidden;
+    }
+
+    .karen-collab-link::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.28) 42%, transparent 72%);
+      transform: translateX(-120%);
+      transition: transform 0.5s ease;
+      z-index: -1;
+    }
+
+    .karen-collab-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 38px rgba(164, 19, 60, 0.30);
+    }
+
+    .karen-collab-link:hover::before {
+      transform: translateX(120%);
+    }
+
+    .gift-fan-karen-action {
+      width: 190px !important;
+      height: 58px !important;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255,255,255,0.82), transparent 28%),
+        linear-gradient(135deg, #ff8fab 0%, #ff4d8d 48%, #c9184a 100%) !important;
+      color: #fff !important;
+      border-color: rgba(255,255,255,0.72) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.75),
+        0 16px 32px rgba(201, 24, 74, 0.30),
+        0 0 0 3px rgba(255, 229, 236, 0.72) !important;
+      font-size: 12px !important;
+      font-weight: 900 !important;
+      letter-spacing: 0.02em !important;
+    }
+
+    .gift-fan-karen-action::before {
+      content: "SPECIAL";
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+      min-width: 48px;
+      height: 18px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: #fff;
+      color: #ff4d8d;
+      font-size: 8px;
+      font-weight: 900;
+      line-height: 1;
+      box-shadow: 0 4px 10px rgba(164, 19, 60, 0.18);
+    }
+
+    .gift-fan-karen-action::after {
+      content: "";
+      position: absolute;
+      right: 8px;
+      top: 8px;
+      display: block !important;
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.9);
+      box-shadow: -16px 18px 0 rgba(255,255,255,0.28);
+    }
+
+    #goAiBuddy {
+      display: none !important;
+    }
+
+    .bottom-links-wrap {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 0;
+      padding: 18px 16px 26px;
+      background: #faf1e2;
+    }
+
+    #mobbyDiagnosisWrapper .karen-collab-link {
+      min-width: min(280px, calc(100vw - 48px));
+      min-height: 54px;
+      font-size: 15px;
+    }
+
     footer {
       background-color: var(--color-forest);
       padding: 56px 0;
@@ -2824,8 +2950,7 @@
       }
     }
 
-    .gacha-btn-wrap,
-    #mobbyDiagnosisWrapper {
+    .gacha-btn-wrap {
       display: none !important;
     }
 
@@ -4025,23 +4150,23 @@
         }
 
         .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="school"] {
-          transform: translate(0, 2px) scale(0.98);
+          transform: translate(0, 2px) scale(0.96);
         }
 
         .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="love"] {
-          transform: translate(52px, 2px) scale(0.98);
+          transform: translate(52px, 2px) scale(0.96);
         }
 
         .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] {
-          transform: translate(104px, 2px) scale(0.98);
+          transform: translate(104px, 2px) scale(0.96);
         }
 
         .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="night"] {
-          transform: translate(156px, 2px) scale(0.98);
+          transform: translate(156px, 2px) scale(0.96);
         }
 
         .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="mama"] {
-          transform: translate(208px, 2px) scale(0.98);
+          transform: translate(208px, 2px) scale(0.96);
         }
       }
 
@@ -8572,16 +8697,14 @@
               <button class="btn btn-secondary action-box-btn gift-fan-action" id="openSnsPopup" data-fan-item="sns"><span class="footer-btn-icon" data-icon="share" aria-hidden="true"></span><span>SNS</span></button>
             </div>
           </div>
+          <button class="btn btn-secondary" id="openVideoPopup">動画</button>
+          <a class="btn btn-secondary" id="goAiBuddy" href="/aibuddy/" aria-label="相棒モビー"><span>相棒<br>モビー</span></a>
         </div>
       </div>
     </div>
     <!-- ▼▼▼ ここにモビー診断ボタンを追加 ▼▼▼ -->
-    <div id="mobbyDiagnosisWrapper"
-      style="width:100%;display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:20px;">
-      <button class="btn btn-primary" id="goMobbyDiagnosis" type="button"
-        style="font-size:14px;padding:10px 24px;">モビー診断</button>
-      <a class="btn btn-primary" id="goKoreanVersion" href="korea/index.html"
-        style="font-size:14px;padding:10px 24px;">한국판</a>
+    <div id="mobbyDiagnosisWrapper" class="bottom-links-wrap">
+      <a class="karen-collab-link" href="karen/index.html">佐藤かれんコラボ</a>
     </div>
     <!-- 右下の法的リンク -->
     <div class="legal-links">
