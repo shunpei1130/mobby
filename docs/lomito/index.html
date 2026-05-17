@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="format-detection" content="telephone=no,address=no,email=no">
+  <title>What Kind of Lomito Moment Are You? | Mobby</title>
+  <meta name="description" content="A warm Mobby quiz rough draft for Lomito, built around pet comfort, daily humor, and emotional connection.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="What Kind of Lomito Moment Are You?">
+  <meta property="og:description" content="Which Lomito-style moment matches you?">
+  <meta property="og:url" content="https://shunpei1130.github.io/mobby/lomito/">
+  <meta property="og:image" content="https://shunpei1130.github.io/mobby/lomito/img/hero.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#fff8e8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-main: 'Yomogi', cursive;
+      --bg: #fff8e8;
+      --surface: #ffffff;
+      --surface2: #fff3d9;
+      --text-main: #1d1d1f;
+      --text-sub: #6e6e73;
+      --accent: #2f6f62;
+      --accent-soft: #e8f4ee;
+      --accent2: #d2691e;
+      --accent3: #aec6cf;
+      --line: #d8d0c2;
+      --danger: #c2410c;
+      --shadow-sm: 0 2px 8px rgba(64, 43, 26, 0.06);
+      --shadow-lg: 0 12px 30px rgba(64, 43, 26, 0.10);
+      color-scheme: light;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-main);
+      background:
+        radial-gradient(circle at 15% 4%, rgba(174, 198, 207, 0.34), rgba(174, 198, 207, 0) 28%),
+        radial-gradient(circle at 90% 0%, rgba(210, 105, 30, 0.14), rgba(210, 105, 30, 0) 30%),
+        var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    button {
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s, box-shadow 0.2s, border-color 0.2s;
+    }
+
+    button:hover {
+      background: #fff;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    button:active {
+      transform: translateY(0) scale(0.96);
+    }
+
+    button:disabled {
+      opacity: 0.42;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background-image: url('../16school/logo.jpg');
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 4px 10px rgba(47, 111, 98, 0.20);
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .title h1 {
+      font-size: 14px;
+      margin: 0;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--accent);
+    }
+
+    .title p {
+      margin: 0;
+      color: var(--text-sub);
+      font-size: 12px;
+    }
+
+    .title-menu a:hover {
+      background: var(--accent-soft);
+    }
+
+    .nav {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .nav a {
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: background 0.2s;
+      text-decoration: none;
+    }
+
+    .nav a:hover { background: rgba(47, 111, 98, 0.08); }
+
+    .nav a.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .panel {
+      background: var(--surface);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--line);
+    }
+
+    .fade-in {
+      animation: fadeIn 0.42s ease-out both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .kicker {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 800;
+      margin: 0 0 8px;
+    }
+
+    .big {
+      font-size: clamp(30px, 6vw, 46px);
+      line-height: 1.12;
+      margin: 0 0 16px;
+      letter-spacing: 0;
+    }
+
+    .text-body {
+      font-size: 15px;
+      color: var(--text-sub);
+    }
+
+    .primary {
+      background: linear-gradient(135deg, var(--accent), #3d8f7d);
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(47, 111, 98, 0.20);
+    }
+
+    .primary:hover {
+      background: linear-gradient(135deg, #2a6257, #347b6d);
+    }
+
+    .danger {
+      color: var(--danger);
+      background: rgba(194, 65, 12, 0.08);
+    }
+
+    .home-btn {
+      margin-right: 6px;
+      font-size: 15px;
+      padding: 6px 18px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--accent);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      gap: 22px;
+      align-items: center;
+      margin: 24px auto 30px;
+      max-width: 640px;
+      text-align: left;
+    }
+
+    .hero-art {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      background: var(--surface2);
+      min-height: 260px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--line);
+    }
+
+    .hero-art img {
+      width: 100%;
+      height: 100%;
+      min-height: 260px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-copy-card {
+      display: grid;
+      gap: 12px;
+    }
+
+    .hero-note {
+      background: var(--accent-soft);
+      border: 1px solid rgba(47, 111, 98, 0.20);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      border-radius: 14px;
+      padding: 12px 14px;
+    }
+
+    .preview-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 24px auto 0;
+      max-width: 640px;
+    }
+
+    .preview-strip img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: var(--surface2);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .progress-wrap { margin: 20px 0; }
+
+    .progress-track {
+      height: 6px;
+      background: var(--surface2);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      width: 0%;
+      transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .qCard {
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .qCard:last-child {
+      border-bottom: none;
+      margin-bottom: 10px;
+    }
+
+    .qText {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0 0 16px;
+    }
+
+    .likert7 {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px 0 6px;
+    }
+
+    .likert-labels {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 0 4px;
+    }
+
+    .likert-labels .left { color: var(--accent); }
+    .likert-labels .right { color: var(--accent2); }
+
+    .likert-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+      width: 100%;
+    }
+
+    .likert-btn {
+      appearance: none;
+      -webkit-appearance: none;
+      border: 3px solid rgba(47, 111, 98, 0.2);
+      background: transparent;
+      border-radius: 999px;
+      cursor: pointer;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1), background 180ms, border-color 180ms, box-shadow 180ms;
+      flex-shrink: 0;
+    }
+
+    .likert-btn[data-i="1"],
+    .likert-btn[data-i="7"] { width: 76px; height: 76px; }
+    .likert-btn[data-i="2"],
+    .likert-btn[data-i="6"] { width: 58px; height: 58px; }
+    .likert-btn[data-i="3"],
+    .likert-btn[data-i="5"] { width: 44px; height: 44px; }
+    .likert-btn[data-i="4"] { width: 30px; height: 30px; }
+
+    .likert-btn.left { border-color: rgba(47, 111, 98, 0.65); }
+    .likert-btn.mid { border-color: rgba(110, 110, 115, 0.45); }
+    .likert-btn.right { border-color: rgba(210, 105, 30, 0.65); }
+
+    .likert-btn.selected {
+      background: rgba(47, 111, 98, 0.22);
+      box-shadow: 0 0 0 6px rgba(47, 111, 98, 0.10);
+      border-color: var(--accent);
+    }
+
+    .likert-btn:active { transform: scale(0.92); }
+
+    .result-hero {
+      text-align: center;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 24px;
+    }
+
+    .char-image-placeholder {
+      width: 240px;
+      height: 240px;
+      margin: 20px auto;
+      border-radius: 28px;
+      background: var(--surface2);
+      display: grid;
+      place-items: center;
+      color: var(--text-sub);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .char-image-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .type-chip {
+      display: inline-block;
+      background: var(--surface2);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      color: var(--text-sub);
+      border: 1px solid var(--line);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .info-card {
+      background: var(--surface2);
+      border-radius: 18px;
+      padding: 20px;
+      border: 1px solid var(--line);
+    }
+
+    .info-card h3 {
+      margin: 0 0 12px;
+      font-size: 15px;
+      color: var(--text-main);
+    }
+
+    .info-card ul {
+      margin: 0;
+      padding-left: 20px;
+      font-size: 13px;
+      color: var(--text-main);
+    }
+
+    .info-card li { margin-bottom: 6px; }
+
+    .result-feature {
+      margin-top: 24px;
+      background: linear-gradient(135deg, #ffffff, #fff3d9);
+      border-left: 4px solid var(--accent);
+    }
+
+    .result-product-content {
+      margin-top: 24px;
+      text-align: center;
+      background: linear-gradient(145deg, #ffffff, #fff7e6);
+      border: 1px solid rgba(47, 111, 98, 0.18);
+      border-radius: 22px;
+      padding: 24px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .result-product-content::after {
+      content: "COLLAB";
+      position: absolute;
+      top: 18px;
+      right: -44px;
+      transform: rotate(20deg);
+      background: linear-gradient(135deg, var(--accent2), #f0a050);
+      color: #fff;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      padding: 6px 48px;
+    }
+
+    .link-row,
+    .share-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .share-panel {
+      margin-top: 24px;
+      text-align: center;
+      border-top: 1px solid var(--line);
+      padding-top: 24px;
+    }
+
+    .link-pill,
+    .share-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--text-main);
+      font-size: 13px;
+      font-weight: 800;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .share-x {
+      background: #111;
+      color: #fff;
+      border-color: #111;
+    }
+
+    .share-line {
+      background: #06c755;
+      color: #fff;
+      border-color: #06c755;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      transform: translate(-50%, 20px);
+      opacity: 0;
+      pointer-events: none;
+      background: rgba(29, 29, 31, 0.92);
+      color: #fff;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 13px;
+      transition: 0.24s ease;
+      z-index: 80;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .char-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .char-card {
+      background: var(--surface);
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .char-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .char-card-image {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--surface2);
+      margin-bottom: 12px;
+      border: 1px solid var(--line);
+    }
+
+    .char-card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .char-card-type {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .char-card-name {
+      font-size: 16px;
+      margin: 0 0 8px;
+      line-height: 1.35;
+    }
+
+    .char-card-desc {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin: 0 0 14px;
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--text-sub);
+      font-size: 11px;
+      margin-top: 50px;
+    }
+
+    @media (max-width: 760px) {
+      .wrap { padding: 24px 14px 70px; }
+      header { align-items: flex-start; }
+      .panel { padding: 24px 18px; border-radius: 22px; }
+      .hero-grid { grid-template-columns: 1fr; text-align: center; }
+      .hero-copy-card { order: 2; }
+      .hero-art { order: 1; max-width: 340px; margin: 0 auto; }
+      .preview-strip { grid-template-columns: repeat(4, 1fr); gap: 7px; }
+      .card-grid { grid-template-columns: 1fr; }
+      .char-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .nav { width: 100%; justify-content: flex-start; }
+    }
+
+    @media (max-width: 420px) {
+      .wrap { padding-left: 12px; padding-right: 12px; }
+      .big { font-size: 31px; }
+      .hero-art img { min-height: 220px; }
+      .preview-strip { grid-template-columns: repeat(2, 1fr); }
+      .likert7 { gap: 6px; }
+      .likert-labels { font-size: 9px; }
+      .likert-buttons { gap: 4px; }
+      .likert-btn[data-i="1"],
+      .likert-btn[data-i="7"] { width: 48px; height: 48px; }
+      .likert-btn[data-i="2"],
+      .likert-btn[data-i="6"] { width: 40px; height: 40px; }
+      .likert-btn[data-i="3"],
+      .likert-btn[data-i="5"] { width: 32px; height: 32px; }
+      .likert-btn[data-i="4"] { width: 24px; height: 24px; }
+      .char-image-placeholder { width: 220px; height: 220px; }
+      .char-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <a href="../index.html?skipSplash=1" style="text-decoration:none;">
+          <button class="home-btn" type="button">Home</button>
+        </a>
+        <div class="logo" id="logoHome" aria-hidden="true"></div>
+        <div class="title" style="position: relative;">
+          <h1 id="titleHome">診断一覧</h1>
+          <p>Lomito x Mobby</p>
+          <div id="titleMenu" class="title-menu" style="display:none; position:absolute; top:calc(100% + 8px); left:0; min-width:210px; padding:8px; border:1px solid var(--line); border-radius:12px; background:var(--surface); box-shadow:var(--shadow-sm); z-index:30;">
+            <a href="/16school/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main); font-size:12px;">学校モビー診断</a>
+            <a href="/16school/mama/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main); font-size:12px;">ママモビー診断</a>
+            <a href="/16love/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main); font-size:12px;">メンヘラモビー診断</a>
+            <a href="/16night/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main); font-size:12px;">夜職モビー診断</a>
+            <a href="/16stan/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main); font-size:12px;">推し活モビー診断</a>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <nav class="nav">
+          <a href="#" id="navDiagnosis" class="active">診断</a>
+          <a href="#" id="navCharacters">キャラ一覧</a>
+        </nav>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="danger" id="btnReset" type="button" style="font-size:11px;">リセット</button>
+          <button id="btnTypeGuide" type="button" style="font-size:11px;background:var(--accent-soft);color:var(--accent);">タイプ解説</button>
+        </div>
+      </div>
+    </header>
+
+    <main id="app"></main>
+    <footer>&copy; 2026 Mobby. All rights reserved.</footer>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite">コピーしました</div>
+
+  <script>
+    const app = document.getElementById("app");
+    const toast = document.getElementById("toast");
+    const STORAGE_KEY = "mobby_yopipi_diagnosis_v1";
+    const PAGE_SIZE = 4;
+    const SITE = {
+      "lang": "en",
+      "slug": "lomito",
+      "title": "What Kind of Lomito Moment Are You?",
+      "metaDescription": "A warm Mobby quiz rough draft for Lomito, built around pet comfort, daily humor, and emotional connection.",
+      "ogDescription": "Which Lomito-style moment matches you?",
+      "officialLabel": "Lomito links",
+      "officialTitle": "From the result to Lomito's world",
+      "officialDescription": "The result page can guide people from the quiz into Lomito's social pages, products, or campaign links.",
+      "introKicker": "LOMITO DAILY MOMENTS",
+      "introTitle": "What Kind of<br>Lomito Moment Are You?",
+      "introDescription": "Answer 32 questions about comfort, humor, routine, and pet-life energy to discover your Lomito-inspired moment.",
+      "heroNote": "This rough page uses original warm pet visuals and does not copy the real pet's face or existing photos.",
+      "heroSubcopy": "Each result is built to be shareable and can link to Instagram, merch, announcements, or any page you prefer.",
+      "heroAlt": "Lomito dedicated Mobby visual",
+      "previewKeys": [
+            "nap",
+            "zoomies",
+            "snack",
+            "window"
+      ],
+      "charactersDescription": "Eight types built from cozy pet life, humor, emotional connection, and everyday rituals.",
+      "guideDescription": "Your strongest answers decide which Lomito-inspired moment fits you best.",
+      "shareResultText": "My Lomito Moment result is {result}.",
+      "copyResultText": "My Lomito Moment result is {result}. https://shunpei1130.github.io/mobby/lomito/",
+      "publicUrl": "https://shunpei1130.github.io/mobby/lomito/",
+      "links": [
+            {
+                  "label": "Instagram",
+                  "url": "https://www.instagram.com/gatolomito/"
+            },
+            {
+                  "label": "Mobby",
+                  "url": "https://www.mobby.online/"
+            }
+      ],
+      "labels": {
+            "home": "Home",
+            "diagnosisList": "Diagnosis",
+            "diagnosis": "Quiz",
+            "characters": "Types",
+            "reset": "Reset",
+            "typeGuide": "Type guide",
+            "copied": "Copied",
+            "resume": "Resume quiz",
+            "start": "Start quiz",
+            "answered": "answered",
+            "strongAgree": "Strongly agree",
+            "strongDisagree": "Strongly disagree",
+            "progress": "Progress",
+            "prev": "Back",
+            "next": "Next",
+            "seeResult": "See result",
+            "answerAll": "Please answer every question on this page.",
+            "result": "Your result",
+            "strengths": "Strengths",
+            "cautions": "Notes",
+            "collabAdvice": "How this becomes a collab",
+            "shareHeading": "Share your result",
+            "shareX": "Share on X",
+            "shareLine": "Send on LINE",
+            "copy": "Copy result",
+            "again": "Try again",
+            "detail": "Details",
+            "allTypes": "All 8 types",
+            "charactersTitle": "Type List",
+            "resultCopied": "Result copied"
+      }
+};
+    const CHARACTERS = {
+      "nap": {
+            "code": "NAP",
+            "name": "Sunbeam Nap Guardian",
+            "catch": "A cozy comfort type that protects the quiet mood.",
+            "image": "img/nap.jpg",
+            "hook": "You value soft routines, warm light, and peaceful pet-life moments.",
+            "strengths": [
+                  "Comfortable",
+                  "Emotionally warm",
+                  "Easy to share"
+            ],
+            "cautions": [
+                  "The theme can be tuned before public release.",
+                  "No existing photos or copyrighted artwork are reused.",
+                  "If a linked page should change, the result CTA can be replaced."
+            ],
+            "advice": [
+                  "Great for calm, saveable social posts.",
+                  "Use it as a shareable entry point from social posts.",
+                  "The result page can lead to Instagram, YouTube, products, or announcements."
+            ]
+      },
+      "zoomies": {
+            "code": "ZOOM",
+            "name": "Tiny Zoomies Spark",
+            "catch": "Playful, sudden, and full of life.",
+            "image": "img/zoomies.jpg",
+            "hook": "You love the funny little bursts that make pet life feel alive.",
+            "strengths": [
+                  "Funny",
+                  "Short-video friendly",
+                  "Memorable"
+            ],
+            "cautions": [
+                  "The theme can be tuned before public release.",
+                  "No existing photos or copyrighted artwork are reused.",
+                  "If a linked page should change, the result CTA can be replaced."
+            ],
+            "advice": [
+                  "Works well for reels and short clips.",
+                  "Use it as a shareable entry point from social posts.",
+                  "The result page can lead to Instagram, YouTube, products, or announcements."
+            ]
+      },
+      "snack": {
+            "code": "SNACK",
+            "name": "Snack-Time Negotiator",
+            "catch": "A food-motivated comedy type.",
+            "image": "img/snack.jpg",
+            "hook": "You understand that the smallest snack moment can become the whole story.",
+            "strengths": [
+                  "Relatable",
+                  "Humorous",
+                  "Product-friendly"
+            ],
+            "cautions": [
+                  "The theme can be tuned before public release.",
+                  "No existing photos or copyrighted artwork are reused.",
+                  "If a linked page should change, the result CTA can be replaced."
+            ],
+            "advice": [
+                  "Can lead into food, treats, or merch ideas.",
+                  "Use it as a shareable entry point from social posts.",
+                  "The result page can lead to Instagram, YouTube, products, or announcements."
+            ]
+      },
+      "window": {
+            "code": "VIEW",
+            "name": "Window Watch Philosopher",
+            "catch": "Quiet, observant, and a little poetic.",
+            "image": "img/window.jpg",
+            "hook": "You enjoy the thoughtful side of pet life: watching, waiting, and wondering.",
+            "strengths": [
+                  "Poetic",
+                  "Saveable",
+                  "Emotional"
+            ],
+            "cautions": [
+                  "The theme can be tuned before public release.",
+                  "No existing photos or copyrighted artwork are reused.",
+                  "If a linked page should change, the result CTA can be replaced."
+            ],
+            "advice": [
+                  "Strong for caption-led posts.",
+                  "Use it as a shareable entry point from social posts.",
+                  "The result page can lead to Instagram, YouTube, products, or announcements."
+            ]
+      },
+      "cuddle": {
+            "code": "CUDDLE",
+            "name": "Cuddle Clock Keeper",
+            "catch": "A soft routine and affection type.",
+            "image": "img/cuddle.jpg",
+            "hook": "You connect through daily closeness, warmth, and familiar timing.",
+            "strengths": [
+                  "Emotionally close",
+                  "Warm",
+                  "Fan-friendly"
+            ],
+            "cautions": [
+                  "The theme can be tuned before public release.",
+                  "No existing photos or copyrighted artwork are reused.",
+                  "If a linked page should change, the result CTA can be replaced."
+            ],
+            "advice": [
+                  "Good for community and emotional storytelling.",
+                  "Use it as a shareable entry point from social posts.",
+                  "The result page can lead to Instagram, YouTube, products, or announcements."
+            ]
+      },
+      "mischief": {
+            "code": "MIS",
+            "name": "Polite Mischief Artist",
+            "catch": "A cute troublemaker with good manners.",
+            "image": "img/mischief.jpg",
+            "hook": "You love moments where a pet does something wrong in the sweetest way.",
+            "strengths": [
+                  "Funny",
+                  "Characterful",
+                  "Comment-friendly"
+            ],
+            "cautions": [
+                  "The theme can be tuned before public release.",
+                  "No existing photos or copyrighted artwork are reused.",
+                  "If a linked page should change, the result CTA can be replaced."
+            ],
+            "advice": [
+                  "Great for conversation-driving results.",
+                  "Use it as a shareable entry point from social posts.",
+                  "The result page can lead to Instagram, YouTube, products, or announcements."
+            ]
+      },
+      "royal": {
+            "code": "ROYAL",
+            "name": "Living-Room Royalty",
+            "catch": "A dramatic but lovable presence type.",
+            "image": "img/royal.jpg",
+            "hook": "You like pet content where the animal clearly owns the room.",
+            "strengths": [
+                  "Iconic",
+                  "Visually strong",
+                  "Meme-friendly"
+            ],
+            "cautions": [
+                  "The theme can be tuned before public release.",
+                  "No existing photos or copyrighted artwork are reused.",
+                  "If a linked page should change, the result CTA can be replaced."
+            ],
+            "advice": [
+                  "Good for bold result cards and merch concepts.",
+                  "Use it as a shareable entry point from social posts.",
+                  "The result page can lead to Instagram, YouTube, products, or announcements."
+            ]
+      },
+      "heart": {
+            "code": "HEART",
+            "name": "Little Heart Healer",
+            "catch": "A gentle emotional-support moment.",
+            "image": "img/heart.jpg",
+            "hook": "You connect most with the quiet love pets bring into daily life.",
+            "strengths": [
+                  "Tender",
+                  "Shareable",
+                  "Deep connection"
+            ],
+            "cautions": [
+                  "The theme can be tuned before public release.",
+                  "No existing photos or copyrighted artwork are reused.",
+                  "If a linked page should change, the result CTA can be replaced."
+            ],
+            "advice": [
+                  "Strong for heartfelt campaign framing.",
+                  "Use it as a shareable entry point from social posts.",
+                  "The result page can lead to Instagram, YouTube, products, or announcements."
+            ]
+      }
+};
+    const QUESTIONS = [
+      {
+            "id": "Q01",
+            "key": "nap",
+            "text": "A calm pet nap can make your day better."
+      },
+      {
+            "id": "Q02",
+            "key": "nap",
+            "text": "You like warm and quiet home moments."
+      },
+      {
+            "id": "Q03",
+            "key": "nap",
+            "text": "Soft light feels comforting to you."
+      },
+      {
+            "id": "Q04",
+            "key": "nap",
+            "text": "You prefer gentle humor over loud jokes."
+      },
+      {
+            "id": "Q05",
+            "key": "zoomies",
+            "text": "A sudden silly moment makes you laugh."
+      },
+      {
+            "id": "Q06",
+            "key": "zoomies",
+            "text": "You like pets with big personality."
+      },
+      {
+            "id": "Q07",
+            "key": "zoomies",
+            "text": "Short funny clips are easy for you to share."
+      },
+      {
+            "id": "Q08",
+            "key": "zoomies",
+            "text": "You enjoy playful chaos at home."
+      },
+      {
+            "id": "Q09",
+            "key": "snack",
+            "text": "Snack-time pet reactions are your weakness."
+      },
+      {
+            "id": "Q10",
+            "key": "snack",
+            "text": "You notice tiny begging expressions."
+      },
+      {
+            "id": "Q11",
+            "key": "snack",
+            "text": "Food rituals feel cute to you."
+      },
+      {
+            "id": "Q12",
+            "key": "snack",
+            "text": "You like everyday humor that feels real."
+      },
+      {
+            "id": "Q13",
+            "key": "window",
+            "text": "A pet looking out the window feels meaningful."
+      },
+      {
+            "id": "Q14",
+            "key": "window",
+            "text": "You like quiet captions with feeling."
+      },
+      {
+            "id": "Q15",
+            "key": "window",
+            "text": "Small routines can feel poetic to you."
+      },
+      {
+            "id": "Q16",
+            "key": "window",
+            "text": "You notice calm details others miss."
+      },
+      {
+            "id": "Q17",
+            "key": "cuddle",
+            "text": "You value routine moments with pets."
+      },
+      {
+            "id": "Q18",
+            "key": "cuddle",
+            "text": "Closeness feels more important than perfection."
+      },
+      {
+            "id": "Q19",
+            "key": "cuddle",
+            "text": "A small cuddle can reset your mood."
+      },
+      {
+            "id": "Q20",
+            "key": "cuddle",
+            "text": "You like content that feels personal."
+      },
+      {
+            "id": "Q21",
+            "key": "mischief",
+            "text": "You laugh when pets act innocent after causing trouble."
+      },
+      {
+            "id": "Q22",
+            "key": "mischief",
+            "text": "A tiny guilty face is hard to resist."
+      },
+      {
+            "id": "Q23",
+            "key": "mischief",
+            "text": "You like humor with affection in it."
+      },
+      {
+            "id": "Q24",
+            "key": "mischief",
+            "text": "You enjoy pet personalities with attitude."
+      },
+      {
+            "id": "Q25",
+            "key": "royal",
+            "text": "Some pets look like they rule the house."
+      },
+      {
+            "id": "Q26",
+            "key": "royal",
+            "text": "You enjoy a dramatic pose."
+      },
+      {
+            "id": "Q27",
+            "key": "royal",
+            "text": "A strong pet personality makes content memorable."
+      },
+      {
+            "id": "Q28",
+            "key": "royal",
+            "text": "You like captions with a little attitude."
+      },
+      {
+            "id": "Q29",
+            "key": "heart",
+            "text": "Pets can make a difficult day lighter."
+      },
+      {
+            "id": "Q30",
+            "key": "heart",
+            "text": "You like content that feels genuinely loving."
+      },
+      {
+            "id": "Q31",
+            "key": "heart",
+            "text": "Small gestures can feel healing to you."
+      },
+      {
+            "id": "Q32",
+            "key": "heart",
+            "text": "You share posts that make people feel better."
+      }
+];
+
+    const state = loadState();
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) return JSON.parse(raw);
+      } catch (error) {}
+      return { step: "intro", page: 0, answers: {}, currentKey: null };
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function resetState() {
+      state.step = "intro";
+      state.page = 0;
+      state.answers = {};
+      state.currentKey = null;
+      saveState();
+      render();
+    }
+
+    function answeredCount() {
+      return Object.keys(state.answers || {}).length;
+    }
+
+    function isCompleted() {
+      return answeredCount() >= QUESTIONS.length;
+    }
+
+    function updateNavActive() {
+      document.getElementById("navDiagnosis").classList.toggle("active", ["intro", "quiz", "result", "guide"].includes(state.step));
+      document.getElementById("navCharacters").classList.toggle("active", state.step === "characters");
+    }
+
+    function render() {
+      window.scrollTo(0, 0);
+      updateNavActive();
+      if (state.step === "quiz") renderQuiz();
+      else if (state.step === "characters") renderCharacters();
+      else if (state.step === "result") renderResult();
+      else if (state.step === "guide") renderTypeGuide();
+      else renderIntro();
+    }
+
+    function renderIntro() {
+      const count = answeredCount();
+      app.innerHTML = `
+        <div class="panel fade-in" style="text-align:center;padding:52px 20px;">
+          <p class="kicker">${SITE.introKicker}</p>
+          <h2 class="big">${SITE.introTitle}</h2>
+          <p class="text-body" style="max-width:500px;margin:0 auto 12px;">${SITE.introDescription}</p>
+          <div class="hero-grid">
+            <div class="hero-copy-card">
+              <div class="hero-note">${SITE.heroNote}</div>
+              <p class="text-body" style="margin:0;">${SITE.heroSubcopy}</p>
+            </div>
+            <div class="hero-art"><img src="img/hero.jpg" alt="${SITE.heroAlt}"></div>
+          </div>
+          <button class="primary" id="btnStart" type="button" style="padding:16px 32px;font-size:16px;">${count > 0 ? SITE.labels.resume : SITE.labels.start}</button>
+          ${count > 0 ? `<p style="font-size:12px;color:var(--text-sub);margin-top:16px;">${count}/${QUESTIONS.length} ${SITE.labels.answered}</p>` : ""}
+          <div class="preview-strip" aria-label="preview images">
+            ${SITE.previewKeys.map((key) => `<img src="${CHARACTERS[key].image}" alt="${CHARACTERS[key].name}">`).join("")}
+          </div>
+        </div>`;
+      document.getElementById("btnStart").onclick = () => {
+        state.step = "quiz";
+        if (count > 0 && !isCompleted()) {
+          const idx = QUESTIONS.findIndex((q) => !state.answers[q.id]);
+          state.page = idx >= 0 ? Math.floor(idx / PAGE_SIZE) : 0;
+        }
+        saveState();
+        render();
+      };
+    }
+
+    function renderQuiz() {
+      const start = state.page * PAGE_SIZE;
+      const currentQuestions = QUESTIONS.slice(start, start + PAGE_SIZE);
+      const totalPages = Math.ceil(QUESTIONS.length / PAGE_SIZE);
+      const progress = Math.round((answeredCount() / QUESTIONS.length) * 100);
+      const questionHtml = currentQuestions.map((q, i) => {
+        const selected = state.answers[q.id];
+        return `
+          <div class="qCard fade-in" style="animation-delay:${i * 0.05}s">
+            <div class="kicker" style="color:var(--text-sub);margin-bottom:4px;">Q${start + i + 1}</div>
+            <p class="qText">${q.text}</p>
+            <div class="likert7">
+              <div class="likert-labels"><span class="left">${SITE.labels.strongAgree}</span><span class="right">${SITE.labels.strongDisagree}</span></div>
+              <div class="likert-buttons">
+                ${[1, 2, 3, 4, 5, 6, 7].map((n) => {
+                  const side = n <= 3 ? "left" : (n === 4 ? "mid" : "right");
+                  const sel = selected === n ? "selected" : "";
+                  return `<button type="button" class="likert-btn ${side} ${sel}" data-i="${n}" data-qid="${q.id}" data-val="${n}" aria-label="${n}"></button>`;
+                }).join("")}
+              </div>
+            </div>
+          </div>`;
+      }).join("");
+
+      app.innerHTML = `
+        <div class="panel">
+          <div class="progress-wrap">
+            <div class="progress-meta"><span>${SITE.labels.progress}</span><span>${progress}%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div>
+          </div>
+          <div style="margin-top:30px;">${questionHtml}</div>
+          <div style="display:flex;justify-content:space-between;gap:12px;margin-top:30px;">
+            <button id="btnPrev" type="button" ${state.page === 0 ? "disabled" : ""}>${SITE.labels.prev}</button>
+            <button class="primary" id="btnNext" type="button">${state.page === totalPages - 1 ? SITE.labels.seeResult : SITE.labels.next}</button>
+          </div>
+        </div>`;
+
+      currentQuestions.forEach((q) => {
+        document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach((button) => {
+          button.onclick = () => {
+            state.answers[q.id] = Number(button.dataset.val);
+            document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach((b) => b.classList.remove("selected"));
+            button.classList.add("selected");
+            saveState();
+            const nextProgress = Math.round((answeredCount() / QUESTIONS.length) * 100);
+            document.querySelector(".progress-fill").style.width = nextProgress + "%";
+            document.querySelector(".progress-meta span:last-child").innerText = nextProgress + "%";
+          };
+        });
+      });
+
+      document.getElementById("btnPrev").onclick = () => {
+        if (state.page > 0) state.page -= 1;
+        saveState();
+        render();
+      };
+      document.getElementById("btnNext").onclick = () => {
+        const unanswered = currentQuestions.find((q) => !state.answers[q.id]);
+        if (unanswered) {
+          showToast(SITE.labels.answerAll);
+          return;
+        }
+        if (state.page >= totalPages - 1) {
+          state.currentKey = computeResult().key;
+          state.step = "result";
+        } else {
+          state.page += 1;
+        }
+        saveState();
+        render();
+      };
+    }
+
+    function computeResult() {
+      const scores = Object.fromEntries(Object.keys(CHARACTERS).map((key) => [key, 0]));
+      QUESTIONS.forEach((question) => {
+        const value = state.answers[question.id];
+        if (!value) return;
+        scores[question.key] += 8 - value;
+      });
+      const key = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+      return { key, scores, char: CHARACTERS[key] };
+    }
+
+    function renderResult() {
+      const result = state.currentKey ? { key: state.currentKey, char: CHARACTERS[state.currentKey] } : computeResult();
+      const ch = result.char;
+      const shareText = encodeURIComponent(SITE.shareResultText.replace("{result}", ch.name));
+      const shareUrl = encodeURIComponent(SITE.publicUrl);
+      app.innerHTML = `
+        <div class="panel fade-in">
+          <div class="result-hero">
+            <p class="kicker">${SITE.labels.result}</p>
+            <h2 class="big" style="font-size:34px;">${ch.name}</h2>
+            <p class="text-body" style="color:var(--text-main);font-weight:700;font-size:16px;margin-bottom:16px;">${ch.catch}</p>
+            <div class="char-image-placeholder"><img src="${ch.image}" alt="${ch.name}"></div>
+            <div class="type-chip">TYPE: ${ch.code}</div>
+          </div>
+          <div class="info-card result-feature">
+            <p class="kicker" style="margin-bottom:10px;">WORLD VIEW</p>
+            <p class="text-body" style="font-size:15px;line-height:1.8;margin:0;color:var(--text-main);">${ch.hook}</p>
+          </div>
+          <div class="card-grid">
+            <div class="info-card"><h3>${SITE.labels.strengths}</h3><ul>${ch.strengths.map((item) => `<li>${item}</li>`).join("")}</ul></div>
+            <div class="info-card"><h3>${SITE.labels.cautions}</h3><ul>${ch.cautions.map((item) => `<li>${item}</li>`).join("")}</ul></div>
+          </div>
+          <div class="info-card" style="margin-top:24px;"><h3>${SITE.labels.collabAdvice}</h3><ul>${ch.advice.map((item) => `<li>${item}</li>`).join("")}</ul></div>
+          <section class="result-product-content">
+            <p class="kicker" style="margin-bottom:12px;">${SITE.officialLabel}</p>
+            <h3 style="font-size:20px;margin:0 0 8px;color:var(--text-main);">${SITE.officialTitle}</h3>
+            <p class="text-body" style="margin:0 auto;max-width:520px;">${SITE.officialDescription}</p>
+            <div class="link-row">
+              ${SITE.links.map((link) => `<a class="link-pill" href="${link.url}" target="_blank" rel="noopener">${link.label}</a>`).join("")}
+            </div>
+          </section>
+          <div class="share-panel fade-in">
+            <p class="kicker" style="margin-bottom:12px;">${SITE.labels.shareHeading}</p>
+            <div class="share-buttons">
+              <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" rel="noopener"><span class="share-btn share-x">${SITE.labels.shareX}</span></a>
+              <a href="https://social-plugins.line.me/lineit/share?url=${shareUrl}" target="_blank" rel="noopener"><span class="share-btn share-line">${SITE.labels.shareLine}</span></a>
+              <button class="share-btn" id="btnCopyResult" type="button">${SITE.labels.copy}</button>
+              <button class="share-btn" id="btnAgain" type="button">${SITE.labels.again}</button>
+            </div>
+          </div>
+        </div>`;
+      document.getElementById("btnCopyResult").onclick = () => copyResult(ch);
+      document.getElementById("btnAgain").onclick = resetState;
+    }
+
+    function renderCharacters() {
+      const html = Object.entries(CHARACTERS).map(([key, ch]) => `
+        <div class="char-card fade-in">
+          <div class="char-card-image"><img src="${ch.image}" alt="${ch.name}"></div>
+          <div class="char-card-type">TYPE: ${ch.code}</div>
+          <h3 class="char-card-name">${ch.name}</h3>
+          <p class="char-card-desc">${ch.catch}</p>
+          <button class="primary" style="width:100%;font-size:12px;margin-top:auto;" data-code="${key}" type="button">${SITE.labels.detail}</button>
+        </div>`).join("");
+      app.innerHTML = `
+        <div class="panel fade-in">
+          <p class="kicker">${SITE.labels.allTypes}</p>
+          <h2 class="big">${SITE.labels.charactersTitle}</h2>
+          <p class="text-body" style="margin-bottom:20px;">${SITE.charactersDescription}</p>
+        </div>
+        <div class="char-grid">${html}</div>`;
+      document.querySelectorAll("button[data-code]").forEach((button) => {
+        button.onclick = () => {
+          state.currentKey = button.dataset.code;
+          state.step = "result";
+          saveState();
+          render();
+        };
+      });
+    }
+
+    function renderTypeGuide() {
+      const rows = Object.entries(CHARACTERS).map(([key, ch]) => `
+        <div class="info-card" style="margin:0;">
+          <h3 style="color:var(--accent);margin-bottom:10px;">${ch.code}: ${ch.name}</h3>
+          <p class="text-body" style="margin:0;color:var(--text-main);font-size:13px;">${ch.catch}</p>
+        </div>`).join("");
+      app.innerHTML = `
+        <div class="panel fade-in">
+          <p class="kicker">TYPE CODE GUIDE</p>
+          <h2 class="big" style="font-size:28px;">${SITE.labels.typeGuide}</h2>
+          <p class="text-body">${SITE.guideDescription}</p>
+          <div class="card-grid">${rows}</div>
+        </div>`;
+    }
+
+    async function copyResult(ch) {
+      const text = SITE.copyResultText.replace("{result}", ch.name);
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast(SITE.labels.resultCopied);
+      } catch (error) {
+        showToast(text);
+      }
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    document.getElementById("navDiagnosis").onclick = (event) => {
+      event.preventDefault();
+      state.step = isCompleted() ? "result" : "intro";
+      if (isCompleted() && !state.currentKey) state.currentKey = computeResult().key;
+      saveState();
+      render();
+    };
+
+    document.getElementById("navCharacters").onclick = (event) => {
+      event.preventDefault();
+      state.step = "characters";
+      saveState();
+      render();
+    };
+
+    document.getElementById("btnReset").onclick = resetState;
+    document.getElementById("btnTypeGuide").onclick = () => {
+      state.step = "guide";
+      saveState();
+      render();
+    };
+    document.getElementById("logoHome").onclick = () => { window.location.href = "../index.html?skipSplash=1"; };
+
+    (function initTitleMenu() {
+      const titleHome = document.getElementById("titleHome");
+      const titleMenu = document.getElementById("titleMenu");
+      titleHome.onclick = function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        titleMenu.style.display = titleMenu.style.display === "block" ? "none" : "block";
+      };
+      titleMenu.addEventListener("click", (event) => event.stopPropagation());
+      document.addEventListener("click", () => { titleMenu.style.display = "none"; });
+    })();
+
+    render();
+  </script>
+</body>
+</html>
