@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="format-detection" content="telephone=no,address=no,email=no">
   <title>Your Dancefloor Energy Quiz | Mobby</title>
-  <meta name="description" content="Find the dance energy that matches your movement, mood, style, and social spark.">
+  <meta name="description" content="A Mobby quiz rough draft for Makuriya, built around dancefloor energy, hosting, fashion, and movement.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Your Dancefloor Energy Quiz">
-  <meta property="og:description" content="Find the dance energy that matches your movement, mood, style, and social spark.">
+  <meta property="og:description" content="Which Makuriya dancefloor energy are you?">
   <meta property="og:url" content="https://shunpei1130.github.io/mobby/makuriya/">
   <meta property="og:image" content="https://shunpei1130.github.io/mobby/makuriya/img/hero.jpg">
   <meta name="twitter:card" content="summary_large_image">
@@ -26,27 +26,38 @@
       --text-sub: #6e6e73;
       --accent: #2f6f62;
       --accent-soft: #e8f4ee;
-      --accent2: #de6246;
-      --accent3: #23a6a6;
+      --accent2: #d2691e;
+      --accent3: #aec6cf;
       --line: #d8d0c2;
       --danger: #c2410c;
       --shadow-sm: 0 2px 8px rgba(64, 43, 26, 0.06);
       --shadow-lg: 0 12px 30px rgba(64, 43, 26, 0.10);
       color-scheme: light;
     }
+
     * { box-sizing: border-box; }
-    html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       font-family: var(--font-main);
       background:
-        radial-gradient(circle at 15% 4%, color-mix(in srgb, var(--accent3) 32%, transparent), transparent 28%),
-        radial-gradient(circle at 90% 0%, color-mix(in srgb, var(--accent2) 16%, transparent), transparent 30%),
+        radial-gradient(circle at 15% 4%, rgba(174, 198, 207, 0.34), rgba(174, 198, 207, 0) 28%),
+        radial-gradient(circle at 90% 0%, rgba(210, 105, 30, 0.14), rgba(210, 105, 30, 0) 30%),
         var(--bg);
       color: var(--text-main);
       line-height: 1.6;
     }
-    a { color: var(--accent); text-decoration: none; }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
     button {
       border: 1px solid transparent;
       background: rgba(255, 255, 255, 0.72);
@@ -57,77 +68,589 @@
       font-size: 13px;
       font-weight: 700;
       transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s, box-shadow 0.2s, border-color 0.2s;
-      font-family: var(--font-main);
     }
-    button:hover { background: #fff; transform: translateY(-1px); box-shadow: var(--shadow-sm); }
-    button:active { transform: translateY(0) scale(0.96); }
-    button:disabled { opacity: 0.42; cursor: not-allowed; transform: none; }
-    .wrap { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
-    header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
-    .brand { display: flex; align-items: center; gap: 10px; }
-    .logo { width: 30px; height: 30px; border-radius: 10px; background-image: url('../16school/logo.jpg'); background-size: cover; background-position: center; box-shadow: 0 4px 10px rgba(47, 111, 98, 0.20); margin-right: 10px; }
-    .title h1 { font-size: 14px; margin: 0; font-weight: 700; color: var(--accent); }
-    .title p { margin: 0; color: var(--text-sub); font-size: 12px; }
-    .nav { display: flex; gap: 12px; align-items: center; }
-    .nav a { color: var(--text-main); font-size: 11px; font-weight: 700; padding: 8px 16px; border-radius: 8px; transition: background 0.2s; }
-    .nav a:hover, .nav a.active { background: var(--accent-soft); color: var(--accent); }
-    .panel { background: var(--surface); border-radius: 24px; padding: 32px; box-shadow: var(--shadow-lg); border: 1px solid var(--line); }
-    .fade-in { animation: fadeIn 0.42s ease-out both; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    .kicker { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 800; margin: 0 0 8px; }
-    .big { font-size: clamp(30px, 6vw, 46px); line-height: 1.12; margin: 0 0 16px; letter-spacing: 0; }
-    .text-body { font-size: 15px; color: var(--text-sub); }
-    .primary { background: linear-gradient(135deg, #2f6f62, #de6246); color: #fff; box-shadow: 0 12px 24px rgba(47, 111, 98, 0.20); }
-    .primary:hover { filter: brightness(0.96); }
-    .home-btn { margin-right: 6px; font-size: 15px; padding: 6px 18px; border-radius: 20px; border: 1px solid var(--line); background: var(--surface); color: var(--accent); }
-    .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 22px; align-items: center; margin: 24px auto 30px; max-width: 640px; text-align: left; }
-    .hero-art { position: relative; border-radius: 20px; overflow: hidden; background: var(--surface2); min-height: 260px; box-shadow: var(--shadow-sm); border: 1px solid var(--line); }
-    .hero-art img { width: 100%; height: 100%; min-height: 260px; object-fit: cover; display: block; }
-    .hero-copy-card { display: grid; gap: 12px; }
-    .hero-note { background: var(--accent-soft); border-radius: 14px; padding: 14px; color: var(--accent); font-size: 13px; font-weight: 700; }
-    .cta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
-    .cta-row a { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line); background: #fff; font-size: 13px; font-weight: 700; box-shadow: var(--shadow-sm); }
-    .progress { margin: 0 0 26px; }
-    .progress-meta { display: flex; justify-content: space-between; color: var(--text-sub); font-size: 12px; margin-bottom: 8px; font-weight: 700; }
-    .progress-bar { height: 10px; border-radius: 999px; background: var(--surface2); overflow: hidden; border: 1px solid var(--line); }
-    .progress-bar span { display: block; height: 100%; width: 0%; background: linear-gradient(135deg, #2f6f62, #de6246); transition: width 0.25s ease; }
-    .q-card { min-height: 260px; display: grid; align-content: center; gap: 22px; }
-    .q-number { color: var(--accent); font-weight: 800; font-size: 13px; }
-    .q-title { font-size: clamp(22px, 5vw, 32px); line-height: 1.35; margin: 0; }
-    .likert7 { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; margin-top: 6px; }
-    .likert7 button { padding: 12px 6px; border-radius: 12px; background: var(--surface2); border-color: var(--line); min-height: 52px; font-size: 15px; }
-    .likert7 button.selected { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 8px 18px rgba(47, 111, 98, 0.18); }
-    .scale-labels { display: flex; justify-content: space-between; gap: 12px; color: var(--text-sub); font-size: 11px; font-weight: 700; }
-    .nav-row { display: flex; justify-content: space-between; gap: 12px; margin-top: 24px; }
-    .result-hero { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 24px; align-items: center; margin-top: 20px; }
-    .result-image { border-radius: 22px; overflow: hidden; border: 1px solid var(--line); background: var(--surface2); box-shadow: var(--shadow-sm); aspect-ratio: 1 / 1; }
-    .result-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 7px 12px; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 800; margin-bottom: 8px; }
-    .result-title { font-size: clamp(28px, 6vw, 42px); line-height: 1.12; margin: 0 0 12px; }
-    .point-list { display: grid; gap: 8px; margin: 18px 0; padding: 0; list-style: none; }
-    .point-list li { background: var(--surface2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 13px; font-weight: 700; }
-    .info-card { margin-top: 28px; padding: 20px; background: var(--accent-soft); border-radius: 18px; color: var(--accent); font-weight: 700; }
-    .char-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 24px; }
-    .char-card { background: #fff; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; box-shadow: var(--shadow-sm); }
-    .char-card img { width: 100%; aspect-ratio: 1.35 / 1; object-fit: cover; display: block; }
-    .char-card div { padding: 14px; }
-    .char-card h3 { margin: 0 0 6px; font-size: 17px; color: var(--accent); }
-    .char-card p { margin: 0; color: var(--text-sub); font-size: 12px; line-height: 1.55; }
-    .share { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
-    .hidden { display: none !important; }
-    footer { margin-top: 38px; color: var(--text-sub); font-size: 11px; text-align: center; }
-    @media (max-width: 720px) {
-      .wrap { padding: 24px 14px 60px; }
-      header { margin-bottom: 22px; }
-      .panel { padding: 22px 16px; border-radius: 20px; }
-      .hero-grid, .result-hero { grid-template-columns: 1fr; }
-      .hero-art { min-height: 220px; }
+
+    button:hover {
+      background: #fff;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    button:active {
+      transform: translateY(0) scale(0.96);
+    }
+
+    button:disabled {
+      opacity: 0.42;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background-image: url('../16school/logo.jpg');
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 4px 10px rgba(47, 111, 98, 0.20);
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .title h1 {
+      font-size: 14px;
+      margin: 0;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--accent);
+    }
+
+    .title p {
+      margin: 0;
+      color: var(--text-sub);
+      font-size: 12px;
+    }
+
+    .title-menu a:hover {
+      background: var(--accent-soft);
+    }
+
+    .nav {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .nav a {
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: background 0.2s;
+      text-decoration: none;
+    }
+
+    .nav a:hover { background: rgba(47, 111, 98, 0.08); }
+
+    .nav a.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .panel {
+      background: var(--surface);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--line);
+    }
+
+    .fade-in {
+      animation: fadeIn 0.42s ease-out both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .kicker {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 800;
+      margin: 0 0 8px;
+    }
+
+    .big {
+      font-size: clamp(30px, 6vw, 46px);
+      line-height: 1.12;
+      margin: 0 0 16px;
+      letter-spacing: 0;
+    }
+
+    .text-body {
+      font-size: 15px;
+      color: var(--text-sub);
+    }
+
+    .primary {
+      background: linear-gradient(135deg, var(--accent), #3d8f7d);
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(47, 111, 98, 0.20);
+    }
+
+    .primary:hover {
+      background: linear-gradient(135deg, #2a6257, #347b6d);
+    }
+
+    .danger {
+      color: var(--danger);
+      background: rgba(194, 65, 12, 0.08);
+    }
+
+    .home-btn {
+      margin-right: 6px;
+      font-size: 15px;
+      padding: 6px 18px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--accent);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      gap: 22px;
+      align-items: center;
+      margin: 24px auto 30px;
+      max-width: 640px;
+      text-align: left;
+    }
+
+    .hero-art {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      background: var(--surface2);
+      min-height: 260px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--line);
+    }
+
+    .hero-art img {
+      width: 100%;
+      height: 100%;
+      min-height: 260px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-copy-card {
+      display: grid;
+      gap: 12px;
+    }
+
+    .hero-note {
+      background: var(--accent-soft);
+      border: 1px solid rgba(47, 111, 98, 0.20);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      border-radius: 14px;
+      padding: 12px 14px;
+    }
+
+    .preview-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 24px auto 0;
+      max-width: 640px;
+    }
+
+    .preview-strip img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: var(--surface2);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .progress-wrap { margin: 20px 0; }
+
+    .progress-track {
+      height: 6px;
+      background: var(--surface2);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      width: 0%;
+      transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .qCard {
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .qCard:last-child {
+      border-bottom: none;
+      margin-bottom: 10px;
+    }
+
+    .qText {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0 0 16px;
+    }
+
+    .likert7 {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px 0 6px;
+    }
+
+    .likert-labels {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 0 4px;
+    }
+
+    .likert-labels .left { color: var(--accent); }
+    .likert-labels .right { color: var(--accent2); }
+
+    .likert-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+      width: 100%;
+    }
+
+    .likert-btn {
+      appearance: none;
+      -webkit-appearance: none;
+      border: 3px solid rgba(47, 111, 98, 0.2);
+      background: transparent;
+      border-radius: 999px;
+      cursor: pointer;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1), background 180ms, border-color 180ms, box-shadow 180ms;
+      flex-shrink: 0;
+    }
+
+    .likert-btn[data-i="1"],
+    .likert-btn[data-i="7"] { width: 76px; height: 76px; }
+    .likert-btn[data-i="2"],
+    .likert-btn[data-i="6"] { width: 58px; height: 58px; }
+    .likert-btn[data-i="3"],
+    .likert-btn[data-i="5"] { width: 44px; height: 44px; }
+    .likert-btn[data-i="4"] { width: 30px; height: 30px; }
+
+    .likert-btn.left { border-color: rgba(47, 111, 98, 0.65); }
+    .likert-btn.mid { border-color: rgba(110, 110, 115, 0.45); }
+    .likert-btn.right { border-color: rgba(210, 105, 30, 0.65); }
+
+    .likert-btn.selected {
+      background: rgba(47, 111, 98, 0.22);
+      box-shadow: 0 0 0 6px rgba(47, 111, 98, 0.10);
+      border-color: var(--accent);
+    }
+
+    .likert-btn:active { transform: scale(0.92); }
+
+    .result-hero {
+      text-align: center;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 24px;
+    }
+
+    .char-image-placeholder {
+      width: 240px;
+      height: 240px;
+      margin: 20px auto;
+      border-radius: 28px;
+      background: var(--surface2);
+      display: grid;
+      place-items: center;
+      color: var(--text-sub);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .char-image-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .type-chip {
+      display: inline-block;
+      background: var(--surface2);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      color: var(--text-sub);
+      border: 1px solid var(--line);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .info-card {
+      background: var(--surface2);
+      border-radius: 18px;
+      padding: 20px;
+      border: 1px solid var(--line);
+    }
+
+    .info-card h3 {
+      margin: 0 0 12px;
+      font-size: 15px;
+      color: var(--text-main);
+    }
+
+    .info-card ul {
+      margin: 0;
+      padding-left: 20px;
+      font-size: 13px;
+      color: var(--text-main);
+    }
+
+    .info-card li { margin-bottom: 6px; }
+
+    .result-feature {
+      margin-top: 24px;
+      background: linear-gradient(135deg, #ffffff, #fff3d9);
+      border-left: 4px solid var(--accent);
+    }
+
+    .result-product-content {
+      margin-top: 24px;
+      text-align: center;
+      background: linear-gradient(145deg, #ffffff, #fff7e6);
+      border: 1px solid rgba(47, 111, 98, 0.18);
+      border-radius: 22px;
+      padding: 24px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .result-product-content::after {
+      content: "COLLAB";
+      position: absolute;
+      top: 18px;
+      right: -44px;
+      transform: rotate(20deg);
+      background: linear-gradient(135deg, var(--accent2), #f0a050);
+      color: #fff;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      padding: 6px 48px;
+    }
+
+    .link-row,
+    .share-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .share-panel {
+      margin-top: 24px;
+      text-align: center;
+      border-top: 1px solid var(--line);
+      padding-top: 24px;
+    }
+
+    .link-pill,
+    .share-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--text-main);
+      font-size: 13px;
+      font-weight: 800;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .share-x {
+      background: #111;
+      color: #fff;
+      border-color: #111;
+    }
+
+    .share-line {
+      background: #06c755;
+      color: #fff;
+      border-color: #06c755;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      transform: translate(-50%, 20px);
+      opacity: 0;
+      pointer-events: none;
+      background: rgba(29, 29, 31, 0.92);
+      color: #fff;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 13px;
+      transition: 0.24s ease;
+      z-index: 80;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .char-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .char-card {
+      background: var(--surface);
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .char-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .char-card-image {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--surface2);
+      margin-bottom: 12px;
+      border: 1px solid var(--line);
+    }
+
+    .char-card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .char-card-type {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .char-card-name {
+      font-size: 16px;
+      margin: 0 0 8px;
+      line-height: 1.35;
+    }
+
+    .char-card-desc {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin: 0 0 14px;
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--text-sub);
+      font-size: 11px;
+      margin-top: 50px;
+    }
+
+    @media (max-width: 760px) {
+      .wrap { padding: 24px 14px 70px; }
+      header { align-items: flex-start; }
+      .panel { padding: 24px 18px; border-radius: 22px; }
+      .hero-grid { grid-template-columns: 1fr; text-align: center; }
+      .hero-copy-card { order: 2; }
+      .hero-art { order: 1; max-width: 340px; margin: 0 auto; }
+      .preview-strip { grid-template-columns: repeat(4, 1fr); gap: 7px; }
+      .card-grid { grid-template-columns: 1fr; }
+      .char-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .nav { width: 100%; justify-content: flex-start; }
+    }
+
+    @media (max-width: 420px) {
+      .wrap { padding-left: 12px; padding-right: 12px; }
+      .big { font-size: 31px; }
       .hero-art img { min-height: 220px; }
-      .likert7 { gap: 5px; }
-      .likert7 button { min-height: 46px; padding: 10px 0; }
+      .preview-strip { grid-template-columns: repeat(2, 1fr); }
+      .likert7 { gap: 6px; }
+      .likert-labels { font-size: 9px; }
+      .likert-buttons { gap: 4px; }
+      .likert-btn[data-i="1"],
+      .likert-btn[data-i="7"] { width: 48px; height: 48px; }
+      .likert-btn[data-i="2"],
+      .likert-btn[data-i="6"] { width: 40px; height: 40px; }
+      .likert-btn[data-i="3"],
+      .likert-btn[data-i="5"] { width: 32px; height: 32px; }
+      .likert-btn[data-i="4"] { width: 24px; height: 24px; }
+      .char-image-placeholder { width: 220px; height: 220px; }
       .char-grid { grid-template-columns: 1fr; }
-      .nav { width: 100%; justify-content: flex-start; overflow-x: auto; padding-bottom: 4px; }
-      .nav a { flex: 0 0 auto; }
     }
   </style>
 </head>
@@ -135,177 +658,754 @@
   <div class="wrap">
     <header>
       <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <div class="title">
-          <h1>Mobby</h1>
-          <p>診断コンテンツ</p>
+        <a href="../index.html?skipSplash=1" style="text-decoration:none;">
+          <button class="home-btn" type="button">Home</button>
+        </a>
+        <div class="logo" id="logoHome" aria-hidden="true"></div>
+        <div class="title" style="position: relative;">
+          <h1 id="titleHome">診断一覧</h1>
+          <p>Makuriya x Mobby</p>
+          <div id="titleMenu" class="title-menu" style="display:none; position:absolute; top:calc(100% + 8px); left:0; min-width:210px; padding:8px; border:1px solid var(--line); border-radius:12px; background:var(--surface); box-shadow:var(--shadow-sm); z-index:30;">
+            <a href="/16school/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main); font-size:12px;">学校モビー診断</a>
+            <a href="/16school/mama/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main); font-size:12px;">ママモビー診断</a>
+            <a href="/16love/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main); font-size:12px;">メンヘラモビー診断</a>
+            <a href="/16night/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main); font-size:12px;">夜職モビー診断</a>
+            <a href="/16stan/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main); font-size:12px;">推し活モビー診断</a>
+          </div>
         </div>
       </div>
-      <nav class="nav" aria-label="main">
-        <a class="active" href="#top">TOP</a>
-        <a href="#quiz">QUIZ</a>
-        <a href="#types">TYPES</a>
-      </nav>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <nav class="nav">
+          <a href="#" id="navDiagnosis" class="active">診断</a>
+          <a href="#" id="navCharacters">キャラ一覧</a>
+        </nav>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="danger" id="btnReset" type="button" style="font-size:11px;">リセット</button>
+          <button id="btnTypeGuide" type="button" style="font-size:11px;background:var(--accent-soft);color:var(--accent);">タイプ解説</button>
+        </div>
+      </div>
     </header>
 
-    <main id="top">
-      <section id="home" class="panel fade-in">
-        <p class="kicker">MAKURIYA ENERGY</p>
-        <h2 class="big">Your Dancefloor Energy Quiz</h2>
-        <p class="text-body">Makuriya's public dance world feels warm, global, expressive, and full of Afro fusion energy. Answer 32 quick questions and find the type of dancefloor presence you bring into a studio, stage, party, or online community.</p>
-        <div class="hero-grid">
-          <div class="hero-copy-card">
-            <div class="hero-note">A rough collaboration page designed for review before publication.</div>
-            <div class="cta-row" id="homeCtas"></div>
-            <button class="primary" id="startBtn">Start the quiz</button>
+    <main id="app"></main>
+    <footer>&copy; 2026 Mobby. All rights reserved.</footer>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite">コピーしました</div>
+
+  <script>
+    const app = document.getElementById("app");
+    const toast = document.getElementById("toast");
+    const STORAGE_KEY = "mobby_yopipi_diagnosis_v1";
+    const PAGE_SIZE = 4;
+    const SITE = {
+      "lang": "en",
+      "slug": "makuriya",
+      "title": "Your Dancefloor Energy Quiz",
+      "metaDescription": "A Mobby quiz rough draft for Makuriya, built around dancefloor energy, hosting, fashion, and movement.",
+      "ogDescription": "Which Makuriya dancefloor energy are you?",
+      "officialLabel": "Makuriya links",
+      "officialTitle": "From the result to Makuriya's world",
+      "officialDescription": "The result page can move people from a fun quiz into your social links, events, music, or brand collaborations.",
+      "introKicker": "MAKURIYA DANCE ENERGY",
+      "introTitle": "Your Dancefloor<br>Energy Quiz",
+      "introDescription": "Answer 32 questions about rhythm, style, hosting energy, and movement to discover your Makuriya-inspired dancefloor type.",
+      "heroNote": "This is a rough collaboration page that turns Makuriya's dance, hosting, and social energy into a shareable fan quiz.",
+      "heroSubcopy": "Each result can lead to Instagram, videos, events, brand pages, or any announcement you want to highlight.",
+      "heroAlt": "Makuriya dedicated Mobby visual",
+      "previewKeys": [
+            "afro",
+            "sunshine",
+            "choreo",
+            "bacardi"
+      ],
+      "charactersDescription": "Eight types built from dancefloor energy, style, hosting presence, and fitness flow.",
+      "guideDescription": "Your strongest answers decide which Makuriya-inspired energy type fits you best.",
+      "shareResultText": "My Dancefloor Energy Quiz result is {result}.",
+      "copyResultText": "My Dancefloor Energy Quiz result is {result}. https://shunpei1130.github.io/mobby/makuriya/",
+      "publicUrl": "https://shunpei1130.github.io/mobby/makuriya/",
+      "links": [
+            {
+                  "label": "Instagram",
+                  "url": "https://www.instagram.com/makuriya_xo/"
+            },
+            {
+                  "label": "Mobby",
+                  "url": "https://www.mobby.online/"
+            }
+      ],
+      "labels": {
+            "home": "Home",
+            "diagnosisList": "Diagnosis",
+            "diagnosis": "Quiz",
+            "characters": "Types",
+            "reset": "Reset",
+            "typeGuide": "Type guide",
+            "copied": "Copied",
+            "resume": "Resume quiz",
+            "start": "Start quiz",
+            "answered": "answered",
+            "strongAgree": "Strongly agree",
+            "strongDisagree": "Strongly disagree",
+            "progress": "Progress",
+            "prev": "Back",
+            "next": "Next",
+            "seeResult": "See result",
+            "answerAll": "Please answer every question on this page.",
+            "result": "Your result",
+            "strengths": "Strengths",
+            "cautions": "Notes",
+            "collabAdvice": "How this becomes a collab",
+            "shareHeading": "Share your result",
+            "shareX": "Share on X",
+            "shareLine": "Send on LINE",
+            "copy": "Copy result",
+            "again": "Try again",
+            "detail": "Details",
+            "allTypes": "All 8 types",
+            "charactersTitle": "Type List",
+            "resultCopied": "Result copied"
+      }
+};
+    const CHARACTERS = {
+      "afro": {
+            "code": "AFRO",
+            "name": "Afro Fusion Fire",
+            "catch": "A rhythm-first type with instant heat.",
+            "image": "img/afro.jpg",
+            "hook": "You bring the room alive with grounded rhythm, big energy, and fearless movement.",
+            "strengths": [
+                  "High-energy presence",
+                  "Strong rhythm sense",
+                  "Easy to share"
+            ],
+            "cautions": [
+                  "The theme can be tuned before public release.",
+                  "No existing photos or copyrighted artwork are reused.",
+                  "If a linked page should change, the result CTA can be replaced."
+            ],
+            "advice": [
+                  "Perfect for short dance clips and event teasers.",
+                  "Use it as a shareable entry point from social posts.",
+                  "The result page can lead to Instagram, YouTube, products, or announcements."
+            ]
+      },
+      "sunshine": {
+            "code": "SUN",
+            "name": "Sunshine Groove",
+            "catch": "Bright, warm, and easy to dance with.",
+            "image": "img/sunshine.jpg",
+            "hook": "You make the room feel open, friendly, and ready to move.",
+            "strengths": [
+                  "Friendly energy",
+                  "Beginner-friendly",
+                  "Positive tone"
+            ],
+            "cautions": [
+                  "The theme can be tuned before public release.",
+                  "No existing photos or copyrighted artwork are reused.",
+                  "If a linked page should change, the result CTA can be replaced."
+            ],
+            "advice": [
+                  "Great for inviting new fans into the quiz.",
+                  "Use it as a shareable entry point from social posts.",
+                  "The result page can lead to Instagram, YouTube, products, or announcements."
+            ]
+      },
+      "choreo": {
+            "code": "CHOR",
+            "name": "Choreo Queen",
+            "catch": "A clean-lines, sharp-detail movement type.",
+            "image": "img/choreo.jpg",
+            "hook": "You love structure, rehearsal, counts, and the satisfying moment when everything lands.",
+            "strengths": [
+                  "Detail-oriented",
+                  "Performance-ready",
+                  "Visually strong"
+            ],
+            "cautions": [
+                  "The theme can be tuned before public release.",
+                  "No existing photos or copyrighted artwork are reused.",
+                  "If a linked page should change, the result CTA can be replaced."
+            ],
+            "advice": [
+                  "Works well for choreography-focused posts.",
+                  "Use it as a shareable entry point from social posts.",
+                  "The result page can lead to Instagram, YouTube, products, or announcements."
+            ]
+      },
+      "bacardi": {
+            "code": "BOUNCE",
+            "name": "Bacardi Bounce",
+            "catch": "Playful party motion with a confident wink.",
+            "image": "img/bacardi.jpg",
+            "hook": "You bring playful, social, and high-impact energy to the room.",
+            "strengths": [
+                  "Memorable vibe",
+                  "Socially strong",
+                  "Event-friendly"
+            ],
+            "cautions": [
+                  "The theme can be tuned before public release.",
+                  "No existing photos or copyrighted artwork are reused.",
+                  "If a linked page should change, the result CTA can be replaced."
+            ],
+            "advice": [
+                  "Useful for party, event, and brand collaboration routes.",
+                  "Use it as a shareable entry point from social posts.",
+                  "The result page can lead to Instagram, YouTube, products, or announcements."
+            ]
+      },
+      "host": {
+            "code": "HOST",
+            "name": "Host the Room",
+            "catch": "A natural MC presence that guides the crowd.",
+            "image": "img/host.jpg",
+            "hook": "You read the room, lift people up, and keep the energy moving.",
+            "strengths": [
+                  "Room-reading",
+                  "Clear presence",
+                  "Community-building"
+            ],
+            "cautions": [
+                  "The theme can be tuned before public release.",
+                  "No existing photos or copyrighted artwork are reused.",
+                  "If a linked page should change, the result CTA can be replaced."
+            ],
+            "advice": [
+                  "Strong for event hosting and live appearance links.",
+                  "Use it as a shareable entry point from social posts.",
+                  "The result page can lead to Instagram, YouTube, products, or announcements."
+            ]
+      },
+      "style": {
+            "code": "STYLE",
+            "name": "Style Switcher",
+            "catch": "Fashion-led movement with sharp visual identity.",
+            "image": "img/style.jpg",
+            "hook": "You change the room with styling, color, and attitude before the first step.",
+            "strengths": [
+                  "Visual identity",
+                  "Fashion angle",
+                  "Brand-friendly"
+            ],
+            "cautions": [
+                  "The theme can be tuned before public release.",
+                  "No existing photos or copyrighted artwork are reused.",
+                  "If a linked page should change, the result CTA can be replaced."
+            ],
+            "advice": [
+                  "Useful for fashion or beauty collaboration pages.",
+                  "Use it as a shareable entry point from social posts.",
+                  "The result page can lead to Instagram, YouTube, products, or announcements."
+            ]
+      },
+      "fitness": {
+            "code": "FLOW",
+            "name": "Fitness Flow",
+            "catch": "Movement that feels strong, healthy, and focused.",
+            "image": "img/fitness.jpg",
+            "hook": "You connect rhythm with stamina, body awareness, and clean flow.",
+            "strengths": [
+                  "Wellness angle",
+                  "Repeatable format",
+                  "Positive habit"
+            ],
+            "cautions": [
+                  "The theme can be tuned before public release.",
+                  "No existing photos or copyrighted artwork are reused.",
+                  "If a linked page should change, the result CTA can be replaced."
+            ],
+            "advice": [
+                  "Can lead into fitness, class, or routine content.",
+                  "Use it as a shareable entry point from social posts.",
+                  "The result page can lead to Instagram, YouTube, products, or announcements."
+            ]
+      },
+      "global": {
+            "code": "GLOBAL",
+            "name": "Global Stage Spark",
+            "catch": "A cross-cultural stage energy type.",
+            "image": "img/global.jpg",
+            "hook": "You love music, movement, and style that travel across places and communities.",
+            "strengths": [
+                  "Broad appeal",
+                  "Cultural curiosity",
+                  "Stage-ready"
+            ],
+            "cautions": [
+                  "The theme can be tuned before public release.",
+                  "No existing photos or copyrighted artwork are reused.",
+                  "If a linked page should change, the result CTA can be replaced."
+            ],
+            "advice": [
+                  "Great for international audience and event links.",
+                  "Use it as a shareable entry point from social posts.",
+                  "The result page can lead to Instagram, YouTube, products, or announcements."
+            ]
+      }
+};
+    const QUESTIONS = [
+      {
+            "id": "Q01",
+            "key": "afro",
+            "text": "A beat can change your mood immediately."
+      },
+      {
+            "id": "Q02",
+            "key": "afro",
+            "text": "You like dance that feels grounded and powerful."
+      },
+      {
+            "id": "Q03",
+            "key": "afro",
+            "text": "You notice rhythm before lyrics."
+      },
+      {
+            "id": "Q04",
+            "key": "afro",
+            "text": "You love movement that brings people together."
+      },
+      {
+            "id": "Q05",
+            "key": "sunshine",
+            "text": "You like music that feels sunny and light."
+      },
+      {
+            "id": "Q06",
+            "key": "sunshine",
+            "text": "You enjoy making people feel welcome."
+      },
+      {
+            "id": "Q07",
+            "key": "sunshine",
+            "text": "A casual dance moment can make your day."
+      },
+      {
+            "id": "Q08",
+            "key": "sunshine",
+            "text": "You prefer joy over showing off."
+      },
+      {
+            "id": "Q09",
+            "key": "choreo",
+            "text": "You like learning the exact moves."
+      },
+      {
+            "id": "Q10",
+            "key": "choreo",
+            "text": "Clean transitions make a routine satisfying."
+      },
+      {
+            "id": "Q11",
+            "key": "choreo",
+            "text": "You enjoy rehearsal as much as performance."
+      },
+      {
+            "id": "Q12",
+            "key": "choreo",
+            "text": "You notice small details in dance videos."
+      },
+      {
+            "id": "Q13",
+            "key": "bacardi",
+            "text": "You enjoy a playful party atmosphere."
+      },
+      {
+            "id": "Q14",
+            "key": "bacardi",
+            "text": "A good crowd gives you more energy."
+      },
+      {
+            "id": "Q15",
+            "key": "bacardi",
+            "text": "You like dance moments that feel spontaneous."
+      },
+      {
+            "id": "Q16",
+            "key": "bacardi",
+            "text": "You can make a simple move look fun."
+      },
+      {
+            "id": "Q17",
+            "key": "host",
+            "text": "You can sense when a room needs more energy."
+      },
+      {
+            "id": "Q18",
+            "key": "host",
+            "text": "You enjoy introducing people to the vibe."
+      },
+      {
+            "id": "Q19",
+            "key": "host",
+            "text": "You like being part of the moment, not only watching it."
+      },
+      {
+            "id": "Q20",
+            "key": "host",
+            "text": "You can keep people engaged."
+      },
+      {
+            "id": "Q21",
+            "key": "style",
+            "text": "Your outfit changes how you move."
+      },
+      {
+            "id": "Q22",
+            "key": "style",
+            "text": "You notice styling in performance videos."
+      },
+      {
+            "id": "Q23",
+            "key": "style",
+            "text": "You enjoy switching aesthetics."
+      },
+      {
+            "id": "Q24",
+            "key": "style",
+            "text": "You like visuals that feel polished and bold."
+      },
+      {
+            "id": "Q25",
+            "key": "fitness",
+            "text": "You like movement that makes you feel strong."
+      },
+      {
+            "id": "Q26",
+            "key": "fitness",
+            "text": "A routine feels better when it has flow."
+      },
+      {
+            "id": "Q27",
+            "key": "fitness",
+            "text": "You enjoy dance as both fun and exercise."
+      },
+      {
+            "id": "Q28",
+            "key": "fitness",
+            "text": "You care about stamina and control."
+      },
+      {
+            "id": "Q29",
+            "key": "global",
+            "text": "You like sounds from different cultures."
+      },
+      {
+            "id": "Q30",
+            "key": "global",
+            "text": "You enjoy dance as a shared language."
+      },
+      {
+            "id": "Q31",
+            "key": "global",
+            "text": "You want a stage moment to feel bigger than one place."
+      },
+      {
+            "id": "Q32",
+            "key": "global",
+            "text": "You like connecting people through music."
+      }
+];
+
+    const state = loadState();
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) return JSON.parse(raw);
+      } catch (error) {}
+      return { step: "intro", page: 0, answers: {}, currentKey: null };
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function resetState() {
+      state.step = "intro";
+      state.page = 0;
+      state.answers = {};
+      state.currentKey = null;
+      saveState();
+      render();
+    }
+
+    function answeredCount() {
+      return Object.keys(state.answers || {}).length;
+    }
+
+    function isCompleted() {
+      return answeredCount() >= QUESTIONS.length;
+    }
+
+    function updateNavActive() {
+      document.getElementById("navDiagnosis").classList.toggle("active", ["intro", "quiz", "result", "guide"].includes(state.step));
+      document.getElementById("navCharacters").classList.toggle("active", state.step === "characters");
+    }
+
+    function render() {
+      window.scrollTo(0, 0);
+      updateNavActive();
+      if (state.step === "quiz") renderQuiz();
+      else if (state.step === "characters") renderCharacters();
+      else if (state.step === "result") renderResult();
+      else if (state.step === "guide") renderTypeGuide();
+      else renderIntro();
+    }
+
+    function renderIntro() {
+      const count = answeredCount();
+      app.innerHTML = `
+        <div class="panel fade-in" style="text-align:center;padding:52px 20px;">
+          <p class="kicker">${SITE.introKicker}</p>
+          <h2 class="big">${SITE.introTitle}</h2>
+          <p class="text-body" style="max-width:500px;margin:0 auto 12px;">${SITE.introDescription}</p>
+          <div class="hero-grid">
+            <div class="hero-copy-card">
+              <div class="hero-note">${SITE.heroNote}</div>
+              <p class="text-body" style="margin:0;">${SITE.heroSubcopy}</p>
+            </div>
+            <div class="hero-art"><img src="img/hero.jpg" alt="${SITE.heroAlt}"></div>
           </div>
-          <div class="hero-art"><img src="img/hero.jpg" alt=""></div>
-        </div>
-      </section>
+          <button class="primary" id="btnStart" type="button" style="padding:16px 32px;font-size:16px;">${count > 0 ? SITE.labels.resume : SITE.labels.start}</button>
+          ${count > 0 ? `<p style="font-size:12px;color:var(--text-sub);margin-top:16px;">${count}/${QUESTIONS.length} ${SITE.labels.answered}</p>` : ""}
+          <div class="preview-strip" aria-label="preview images">
+            ${SITE.previewKeys.map((key) => `<img src="${CHARACTERS[key].image}" alt="${CHARACTERS[key].name}">`).join("")}
+          </div>
+        </div>`;
+      document.getElementById("btnStart").onclick = () => {
+        state.step = "quiz";
+        if (count > 0 && !isCompleted()) {
+          const idx = QUESTIONS.findIndex((q) => !state.answers[q.id]);
+          state.page = idx >= 0 ? Math.floor(idx / PAGE_SIZE) : 0;
+        }
+        saveState();
+        render();
+      };
+    }
 
-      <section id="quiz" class="panel fade-in hidden" aria-live="polite">
-        <div class="progress">
-          <div class="progress-meta"><span id="progressText"></span><span id="progressPercent"></span></div>
-          <div class="progress-bar"><span id="progressFill"></span></div>
-        </div>
-        <div class="q-card">
-          <div class="q-number" id="qNumber"></div>
-          <h2 class="q-title" id="qText"></h2>
-          <div class="scale-labels"><span>Not at all</span><span>Strongly agree</span></div>
-          <div class="likert7" id="choices"></div>
-        </div>
-        <div class="nav-row">
-          <button id="backBtn">Back</button>
-          <button id="nextBtn" class="primary">Next</button>
-        </div>
-      </section>
+    function renderQuiz() {
+      const start = state.page * PAGE_SIZE;
+      const currentQuestions = QUESTIONS.slice(start, start + PAGE_SIZE);
+      const totalPages = Math.ceil(QUESTIONS.length / PAGE_SIZE);
+      const progress = Math.round((answeredCount() / QUESTIONS.length) * 100);
+      const questionHtml = currentQuestions.map((q, i) => {
+        const selected = state.answers[q.id];
+        return `
+          <div class="qCard fade-in" style="animation-delay:${i * 0.05}s">
+            <div class="kicker" style="color:var(--text-sub);margin-bottom:4px;">Q${start + i + 1}</div>
+            <p class="qText">${q.text}</p>
+            <div class="likert7">
+              <div class="likert-labels"><span class="left">${SITE.labels.strongAgree}</span><span class="right">${SITE.labels.strongDisagree}</span></div>
+              <div class="likert-buttons">
+                ${[1, 2, 3, 4, 5, 6, 7].map((n) => {
+                  const side = n <= 3 ? "left" : (n === 4 ? "mid" : "right");
+                  const sel = selected === n ? "selected" : "";
+                  return `<button type="button" class="likert-btn ${side} ${sel}" data-i="${n}" data-qid="${q.id}" data-val="${n}" aria-label="${n}"></button>`;
+                }).join("")}
+              </div>
+            </div>
+          </div>`;
+      }).join("");
 
-      <section id="result" class="panel fade-in hidden">
-        <p class="kicker">YOUR RESULT</p>
-        <div class="result-hero">
-          <div class="result-image"><img id="resultImg" src="" alt=""></div>
-          <div>
-            <span class="badge" id="resultBadge"></span>
-            <h2 class="result-title" id="resultName"></h2>
-            <p class="text-body" id="resultLead"></p>
-            <ul class="point-list" id="resultPoints"></ul>
-            <div class="share">
-              <button id="xShare">Share on X</button>
-              <button id="lineShare">Share on LINE</button>
-              <button id="retryBtn" class="primary">Try again</button>
+      app.innerHTML = `
+        <div class="panel">
+          <div class="progress-wrap">
+            <div class="progress-meta"><span>${SITE.labels.progress}</span><span>${progress}%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div>
+          </div>
+          <div style="margin-top:30px;">${questionHtml}</div>
+          <div style="display:flex;justify-content:space-between;gap:12px;margin-top:30px;">
+            <button id="btnPrev" type="button" ${state.page === 0 ? "disabled" : ""}>${SITE.labels.prev}</button>
+            <button class="primary" id="btnNext" type="button">${state.page === totalPages - 1 ? SITE.labels.seeResult : SITE.labels.next}</button>
+          </div>
+        </div>`;
+
+      currentQuestions.forEach((q) => {
+        document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach((button) => {
+          button.onclick = () => {
+            state.answers[q.id] = Number(button.dataset.val);
+            document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach((b) => b.classList.remove("selected"));
+            button.classList.add("selected");
+            saveState();
+            const nextProgress = Math.round((answeredCount() / QUESTIONS.length) * 100);
+            document.querySelector(".progress-fill").style.width = nextProgress + "%";
+            document.querySelector(".progress-meta span:last-child").innerText = nextProgress + "%";
+          };
+        });
+      });
+
+      document.getElementById("btnPrev").onclick = () => {
+        if (state.page > 0) state.page -= 1;
+        saveState();
+        render();
+      };
+      document.getElementById("btnNext").onclick = () => {
+        const unanswered = currentQuestions.find((q) => !state.answers[q.id]);
+        if (unanswered) {
+          showToast(SITE.labels.answerAll);
+          return;
+        }
+        if (state.page >= totalPages - 1) {
+          state.currentKey = computeResult().key;
+          state.step = "result";
+        } else {
+          state.page += 1;
+        }
+        saveState();
+        render();
+      };
+    }
+
+    function computeResult() {
+      const scores = Object.fromEntries(Object.keys(CHARACTERS).map((key) => [key, 0]));
+      QUESTIONS.forEach((question) => {
+        const value = state.answers[question.id];
+        if (!value) return;
+        scores[question.key] += 8 - value;
+      });
+      const key = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+      return { key, scores, char: CHARACTERS[key] };
+    }
+
+    function renderResult() {
+      const result = state.currentKey ? { key: state.currentKey, char: CHARACTERS[state.currentKey] } : computeResult();
+      const ch = result.char;
+      const shareText = encodeURIComponent(SITE.shareResultText.replace("{result}", ch.name));
+      const shareUrl = encodeURIComponent(SITE.publicUrl);
+      app.innerHTML = `
+        <div class="panel fade-in">
+          <div class="result-hero">
+            <p class="kicker">${SITE.labels.result}</p>
+            <h2 class="big" style="font-size:34px;">${ch.name}</h2>
+            <p class="text-body" style="color:var(--text-main);font-weight:700;font-size:16px;margin-bottom:16px;">${ch.catch}</p>
+            <div class="char-image-placeholder"><img src="${ch.image}" alt="${ch.name}"></div>
+            <div class="type-chip">TYPE: ${ch.code}</div>
+          </div>
+          <div class="info-card result-feature">
+            <p class="kicker" style="margin-bottom:10px;">WORLD VIEW</p>
+            <p class="text-body" style="font-size:15px;line-height:1.8;margin:0;color:var(--text-main);">${ch.hook}</p>
+          </div>
+          <div class="card-grid">
+            <div class="info-card"><h3>${SITE.labels.strengths}</h3><ul>${ch.strengths.map((item) => `<li>${item}</li>`).join("")}</ul></div>
+            <div class="info-card"><h3>${SITE.labels.cautions}</h3><ul>${ch.cautions.map((item) => `<li>${item}</li>`).join("")}</ul></div>
+          </div>
+          <div class="info-card" style="margin-top:24px;"><h3>${SITE.labels.collabAdvice}</h3><ul>${ch.advice.map((item) => `<li>${item}</li>`).join("")}</ul></div>
+          <section class="result-product-content">
+            <p class="kicker" style="margin-bottom:12px;">${SITE.officialLabel}</p>
+            <h3 style="font-size:20px;margin:0 0 8px;color:var(--text-main);">${SITE.officialTitle}</h3>
+            <p class="text-body" style="margin:0 auto;max-width:520px;">${SITE.officialDescription}</p>
+            <div class="link-row">
+              ${SITE.links.map((link) => `<a class="link-pill" href="${link.url}" target="_blank" rel="noopener">${link.label}</a>`).join("")}
+            </div>
+          </section>
+          <div class="share-panel fade-in">
+            <p class="kicker" style="margin-bottom:12px;">${SITE.labels.shareHeading}</p>
+            <div class="share-buttons">
+              <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" rel="noopener"><span class="share-btn share-x">${SITE.labels.shareX}</span></a>
+              <a href="https://social-plugins.line.me/lineit/share?url=${shareUrl}" target="_blank" rel="noopener"><span class="share-btn share-line">${SITE.labels.shareLine}</span></a>
+              <button class="share-btn" id="btnCopyResult" type="button">${SITE.labels.copy}</button>
+              <button class="share-btn" id="btnAgain" type="button">${SITE.labels.again}</button>
             </div>
           </div>
+        </div>`;
+      document.getElementById("btnCopyResult").onclick = () => copyResult(ch);
+      document.getElementById("btnAgain").onclick = resetState;
+    }
+
+    function renderCharacters() {
+      const html = Object.entries(CHARACTERS).map(([key, ch]) => `
+        <div class="char-card fade-in">
+          <div class="char-card-image"><img src="${ch.image}" alt="${ch.name}"></div>
+          <div class="char-card-type">TYPE: ${ch.code}</div>
+          <h3 class="char-card-name">${ch.name}</h3>
+          <p class="char-card-desc">${ch.catch}</p>
+          <button class="primary" style="width:100%;font-size:12px;margin-top:auto;" data-code="${key}" type="button">${SITE.labels.detail}</button>
+        </div>`).join("");
+      app.innerHTML = `
+        <div class="panel fade-in">
+          <p class="kicker">${SITE.labels.allTypes}</p>
+          <h2 class="big">${SITE.labels.charactersTitle}</h2>
+          <p class="text-body" style="margin-bottom:20px;">${SITE.charactersDescription}</p>
         </div>
-        <div class="info-card">Find the dance energy that matches your movement, mood, style, and social spark.</div>
-        <div class="cta-row" id="resultCtas"></div>
-      </section>
-
-      <section id="types" class="panel fade-in" style="margin-top: 24px;">
-        <p class="kicker">All 8 types</p>
-        <h2 class="big">Eight Ways To Show Up</h2>
-        <div class="char-grid" id="typeGrid"></div>
-      </section>
-    </main>
-
-    <footer>© Mobby. This is a collaboration rough draft for review.</footer>
-  </div>
-  <script>
-    const DATA = {"lang":"en","title":"Your Dancefloor Energy Quiz","shareText":"I tried Your Dancefloor Energy Quiz","results":[{"id":"afro","name":"Afro Fusion Fire","lead":"Your energy hits first: grounded, powerful, and impossible to ignore.","image":"type1.jpg","points":["Bold rhythm","Strong presence","Instant heat"]},{"id":"sunshine","name":"Sunshine Groove","lead":"You bring joy into the room and make people feel welcome.","image":"type2.jpg","points":["Warm smile","Easy flow","Positive crowd pull"]},{"id":"choreo","name":"Choreo Queen","lead":"You love details, counts, formations, and the moment everything locks in.","image":"type3.jpg","points":["Sharp memory","Clean lines","Rehearsal focus"]},{"id":"bacardi","name":"Bacardi Bounce","lead":"Your hips, bounce, and musical playfulness make the beat feel alive.","image":"type4.jpg","points":["Loose groove","Hip rhythm","Playful confidence"]},{"id":"host","name":"Host the Room","lead":"You do not just dance; you guide the energy and bring people with you.","image":"type5.jpg","points":["MC spirit","Room control","Social spark"]},{"id":"style","name":"Style Switcher","lead":"Fashion, attitude, and movement work together in your expression.","image":"type6.jpg","points":["Visual taste","Outfit energy","Creative switch-ups"]},{"id":"fitness","name":"Fitness Flow","lead":"Your movement is strength, sweat, rhythm, and discipline in one.","image":"type7.jpg","points":["Body control","Stamina","Training mindset"]},{"id":"global","name":"Global Stage Spark","lead":"You are drawn to cross-cultural stages, travel energy, and big moments.","image":"type8.jpg","points":["Global mood","Stage ambition","Wide-open presence"]}],"questions":[{"axis":"afro","text":"When the beat drops, your body reacts before you think."},{"axis":"sunshine","text":"You like making the people around you feel comfortable."},{"axis":"choreo","text":"You enjoy learning the exact counts and details of a routine."},{"axis":"bacardi","text":"Hip movement and bounce are your favorite parts of a dance."},{"axis":"host","text":"You naturally hype people up in a group setting."},{"axis":"style","text":"Your outfit changes how you move."},{"axis":"fitness","text":"You like dance that also feels like a real workout."},{"axis":"global","text":"You are inspired by dance styles from different cultures and cities."},{"axis":"afro","text":"Strong grounded movement makes you feel powerful."},{"axis":"sunshine","text":"You prefer a warm, bright, welcoming vibe."},{"axis":"choreo","text":"You replay choreo clips to catch the small details."},{"axis":"bacardi","text":"You love playful rhythm more than perfect seriousness."},{"axis":"host","text":"You are comfortable taking the lead in a room."},{"axis":"style","text":"Accessories, color, and silhouette matter to your performance mood."},{"axis":"fitness","text":"You respect discipline, stamina, and repetition."},{"axis":"global","text":"A big international stage would excite you."},{"axis":"afro","text":"You connect most when the rhythm feels earthy and full-bodied."},{"axis":"sunshine","text":"People often read your energy as friendly or bright."},{"axis":"choreo","text":"Finishing a clean routine feels deeply satisfying."},{"axis":"bacardi","text":"You like movement that feels relaxed but still controlled."},{"axis":"host","text":"You enjoy introducing people, explaining things, or guiding the flow."},{"axis":"style","text":"You like switching from sporty to glamorous to street."},{"axis":"fitness","text":"You feel better after moving hard."},{"axis":"global","text":"You like mixing influences instead of staying in one box."},{"axis":"afro","text":"You want your dance to feel rooted and expressive."},{"axis":"sunshine","text":"Joy is one of your strongest performance tools."},{"axis":"choreo","text":"You can be patient when learning difficult steps."},{"axis":"bacardi","text":"You are drawn to a bouncy, social, party-ready groove."},{"axis":"host","text":"A microphone, DJ booth, or crowd-facing role sounds exciting."},{"axis":"style","text":"You think visual identity is part of performance."},{"axis":"fitness","text":"Training basics matter as much as the final performance."},{"axis":"global","text":"You want your movement to connect with people beyond one local scene."}],"ctas":[{"label":"TikTok","url":"https://www.tiktok.com/@makuriyaxo"},{"label":"Instagram","url":"https://www.instagram.com/makuriya_xo/"},{"label":"Workshop info","url":"https://www.studio-mission.com/workshop/8441.html"}]};
-    const state = { index: 0, answers: Array(DATA.questions.length).fill(null) };
-    const $ = (id) => document.getElementById(id);
-    const home = $("home");
-    const quiz = $("quiz");
-    const result = $("result");
-    const choices = $("choices");
-    function renderCtas(targetId) {
-      $(targetId).innerHTML = DATA.ctas.map((cta) => '<a href="' + cta.url + '" target="_blank" rel="noopener">' + cta.label + '</a>').join("");
-    }
-    function renderTypes() {
-      $("typeGrid").innerHTML = DATA.results.map((item) =>
-        '<article class="char-card"><img src="img/' + item.image + '" alt=""><div><h3>' + item.name + '</h3><p>' + item.lead + '</p></div></article>'
-      ).join("");
-    }
-    function renderQuestion() {
-      const q = DATA.questions[state.index];
-      $("qNumber").textContent = "Q" + String(state.index + 1).padStart(2, "0") + " / " + DATA.questions.length;
-      $("qText").textContent = q.text;
-      $("progressText").textContent = DATA.lang === "en" ? "Progress" : "進捗";
-      const pct = Math.round((state.index / DATA.questions.length) * 100);
-      $("progressPercent").textContent = pct + "%";
-      $("progressFill").style.width = pct + "%";
-      choices.innerHTML = "";
-      for (let i = 1; i <= 7; i += 1) {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.textContent = i;
-        btn.className = state.answers[state.index] === i ? "selected" : "";
-        btn.addEventListener("click", () => {
-          state.answers[state.index] = i;
-          renderQuestion();
-        });
-        choices.appendChild(btn);
-      }
-      $("backBtn").disabled = state.index === 0;
-      $("nextBtn").textContent = state.index === DATA.questions.length - 1 ? "See result" : "Next";
-      $("nextBtn").disabled = state.answers[state.index] === null;
-    }
-    function calcResult() {
-      const scores = Object.fromEntries(DATA.results.map((r) => [r.id, 0]));
-      DATA.questions.forEach((q, i) => {
-        scores[q.axis] += state.answers[i] || 0;
+        <div class="char-grid">${html}</div>`;
+      document.querySelectorAll("button[data-code]").forEach((button) => {
+        button.onclick = () => {
+          state.currentKey = button.dataset.code;
+          state.step = "result";
+          saveState();
+          render();
+        };
       });
-      return DATA.results.slice().sort((a, b) => scores[b.id] - scores[a.id])[0];
     }
-    function showResult() {
-      const item = calcResult();
-      quiz.classList.add("hidden");
-      result.classList.remove("hidden");
-      $("progressFill").style.width = "100%";
-      $("resultImg").src = "img/" + item.image;
-      $("resultBadge").textContent = DATA.lang === "en" ? "Your type" : "あなたのタイプ";
-      $("resultName").textContent = item.name;
-      $("resultLead").textContent = item.lead;
-      $("resultPoints").innerHTML = item.points.map((p) => "<li>" + p + "</li>").join("");
-      window.scrollTo({ top: 0, behavior: "smooth" });
+
+    function renderTypeGuide() {
+      const rows = Object.entries(CHARACTERS).map(([key, ch]) => `
+        <div class="info-card" style="margin:0;">
+          <h3 style="color:var(--accent);margin-bottom:10px;">${ch.code}: ${ch.name}</h3>
+          <p class="text-body" style="margin:0;color:var(--text-main);font-size:13px;">${ch.catch}</p>
+        </div>`).join("");
+      app.innerHTML = `
+        <div class="panel fade-in">
+          <p class="kicker">TYPE CODE GUIDE</p>
+          <h2 class="big" style="font-size:28px;">${SITE.labels.typeGuide}</h2>
+          <p class="text-body">${SITE.guideDescription}</p>
+          <div class="card-grid">${rows}</div>
+        </div>`;
     }
-    function shareUrl(kind) {
-      const url = location.href;
-      const text = encodeURIComponent(DATA.shareText + " | Mobby");
-      const encodedUrl = encodeURIComponent(url);
-      return kind === "line"
-        ? "https://social-plugins.line.me/lineit/share?url=" + encodedUrl
-        : "https://twitter.com/intent/tweet?text=" + text + "&url=" + encodedUrl;
-    }
-    $("startBtn").addEventListener("click", () => {
-      home.classList.add("hidden");
-      quiz.classList.remove("hidden");
-      renderQuestion();
-      location.hash = "quiz";
-    });
-    $("backBtn").addEventListener("click", () => {
-      state.index = Math.max(0, state.index - 1);
-      renderQuestion();
-    });
-    $("nextBtn").addEventListener("click", () => {
-      if (state.answers[state.index] === null) return;
-      if (state.index === DATA.questions.length - 1) showResult();
-      else {
-        state.index += 1;
-        renderQuestion();
+
+    async function copyResult(ch) {
+      const text = SITE.copyResultText.replace("{result}", ch.name);
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast(SITE.labels.resultCopied);
+      } catch (error) {
+        showToast(text);
       }
-    });
-    $("retryBtn").addEventListener("click", () => {
-      state.index = 0;
-      state.answers.fill(null);
-      result.classList.add("hidden");
-      home.classList.remove("hidden");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-    $("xShare").addEventListener("click", () => window.open(shareUrl("x"), "_blank", "noopener"));
-    $("lineShare").addEventListener("click", () => window.open(shareUrl("line"), "_blank", "noopener"));
-    renderCtas("homeCtas");
-    renderCtas("resultCtas");
-    renderTypes();
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    document.getElementById("navDiagnosis").onclick = (event) => {
+      event.preventDefault();
+      state.step = isCompleted() ? "result" : "intro";
+      if (isCompleted() && !state.currentKey) state.currentKey = computeResult().key;
+      saveState();
+      render();
+    };
+
+    document.getElementById("navCharacters").onclick = (event) => {
+      event.preventDefault();
+      state.step = "characters";
+      saveState();
+      render();
+    };
+
+    document.getElementById("btnReset").onclick = resetState;
+    document.getElementById("btnTypeGuide").onclick = () => {
+      state.step = "guide";
+      saveState();
+      render();
+    };
+    document.getElementById("logoHome").onclick = () => { window.location.href = "../index.html?skipSplash=1"; };
+
+    (function initTitleMenu() {
+      const titleHome = document.getElementById("titleHome");
+      const titleMenu = document.getElementById("titleMenu");
+      titleHome.onclick = function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        titleMenu.style.display = titleMenu.style.display === "block" ? "none" : "block";
+      };
+      titleMenu.addEventListener("click", (event) => event.stopPropagation());
+      document.addEventListener("click", () => { titleMenu.style.display = "none"; });
+    })();
+
+    render();
   </script>
 </body>
 </html>
