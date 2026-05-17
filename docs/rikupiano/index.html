@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="format-detection" content="telephone=no,address=no,email=no">
+  <title>rikupiano音色タイプ診断 | Mobby</title>
+  <meta name="description" content="今の気分、音楽との向き合い方、練習や推し活の温度から、あなたの音色タイプを診断します。">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="rikupiano音色タイプ診断">
+  <meta property="og:description" content="今の気分、音楽との向き合い方、練習や推し活の温度から、あなたの音色タイプを診断します。">
+  <meta property="og:url" content="https://shunpei1130.github.io/mobby/rikupiano/">
+  <meta property="og:image" content="https://shunpei1130.github.io/mobby/rikupiano/img/hero.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#fff8e8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-main: 'Yomogi', cursive;
+      --bg: #fff8e8;
+      --surface: #ffffff;
+      --surface2: #fff3d9;
+      --text-main: #1d1d1f;
+      --text-sub: #6e6e73;
+      --accent: #2f6f62;
+      --accent-soft: #e8f4ee;
+      --accent2: #b7791f;
+      --accent3: #4f6f8f;
+      --line: #d8d0c2;
+      --danger: #c2410c;
+      --shadow-sm: 0 2px 8px rgba(64, 43, 26, 0.06);
+      --shadow-lg: 0 12px 30px rgba(64, 43, 26, 0.10);
+      color-scheme: light;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-main);
+      background:
+        radial-gradient(circle at 15% 4%, color-mix(in srgb, var(--accent3) 32%, transparent), transparent 28%),
+        radial-gradient(circle at 90% 0%, color-mix(in srgb, var(--accent2) 16%, transparent), transparent 30%),
+        var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    button {
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s, box-shadow 0.2s, border-color 0.2s;
+      font-family: var(--font-main);
+    }
+    button:hover { background: #fff; transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+    button:active { transform: translateY(0) scale(0.96); }
+    button:disabled { opacity: 0.42; cursor: not-allowed; transform: none; }
+    .wrap { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
+    header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .logo { width: 30px; height: 30px; border-radius: 10px; background-image: url('../16school/logo.jpg'); background-size: cover; background-position: center; box-shadow: 0 4px 10px rgba(47, 111, 98, 0.20); margin-right: 10px; }
+    .title h1 { font-size: 14px; margin: 0; font-weight: 700; color: var(--accent); }
+    .title p { margin: 0; color: var(--text-sub); font-size: 12px; }
+    .nav { display: flex; gap: 12px; align-items: center; }
+    .nav a { color: var(--text-main); font-size: 11px; font-weight: 700; padding: 8px 16px; border-radius: 8px; transition: background 0.2s; }
+    .nav a:hover, .nav a.active { background: var(--accent-soft); color: var(--accent); }
+    .panel { background: var(--surface); border-radius: 24px; padding: 32px; box-shadow: var(--shadow-lg); border: 1px solid var(--line); }
+    .fade-in { animation: fadeIn 0.42s ease-out both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .kicker { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 800; margin: 0 0 8px; }
+    .big { font-size: clamp(30px, 6vw, 46px); line-height: 1.12; margin: 0 0 16px; letter-spacing: 0; }
+    .text-body { font-size: 15px; color: var(--text-sub); }
+    .primary { background: linear-gradient(135deg, #2f6f62, #b7791f); color: #fff; box-shadow: 0 12px 24px rgba(47, 111, 98, 0.20); }
+    .primary:hover { filter: brightness(0.96); }
+    .home-btn { margin-right: 6px; font-size: 15px; padding: 6px 18px; border-radius: 20px; border: 1px solid var(--line); background: var(--surface); color: var(--accent); }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 22px; align-items: center; margin: 24px auto 30px; max-width: 640px; text-align: left; }
+    .hero-art { position: relative; border-radius: 20px; overflow: hidden; background: var(--surface2); min-height: 260px; box-shadow: var(--shadow-sm); border: 1px solid var(--line); }
+    .hero-art img { width: 100%; height: 100%; min-height: 260px; object-fit: cover; display: block; }
+    .hero-copy-card { display: grid; gap: 12px; }
+    .hero-note { background: var(--accent-soft); border-radius: 14px; padding: 14px; color: var(--accent); font-size: 13px; font-weight: 700; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .cta-row a { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line); background: #fff; font-size: 13px; font-weight: 700; box-shadow: var(--shadow-sm); }
+    .progress { margin: 0 0 26px; }
+    .progress-meta { display: flex; justify-content: space-between; color: var(--text-sub); font-size: 12px; margin-bottom: 8px; font-weight: 700; }
+    .progress-bar { height: 10px; border-radius: 999px; background: var(--surface2); overflow: hidden; border: 1px solid var(--line); }
+    .progress-bar span { display: block; height: 100%; width: 0%; background: linear-gradient(135deg, #2f6f62, #b7791f); transition: width 0.25s ease; }
+    .q-card { min-height: 260px; display: grid; align-content: center; gap: 22px; }
+    .q-number { color: var(--accent); font-weight: 800; font-size: 13px; }
+    .q-title { font-size: clamp(22px, 5vw, 32px); line-height: 1.35; margin: 0; }
+    .likert7 { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; margin-top: 6px; }
+    .likert7 button { padding: 12px 6px; border-radius: 12px; background: var(--surface2); border-color: var(--line); min-height: 52px; font-size: 15px; }
+    .likert7 button.selected { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 8px 18px rgba(47, 111, 98, 0.18); }
+    .scale-labels { display: flex; justify-content: space-between; gap: 12px; color: var(--text-sub); font-size: 11px; font-weight: 700; }
+    .nav-row { display: flex; justify-content: space-between; gap: 12px; margin-top: 24px; }
+    .result-hero { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 24px; align-items: center; margin-top: 20px; }
+    .result-image { border-radius: 22px; overflow: hidden; border: 1px solid var(--line); background: var(--surface2); box-shadow: var(--shadow-sm); aspect-ratio: 1 / 1; }
+    .result-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 7px 12px; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 800; margin-bottom: 8px; }
+    .result-title { font-size: clamp(28px, 6vw, 42px); line-height: 1.12; margin: 0 0 12px; }
+    .point-list { display: grid; gap: 8px; margin: 18px 0; padding: 0; list-style: none; }
+    .point-list li { background: var(--surface2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 13px; font-weight: 700; }
+    .info-card { margin-top: 28px; padding: 20px; background: var(--accent-soft); border-radius: 18px; color: var(--accent); font-weight: 700; }
+    .char-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 24px; }
+    .char-card { background: #fff; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; box-shadow: var(--shadow-sm); }
+    .char-card img { width: 100%; aspect-ratio: 1.35 / 1; object-fit: cover; display: block; }
+    .char-card div { padding: 14px; }
+    .char-card h3 { margin: 0 0 6px; font-size: 17px; color: var(--accent); }
+    .char-card p { margin: 0; color: var(--text-sub); font-size: 12px; line-height: 1.55; }
+    .share { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .hidden { display: none !important; }
+    footer { margin-top: 38px; color: var(--text-sub); font-size: 11px; text-align: center; }
+    @media (max-width: 720px) {
+      .wrap { padding: 24px 14px 60px; }
+      header { margin-bottom: 22px; }
+      .panel { padding: 22px 16px; border-radius: 20px; }
+      .hero-grid, .result-hero { grid-template-columns: 1fr; }
+      .hero-art { min-height: 220px; }
+      .hero-art img { min-height: 220px; }
+      .likert7 { gap: 5px; }
+      .likert7 button { min-height: 46px; padding: 10px 0; }
+      .char-grid { grid-template-columns: 1fr; }
+      .nav { width: 100%; justify-content: flex-start; overflow-x: auto; padding-bottom: 4px; }
+      .nav a { flex: 0 0 auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="title">
+          <h1>Mobby</h1>
+          <p>診断コンテンツ</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="main">
+        <a class="active" href="#top">TOP</a>
+        <a href="#quiz">診断</a>
+        <a href="#types">タイプ一覧</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section id="home" class="panel fade-in">
+        <p class="kicker">PIANO MOOD QUIZ</p>
+        <h2 class="big">rikupiano音色タイプ診断</h2>
+        <p class="text-body">ピアノの音色は、聴く人の気分や思い出によって違って響きます。32問に答えると、あなたがどんな音楽の楽しみ方をするタイプか、rikupianoの世界観に合わせた8つの音色で表示します。</p>
+        <div class="hero-grid">
+          <div class="hero-copy-card">
+            <div class="hero-note">Instagramや活動リンクは、公開前にrikupiano様の希望導線へ差し替えます。</div>
+            <div class="cta-row" id="homeCtas"></div>
+            <button class="primary" id="startBtn">診断をはじめる</button>
+          </div>
+          <div class="hero-art"><img src="img/hero.jpg" alt=""></div>
+        </div>
+      </section>
+
+      <section id="quiz" class="panel fade-in hidden" aria-live="polite">
+        <div class="progress">
+          <div class="progress-meta"><span id="progressText"></span><span id="progressPercent"></span></div>
+          <div class="progress-bar"><span id="progressFill"></span></div>
+        </div>
+        <div class="q-card">
+          <div class="q-number" id="qNumber"></div>
+          <h2 class="q-title" id="qText"></h2>
+          <div class="scale-labels"><span>まったく違う</span><span>とても当てはまる</span></div>
+          <div class="likert7" id="choices"></div>
+        </div>
+        <div class="nav-row">
+          <button id="backBtn">戻る</button>
+          <button id="nextBtn" class="primary">次へ</button>
+        </div>
+      </section>
+
+      <section id="result" class="panel fade-in hidden">
+        <p class="kicker">診断結果</p>
+        <div class="result-hero">
+          <div class="result-image"><img id="resultImg" src="" alt=""></div>
+          <div>
+            <span class="badge" id="resultBadge"></span>
+            <h2 class="result-title" id="resultName"></h2>
+            <p class="text-body" id="resultLead"></p>
+            <ul class="point-list" id="resultPoints"></ul>
+            <div class="share">
+              <button id="xShare">Xでシェア</button>
+              <button id="lineShare">LINEで送る</button>
+              <button id="retryBtn" class="primary">もう一度診断</button>
+            </div>
+          </div>
+        </div>
+        <div class="info-card">今の気分、音楽との向き合い方、練習や推し活の温度から、あなたの音色タイプを診断します。</div>
+        <div class="cta-row" id="resultCtas"></div>
+      </section>
+
+      <section id="types" class="panel fade-in" style="margin-top: 24px;">
+        <p class="kicker">8タイプ一覧</p>
+        <h2 class="big">8つのタイプ</h2>
+        <div class="char-grid" id="typeGrid"></div>
+      </section>
+    </main>
+
+    <footer>© Mobby. This is a collaboration rough draft for review.</footer>
+  </div>
+  <script>
+    const DATA = {"lang":"ja","title":"rikupiano音色タイプ診断","shareText":"rikupiano音色タイプ診断をやってみた","results":[{"id":"crystal","name":"クリスタル高音タイプ","lead":"透明感のあるメロディに心が動く、きらめき重視のリスナー。","image":"type1.jpg","points":["軽やかな音が好き","短いフレーズに反応","SNSシェア向き"]},{"id":"bass","name":"深呼吸ベースタイプ","lead":"低音や余韻に安心する、落ち着いた音楽時間を大切にする人。","image":"type2.jpg","points":["ゆっくり聴ける","余白に強い","夜の音楽が似合う"]},{"id":"practice","name":"練習設計家タイプ","lead":"できるようになる過程が好きな、コツコツ上達型。","image":"type3.jpg","points":["譜読みが好き","段取りが得意","反復を楽しめる"]},{"id":"stage","name":"リサイタル光タイプ","lead":"本番の緊張感やステージの輝きで力が出るタイプ。","image":"type4.jpg","points":["集中力が高い","一発勝負に強い","華やかさがある"]},{"id":"support","name":"やさしい伴奏タイプ","lead":"誰かの声や気持ちに寄り添う音楽が得意なサポート型。","image":"type5.jpg","points":["聞き役がうまい","調和を大切にする","温度感がやわらかい"]},{"id":"score","name":"譜面読み職人タイプ","lead":"細部まで読み解いて、音の理由を見つける分析派。","image":"type6.jpg","points":["構造を見る","丁寧に確認する","再現度にこだわる"]},{"id":"improv","name":"即興きらめきタイプ","lead":"その場の気分で音を選ぶ、感覚派のクリエイティブタイプ。","image":"type7.jpg","points":["直感が強い","アレンジが好き","空気を変えられる"]},{"id":"midnight","name":"夜更けの静音タイプ","lead":"一人の時間に深く浸る、静かな感情表現が得意なタイプ。","image":"type8.jpg","points":["夜に集中できる","内省が深い","小さな音が好き"]}],"questions":[{"axis":"crystal","text":"明るく透明感のある高音に惹かれる。"},{"axis":"bass","text":"低音がしっかり響く曲を聴くと落ち着く。"},{"axis":"practice","text":"曲を少しずつ形にしていく過程が好き。"},{"axis":"stage","text":"本番やライブの緊張感にわくわくする。"},{"axis":"support","text":"主役を支える伴奏やハーモニーに感動する。"},{"axis":"score","text":"譜面や構成を見ながら音楽を理解したい。"},{"axis":"improv","text":"決めすぎず、その場の気分で音楽を楽しみたい。"},{"axis":"midnight","text":"夜に一人で聴く音楽が一番心に入る。"},{"axis":"crystal","text":"短い綺麗なフレーズを何度も聴き返す。"},{"axis":"bass","text":"ゆったりしたテンポの曲で深呼吸したくなる。"},{"axis":"practice","text":"練習メニューや順番を考えるのが得意。"},{"axis":"stage","text":"スポットライトのあるステージに憧れがある。"},{"axis":"support","text":"誰かの気持ちに寄り添う曲を選びがちだ。"},{"axis":"score","text":"原曲の雰囲気や細かい音を大事にしたい。"},{"axis":"improv","text":"思いついたメロディをすぐ形にしたくなる。"},{"axis":"midnight","text":"静かな曲ほど感情が伝わると思う。"},{"axis":"crystal","text":"軽やかで弾むような音が好き。"},{"axis":"bass","text":"余韻が長く残る音に安心する。"},{"axis":"practice","text":"できなかった部分が弾ける瞬間が好き。"},{"axis":"stage","text":"人前で届けるからこそ音楽は強くなると思う。"},{"axis":"support","text":"歌やメロディを引き立てる音に魅力を感じる。"},{"axis":"score","text":"採譜やアレンジの正確さが気になる。"},{"axis":"improv","text":"同じ曲でも毎回違う表情で楽しみたい。"},{"axis":"midnight","text":"眠る前に聴く一曲を大切にしている。"},{"axis":"crystal","text":"SNSで短く共有したくなる音楽がある。"},{"axis":"bass","text":"落ち込んだ時は深い音の曲に救われる。"},{"axis":"practice","text":"地道な積み重ねが一番信頼できる。"},{"axis":"stage","text":"拍手や空気感まで含めて音楽だと思う。"},{"axis":"support","text":"誰かの背中を押すような曲が好き。"},{"axis":"score","text":"曲の細部に気づくと嬉しくなる。"},{"axis":"improv","text":"アドリブや予想外の展開に惹かれる。"},{"axis":"midnight","text":"派手さより、静かな余韻に惹かれる。"}],"ctas":[{"label":"Instagram","url":"https://www.instagram.com/rikupiano/"},{"label":"活動リンク確認","url":"mailto:rikupiano2025@gmail.com"},{"label":"Mobby","url":"https://www.mobby.online/"}]};
+    const state = { index: 0, answers: Array(DATA.questions.length).fill(null) };
+    const $ = (id) => document.getElementById(id);
+    const home = $("home");
+    const quiz = $("quiz");
+    const result = $("result");
+    const choices = $("choices");
+    function renderCtas(targetId) {
+      $(targetId).innerHTML = DATA.ctas.map((cta) => '<a href="' + cta.url + '" target="_blank" rel="noopener">' + cta.label + '</a>').join("");
+    }
+    function renderTypes() {
+      $("typeGrid").innerHTML = DATA.results.map((item) =>
+        '<article class="char-card"><img src="img/' + item.image + '" alt=""><div><h3>' + item.name + '</h3><p>' + item.lead + '</p></div></article>'
+      ).join("");
+    }
+    function renderQuestion() {
+      const q = DATA.questions[state.index];
+      $("qNumber").textContent = "Q" + String(state.index + 1).padStart(2, "0") + " / " + DATA.questions.length;
+      $("qText").textContent = q.text;
+      $("progressText").textContent = DATA.lang === "en" ? "Progress" : "進捗";
+      const pct = Math.round((state.index / DATA.questions.length) * 100);
+      $("progressPercent").textContent = pct + "%";
+      $("progressFill").style.width = pct + "%";
+      choices.innerHTML = "";
+      for (let i = 1; i <= 7; i += 1) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = i;
+        btn.className = state.answers[state.index] === i ? "selected" : "";
+        btn.addEventListener("click", () => {
+          state.answers[state.index] = i;
+          renderQuestion();
+        });
+        choices.appendChild(btn);
+      }
+      $("backBtn").disabled = state.index === 0;
+      $("nextBtn").textContent = state.index === DATA.questions.length - 1 ? "結果を見る" : "次へ";
+      $("nextBtn").disabled = state.answers[state.index] === null;
+    }
+    function calcResult() {
+      const scores = Object.fromEntries(DATA.results.map((r) => [r.id, 0]));
+      DATA.questions.forEach((q, i) => {
+        scores[q.axis] += state.answers[i] || 0;
+      });
+      return DATA.results.slice().sort((a, b) => scores[b.id] - scores[a.id])[0];
+    }
+    function showResult() {
+      const item = calcResult();
+      quiz.classList.add("hidden");
+      result.classList.remove("hidden");
+      $("progressFill").style.width = "100%";
+      $("resultImg").src = "img/" + item.image;
+      $("resultBadge").textContent = DATA.lang === "en" ? "Your type" : "あなたのタイプ";
+      $("resultName").textContent = item.name;
+      $("resultLead").textContent = item.lead;
+      $("resultPoints").innerHTML = item.points.map((p) => "<li>" + p + "</li>").join("");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    function shareUrl(kind) {
+      const url = location.href;
+      const text = encodeURIComponent(DATA.shareText + " | Mobby");
+      const encodedUrl = encodeURIComponent(url);
+      return kind === "line"
+        ? "https://social-plugins.line.me/lineit/share?url=" + encodedUrl
+        : "https://twitter.com/intent/tweet?text=" + text + "&url=" + encodedUrl;
+    }
+    $("startBtn").addEventListener("click", () => {
+      home.classList.add("hidden");
+      quiz.classList.remove("hidden");
+      renderQuestion();
+      location.hash = "quiz";
+    });
+    $("backBtn").addEventListener("click", () => {
+      state.index = Math.max(0, state.index - 1);
+      renderQuestion();
+    });
+    $("nextBtn").addEventListener("click", () => {
+      if (state.answers[state.index] === null) return;
+      if (state.index === DATA.questions.length - 1) showResult();
+      else {
+        state.index += 1;
+        renderQuestion();
+      }
+    });
+    $("retryBtn").addEventListener("click", () => {
+      state.index = 0;
+      state.answers.fill(null);
+      result.classList.add("hidden");
+      home.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    $("xShare").addEventListener("click", () => window.open(shareUrl("x"), "_blank", "noopener"));
+    $("lineShare").addEventListener("click", () => window.open(shareUrl("line"), "_blank", "noopener"));
+    renderCtas("homeCtas");
+    renderCtas("resultCtas");
+    renderTypes();
+  </script>
+</body>
+</html>
