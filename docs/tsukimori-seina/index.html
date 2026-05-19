@@ -1,0 +1,868 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>月森世菜 パールホワイト世界観診断 | Mobby</title>
+  <meta name="description" content="20問であなたの白い世界観と表現スタイルを8タイプから診断する、月森世菜さん向けモビー診断ラフ案です。" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="月森世菜 パールホワイト世界観診断" />
+  <meta property="og:description" content="ホワイト統一、きらめき装飾、イラスト物語、ファッション空間。あなたの世界観を20問で診断します。" />
+  <meta property="og:image" content="img/tsukimori-mobby-white-world.png" />
+  <meta name="theme-color" content="#fbf8f3" />
+  <link rel="icon" type="image/jpeg" href="../16school/favicon/fav.jpg" />
+  <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --font-ja: 'Yomogi', cursive;
+      --font-en: 'Yomogi', cursive;
+      --bg: #fbf8f3;
+      --surface: #ffffff;
+      --text-main: #1d1d1f;
+      --text-sub: #86868b;
+      --accent: #8d7a5f;
+      --accent-soft: #f4efe7;
+      --line: #d2d2d7;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+      --shadow-lg: 0 12px 30px rgba(0,0,0,0.08);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --danger: #ff3b30;
+    }
+
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    body {
+      margin: 0;
+      font-family: var(--font-en), var(--font-ja);
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    .wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand { display: flex; align-items: center; gap: 0; }
+    .logo {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background-image: url('../16school/logo.jpg');
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 4px 10px rgba(141,122,95,0.28);
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    .title h1 { font-size: 14px; margin: 0; font-weight: 600; cursor: pointer; }
+    .title p { margin: 0; color: var(--text-sub); font-size: 12px; }
+    .nav { display: flex; gap: 12px; align-items: center; }
+    .nav a {
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+    .nav a:hover { background: rgba(0,0,0,0.05); }
+    .nav a.active { background: var(--accent-soft); color: var(--accent); }
+
+    button {
+      border: 1px solid transparent;
+      background: rgba(0,0,0,0.05);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease, box-shadow 0.2s ease;
+    }
+    button:hover { background: rgba(0,0,0,0.08); transform: translateY(-1px); }
+    button:active { transform: translateY(0) scale(0.96); }
+    button.primary {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 4px 12px rgba(141,122,95,0.24);
+    }
+    button.primary:hover { background: #9b8769; box-shadow: 0 6px 16px rgba(141,122,95,0.34); }
+    button.danger { color: var(--danger); background: rgba(255,59,48,0.05); }
+    button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .panel {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      padding: 32px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255,255,255,0.8);
+    }
+    .kicker {
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0 0 8px;
+    }
+    .big {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 16px;
+      color: var(--text-main);
+    }
+    .text-body { color: var(--text-sub); font-size: 14px; line-height: 1.8; }
+    .hero-image {
+      width: min(360px, 100%);
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 18px;
+      box-shadow: var(--shadow-sm);
+      margin: 0 auto 28px;
+      display: block;
+    }
+    .progress-wrap { margin-bottom: 20px; }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-sub);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+    .progress-track {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--accent);
+      transition: width 0.25s ease;
+    }
+    .qCard {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 22px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .qText {
+      font-size: 16px;
+      line-height: 1.8;
+      margin: 0 0 18px;
+      color: var(--text-main);
+    }
+    .likert7 { width: 100%; }
+    .likert-labels {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-sub);
+      font-size: 11px;
+      margin-bottom: 10px;
+    }
+    .likert-buttons {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(28px, 1fr));
+      gap: 8px;
+      align-items: center;
+    }
+    .likert-btn {
+      aspect-ratio: 1 / 1;
+      min-width: 0;
+      padding: 0;
+      border-radius: 50%;
+      border: 2px solid var(--line);
+      background: #fff;
+      box-shadow: none;
+    }
+    .likert-btn.left { border-color: rgba(0,113,227,0.55); }
+    .likert-btn.mid { border-color: #b8b8bd; }
+    .likert-btn.right { border-color: rgba(255,149,0,0.55); }
+    .likert-btn.selected.left { background: var(--accent); border-color: var(--accent); }
+    .likert-btn.selected.mid { background: #8e8e93; border-color: #8e8e93; }
+    .likert-btn.selected.right { background: #ff9500; border-color: #ff9500; }
+    .fade-in { animation: fadeIn 0.35s ease both; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-hero { text-align: center; }
+    .result-img {
+      width: min(420px, 100%);
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 20px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 22px;
+    }
+    .type-code {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 92px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .axis-row { margin: 18px 0; }
+    .axis-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--text-sub);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+    .axis-bar {
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #dceeff 0%, #f6f6f6 50%, #ffe8c7 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .axis-dot {
+      position: absolute;
+      top: 50%;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      border: 4px solid var(--accent);
+      transform: translate(-50%, -50%);
+      box-shadow: var(--shadow-sm);
+    }
+    .section-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+    .mini {
+      background: #fafafa;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .mini h3 { margin: 0 0 8px; font-size: 14px; }
+    .mini p { margin: 0; color: var(--text-sub); font-size: 13px; line-height: 1.8; }
+    .characters-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .char-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .char-card img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+    }
+    .char-body { padding: 16px; }
+    .char-body h3 { margin: 0 0 8px; font-size: 16px; }
+    .char-body p { margin: 0; color: var(--text-sub); font-size: 13px; line-height: 1.7; }
+    .actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 600px) {
+      .wrap { padding: 28px 14px 60px; }
+      header { flex-direction: column; align-items: flex-start; margin-bottom: 28px; }
+      .nav { width: auto; justify-content: flex-start; }
+      .panel { padding: 24px 16px; border-radius: 18px; }
+      .big { font-size: 22px; }
+      .qCard { padding: 18px 14px; }
+      .qText { font-size: 15px; }
+      .likert-buttons { gap: 6px; }
+      .section-grid,
+      .characters-grid { grid-template-columns: 1fr; }
+      button.danger { white-space: nowrap; min-width: 80px; font-size: 12px; padding: 10px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand" id="brandHome">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="title">
+          <h1>月森世菜 パールホワイト世界観診断</h1>
+          <p>Mobby rough preview</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="ページ内メニュー">
+        <a id="navDiagnosis" class="active">診断</a>
+        <a id="navCharacters">タイプ一覧</a>
+      </nav>
+    </header>
+    <main id="app"></main>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "tsukimori_seina_pearl_white_world_v1";
+    const PAGE_SIZE = 5;
+    const AXIS_KEYS = ["A", "B", "C"];
+
+    const AXES = {
+      A: { key: "A", name: "世界観の作り方", left: "ホワイト統一", right: "きらめき装飾", leftCode: "ほ", rightCode: "き" },
+      B: { key: "B", name: "表現スタイル", left: "イラスト物語", right: "ファッション空間", leftCode: "い", rightCode: "ふ" },
+      C: { key: "C", name: "届け方", left: "作品没入", right: "ファン共有", leftCode: "さ", rightCode: "ふ" }
+    };
+
+    const QUESTIONS = [
+      {id:"A1", axis:"A", text:"部屋や服、小物は、白や淡い色で統一されていると落ち着く", reverse:false},
+      {id:"A2", axis:"A", text:"世界観を作る時は、まず余白や清潔感を大切にしたい", reverse:false},
+      {id:"A3", axis:"A", text:"色数を絞って、静かに整った雰囲気を作るのが好きだ", reverse:false},
+      {id:"A4", axis:"A", text:"リボン、パール、チュール、きらっと光る小物にときめく", reverse:true},
+      {id:"A5", axis:"A", text:"シンプルにまとめるより、少し夢っぽい装飾を足したくなる", reverse:true},
+      {id:"A6", axis:"A", text:"見る人が思わず保存したくなるような、きらめきのある画面作りが好きだ", reverse:true},
+
+      {id:"B1", axis:"B", text:"表現するなら、キャラクターや物語の気配を感じるものに惹かれる", reverse:false},
+      {id:"B2", axis:"B", text:"ノートやラフに描いた小さなアイデアから世界観が広がることが多い", reverse:false},
+      {id:"B3", axis:"B", text:"一枚の絵の中に、前後のストーリーを想像できる余韻を入れたい", reverse:false},
+      {id:"B4", axis:"B", text:"服や部屋よりも、まず絵や漫画の空気感から世界を作りたい", reverse:false},
+      {id:"B5", axis:"B", text:"服、インテリア、写真の構図まで含めて一つの作品のように整えたい", reverse:true},
+      {id:"B6", axis:"B", text:"コーディネートや部屋の見え方を編集する時間が楽しい", reverse:true},
+      {id:"B7", axis:"B", text:"世界観は、イラストだけでなく生活やファッションにも自然に出したい", reverse:true},
+
+      {id:"C1", axis:"C", text:"制作中は、周りの反応よりも自分が世界に入り込めるかを重視する", reverse:false},
+      {id:"C2", axis:"C", text:"納得できるまで細部を直して、完成した世界に没入したい", reverse:false},
+      {id:"C3", axis:"C", text:"好きな世界観は、まず自分の中で静かに育てる時間が必要だ", reverse:false},
+      {id:"C4", axis:"C", text:"完成した作品やコーデは、ファンの反応を想像しながら見せ方を考える", reverse:true},
+      {id:"C5", axis:"C", text:"かわいい、好き、と言ってもらえる共有の瞬間が制作の励みになる", reverse:true},
+      {id:"C6", axis:"C", text:"SNSで並んだ時に伝わる世界観まで含めて整えたい", reverse:true},
+      {id:"C7", axis:"C", text:"自分の作品をきっかけに、ファン同士の会話が生まれるとうれしい", reverse:true}
+    ];
+
+    const CHARACTERS = {
+      "ほいさ": {
+        name: "パールホワイト物語モビィ",
+        summary: "白い余白と物語性を大切に、自分だけの世界へ深く入り込むタイプ。",
+        catch: "静かな白の奥に、小さな物語をそっと隠している人です。",
+        hook: "白い紙、淡い影、細い線。派手に語らなくても、見る人が続きの物語を想像したくなる空気を作れます。自分の中で納得できるまで磨く時間が、その世界の透明度を上げています。",
+        downside: "細部に入り込むほど、完成を出すタイミングを逃しやすいです。まず一枚だけ見せる日を決めると、世界が外へ歩き出します。",
+        perception: "繊細、透明感がある、作品に引き込まれると思われやすいです。",
+        strength: "余白と物語の気配で、静かに人を惹き込む力。",
+        weakness: "完璧に整うまで隠したくなり、共有が遅れることがあります。",
+        advice: "完成前の一部だけでも、白い余白を活かして見せると期待感が生まれます。",
+        image: "img/tsukimori-mobby-white-world.png"
+      },
+      "ほいふ": {
+        name: "白い余白の共感モビィ",
+        summary: "やさしい白の世界を、ファンが入りやすい物語として届けるタイプ。",
+        catch: "余白があるから、見た人の気持ちもそっと入り込めます。",
+        hook: "真っ白に近い世界なのに、冷たくならない。そこに小さな台詞や表情の気配を置くことで、ファンが自分の気持ちを重ねやすい作品になります。",
+        downside: "共感を意識しすぎると、世界観の静けさが少し揺らぐことも。自分が一番好きな白の温度を先に決めると芯が残ります。",
+        perception: "癒される、共感できる、保存したくなると思われやすいです。",
+        strength: "自分の世界を守りながら、見る人が入り込む余白を作る力。",
+        weakness: "反応に合わせすぎると、本来の静けさが薄くなることがあります。",
+        advice: "投稿文は短くして、作品の余白に語らせると魅力が伝わります。",
+        image: "img/tsukimori-mobby-pearl-story.png"
+      },
+      "ほふさ": {
+        name: "ホワイトルーム編集モビィ",
+        summary: "白い服や部屋、小物まで含めて、世界観を丁寧に編集するタイプ。",
+        catch: "生活の一角まで、作品のように整えていける人です。",
+        hook: "机の上、壁の余白、服の質感、写真の光。日常にあるものを並べ替えて、静かなホワイトルームのような世界を作れます。作る時間そのものに深く没入できる人です。",
+        downside: "整えたい気持ちが強いぶん、少し散らかった瞬間に気分が下がりがち。完璧ではない白も、制作途中の味として残してみてください。",
+        perception: "世界観がある、丁寧、部屋や服までかわいいと思われやすいです。",
+        strength: "ファッション、インテリア、写真を一つの世界として編集する力。",
+        weakness: "整える範囲が広がりすぎて、制作前に疲れることがあります。",
+        advice: "今日は机の上だけ、など小さな範囲を決めると世界観が続きます。",
+        image: "img/tsukimori-mobby-white-world.png"
+      },
+      "ほふふ": {
+        name: "世界観シェアモビィ",
+        summary: "白い空間やコーデの世界観を、ファンと一緒に楽しめるタイプ。",
+        catch: "白のかわいさを、作品にも日常にも広げて共有します。",
+        hook: "新しい小物、部屋の一角、白いコーデ。見つけた世界観のかけらを、ファンにも見せたくなる人です。統一感があるから、投稿が並んだ時にもひとつの物語になります。",
+        downside: "共有したい気持ちが強いと、見せるために整えすぎてしまうことも。自然に好きと思った瞬間を残すと、温度が伝わります。",
+        perception: "世界観が徹底している、真似したい、見ているだけで楽しいと思われやすいです。",
+        strength: "日常の白い世界を、ファンが参加できるムードに変える力。",
+        weakness: "投稿映えを考えすぎて、自分の休む場所まで作品化しがちです。",
+        advice: "完璧な一枚だけでなく、途中のかわいい一角も共有すると親しみが増します。",
+        image: "img/tsukimori-mobby-pearl-story.png"
+      },
+      "きいさ": {
+        name: "きらめきイラストモビィ",
+        summary: "装飾のときめきと物語への没入で、夢のある一枚を作るタイプ。",
+        catch: "線の先に、リボンと光がほどけるような物語を描けます。",
+        hook: "パール、リボン、淡いレース、きらっとした瞳。小さな装飾を物語のサインとして置くのが上手です。見る人は、そのきらめきからキャラクターの気持ちを想像します。",
+        downside: "飾りたい気持ちが強いほど、主役が少し埋もれることも。光らせる場所を一つ決めると、物語が読みやすくなります。",
+        perception: "夢がある、かわいい、細部まで見たくなると思われやすいです。",
+        strength: "装飾をただの飾りではなく、物語の入口にできる力。",
+        weakness: "ときめきを足しすぎると、余白がなくなることがあります。",
+        advice: "一番見てほしいモチーフを先に決めて、ほかは少し引くと輝きます。",
+        image: "img/tsukimori-mobby-white-world.png"
+      },
+      "きいふ": {
+        name: "ときめきファンアートモビィ",
+        summary: "きらめく物語を、ファンが反応したくなる形で届けるタイプ。",
+        catch: "かわいいの一言が生まれる、共有したくなる物語を作れます。",
+        hook: "絵の中のリボン、表情、淡い光。見た瞬間に好きと言いたくなるポイントを作るのが得意です。物語に入り込みながら、届ける相手のときめきも想像できます。",
+        downside: "反応を意識するほど、装飾がわかりやすい方へ寄りがち。自分だけが好きな小さな違和感も残すと、作品に奥行きが出ます。",
+        perception: "ファンになりたくなる、グッズ化してほしい、何度も見たいと思われやすいです。",
+        strength: "物語のときめきを、共有されやすいビジュアルに変える力。",
+        weakness: "反応が薄いと、次の表現を迷いやすいです。",
+        advice: "投稿時に見どころを一つだけ添えると、ファンが反応しやすくなります。",
+        image: "img/tsukimori-mobby-pearl-story.png"
+      },
+      "きふさ": {
+        name: "ドリーミーコーデモビィ",
+        summary: "ファッションや空間にきらめきを落とし込み、夢のある世界を編集するタイプ。",
+        catch: "服も部屋も、少しだけ物語の中に連れていけます。",
+        hook: "白いワンピース、透ける素材、パールの小物、淡い部屋。自分のまわりを少しずつ夢の中のように整えるのが得意です。作品に没入するように、日常も編集できます。",
+        downside: "理想の世界に近づけたいほど、現実の散らかりが気になりやすいです。ひとつのコーデだけでも十分に世界は伝わります。",
+        perception: "雰囲気が完成されている、服も部屋もかわいい、憧れると思われやすいです。",
+        strength: "ファッションと空間を使って、体験できる世界観を作る力。",
+        weakness: "準備に時間をかけすぎて、発信や制作が後回しになることがあります。",
+        advice: "全身ではなく、袖口や小物など一部にきらめきを集めると続けやすいです。",
+        image: "img/tsukimori-mobby-white-world.png"
+      },
+      "きふふ": {
+        name: "パールステージモビィ",
+        summary: "白い世界観と装飾の華やかさで、ファンと盛り上がる場を作るタイプ。",
+        catch: "パールの光をまとって、世界観そのものをステージにできます。",
+        hook: "投稿、展示、撮影、ファンに届く瞬間。白い世界にきらめきを足して、見た人が参加したくなるムードを作れます。あなたの世界観は、共有されるほど強くなります。",
+        downside: "見せたい気持ちが強いぶん、ずっとステージ上にいるように疲れることも。オフの日の白い余白も、大切な世界観の一部です。",
+        perception: "華がある、世界観が強い、応援したくなると思われやすいです。",
+        strength: "自分の美意識を、ファンが楽しめる体験として届ける力。",
+        weakness: "共有の場を意識しすぎると、ひとりで没入する時間が不足します。",
+        advice: "華やかな投稿のあとに、静かな制作風景を見せると奥行きが出ます。",
+        image: "img/tsukimori-mobby-pearl-story.png"
+      }
+    };
+
+    const ANS_LABEL = {
+      1:"そう思う", 2:"ややそう思う", 3:"少しそう思う", 4:"どちらでもない",
+      5:"少しそう思わない", 6:"ややそう思わない", 7:"そう思わない"
+    };
+
+    const defaultState = () => ({
+      step: "intro",
+      page: 0,
+      answers: {},
+      questionOrder: [],
+      axes: null
+    });
+
+    let state = loadState();
+    const app = document.getElementById("app");
+
+    function loadState(){
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return defaultState();
+        return {...defaultState(), ...JSON.parse(raw)};
+      } catch {
+        return defaultState();
+      }
+    }
+
+    function saveState(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function resetDiagnosis(){
+      state = defaultState();
+      localStorage.removeItem(STORAGE_KEY);
+      render();
+    }
+
+    function getQuestionOrder(){
+      if(Array.isArray(state.questionOrder) && state.questionOrder.length === QUESTIONS.length) return state.questionOrder;
+      const grouped = AXIS_KEYS.flatMap(axis => QUESTIONS.filter(q => q.axis === axis));
+      state.questionOrder = grouped.map(q => q.id);
+      saveState();
+      return state.questionOrder;
+    }
+
+    function getShuffledQuestions(){
+      const order = getQuestionOrder();
+      return order.map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean);
+    }
+
+    function computeResult(){
+      const SCALE = 7;
+      const MID = 4;
+      const MAX_DEV = 3;
+      const GAMMA = 1.35;
+      const EXTREME_BONUS = 0.35;
+      const COHERENCE_SHRINK = 0.20;
+
+      const raw = {A:0, B:0, C:0};
+      const absRaw = {A:0, B:0, C:0};
+      const maxRaw = {A:0, B:0, C:0};
+      const breakdown = {A:[], B:[], C:[]};
+      const allAnswers = [];
+
+      const weightOf = ansRaw => (ansRaw === 1 || ansRaw === 7) ? (1 + EXTREME_BONUS) : 1;
+      const shapeAns = ansAdj => {
+        const centered = MID - ansAdj;
+        const t = centered / MAX_DEV;
+        const mag = Math.min(1, Math.abs(t));
+        return Math.sign(t) * Math.pow(mag, GAMMA);
+      };
+
+      for(const q of QUESTIONS){
+        const ansRaw = state.answers[q.id];
+        if(!ansRaw) continue;
+        allAnswers.push(ansRaw);
+        const ansAdj = q.reverse ? (SCALE + 1 - ansRaw) : ansRaw;
+        const shaped = shapeAns(ansAdj);
+        const w = weightOf(ansRaw) * (q.importance ?? 1);
+        const contrib = w * shaped;
+        raw[q.axis] += contrib;
+        absRaw[q.axis] += Math.abs(contrib);
+        maxRaw[q.axis] += w;
+        breakdown[q.axis].push({id:q.id, text:q.text, ans:ansRaw, contrib});
+      }
+
+      const norm = {};
+      const pos = {};
+      const leftPct = {};
+      const hard = {};
+      const decisiveness = {};
+      const coherenceByAxis = {};
+
+      AXIS_KEYS.forEach(k => {
+        const denom = maxRaw[k] || 1;
+        const coherence = absRaw[k] ? (Math.abs(raw[k]) / absRaw[k]) : 0;
+        coherenceByAxis[k] = coherence;
+        const adjusted = raw[k] * (1 - COHERENCE_SHRINK * (1 - coherence));
+        norm[k] = Math.max(-1, Math.min(1, adjusted / denom));
+        hard[k] = norm[k] > 0 ? "L" : "R";
+        pos[k] = Math.max(0, Math.min(100, 50 - norm[k] * 50));
+        leftPct[k] = Math.round((norm[k] + 1) * 50);
+        decisiveness[k] = Math.min(1, Math.abs(norm[k]));
+      });
+
+      let straightLine = false;
+      if(allAnswers.length){
+        const freq = {1:0,2:0,3:0,4:0,5:0,6:0,7:0};
+        allAnswers.forEach(a => freq[a]++);
+        const maxF = Math.max(...Object.values(freq));
+        straightLine = (maxF / allAnswers.length) >= 0.80;
+      }
+
+      const code = (hard.A === "L" ? AXES.A.leftCode : AXES.A.rightCode) +
+                   (hard.B === "L" ? AXES.B.leftCode : AXES.B.rightCode) +
+                   (hard.C === "L" ? AXES.C.leftCode : AXES.C.rightCode);
+      const totalDecisiveness = AXIS_KEYS.reduce((sum, k) => sum + decisiveness[k], 0) / AXIS_KEYS.length;
+      const confidenceLevel = {};
+      const confidenceLabel = {};
+      AXIS_KEYS.forEach(k => {
+        const d = decisiveness[k];
+        if(d >= 0.50) {
+          confidenceLevel[k] = "strong";
+          confidenceLabel[k] = "はっきり";
+        } else if(d >= 0.25) {
+          confidenceLevel[k] = "moderate";
+          confidenceLabel[k] = "やや";
+        } else {
+          confidenceLevel[k] = "mid";
+          confidenceLabel[k] = "場面による";
+        }
+      });
+
+      const adjacentTypes = [];
+      AXIS_KEYS.forEach(k => {
+        if(confidenceLevel[k] === "mid") {
+          const altHard = {...hard, [k]: hard[k] === "L" ? "R" : "L"};
+          const altCode = (altHard.A === "L" ? AXES.A.leftCode : AXES.A.rightCode) +
+                          (altHard.B === "L" ? AXES.B.leftCode : AXES.B.rightCode) +
+                          (altHard.C === "L" ? AXES.C.leftCode : AXES.C.rightCode);
+          if(CHARACTERS[altCode] && altCode !== code) {
+            adjacentTypes.push({axis:k, code:altCode, name:CHARACTERS[altCode].name});
+          }
+        }
+      });
+
+      return {
+        code,
+        char: CHARACTERS[code],
+        norm,
+        pos,
+        leftPct,
+        hard,
+        decisiveness,
+        confidenceLevel,
+        confidenceLabel,
+        totalDecisiveness,
+        coherenceByAxis,
+        breakdown,
+        straightLine,
+        adjacentTypes
+      };
+    }
+
+    function isComplete(){
+      return Object.keys(state.answers || {}).length >= QUESTIONS.length;
+    }
+
+    function render(){
+      document.getElementById("navDiagnosis").classList.toggle("active", state.step !== "characters");
+      document.getElementById("navCharacters").classList.toggle("active", state.step === "characters");
+      if(state.step === "intro") renderIntro();
+      else if(state.step === "quiz") renderQuiz();
+      else if(state.step === "characters") renderCharacters();
+      else renderResult();
+    }
+
+    function renderIntro(){
+      const count = Object.keys(state.answers).length;
+      app.innerHTML = `
+        <div class="panel fade-in" style="text-align:center; padding:60px 20px;">
+          <img class="hero-image" src="img/tsukimori-mobby-white-world.png" alt="白い世界観の部屋にいるMobby">
+          <p class="kicker">Mobby rough preview</p>
+          <h2 class="big">あなたの白い世界観を<br>3つの軸で診断します。</h2>
+          <p class="text-body" style="max-width:440px; margin:0 auto 30px;">
+            直感で選ぶ20問の質問から、世界観の作り方、表現スタイル、届け方のクセを8タイプで診断します。
+          </p>
+          <button class="primary" id="btnStart" style="padding:16px 32px; font-size:16px;">
+            ${count > 0 ? "診断を再開する" : "診断をはじめる"}
+          </button>
+          ${count > 0 ? `<p style="font-size:12px; color:#86868b; margin-top:16px;">${count} / ${QUESTIONS.length}問 回答済み</p>` : ""}
+        </div>
+      `;
+      document.getElementById("btnStart").onclick = () => {
+        state.step = "quiz";
+        getQuestionOrder();
+        const idx = getShuffledQuestions().findIndex(q => !state.answers[q.id]);
+        state.page = idx >= 0 ? Math.floor(idx / PAGE_SIZE) : 0;
+        saveState();
+        render();
+      };
+    }
+
+    function renderQuiz(){
+      const shuffledQs = getShuffledQuestions();
+      const start = state.page * PAGE_SIZE;
+      const currentQs = shuffledQs.slice(start, start + PAGE_SIZE);
+      const totalPage = Math.ceil(shuffledQs.length / PAGE_SIZE);
+      const progress = Math.round((Object.keys(state.answers).length / shuffledQs.length) * 100);
+
+      const qHtml = currentQs.map((q, i) => {
+        const val = state.answers[q.id];
+        return `
+          <div class="qCard fade-in" style="animation-delay:${i*0.05}s">
+            <div class="kicker" style="color:#86868b; margin-bottom:4px;">Q${start+i+1}</div>
+            <p class="qText">${q.text}</p>
+            <div class="likert7">
+              <div class="likert-labels">
+                <span>${AXES[q.axis].left}</span>
+                <span>${AXES[q.axis].right}</span>
+              </div>
+              <div class="likert-buttons">
+                ${[1,2,3,4,5,6,7].map(n => {
+                  const side = n <= 3 ? "left" : (n === 4 ? "mid" : "right");
+                  const sel = val === n ? "selected" : "";
+                  return `<button type="button" class="likert-btn ${side} ${sel}" data-qid="${q.id}" data-val="${n}" aria-label="${ANS_LABEL[n]}"></button>`;
+                }).join("")}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      app.innerHTML = `
+        <div class="panel">
+          <div class="progress-wrap">
+            <div class="progress-meta">
+              <span>進行状況</span>
+              <span>${progress}%</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div>
+          </div>
+          <div style="margin-top:30px;">${qHtml}</div>
+          <div style="display:flex; justify-content:space-between; margin-top:30px;">
+            <button id="btnPrev" ${state.page===0 ? "disabled":""}>戻る</button>
+            <button class="primary" id="btnNext">${state.page === totalPage - 1 ? "結果を見る" : "次へ"}</button>
+          </div>
+        </div>
+      `;
+
+      currentQs.forEach(q => {
+        document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(btn => {
+          btn.onclick = () => {
+            state.answers[q.id] = parseInt(btn.dataset.val, 10);
+            document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(b => b.classList.remove("selected"));
+            btn.classList.add("selected");
+            saveState();
+            const p = Math.round((Object.keys(state.answers).length / shuffledQs.length) * 100);
+            document.querySelector(".progress-fill").style.width = p + "%";
+            document.querySelector(".progress-meta span:last-child").innerText = p + "%";
+          };
+        });
+      });
+
+      document.getElementById("btnPrev").onclick = () => {
+        if(state.page > 0) state.page--;
+        saveState();
+        render();
+      };
+      document.getElementById("btnNext").onclick = () => {
+        const missing = currentQs.filter(q => !state.answers[q.id]);
+        if(missing.length){
+          alert("このページの質問にすべて回答してください。");
+          return;
+        }
+        if(state.page < totalPage - 1){
+          state.page++;
+          saveState();
+          render();
+        } else {
+          state.axes = computeResult();
+          state.step = "result";
+          saveState();
+          render();
+        }
+      };
+    }
+
+    function renderAxis(result){
+      return AXIS_KEYS.map(k => {
+        const a = AXES[k];
+        return `
+          <div class="axis-row">
+            <div class="axis-meta">
+              <span>${a.name}: ${a.left}</span>
+              <span>${result.confidenceLabel[k]}</span>
+              <span>${a.right}</span>
+            </div>
+            <div class="axis-bar"><div class="axis-dot" style="left:${result.pos[k]}%"></div></div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderResult(){
+      if(!isComplete()){
+        state.step = "intro";
+        render();
+        return;
+      }
+      const result = state.axes || computeResult();
+      const c = result.char;
+      app.innerHTML = `
+        <div class="panel fade-in result-hero">
+          <p class="kicker">RESULT</p>
+          <span class="type-code">TYPE ${result.code}</span>
+          <h2 class="big">${c.name}</h2>
+          <img class="result-img" src="${c.image}" alt="${c.name}">
+          <p class="text-body" style="max-width:560px; margin:0 auto;">${c.summary}</p>
+          <p style="font-size:17px; font-weight:700; margin:22px auto 0; max-width:560px;">${c.catch}</p>
+        </div>
+        <div class="panel fade-in">
+          <p class="kicker">3 AXES</p>
+          <h2 class="big">あなたの世界観バランス</h2>
+          ${renderAxis(result)}
+          ${result.straightLine ? `<p class="text-body" style="color:#ff9500;">同じ回答が多めです。気分を変えてもう一度試すと、少し違う結果になるかもしれません。</p>` : ""}
+          ${result.adjacentTypes.length ? `<p class="text-body">近いタイプ: ${result.adjacentTypes.map(t => `${t.name}`).join(" / ")}</p>` : ""}
+        </div>
+        <div class="panel fade-in">
+          <p class="kicker">DETAIL</p>
+          <h2 class="big">このタイプの見え方</h2>
+          <div class="section-grid">
+            <div class="mini"><h3>共感ポイント</h3><p>${c.hook}</p></div>
+            <div class="mini"><h3>しんどい時</h3><p>${c.downside}</p></div>
+            <div class="mini"><h3>周りから</h3><p>${c.perception}</p></div>
+            <div class="mini"><h3>今日のヒント</h3><p>${c.advice}</p></div>
+            <div class="mini"><h3>強み</h3><p>${c.strength}</p></div>
+            <div class="mini"><h3>気をつけたいこと</h3><p>${c.weakness}</p></div>
+          </div>
+          <div class="actions">
+            <button class="primary" id="btnChars">8タイプを見る</button>
+            <button id="btnAgain">もう一度診断する</button>
+          </div>
+        </div>
+      `;
+      document.getElementById("btnChars").onclick = () => {
+        state.step = "characters";
+        saveState();
+        render();
+      };
+      document.getElementById("btnAgain").onclick = resetDiagnosis;
+    }
+
+    function renderCharacters(){
+      const cards = Object.entries(CHARACTERS).map(([code, c]) => `
+        <article class="char-card fade-in">
+          <img src="${c.image}" alt="${c.name}">
+          <div class="char-body">
+            <p class="kicker">TYPE ${code}</p>
+            <h3>${c.name}</h3>
+            <p>${c.summary}</p>
+          </div>
+        </article>
+      `).join("");
+      app.innerHTML = `
+        <div class="panel fade-in">
+          <p class="kicker">8 TYPES</p>
+          <h2 class="big">パールホワイト世界観 8タイプ</h2>
+          <p class="text-body">2枚のラフ画像をサンプルとして交互に配置しています。診断結果や一覧の画像差し替えにも対応できます。</p>
+          <div class="characters-grid">${cards}</div>
+          <div class="actions">
+            <button class="primary" id="btnBackDiagnosis">${isComplete() ? "結果に戻る" : "診断する"}</button>
+          </div>
+        </div>
+      `;
+      document.getElementById("btnBackDiagnosis").onclick = () => {
+        state.step = isComplete() ? "result" : "intro";
+        saveState();
+        render();
+      };
+    }
+
+    document.getElementById("brandHome").onclick = () => {
+      state.step = isComplete() ? "result" : "intro";
+      saveState();
+      render();
+    };
+    document.getElementById("navDiagnosis").onclick = () => {
+      state.step = isComplete() ? "result" : "intro";
+      saveState();
+      render();
+    };
+    document.getElementById("navCharacters").onclick = () => {
+      state.step = "characters";
+      saveState();
+      render();
+    };
+
+    render();
+  </script>
+</body>
+</html>
