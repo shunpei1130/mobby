@@ -1,0 +1,1006 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鈴木ふみ奈ムードタイプ診断 | Mobby Rough Preview</title>
+    <meta name="description" content="鈴木ふみ奈様向けモビー診断のラフプレビュー。20問の7段階回答で、3軸から8つのムードタイプを表示します。">
+    <meta name="robots" content="noindex, nofollow">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="鈴木ふみ奈ムードタイプ診断 | Mobby Rough Preview">
+    <meta property="og:description" content="公開活動文脈をもとにした、ファン参加型モビー診断のラフ案です。">
+    <meta property="og:image" content="./img/hero-mood.png">
+    <meta name="theme-color" content="#14120f">
+    <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --font-main: "Yomogi", cursive;
+            --bg: #14120f;
+            --surface: #211d19;
+            --surface-2: #2c2620;
+            --surface-3: #171512;
+            --text: #fff8ec;
+            --muted: #c7b8a0;
+            --line: rgba(255, 248, 236, 0.14);
+            --gold: #e7b75f;
+            --coral: #f28d73;
+            --teal: #79c7bf;
+            --ink: #090807;
+            --danger: #ff8276;
+            --radius: 8px;
+            --shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: var(--font-main);
+            color: var(--text);
+            background:
+                radial-gradient(circle at 10% 5%, rgba(242, 141, 115, 0.16), transparent 28%),
+                radial-gradient(circle at 92% 8%, rgba(121, 199, 191, 0.12), transparent 32%),
+                linear-gradient(180deg, #17120f 0%, #14120f 54%, #0e0c0a 100%);
+            line-height: 1.75;
+        }
+
+        a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        button {
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 10px 18px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.06);
+            cursor: pointer;
+            transition: transform 0.16s ease, background 0.2s, border-color 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(231, 183, 95, 0.45);
+        }
+
+        button:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        button:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .primary {
+            border: 0;
+            color: #120e0a;
+            background: linear-gradient(135deg, var(--gold), var(--coral));
+            box-shadow: 0 14px 28px rgba(231, 183, 95, 0.2);
+        }
+
+        .wrap {
+            width: min(100%, 980px);
+            margin: 0 auto;
+            padding: 32px 18px 72px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .home-btn {
+            padding: 8px 14px;
+            color: var(--gold);
+            background: var(--surface);
+        }
+
+        .logo {
+            width: 34px;
+            height: 34px;
+            flex: 0 0 auto;
+            border-radius: 10px;
+            background-image: url("../mobby_logo2_trimmed.webp");
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 8px 18px rgba(231, 183, 95, 0.2);
+        }
+
+        .title h1 {
+            margin: 0;
+            color: var(--gold);
+            font-size: 15px;
+            line-height: 1.35;
+        }
+
+        .title p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.45;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 9px;
+            flex-wrap: wrap;
+        }
+
+        .nav a,
+        .nav button {
+            padding: 8px 13px;
+            font-size: 12px;
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav a.active {
+            color: #14120f;
+            background: var(--teal);
+            border-color: transparent;
+        }
+
+        .section {
+            margin-bottom: 22px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: rgba(33, 29, 25, 0.94);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .section-pad {
+            padding: 28px;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.92fr);
+            min-height: 520px;
+        }
+
+        .hero-copy {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 42px;
+        }
+
+        .hero-media {
+            min-height: 360px;
+            background-image:
+                linear-gradient(90deg, rgba(20, 18, 15, 0.05), rgba(20, 18, 15, 0.28)),
+                url("img/hero-mood.png");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .kicker {
+            margin: 0 0 10px;
+            color: var(--teal);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .big {
+            margin: 0 0 16px;
+            font-size: clamp(28px, 4.8vw, 50px);
+            line-height: 1.28;
+            letter-spacing: 0;
+        }
+
+        .lead {
+            max-width: 620px;
+            margin: 0 0 22px;
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        .pill-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 20px 0 0;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            min-height: 30px;
+            padding: 5px 11px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.05);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .visual-band {
+            min-height: 190px;
+            background-image:
+                linear-gradient(180deg, rgba(20, 18, 15, 0.08), rgba(20, 18, 15, 0.48)),
+                url("img/result-cards.png");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .progress-wrap {
+            margin-bottom: 24px;
+        }
+
+        .progress-meta {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .progress-track,
+        .axis-track {
+            overflow: hidden;
+            border-radius: 999px;
+            background: var(--surface-3);
+        }
+
+        .progress-track {
+            height: 8px;
+        }
+
+        .progress-fill,
+        .axis-fill {
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--teal), var(--gold), var(--coral));
+            transition: width 0.25s ease;
+        }
+
+        .q-card {
+            padding: 0 0 24px;
+            margin: 0 0 24px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .q-card:last-of-type {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 0;
+        }
+
+        .q-text {
+            margin: 0 0 12px;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .scale-labels {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 10px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .scale-labels span:last-child {
+            text-align: right;
+        }
+
+        .scale-buttons {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .scale-btn {
+            min-height: 44px;
+            padding: 8px 6px;
+            border-radius: var(--radius);
+            color: var(--muted);
+            background: rgba(255, 255, 255, 0.04);
+            font-size: 13px;
+        }
+
+        .scale-btn.selected {
+            color: #120e0a;
+            background: linear-gradient(135deg, var(--gold), var(--teal));
+            border-color: transparent;
+            box-shadow: 0 0 0 4px rgba(121, 199, 191, 0.12);
+        }
+
+        .quiz-actions,
+        .result-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        .result-hero {
+            display: grid;
+            grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.1fr);
+            gap: 0;
+        }
+
+        .result-image {
+            min-height: 360px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .result-copy {
+            padding: 32px;
+        }
+
+        .type-name {
+            margin: 0 0 10px;
+            color: var(--gold);
+            font-size: clamp(28px, 4vw, 42px);
+            line-height: 1.25;
+        }
+
+        .type-catch {
+            margin: 0 0 18px;
+            color: var(--text);
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .info-grid,
+        .type-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .info-card,
+        .type-card {
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, 0.045);
+            overflow: hidden;
+        }
+
+        .info-card {
+            padding: 18px;
+        }
+
+        .info-card h3,
+        .type-card h3 {
+            margin: 0 0 9px;
+            color: var(--gold);
+            font-size: 15px;
+        }
+
+        .info-card p,
+        .type-card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .axis-row {
+            margin-bottom: 18px;
+        }
+
+        .axis-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .axis-track {
+            position: relative;
+            height: 10px;
+        }
+
+        .type-card-media {
+            aspect-ratio: 16 / 9;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .type-card-body {
+            padding: 16px;
+        }
+
+        .empty-note {
+            color: var(--danger);
+            font-size: 13px;
+            min-height: 20px;
+        }
+
+        footer {
+            margin-top: 34px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        @media (max-width: 760px) {
+            .wrap {
+                padding: 20px 12px 56px;
+            }
+
+            header,
+            .nav {
+                align-items: flex-start;
+                justify-content: flex-start;
+            }
+
+            .hero,
+            .result-hero {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-copy,
+            .result-copy,
+            .section-pad {
+                padding: 22px 16px;
+            }
+
+            .hero {
+                min-height: 0;
+            }
+
+            .hero-media {
+                min-height: 240px;
+                order: -1;
+            }
+
+            .result-image {
+                min-height: 230px;
+            }
+
+            .scale-buttons {
+                gap: 5px;
+            }
+
+            .scale-btn {
+                min-height: 42px;
+                padding: 7px 3px;
+                font-size: 12px;
+            }
+
+            .info-grid,
+            .type-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quiz-actions button,
+            .result-actions button,
+            .result-actions a {
+                flex: 1 1 130px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <header>
+            <div class="brand">
+                <a href="../index.html?skipSplash=1"><button class="home-btn" type="button">Home</button></a>
+                <div class="logo" aria-hidden="true"></div>
+                <div class="title">
+                    <h1>鈴木ふみ奈ムードタイプ診断</h1>
+                    <p>Mobby Rough Preview</p>
+                </div>
+            </div>
+            <nav class="nav" aria-label="ページ操作">
+                <a href="#" id="navDiagnosis" class="active">診断</a>
+                <a href="#" id="navCharacters">8タイプ</a>
+                <button id="btnReset" type="button">リセット</button>
+            </nav>
+        </header>
+        <main id="app"></main>
+        <footer>&copy; 2026 Mobby. Proposal rough preview.</footer>
+    </div>
+
+    <script>
+        const STORAGE_KEY = "mobby_fumina_suzuki_preview_v1";
+        const PAGE_SIZE = 4;
+        const GAMMA = 1.35;
+        const EXTREME_BONUS = 0.35;
+        const COHERENCE_SHRINK = 0.20;
+
+        const AXES = {
+            glamour: { name: "Glamour / Natural", left: "Natural", right: "Glamour" },
+            active: { name: "Active / Chill", left: "Chill", right: "Active" },
+            classic: { name: "Classic / Pop", left: "Pop", right: "Classic" }
+        };
+
+        const TYPES = {
+            grace: {
+                name: "Grace Spotlight",
+                label: "品よく光を集める主役ムード",
+                vector: { glamour: 1, active: 1, classic: 1 },
+                image: "hero-mood.png",
+                message: "ステージ感、写真集の余韻、凛とした見せ方が重なるタイプ。特別な一枚を選ぶように、世界観を丁寧に整えると魅力が伝わります。",
+                fanPoint: "完成度の高いビジュアルや、節目の告知と相性がよいムードです。",
+                next: "キービジュアル、診断タイトル、結果シェア画像を上品な光と余白で統一する。"
+            },
+            stage: {
+                name: "Stage Muse",
+                label: "華やかに動き、場を明るくする表現者ムード",
+                vector: { glamour: 1, active: 1, classic: -1 },
+                image: "result-cards.png",
+                message: "撮影、イベント、SNSでの明るい瞬間が映えるタイプ。強い主役感を保ちながら、ファンが反応しやすい軽やかさもあります。",
+                fanPoint: "リール、イベント前告知、舞台裏の短い投稿と相性がよいムードです。",
+                next: "診断結果のコピーは、華やかさと参加しやすさを同じ比率で入れる。"
+            },
+            piano: {
+                name: "Piano Noir",
+                label: "静かな余韻で惹きつける映画的ムード",
+                vector: { glamour: 1, active: -1, classic: 1 },
+                image: "hero-mood.png",
+                message: "音楽、夜の光、落ち着いた表情が似合うタイプ。派手に説明しなくても、余白や空気感で印象を残せます。",
+                fanPoint: "ピアノやサックスなど、公開プロフィール上の音楽文脈を品よく扱いやすいムードです。",
+                next: "結果画面では短い詩的コピーよりも、余韻が残る一文を中心にする。"
+            },
+            pocket: {
+                name: "Pocket Queen",
+                label: "特別感と親しみやすさを両立するムード",
+                vector: { glamour: 1, active: -1, classic: -1 },
+                image: "result-cards.png",
+                message: "華やかだけれど距離が遠すぎないタイプ。ファンが自分の結果として持ち帰りやすい、明るい特別感があります。",
+                fanPoint: "カレンダー、グッズ、SNS投稿の世界観に接続しやすいムードです。",
+                next: "結果名やタイプ一覧に、かわいさと高級感の両方を残す。"
+            },
+            action: {
+                name: "Action Bloom",
+                label: "挑戦のあとに花が咲くアクティブムード",
+                vector: { glamour: -1, active: 1, classic: 1 },
+                image: "hero-mood.png",
+                message: "KUNOICHIやトレーニングのような挑戦文脈と、芯のある上品さが重なるタイプ。努力や行動をポジティブに見せられます。",
+                fanPoint: "挑戦企画、体を動かす投稿、節目のチャレンジに相性がよいムードです。",
+                next: "診断質問では勝負感を強くしすぎず、前向きな挑戦として扱う。"
+            },
+            fresh: {
+                name: "Fresh Camera",
+                label: "自然体の笑顔がそのまま残るカメラムード",
+                vector: { glamour: -1, active: 1, classic: -1 },
+                image: "result-cards.png",
+                message: "明るさ、親しみやすさ、SNSで会話が生まれる軽快さが強いタイプ。完璧すぎない瞬間に、ファンが反応しやすい余白があります。",
+                fanPoint: "オフショット、近況投稿、イベント後の感謝投稿と相性がよいムードです。",
+                next: "結果シェア文は、友達にも回しやすい短さと明るさを優先する。"
+            },
+            sauna: {
+                name: "Sauna Reset",
+                label: "整えてから輝くナチュラルムード",
+                vector: { glamour: -1, active: -1, classic: 1 },
+                image: "hero-mood.png",
+                message: "サウナ、休息、落ち着いた美しさの文脈が似合うタイプ。強く見せるより、整った空気で自然に印象を残します。",
+                fanPoint: "ライフスタイル、美容、リセット感のある投稿と相性がよいムードです。",
+                next: "診断内では、内面の断定ではなく過ごし方やムード選びとして表現する。"
+            },
+            popCalendar: {
+                name: "Pop Calendar",
+                label: "毎日を明るく切り取るポップムード",
+                vector: { glamour: -1, active: -1, classic: -1 },
+                image: "result-cards.png",
+                message: "季節感、日常感、カレンダーのように続く楽しさが似合うタイプ。ファンが今日の気分としてシェアしやすい軽やかさがあります。",
+                fanPoint: "カレンダー発売、日々のSNS投稿、ファン参加型の企画と相性がよいムードです。",
+                next: "8タイプ一覧では、最もシェアしやすい入口タイプとして明るく見せる。"
+            }
+        };
+
+        const TYPE_ORDER = ["grace", "stage", "piano", "pocket", "action", "fresh", "sauna", "popCalendar"];
+
+        const QUESTIONS = [
+            { id: "Q1", axis: "glamour", text: "週末に選びたいのは、自然体で整う時間か、華やかな撮影気分か", left: "自然体で整う", right: "華やかな撮影気分", weight: 1.1 },
+            { id: "Q2", axis: "glamour", text: "写真を撮るなら、やわらかい自然光か、ドラマチックな光か", left: "自然光", right: "ドラマチック", weight: 1 },
+            { id: "Q3", axis: "active", text: "友人にすすめるなら、リラックス系スポットか、挑戦系イベントか", left: "リラックス", right: "挑戦", weight: 1.05 },
+            { id: "Q4", axis: "glamour", text: "今日の服は、着心地重視の抜け感か、印象に残る一点主役か", left: "抜け感", right: "一点主役", weight: 0.95 },
+            { id: "Q5", axis: "active", text: "気分を上げるなら、落ち着くBGMか、ステージ感のある音楽か", left: "落ち着く", right: "ステージ感", weight: 0.9 },
+            { id: "Q6", axis: "classic", text: "SNSに残したいのは、明るい日常の瞬間か、完成度の高い1枚か", left: "日常の瞬間", right: "完成度の高い1枚", weight: 1 },
+            { id: "Q7", axis: "classic", text: "憧れる世界観は、明るいバラエティ感か、映画のワンシーンか", left: "バラエティ感", right: "映画的", weight: 1.05 },
+            { id: "Q8", axis: "glamour", text: "自分らしい魅力は、親しみやすい笑顔か、凛とした存在感か", left: "親しみやすい", right: "凛とした", weight: 1.05 },
+            { id: "Q9", axis: "active", text: "体を動かすなら、整えるストレッチか、限界に挑むトレーニングか", left: "整える", right: "挑む", weight: 1.1 },
+            { id: "Q10", axis: "active", text: "休日のご褒美は、サウナでリセットする時間か、撮影に向けて動く時間か", left: "サウナ", right: "撮影へ動く", weight: 1 },
+            { id: "Q11", axis: "glamour", text: "初対面で見せたいのは、話しかけやすさか、華やかなオーラか", left: "話しかけやすさ", right: "華やかなオーラ", weight: 0.95 },
+            { id: "Q12", axis: "active", text: "企画に参加するなら、ゆるく楽しめる診断か、勝負感のあるチャレンジか", left: "ゆるく楽しむ", right: "チャレンジ", weight: 1 },
+            { id: "Q13", axis: "classic", text: "好きな余白は、ポップなにぎわいか、クラシックな静けさか", left: "ポップ", right: "クラシック", weight: 0.95 },
+            { id: "Q14", axis: "classic", text: "似合う言葉は、SMILEか、GRACEか", left: "SMILE", right: "GRACE", weight: 0.9 },
+            { id: "Q15", axis: "classic", text: "表現するなら、モデル的なビジュアル感か、女優的なストーリー性か", left: "ビジュアル感", right: "ストーリー性", weight: 1.05 },
+            { id: "Q16", axis: "glamour", text: "カレンダーにしたいのは、毎日の親近感か、季節ごとの華やかさか", left: "親近感", right: "華やかさ", weight: 0.95 },
+            { id: "Q17", axis: "glamour", text: "勝負の日に選ぶのは、軽やかな笑顔か、強い目線か", left: "軽やかな笑顔", right: "強い目線", weight: 1.05 },
+            { id: "Q18", axis: "active", text: "自分を整えるなら、サウナでほどくか、筋トレで切り替えるか", left: "ほどく", right: "切り替える", weight: 1.05 },
+            { id: "Q19", axis: "classic", text: "ファンと共有したいのは、会話が生まれる遊びか、特別感のある世界観か", left: "会話が生まれる", right: "特別感", weight: 1 },
+            { id: "Q20", axis: "classic", text: "最後に残したい印象は、明るい高揚感か、上品な余韻か", left: "明るい高揚感", right: "上品な余韻", weight: 1.1 }
+        ];
+
+        const state = {
+            step: "intro",
+            page: 0,
+            answers: {}
+        };
+
+        const app = document.getElementById("app");
+        const navDiagnosis = document.getElementById("navDiagnosis");
+        const navCharacters = document.getElementById("navCharacters");
+        const btnReset = document.getElementById("btnReset");
+
+        function clamp(n, min, max) {
+            return Math.max(min, Math.min(max, n));
+        }
+
+        function escapeHtml(value) {
+            return String(value).replace(/[&<>"']/g, ch => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                "\"": "&quot;",
+                "'": "&#39;"
+            }[ch]));
+        }
+
+        function loadState() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) Object.assign(state, JSON.parse(raw));
+            } catch (_) { }
+        }
+
+        function saveState() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        }
+
+        function resetState() {
+            state.step = "intro";
+            state.page = 0;
+            state.answers = {};
+            localStorage.removeItem(STORAGE_KEY);
+            render();
+        }
+
+        function answeredCount() {
+            return QUESTIONS.filter(q => state.answers[q.id]).length;
+        }
+
+        function isCompleted() {
+            return answeredCount() === QUESTIONS.length;
+        }
+
+        function shapedAnswer(answer) {
+            const raw = (answer - 4) / 3;
+            if (!raw) return 0;
+            let shaped = Math.sign(raw) * Math.pow(Math.abs(raw), GAMMA);
+            if (Math.abs(raw) >= 0.999) shaped += Math.sign(raw) * EXTREME_BONUS;
+            return shaped;
+        }
+
+        function computeAxes() {
+            const raw = { glamour: 0, active: 0, classic: 0 };
+            const max = { glamour: 0, active: 0, classic: 0 };
+            QUESTIONS.forEach(q => {
+                max[q.axis] += (1 + EXTREME_BONUS) * q.weight;
+                const answer = state.answers[q.id];
+                if (!answer) return;
+                raw[q.axis] += shapedAnswer(answer) * q.weight;
+            });
+
+            const normalized = {};
+            Object.keys(AXES).forEach(axis => {
+                normalized[axis] = clamp(raw[axis] / max[axis], -1, 1);
+            });
+
+            const coherence = Object.values(normalized).reduce((sum, v) => sum + Math.abs(v), 0) / 3;
+            const shrink = 1 - COHERENCE_SHRINK * (1 - coherence);
+            Object.keys(normalized).forEach(axis => {
+                normalized[axis] = clamp(normalized[axis] * shrink, -1, 1);
+            });
+
+            return normalized;
+        }
+
+        function computeResult() {
+            const axes = computeAxes();
+            const scored = TYPE_ORDER.map(key => {
+                const type = TYPES[key];
+                const score = Object.keys(AXES).reduce((sum, axis) => sum + type.vector[axis] * axes[axis], 0);
+                return { key, score };
+            }).sort((a, b) => b.score - a.score || TYPE_ORDER.indexOf(a.key) - TYPE_ORDER.indexOf(b.key));
+            return { typeKey: scored[0].key, type: TYPES[scored[0].key], axes, scored };
+        }
+
+        function axisPercent(value) {
+            return Math.round((value + 1) * 50);
+        }
+
+        function setStep(step) {
+            state.step = step;
+            saveState();
+            render();
+        }
+
+        function updateNav() {
+            navDiagnosis.classList.toggle("active", state.step !== "characters");
+            navCharacters.classList.toggle("active", state.step === "characters");
+        }
+
+        function render() {
+            window.scrollTo({ top: 0, behavior: "instant" });
+            updateNav();
+            if (state.step === "quiz") renderQuiz();
+            else if (state.step === "result") renderResult();
+            else if (state.step === "characters") renderCharacters();
+            else renderIntro();
+        }
+
+        function renderIntro() {
+            const count = answeredCount();
+            app.innerHTML = `
+                <section class="section hero">
+                    <div class="hero-copy">
+                        <p class="kicker">Proposal rough preview</p>
+                        <h2 class="big">鈴木ふみ奈<br>ムードタイプ診断</h2>
+                        <p class="lead">公開されている活動文脈をもとに、ファンが20問で自分のムードタイプを見つけられるモビー診断ラフです。</p>
+                        <div>
+                            <button class="primary" id="btnStart" type="button">${count ? "診断を再開する" : "診断をはじめる"}</button>
+                        </div>
+                        <div class="pill-row" aria-label="診断仕様">
+                            <span class="pill">20問</span>
+                            <span class="pill">7段階</span>
+                            <span class="pill">3軸</span>
+                            <span class="pill">8タイプ</span>
+                        </div>
+                    </div>
+                    <div class="hero-media" role="img" aria-label="ステージライトと抽象的なムードビジュアル"></div>
+                </section>
+                <section class="section">
+                    <div class="visual-band" role="img" aria-label="8タイプを象徴する抽象コラージュ"></div>
+                    <div class="section-pad">
+                        <p class="kicker">Theme</p>
+                        <p class="lead" style="margin-bottom:0;">グラビア、女優、写真集、音楽、トレーニング、サウナなどの公開情報から、人物像の断定ではなく「楽しめる世界観」として診断に落とし込みます。</p>
+                    </div>
+                </section>`;
+            document.getElementById("btnStart").onclick = () => {
+                const firstMissing = QUESTIONS.findIndex(q => !state.answers[q.id]);
+                state.page = firstMissing >= 0 ? Math.floor(firstMissing / PAGE_SIZE) : 0;
+                setStep("quiz");
+            };
+        }
+
+        function renderQuiz() {
+            const totalPages = Math.ceil(QUESTIONS.length / PAGE_SIZE);
+            const start = state.page * PAGE_SIZE;
+            const currentQuestions = QUESTIONS.slice(start, start + PAGE_SIZE);
+            const progress = Math.round((answeredCount() / QUESTIONS.length) * 100);
+            const questionHtml = currentQuestions.map((q, index) => {
+                const selected = state.answers[q.id];
+                const escapedText = escapeHtml(q.text);
+                const escapedLeft = escapeHtml(q.left);
+                const escapedRight = escapeHtml(q.right);
+                return `
+                    <div class="q-card">
+                        <p class="kicker">Q${start + index + 1} / ${QUESTIONS.length}</p>
+                        <p class="q-text">${escapedText}</p>
+                        <div class="scale-labels">
+                            <span>${escapedLeft}</span>
+                            <span>中間</span>
+                            <span>${escapedRight}</span>
+                        </div>
+                        <div class="scale-buttons">
+                            ${[1, 2, 3, 4, 5, 6, 7].map(value => `
+                                <button
+                                    class="scale-btn ${selected === value ? "selected" : ""}"
+                                    type="button"
+                                    data-qid="${q.id}"
+                                    data-value="${value}"
+                                    aria-label="${escapedLeft}から${escapedRight}の7段階中${value}">
+                                    ${value}
+                                </button>`).join("")}
+                        </div>
+                    </div>`;
+            }).join("");
+
+            app.innerHTML = `
+                <section class="section section-pad">
+                    <div class="progress-wrap">
+                        <div class="progress-meta"><span>${state.page + 1}/${totalPages}ページ</span><span>${progress}%</span></div>
+                        <div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div>
+                    </div>
+                    ${questionHtml}
+                    <p id="quizError" class="empty-note"></p>
+                    <div class="quiz-actions">
+                        <button id="btnPrev" type="button" ${state.page === 0 ? "disabled" : ""}>戻る</button>
+                        <button class="primary" id="btnNext" type="button">${state.page === totalPages - 1 ? "結果を見る" : "次へ"}</button>
+                    </div>
+                </section>`;
+
+            document.querySelectorAll(".scale-btn").forEach(btn => {
+                btn.onclick = () => {
+                    const qid = btn.dataset.qid;
+                    state.answers[qid] = Number(btn.dataset.value);
+                    document.querySelectorAll(`.scale-btn[data-qid="${qid}"]`).forEach(el => el.classList.remove("selected"));
+                    btn.classList.add("selected");
+                    document.getElementById("quizError").textContent = "";
+                    saveState();
+                    const nextProgress = Math.round((answeredCount() / QUESTIONS.length) * 100);
+                    document.querySelector(".progress-fill").style.width = `${nextProgress}%`;
+                    document.querySelector(".progress-meta span:last-child").textContent = `${nextProgress}%`;
+                };
+            });
+
+            document.getElementById("btnPrev").onclick = () => {
+                state.page = Math.max(0, state.page - 1);
+                saveState();
+                render();
+            };
+
+            document.getElementById("btnNext").onclick = () => {
+                const missing = currentQuestions.find(q => !state.answers[q.id]);
+                if (missing) {
+                    document.getElementById("quizError").textContent = "このページの質問にすべて回答してください。";
+                    return;
+                }
+                if (state.page < totalPages - 1) {
+                    state.page += 1;
+                    saveState();
+                    render();
+                    return;
+                }
+                setStep("result");
+            };
+        }
+
+        function renderAxisRows(axes) {
+            return Object.keys(AXES).map(axisKey => {
+                const axis = AXES[axisKey];
+                const pct = axisPercent(axes[axisKey]);
+                const dominant = axes[axisKey] >= 0 ? axis.right : axis.left;
+                const strength = Math.round(Math.abs(axes[axisKey]) * 100);
+                return `
+                    <div class="axis-row">
+                        <div class="axis-head">
+                            <span>${axis.name}</span>
+                            <span>${dominant} ${strength}%</span>
+                        </div>
+                        <div class="axis-track"><div class="axis-fill" style="width:${pct}%"></div></div>
+                    </div>`;
+            }).join("");
+        }
+
+        function renderResult() {
+            if (!isCompleted()) {
+                state.step = "quiz";
+                saveState();
+                render();
+                return;
+            }
+            const result = computeResult();
+            const type = result.type;
+            const shareUrl = encodeURIComponent(window.location.href.split("?")[0]);
+            const shareText = encodeURIComponent(`鈴木ふみ奈ムードタイプ診断の結果は「${type.name}」でした。\n${type.label}`);
+            app.innerHTML = `
+                <section class="section result-hero">
+                    <div class="result-image" style="background-image:url('img/${type.image}')" role="img" aria-label="${escapeHtml(type.name)}のムードビジュアル"></div>
+                    <div class="result-copy">
+                        <p class="kicker">Result</p>
+                        <h2 class="type-name">${escapeHtml(type.name)}</h2>
+                        <p class="type-catch">${escapeHtml(type.label)}</p>
+                        <p class="lead">${escapeHtml(type.message)}</p>
+                        <div class="pill-row">
+                            <span class="pill">${result.axes.glamour >= 0 ? "Glamour" : "Natural"}</span>
+                            <span class="pill">${result.axes.active >= 0 ? "Active" : "Chill"}</span>
+                            <span class="pill">${result.axes.classic >= 0 ? "Classic" : "Pop"}</span>
+                        </div>
+                    </div>
+                </section>
+                <section class="info-grid">
+                    <div class="info-card">
+                        <h3>ファンが楽しめる文脈</h3>
+                        <p>${escapeHtml(type.fanPoint)}</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>ラフ案での見せ方</h3>
+                        <p>${escapeHtml(type.next)}</p>
+                    </div>
+                </section>
+                <section class="section section-pad" style="margin-top:22px;">
+                    <p class="kicker">3 Axes</p>
+                    ${renderAxisRows(result.axes)}
+                </section>
+                <section class="section">
+                    <div class="visual-band" role="img" aria-label="診断タイプの抽象コラージュ"></div>
+                    <div class="section-pad">
+                        <p class="kicker">Share Preview</p>
+                        <p class="lead">結果画面は、タイプ名、短いムードコピー、3軸グラフ、ファンが共有しやすい文脈で構成します。</p>
+                        <div class="result-actions">
+                            <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" rel="noopener"><button type="button">Xでシェア</button></a>
+                            <button id="btnCharacters" type="button">8タイプを見る</button>
+                            <button id="btnRetry" type="button">もう一度診断</button>
+                        </div>
+                    </div>
+                </section>`;
+
+            document.getElementById("btnCharacters").onclick = () => setStep("characters");
+            document.getElementById("btnRetry").onclick = () => {
+                if (confirm("最初からやり直しますか？")) resetState();
+            };
+        }
+
+        function renderCharacters() {
+            const cards = TYPE_ORDER.map((key, index) => {
+                const type = TYPES[key];
+                const vectorLabels = [
+                    type.vector.glamour > 0 ? "Glamour" : "Natural",
+                    type.vector.active > 0 ? "Active" : "Chill",
+                    type.vector.classic > 0 ? "Classic" : "Pop"
+                ].join(" / ");
+                return `
+                    <article class="type-card">
+                        <div class="type-card-media" style="background-image:url('img/${index % 2 === 0 ? "hero-mood.png" : "result-cards.png"}')" role="img" aria-label="${escapeHtml(type.name)}の抽象ビジュアル"></div>
+                        <div class="type-card-body">
+                            <p class="kicker">${escapeHtml(vectorLabels)}</p>
+                            <h3>${escapeHtml(type.name)}</h3>
+                            <p>${escapeHtml(type.label)}</p>
+                        </div>
+                    </article>`;
+            }).join("");
+
+            app.innerHTML = `
+                <section class="section section-pad">
+                    <p class="kicker">Characters</p>
+                    <h2 class="big" style="font-size:32px;">8つのムードタイプ</h2>
+                    <p class="lead">3軸の組み合わせで、ファンが自分の結果として持ち帰りやすい8タイプに分けます。</p>
+                </section>
+                <section class="type-grid">${cards}</section>`;
+        }
+
+        navDiagnosis.onclick = e => {
+            e.preventDefault();
+            setStep(isCompleted() ? "result" : "intro");
+        };
+
+        navCharacters.onclick = e => {
+            e.preventDefault();
+            setStep("characters");
+        };
+
+        btnReset.onclick = () => {
+            if (confirm("最初からやり直しますか？")) resetState();
+        };
+
+        loadState();
+        render();
+    </script>
+</body>
+
+</html>
