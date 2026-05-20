@@ -913,6 +913,10 @@
       position: relative;
     }
 
+    .hero-carousel-shell.floating {
+      animation: none !important;
+    }
+
     .hero-model-stage {
       width: 100%;
       position: relative;
@@ -978,11 +982,13 @@
 
     .hero-character-row {
       width: min(340px, calc(100% - 24px));
-      margin: 8px auto 0;
+      margin: -36px auto 0;
       display: grid;
       grid-template-columns: 56px minmax(0, 1fr) 56px;
       align-items: center;
       gap: 12px;
+      position: relative;
+      z-index: 3;
     }
 
     @media (min-width: 769px) and (max-width: 1100px) {
@@ -3394,6 +3400,7 @@
     @media (max-width: 768px) {
       .hero-character-row {
         width: min(320px, calc(100% - 16px));
+        margin-top: -32px;
         grid-template-columns: 50px minmax(0, 1fr) 50px;
         gap: 10px;
       }
@@ -5175,6 +5182,46 @@
       justify-items: center;
     }
 
+    .hero-diagnosis-menu {
+      width: min(760px, calc(100% - 32px));
+      margin: 24px auto 4px;
+      position: relative;
+      z-index: 18;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions {
+      box-sizing: border-box;
+      flex-wrap: nowrap !important;
+      justify-content: flex-start !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      scroll-snap-type: none !important;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action {
+      flex: 0 0 104px !important;
+      width: 104px !important;
+      scroll-snap-align: none;
+    }
+
+    .footer-burn-card-row {
+      order: 1;
+      width: 100%;
+      margin: 0 auto 2px !important;
+    }
+
+    .footer-burn-card-row .burn-card {
+      width: 100%;
+      margin: 0 auto !important;
+    }
+
     .gift-fan-diagnosis-actions,
     .gift-fan-actions {
       position: static !important;
@@ -5267,7 +5314,7 @@
       right: auto !important;
       bottom: auto !important;
       width: 104px !important;
-      height: 82px !important;
+      height: 66px !important;
       flex: 0 1 104px !important;
       padding: 0 !important;
       flex-direction: column !important;
@@ -5363,22 +5410,40 @@
     }
 
     .gift-fan-diagnosis-action[data-diagnosis-item="school"] {
-      order: 2;
-    }
-
-    .gift-fan-diagnosis-action[data-diagnosis-item="romance"] {
       order: 1;
     }
 
     .gift-fan-diagnosis-action[data-diagnosis-item="love"] {
-      order: 3;
+      order: 2;
     }
 
     .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] {
+      order: 3;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="romance"] {
       order: 4;
     }
 
+    .gift-fan-diagnosis-action[data-diagnosis-item="blank-1"] {
+      order: 5;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="blank-2"] {
+      order: 6;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="blank-3"] {
+      order: 7;
+    }
+
     @media (max-width: 520px) {
+      .hero-diagnosis-menu {
+        width: min(360px, calc(100% - 16px));
+        margin-left: auto;
+        margin-right: auto;
+      }
+
       .gift-fan-diagnosis-actions {
         gap: 8px !important;
         padding: 34px 10px 12px !important;
@@ -5393,6 +5458,22 @@
         border-radius: 16px !important;
         font-size: 0.8rem !important;
         gap: 3px !important;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-actions {
+        width: 100% !important;
+        max-width: 100% !important;
+        gap: 8px !important;
+        padding: 34px 10px 12px !important;
+        justify-content: flex-start !important;
+        scroll-padding-left: 10px;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-action,
+      .hero-diagnosis-menu .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action {
+        width: 78px !important;
+        flex: 0 0 78px !important;
+        font-size: 0.72rem !important;
       }
 
       .gift-fan-actions {
@@ -5532,20 +5613,22 @@
     .hero-intro .headline {
       position: relative;
       z-index: 4;
+      margin-top: 28px;
       margin-bottom: -6px;
     }
 
     .hero-intro .hero-carousel-shell {
-      margin-top: -44px;
+      margin-top: -88px;
     }
 
     @media (max-width: 768px) {
       .hero-intro .headline {
+        margin-top: 22px;
         margin-bottom: -4px;
       }
 
       .hero-intro .hero-carousel-shell {
-        margin-top: -40px;
+        margin-top: -76px;
       }
     }
 
@@ -5606,6 +5689,147 @@
         inset 0 -18px 28px rgba(255, 255, 255, 0.18),
         0 16px 32px rgba(78, 57, 39, 0.21) !important;
     }
+
+    /* Hero diagnosis menu: keep the dotted frame stable, scroll only the buttons. */
+    .hero-diagnosis-menu {
+      box-sizing: border-box;
+      width: min(760px, calc(100% - 32px));
+      margin: 24px auto 4px;
+      padding: 24px 18px 14px;
+      position: relative;
+      z-index: 18;
+      border: 1.5px dashed rgba(237, 126, 57, 0.78);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.28);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.54),
+        0 12px 26px rgba(91, 67, 42, 0.1);
+    }
+
+    .hero-diagnosis-menu::before {
+      content: "♡  診断メニュー  ♡";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 0 22px;
+      background: #faf1e2;
+      color: #282828;
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions {
+      box-sizing: border-box;
+      width: 100% !important;
+      max-width: 100% !important;
+      height: 78px !important;
+      padding: 12px 0 0 !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      justify-content: flex-start !important;
+      align-items: flex-end !important;
+      gap: 14px !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      scroll-snap-type: none !important;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions::before {
+      content: none !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action {
+      width: 82px !important;
+      height: 66px !important;
+      flex: 0 0 82px !important;
+      border-radius: 14px !important;
+      font-size: 0.8rem !important;
+      scroll-snap-align: none;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item^="blank"] {
+      overflow: visible !important;
+    }
+
+    .gift-fan-collab-badge {
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      z-index: 4;
+      min-width: 48px;
+      height: 20px;
+      padding: 0 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateX(-50%);
+      border-radius: 6px;
+      background: rgba(255, 248, 239, 0.98);
+      color: #ff3e9a;
+      font-size: 9px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.06em;
+      box-shadow:
+        0 3px 8px rgba(89, 70, 52, 0.16),
+        inset 0 0 0 1px rgba(47, 79, 79, 0.18);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 520px) {
+      .hero-diagnosis-menu {
+        width: calc(100vw - 32px);
+        max-width: 360px;
+        margin-left: calc(50% - 50vw + 16px);
+        margin-right: 0;
+        padding: 20px 10px 12px;
+        border-radius: 20px;
+      }
+
+      .hero-diagnosis-menu::before {
+        font-size: 1rem;
+        padding: 0 14px;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-actions {
+        height: 70px !important;
+        padding-top: 12px !important;
+        align-items: flex-end !important;
+        gap: 7px !important;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-action {
+        width: 62px !important;
+        height: 58px !important;
+        flex: 0 0 62px !important;
+        border-radius: 13px !important;
+        font-size: 0.62rem !important;
+      }
+
+      .gift-fan-collab-badge {
+        top: -10px;
+        min-width: 42px;
+        height: 18px;
+        padding: 0 6px;
+        font-size: 8px;
+      }
+    }
   </style>
 </head>
 
@@ -5653,17 +5877,16 @@
               <button class="hero-character-action mode" id="heroCarouselModeButton" type="button" aria-label="カルーセル表示を切り替える">通常</button>
             </div>
           </div>
-          <div class="burn-card-row after-hero">
-            <a class="burn-card" href="burn-record/index.html" aria-label="BURNでページをつくる">
-              <span class="burn-card-copy">
-                <span class="burn-card-title">BURNでページをつくる</span>
-                <span class="burn-card-text">ふたりの思い出を、<br>本のように残そう。</span>
-                <span class="burn-card-arrow" aria-hidden="true">›</span>
-              </span>
-              <span class="burn-card-media" aria-hidden="true">
-                <img src="img/burn/burn_ref.png" alt="" loading="eager" decoding="async">
-              </span>
-            </a>
+          <div class="hero-diagnosis-menu">
+            <div class="gift-fan-diagnosis-actions" aria-hidden="false">
+              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16school/index.html" data-diagnosis-item="school"><span class="footer-btn-icon" data-icon="school" aria-hidden="true"></span><span>学校</span></a>
+              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16love/index.html" data-diagnosis-item="love"><span class="footer-btn-icon" data-icon="cloud" aria-hidden="true"></span><span>メンヘラ</span></a>
+              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16stan/index.html" data-diagnosis-item="oshi"><span class="footer-btn-icon" data-icon="star" aria-hidden="true"></span><span>推し</span></a>
+              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="love-diagnosis/index.html" data-diagnosis-item="romance"><span class="footer-btn-icon" data-icon="heart" aria-hidden="true"></span><span>恋愛</span></a>
+              <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" type="button" data-diagnosis-item="blank-1" aria-label="コラボ予定1"><span class="gift-fan-collab-badge">コラボ!</span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" type="button" data-diagnosis-item="blank-2" aria-label="コラボ予定2"><span class="gift-fan-collab-badge">コラボ!</span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" type="button" data-diagnosis-item="blank-3" aria-label="コラボ予定3"><span class="gift-fan-collab-badge">コラボ!</span></button>
+            </div>
           </div>
         </div>
       </section>
@@ -6232,6 +6455,7 @@
           <a class="btn btn-primary" href="16school/index.html">学校モビー診断</a>
           <a class="btn btn-primary" href="16love/index.html">メンヘラモビー診断</a>
           <a class="btn btn-primary" href="16stan/index.html">推し活モビー診断</a>
+          <a class="btn btn-primary" href="love-diagnosis/index.html">恋愛モビー診断</a>
           <a class="btn btn-primary" href="/mypage-register.html">診断まとめマイページ作成</a>
         </div>
       </div>
@@ -6262,11 +6486,17 @@
         </div>
         <div class="popup-buttons">
             <div class="gift-fan-menu is-open" id="giftFanMenu">
-            <div class="gift-fan-diagnosis-actions" aria-hidden="false">
-              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="love-diagnosis/index.html" data-diagnosis-item="romance"><span class="footer-btn-icon" data-icon="heart" aria-hidden="true"></span><span>恋愛</span></a>
-              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16school/index.html" data-diagnosis-item="school"><span class="footer-btn-icon" data-icon="school" aria-hidden="true"></span><span>学校</span></a>
-              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16love/index.html" data-diagnosis-item="love"><span class="footer-btn-icon" data-icon="cloud" aria-hidden="true"></span><span>メンヘラ</span></a>
-              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16stan/index.html" data-diagnosis-item="oshi"><span class="footer-btn-icon" data-icon="star" aria-hidden="true"></span><span>推し</span></a>
+            <div class="burn-card-row footer-burn-card-row">
+              <a class="burn-card" href="burn-record/index.html" aria-label="BURNでページをつくる">
+                <span class="burn-card-copy">
+                  <span class="burn-card-title">BURNでページをつくる</span>
+                  <span class="burn-card-text">ふたりの思い出を、<br>本のように残そう。</span>
+                  <span class="burn-card-arrow" aria-hidden="true">›</span>
+                </span>
+                <span class="burn-card-media" aria-hidden="true">
+                  <img src="img/burn/burn_ref.png" alt="" loading="lazy" decoding="async">
+                </span>
+              </a>
             </div>
             <div class="gift-fan-actions" aria-hidden="false">
               <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openCompositingPopup" data-fan-item="compositing"><span class="footer-btn-icon" data-icon="image" aria-hidden="true"></span><span>ポスター<br>作成</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></button>
@@ -7645,6 +7875,72 @@
     const giftFanMenu = document.getElementById('giftFanMenu');
     const giftFanToggle = document.getElementById('giftFanToggle');
     const giftFanActions = Array.from(document.querySelectorAll('#giftFanMenu .gift-fan-action'));
+
+    function initHeroDiagnosisAutoScroll() {
+      const scroller = document.querySelector('.hero-diagnosis-menu .gift-fan-diagnosis-actions');
+      if (!scroller || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      const items = Array.from(scroller.querySelectorAll('.gift-fan-diagnosis-action'));
+      if (items.length < 2) return;
+
+      let timerId = null;
+      let resumeTimerId = null;
+
+      const getItemLeft = (item) => item.offsetLeft - scroller.offsetLeft;
+
+      const getCurrentIndex = () => {
+        const currentLeft = scroller.scrollLeft;
+        return items.reduce((closestIndex, item, index) => {
+          const closestDistance = Math.abs(getItemLeft(items[closestIndex]) - currentLeft);
+          const itemDistance = Math.abs(getItemLeft(item) - currentLeft);
+          return itemDistance < closestDistance ? index : closestIndex;
+        }, 0);
+      };
+
+      const stop = () => {
+        if (timerId) {
+          window.clearTimeout(timerId);
+          timerId = null;
+        }
+      };
+
+      const queueNext = () => {
+        stop();
+        timerId = window.setTimeout(() => {
+          if (scroller.scrollWidth <= scroller.clientWidth + 2) {
+            queueNext();
+            return;
+          }
+
+          const currentIndex = getCurrentIndex();
+          const nextIndex = currentIndex >= items.length - 1 ? 0 : currentIndex + 1;
+          scroller.scrollTo({
+            left: getItemLeft(items[nextIndex]),
+            behavior: 'smooth'
+          });
+          queueNext();
+        }, 2200);
+      };
+
+      const start = () => {
+        queueNext();
+      };
+
+      const pauseThenResume = () => {
+        stop();
+        if (resumeTimerId) window.clearTimeout(resumeTimerId);
+        resumeTimerId = window.setTimeout(start, 5200);
+      };
+
+      ['pointerdown', 'wheel', 'touchstart', 'focusin'].forEach((eventName) => {
+        scroller.addEventListener(eventName, pauseThenResume, { passive: true });
+      });
+
+      window.addEventListener('resize', pauseThenResume, { passive: true });
+      start();
+    }
+
+    // Hero diagnosis auto advance is initialized in the isolated script near the end of the page.
     const giftFanDiagnosisActions = Array.from(document.querySelectorAll('#giftFanMenu .gift-fan-diagnosis-action'));
     const diagnosisFanTrigger = document.getElementById('openPricePopup');
     const heartNoteTabs = document.getElementById('heartNoteTabs');
@@ -9402,6 +9698,70 @@
         link.style.display = "none";
       });
     }
+  </script>
+  <script>
+    (function () {
+      function initHeroDiagnosisAutoAdvance() {
+        const scroller = document.querySelector('.hero-diagnosis-menu .gift-fan-diagnosis-actions');
+        if (!scroller || scroller.dataset.autoAdvanceReady === 'true') return;
+
+        const items = Array.from(scroller.querySelectorAll('.gift-fan-diagnosis-action'));
+        if (items.length < 2) return;
+
+        scroller.dataset.autoAdvanceReady = 'true';
+        scroller.style.scrollSnapType = 'none';
+
+        let timerId = 0;
+        let resumeTimerId = 0;
+        const scrollStepPx = 1;
+        const scrollIntervalMs = 48;
+        const autoStartDelayMs = 5000;
+
+        const canScroll = () => scroller.scrollWidth > scroller.clientWidth + 2;
+
+        const stop = () => {
+          if (timerId) {
+            window.clearInterval(timerId);
+            timerId = 0;
+          }
+        };
+
+        const tick = () => {
+          if (!canScroll()) return;
+          const maxScroll = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
+          scroller.scrollLeft += scrollStepPx;
+          if (scroller.scrollLeft >= maxScroll - 1) {
+            scroller.scrollLeft = 0;
+            pauseThenResume();
+          }
+        };
+
+        const start = () => {
+          stop();
+          timerId = window.setInterval(tick, scrollIntervalMs);
+        };
+
+        const pauseThenResume = () => {
+          stop();
+          if (resumeTimerId) window.clearTimeout(resumeTimerId);
+          resumeTimerId = window.setTimeout(start, autoStartDelayMs);
+        };
+
+        ['pointerdown', 'wheel', 'touchstart', 'focusin'].forEach((eventName) => {
+          scroller.addEventListener(eventName, pauseThenResume, { passive: true });
+        });
+        window.addEventListener('resize', pauseThenResume, { passive: true });
+
+        resumeTimerId = window.setTimeout(start, autoStartDelayMs);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initHeroDiagnosisAutoAdvance, { once: true });
+      } else {
+        initHeroDiagnosisAutoAdvance();
+      }
+      window.addEventListener('load', initHeroDiagnosisAutoAdvance, { once: true });
+    })();
   </script>
 
   <!-- ページ遷移フェード -->
