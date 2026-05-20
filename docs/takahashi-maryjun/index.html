@@ -1,0 +1,868 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>高橋メアリージュン リセットエレガンス診断 | Mobby</title>
+  <meta name="description" content="20問であなたの整え方と凛としたムードを8タイプから診断する、高橋メアリージュンさん向けモビー診断ラフ案です。" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="高橋メアリージュン リセットエレガンス診断" />
+  <meta property="og:description" content="リセット、エナジー、ナチュラル、モード、芯の強さ、やさしい共感。あなたの整え方を20問で診断します。" />
+  <meta property="og:image" content="img/maryjun-mobby-reset.png" />
+  <meta name="theme-color" content="#f5f7f1" />
+  <link rel="icon" type="image/jpeg" href="../16school/favicon/fav.jpg" />
+  <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --font-ja: 'Yomogi', cursive;
+      --font-en: 'Yomogi', cursive;
+      --bg: #f5f7f1;
+      --surface: #ffffff;
+      --text-main: #1d1d1f;
+      --text-sub: #86868b;
+      --accent: #566b58;
+      --accent-soft: #e8efe3;
+      --line: #d2d2d7;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+      --shadow-lg: 0 12px 30px rgba(0,0,0,0.08);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --danger: #ff3b30;
+    }
+
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    body {
+      margin: 0;
+      font-family: var(--font-en), var(--font-ja);
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    .wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand { display: flex; align-items: center; gap: 0; }
+    .logo {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background-image: url('../16school/logo.jpg');
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 4px 10px rgba(86,107,88,0.28);
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    .title h1 { font-size: 14px; margin: 0; font-weight: 600; cursor: pointer; }
+    .title p { margin: 0; color: var(--text-sub); font-size: 12px; }
+    .nav { display: flex; gap: 12px; align-items: center; }
+    .nav a {
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+    .nav a:hover { background: rgba(0,0,0,0.05); }
+    .nav a.active { background: var(--accent-soft); color: var(--accent); }
+
+    button {
+      border: 1px solid transparent;
+      background: rgba(0,0,0,0.05);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease, box-shadow 0.2s ease;
+    }
+    button:hover { background: rgba(0,0,0,0.08); transform: translateY(-1px); }
+    button:active { transform: translateY(0) scale(0.96); }
+    button.primary {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 4px 12px rgba(86,107,88,0.24);
+    }
+    button.primary:hover { background: #627a64; box-shadow: 0 6px 16px rgba(86,107,88,0.34); }
+    button.danger { color: var(--danger); background: rgba(255,59,48,0.05); }
+    button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .panel {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      padding: 32px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255,255,255,0.8);
+    }
+    .kicker {
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0 0 8px;
+    }
+    .big {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 16px;
+      color: var(--text-main);
+    }
+    .text-body { color: var(--text-sub); font-size: 14px; line-height: 1.8; }
+    .hero-image {
+      width: min(360px, 100%);
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 18px;
+      box-shadow: var(--shadow-sm);
+      margin: 0 auto 28px;
+      display: block;
+    }
+    .progress-wrap { margin-bottom: 20px; }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-sub);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+    .progress-track {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--accent);
+      transition: width 0.25s ease;
+    }
+    .qCard {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 22px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .qText {
+      font-size: 16px;
+      line-height: 1.8;
+      margin: 0 0 18px;
+      color: var(--text-main);
+    }
+    .likert7 { width: 100%; }
+    .likert-labels {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-sub);
+      font-size: 11px;
+      margin-bottom: 10px;
+    }
+    .likert-buttons {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(28px, 1fr));
+      gap: 8px;
+      align-items: center;
+    }
+    .likert-btn {
+      aspect-ratio: 1 / 1;
+      min-width: 0;
+      padding: 0;
+      border-radius: 50%;
+      border: 2px solid var(--line);
+      background: #fff;
+      box-shadow: none;
+    }
+    .likert-btn.left { border-color: rgba(0,113,227,0.55); }
+    .likert-btn.mid { border-color: #b8b8bd; }
+    .likert-btn.right { border-color: rgba(255,149,0,0.55); }
+    .likert-btn.selected.left { background: var(--accent); border-color: var(--accent); }
+    .likert-btn.selected.mid { background: #8e8e93; border-color: #8e8e93; }
+    .likert-btn.selected.right { background: #ff9500; border-color: #ff9500; }
+    .fade-in { animation: fadeIn 0.35s ease both; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-hero { text-align: center; }
+    .result-img {
+      width: min(420px, 100%);
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 20px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 22px;
+    }
+    .type-code {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 92px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .axis-row { margin: 18px 0; }
+    .axis-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--text-sub);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+    .axis-bar {
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #dceeff 0%, #f6f6f6 50%, #ffe8c7 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .axis-dot {
+      position: absolute;
+      top: 50%;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      border: 4px solid var(--accent);
+      transform: translate(-50%, -50%);
+      box-shadow: var(--shadow-sm);
+    }
+    .section-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+    .mini {
+      background: #fafafa;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .mini h3 { margin: 0 0 8px; font-size: 14px; }
+    .mini p { margin: 0; color: var(--text-sub); font-size: 13px; line-height: 1.8; }
+    .characters-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .char-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .char-card img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+    }
+    .char-body { padding: 16px; }
+    .char-body h3 { margin: 0 0 8px; font-size: 16px; }
+    .char-body p { margin: 0; color: var(--text-sub); font-size: 13px; line-height: 1.7; }
+    .actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 600px) {
+      .wrap { padding: 28px 14px 60px; }
+      header { flex-direction: column; align-items: flex-start; margin-bottom: 28px; }
+      .nav { width: auto; justify-content: flex-start; }
+      .panel { padding: 24px 16px; border-radius: 18px; }
+      .big { font-size: 22px; }
+      .qCard { padding: 18px 14px; }
+      .qText { font-size: 15px; }
+      .likert-buttons { gap: 6px; }
+      .section-grid,
+      .characters-grid { grid-template-columns: 1fr; }
+      button.danger { white-space: nowrap; min-width: 80px; font-size: 12px; padding: 10px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand" id="brandHome">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="title">
+          <h1>高橋メアリージュン リセットエレガンス診断</h1>
+          <p>Mobby rough preview</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="ページ内メニュー">
+        <a id="navDiagnosis" class="active">診断</a>
+        <a id="navCharacters">タイプ一覧</a>
+      </nav>
+    </header>
+    <main id="app"></main>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "takahashi_maryjun_reset_elegance_v1";
+    const PAGE_SIZE = 5;
+    const AXIS_KEYS = ["A", "B", "C"];
+
+    const AXES = {
+      A: { key: "A", name: "整え方", left: "リセット", right: "エナジー", leftCode: "り", rightCode: "え" },
+      B: { key: "B", name: "表現ムード", left: "ナチュラル", right: "モード", leftCode: "な", rightCode: "も" },
+      C: { key: "C", name: "届け方", left: "芯の強さ", right: "やさしい共感", leftCode: "し", rightCode: "や" }
+    };
+
+    const QUESTIONS = [
+      {id:"A1", axis:"A", text:"香りや深呼吸で一度整える時間があると、自分に戻れる", reverse:false},
+      {id:"A2", axis:"A", text:"大切な予定の前は、肌・服・心を静かに整えてから動きたい", reverse:false},
+      {id:"A3", axis:"A", text:"忙しい日ほど、植物や余白のある空間でリセットしたくなる", reverse:false},
+      {id:"A4", axis:"A", text:"迷った時は、まず余計な情報を減らして感覚を澄ませたい", reverse:false},
+      {id:"A5", axis:"A", text:"朝から強めのテンションで一気に動く方が自分らしい", reverse:true},
+      {id:"A6", axis:"A", text:"気分を変えるなら、休むより新しい予定や挑戦で上げたい", reverse:true},
+
+      {id:"B1", axis:"B", text:"素肌感や自然体の美しさがある表現に安心する", reverse:false},
+      {id:"B2", axis:"B", text:"オーガニック、植物、土の香りのような温度に惹かれる", reverse:false},
+      {id:"B3", axis:"B", text:"着飾りすぎない余白がある方が、その人らしさが出ると思う", reverse:false},
+      {id:"B4", axis:"B", text:"香りや手触り、空気感までやわらかい表現が好きだ", reverse:false},
+      {id:"B5", axis:"B", text:"黒や直線、シャープな服で一気に空気を締めたい", reverse:true},
+      {id:"B6", axis:"B", text:"写真や映像では、少し強くてクールなムードに惹かれる", reverse:true},
+      {id:"B7", axis:"B", text:"シンプルよりも、モードな違和感がある方が記憶に残る", reverse:true},
+
+      {id:"C1", axis:"C", text:"伝える時は、まず自分の信念や経験をまっすぐ置きたい", reverse:false},
+      {id:"C2", axis:"C", text:"多少強い言葉でも、本音なら必要だと思う", reverse:false},
+      {id:"C3", axis:"C", text:"逆境や悩みも、乗り越えた姿として見せられると力になる", reverse:false},
+      {id:"C4", axis:"C", text:"表現では、芯のある目線や佇まいを大切にしたい", reverse:false},
+      {id:"C5", axis:"C", text:"相手が受け取りやすいように、やわらかい言葉へ整えたい", reverse:true},
+      {id:"C6", axis:"C", text:"ファンや周りの人がほっとできる共有感を大切にしたい", reverse:true},
+      {id:"C7", axis:"C", text:"自分の強さだけでなく、弱さや迷いも一緒に見せたい", reverse:true}
+    ];
+
+    const CHARACTERS = {
+      "りなし": {
+        name: "リセットナチュラルモビィ",
+        summary: "香りや植物、余白のある時間で静かに自分を整えるタイプ。",
+        catch: "深呼吸をひとつ置くだけで、空気まで澄ませられる人です。",
+        hook: "無理に飾るより、整った肌、自然な服、落ち着いた香り。自分に戻るための小さな習慣を大切にできるので、周りにも静かな安心感を渡せます。",
+        downside: "整える時間が取れないと、気持ちの切り替えが遅れがちです。最短のリセット動作を一つ決めておくと戻りやすくなります。",
+        perception: "落ち着いている、自然体で美しい、話すと安心すると見られやすいです。",
+        strength: "忙しい場でも、自分の呼吸と感覚を取り戻す力。",
+        weakness: "準備が整わないまま動くことに少し弱いです。",
+        advice: "香り、白湯、羽織る服など、ひとつだけ整える合図を持つと軸が戻ります。",
+        image: "img/maryjun-mobby-reset.png"
+      },
+      "りなや": {
+        name: "透明感リカバリーモビィ",
+        summary: "やさしい言葉と自然体のムードで、人をほっと回復させるタイプ。",
+        catch: "強さをやわらかく包み、相手の心まで軽くできます。",
+        hook: "自分を整えながら、周りの人にも無理をさせない空気を作れます。ナチュラルな雰囲気の奥に、相手を気遣う細やかな視線があります。",
+        downside: "相手に合わせすぎると、自分のリズムが後回しになりがちです。先に自分の休む時間を確保してください。",
+        perception: "透明感がある、やさしい、相談しやすいと思われやすいです。",
+        strength: "自然体のまま、相手の緊張をほどく共感力。",
+        weakness: "頼られるほど、自分の疲れを見逃すことがあります。",
+        advice: "返信や発信も、短くやさしい一言で十分に届きます。",
+        image: "img/maryjun-mobby-elegance.png"
+      },
+      "りもし": {
+        name: "静かなモードモビィ",
+        summary: "内側を整えたうえで、凛としたモード感を静かに放つタイプ。",
+        catch: "静けさの中に、まっすぐな目線と強い輪郭があります。",
+        hook: "余白を持ちながらも、服や表情には一本の線が通っています。黒やシャープな形を使っても強すぎず、整えた心があるから上品に見えます。",
+        downside: "自分の納得を待つほど、動き出しが慎重になりやすいです。小さな場で先に見せると勢いが生まれます。",
+        perception: "凛としている、芯がある、洗練されていると思われやすいです。",
+        strength: "静かな自己管理と、強い表現を両立する力。",
+        weakness: "完璧なコンディションを待ちすぎることがあります。",
+        advice: "整えた日の一枚を残しておくと、次の表現の基準になります。",
+        image: "img/maryjun-mobby-reset.png"
+      },
+      "りもや": {
+        name: "やわらぎモードモビィ",
+        summary: "モードな雰囲気を、やさしい共感とセルフケアでなじませるタイプ。",
+        catch: "シャープなのに冷たくない、余韻のある魅力を持っています。",
+        hook: "黒や直線、都会的なムードをまとっても、言葉や表情にはやわらかさが残ります。強さと安心感の両方で、人の記憶に残るタイプです。",
+        downside: "強く見せたい日とやさしく届けたい日の間で迷うことがあります。先に届けたい感情を決めると表現がまとまります。",
+        perception: "かっこいいのに親しみやすい、余裕があると思われやすいです。",
+        strength: "モード感を人が受け取りやすい温度に変える力。",
+        weakness: "相手の受け取り方を考えすぎて、切れ味が弱まることがあります。",
+        advice: "服で強さを出す日は、言葉を少し柔らかくするとバランスが整います。",
+        image: "img/maryjun-mobby-elegance.png"
+      },
+      "えなし": {
+        name: "エナジーナチュラルモビィ",
+        summary: "自然体のままよく動き、健康的な明るさで場を前に進めるタイプ。",
+        catch: "動きながら整い、日常に健やかなエネルギーを広げます。",
+        hook: "畑、植物、日差し、素肌感。力を入れすぎないのに生命力があり、周りも少し前向きになります。行動することで自分の調子を上げられる人です。",
+        downside: "動ける時ほど、休むサインを見逃しやすいです。調子が良い日にこそ回復の時間を挟んでください。",
+        perception: "ヘルシー、前向き、自然体で魅力的と思われやすいです。",
+        strength: "行動量とナチュラルな明るさで、場を軽くする力。",
+        weakness: "立ち止まることに少し罪悪感を持ちやすいです。",
+        advice: "予定の合間に短い空白を入れると、エネルギーが長持ちします。",
+        image: "img/maryjun-mobby-reset.png"
+      },
+      "えなや": {
+        name: "ヘルシー共感モビィ",
+        summary: "明るい行動力とやさしい距離感で、人を巻き込むタイプ。",
+        catch: "元気を押しつけず、そっと一緒に前を向かせてくれます。",
+        hook: "自分が動くことで空気を明るくしながら、相手のペースも尊重できます。ナチュラルな発信や生活感が、共感されやすい魅力になります。",
+        downside: "みんなを元気にしようとして、自分の疲れを後回しにしがちです。今日は誰のための元気かを確認しましょう。",
+        perception: "親しみやすい、健康的、応援したくなると思われやすいです。",
+        strength: "行動力を、やさしい巻き込み力に変える力。",
+        weakness: "相手の反応が薄いと、少しエネルギーが下がります。",
+        advice: "自分の小さな回復習慣も共有すると、共感が深まります。",
+        image: "img/maryjun-mobby-elegance.png"
+      },
+      "えもし": {
+        name: "凛とモードモビィ",
+        summary: "強いエネルギーとモードな表現で、場の空気を引き締めるタイプ。",
+        catch: "一歩入るだけで、空間に芯のある緊張感を作れます。",
+        hook: "シャープな服、まっすぐな視線、迷いのない言葉。行動力と表現の強さが重なることで、見る人に覚悟や美意識を感じさせます。",
+        downside: "強く見えるぶん、弱音を出しにくくなることがあります。信頼できる場所では、少しだけ力を抜いて大丈夫です。",
+        perception: "かっこいい、説得力がある、存在感が強いと思われやすいです。",
+        strength: "信念とモード感で、短い瞬間でも記憶に残す力。",
+        weakness: "ひとりで背負いすぎると、切り替えが遅れます。",
+        advice: "強い表現のあとに、素の言葉を一つ添えると奥行きが出ます。",
+        image: "img/maryjun-mobby-reset.png"
+      },
+      "えもや": {
+        name: "エレガンスシェアモビィ",
+        summary: "華やかなエネルギーと共感力で、洗練された場を分かち合うタイプ。",
+        catch: "凛とした美しさを、見ている人の高揚感に変えられます。",
+        hook: "モードな服や撮影の空気を楽しみながら、受け取る人が置いていかれない温度も大切にできます。華やかさと親しみやすさの橋渡しが得意です。",
+        downside: "期待に応えようとするほど、ずっとオンの顔でいようとして疲れることがあります。オフの余白も魅力として残せます。",
+        perception: "華がある、上品、近くで応援したくなると思われやすいです。",
+        strength: "洗練されたムードを、共有できる体験に変える力。",
+        weakness: "見せ方を考えすぎて、自分の休息が後回しになります。",
+        advice: "完成された一枚と、リラックスした一言をセットにすると信頼感が増します。",
+        image: "img/maryjun-mobby-elegance.png"
+      }
+    };
+
+    const ANS_LABEL = {
+      1:"そう思う", 2:"ややそう思う", 3:"少しそう思う", 4:"どちらでもない",
+      5:"少しそう思わない", 6:"ややそう思わない", 7:"そう思わない"
+    };
+
+    const defaultState = () => ({
+      step: "intro",
+      page: 0,
+      answers: {},
+      questionOrder: [],
+      axes: null
+    });
+
+    let state = loadState();
+    const app = document.getElementById("app");
+
+    function loadState(){
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return defaultState();
+        return {...defaultState(), ...JSON.parse(raw)};
+      } catch {
+        return defaultState();
+      }
+    }
+
+    function saveState(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function resetDiagnosis(){
+      state = defaultState();
+      localStorage.removeItem(STORAGE_KEY);
+      render();
+    }
+
+    function getQuestionOrder(){
+      if(Array.isArray(state.questionOrder) && state.questionOrder.length === QUESTIONS.length) return state.questionOrder;
+      const grouped = AXIS_KEYS.flatMap(axis => QUESTIONS.filter(q => q.axis === axis));
+      state.questionOrder = grouped.map(q => q.id);
+      saveState();
+      return state.questionOrder;
+    }
+
+    function getShuffledQuestions(){
+      const order = getQuestionOrder();
+      return order.map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean);
+    }
+
+    function computeResult(){
+      const SCALE = 7;
+      const MID = 4;
+      const MAX_DEV = 3;
+      const GAMMA = 1.35;
+      const EXTREME_BONUS = 0.35;
+      const COHERENCE_SHRINK = 0.20;
+
+      const raw = {A:0, B:0, C:0};
+      const absRaw = {A:0, B:0, C:0};
+      const maxRaw = {A:0, B:0, C:0};
+      const breakdown = {A:[], B:[], C:[]};
+      const allAnswers = [];
+
+      const weightOf = ansRaw => (ansRaw === 1 || ansRaw === 7) ? (1 + EXTREME_BONUS) : 1;
+      const shapeAns = ansAdj => {
+        const centered = MID - ansAdj;
+        const t = centered / MAX_DEV;
+        const mag = Math.min(1, Math.abs(t));
+        return Math.sign(t) * Math.pow(mag, GAMMA);
+      };
+
+      for(const q of QUESTIONS){
+        const ansRaw = state.answers[q.id];
+        if(!ansRaw) continue;
+        allAnswers.push(ansRaw);
+        const ansAdj = q.reverse ? (SCALE + 1 - ansRaw) : ansRaw;
+        const shaped = shapeAns(ansAdj);
+        const w = weightOf(ansRaw) * (q.importance ?? 1);
+        const contrib = w * shaped;
+        raw[q.axis] += contrib;
+        absRaw[q.axis] += Math.abs(contrib);
+        maxRaw[q.axis] += w;
+        breakdown[q.axis].push({id:q.id, text:q.text, ans:ansRaw, contrib});
+      }
+
+      const norm = {};
+      const pos = {};
+      const leftPct = {};
+      const hard = {};
+      const decisiveness = {};
+      const coherenceByAxis = {};
+
+      AXIS_KEYS.forEach(k => {
+        const denom = maxRaw[k] || 1;
+        const coherence = absRaw[k] ? (Math.abs(raw[k]) / absRaw[k]) : 0;
+        coherenceByAxis[k] = coherence;
+        const adjusted = raw[k] * (1 - COHERENCE_SHRINK * (1 - coherence));
+        norm[k] = Math.max(-1, Math.min(1, adjusted / denom));
+        hard[k] = norm[k] > 0 ? "L" : "R";
+        pos[k] = Math.max(0, Math.min(100, 50 - norm[k] * 50));
+        leftPct[k] = Math.round((norm[k] + 1) * 50);
+        decisiveness[k] = Math.min(1, Math.abs(norm[k]));
+      });
+
+      let straightLine = false;
+      if(allAnswers.length){
+        const freq = {1:0,2:0,3:0,4:0,5:0,6:0,7:0};
+        allAnswers.forEach(a => freq[a]++);
+        const maxF = Math.max(...Object.values(freq));
+        straightLine = (maxF / allAnswers.length) >= 0.80;
+      }
+
+      const code = (hard.A === "L" ? AXES.A.leftCode : AXES.A.rightCode) +
+                   (hard.B === "L" ? AXES.B.leftCode : AXES.B.rightCode) +
+                   (hard.C === "L" ? AXES.C.leftCode : AXES.C.rightCode);
+      const totalDecisiveness = AXIS_KEYS.reduce((sum, k) => sum + decisiveness[k], 0) / AXIS_KEYS.length;
+      const confidenceLevel = {};
+      const confidenceLabel = {};
+      AXIS_KEYS.forEach(k => {
+        const d = decisiveness[k];
+        if(d >= 0.50) {
+          confidenceLevel[k] = "strong";
+          confidenceLabel[k] = "はっきり";
+        } else if(d >= 0.25) {
+          confidenceLevel[k] = "moderate";
+          confidenceLabel[k] = "やや";
+        } else {
+          confidenceLevel[k] = "mid";
+          confidenceLabel[k] = "場面による";
+        }
+      });
+
+      const adjacentTypes = [];
+      AXIS_KEYS.forEach(k => {
+        if(confidenceLevel[k] === "mid") {
+          const altHard = {...hard, [k]: hard[k] === "L" ? "R" : "L"};
+          const altCode = (altHard.A === "L" ? AXES.A.leftCode : AXES.A.rightCode) +
+                          (altHard.B === "L" ? AXES.B.leftCode : AXES.B.rightCode) +
+                          (altHard.C === "L" ? AXES.C.leftCode : AXES.C.rightCode);
+          if(CHARACTERS[altCode] && altCode !== code) {
+            adjacentTypes.push({axis:k, code:altCode, name:CHARACTERS[altCode].name});
+          }
+        }
+      });
+
+      return {
+        code,
+        char: CHARACTERS[code],
+        norm,
+        pos,
+        leftPct,
+        hard,
+        decisiveness,
+        confidenceLevel,
+        confidenceLabel,
+        totalDecisiveness,
+        coherenceByAxis,
+        breakdown,
+        straightLine,
+        adjacentTypes
+      };
+    }
+
+    function isComplete(){
+      return Object.keys(state.answers || {}).length >= QUESTIONS.length;
+    }
+
+    function render(){
+      document.getElementById("navDiagnosis").classList.toggle("active", state.step !== "characters");
+      document.getElementById("navCharacters").classList.toggle("active", state.step === "characters");
+      if(state.step === "intro") renderIntro();
+      else if(state.step === "quiz") renderQuiz();
+      else if(state.step === "characters") renderCharacters();
+      else renderResult();
+    }
+
+    function renderIntro(){
+      const count = Object.keys(state.answers).length;
+      app.innerHTML = `
+        <div class="panel fade-in" style="text-align:center; padding:60px 20px;">
+          <img class="hero-image" src="img/maryjun-mobby-reset.png" alt="植物とアロマの空間にいるMobby">
+          <p class="kicker">Mobby rough preview</p>
+          <h2 class="big">あなたの整え方と凛としたムードを<br>3つの軸で診断します。</h2>
+          <p class="text-body" style="max-width:440px; margin:0 auto 30px;">
+            直感で選ぶ20問の質問から、整え方、表現ムード、届け方のクセを8タイプで診断します。
+          </p>
+          <button class="primary" id="btnStart" style="padding:16px 32px; font-size:16px;">
+            ${count > 0 ? "診断を再開する" : "診断をはじめる"}
+          </button>
+          ${count > 0 ? `<p style="font-size:12px; color:#86868b; margin-top:16px;">${count} / ${QUESTIONS.length}問 回答済み</p>` : ""}
+        </div>
+      `;
+      document.getElementById("btnStart").onclick = () => {
+        state.step = "quiz";
+        getQuestionOrder();
+        const idx = getShuffledQuestions().findIndex(q => !state.answers[q.id]);
+        state.page = idx >= 0 ? Math.floor(idx / PAGE_SIZE) : 0;
+        saveState();
+        render();
+      };
+    }
+
+    function renderQuiz(){
+      const shuffledQs = getShuffledQuestions();
+      const start = state.page * PAGE_SIZE;
+      const currentQs = shuffledQs.slice(start, start + PAGE_SIZE);
+      const totalPage = Math.ceil(shuffledQs.length / PAGE_SIZE);
+      const progress = Math.round((Object.keys(state.answers).length / shuffledQs.length) * 100);
+
+      const qHtml = currentQs.map((q, i) => {
+        const val = state.answers[q.id];
+        return `
+          <div class="qCard fade-in" style="animation-delay:${i*0.05}s">
+            <div class="kicker" style="color:#86868b; margin-bottom:4px;">Q${start+i+1}</div>
+            <p class="qText">${q.text}</p>
+            <div class="likert7">
+              <div class="likert-labels">
+                <span>${AXES[q.axis].left}</span>
+                <span>${AXES[q.axis].right}</span>
+              </div>
+              <div class="likert-buttons">
+                ${[1,2,3,4,5,6,7].map(n => {
+                  const side = n <= 3 ? "left" : (n === 4 ? "mid" : "right");
+                  const sel = val === n ? "selected" : "";
+                  return `<button type="button" class="likert-btn ${side} ${sel}" data-qid="${q.id}" data-val="${n}" aria-label="${ANS_LABEL[n]}"></button>`;
+                }).join("")}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      app.innerHTML = `
+        <div class="panel">
+          <div class="progress-wrap">
+            <div class="progress-meta">
+              <span>進行状況</span>
+              <span>${progress}%</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div>
+          </div>
+          <div style="margin-top:30px;">${qHtml}</div>
+          <div style="display:flex; justify-content:space-between; margin-top:30px;">
+            <button id="btnPrev" ${state.page===0 ? "disabled":""}>戻る</button>
+            <button class="primary" id="btnNext">${state.page === totalPage - 1 ? "結果を見る" : "次へ"}</button>
+          </div>
+        </div>
+      `;
+
+      currentQs.forEach(q => {
+        document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(btn => {
+          btn.onclick = () => {
+            state.answers[q.id] = parseInt(btn.dataset.val, 10);
+            document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(b => b.classList.remove("selected"));
+            btn.classList.add("selected");
+            saveState();
+            const p = Math.round((Object.keys(state.answers).length / shuffledQs.length) * 100);
+            document.querySelector(".progress-fill").style.width = p + "%";
+            document.querySelector(".progress-meta span:last-child").innerText = p + "%";
+          };
+        });
+      });
+
+      document.getElementById("btnPrev").onclick = () => {
+        if(state.page > 0) state.page--;
+        saveState();
+        render();
+      };
+      document.getElementById("btnNext").onclick = () => {
+        const missing = currentQs.filter(q => !state.answers[q.id]);
+        if(missing.length){
+          alert("このページの質問にすべて回答してください。");
+          return;
+        }
+        if(state.page < totalPage - 1){
+          state.page++;
+          saveState();
+          render();
+        } else {
+          state.axes = computeResult();
+          state.step = "result";
+          saveState();
+          render();
+        }
+      };
+    }
+
+    function renderAxis(result){
+      return AXIS_KEYS.map(k => {
+        const a = AXES[k];
+        return `
+          <div class="axis-row">
+            <div class="axis-meta">
+              <span>${a.name}: ${a.left}</span>
+              <span>${result.confidenceLabel[k]}</span>
+              <span>${a.right}</span>
+            </div>
+            <div class="axis-bar"><div class="axis-dot" style="left:${result.pos[k]}%"></div></div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderResult(){
+      if(!isComplete()){
+        state.step = "intro";
+        render();
+        return;
+      }
+      const result = state.axes || computeResult();
+      const c = result.char;
+      app.innerHTML = `
+        <div class="panel fade-in result-hero">
+          <p class="kicker">RESULT</p>
+          <span class="type-code">TYPE ${result.code}</span>
+          <h2 class="big">${c.name}</h2>
+          <img class="result-img" src="${c.image}" alt="${c.name}">
+          <p class="text-body" style="max-width:560px; margin:0 auto;">${c.summary}</p>
+          <p style="font-size:17px; font-weight:700; margin:22px auto 0; max-width:560px;">${c.catch}</p>
+        </div>
+        <div class="panel fade-in">
+          <p class="kicker">3 AXES</p>
+          <h2 class="big">あなたのリセットエレガンスバランス</h2>
+          ${renderAxis(result)}
+          ${result.straightLine ? `<p class="text-body" style="color:#ff9500;">同じ回答が多めです。気分を変えてもう一度試すと、少し違う結果になるかもしれません。</p>` : ""}
+          ${result.adjacentTypes.length ? `<p class="text-body">近いタイプ: ${result.adjacentTypes.map(t => `${t.name}`).join(" / ")}</p>` : ""}
+        </div>
+        <div class="panel fade-in">
+          <p class="kicker">DETAIL</p>
+          <h2 class="big">このタイプの見え方</h2>
+          <div class="section-grid">
+            <div class="mini"><h3>共感ポイント</h3><p>${c.hook}</p></div>
+            <div class="mini"><h3>しんどい時</h3><p>${c.downside}</p></div>
+            <div class="mini"><h3>周りから</h3><p>${c.perception}</p></div>
+            <div class="mini"><h3>今日のヒント</h3><p>${c.advice}</p></div>
+            <div class="mini"><h3>強み</h3><p>${c.strength}</p></div>
+            <div class="mini"><h3>気をつけたいこと</h3><p>${c.weakness}</p></div>
+          </div>
+          <div class="actions">
+            <button class="primary" id="btnChars">8タイプを見る</button>
+            <button id="btnAgain">もう一度診断する</button>
+          </div>
+        </div>
+      `;
+      document.getElementById("btnChars").onclick = () => {
+        state.step = "characters";
+        saveState();
+        render();
+      };
+      document.getElementById("btnAgain").onclick = resetDiagnosis;
+    }
+
+    function renderCharacters(){
+      const cards = Object.entries(CHARACTERS).map(([code, c]) => `
+        <article class="char-card fade-in">
+          <img src="${c.image}" alt="${c.name}">
+          <div class="char-body">
+            <p class="kicker">TYPE ${code}</p>
+            <h3>${c.name}</h3>
+            <p>${c.summary}</p>
+          </div>
+        </article>
+      `).join("");
+      app.innerHTML = `
+        <div class="panel fade-in">
+          <p class="kicker">8 TYPES</p>
+          <h2 class="big">リセットエレガンス 8タイプ</h2>
+          <p class="text-body">2枚のラフ画像をサンプルとして交互に配置しています。診断結果や一覧の画像差し替えにも対応できます。</p>
+          <div class="characters-grid">${cards}</div>
+          <div class="actions">
+            <button class="primary" id="btnBackDiagnosis">${isComplete() ? "結果に戻る" : "診断する"}</button>
+          </div>
+        </div>
+      `;
+      document.getElementById("btnBackDiagnosis").onclick = () => {
+        state.step = isComplete() ? "result" : "intro";
+        saveState();
+        render();
+      };
+    }
+
+    document.getElementById("brandHome").onclick = () => {
+      state.step = isComplete() ? "result" : "intro";
+      saveState();
+      render();
+    };
+    document.getElementById("navDiagnosis").onclick = () => {
+      state.step = isComplete() ? "result" : "intro";
+      saveState();
+      render();
+    };
+    document.getElementById("navCharacters").onclick = () => {
+      state.step = "characters";
+      saveState();
+      render();
+    };
+
+    render();
+  </script>
+</body>
+</html>
