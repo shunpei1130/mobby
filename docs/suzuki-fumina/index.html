@@ -1,0 +1,868 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>鈴木ふみ奈 フォトジェニックミューズ診断 | Mobby</title>
+  <meta name="description" content="20問であなたの魅せ方と挑戦する華を8タイプから診断する、鈴木ふみ奈さん向けモビー診断ラフ案です。" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="鈴木ふみ奈 フォトジェニックミューズ診断" />
+  <meta property="og:description" content="写真美学、ステージ華、しなやか設計、挑戦エネルギー。あなたの魅せ方を20問で診断します。" />
+  <meta property="og:image" content="img/fumina-mobby-art-muse.png" />
+  <meta name="theme-color" content="#fbf7f4" />
+  <link rel="icon" type="image/jpeg" href="../16school/favicon/fav.jpg" />
+  <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --font-ja: 'Yomogi', cursive;
+      --font-en: 'Yomogi', cursive;
+      --bg: #fbf7f4;
+      --surface: #ffffff;
+      --text-main: #1d1d1f;
+      --text-sub: #86868b;
+      --accent: #9a5c63;
+      --accent-soft: #f5e8e9;
+      --line: #d2d2d7;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+      --shadow-lg: 0 12px 30px rgba(0,0,0,0.08);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --danger: #ff3b30;
+    }
+
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    body {
+      margin: 0;
+      font-family: var(--font-en), var(--font-ja);
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    .wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand { display: flex; align-items: center; gap: 0; }
+    .logo {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background-image: url('../16school/logo.jpg');
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 4px 10px rgba(154,92,99,0.28);
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    .title h1 { font-size: 14px; margin: 0; font-weight: 600; cursor: pointer; }
+    .title p { margin: 0; color: var(--text-sub); font-size: 12px; }
+    .nav { display: flex; gap: 12px; align-items: center; }
+    .nav a {
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+    .nav a:hover { background: rgba(0,0,0,0.05); }
+    .nav a.active { background: var(--accent-soft); color: var(--accent); }
+
+    button {
+      border: 1px solid transparent;
+      background: rgba(0,0,0,0.05);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease, box-shadow 0.2s ease;
+    }
+    button:hover { background: rgba(0,0,0,0.08); transform: translateY(-1px); }
+    button:active { transform: translateY(0) scale(0.96); }
+    button.primary {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 4px 12px rgba(154,92,99,0.24);
+    }
+    button.primary:hover { background: #aa6970; box-shadow: 0 6px 16px rgba(154,92,99,0.34); }
+    button.danger { color: var(--danger); background: rgba(255,59,48,0.05); }
+    button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .panel {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      padding: 32px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255,255,255,0.8);
+    }
+    .kicker {
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0 0 8px;
+    }
+    .big {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 16px;
+      color: var(--text-main);
+    }
+    .text-body { color: var(--text-sub); font-size: 14px; line-height: 1.8; }
+    .hero-image {
+      width: min(360px, 100%);
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 18px;
+      box-shadow: var(--shadow-sm);
+      margin: 0 auto 28px;
+      display: block;
+    }
+    .progress-wrap { margin-bottom: 20px; }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-sub);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+    .progress-track {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--accent);
+      transition: width 0.25s ease;
+    }
+    .qCard {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 22px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .qText {
+      font-size: 16px;
+      line-height: 1.8;
+      margin: 0 0 18px;
+      color: var(--text-main);
+    }
+    .likert7 { width: 100%; }
+    .likert-labels {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-sub);
+      font-size: 11px;
+      margin-bottom: 10px;
+    }
+    .likert-buttons {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(28px, 1fr));
+      gap: 8px;
+      align-items: center;
+    }
+    .likert-btn {
+      aspect-ratio: 1 / 1;
+      min-width: 0;
+      padding: 0;
+      border-radius: 50%;
+      border: 2px solid var(--line);
+      background: #fff;
+      box-shadow: none;
+    }
+    .likert-btn.left { border-color: rgba(0,113,227,0.55); }
+    .likert-btn.mid { border-color: #b8b8bd; }
+    .likert-btn.right { border-color: rgba(255,149,0,0.55); }
+    .likert-btn.selected.left { background: var(--accent); border-color: var(--accent); }
+    .likert-btn.selected.mid { background: #8e8e93; border-color: #8e8e93; }
+    .likert-btn.selected.right { background: #ff9500; border-color: #ff9500; }
+    .fade-in { animation: fadeIn 0.35s ease both; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-hero { text-align: center; }
+    .result-img {
+      width: min(420px, 100%);
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 20px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 22px;
+    }
+    .type-code {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 92px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .axis-row { margin: 18px 0; }
+    .axis-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--text-sub);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+    .axis-bar {
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #dceeff 0%, #f6f6f6 50%, #ffe8c7 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .axis-dot {
+      position: absolute;
+      top: 50%;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      border: 4px solid var(--accent);
+      transform: translate(-50%, -50%);
+      box-shadow: var(--shadow-sm);
+    }
+    .section-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+    .mini {
+      background: #fafafa;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .mini h3 { margin: 0 0 8px; font-size: 14px; }
+    .mini p { margin: 0; color: var(--text-sub); font-size: 13px; line-height: 1.8; }
+    .characters-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .char-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .char-card img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+    }
+    .char-body { padding: 16px; }
+    .char-body h3 { margin: 0 0 8px; font-size: 16px; }
+    .char-body p { margin: 0; color: var(--text-sub); font-size: 13px; line-height: 1.7; }
+    .actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 600px) {
+      .wrap { padding: 28px 14px 60px; }
+      header { flex-direction: column; align-items: flex-start; margin-bottom: 28px; }
+      .nav { width: auto; justify-content: flex-start; }
+      .panel { padding: 24px 16px; border-radius: 18px; }
+      .big { font-size: 22px; }
+      .qCard { padding: 18px 14px; }
+      .qText { font-size: 15px; }
+      .likert-buttons { gap: 6px; }
+      .section-grid,
+      .characters-grid { grid-template-columns: 1fr; }
+      button.danger { white-space: nowrap; min-width: 80px; font-size: 12px; padding: 10px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand" id="brandHome">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="title">
+          <h1>鈴木ふみ奈 フォトジェニックミューズ診断</h1>
+          <p>Mobby rough preview</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="ページ内メニュー">
+        <a id="navDiagnosis" class="active">診断</a>
+        <a id="navCharacters">タイプ一覧</a>
+      </nav>
+    </header>
+    <main id="app"></main>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "suzuki_fumina_photogenic_muse_v1";
+    const PAGE_SIZE = 5;
+    const AXIS_KEYS = ["A", "B", "C"];
+
+    const AXES = {
+      A: { key: "A", name: "魅せ方", left: "写真美学", right: "ステージ華", leftCode: "し", rightCode: "す" },
+      B: { key: "B", name: "表現姿勢", left: "しなやか設計", right: "挑戦エネルギー", leftCode: "な", rightCode: "ち" },
+      C: { key: "C", name: "届け方", left: "自分基準", right: "ファン共鳴", leftCode: "じ", rightCode: "ふ" }
+    };
+
+    const QUESTIONS = [
+      {id:"A1", axis:"A", text:"写真に残すなら、光・角度・余白まで丁寧に設計したい", reverse:false},
+      {id:"A2", axis:"A", text:"一枚の写真で、言葉より先に世界観を伝えられると嬉しい", reverse:false},
+      {id:"A3", axis:"A", text:"ポーズや表情は、派手さよりも美しいラインを大切にしたい", reverse:false},
+      {id:"A4", axis:"A", text:"撮影前は、全体のトーンや見え方を細かく確認したくなる", reverse:false},
+      {id:"A5", axis:"A", text:"人前に立つなら、場の熱量ごと一気に引き上げたい", reverse:true},
+      {id:"A6", axis:"A", text:"静かな写真より、ステージのような華やかさに惹かれる", reverse:true},
+
+      {id:"B1", axis:"B", text:"体づくりや表現は、日々の積み重ねでしなやかに整えたい", reverse:false},
+      {id:"B2", axis:"B", text:"美しさには、無理をしない継続と自分なりのルールが必要だと思う", reverse:false},
+      {id:"B3", axis:"B", text:"表情やポーズは、勢いよりもコントロールで魅せたい", reverse:false},
+      {id:"B4", axis:"B", text:"音楽のように、呼吸やリズムを整えてから表現したい", reverse:false},
+      {id:"B5", axis:"B", text:"新しいジャンルや難しい役にも、まず飛び込んでみたい", reverse:true},
+      {id:"B6", axis:"B", text:"アクションや舞台のような、身体ごと使う表現に燃える", reverse:true},
+      {id:"B7", axis:"B", text:"安定よりも、少し怖い挑戦がある方が自分を更新できる", reverse:true},
+
+      {id:"C1", axis:"C", text:"見せ方は、周りの正解よりも自分の美意識で決めたい", reverse:false},
+      {id:"C2", axis:"C", text:"納得できる表現なら、少数に深く刺さる形でも良い", reverse:false},
+      {id:"C3", axis:"C", text:"自分の武器や個性は、ブレずに守って磨きたい", reverse:false},
+      {id:"C4", axis:"C", text:"大切な場面では、ファンの期待より自分の完成度を優先したい", reverse:false},
+      {id:"C5", axis:"C", text:"ファンが一緒に盛り上がれる瞬間まで含めて表現を考えたい", reverse:true},
+      {id:"C6", axis:"C", text:"応援の声があると、次の挑戦への熱量が上がる", reverse:true},
+      {id:"C7", axis:"C", text:"作品や写真を見た人が、元気になったり前向きになったりすると嬉しい", reverse:true}
+    ];
+
+    const CHARACTERS = {
+      "しなじ": {
+        name: "写真美学モビィ",
+        summary: "光、角度、余白を丁寧に整え、自分だけの美学で一枚を完成させるタイプ。",
+        catch: "静かな一枚の中に、強い美意識を宿せる人です。",
+        hook: "派手に説明しなくても、ポーズの線や光の置き方で世界観を伝えられます。細部まで見せ方を設計できるので、見る人の記憶に残る余韻が生まれます。",
+        downside: "納得できるまで整えたいぶん、公開のタイミングを逃しやすいです。今日は一枚だけ出す、と決めると魅力が外へ届きます。",
+        perception: "美意識が高い、品がある、写真に説得力があると思われやすいです。",
+        strength: "視線、光、構図を使って、静かな存在感を作る力。",
+        weakness: "完成度を求めすぎて、動き出しが慎重になることがあります。",
+        advice: "ベストな一枚だけでなく、準備中の美しい瞬間も残してみてください。",
+        image: "img/fumina-mobby-art-muse.png"
+      },
+      "しなふ": {
+        name: "余白共鳴モビィ",
+        summary: "しなやかな美しさと余白で、ファンが想像を重ねられるタイプ。",
+        catch: "見せすぎない余韻が、見る人の気持ちを惹き寄せます。",
+        hook: "強い演出よりも、少し残した余白ややわらかな表情で共鳴を生みます。ファンが自分の言葉で魅力を語りたくなる、受け取りやすい美しさがあります。",
+        downside: "共鳴を意識しすぎると、自分の基準が揺らぎやすいです。最初に残したい空気感を決めると芯が保てます。",
+        perception: "親しみやすい、透明感がある、何度も見たくなると思われやすいです。",
+        strength: "上品な余白で、ファンが入り込める表現を作る力。",
+        weakness: "反応を見すぎると、自分の美学がぼやけることがあります。",
+        advice: "投稿文は短くして、写真の余韻に語らせると魅力が増します。",
+        image: "img/fumina-mobby-stage-glow.png"
+      },
+      "しちじ": {
+        name: "挑戦アートモビィ",
+        summary: "写真としての完成度に、挑戦する熱量や身体表現を重ねるタイプ。",
+        catch: "美しいだけで終わらない、攻めた一枚を作れます。",
+        hook: "ポーズ、表情、身体の使い方に挑戦があるほど燃えるタイプです。写真の中に少しの緊張感を入れることで、作品としての強さが生まれます。",
+        downside: "挑戦したい気持ちが強いほど、自分に厳しくなりがちです。作品の強さと自分の休息は別で持っていて大丈夫です。",
+        perception: "ストイック、表現力がある、作品性が強いと思われやすいです。",
+        strength: "美学と挑戦心を両立し、写真に物語性を加える力。",
+        weakness: "攻めるほど、楽しさより課題が先に見えることがあります。",
+        advice: "挑戦したポイントを一つだけ言葉にすると、見る人の解像度も上がります。",
+        image: "img/fumina-mobby-art-muse.png"
+      },
+      "しちふ": {
+        name: "ポジティブミューズモビィ",
+        summary: "挑戦する姿そのものを、ファンの前向きな熱量に変えるタイプ。",
+        catch: "頑張る姿が、そのまま誰かの元気になります。",
+        hook: "新しい役、身体を使う表現、少し難しい撮影。挑む過程を明るく見せられるので、ファンも一緒に応援したくなります。",
+        downside: "期待に応えようとして、いつも前向きでいようとしすぎることがあります。迷いも見せると、共感はさらに深まります。",
+        perception: "明るい、努力家、応援したくなると思われやすいです。",
+        strength: "挑戦の過程を、見ている人の勇気に変える力。",
+        weakness: "反応が薄いと、努力の方向を迷いやすくなります。",
+        advice: "完成形だけでなく、練習や準備の一瞬を見せると熱量が伝わります。",
+        image: "img/fumina-mobby-stage-glow.png"
+      },
+      "すなじ": {
+        name: "ステージしなやかモビィ",
+        summary: "華やかな場でも、しなやかな設計と自分基準で魅せるタイプ。",
+        catch: "ステージの光を浴びても、自分のラインを崩しません。",
+        hook: "場の華やかさに流されず、ポーズや表情を冷静に整えられます。音楽のリズムのように呼吸を合わせながら、堂々とした美しさを作れます。",
+        downside: "自分の基準が高いぶん、華やかな場でも反省点を探しがちです。うまくいった部分を先に数えると次へ進みやすくなります。",
+        perception: "華があるのに落ち着いている、プロ意識が高いと思われやすいです。",
+        strength: "大きな場でも、細部まで整えて魅せる力。",
+        weakness: "自分の中の合格点に届くまで安心しにくいです。",
+        advice: "本番前に呼吸や姿勢のルーティンを一つ決めると、華が安定します。",
+        image: "img/fumina-mobby-art-muse.png"
+      },
+      "すなふ": {
+        name: "グロウ共感モビィ",
+        summary: "華やかさとやわらかな共感を両立し、場全体を明るくするタイプ。",
+        catch: "輝きをひとり占めせず、周りも一緒に照らせます。",
+        hook: "ステージのような場で華を放ちながら、ファンや周りの人が置いていかれない温度も持っています。明るさと気配りのバランスが魅力です。",
+        downside: "周りを楽しませたい気持ちが強いと、自分の疲れを後回しにしがちです。オフの時間も魅力の一部です。",
+        perception: "華やか、親しみやすい、元気をもらえると思われやすいです。",
+        strength: "自分の輝きを、ファンと共有できるムードに変える力。",
+        weakness: "期待に合わせすぎると、自分のペースが乱れます。",
+        advice: "華やかな投稿のあとに、素の一言を添えると距離感が近づきます。",
+        image: "img/fumina-mobby-stage-glow.png"
+      },
+      "すちじ": {
+        name: "ワールドクラス挑戦モビィ",
+        summary: "大きな舞台や新しい挑戦に、自分の美学を持って挑むタイプ。",
+        catch: "高い場所ほど燃える、スケールの大きな挑戦者です。",
+        hook: "人前に立つ華やかさ、身体を使う表現、知らない世界へ踏み出す勇気。自分の基準を持ったまま挑戦できるので、存在そのものに説得力が出ます。",
+        downside: "高い目標を置くほど、休むことを後回しにしやすいです。長く挑戦するための回復も戦略に入れてください。",
+        perception: "強い、かっこいい、スケール感があると思われやすいです。",
+        strength: "挑戦の場で、個性と美学を失わずに前へ出る力。",
+        weakness: "自分で背負いすぎて、助けを求めるのが遅れることがあります。",
+        advice: "挑戦前に、何を守って何を変えるかを一つずつ決めると強くなれます。",
+        image: "img/fumina-mobby-art-muse.png"
+      },
+      "すちふ": {
+        name: "ファン熱量ステージモビィ",
+        summary: "挑戦と華やかさを、ファンと一緒に盛り上がる体験へ変えるタイプ。",
+        catch: "ステージの熱を、応援の輪まで広げられます。",
+        hook: "撮影、舞台、イベント、新しい挑戦。自分が前へ出るほど、ファンの熱量も一緒に上がります。華やかな瞬間を共有できる、場づくりの力があります。",
+        downside: "盛り上げたい気持ちが強いほど、常に期待以上でいようとして疲れることがあります。静かな準備時間も大切にしてください。",
+        perception: "パワフル、楽しい、応援していて熱くなると思われやすいです。",
+        strength: "自分の挑戦を、ファン参加型の熱量に変える力。",
+        weakness: "反応の大きさで自信が揺れやすい日があります。",
+        advice: "大きな発表の前後に、準備の裏側を少し見せると応援が深まります。",
+        image: "img/fumina-mobby-stage-glow.png"
+      }
+    };
+
+    const ANS_LABEL = {
+      1:"そう思う", 2:"ややそう思う", 3:"少しそう思う", 4:"どちらでもない",
+      5:"少しそう思わない", 6:"ややそう思わない", 7:"そう思わない"
+    };
+
+    const defaultState = () => ({
+      step: "intro",
+      page: 0,
+      answers: {},
+      questionOrder: [],
+      axes: null
+    });
+
+    let state = loadState();
+    const app = document.getElementById("app");
+
+    function loadState(){
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return defaultState();
+        return {...defaultState(), ...JSON.parse(raw)};
+      } catch {
+        return defaultState();
+      }
+    }
+
+    function saveState(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function resetDiagnosis(){
+      state = defaultState();
+      localStorage.removeItem(STORAGE_KEY);
+      render();
+    }
+
+    function getQuestionOrder(){
+      if(Array.isArray(state.questionOrder) && state.questionOrder.length === QUESTIONS.length) return state.questionOrder;
+      const grouped = AXIS_KEYS.flatMap(axis => QUESTIONS.filter(q => q.axis === axis));
+      state.questionOrder = grouped.map(q => q.id);
+      saveState();
+      return state.questionOrder;
+    }
+
+    function getShuffledQuestions(){
+      const order = getQuestionOrder();
+      return order.map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean);
+    }
+
+    function computeResult(){
+      const SCALE = 7;
+      const MID = 4;
+      const MAX_DEV = 3;
+      const GAMMA = 1.35;
+      const EXTREME_BONUS = 0.35;
+      const COHERENCE_SHRINK = 0.20;
+
+      const raw = {A:0, B:0, C:0};
+      const absRaw = {A:0, B:0, C:0};
+      const maxRaw = {A:0, B:0, C:0};
+      const breakdown = {A:[], B:[], C:[]};
+      const allAnswers = [];
+
+      const weightOf = ansRaw => (ansRaw === 1 || ansRaw === 7) ? (1 + EXTREME_BONUS) : 1;
+      const shapeAns = ansAdj => {
+        const centered = MID - ansAdj;
+        const t = centered / MAX_DEV;
+        const mag = Math.min(1, Math.abs(t));
+        return Math.sign(t) * Math.pow(mag, GAMMA);
+      };
+
+      for(const q of QUESTIONS){
+        const ansRaw = state.answers[q.id];
+        if(!ansRaw) continue;
+        allAnswers.push(ansRaw);
+        const ansAdj = q.reverse ? (SCALE + 1 - ansRaw) : ansRaw;
+        const shaped = shapeAns(ansAdj);
+        const w = weightOf(ansRaw) * (q.importance ?? 1);
+        const contrib = w * shaped;
+        raw[q.axis] += contrib;
+        absRaw[q.axis] += Math.abs(contrib);
+        maxRaw[q.axis] += w;
+        breakdown[q.axis].push({id:q.id, text:q.text, ans:ansRaw, contrib});
+      }
+
+      const norm = {};
+      const pos = {};
+      const leftPct = {};
+      const hard = {};
+      const decisiveness = {};
+      const coherenceByAxis = {};
+
+      AXIS_KEYS.forEach(k => {
+        const denom = maxRaw[k] || 1;
+        const coherence = absRaw[k] ? (Math.abs(raw[k]) / absRaw[k]) : 0;
+        coherenceByAxis[k] = coherence;
+        const adjusted = raw[k] * (1 - COHERENCE_SHRINK * (1 - coherence));
+        norm[k] = Math.max(-1, Math.min(1, adjusted / denom));
+        hard[k] = norm[k] > 0 ? "L" : "R";
+        pos[k] = Math.max(0, Math.min(100, 50 - norm[k] * 50));
+        leftPct[k] = Math.round((norm[k] + 1) * 50);
+        decisiveness[k] = Math.min(1, Math.abs(norm[k]));
+      });
+
+      let straightLine = false;
+      if(allAnswers.length){
+        const freq = {1:0,2:0,3:0,4:0,5:0,6:0,7:0};
+        allAnswers.forEach(a => freq[a]++);
+        const maxF = Math.max(...Object.values(freq));
+        straightLine = (maxF / allAnswers.length) >= 0.80;
+      }
+
+      const code = (hard.A === "L" ? AXES.A.leftCode : AXES.A.rightCode) +
+                   (hard.B === "L" ? AXES.B.leftCode : AXES.B.rightCode) +
+                   (hard.C === "L" ? AXES.C.leftCode : AXES.C.rightCode);
+      const totalDecisiveness = AXIS_KEYS.reduce((sum, k) => sum + decisiveness[k], 0) / AXIS_KEYS.length;
+      const confidenceLevel = {};
+      const confidenceLabel = {};
+      AXIS_KEYS.forEach(k => {
+        const d = decisiveness[k];
+        if(d >= 0.50) {
+          confidenceLevel[k] = "strong";
+          confidenceLabel[k] = "はっきり";
+        } else if(d >= 0.25) {
+          confidenceLevel[k] = "moderate";
+          confidenceLabel[k] = "やや";
+        } else {
+          confidenceLevel[k] = "mid";
+          confidenceLabel[k] = "場面による";
+        }
+      });
+
+      const adjacentTypes = [];
+      AXIS_KEYS.forEach(k => {
+        if(confidenceLevel[k] === "mid") {
+          const altHard = {...hard, [k]: hard[k] === "L" ? "R" : "L"};
+          const altCode = (altHard.A === "L" ? AXES.A.leftCode : AXES.A.rightCode) +
+                          (altHard.B === "L" ? AXES.B.leftCode : AXES.B.rightCode) +
+                          (altHard.C === "L" ? AXES.C.leftCode : AXES.C.rightCode);
+          if(CHARACTERS[altCode] && altCode !== code) {
+            adjacentTypes.push({axis:k, code:altCode, name:CHARACTERS[altCode].name});
+          }
+        }
+      });
+
+      return {
+        code,
+        char: CHARACTERS[code],
+        norm,
+        pos,
+        leftPct,
+        hard,
+        decisiveness,
+        confidenceLevel,
+        confidenceLabel,
+        totalDecisiveness,
+        coherenceByAxis,
+        breakdown,
+        straightLine,
+        adjacentTypes
+      };
+    }
+
+    function isComplete(){
+      return Object.keys(state.answers || {}).length >= QUESTIONS.length;
+    }
+
+    function render(){
+      document.getElementById("navDiagnosis").classList.toggle("active", state.step !== "characters");
+      document.getElementById("navCharacters").classList.toggle("active", state.step === "characters");
+      if(state.step === "intro") renderIntro();
+      else if(state.step === "quiz") renderQuiz();
+      else if(state.step === "characters") renderCharacters();
+      else renderResult();
+    }
+
+    function renderIntro(){
+      const count = Object.keys(state.answers).length;
+      app.innerHTML = `
+        <div class="panel fade-in" style="text-align:center; padding:60px 20px;">
+          <img class="hero-image" src="img/fumina-mobby-art-muse.png" alt="上品な撮影スタジオにいるMobby">
+          <p class="kicker">Mobby rough preview</p>
+          <h2 class="big">あなたの魅せ方と挑戦する華を<br>3つの軸で診断します。</h2>
+          <p class="text-body" style="max-width:440px; margin:0 auto 30px;">
+            直感で選ぶ20問の質問から、魅せ方、表現姿勢、届け方のクセを8タイプで診断します。
+          </p>
+          <button class="primary" id="btnStart" style="padding:16px 32px; font-size:16px;">
+            ${count > 0 ? "診断を再開する" : "診断をはじめる"}
+          </button>
+          ${count > 0 ? `<p style="font-size:12px; color:#86868b; margin-top:16px;">${count} / ${QUESTIONS.length}問 回答済み</p>` : ""}
+        </div>
+      `;
+      document.getElementById("btnStart").onclick = () => {
+        state.step = "quiz";
+        getQuestionOrder();
+        const idx = getShuffledQuestions().findIndex(q => !state.answers[q.id]);
+        state.page = idx >= 0 ? Math.floor(idx / PAGE_SIZE) : 0;
+        saveState();
+        render();
+      };
+    }
+
+    function renderQuiz(){
+      const shuffledQs = getShuffledQuestions();
+      const start = state.page * PAGE_SIZE;
+      const currentQs = shuffledQs.slice(start, start + PAGE_SIZE);
+      const totalPage = Math.ceil(shuffledQs.length / PAGE_SIZE);
+      const progress = Math.round((Object.keys(state.answers).length / shuffledQs.length) * 100);
+
+      const qHtml = currentQs.map((q, i) => {
+        const val = state.answers[q.id];
+        return `
+          <div class="qCard fade-in" style="animation-delay:${i*0.05}s">
+            <div class="kicker" style="color:#86868b; margin-bottom:4px;">Q${start+i+1}</div>
+            <p class="qText">${q.text}</p>
+            <div class="likert7">
+              <div class="likert-labels">
+                <span>${AXES[q.axis].left}</span>
+                <span>${AXES[q.axis].right}</span>
+              </div>
+              <div class="likert-buttons">
+                ${[1,2,3,4,5,6,7].map(n => {
+                  const side = n <= 3 ? "left" : (n === 4 ? "mid" : "right");
+                  const sel = val === n ? "selected" : "";
+                  return `<button type="button" class="likert-btn ${side} ${sel}" data-qid="${q.id}" data-val="${n}" aria-label="${ANS_LABEL[n]}"></button>`;
+                }).join("")}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      app.innerHTML = `
+        <div class="panel">
+          <div class="progress-wrap">
+            <div class="progress-meta">
+              <span>進行状況</span>
+              <span>${progress}%</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div>
+          </div>
+          <div style="margin-top:30px;">${qHtml}</div>
+          <div style="display:flex; justify-content:space-between; margin-top:30px;">
+            <button id="btnPrev" ${state.page===0 ? "disabled":""}>戻る</button>
+            <button class="primary" id="btnNext">${state.page === totalPage - 1 ? "結果を見る" : "次へ"}</button>
+          </div>
+        </div>
+      `;
+
+      currentQs.forEach(q => {
+        document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(btn => {
+          btn.onclick = () => {
+            state.answers[q.id] = parseInt(btn.dataset.val, 10);
+            document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(b => b.classList.remove("selected"));
+            btn.classList.add("selected");
+            saveState();
+            const p = Math.round((Object.keys(state.answers).length / shuffledQs.length) * 100);
+            document.querySelector(".progress-fill").style.width = p + "%";
+            document.querySelector(".progress-meta span:last-child").innerText = p + "%";
+          };
+        });
+      });
+
+      document.getElementById("btnPrev").onclick = () => {
+        if(state.page > 0) state.page--;
+        saveState();
+        render();
+      };
+      document.getElementById("btnNext").onclick = () => {
+        const missing = currentQs.filter(q => !state.answers[q.id]);
+        if(missing.length){
+          alert("このページの質問にすべて回答してください。");
+          return;
+        }
+        if(state.page < totalPage - 1){
+          state.page++;
+          saveState();
+          render();
+        } else {
+          state.axes = computeResult();
+          state.step = "result";
+          saveState();
+          render();
+        }
+      };
+    }
+
+    function renderAxis(result){
+      return AXIS_KEYS.map(k => {
+        const a = AXES[k];
+        return `
+          <div class="axis-row">
+            <div class="axis-meta">
+              <span>${a.name}: ${a.left}</span>
+              <span>${result.confidenceLabel[k]}</span>
+              <span>${a.right}</span>
+            </div>
+            <div class="axis-bar"><div class="axis-dot" style="left:${result.pos[k]}%"></div></div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderResult(){
+      if(!isComplete()){
+        state.step = "intro";
+        render();
+        return;
+      }
+      const result = state.axes || computeResult();
+      const c = result.char;
+      app.innerHTML = `
+        <div class="panel fade-in result-hero">
+          <p class="kicker">RESULT</p>
+          <span class="type-code">TYPE ${result.code}</span>
+          <h2 class="big">${c.name}</h2>
+          <img class="result-img" src="${c.image}" alt="${c.name}">
+          <p class="text-body" style="max-width:560px; margin:0 auto;">${c.summary}</p>
+          <p style="font-size:17px; font-weight:700; margin:22px auto 0; max-width:560px;">${c.catch}</p>
+        </div>
+        <div class="panel fade-in">
+          <p class="kicker">3 AXES</p>
+          <h2 class="big">あなたのフォトジェニックミューズバランス</h2>
+          ${renderAxis(result)}
+          ${result.straightLine ? `<p class="text-body" style="color:#ff9500;">同じ回答が多めです。気分を変えてもう一度試すと、少し違う結果になるかもしれません。</p>` : ""}
+          ${result.adjacentTypes.length ? `<p class="text-body">近いタイプ: ${result.adjacentTypes.map(t => `${t.name}`).join(" / ")}</p>` : ""}
+        </div>
+        <div class="panel fade-in">
+          <p class="kicker">DETAIL</p>
+          <h2 class="big">このタイプの見え方</h2>
+          <div class="section-grid">
+            <div class="mini"><h3>共感ポイント</h3><p>${c.hook}</p></div>
+            <div class="mini"><h3>しんどい時</h3><p>${c.downside}</p></div>
+            <div class="mini"><h3>周りから</h3><p>${c.perception}</p></div>
+            <div class="mini"><h3>今日のヒント</h3><p>${c.advice}</p></div>
+            <div class="mini"><h3>強み</h3><p>${c.strength}</p></div>
+            <div class="mini"><h3>気をつけたいこと</h3><p>${c.weakness}</p></div>
+          </div>
+          <div class="actions">
+            <button class="primary" id="btnChars">8タイプを見る</button>
+            <button id="btnAgain">もう一度診断する</button>
+          </div>
+        </div>
+      `;
+      document.getElementById("btnChars").onclick = () => {
+        state.step = "characters";
+        saveState();
+        render();
+      };
+      document.getElementById("btnAgain").onclick = resetDiagnosis;
+    }
+
+    function renderCharacters(){
+      const cards = Object.entries(CHARACTERS).map(([code, c]) => `
+        <article class="char-card fade-in">
+          <img src="${c.image}" alt="${c.name}">
+          <div class="char-body">
+            <p class="kicker">TYPE ${code}</p>
+            <h3>${c.name}</h3>
+            <p>${c.summary}</p>
+          </div>
+        </article>
+      `).join("");
+      app.innerHTML = `
+        <div class="panel fade-in">
+          <p class="kicker">8 TYPES</p>
+          <h2 class="big">フォトジェニックミューズ 8タイプ</h2>
+          <p class="text-body">2枚のラフ画像をサンプルとして交互に配置しています。診断結果や一覧の画像差し替えにも対応できます。</p>
+          <div class="characters-grid">${cards}</div>
+          <div class="actions">
+            <button class="primary" id="btnBackDiagnosis">${isComplete() ? "結果に戻る" : "診断する"}</button>
+          </div>
+        </div>
+      `;
+      document.getElementById("btnBackDiagnosis").onclick = () => {
+        state.step = isComplete() ? "result" : "intro";
+        saveState();
+        render();
+      };
+    }
+
+    document.getElementById("brandHome").onclick = () => {
+      state.step = isComplete() ? "result" : "intro";
+      saveState();
+      render();
+    };
+    document.getElementById("navDiagnosis").onclick = () => {
+      state.step = isComplete() ? "result" : "intro";
+      saveState();
+      render();
+    };
+    document.getElementById("navCharacters").onclick = () => {
+      state.step = "characters";
+      saveState();
+      render();
+    };
+
+    render();
+  </script>
+</body>
+</html>
