@@ -8,8 +8,8 @@
   <!-- SEO基本 -->
   <title>モビー診断 | Mobby（モビー）公式サイト</title>
   <meta name="description"
-    content="モビー診断の公式サイト。学校モビー診断、メンヘラモビー診断、推し活モビー診断、夜職モビー診断、ママモビー診断を無料で楽しめます。Mobby（モビー）のカメラ型キーホルダー公式情報も掲載。">
-  <meta name="keywords" content="モビー診断,Mobby,モビー,学校モビー診断,メンヘラモビー診断,推し活モビー診断,夜職モビー診断,ママモビー診断,カメラ型キーホルダー,モビーアウトフィット">
+    content="モビー診断の公式サイト。学校モビー診断、メンヘラモビー診断、推し活モビー診断を無料で楽しめます。Mobby（モビー）のカメラ型キーホルダー公式情報も掲載。">
+  <meta name="keywords" content="モビー診断,Mobby,モビー,学校モビー診断,メンヘラモビー診断,推し活モビー診断,カメラ型キーホルダー,モビーアウトフィット">
   <meta name="author" content="Mobby">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://www.mobby.online/">
@@ -18,7 +18,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.mobby.online/">
   <meta property="og:title" content="モビー診断 | Mobby（モビー）公式サイト">
-  <meta property="og:description" content="学校モビー診断、メンヘラモビー診断、推し活モビー診断、夜職モビー診断、ママモビー診断をまとめて見られるMobby（モビー）公式サイト。">
+  <meta property="og:description" content="学校モビー診断、メンヘラモビー診断、推し活モビー診断をまとめて見られるMobby（モビー）公式サイト。">
   <meta property="og:image" content="https://www.mobby.online/img/Mobby.png">
   <meta property="og:site_name" content="モビー診断 | Mobby（モビー）">
   <meta property="og:locale" content="ja_JP">
@@ -28,7 +28,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://www.mobby.online/">
   <meta name="twitter:title" content="モビー診断 | Mobby（モビー）公式サイト">
-  <meta name="twitter:description" content="学校・メンヘラ・推し活・夜職・ママの各モビー診断をまとめて見られる公式サイト。">
+  <meta name="twitter:description" content="学校・メンヘラ・推し活の各モビー診断をまとめて見られる公式サイト。">
   <meta name="twitter:image" content="https://www.mobby.online/img/Mobby.png">
 
   <!-- Favicon -->
@@ -194,7 +194,7 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      width: min(86vw, 1240px);
+      width: min(70vw, 520px);
       transform: translate(-50%, -50%);
       z-index: 4;
       pointer-events: none;
@@ -212,8 +212,8 @@
     .splash-logo-mask {
       position: absolute;
       inset: 0;
-      -webkit-mask-image: url("mobby_logo2.webp");
-      mask-image: url("mobby_logo2.webp");
+      -webkit-mask-image: url("mobby-custom/assets/stickers/Logo.png");
+      mask-image: url("mobby-custom/assets/stickers/Logo.png");
       -webkit-mask-repeat: no-repeat;
       mask-repeat: no-repeat;
       -webkit-mask-position: center;
@@ -234,7 +234,7 @@
     .splash-logo-reveal {
       position: absolute;
       inset: 0;
-      background: url("mobby_logo2.webp") center / contain no-repeat;
+      background: url("mobby-custom/assets/stickers/Logo.png") center / contain no-repeat;
       clip-path: inset(0 100% 0 0);
       animation: splashLogoReveal 2.1s cubic-bezier(0.22, 1, 0.36, 1) 0.18s forwards;
     }
@@ -420,9 +420,9 @@
 
     .mobby-title img {
       display: block;
-      width: min(46vw, 400px);
+      width: min(34vw, 220px);
       height: auto;
-      margin: 0 auto -6%;
+      margin: 0 auto -2%;
     }
 
     @media (max-width: 768px) {
@@ -432,8 +432,8 @@
       }
 
       .mobby-title img {
-        width: min(74vw, 360px);
-        margin: 0 auto -10%;
+        width: min(44vw, 180px);
+        margin: 0 auto -4%;
       }
     }
 
@@ -443,8 +443,8 @@
       }
 
       .mobby-title img {
-        width: min(52vw, 360px);
-        margin: 0 auto -8%;
+        width: min(34vw, 220px);
+        margin: 0 auto -3%;
       }
     }
 
@@ -1001,31 +1001,50 @@
     }
 
     .hero-character-action {
+      position: relative;
       width: 56px;
       height: 56px;
       padding: 0;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: none;
+      border: 1px solid rgba(255, 255, 255, 0.48);
       border-radius: 18px;
-      background: linear-gradient(145deg, #fff8ee 0%, #efe2cf 100%);
-      color: #856555;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.18));
+      color: rgba(71, 63, 54, 0.86);
       font-size: 1.05rem;
       font-weight: 800;
       letter-spacing: 0;
+      backdrop-filter: blur(18px) saturate(1.35);
+      -webkit-backdrop-filter: blur(18px) saturate(1.35);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.95),
-        0 8px 18px rgba(89, 70, 52, 0.14);
+        inset 0 1px 0 rgba(255, 255, 255, 0.72),
+        inset 0 -18px 26px rgba(255, 255, 255, 0.12),
+        0 10px 24px rgba(78, 57, 39, 0.16);
       cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.46);
+    }
+
+    .hero-character-action::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0) 46%),
+        radial-gradient(circle at 24% 16%, rgba(255, 255, 255, 0.66), rgba(255, 255, 255, 0) 34%);
+      pointer-events: none;
+      z-index: 0;
     }
 
     .hero-character-action:hover {
       transform: translateY(-2px);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.95),
-        0 12px 24px rgba(89, 70, 52, 0.18);
+        inset 0 1px 0 rgba(255, 255, 255, 0.78),
+        inset 0 -18px 26px rgba(255, 255, 255, 0.16),
+        0 14px 28px rgba(78, 57, 39, 0.2);
     }
 
     .hero-character-action.mode {
@@ -1066,6 +1085,188 @@
         0 5px 12px rgba(89, 70, 52, 0.22),
         0 0 0 4px rgba(255, 214, 160, 0.28),
         inset 0 0 0 1px rgba(108, 82, 64, 0.2);
+    }
+
+    .burn-card {
+      position: relative;
+      width: min(760px, calc(100% - 24px));
+      min-height: 190px;
+      margin: 22px auto 0;
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(220px, 1.25fr);
+      align-items: stretch;
+      overflow: hidden;
+      border-radius: 24px;
+      text-decoration: none;
+      background:
+        linear-gradient(145deg, rgba(255, 252, 244, 0.94), rgba(255, 244, 225, 0.82));
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.78),
+        0 18px 36px rgba(97, 73, 45, 0.14);
+      isolation: isolate;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .burn-card-row {
+      width: 100%;
+      display: block !important;
+      margin: 10px auto 18px;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+
+    .burn-card-row.after-hero {
+      width: min(760px, calc(100% - 32px));
+      margin: 14px auto 22px;
+      position: relative;
+      z-index: 18;
+    }
+
+    .popup-buttons-bar .burn-card {
+      display: grid !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+
+    .hero .burn-card-row.after-hero,
+    .hero .burn-card-row.after-hero .burn-card {
+      display: grid !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto;
+    }
+
+    .burn-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 70% 45%, rgba(255, 255, 255, 0.28), transparent 42%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .burn-card-copy {
+      position: relative;
+      z-index: 1;
+      min-height: 190px;
+      padding: 38px 34px 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      color: #514033;
+    }
+
+    .burn-card-media {
+      position: relative;
+      z-index: 1;
+      min-height: 190px;
+      overflow: hidden;
+      display: block;
+      background: url("img/burn/burn_ref.png") center / cover no-repeat;
+    }
+
+    .burn-card-media::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 44%;
+      z-index: 1;
+      background: linear-gradient(90deg, rgba(255, 252, 244, 0.92), rgba(255, 252, 244, 0));
+      pointer-events: none;
+    }
+
+    .burn-card-media img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 190px;
+      object-fit: cover;
+      object-position: center;
+      filter: sepia(0.08) saturate(0.92) brightness(1.03);
+      opacity: 1 !important;
+    }
+
+    .burn-card-title {
+      font-size: clamp(1.45rem, 4.2vw, 2.15rem);
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      line-height: 1.25;
+    }
+
+    .burn-card-text {
+      margin-top: 20px;
+      font-size: clamp(1rem, 2.6vw, 1.28rem);
+      line-height: 1.7;
+      letter-spacing: 0.08em;
+      color: rgba(54, 48, 42, 0.82);
+    }
+
+    .burn-card-arrow {
+      width: 46px;
+      height: 46px;
+      margin-top: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.68);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      color: #384149;
+      font-size: 2.1rem;
+      line-height: 1;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 8px 18px rgba(78, 57, 39, 0.12);
+    }
+
+    @media (max-width: 640px) {
+      .burn-card {
+        grid-template-columns: minmax(0, 0.95fr) minmax(145px, 1.1fr);
+        min-height: 132px;
+        border-radius: 18px;
+      }
+
+      .burn-card-copy {
+        min-height: 132px;
+        padding: 18px 14px 14px;
+      }
+
+      .burn-card-media {
+        min-height: 132px;
+      }
+
+      .burn-card-media::before {
+        inset: 0 auto 0 0;
+        width: 46%;
+        background: linear-gradient(90deg, rgba(255, 252, 244, 0.9), rgba(255, 252, 244, 0));
+      }
+
+      .burn-card-media img {
+        min-height: 132px;
+      }
+
+      .burn-card-title {
+        font-size: 1.05rem;
+      }
+
+      .burn-card-text {
+        margin-top: 10px;
+        font-size: 0.82rem;
+        line-height: 1.55;
+        letter-spacing: 0.06em;
+      }
+
+      .burn-card-arrow {
+        width: 34px;
+        height: 34px;
+        margin-top: 12px;
+        font-size: 1.7rem;
+      }
     }
 
     .hero-smoke-canvas {
@@ -4521,17 +4722,18 @@
 
     /* 右下の法的リンク */
     .legal-links {
-      position: fixed;
-      bottom: 12px;
-      right: 12px;
+      position: static;
+      margin: 28px auto 18px;
       z-index: 30;
       display: flex;
       flex-direction: column;
       gap: 6px;
-      align-items: flex-end;
-      font-size: 0.75rem;
-      opacity: 0.6;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      opacity: 0.82;
       transition: opacity 0.3s ease;
+      color: rgba(45, 45, 45, 0.78);
     }
 
     .legal-links:hover {
@@ -4539,7 +4741,7 @@
     }
 
     .legal-links a {
-      color: var(--color-forest);
+      color: rgba(45, 45, 45, 0.78);
       text-decoration: none;
       padding: 4px 8px;
       transition: opacity 0.2s ease;
@@ -4549,12 +4751,29 @@
       text-decoration: underline;
     }
 
+    .legal-link-row {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .legal-link-row-sub {
+      font-size: 0.76rem;
+      opacity: 0.74;
+    }
+
+    .copyright {
+      margin-top: 2px;
+      letter-spacing: 0.08em;
+    }
+
     @media (max-width: 768px) {
       .legal-links {
-        font-size: 0.3rem;
-        bottom: 8px;
-        right: 8px;
-        gap: 0px;
+        margin: 22px auto 14px;
+        font-size: 0.74rem;
+        gap: 3px;
       }
 
       .legal-links a {
@@ -4939,6 +5158,454 @@
         bottom: 34px !important;
       }
     }
+
+    /* Static two-row layout for the footer actions. */
+    .popup-buttons {
+      width: min(760px, 96vw) !important;
+      padding-left: 0 !important;
+      display: block !important;
+    }
+
+    .gift-fan-menu {
+      top: 0 !important;
+      width: 100% !important;
+      height: auto !important;
+      display: grid !important;
+      gap: 12px !important;
+      justify-items: center;
+    }
+
+    .gift-fan-diagnosis-actions,
+    .gift-fan-actions {
+      position: static !important;
+      inset: auto !important;
+      width: 100% !important;
+      height: auto !important;
+      display: flex !important;
+      flex-wrap: wrap !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 14px !important;
+      transform: none !important;
+      overflow: visible !important;
+      pointer-events: auto !important;
+      color: inherit !important;
+      font-size: inherit !important;
+    }
+
+    .gift-fan-actions {
+      flex-wrap: nowrap !important;
+    }
+
+    .gift-fan-diagnosis-actions {
+      order: 1;
+      position: relative !important;
+      padding: 38px 18px 16px !important;
+      border: 1.5px dashed rgba(237, 126, 57, 0.78);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.28);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.54),
+        0 12px 26px rgba(91, 67, 42, 0.1);
+    }
+
+    .gift-fan-diagnosis-actions::before {
+      content: "♡  診断メニュー  ♡";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 0 22px;
+      background: #faf1e2;
+      color: #282828;
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .gift-fan-actions {
+      order: 2;
+    }
+
+    .gift-fan-action,
+    .gift-fan-menu.is-open .gift-fan-action[data-fan-item] {
+      position: relative !important;
+      right: auto !important;
+      bottom: auto !important;
+      width: 78px !important;
+      height: 74px !important;
+      flex: 0 0 78px !important;
+      padding: 0 !important;
+      flex-direction: column !important;
+      gap: 4px !important;
+      display: inline-flex !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      transform: none !important;
+      border-radius: 18px !important;
+      font-size: 0.78rem !important;
+      font-weight: 900 !important;
+      line-height: 1.15 !important;
+      overflow: hidden !important;
+      border: 1px solid rgba(255, 255, 255, 0.48) !important;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.18)) !important;
+      color: rgba(71, 63, 54, 0.86) !important;
+      backdrop-filter: blur(18px) saturate(1.35);
+      -webkit-backdrop-filter: blur(18px) saturate(1.35);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.72),
+        inset 0 -18px 26px rgba(255, 255, 255, 0.12),
+        0 10px 24px rgba(78, 57, 39, 0.16) !important;
+    }
+
+    .gift-fan-diagnosis-action,
+    .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action {
+      position: relative !important;
+      right: auto !important;
+      bottom: auto !important;
+      width: 104px !important;
+      height: 82px !important;
+      flex: 0 1 104px !important;
+      padding: 0 !important;
+      flex-direction: column !important;
+      gap: 5px !important;
+      display: inline-flex !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      transform: none !important;
+      border-radius: 18px !important;
+      font-size: 0.95rem !important;
+      font-weight: 900 !important;
+      line-height: 1.15 !important;
+      overflow: hidden !important;
+      border: 1px solid rgba(255, 255, 255, 0.48) !important;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.18)) !important;
+      color: rgba(71, 63, 54, 0.86) !important;
+      backdrop-filter: blur(18px) saturate(1.35);
+      -webkit-backdrop-filter: blur(18px) saturate(1.35);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.72),
+        inset 0 -18px 26px rgba(255, 255, 255, 0.12),
+        0 10px 24px rgba(78, 57, 39, 0.16) !important;
+    }
+
+    .gift-fan-action[data-fan-item="price"] {
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.66), rgba(255, 246, 230, 0.24)) !important;
+      color: rgba(86, 64, 45, 0.92) !important;
+      order: 1;
+    }
+
+    .footer-btn-icon {
+      position: relative;
+      z-index: 2;
+      display: block;
+      width: 30px;
+      height: 30px;
+      font-size: 0;
+      line-height: 0;
+      color: rgba(45, 50, 54, 0.9);
+    }
+
+    .gift-fan-action .footer-btn-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .footer-btn-icon::before {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: currentColor;
+      -webkit-mask: var(--footer-icon) center / contain no-repeat;
+      mask: var(--footer-icon) center / contain no-repeat;
+    }
+
+    .footer-btn-icon[data-icon="heart"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M32 54S8 39 8 22c0-8 6-14 14-14 5 0 9 3 10 7 1-4 5-7 10-7 8 0 14 6 14 14 0 17-24 32-24 32Z'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="school"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 54h48'/%3E%3Cpath d='M18 54V34h28v20'/%3E%3Cpath d='M24 34V21l8-7 8 7v13'/%3E%3Cpath d='M32 14V7h10v9H32'/%3E%3Cpath d='M29 54V42a3 3 0 0 1 6 0v12'/%3E%3Cpath d='M14 54V37h10'/%3E%3Cpath d='M50 54V37H40'/%3E%3Ccircle cx='32' cy='28' r='3'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="cloud"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 43h26a12 12 0 0 0 0-24 15 15 0 0 0-29-1A12 12 0 0 0 20 43Z'/%3E%3Cpath d='M20 53l-4 6'/%3E%3Cpath d='M34 53l-4 6'/%3E%3Cpath d='M48 53l-4 6'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="star"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m32 6 8 17 18 2-13 13 3 18-16-9-16 9 3-18L6 25l18-2 8-17Z'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="image"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='10' y='12' width='44' height='40' rx='3'/%3E%3Ccircle cx='39' cy='24' r='5'/%3E%3Cpath d='M12 48 27 32l10 10 7-8 10 14'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="book"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M32 51c-7-6-15-7-24-3V13c9-4 17-3 24 3v35Z'/%3E%3Cpath d='M32 51c7-6 15-7 24-3V13c-9-4-17-3-24 3v35Z'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="vote"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 31h40l6 11v15H6V42l6-11Z'/%3E%3Cpath d='M15 42h34'/%3E%3Cpath d='M28 29 17 18 31 4l16 16-12 9'/%3E%3Cpath d='M24 29h16'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="mail"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='8' y='16' width='48' height='34' rx='4'/%3E%3Cpath d='m10 19 22 18 22-18'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="share"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='17' cy='34' r='8'/%3E%3Ccircle cx='47' cy='17' r='8'/%3E%3Ccircle cx='47' cy='49' r='8'/%3E%3Cpath d='M24 30 40 21'/%3E%3Cpath d='M24 38 40 46'/%3E%3C/svg%3E");
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="school"] {
+      order: 2;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="romance"] {
+      order: 1;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="love"] {
+      order: 3;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] {
+      order: 4;
+    }
+
+    @media (max-width: 520px) {
+      .gift-fan-diagnosis-actions {
+        gap: 8px !important;
+        padding: 34px 10px 12px !important;
+        border-radius: 20px;
+      }
+
+      .gift-fan-diagnosis-action,
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action {
+        width: calc((100% - 24px) / 4) !important;
+        height: 70px !important;
+        flex: 0 0 calc((100% - 24px) / 4) !important;
+        border-radius: 16px !important;
+        font-size: 0.8rem !important;
+        gap: 3px !important;
+      }
+
+      .gift-fan-actions {
+        gap: 7px !important;
+      }
+
+      .gift-fan-action,
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item] {
+        width: calc((100% - 28px) / 5) !important;
+        height: 64px !important;
+        flex: 0 0 calc((100% - 28px) / 5) !important;
+        border-radius: 16px !important;
+        font-size: 0.68rem !important;
+        gap: 2px !important;
+      }
+
+      .gift-fan-action .footer-btn-icon,
+      .gift-fan-diagnosis-action .footer-btn-icon {
+        width: 22px;
+        height: 22px;
+      }
+    }
+
+    .gift-fan-action::before,
+    .gift-fan-diagnosis-action::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0) 46%),
+        radial-gradient(circle at 24% 16%, rgba(255, 255, 255, 0.66), rgba(255, 255, 255, 0) 34%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .gift-fan-action::after,
+    .gift-fan-diagnosis-action::after {
+      content: "";
+      position: absolute;
+      inset: auto 8px 7px 8px;
+      height: 1px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.58);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .gift-fan-action,
+    .gift-fan-diagnosis-action {
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.46);
+    }
+
+    .gift-fan-action {
+      z-index: 1;
+    }
+
+    .gift-fan-action > *,
+    .gift-fan-diagnosis-action > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .gift-fan-new-badge {
+      z-index: 3;
+    }
+
+    #openCompositingPopup .gift-fan-new-badge,
+    #openVotePopup .gift-fan-new-badge {
+      display: none !important;
+    }
+
+    .gift-fan-menu.is-diagnosis-open .gift-fan-action:not([data-fan-item="price"]) {
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      transform: none !important;
+    }
+
+    .gift-fan-new-badge {
+      top: -10px !important;
+    }
+
+    @media (max-width: 520px) {
+      .popup-buttons-bar {
+        padding: 12px 0 8px;
+      }
+
+      .popup-buttons {
+        width: min(360px, 96vw) !important;
+      }
+
+      .gift-fan-diagnosis-actions,
+      .gift-fan-actions {
+        gap: 6px !important;
+      }
+
+      .gift-fan-actions {
+        flex-wrap: nowrap !important;
+      }
+
+      .gift-fan-diagnosis-actions {
+        padding: 34px 10px 12px !important;
+      }
+
+      .gift-fan-diagnosis-actions::before {
+        font-size: 1rem;
+        padding: 0 14px;
+      }
+
+      .gift-fan-action,
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item] {
+        width: calc((100% - 24px) / 5) !important;
+        height: 64px !important;
+        flex: 0 0 calc((100% - 24px) / 5) !important;
+        font-size: 0.7rem !important;
+      }
+
+      .gift-fan-diagnosis-action,
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action {
+        width: calc((100% - 18px) / 4) !important;
+        height: 70px !important;
+        flex: 0 0 calc((100% - 18px) / 4) !important;
+        font-size: 0.8rem !important;
+      }
+
+      .footer-btn-icon {
+        width: 24px;
+        height: 24px;
+      }
+
+      .gift-fan-action .footer-btn-icon {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    .hero-intro .headline {
+      position: relative;
+      z-index: 4;
+      margin-bottom: -6px;
+    }
+
+    .hero-intro .hero-carousel-shell {
+      margin-top: -44px;
+    }
+
+    @media (max-width: 768px) {
+      .hero-intro .headline {
+        margin-bottom: -4px;
+      }
+
+      .hero-intro .hero-carousel-shell {
+        margin-top: -40px;
+      }
+    }
+
+    /* Glassmorphism finish for the main action buttons. */
+    .hero-character-action,
+    .gift-fan-action,
+    .gift-fan-diagnosis-action,
+    .burn-card-arrow,
+    .gacha-btn {
+      position: relative !important;
+      overflow: hidden !important;
+      isolation: isolate;
+      border-color: rgba(255, 255, 255, 0.54) !important;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.2) 58%, rgba(255, 248, 238, 0.34)) !important;
+      color: rgba(45, 50, 54, 0.9) !important;
+      backdrop-filter: blur(22px) saturate(1.45) !important;
+      -webkit-backdrop-filter: blur(22px) saturate(1.45) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.82),
+        inset 0 -18px 28px rgba(255, 255, 255, 0.13),
+        0 12px 28px rgba(78, 57, 39, 0.17) !important;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+
+    .hero-character-action::before,
+    .gift-fan-action::before,
+    .gift-fan-diagnosis-action::before,
+    .burn-card-arrow::before,
+    .gacha-btn::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0) 44%),
+        radial-gradient(circle at 22% 14%, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0) 34%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-character-action > *,
+    .gift-fan-action > *,
+    .gift-fan-diagnosis-action > *,
+    .burn-card-arrow > *,
+    .gacha-btn > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-character-action:hover,
+    .gift-fan-action:hover,
+    .gift-fan-diagnosis-action:hover,
+    .burn-card-arrow:hover,
+    .gacha-btn:hover {
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -18px 28px rgba(255, 255, 255, 0.18),
+        0 16px 32px rgba(78, 57, 39, 0.21) !important;
+    }
   </style>
 </head>
 
@@ -4950,7 +5617,7 @@
         <div class="splash-logo-mask splash-logo-glow"></div>
         <div class="splash-logo-reveal"></div>
         <div class="splash-logo-mask splash-logo-trace"></div>
-        <img class="splash-logo-img" src="mobby_logo2.webp" alt="Mobby logo" fetchpriority="high" decoding="async" />
+        <img class="splash-logo-img" src="mobby-custom/assets/stickers/Logo.png" alt="Mobby logo" fetchpriority="high" decoding="async" />
       </div>
     </div>
     <div class="instruction">TAP!</div>
@@ -4959,7 +5626,7 @@
   <div id="main-content">
     <div class="hero-intro">
       <div class="mobby-title" aria-label="Mobby">
-        <img src="mobby_logo2_trimmed.webp" alt="Mobby" fetchpriority="high" decoding="async" />
+        <img src="mobby-custom/assets/stickers/Logo.png" alt="Mobby" fetchpriority="high" decoding="async" />
         </div>
       <h1 class="headline reveal delay-200">心の沈黙に耳を澄ませる</h1>
       <section class="hero">
@@ -4986,10 +5653,21 @@
               <button class="hero-character-action mode" id="heroCarouselModeButton" type="button" aria-label="カルーセル表示を切り替える">通常</button>
             </div>
           </div>
+          <div class="burn-card-row after-hero">
+            <a class="burn-card" href="burn-record/index.html" aria-label="BURNでページをつくる">
+              <span class="burn-card-copy">
+                <span class="burn-card-title">BURNでページをつくる</span>
+                <span class="burn-card-text">ふたりの思い出を、<br>本のように残そう。</span>
+                <span class="burn-card-arrow" aria-hidden="true">›</span>
+              </span>
+              <span class="burn-card-media" aria-hidden="true">
+                <img src="img/burn/burn_ref.png" alt="" loading="eager" decoding="async">
+              </span>
+            </a>
+          </div>
         </div>
       </section>
     </div>
-
 
     <!-- Viewfinder Overlay -->
 
@@ -5294,7 +5972,6 @@
                     <button type="button" class="acrylic-series-button" data-series-id="school">学校モビー診断</button>
                     <button type="button" class="acrylic-series-button" data-series-id="love">恋愛モビー診断</button>
                     <button type="button" class="acrylic-series-button" data-series-id="stan">推し活モビー診断</button>
-                    <button type="button" class="acrylic-series-button" data-series-id="night">夜職モビー診断</button>
                   </div>
                 </div>
                 <div id="acrylicDiagnosisStatus" class="acrylic-status-card">
@@ -5555,8 +6232,6 @@
           <a class="btn btn-primary" href="16school/index.html">学校モビー診断</a>
           <a class="btn btn-primary" href="16love/index.html">メンヘラモビー診断</a>
           <a class="btn btn-primary" href="16stan/index.html">推し活モビー診断</a>
-          <a class="btn btn-primary" href="16night/index.html">夜職モビー診断</a>
-          <a class="btn btn-primary" href="16school/mama/index.html">ママモビー診断</a>
           <a class="btn btn-primary" href="/mypage-register.html">診断まとめマイページ作成</a>
         </div>
       </div>
@@ -5586,25 +6261,21 @@
           </div>
         </div>
         <div class="popup-buttons">
-          <button class="btn btn-secondary" id="openMessagePopup">文章</button>
-          <div class="gift-fan-menu is-open" id="giftFanMenu">
-            <div class="gift-fan-actions" aria-hidden="false">
-              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openPricePopup" data-fan-item="price">診断</button>
-              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openFaqPopup" data-fan-item="faq">お問い合わせ</button>
-              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openSnsPopup" data-fan-item="sns">SNS</button>
-              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openEncyclopediaPopup" data-fan-item="encyclopedia">図鑑</button>
-              <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openVotePopup" data-fan-item="vote">投票<span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></button>
-              <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openCompositingPopup" data-fan-item="compositing">ポスター作成<span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></button>
+            <div class="gift-fan-menu is-open" id="giftFanMenu">
+            <div class="gift-fan-diagnosis-actions" aria-hidden="false">
+              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="love-diagnosis/index.html" data-diagnosis-item="romance"><span class="footer-btn-icon" data-icon="heart" aria-hidden="true"></span><span>恋愛</span></a>
+              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16school/index.html" data-diagnosis-item="school"><span class="footer-btn-icon" data-icon="school" aria-hidden="true"></span><span>学校</span></a>
+              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16love/index.html" data-diagnosis-item="love"><span class="footer-btn-icon" data-icon="cloud" aria-hidden="true"></span><span>メンヘラ</span></a>
+              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16stan/index.html" data-diagnosis-item="oshi"><span class="footer-btn-icon" data-icon="star" aria-hidden="true"></span><span>推し</span></a>
             </div>
-            <div class="gift-fan-diagnosis-actions" aria-hidden="true">
-              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16school/index.html" data-diagnosis-item="school">学校</a>
-              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16love/index.html" data-diagnosis-item="love">メンヘラ</a>
-              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16stan/index.html" data-diagnosis-item="oshi">推し</a>
-              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16night/index.html" data-diagnosis-item="night">夜職</a>
-              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16school/mama/index.html" data-diagnosis-item="mama">ママ</a>
+            <div class="gift-fan-actions" aria-hidden="false">
+              <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openCompositingPopup" data-fan-item="compositing"><span class="footer-btn-icon" data-icon="image" aria-hidden="true"></span><span>ポスター<br>作成</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openEncyclopediaPopup" data-fan-item="encyclopedia"><span class="footer-btn-icon" data-icon="book" aria-hidden="true"></span><span>図鑑</span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openVotePopup" data-fan-item="vote"><span class="footer-btn-icon" data-icon="vote" aria-hidden="true"></span><span>投票</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openFaqPopup" data-fan-item="faq"><span class="footer-btn-icon" data-icon="mail" aria-hidden="true"></span><span>お問い合わせ</span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openSnsPopup" data-fan-item="sns"><span class="footer-btn-icon" data-icon="share" aria-hidden="true"></span><span>SNS</span></button>
             </div>
           </div>
-          <button class="btn btn-secondary" id="openVideoPopup">動画</button>
         </div>
       </div>
     </div>
@@ -5618,10 +6289,17 @@
     </div>
     <!-- 右下の法的リンク -->
     <div class="legal-links">
-      <a href="/terms">利用規約</a>
-      <a href="/privacy">プライバシーポリシー</a>
-      <a href="/tokusho">特定商取引法に基づく表記</a>
-      <a href="/company">運営者情報</a>
+      <div class="legal-link-row">
+        <a href="/terms">利用規約</a>
+        <span aria-hidden="true">|</span>
+        <a href="/privacy">プライバシーポリシー</a>
+      </div>
+      <div class="legal-link-row legal-link-row-sub">
+        <a href="/tokusho">特定商取引法に基づく表記</a>
+        <span aria-hidden="true">|</span>
+        <a href="/company">運営者情報</a>
+      </div>
+      <div class="copyright">© Mobby All Rights Reserved.</div>
     </div>
   </div>
 
@@ -6806,8 +7484,6 @@
       { key: "all", label: "📋 一覧", color: "#6b7280" },
       { key: "school_m", label: "🏫 学校♂", color: "#4a90d9" },
       { key: "school_f", label: "🏫 学校♀", color: "#e9748d" },
-      { key: "mama", label: "👩 ママ", color: "#e8a0bf" },
-      { key: "night", label: "🌙 夜職", color: "#c9a050" },
       { key: "stan", label: "🎤 推し活", color: "#9b6dff" },
       { key: "love", label: "💜 メンヘラ", color: "#b86cff" },
     ];
@@ -7235,7 +7911,7 @@
       const actions = giftFanMenu.querySelector('.gift-fan-actions');
       if (actions) actions.setAttribute('aria-hidden', 'false');
       const diagnosisActions = giftFanMenu.querySelector('.gift-fan-diagnosis-actions');
-      if (diagnosisActions) diagnosisActions.setAttribute('aria-hidden', 'true');
+      if (diagnosisActions) diagnosisActions.setAttribute('aria-hidden', 'false');
     }
 
     function toggleGiftFanMenu() {
@@ -7573,7 +8249,7 @@
     diagnosisFanTrigger?.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      toggleGiftDiagnosisMenu();
+      openPopup('diagnosisPopup');
     });
     document.getElementById('openFaqPopup')?.addEventListener('click', () => openPopup('faqPopup'));
     document.getElementById('openSnsPopup')?.addEventListener('click', () => openPopup('snsPopup'));
@@ -7595,7 +8271,7 @@
     });
     document.getElementById('goMobbyDiagnosis')?.addEventListener('click', () => openPopup('diagnosisPopup'));
     const diagnosisLauncher = document.getElementById('openPricePopup');
-    if (diagnosisLauncher) diagnosisLauncher.textContent = '診断';
+    if (diagnosisLauncher && diagnosisLauncher.children.length === 0) diagnosisLauncher.textContent = '診断';
     document.addEventListener('click', (e) => {
       if (!giftFanMenu?.classList.contains('is-diagnosis-open')) return;
       if (giftFanMenu.contains(e.target)) return;
@@ -7837,43 +8513,6 @@
           return diagnosisName ? `16stan/img/key/${diagnosisName}.webp` : "16stan/img/key/現場至上主義推しモビー.webp";
         }
       },
-      {
-        id: "night",
-        label: "夜職モビー診断",
-        source: "16night",
-        storageKey: "night_char_diag_v1",
-        diagnosisUrl: "16night/index.html",
-        fallbackImage: "16night/img/key/もはふし_keychain_lite.jpg",
-        backImage: "16school/key/ura.jpg",
-        resolveReady(data) {
-          if (!data || typeof data !== "object") return false;
-          const answered = Object.keys(data.answers || {}).length;
-          return answered > 0 && !!(data.profile?.name && data.profile?.email && data.profile?.age && data.code);
-        },
-        resolvePendingReady() {
-          return false;
-        },
-        resolveSummary(data) {
-          return {
-            name: data?.profile?.name || "",
-            email: data?.profile?.email || "",
-            age: data?.profile?.age || "",
-            gender: "",
-            type: data?.code || "",
-            diagnosisName: data?.char?.name || "",
-            axes: data?.leftPct || {},
-            answers: data?.answers || {},
-            interested: false,
-            userId: "",
-            referrerId: "",
-            shareCount: 0
-          };
-        },
-        resolveImage(summary) {
-          const type = String(summary?.type || "").trim();
-          return type ? `16night/img/key/${type}_keychain_lite.jpg` : "16night/img/key/もはふし_keychain_lite.jpg";
-        }
-      }
     ];
 
     const acrylicSeriesChooser = document.getElementById("acrylicSeriesChooser");
@@ -8771,7 +9410,11 @@
     (function () {
       var overlay = document.getElementById('pageTransitionOverlay');
       // ページ読み込み時フェードイン
-      window.addEventListener('pageshow', function () {
+      window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+          window.location.reload();
+          return;
+        }
         overlay.classList.add('fade-in');
         overlay.classList.remove('fade-out');
         if (typeof resetTransientUiAfterHistoryRestore === 'function') {

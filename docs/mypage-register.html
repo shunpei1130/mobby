@@ -342,7 +342,7 @@
     <section class="panel hero">
       <span class="eyebrow">Mobby Identity Hub</span>
       <h1>診断を束ねて、<br>“私”を一枚で見せる。</h1>
-      <p class="lead">学校・メンヘラ・推し活・夜職・ママ診断を横断して、あなた専用のプロフィールページを作成します。SNSに貼るだけで「私こんなタイプ」が伝わる設計です。</p>
+      <p class="lead">学校・メンヘラ・推し活診断を横断して、あなた専用のプロフィールページを作成します。SNSに貼るだけで「私こんなタイプ」が伝わる設計です。</p>
       <div class="metrics">
         <div class="metric"><strong id="doneCount">0</strong><span>完了診断</span></div>
         <div class="metric"><strong id="totalCount">5</strong><span>対象診断</span></div>
@@ -386,9 +386,7 @@
       const STORAGE_TARGETS = [
         { key: "school_char_diag_v1", label: "学校", source: "16school" },
         { key: "love_char_diag_v1", label: "メンヘラ", source: "16love" },
-        { key: "stan_char_diag_v1", label: "推し活", source: "16stan" },
-        { key: "night_char_diag_v1", label: "夜職", source: "16night" },
-        { key: "mamaMobbyState", label: "ママ", source: "16mama" }
+        { key: "stan_char_diag_v1", label: "推し活", source: "16stan" }
       ];
 
       const isLocal = location.hostname === "127.0.0.1" || location.hostname === "localhost";
