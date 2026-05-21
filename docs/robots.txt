@@ -8,3 +8,4 @@ User-agent: Googlebot-Mobile
 Allow: /
 
 Sitemap: https://www.mobby.online/sitemap.xml
+Sitemap: https://www.mobby.online/korea/16school/sitemap.xml

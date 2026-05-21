@@ -4,6 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="format-detection" content="telephone=no,address=no,email=no" />
 
   <!-- SEO基本 -->
   <title>モビー診断 | Mobby（モビー）公式サイト</title>
@@ -11,8 +13,14 @@
     content="モビー診断の公式サイト。学校モビー診断、メンヘラモビー診断、推し活モビー診断を無料で楽しめます。Mobby（モビー）のカメラ型キーホルダー公式情報も掲載。">
   <meta name="keywords" content="モビー診断,Mobby,モビー,学校モビー診断,メンヘラモビー診断,推し活モビー診断,カメラ型キーホルダー,モビーアウトフィット">
   <meta name="author" content="Mobby">
+  <meta name="application-name" content="Mobby（モビー）">
   <meta name="robots" content="index, follow">
+  <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="bingbot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <link rel="canonical" href="https://www.mobby.online/">
+  <link rel="alternate" href="https://www.mobby.online/" hreflang="ja-JP">
+  <link rel="alternate" href="https://www.mobby.online/korea/" hreflang="ko-KR">
+  <link rel="alternate" href="https://www.mobby.online/" hreflang="x-default">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
@@ -22,7 +30,8 @@
   <meta property="og:image" content="https://www.mobby.online/img/Mobby.webp">
   <meta property="og:site_name" content="モビー診断 | Mobby（モビー）">
   <meta property="og:locale" content="ja_JP">
-  <meta property="og:locale:alternate" content="モビー">
+  <meta property="og:locale:alternate" content="ko_KR">
+  <meta property="og:locale:alternate" content="en_US">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
@@ -45,61 +54,118 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Product",
-    "name": "Mobby（モビー）",
-    "alternateName": "モビー",
-    "description": "思い出を撮影できるカメラ型キーホルダー。かわいいデザインで持ち歩けるミニカメラアクセサリー。",
-    "image": "https://www.mobby.online/img/Mobby.webp",
-    "brand": {
-      "@type": "Brand",
-      "name": "Mobby"
-    },
-    "category": "カメラ型キーホルダー",
-    "offers": {
-      "@type": "Offer",
-      "price": 0,
-      "priceCurrency": "JPY",
-      "availability": "https://schema.org/PreOrder",
-      "url": "https://www.mobby.online/",
-      "priceValidUntil": "2027-12-31"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": 4.8,
-      "reviewCount": 100,
-      "ratingCount": 100,
-      "bestRating": 5,
-      "worstRating": 1
-    },
-    "review": {
-      "@type": "Review",
-      "reviewRating": {
-        "@type": "Rating",
-        "ratingValue": 5,
-        "bestRating": 5,
-        "worstRating": 1
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://www.mobby.online/#organization",
+        "name": "Mobby",
+        "alternateName": [
+          "モビー",
+          "Mobby（モビー）",
+          "モビー診断"
+        ],
+        "url": "https://www.mobby.online/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.mobby.online/img/Mobby.png"
+        },
+        "sameAs": [
+          "https://www.instagram.com/mobby_official_/",
+          "https://www.tiktok.com/@mobby_official_"
+        ]
       },
-      "author": {
-        "@type": "Person",
-        "name": "ユーザー"
+      {
+        "@type": "WebSite",
+        "@id": "https://www.mobby.online/#website",
+        "url": "https://www.mobby.online/",
+        "name": "モビー診断 | Mobby（モビー）公式サイト",
+        "alternateName": [
+          "モビー診断",
+          "Mobby",
+          "モビー"
+        ],
+        "inLanguage": "ja",
+        "publisher": {
+          "@id": "https://www.mobby.online/#organization"
+        }
       },
-      "reviewBody": "かわいいデザインで気に入りました！"
-    }
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "モビー診断 | Mobby（モビー）公式サイト",
-    "alternateName": ["モビー診断", "Mobby", "モビー"],
-    "url": "https://www.mobby.online/",
-    "description": "学校モビー診断など複数の診断コンテンツを掲載するMobby（モビー）公式サイト。",
-    "inLanguage": "ja",
-    "publisher": {
-      "@type": "Organization",
-      "name": "Mobby"
-    }
+      {
+        "@type": "WebPage",
+        "@id": "https://www.mobby.online/#webpage",
+        "url": "https://www.mobby.online/",
+        "name": "モビー診断 | Mobby（モビー）公式サイト",
+        "description": "学校モビー診断、メンヘラモビー診断、推し活モビー診断、夜職モビー診断、ママモビー診断をまとめて見られるMobby（モビー）公式サイト。",
+        "inLanguage": "ja",
+        "isPartOf": {
+          "@id": "https://www.mobby.online/#website"
+        },
+        "about": {
+          "@type": "Thing",
+          "name": "モビー診断"
+        },
+        "primaryImageOfPage": {
+          "@type": "ImageObject",
+          "url": "https://www.mobby.online/img/Mobby.png"
+        },
+        "breadcrumb": {
+          "@id": "https://www.mobby.online/#breadcrumb"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://www.mobby.online/#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "モビー診断トップ",
+            "item": "https://www.mobby.online/"
+          }
+        ]
+      },
+      {
+        "@type": "Product",
+        "@id": "https://www.mobby.online/#product",
+        "name": "Mobby（モビー）",
+        "alternateName": "モビー",
+        "description": "思い出を撮影できるカメラ型キーホルダー。かわいいデザインで持ち歩けるミニカメラアクセサリー。",
+        "image": "https://www.mobby.online/img/Mobby.png",
+        "brand": {
+          "@id": "https://www.mobby.online/#organization"
+        },
+        "category": "カメラ型キーホルダー",
+        "offers": {
+          "@type": "Offer",
+          "price": 0,
+          "priceCurrency": "JPY",
+          "availability": "https://schema.org/PreOrder",
+          "url": "https://www.mobby.online/",
+          "priceValidUntil": "2027-12-31"
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": 4.8,
+          "reviewCount": 100,
+          "ratingCount": 100,
+          "bestRating": 5,
+          "worstRating": 1
+        },
+        "review": {
+          "@type": "Review",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": 5,
+            "bestRating": 5,
+            "worstRating": 1
+          },
+          "author": {
+            "@type": "Person",
+            "name": "ユーザー"
+          },
+          "reviewBody": "かわいいデザインで気に入りました！"
+        }
+      }
+    ]
   }
   </script>
   <style>
@@ -7215,6 +7281,7 @@
       let smokeInView = true;
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
       let quality = getSmokeQuality();
+      let renderScale = 1;
 
       function syncSmokeVisibility() {
         const splash = document.getElementById("splash-screen");
@@ -7228,6 +7295,9 @@
         const reduced = prefersReducedMotion.matches;
         const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
         const compactViewport = window.innerWidth < 768;
+        const cpuCores = Number(navigator.hardwareConcurrency || 4);
+        const mem = Number(navigator.deviceMemory || 0);
+        const lowSpecDesktop = !coarsePointer && !compactViewport && (cpuCores <= 4 || (mem > 0 && mem <= 4));
 
         if (reduced) {
           return {
@@ -7242,22 +7312,33 @@
 
         if (coarsePointer || compactViewport) {
           return {
-            spawnRate: 0.038,
+            spawnRate: 0.032,
             emitCount: 1,
-            blur: 3,
-            maxParticles: 68,
+            blur: 2,
+            maxParticles: 54,
             streak: true,
-            densityRange: 0.28
+            densityRange: 0.24
+          };
+        }
+
+        if (lowSpecDesktop) {
+          return {
+            spawnRate: 0.024,
+            emitCount: 1,
+            blur: 1,
+            maxParticles: 34,
+            streak: false,
+            densityRange: 0.2
           };
         }
 
         return {
-          spawnRate: 0.05,
+          spawnRate: 0.03,
           emitCount: 1,
-          blur: 4,
-          maxParticles: 84,
+          blur: 2,
+          maxParticles: 46,
           streak: true,
-          densityRange: 0.3
+          densityRange: 0.23
         };
       }
 
@@ -7269,14 +7350,22 @@
 
       function resizeSmoke() {
         quality = getSmokeQuality();
+        const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+        const compactViewport = window.innerWidth < 768;
+        const desktopMode = !coarsePointer && !compactViewport;
+        renderScale = desktopMode
+          ? Math.max(0.58, Math.min(0.78, 1366 / Math.max(window.innerWidth, 1)))
+          : 1;
         const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
         width = Math.max(1, Math.round(window.innerWidth));
         height = Math.max(1, Math.round(window.innerHeight));
-        canvas.width = Math.round(width * dpr);
-        canvas.height = Math.round(height * dpr);
+        const renderWidth = Math.max(1, Math.round(width * renderScale));
+        const renderHeight = Math.max(1, Math.round(height * renderScale));
+        canvas.width = Math.round(renderWidth * dpr);
+        canvas.height = Math.round(renderHeight * dpr);
         canvas.style.width = `${width}px`;
         canvas.style.height = `${height}px`;
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.setTransform(dpr / renderScale, 0, 0, dpr / renderScale, 0, 0);
         const rect = stage.getBoundingClientRect();
         sourceX = rect.left + rect.width * source.x;
         sourceY = rect.top + rect.height * source.y;
@@ -10145,4 +10234,3 @@
 </body>
 
 </html>
-
