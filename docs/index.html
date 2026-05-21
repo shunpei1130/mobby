@@ -5833,8 +5833,7 @@
       justify-content: flex-start !important;
       align-items: flex-end !important;
       gap: 0 !important;
-      overflow: hidden !important;
-      overflow-x: hidden !important;
+      overflow-x: auto !important;
       overflow-y: hidden !important;
       scroll-snap-type: none !important;
       scroll-behavior: smooth;
@@ -5859,9 +5858,9 @@
       animation-play-state: running;
     }
 
-    .hero-diagnosis-menu .gift-fan-diagnosis-actions:hover .hero-diagnosis-track,
-    .hero-diagnosis-menu .gift-fan-diagnosis-actions:focus-within .hero-diagnosis-track {
-      animation-play-state: paused;
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions.is-user-scrolling .hero-diagnosis-track {
+      animation: none;
+      transform: translateX(0);
     }
 
     @keyframes heroDiagnosisScroll {
@@ -10077,6 +10076,8 @@
         scroller.dataset.autoAdvanceReady = 'true';
         scroller.style.scrollSnapType = 'none';
 
+        let userScrollTimerId = 0;
+
         const updateAnimation = () => {
           const distance = Math.max(0, track.scrollWidth - scroller.clientWidth);
           scroller.style.setProperty('--hero-diagnosis-scroll-distance', `${distance}px`);
@@ -10085,7 +10086,14 @@
         };
 
         const pauseThenResume = () => {
+          scroller.classList.add('is-user-scrolling');
           updateAnimation();
+          if (userScrollTimerId) window.clearTimeout(userScrollTimerId);
+          userScrollTimerId = window.setTimeout(() => {
+            scroller.scrollLeft = 0;
+            scroller.classList.remove('is-user-scrolling');
+            updateAnimation();
+          }, 1800);
         };
 
         ['pointerdown', 'wheel', 'touchstart', 'focusin'].forEach((eventName) => scroller.addEventListener(eventName, pauseThenResume, { passive: true }));
