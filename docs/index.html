@@ -1256,7 +1256,7 @@
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       color: #384149;
-      font-size: 2.1rem;
+      font-size: 0;
       line-height: 1;
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.8),
@@ -1304,8 +1304,8 @@
         width: 34px;
         height: 34px;
         margin-top: 12px;
-        font-size: 1.7rem;
       }
+
     }
 
     .hero-smoke-canvas {
@@ -5723,6 +5723,37 @@
         0 16px 32px rgba(78, 57, 39, 0.21) !important;
     }
 
+    .footer-burn-card-row .burn-card-arrow {
+      display: grid !important;
+      place-items: center !important;
+      font-size: 0 !important;
+      line-height: 0 !important;
+      text-indent: 0 !important;
+    }
+
+    .footer-burn-card-row .burn-card-arrow::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 2;
+      width: 9px;
+      height: 9px;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      transform-origin: center;
+      pointer-events: none;
+    }
+
+    @media (max-width: 640px) {
+      .footer-burn-card-row .burn-card-arrow::after {
+        width: 8px;
+        height: 8px;
+        border-width: 1.8px;
+      }
+    }
+
     /* Hero diagnosis menu: keep the dotted frame stable, scroll only the buttons. */
     .hero-diagnosis-menu {
       box-sizing: border-box;
@@ -6726,7 +6757,7 @@
                 <span class="burn-card-copy">
                   <span class="burn-card-title">ページを作る</span>
                   <span class="burn-card-text">二人の思い出を<br>雑誌のページのように残す</span>
-                  <span class="burn-card-arrow" aria-hidden="true">›</span>
+                  <span class="burn-card-arrow" aria-hidden="true"></span>
                 </span>
                 <span class="burn-card-media" aria-hidden="true">
                   <img src="img/burn/burn_ref.png" alt="" loading="lazy" decoding="async">

@@ -1395,7 +1395,12 @@
         const div = document.createElement("button");
         div.className = "asset";
         div.type = "button";
-        div.innerHTML = `<img src="${a.url}" alt=""><span>${a.name}</span>`;
+        const img = document.createElement("img");
+        img.src = a.url;
+        img.alt = "";
+        const label = document.createElement("span");
+        label.textContent = a.name;
+        div.append(img, label);
         div.dataset.assetUrl = a.url;
         div.dataset.assetName = a.name;
         div.dataset.assetLocked = a.locked ? "1" : "0";
@@ -1462,6 +1467,7 @@
     let dragStartX = 0;
     let dragStartLeft = 0;
     let dragMoved = false;
+    const dragThreshold = 8;
     let pendingAssetButton = null;
     row.addEventListener("pointerdown", (e) => {
       if (e.button !== 0) return;
@@ -1476,8 +1482,8 @@
     row.addEventListener("pointermove", (e) => {
       if (!isDragScroll) return;
       const delta = e.clientX - dragStartX;
-      if (Math.abs(delta) > 2) dragMoved = true;
-      row.scrollLeft = dragStartLeft - delta;
+      if (Math.abs(delta) > dragThreshold) dragMoved = true;
+      if (dragMoved) row.scrollLeft = dragStartLeft - delta;
       if (dragMoved) e.preventDefault();
     });
     row.addEventListener("pointerup", () => {

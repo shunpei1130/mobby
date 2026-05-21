@@ -176,7 +176,7 @@
             ${l("image")} アルバム
           </button>
           <button class="record-shutter" type="button" data-record-open-camera-input aria-label="写真を撮る"></button>
-          <button class="record-secondary-button record-save-button" type="button" data-record-save ${a&&!r?"":"disabled"} ${r?'aria-busy="true"':""}>${r?"保存中":"保存"}</button>
+          <button class="record-secondary-button record-save-button" type="button" data-record-save ${a&&!r?"":"disabled"} ${r?'aria-busy="true"':""} style="display:flex!important;align-items:center;justify-content:center;width:100%!important;min-height:54px!important;border:0!important;border-radius:999px!important;background:#c86f6a!important;color:#fff!important;box-shadow:0 12px 26px rgba(181,98,92,.22)!important;font-weight:700!important;opacity:1!important;visibility:visible!important;">${r?"保存中":"保存"}</button>
         </div>
         ${a?'<button class="record-photo-download" type="button" data-record-save-photo>写真だけ保存</button>':""}
         `}
@@ -230,7 +230,7 @@
             <input type="text" data-record-edit-mood value="${o(e.mood||"")}" placeholder="うれしい / のんびり" />
           </label>
         </div>
-        <button class="record-primary-button" type="button" data-record-update-memory="${e.id}">保存</button>
+        <button class="record-primary-button" type="button" data-record-update-memory="${e.id}" style="display:flex!important;align-items:center;justify-content:center;width:100%;min-height:54px;margin-top:14px;border:0;border-radius:999px;background:#c86f6a!important;color:#fff!important;box-shadow:0 12px 26px rgba(181,98,92,.22);font-weight:700;opacity:1!important;visibility:visible!important;">保存</button>
       </article>
     </section>
   `:E([])}function L(e){return`left:${e.x}%;top:${e.y}%;width:${e.width}%;height:${e.height}%;`}function Ie(e=w){return`
@@ -279,7 +279,7 @@
       <span>Page title</span>
       <input type="text" data-record-title value="${o(e)}" placeholder="A day to remember" />
     </label>
-  `}function Te(e,r,a=w,t="",n=!0){const i=(r||[]).slice(0,3),c=new Set(i),p=new Map(e.map(s=>[s.id,s])),m=i.map(s=>p.get(s)).filter(Boolean),_=e.filter(s=>!c.has(s.id)),g=[...m,..._];return`
+  `}function Te(e,r,a=w,t="",n=!0){const p=new Map(e.map(s=>[s.id,s])),i=(r||[]).filter(s=>p.has(s)).slice(0,3),c=new Set(i),m=i.map(s=>p.get(s)).filter(Boolean),_=e.filter(s=>!c.has(s.id)),g=[...m,..._];return`
     <section class="record-page record-page--select">
       <header class="record-stack-header">
         <button class="record-select-back" type="button" data-record-back-home aria-label="&#25147;&#12427;">${l("returnLeft")}</button>
@@ -313,7 +313,6 @@
               </button>
               <div class="record-select-card__copy">
                 <p class="record-select-card__date">${b}</p>
-                ${d===0?"<em>&#12513;&#12452;&#12531;&#20889;&#30495;</em>":""}
               </div>
               ${$?`
                 <div class="record-select-card__order" aria-label="photo order">
@@ -356,14 +355,12 @@
       <img class="record-generated-page__template" src="${c.src}" alt="" ${h()} />
       <time class="record-generated-page__date" datetime="${o(t||U())}">${o(_)}</time>
       ${c.titleSlot?`
-        <input
+        <article
           class="record-template-slot record-template-slot--title"
           style="${L(c.titleSlot)}"
-          type="text"
           data-record-title
-          value="${o(m)}"
           aria-label="ページタイトル"
-        />
+        >${o(m)}</article>
       `:""}
       ${c.imageSlots.map((d,b)=>s(e[b],Ae(d,b),b)).join("")}
       ${c.textSlots.map((d,b)=>$(e[b],d,b)).join("")}
@@ -404,6 +401,7 @@
       </div>
     </section>
   `}function Ke(e,r){const a=r.recordDate||U(),t=[...e.recordMemories||[]].filter(c=>B(c.createdAt)===a).sort((c,p)=>{const m=String(c.time||"").localeCompare(String(p.time||""));return m||new Date(c.createdAt)-new Date(p.createdAt)}),n=r.recordStage||"home";if(n==="camera")return Me(r.recordDraft||{},!!r.recordMemorySaving);if(n==="edit")return Se(t.find(c=>c.id===r.recordEditingId));const i=r.recordPhotoFeather!==!1;return n==="select"?Te(t,r.recordSelectedIds||[],r.recordTemplateId||w,r.recordTitle||"",i):n==="preview"?Ne(C(t,r.recordSelectedIds||[]),r.recordTemplateId||w,r.recordTitle||"",a,r.recordBackgroundId||v,i):n==="complete"?Fe(C(t,r.recordSelectedIds||[]),r.recordTemplateId||w,r.recordTitle||"",a,r.recordBackgroundId||v,i):E(t,a)}export{v as D,y as R,w as a,_e as b,ve as g,Ke as r};
+
 
 
 

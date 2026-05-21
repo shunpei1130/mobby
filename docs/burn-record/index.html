@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>BURNでページをつくる</title>
-  <script type="module" crossorigin src="./assets/burnRecord-CEFJ408q.js"></script>
+  <script type="module" crossorigin src="./assets/burnRecord-CEFJ408q.js?v=clear-initial-copy"></script>
   <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
-  <link rel="modulepreload" crossorigin href="./assets/icons-BAsau70F.js">
-  <link rel="modulepreload" crossorigin href="./assets/record-CKgMcgCu.js">
-  <link rel="stylesheet" crossorigin href="./assets/components-Cas7KQML.css">
-  <link rel="stylesheet" crossorigin href="./assets/record-bTKggYDr.css">
+  <link rel="modulepreload" crossorigin href="./assets/icons-BAsau70F.js?v=iconfix">
+  <link rel="modulepreload" crossorigin href="./assets/record-CKgMcgCu.js?v=clear-initial-copy">
+  <link rel="stylesheet" crossorigin href="./assets/components-Cas7KQML.css?v=edit-save-clean">
+  <link rel="stylesheet" crossorigin href="./assets/record-bTKggYDr.css?v=hide-time">
   <style>
     .burn-guide-overlay {
       position: fixed;
@@ -71,6 +71,23 @@
 
     .burn-guide-copy {
       display: none;
+    }
+
+    .record-edit-card [data-record-update-memory] {
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 54px;
+      margin-top: 14px;
+      border: 0;
+      border-radius: 999px;
+      background: #c86f6a !important;
+      color: #fff !important;
+      box-shadow: 0 12px 26px rgba(181, 98, 92, 0.22);
+      font-weight: 700;
+      opacity: 1 !important;
+      visibility: visible !important;
     }
 
     .burn-guide-visual {
@@ -511,6 +528,65 @@
       background: #d979a4;
     }
 
+    .record-header__back,
+    [data-record-back-home],
+    .record-camera-header button,
+    .record-outline-button,
+    [data-record-home-return],
+    .record-page--preview [data-record-stage="select"],
+    .record-page--preview .record-page-preview-card__copy button[data-record-stage="select"] {
+      border: 1px solid rgba(255, 255, 255, 0.56) !important;
+      border-radius: 999px !important;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.2) 58%, rgba(255, 244, 250, 0.28)) !important;
+      color: rgba(62, 48, 44, 0.9) !important;
+      -webkit-backdrop-filter: blur(18px) saturate(1.35) !important;
+      backdrop-filter: blur(18px) saturate(1.35) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.82),
+        inset 0 -14px 22px rgba(255, 255, 255, 0.12),
+        0 10px 22px rgba(78, 57, 39, 0.12) !important;
+    }
+
+    .record-header__back svg,
+    [data-record-back-home] svg,
+    .record-camera-header button svg,
+    .record-outline-button svg,
+    .record-page--preview [data-record-stage="select"] svg {
+      color: currentColor !important;
+      stroke: currentColor !important;
+    }
+
+    .record-page--complete .record-complete-actions [data-record-home-return] {
+      display: grid !important;
+    }
+
+    .record-title-field input,
+    .record-template-slot--title {
+      border: 0 !important;
+      background: transparent !important;
+      background-color: transparent !important;
+      background-image: none !important;
+      box-shadow: none !important;
+      -webkit-appearance: none !important;
+      appearance: none !important;
+    }
+
+    .record-generated-page .record-template-slot--title {
+      display: block !important;
+      align-content: start !important;
+      place-items: initial !important;
+      padding: 5.5% !important;
+      overflow: hidden !important;
+      color: #4f4440 !important;
+      font-family: Shippori Mincho, "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif !important;
+      font-size: clamp(0.54rem, 3.03cqw, 0.74rem) !important;
+      font-weight: 400 !important;
+      line-height: 1.74 !important;
+      text-align: left !important;
+      white-space: pre-line !important;
+    }
+
     @media (max-width: 520px) {
       .burn-guide-overlay {
         padding: 18px;
@@ -628,6 +704,36 @@
       });
 
       render();
+    })();
+
+    (() => {
+      const root = document.getElementById("recordRoot");
+      if (!root) return;
+
+      const addHomeReturn = () => {
+        const actions = root.querySelector(".record-page--complete .record-complete-actions");
+        if (!actions || actions.querySelector("[data-record-home-return]")) return;
+
+        const saveButton = actions.querySelector("[data-record-save-page]");
+        if (!saveButton) return;
+
+        const homeButton = document.createElement("button");
+        homeButton.type = "button";
+        homeButton.dataset.recordHomeReturn = "true";
+        homeButton.innerHTML = "<span>Homeに戻る</span>";
+        saveButton.insertAdjacentElement("afterend", homeButton);
+      };
+
+      root.addEventListener("click", (event) => {
+        if (!event.target.closest("[data-record-home-return]")) return;
+        window.location.href = "../index.html";
+      });
+
+      new MutationObserver(addHomeReturn).observe(root, {
+        childList: true,
+        subtree: true
+      });
+      addHomeReturn();
     })();
   </script>
 </body>
