@@ -155,11 +155,10 @@
       background-image:
         radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 24%),
         radial-gradient(circle at 85% 18%, rgba(255, 196, 166, 0.38), rgba(255, 196, 166, 0) 28%),
-        url('img/favicon/背景透過.webp'),
         linear-gradient(135deg, #fff8ef 0%, #f6ecda 55%, #ead8ba 100%);
       background-repeat: no-repeat;
-      background-position: center, center, center, center;
-      background-size: 100% 100%, 100% 100%, min(68vw, 430px) auto, cover;
+      background-position: center, center, center;
+      background-size: 100% 100%, 100% 100%, cover;
       /* 横幅50%で固定 */
       /* 拡大しない・必ず収まる */
     }
@@ -223,13 +222,6 @@
       pointer-events: none;
     }
 
-    .splash-logo-img {
-      display: block;
-      width: 100%;
-      height: auto;
-      opacity: 1;
-    }
-
     .splash-logo-reveal {
       position: absolute;
       inset: 0;
@@ -284,7 +276,7 @@
 
     @media (max-width: 640px) {
       #splash-screen {
-        background-size: 100% 100%, 100% 100%, min(86vw, 340px) auto, cover;
+        background-size: 100% 100%, 100% 100%, cover;
       }
 
       .splash-logo-shell {
@@ -653,6 +645,13 @@
       background:
         linear-gradient(145deg, #d65f89 0%, #ef9a7d 54%, #f9d66d 100%);
       color: #fffaf2;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+
+    #openSnsPopup::before,
+    #openSnsPopup::after {
+      pointer-events: none;
     }
 
     #openVideoPopup {
@@ -3402,10 +3401,17 @@
       text-decoration: none;
       font-weight: 900;
       letter-spacing: 0.04em;
+      opacity: 1 !important;
+      visibility: visible !important;
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.35),
         0 12px 28px rgba(74, 55, 40, 0.18);
       transition: transform 0.2s var(--ease-soft), box-shadow 0.2s var(--ease-soft);
+    }
+
+    .sns-link-card::before,
+    .sns-link-card::after {
+      pointer-events: none;
     }
 
     .sns-link-card:hover {
@@ -5800,10 +5806,13 @@
     }
 
     .hero-diagnosis-menu .gift-fan-diagnosis-actions {
+      --hero-diagnosis-scroll-distance: 230px;
+      --hero-diagnosis-scroll-duration: 14s;
       box-sizing: border-box;
-      width: 100% !important;
+      width: min(430px, 100%) !important;
       max-width: 100% !important;
       height: 78px !important;
+      margin: 0 auto !important;
       padding: 12px 0 0 !important;
       border: 0 !important;
       border-radius: 0 !important;
@@ -5813,13 +5822,47 @@
       flex-wrap: nowrap !important;
       justify-content: flex-start !important;
       align-items: flex-end !important;
-      gap: 14px !important;
-      overflow-x: auto !important;
+      gap: 0 !important;
+      overflow: hidden !important;
+      overflow-x: hidden !important;
       overflow-y: hidden !important;
       scroll-snap-type: none !important;
       scroll-behavior: smooth;
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
+    }
+
+    .hero-diagnosis-menu .hero-diagnosis-track {
+      display: flex !important;
+      flex: 0 0 auto;
+      flex-wrap: nowrap !important;
+      align-items: flex-end !important;
+      gap: 14px !important;
+      width: max-content;
+      min-width: max-content;
+      will-change: transform;
+      animation: heroDiagnosisScroll var(--hero-diagnosis-scroll-duration) linear infinite;
+      animation-play-state: paused;
+    }
+
+    .hero-diagnosis-menu.is-scroll-ready .hero-diagnosis-track {
+      animation-play-state: running;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions:hover .hero-diagnosis-track,
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions:focus-within .hero-diagnosis-track {
+      animation-play-state: paused;
+    }
+
+    @keyframes heroDiagnosisScroll {
+      0%,
+      24% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(calc(var(--hero-diagnosis-scroll-distance) * -1));
+      }
     }
 
     .hero-diagnosis-menu .gift-fan-diagnosis-actions::before {
@@ -5997,6 +6040,10 @@
         height: 70px !important;
         padding-top: 12px !important;
         align-items: flex-end !important;
+        gap: 0 !important;
+      }
+
+      .hero-diagnosis-menu .hero-diagnosis-track {
         gap: 7px !important;
       }
 
@@ -6121,7 +6168,6 @@
         <div class="splash-logo-mask splash-logo-glow"></div>
         <div class="splash-logo-reveal"></div>
         <div class="splash-logo-mask splash-logo-trace"></div>
-        <img class="splash-logo-img" src="mobby-custom/assets/stickers/Logo.webp" alt="Mobby logo" fetchpriority="high" decoding="async" />
       </div>
     </div>
   </div>
@@ -6158,13 +6204,15 @@
           </div>
           <div class="hero-diagnosis-menu">
             <div class="gift-fan-diagnosis-actions" aria-hidden="false">
-              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16school/index.html" data-diagnosis-item="school"><span class="footer-btn-icon" data-icon="school" aria-hidden="true"></span><span>学校</span></a>
-              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16love/index.html" data-diagnosis-item="love"><span class="footer-btn-icon" data-icon="cloud" aria-hidden="true"></span><span>メンヘラ</span></a>
-              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16stan/index.html" data-diagnosis-item="oshi"><span class="footer-btn-icon" data-icon="star" aria-hidden="true"></span><span>推し</span></a>
-              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16renai/index.html" data-diagnosis-item="romance"><span class="footer-btn-icon" data-icon="heart" aria-hidden="true"></span><span>恋愛</span></a>
-              <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" type="button" data-diagnosis-item="blank-1" aria-label="コラボ予定1"><span class="gift-fan-collab-badge">コラボ!</span></button>
-              <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" type="button" data-diagnosis-item="blank-2" aria-label="コラボ予定2"><span class="gift-fan-collab-badge">コラボ!</span></button>
-              <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" type="button" data-diagnosis-item="blank-3" aria-label="コラボ予定3"><span class="gift-fan-collab-badge">コラボ!</span></button>
+              <div class="hero-diagnosis-track">
+                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16school/index.html" data-diagnosis-item="school"><span class="footer-btn-icon" data-icon="school" aria-hidden="true"></span><span>学校</span></a>
+                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16love/index.html" data-diagnosis-item="love"><span class="footer-btn-icon" data-icon="cloud" aria-hidden="true"></span><span>メンヘラ</span></a>
+                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16stan/index.html" data-diagnosis-item="oshi"><span class="footer-btn-icon" data-icon="star" aria-hidden="true"></span><span>推し</span></a>
+                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16renai/index.html" data-diagnosis-item="romance"><span class="footer-btn-icon" data-icon="heart" aria-hidden="true"></span><span>恋愛</span></a>
+                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" type="button" data-diagnosis-item="blank-1" aria-label="コラボ予定1"><span class="gift-fan-collab-badge">コラボ!</span></button>
+                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" type="button" data-diagnosis-item="blank-2" aria-label="コラボ予定2"><span class="gift-fan-collab-badge">コラボ!</span></button>
+                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" type="button" data-diagnosis-item="blank-3" aria-label="コラボ予定3"><span class="gift-fan-collab-badge">コラボ!</span></button>
+              </div>
             </div>
           </div>
         </div>
@@ -7542,6 +7590,7 @@
       if (mainContent) mainContent.classList.add('visible');
       document.body.style.overflowY = 'auto';
       if (stickyCta) stickyCta.style.display = 'block';
+      document.querySelector('.hero-diagnosis-menu')?.classList.add('is-scroll-ready');
       window.dispatchEvent(new CustomEvent('hero-smoke-toggle', {
         detail: {
           active: document.querySelector('.hero-model-stage')?.classList.contains('is-smoke-active')
@@ -10008,73 +10057,34 @@
         const scroller = document.querySelector('.hero-diagnosis-menu .gift-fan-diagnosis-actions');
         if (!scroller || scroller.dataset.autoAdvanceReady === 'true') return;
 
+        scroller.querySelectorAll('[data-auto-clone="true"]').forEach((clone) => clone.remove());
+        const track = scroller.querySelector('.hero-diagnosis-track');
         const items = Array.from(scroller.querySelectorAll('.gift-fan-diagnosis-action'));
+        if (!track) return;
         if (items.length < 2) return;
 
         scroller.dataset.autoAdvanceReady = 'true';
         scroller.style.scrollSnapType = 'none';
 
-        let rafId = 0;
-        let resumeTimerId = 0;
-        let lastFrameTime = 0;
-        const scrollSpeedPxPerSecond = 24;
-        const autoStartDelayMs = 1800;
-
-        const canScroll = () => scroller.scrollWidth > scroller.clientWidth + 2;
-
-        const stop = () => {
-          if (rafId) {
-            window.cancelAnimationFrame(rafId);
-            rafId = 0;
-          }
-          lastFrameTime = 0;
-        };
-
-        const tick = (frameTime) => {
-          if (!canScroll()) {
-            rafId = window.requestAnimationFrame(tick);
-            return;
-          }
-
-          if (!lastFrameTime) lastFrameTime = frameTime;
-          const elapsedSeconds = Math.min((frameTime - lastFrameTime) / 1000, 0.08);
-          lastFrameTime = frameTime;
-
-          const maxScroll = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
-          scroller.scrollLeft += scrollSpeedPxPerSecond * elapsedSeconds;
-
-          if (scroller.scrollLeft >= maxScroll - 1) {
-            scroller.scrollLeft = 0;
-            lastFrameTime = 0;
-          }
-
-          rafId = window.requestAnimationFrame(tick);
-        };
-
-        const start = () => {
-          stop();
-          rafId = window.requestAnimationFrame(tick);
+        const updateAnimation = () => {
+          const distance = Math.max(0, track.scrollWidth - scroller.clientWidth);
+          scroller.style.setProperty('--hero-diagnosis-scroll-distance', `${distance}px`);
+          scroller.style.setProperty('--hero-diagnosis-scroll-duration', `${Math.max(8, distance / 18)}s`);
+          if (distance <= 1) track.style.animationPlayState = 'paused';
         };
 
         const pauseThenResume = () => {
-          stop();
-          if (resumeTimerId) window.clearTimeout(resumeTimerId);
-          resumeTimerId = window.setTimeout(start, autoStartDelayMs);
+          updateAnimation();
         };
 
-        ['pointerdown', 'wheel', 'touchstart', 'focusin'].forEach((eventName) => {
-          scroller.addEventListener(eventName, pauseThenResume, { passive: true });
-        });
+        ['pointerdown', 'wheel', 'touchstart', 'focusin'].forEach((eventName) => scroller.addEventListener(eventName, pauseThenResume, { passive: true }));
         window.addEventListener('resize', pauseThenResume, { passive: true });
         document.addEventListener('visibilitychange', () => {
-          if (document.hidden) {
-            stop();
-          } else {
-            pauseThenResume();
-          }
+          if (!document.hidden) updateAnimation();
         });
 
-        resumeTimerId = window.setTimeout(start, autoStartDelayMs);
+        window.setTimeout(updateAnimation, 0);
+        window.setTimeout(updateAnimation, 500);
       }
 
       if (document.readyState === 'loading') {
