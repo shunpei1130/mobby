@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ko">
 
 <head>
@@ -1533,7 +1533,7 @@
                         snsSaveHint.textContent = "저장을 시작했습니다. 잘 안 되는 경우 결과 화면을 스크린샷해주세요.";
                         const dl = document.createElement("a");
                         dl.href = snsImagePath;
-                        dl.download = `${sanitizeDownloadName(ch.name)}-sns.png`;
+                        dl.download = `${sanitizeDownloadName(ch.name)}-sns.webp`;
                         dl.rel = "noopener";
                         document.body.appendChild(dl);
                         dl.click();

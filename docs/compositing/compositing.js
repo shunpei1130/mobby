@@ -1,4 +1,4 @@
-const COMPOSITING_TEMPLATES = [
+﻿const COMPOSITING_TEMPLATES = [
   {
     id: "mobby-inthebeach",
     name: "inthebeach",
@@ -424,7 +424,7 @@ function initCompositingTool() {
     const url = canvas.toDataURL("image/png");
     const link = document.createElement("a");
     link.href = url;
-    link.download = `mobby-compositing-${compositingState.templateId || "image"}.png`;
+    link.download = `mobby-compositing-${compositingState.templateId || "image"}.webp`;
     link.click();
   });
 

@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ja">
 
 <head>
@@ -1653,7 +1653,7 @@ state.profile = { name, email, age }; const { code, pcts } = computeResult(); co
             const { code, pcts } = computeResult(); const ch = CH[code]; if (!ch) { renderIntro(); return; } const app = document.getElementById("app");
             const displayName = ch.displayName || ch.name;
             const imgPath = `img/${ch.name}.jpg`;
-            const keyImageFrontPath = `img/key/${ch.name}.png`;
+            const keyImageFrontPath = `img/key/${ch.name}.webp`;
             const keyImageFrontWebpPath = `img/key/${ch.name}.webp`;
             const keyImageBackPath = "img/key/ura.jpg";
             const keyImageBackWebpPath = "img/key/ura.webp";
@@ -1799,8 +1799,8 @@ state.profile = { name, email, age }; const { code, pcts } = computeResult(); co
                     if (!iosLike) {
                         snsSaveHint.textContent = "保存を開始しました。うまくいかない場合は結果画面をスクショしてください。";
                         const dl = document.createElement("a");
-                        dl.href = snsImagePaths.png;
-                        dl.download = `${sanitizeDownloadName(ch.name)}.png`;
+                        dl.href = snsImagePaths.webp;
+                        dl.download = `${sanitizeDownloadName(ch.name)}.webp`;
                         dl.rel = "noopener";
                         document.body.appendChild(dl);
                         dl.click();
@@ -1809,7 +1809,7 @@ state.profile = { name, email, age }; const { code, pcts } = computeResult(); co
                     }
                     snsSaveHint.textContent = "iPhoneは画像を長押しして「写真に保存」を選んでください。";
                     snsSavePreview.alt = `${displayName} SNS投稿用画像`;
-                    if (snsSavePreview.src && decodeURIComponent(snsSavePreview.src).endsWith(decodeURIComponent(snsImagePaths.png))) {
+                    if (snsSavePreview.src && decodeURIComponent(snsSavePreview.src).endsWith(decodeURIComponent(snsImagePaths.webp))) {
                         snsSavePreview.style.display = "block";
                         snsSaveFallback.style.display = "none";
                         snsSaveBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -1824,7 +1824,7 @@ state.profile = { name, email, age }; const { code, pcts } = computeResult(); co
                         snsSaveFallback.style.display = "block";
                         snsSaveHint.textContent = "このタイプのSNS画像は準備中です。結果画面をスクショして投稿してください。";
                     };
-                    snsSavePreview.src = snsImagePaths.png;
+                    snsSavePreview.src = snsImagePaths.webp;
                     snsSaveBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
                 };
             }

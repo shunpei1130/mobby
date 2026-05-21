@@ -1,4 +1,4 @@
-const ANS_LABEL = { 1: "매우 그렇다", 2: "그렇다", 3: "약간 그렇다", 4: "보통이다", 5: "약간 아니다", 6: "아니다", 7: "전혀 아니다" };
+﻿const ANS_LABEL = { 1: "매우 그렇다", 2: "그렇다", 3: "약간 그렇다", 4: "보통이다", 5: "약간 아니다", 6: "아니다", 7: "전혀 아니다" };
 const STORAGE_KEY = "love_char_diag_korea_v1";
 const PAGE_SIZE = 5;
 const state = { step: "intro", page: 0, answers: {}, questionOrder: null, profile: { name: "", email: "" }, sentToSheet: false };
@@ -200,7 +200,7 @@ function renderResult() {
     const shareText = encodeURIComponent(`연애 멘헤라 모비 진단 결과는 「${ch.name}」이었습니다!😈💜\n연애 멘헤라도：Lv${res.level}（${res.menheraLevel.name}）\n${ch.catch}\n\n좋아하는 사람에 대한 무거움, 당신도 진단해봐👇`);
     const shareUrl = encodeURIComponent(window.location.href.split("?")[0]);
     const keyImageWebpPath = `img/key/${charImgName}.webp`;
-    const keyImagePngPath = `img/key/${charImgName}.png`;
+    const keyImagePngPath = `img/key/${charImgName}.webp`;
     const keyImageBackPath = "img/key/ura.jpg";
     app.innerHTML = `<div class="panel fade-in"><div class="result-hero"><p class="kicker">진단 결과</p><h2 class="big" style="font-size:28px;">${ch.name}</h2><p class="text-body" style="color:var(--text-main);font-weight:600;font-size:16px;margin-bottom:16px;">${ch.catch}</p><div class="char-image-placeholder"><img src="img/${charImgName}.jpg" alt="${ch.name}" onerror="this.parentElement.textContent='이미지 준비 중'"></div><div style="display:inline-block;background:var(--surface2);padding:6px 16px;border-radius:20px;font-size:12px;font-family:monospace;color:var(--text-sub);">TYPE: ${toDisplayTypeCode(res.code)}</div></div>
   <div style="margin-top:24px;padding:20px;background:linear-gradient(135deg,rgba(167,139,250,0.15),rgba(244,114,182,0.15));border-radius:16px;border:1px solid var(--accent);text-align:center;"><p style="font-size:11px;font-weight:700;color:var(--accent);margin:0 0 8px;">😈💜 연애 멘헤라도</p><p style="font-size:36px;font-weight:700;margin:0 0 4px;color:${gaugeColor};">Lv.${res.level}</p><p style="font-size:18px;font-weight:600;margin:0 0 12px;color:var(--text-main);">${res.menheraLevel.name}</p><p style="font-size:13px;color:var(--text-sub);margin:0 0 16px;">${res.menheraLevel.desc}</p><div class="menhera-gauge-bar"><div class="menhera-gauge-fill" style="width:${res.menheraScore}%;background:linear-gradient(90deg,#4ade80,#facc15,#f472b6);"></div></div><div class="menhera-gauge-labels"><span>멘탈 철벽</span><span>연애 좀비</span></div></div>
@@ -297,7 +297,7 @@ function renderResult() {
                 snsSaveHint.textContent = "저장을 시작했습니다. 잘 안 되면 결과 화면을 스크린샷해주세요.";
                 const dl = document.createElement("a");
                 dl.href = snsImagePath;
-                dl.download = `${sanitizeDownloadName(ch.name)}-sns.png`;
+                dl.download = `${sanitizeDownloadName(ch.name)}-sns.webp`;
                 dl.rel = "noopener";
                 document.body.appendChild(dl);
                 dl.click();

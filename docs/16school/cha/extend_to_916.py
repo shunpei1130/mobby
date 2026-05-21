@@ -1,4 +1,4 @@
-"""
+﻿"""
 Convert all 32 images from 1:1 (1024x1024) to 9:16 aspect ratio
 by extending the background vertically (top and bottom).
 
@@ -90,7 +90,7 @@ def main():
     os.makedirs(DST_DIR, exist_ok=True)
     
     images = sorted([f for f in os.listdir(SRC_DIR) 
-                     if f.lower().endswith(('.jpg', '.jpeg', '.png')) 
+                     if f.lower().endswith(('.jpg', '.jpeg', '.webp')) 
                      and f != 'extend_to_916.py'])
     
     print(f"Found {len(images)} images to process")

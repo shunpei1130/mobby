@@ -7,9 +7,9 @@
   const watermarkImg = new Image();
   watermarkImg.crossOrigin = "anonymous";
   try {
-    watermarkImg.src = new URL("../assets/stickers/Logo.png", import.meta.url).href;
+    watermarkImg.src = new URL("../assets/stickers/Logo.webp", import.meta.url).href;
   } catch (e) {
-    watermarkImg.src = "/assets/stickers/Logo.png";
+    watermarkImg.src = "/assets/stickers/Logo.webp";
   }
 
   function ensureWatermarkLoaded() {

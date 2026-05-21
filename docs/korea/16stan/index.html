@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ko">
 
 <head>
@@ -1649,8 +1649,8 @@
                     if (!iosLike) {
                         snsSaveHint.textContent = "저장을 시작했습니다. 잘 안 되는 경우 결과 화면을 스크린샷해주세요.";
                         const dl = document.createElement("a");
-                        dl.href = snsImagePaths.png;
-                        dl.download = `${sanitizeDownloadName(ch.name)}.png`;
+                        dl.href = snsImagePaths.webp;
+                        dl.download = `${sanitizeDownloadName(ch.name)}.webp`;
                         dl.rel = "noopener";
                         document.body.appendChild(dl);
                         dl.click();
@@ -1659,7 +1659,7 @@
                     }
                     snsSaveHint.textContent = "iPhone은 이미지를 길게 눌러서「사진에 저장」을 선택해주세요.";
                     snsSavePreview.alt = `${displayName} SNS 게시용 이미지`;
-                    if (snsSavePreview.src && decodeURIComponent(snsSavePreview.src).endsWith(decodeURIComponent(snsImagePaths.png))) {
+                    if (snsSavePreview.src && decodeURIComponent(snsSavePreview.src).endsWith(decodeURIComponent(snsImagePaths.webp))) {
                         snsSavePreview.style.display = "block";
                         snsSaveFallback.style.display = "none";
                         snsSaveBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -1674,7 +1674,7 @@
                         snsSaveFallback.style.display = "block";
                         snsSaveHint.textContent = "이 타입의 SNS 이미지는 준비 중입니다. 결과 화면을 스크린샷해서 게시해주세요.";
                     };
-                    snsSavePreview.src = snsImagePaths.png;
+                    snsSavePreview.src = snsImagePaths.webp;
                     snsSaveBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
                 };
             }
