@@ -204,77 +204,6 @@
   z-index: -1;
 }
 
-:where(
-  button,
-  .btn,
-  .button,
-  .record-primary-button,
-  .record-secondary-button,
-  .record-outline-button,
-  .record-section__action,
-  .record-header__compose-link,
-  .record-date-switch,
-  .record-filter-bar button,
-  .record-photo-frame-options button,
-  .record-photo-edge-options button,
-  .record-template-option,
-  .record-background-option,
-  .burn-guide-next,
-  .burn-guide-skip,
-  .compose-draft-button,
-  .compose-submit-button,
-  .compose-history-button,
-  .compose-stage-back,
-  .compose-mode-switch,
-  .compose-mode-switch__button,
-  .compose-custom-tools__buttons .button,
-  .compose-text-tray__option,
-  .compose-text-tray__align-button,
-  .compose-text-tray__background-button,
-  .love-diagnosis-tabs__item,
-  .love-answer-option,
-  .love-character-share-save,
-  .social-card-link,
-  .sns-save-btn,
-  .share-btn,
-  .char-card-detail-btn,
-  .likert-btn
-) {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  border-color: var(--glass-border) !important;
-  background: var(--glass-bg-strong) !important;
-  box-shadow: var(--glass-shadow-soft) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(1.32) !important;
-  backdrop-filter: blur(18px) saturate(1.32) !important;
-}
-
-:where(button, .btn, .button, .record-primary-button, .record-secondary-button, .record-outline-button, .burn-guide-next, .compose-submit-button, .share-btn, .sns-save-btn)::before {
-  content: "";
-  position: absolute;
-  inset: 1px 1px auto;
-  height: 52%;
-  border-radius: inherit;
-  background: linear-gradient(180deg, rgba(255, 255, 255, .76), rgba(255, 255, 255, .08));
-  pointer-events: none;
-  z-index: -1;
-}
-
-:where(button, .btn, .button, .record-primary-button, .record-secondary-button, .record-outline-button, .burn-guide-next, .compose-submit-button, .share-btn, .sns-save-btn)::after {
-  content: "";
-  position: absolute;
-  top: -44%;
-  left: -26%;
-  width: 38%;
-  height: 190%;
-  transform: rotate(18deg);
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .42), transparent);
-  opacity: .74;
-  pointer-events: none;
-  z-index: -1;
-}
-
 :where(.primary, .button--primary, .record-primary-button, .burn-guide-next, .compose-submit-button, .sns-save-btn) {
   color: #fff !important;
   border-color: rgba(255, 255, 255, .48) !important;
@@ -308,4 +237,31 @@
   :where(.card, .hero-card, .burn-card, .vote-card, .sns-link-card, .price-card, .product-tab-card, .acrylic-series-card, .acrylic-status-card, .acrylic-summary-card, .try-card, .info-card, .love-card, .char-card, .qcard, .qCard, .panel) {
     background: rgba(255, 255, 255, .88) !important;
   }
+}
+
+.sns-link-card {
+  color: #fffaf2 !important;
+  border-color: rgba(255, 255, 255, .62) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .34),
+    inset 0 -18px 30px rgba(25, 18, 28, .18),
+    0 16px 34px rgba(74, 55, 40, .2) !important;
+}
+
+.sns-link-card.instagram {
+  background:
+    radial-gradient(circle at 18% 16%, rgba(255, 255, 255, .42), rgba(255, 255, 255, 0) 28%),
+    linear-gradient(135deg, #6f35ff 0%, #d934a5 46%, #ff8b62 72%, #ffd36b 100%) !important;
+}
+
+.sns-link-card.tiktok {
+  background:
+    radial-gradient(circle at 18% 16%, rgba(255, 255, 255, .24), rgba(255, 255, 255, 0) 30%),
+    linear-gradient(135deg, #111 0%, #26262e 52%, #ff3b6b 78%, #00f2ea 120%) !important;
+}
+
+.sns-link-card span,
+.sns-link-card small {
+  color: #fffaf2 !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, .22);
 }
