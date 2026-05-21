@@ -1330,32 +1330,6 @@
 
     }
 
-    .hero-smoke-canvas {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 12;
-      pointer-events: none;
-      touch-action: manipulation;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .hero-smoke-glow {
-      position: absolute;
-      left: 22%;
-      top: 34%;
-      width: 52px;
-      height: 52px;
-      border-radius: 999px;
-      background: radial-gradient(circle, rgba(255, 234, 205, 0.45) 0%, rgba(255, 234, 205, 0) 72%);
-      filter: blur(6px);
-      z-index: 2;
-      pointer-events: none;
-      mix-blend-mode: screen;
-    }
-
     #openMessagePopup {
       background: linear-gradient(145deg, #f39bc0, #e182a7);
       color: #fff7ef;
@@ -6203,8 +6177,6 @@
           <div class="hero-carousel-shell floating reveal delay-200">
             <div class="hero-model-stage" aria-label="Mobby 3D モデル">
               <div class="hero-model-carousel" id="heroModelCarousel" aria-live="polite"></div>
-              <div class="hero-smoke-glow" aria-hidden="true"></div>
-              <canvas id="heroSmokeCanvas" class="hero-smoke-canvas" aria-hidden="true"></canvas>
             </div>
             <div class="hero-character-row">
               <button class="hero-character-action peek-heart-btn" id="openHeartNote" type="button" aria-label="心を覗く">&#128269;&#65038;</button>
@@ -7095,20 +7067,16 @@
 
       function syncActiveState() {
         window.__activeHeroSlide = slides[activeIndex];
-        const smokeActive = slides[activeIndex].dataset.smokeSource === "true";
         const activeImage = slides[activeIndex]?.querySelector(".hero-model-viewer");
         const activeItem = getCurrentSet().items[activeIndex];
         heroCharacterName.textContent = activeItem?.name || activeImage?.alt || "";
-        stage.classList.toggle("is-smoke-active", smokeActive);
+        stage.classList.remove("is-smoke-active");
         window.dispatchEvent(new CustomEvent("hero-slide-change", {
           detail: {
             slide: slides[activeIndex],
             index: activeIndex,
             mode: getCurrentSet().id
           }
-        }));
-        window.dispatchEvent(new CustomEvent("hero-smoke-toggle", {
-          detail: { active: smokeActive }
         }));
       }
 
@@ -7219,6 +7187,7 @@
     })();
 
     (() => {
+      return;
       const canvas = document.getElementById("heroSmokeCanvas");
       const stage = canvas?.closest(".hero-model-stage");
       const glow = stage?.querySelector(".hero-smoke-glow");
@@ -7601,11 +7570,6 @@
       document.body.style.overflowY = 'auto';
       if (stickyCta) stickyCta.style.display = 'block';
       document.querySelector('.hero-diagnosis-menu')?.classList.add('is-scroll-ready');
-      window.dispatchEvent(new CustomEvent('hero-smoke-toggle', {
-        detail: {
-          active: document.querySelector('.hero-model-stage')?.classList.contains('is-smoke-active')
-        }
-      }));
       initScrollObserver();
     };
 
