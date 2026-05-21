@@ -151,16 +151,15 @@
       overflow: hidden;
 
       /* ▼ 小さく表示＋余白は白 */
-      background:
+      background-color: #fff8ef;
+      background-image:
         radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 24%),
         radial-gradient(circle at 85% 18%, rgba(255, 196, 166, 0.38), rgba(255, 196, 166, 0) 28%),
+        url('img/favicon/背景透過.webp'),
         linear-gradient(135deg, #fff8ef 0%, #f6ecda 55%, #ead8ba 100%);
-      /* 余白を白に */
-      background-image: url('img/favicon/背景.jpg');
       background-repeat: no-repeat;
-      background-position: center;
-      background-size: 50% auto;
-      background-image: none;
+      background-position: center, center, center, center;
+      background-size: 100% 100%, 100% 100%, min(68vw, 430px) auto, cover;
       /* 横幅50%で固定 */
       /* 拡大しない・必ず収まる */
     }
@@ -228,8 +227,7 @@
       display: block;
       width: 100%;
       height: auto;
-      opacity: 0;
-      animation: splashLogoSettle 0.01s linear 2.1s forwards;
+      opacity: 1;
     }
 
     .splash-logo-reveal {
@@ -282,6 +280,16 @@
 
     #splash-screen.is-bursting .instruction {
       animation: splashInstructionFade 0.35s ease forwards;
+    }
+
+    @media (max-width: 640px) {
+      #splash-screen {
+        background-size: 100% 100%, 100% 100%, min(86vw, 340px) auto, cover;
+      }
+
+      .splash-logo-shell {
+        width: min(82vw, 360px);
+      }
     }
 
     @keyframes splashLogoAppear {
