@@ -516,12 +516,12 @@ const _='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800
       <h4>${n}</h4>
       ${e.split(/\n{2,}/).map(t=>`<p>${t}</p>`).join("")}
     </section>
-  `:""}function m(e){const n=e!=null&&e.typeName?`${e.typeName}.webp`:"";return n?`./image/lovemobby/${encodeURIComponent(n)}`:""}function $(e){const n=e!=null&&e.typeName?`${e.typeName}_sharecard.webp`:"";return n?`./image/lovemobby_sharecard/${encodeURIComponent(n)}`:""}function ae(){return`
+  `:""}function m(e){const n=e!=null&&e.typeName?`${e.typeName}.webp`:"";return n?`./image/lovemobby/${encodeURIComponent(n)}`:""}function xe(e){const n=e!=null&&e.typeName?`${e.typeName.replace("毛布をかける守り人","毛布を掛ける守り人")}_透過.png`:"";return n?`./image/toka/${encodeURIComponent(n)}`:""}function $(e){const n=e!=null&&e.typeName?`${e.typeName}_sharecard.webp`:"";return n?`./image/lovemobby_sharecard/${encodeURIComponent(n)}`:""}function ae(){return`
     <section class="love-diagnosis love-diagnosis--intro">
       <div class="love-diagnosis__hero">
-        <p class="love-diagnosis__eyebrow">love mobby diagnosis</p>
-        <h3>恋愛モビー診断</h3>
-        <p>40問で、あなたの恋愛傾向を4軸から読み取り、16タイプのモビーに分類します。</p>
+        <p class="love-diagnosis__eyebrow">恋愛モビー診断</p>
+        <h3>あなたの恋愛タイプを<br>4つの軸で診断します。</h3>
+        <p>直感で選ぶ40問の質問から、あなたの恋愛タイプを16種類から診断します。</p>
       </div>
       <div class="love-diagnosis__intro-grid">
         ${Object.values(C).map(e=>`

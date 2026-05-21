@@ -470,8 +470,11 @@
     }
 
     .burn-guide-skip {
+      border-radius: 999px;
       color: #bd6d68;
-      background: transparent;
+      background: rgba(255, 255, 255, 0.42);
+      border: 1px solid rgba(255, 255, 255, 0.62);
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.78), 0 10px 22px rgba(101, 72, 61, 0.1);
       font-size: 1.05rem;
       font-weight: 600;
     }
@@ -502,6 +505,13 @@
       background: #c86f6a;
     }
 
+    .record-header__back,
+    [data-record-back-home],
+    .record-camera-header button,
+    .record-outline-button {
+      border-radius: 999px !important;
+    }
+
     @media (max-width: 520px) {
       .burn-guide-overlay {
         padding: 18px;
@@ -513,6 +523,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="../glassmorphism.css">
 </head>
 <body>
   <main id="recordRoot"></main>

@@ -276,7 +276,7 @@
     }
 
     #splash-screen.is-bursting .splash-logo-shell {
-      animation: splashLogoBurst 0.78s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation: splashLogoWipeOut 0.96s cubic-bezier(0.7, 0, 0.24, 1) forwards;
     }
 
     #splash-screen.is-bursting .instruction {
@@ -347,20 +347,28 @@
       }
     }
 
-    @keyframes splashLogoBurst {
+    @keyframes splashLogoWipeOut {
       0% {
         opacity: 1;
         transform: translate(-50%, -50%) scale(1);
+        clip-path: inset(0 0 0 0);
         filter:
           drop-shadow(0 0 24px rgba(255, 255, 255, 0.92))
           drop-shadow(0 22px 36px rgba(79, 71, 63, 0.16));
       }
 
+      28% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.01);
+        clip-path: inset(0 0 0 0);
+      }
+
       100% {
         opacity: 0;
-        transform: translate(-50%, -62%) scale(0.88);
+        transform: translate(-50%, -50%) scale(1.01);
+        clip-path: inset(0 100% 0 0);
         filter:
-          drop-shadow(0 0 44px rgba(255, 255, 255, 0.98))
+          drop-shadow(0 0 36px rgba(255, 255, 255, 0.96))
           drop-shadow(0 36px 60px rgba(79, 71, 63, 0.08));
       }
     }
@@ -605,6 +613,25 @@
         display: grid !important;
         grid-template-columns: 1fr 1fr;
       }
+    }
+
+    #encyclopediaTabs .ency-tab {
+      border: 1px solid rgba(255, 255, 255, 0.82) !important;
+      background: rgba(255, 255, 255, 0.64) !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.72),
+        0 3px 10px rgba(0, 0, 0, 0.06) !important;
+    }
+
+    #encyclopediaTabs .ency-tab.is-active {
+      border: 3px solid #ff74ae !important;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(255, 116, 174, 0.16)) !important;
+      box-shadow:
+        inset 0 0 0 2px rgba(255, 255, 255, 0.86),
+        0 0 0 3px rgba(255, 116, 174, 0.22),
+        0 6px 14px rgba(0, 0, 0, 0.12) !important;
+      transform: translateY(-1px);
     }
 
     #openFaqPopup {
@@ -1208,7 +1235,13 @@
       font-size: clamp(1rem, 2.6vw, 1.28rem);
       line-height: 1.7;
       letter-spacing: 0.08em;
-      color: rgba(54, 48, 42, 0.82);
+      color: rgba(38, 34, 30, 0.96);
+    }
+
+    .footer-burn-card-row .burn-card-text {
+      color: #211d1a !important;
+      opacity: 1 !important;
+      text-shadow: none;
     }
 
     .burn-card-arrow {
@@ -5762,6 +5795,115 @@
       scroll-snap-align: none;
     }
 
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="school"] {
+      border-color: rgba(80, 154, 255, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(206, 230, 255, 0.74), rgba(72, 148, 255, 0.32)) !important;
+      color: #174f9a !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(80, 154, 255, 0.18) !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="love"] {
+      border-color: rgba(159, 112, 255, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(226, 212, 255, 0.74), rgba(151, 105, 255, 0.34)) !important;
+      color: #5530a5 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(151, 105, 255, 0.18) !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] {
+      border-color: rgba(245, 190, 55, 0.55) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 240, 178, 0.78), rgba(255, 202, 64, 0.36)) !important;
+      color: #7a5600 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(245, 190, 55, 0.18) !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="romance"] {
+      border-color: rgba(255, 116, 174, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 210, 230, 0.72), rgba(255, 130, 184, 0.32)) !important;
+      color: #8a2555 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(255, 117, 178, 0.2) !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="school"] .footer-btn-icon,
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="love"] .footer-btn-icon,
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] .footer-btn-icon,
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="romance"] .footer-btn-icon {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="compositing"] {
+      border-color: rgba(255, 116, 174, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 210, 230, 0.72), rgba(255, 130, 184, 0.32)) !important;
+      color: #8a2555 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(255, 117, 178, 0.2) !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="encyclopedia"] {
+      border-color: rgba(80, 154, 255, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(206, 230, 255, 0.74), rgba(72, 148, 255, 0.32)) !important;
+      color: #174f9a !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(80, 154, 255, 0.18) !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="vote"] {
+      border-color: rgba(159, 112, 255, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(226, 212, 255, 0.74), rgba(151, 105, 255, 0.34)) !important;
+      color: #5530a5 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(151, 105, 255, 0.18) !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="faq"] {
+      border-color: rgba(245, 190, 55, 0.55) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 240, 178, 0.78), rgba(255, 202, 64, 0.36)) !important;
+      color: #7a5600 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(245, 190, 55, 0.18) !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="sns"] {
+      border-color: rgba(73, 184, 124, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(210, 244, 224, 0.76), rgba(78, 200, 132, 0.34)) !important;
+      color: #176b3d !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(73, 184, 124, 0.18) !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="compositing"] .footer-btn-icon,
+    .gift-fan-menu .gift-fan-action[data-fan-item="encyclopedia"] .footer-btn-icon,
+    .gift-fan-menu .gift-fan-action[data-fan-item="vote"] .footer-btn-icon,
+    .gift-fan-menu .gift-fan-action[data-fan-item="faq"] .footer-btn-icon,
+    .gift-fan-menu .gift-fan-action[data-fan-item="sns"] .footer-btn-icon {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
     .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item^="blank"] {
       overflow: visible !important;
     }
@@ -5831,6 +5973,77 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="glassmorphism.css">
+  <style>
+    .footer-burn-card-row .burn-card {
+      border: 0 !important;
+    }
+
+    .footer-burn-card-row .burn-card::after,
+    .footer-burn-card-row .burn-card-media::before {
+      display: none !important;
+    }
+
+    .hero-character-action.mode {
+      overflow: hidden !important;
+    }
+
+    .hero-character-action.mode::after {
+      content: "" !important;
+      position: absolute !important;
+      right: 6px !important;
+      bottom: 6px !important;
+      z-index: 3 !important;
+      display: block !important;
+      opacity: 1 !important;
+      width: 17px !important;
+      height: 17px !important;
+      border-radius: 999px !important;
+      background-color: rgba(255, 248, 239, 0.96) !important;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236c5240' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 7a8 8 0 0 0-13.66-2.34L4 7'/%3E%3Cpath d='M4 3v4h4'/%3E%3Cpath d='M4 17a8 8 0 0 0 13.66 2.34L20 17'/%3E%3Cpath d='M20 21v-4h-4'/%3E%3C/svg%3E") !important;
+      background-repeat: no-repeat !important;
+      background-position: center !important;
+      background-size: 11px 11px !important;
+      box-shadow:
+        0 3px 8px rgba(89, 70, 52, 0.16),
+        inset 0 0 0 1px rgba(108, 82, 64, 0.18) !important;
+      pointer-events: none !important;
+    }
+
+    .gift-fan-menu .gift-fan-actions .gift-fan-action[data-fan-item] {
+      border: 1px solid rgba(255, 255, 255, 0.46) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.22) 58%, rgba(255, 248, 238, 0.28)) !important;
+      color: rgba(45, 50, 54, 0.9) !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        inset 0 -14px 22px rgba(255, 255, 255, 0.12),
+        0 12px 26px rgba(78, 57, 39, 0.13) !important;
+      backdrop-filter: blur(22px) saturate(1.45) !important;
+      -webkit-backdrop-filter: blur(22px) saturate(1.45) !important;
+    }
+
+    .gift-fan-menu .gift-fan-actions .gift-fan-action[data-fan-item]::before,
+    .gift-fan-menu .gift-fan-actions .gift-fan-action[data-fan-item]::after {
+      display: block !important;
+    }
+
+    .gift-fan-menu .gift-fan-actions .gift-fan-action[data-fan-item]::before {
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.48), rgba(255, 255, 255, 0) 48%),
+        radial-gradient(circle at 24% 16%, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0) 34%) !important;
+    }
+
+    .gift-fan-menu .gift-fan-actions .gift-fan-action[data-fan-item]::after {
+      background: rgba(255, 255, 255, 0.46) !important;
+    }
+
+    .gift-fan-menu .gift-fan-actions .gift-fan-action[data-fan-item] .footer-btn-icon {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+  </style>
 </head>
 
 <body>
@@ -5844,7 +6057,6 @@
         <img class="splash-logo-img" src="mobby-custom/assets/stickers/Logo.png" alt="Mobby logo" fetchpriority="high" decoding="async" />
       </div>
     </div>
-    <div class="instruction">TAP!</div>
   </div>
 
   <div id="main-content">
@@ -5882,7 +6094,7 @@
               <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16school/index.html" data-diagnosis-item="school"><span class="footer-btn-icon" data-icon="school" aria-hidden="true"></span><span>学校</span></a>
               <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16love/index.html" data-diagnosis-item="love"><span class="footer-btn-icon" data-icon="cloud" aria-hidden="true"></span><span>メンヘラ</span></a>
               <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16stan/index.html" data-diagnosis-item="oshi"><span class="footer-btn-icon" data-icon="star" aria-hidden="true"></span><span>推し</span></a>
-              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="love-diagnosis/index.html" data-diagnosis-item="romance"><span class="footer-btn-icon" data-icon="heart" aria-hidden="true"></span><span>恋愛</span></a>
+              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16renai/index.html" data-diagnosis-item="romance"><span class="footer-btn-icon" data-icon="heart" aria-hidden="true"></span><span>恋愛</span></a>
               <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" type="button" data-diagnosis-item="blank-1" aria-label="コラボ予定1"><span class="gift-fan-collab-badge">コラボ!</span></button>
               <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" type="button" data-diagnosis-item="blank-2" aria-label="コラボ予定2"><span class="gift-fan-collab-badge">コラボ!</span></button>
               <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" type="button" data-diagnosis-item="blank-3" aria-label="コラボ予定3"><span class="gift-fan-collab-badge">コラボ!</span></button>
@@ -6406,7 +6618,7 @@
         <div style="padding:28px 24px 24px;">
           <div style="text-align:center;margin-bottom:20px;">
             <h2 style="font-size:22px;font-weight:800;margin:0 0 6px;color:#4a3728;">📖 モビー図鑑</h2>
-            <p style="font-size:13px;color:#8a7a6a;margin:0;">全96タイプのモビーを見てみよう！</p>
+            <p style="font-size:13px;color:#8a7a6a;margin:0;">全112タイプのモビーを見てみよう！</p>
           </div>
           <div id="encyclopediaTabs"
             style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;"></div>
@@ -6455,7 +6667,7 @@
           <a class="btn btn-primary" href="16school/index.html">学校モビー診断</a>
           <a class="btn btn-primary" href="16love/index.html">メンヘラモビー診断</a>
           <a class="btn btn-primary" href="16stan/index.html">推し活モビー診断</a>
-          <a class="btn btn-primary" href="love-diagnosis/index.html">恋愛モビー診断</a>
+          <a class="btn btn-primary" href="16renai/index.html">恋愛モビー診断</a>
           <a class="btn btn-primary" href="/mypage-register.html">診断まとめマイページ作成</a>
         </div>
       </div>
@@ -6487,10 +6699,10 @@
         <div class="popup-buttons">
             <div class="gift-fan-menu is-open" id="giftFanMenu">
             <div class="burn-card-row footer-burn-card-row">
-              <a class="burn-card" href="burn-record/index.html" aria-label="BURNでページをつくる">
+              <a class="burn-card" href="burn-record/index.html" aria-label="ページを作る">
                 <span class="burn-card-copy">
-                  <span class="burn-card-title">BURNでページをつくる</span>
-                  <span class="burn-card-text">ふたりの思い出を、<br>本のように残そう。</span>
+                  <span class="burn-card-title">ページを作る</span>
+                  <span class="burn-card-text">二人の思い出を<br>雑誌のページのように残す</span>
                   <span class="burn-card-arrow" aria-hidden="true">›</span>
                 </span>
                 <span class="burn-card-media" aria-hidden="true">
@@ -7283,25 +7495,31 @@
 
     if (!shouldSkipSplash && splashElement) {
       let splashDone = false;
+      let splashAutoTimer = null;
 
       const exitSplash = () => {
         if (splashDone) return;
         splashDone = true;
+        if (splashAutoTimer) {
+          window.clearTimeout(splashAutoTimer);
+          splashAutoTimer = null;
+        }
         splashElement.classList.add('is-bursting');
 
         window.setTimeout(() => {
           splashElement.classList.add('hidden');
           revealMainContent();
-        }, 420);
+        }, 960);
 
         window.setTimeout(() => {
           splashElement.remove();
-        }, 1180);
+        }, 1380);
       };
 
       splashElement.addEventListener('click', exitSplash, { once: true });
       splashElement.addEventListener('pointerdown', exitSplash, { once: true });
       splashElement.addEventListener('touchstart', exitSplash, { once: true, passive: true });
+      splashAutoTimer = window.setTimeout(exitSplash, 2400);
     }
 
     window.addEventListener('resize', () => {
@@ -7708,6 +7926,23 @@
       { name: "イカ焼きモビー", img: "16love/img/イカ焼きモビー.jpg", cat: "love", summary: "痛みを内側に抱え込みやすい、我慢強く繊細なタイプ。", catch: "全部内側で抱え込む。腕には絆創膏。痛みは見せない。" },
       { name: "情緒バグモビー", img: "16love/img/情緒バグモビー.jpg", cat: "love", summary: "感情の切替が激しく、共感で回復するタイプ。", catch: "情緒がバグりすぎ。泣いて怒って笑って、全部同時。" },
       { name: "恋愛ゾンビモビー", img: "16love/img/恋愛ゾンビモビー.jpg", cat: "love", summary: "何度沈んでも立ち上がる、不死身の恋愛タイプ。", catch: "何度沈んでも這い上がる。恋愛ゾンビ、不死身のメンヘラ。" },
+      // Romance (恋愛モビー診断) (16)
+      { name: "花束の主人公モビー", img: "16renai/image/lovemobby/花束の主人公.webp", cat: "romance", summary: "恋の主役感と、ときめきと、見せたくなる幸せを持ったタイプ。", catch: "愛される実感も、特別な瞬間も、かわいく残したい恋の主人公。" },
+      { name: "秘密の星モビー", img: "16renai/image/lovemobby/秘密の星.webp", cat: "romance", summary: "特別に愛されたいけど、その恋は二人だけで大切にしたいタイプ。", catch: "目立たなくても、二人だけの空でちゃんと輝く恋を選ぶ。" },
+      { name: "ひなたの愛され人モビー", img: "16renai/image/lovemobby/ひなたの愛され人.webp", cat: "romance", summary: "離したくない安心と、周りにも伝わる愛され感を求めやすいタイプ。", catch: "近くにいてくれる安心と、愛されている空気をまっすぐ受け取る。" },
+      { name: "雨宿りの待ち人モビー", img: "16renai/image/lovemobby/雨宿りの待ち人.webp", cat: "romance", summary: "大切にされている実感を、静かに深く受け取りたいタイプ。", catch: "急がず騒がず、雨が止むまで寄り添える恋を待っている。" },
+      { name: "風まかせの小悪魔モビー", img: "16renai/image/lovemobby/風まかせの小悪魔.webp", cat: "romance", summary: "自由さとときめき、そして少し見せたくなる魅力を持つタイプ。", catch: "つかまえたいのに風みたい。軽やかな距離感で恋を揺らす。" },
+      { name: "月影のミューズモビー", img: "16renai/image/lovemobby/月影のミューズ.webp", cat: "romance", summary: "自由でいたいけど、恋の特別感は二人だけで味わいたいタイプ。", catch: "月明かりみたいに静かで、二人だけに届くロマンを持っている。" },
+      { name: "晴れ間の本命モビー", img: "16renai/image/lovemobby/晴れ間の本命.webp", cat: "romance", summary: "自分の時間も大事にしながら、安心できる本命感を求めるタイプ。", catch: "自由に過ごしても、帰る場所はちゃんと本命のそば。" },
+      { name: "静かな灯モビー", img: "16renai/image/lovemobby/静かな灯.webp", cat: "romance", summary: "自由と安心を大事にしながら、二人だけの深い愛情を育てるタイプ。", catch: "派手に燃えなくても、消えない灯りみたいに恋を守る。" },
+      { name: "恋に旗を振る人モビー", img: "16renai/image/lovemobby/恋に旗を振る人.webp", cat: "romance", summary: "相手を支えながら、一緒にときめく時間を外にも残したいタイプ。", catch: "好きな人の隣で旗を振り、二人の楽しい瞬間を残していく。" },
+      { name: "胸奥のロマンモビー", img: "16renai/image/lovemobby/胸奥のロマン.webp", cat: "romance", summary: "相手を支えながら、二人だけのロマンチックな世界を大切にするタイプ。", catch: "胸の奥にしまった物語を、好きな人とだけ静かに育てる。" },
+      { name: "陽だまりを分ける人モビー", img: "16renai/image/lovemobby/陽だまりを分ける人.webp", cat: "romance", summary: "支え合う安心感を、周りにも伝わる形で残したいタイプ。", catch: "あたたかさを一人占めせず、好きな人と分け合える恋。" },
+      { name: "毛布をかける守り人モビー", img: "16renai/image/lovemobby/毛布をかける守り人.webp", cat: "romance", summary: "離したくない気持ちで支えながら、二人だけの安心できる関係を大事にするタイプ。", catch: "言葉より先に毛布をかける。守ることで愛を伝える人。" },
+      { name: "地図を広げる冒険家モビー", img: "16renai/image/lovemobby/地図を広げる冒険家.webp", cat: "romance", summary: "自由さとときめきを大切にしながら、楽しい恋を形に残したいタイプ。", catch: "恋を冒険みたいに楽しみ、行き先も思い出も一緒に広げる。" },
+      { name: "夜風のロマンチストモビー", img: "16renai/image/lovemobby/夜風のロマンチスト.webp", cat: "romance", summary: "自由な距離感の中で、二人だけのロマンを静かに育てるタイプ。", catch: "近すぎず遠すぎず、夜風みたいな距離でロマンを運ぶ。" },
+      { name: "余白を飾る演出家モビー", img: "16renai/image/lovemobby/余白を飾る演出家.webp", cat: "romance", summary: "自由で自然体だけど、関係性の見せ方にもセンスが出るタイプ。", catch: "無理に詰め込まず、余白までかわいく見せる恋の演出家。" },
+      { name: "静かな港の相棒モビー", img: "16renai/image/lovemobby/静かな港の相棒.webp", cat: "romance", summary: "自由と安心、そして二人だけの信頼を長く育てるタイプ。", catch: "それぞれ旅しても、戻れる港がある。静かに強い相棒の恋。" },
     ];
 
     const ENCYCLOPEDIA_CATEGORIES = [
@@ -7716,6 +7951,7 @@
       { key: "school_f", label: "🏫 学校♀", color: "#e9748d" },
       { key: "stan", label: "🎤 推し活", color: "#9b6dff" },
       { key: "love", label: "💜 メンヘラ", color: "#b86cff" },
+      { key: "romance", label: "💗 恋愛", color: "#ff74ae" },
     ];
 
     const SCHOOL_NOTE_NAME_ALIASES = {
@@ -7749,10 +7985,9 @@
       // Render tabs
       tabsEl.innerHTML = ENCYCLOPEDIA_CATEGORIES.map(c => {
         const isActive = c.key === encyclopediaActiveTab;
-        return `<button data-cat="${c.key}" style="
-          padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;border:2px solid ${c.color};
-          background:${isActive ? c.color : 'transparent'};color:${isActive ? '#fff' : c.color};
-          transition:all 0.2s ease;
+        return `<button class="ency-tab${isActive ? ' is-active' : ''}" data-cat="${c.key}" aria-selected="${isActive ? 'true' : 'false'}" style="
+          padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;color:${c.color};
+          transition:all 0.2s ease;white-space:nowrap;
         ">${c.label}</button>`;
       }).join('');
 
@@ -7782,7 +8017,7 @@
 
       if (encyclopediaActiveTab === 'all') {
         // Group by category with section headers
-        const catOrder = ['school_m', 'school_f', 'mama', 'night', 'stan', 'love'];
+        const catOrder = ['school_m', 'school_f', 'mama', 'night', 'stan', 'love', 'romance'];
         let html = '';
         let globalIdx = 0;
         catOrder.forEach(catKey => {
@@ -7790,8 +8025,9 @@
           const ci = ENCYCLOPEDIA_CATEGORIES.find(c => c.key === catKey);
           if (!ci || catItems.length === 0) return;
           catItems.forEach((item, i) => {
+            const itemIndex = ENCYCLOPEDIA_DATA.indexOf(item);
             html += `
-            <div class="ency-card" data-idx="${globalIdx}" style="
+            <div class="ency-card" data-idx="${itemIndex}" style="
               background:#fff;border-radius:14px;overflow:hidden;cursor:pointer;
               box-shadow:0 2px 12px rgba(0,0,0,0.08);border:1px solid rgba(0,0,0,0.06);
               transition:transform 0.2s ease,box-shadow 0.2s ease;
