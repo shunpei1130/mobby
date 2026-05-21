@@ -208,6 +208,16 @@
       aspect-ratio: 1812 / 638;
     }
 
+    .splash-logo-img {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 1;
+    }
+
     .splash-logo-mask {
       position: absolute;
       inset: 0;
@@ -6165,6 +6175,7 @@
   <div id="splash-screen">
     <div class="splash-logo-shell" aria-hidden="true">
       <div class="splash-logo-frame">
+        <img class="splash-logo-img" src="mobby-custom/assets/stickers/Logo.webp" alt="Mobby logo" fetchpriority="high" decoding="async" />
         <div class="splash-logo-mask splash-logo-glow"></div>
         <div class="splash-logo-reveal"></div>
         <div class="splash-logo-mask splash-logo-trace"></div>
