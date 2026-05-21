@@ -34,18 +34,23 @@
       gap: 18px;
       padding: 32px 24px 26px;
       overflow: auto;
-      border: 1px solid rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(255, 214, 232, 0.62);
       border-radius: 26px;
-      background: linear-gradient(145deg, rgba(255, 253, 250, 0.97), rgba(255, 246, 241, 0.94));
-      box-shadow: 0 28px 80px rgba(44, 34, 29, 0.34);
-      color: #2d2522;
+      background:
+        linear-gradient(145deg, rgba(255, 248, 252, 0.58), rgba(255, 229, 241, 0.36)) !important;
+      -webkit-backdrop-filter: blur(18px) saturate(1.18);
+      backdrop-filter: blur(18px) saturate(1.18);
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.7),
+        0 28px 80px rgba(109, 54, 78, 0.24);
+      color: #3a2730;
       text-align: center;
       font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
     }
 
     .burn-guide-step {
       margin: 0;
-      color: #c86f6a;
+      color: #d979a4;
       font-family: Georgia, "Times New Roman", serif;
       font-size: 1rem;
       font-weight: 700;
@@ -61,27 +66,21 @@
     }
 
     .burn-guide-heart {
-      margin: -8px 0 0;
-      color: #d7a2a0;
-      font-size: 1.45rem;
-      line-height: 1;
+      display: none;
     }
 
     .burn-guide-copy {
-      margin: 0;
-      color: #3f3531;
-      font-size: 1rem;
-      line-height: 1.9;
+      display: none;
     }
 
     .burn-guide-visual {
       width: min(100%, 420px);
       margin: 0 auto;
       padding: 18px;
-      border: 1px solid rgba(78, 57, 51, 0.08);
+      border: 1px solid rgba(222, 137, 174, 0.18);
       border-radius: 16px;
-      background: rgba(255, 255, 255, 0.74);
-      box-shadow: 0 14px 34px rgba(77, 48, 39, 0.12);
+      background: rgba(255, 250, 253, 0.78);
+      box-shadow: 0 14px 34px rgba(109, 54, 78, 0.1);
     }
 
     .burn-guide-upload {
@@ -89,9 +88,9 @@
       place-items: center;
       gap: 12px;
       min-height: 190px;
-      border: 1.5px dashed rgba(181, 118, 110, 0.38);
-      background: rgba(255, 250, 246, 0.72);
-      color: #7c625b;
+      border: 1.5px dashed rgba(217, 121, 164, 0.38);
+      background: rgba(255, 244, 250, 0.72);
+      color: #7b5063;
     }
 
     .burn-guide-upload strong {
@@ -99,9 +98,9 @@
       place-items: center;
       width: 58px;
       height: 58px;
-      border: 1px solid rgba(196, 111, 102, 0.42);
+      border: 1px solid rgba(217, 121, 164, 0.42);
       border-radius: 999px;
-      color: #a9665f;
+      color: #b95f88;
       font-size: 2rem;
       font-weight: 400;
       line-height: 1;
@@ -281,7 +280,10 @@
     }
 
     .burn-guide-bg {
-      min-height: 88px;
+      width: 34px;
+      height: 48px;
+      min-height: 0;
+      overflow: hidden;
       background: radial-gradient(circle at 70% 28%, rgba(255, 255, 255, 0.9), transparent 18%), linear-gradient(135deg, #ffd5e5, #d8b5ff 48%, #ffe9f4);
     }
 
@@ -289,9 +291,17 @@
       display: block;
       width: 100%;
       height: 100%;
-      min-height: 88px;
+      min-height: 0;
       object-fit: cover;
       border-radius: 9px;
+    }
+
+    .burn-guide-background-row {
+      width: max-content;
+      grid-template-columns: repeat(3, 34px);
+      justify-content: center;
+      margin: 0 auto;
+      gap: 6px;
     }
 
     .burn-guide-bg:nth-child(2) {
@@ -376,7 +386,7 @@
 
     .burn-guide-page-image {
       display: block;
-      width: min(76%, 240px);
+      width: min(66%, 210px);
       aspect-ratio: 1240 / 1754;
       margin: 0 auto;
       object-fit: cover;
@@ -440,11 +450,7 @@
     }
 
     .burn-guide-rule {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      gap: 14px;
-      color: #d7a2a0;
+      display: none;
     }
 
     .burn-guide-rule::before,
@@ -471,10 +477,10 @@
 
     .burn-guide-skip {
       border-radius: 999px;
-      color: #bd6d68;
-      background: rgba(255, 255, 255, 0.42);
-      border: 1px solid rgba(255, 255, 255, 0.62);
-      box-shadow: inset 0 1px rgba(255, 255, 255, 0.78), 0 10px 22px rgba(101, 72, 61, 0.1);
+      color: #bd5f89;
+      background: rgba(255, 255, 255, 0.48);
+      border: 1px solid rgba(255, 214, 232, 0.72);
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.82), 0 10px 22px rgba(109, 54, 78, 0.1);
       font-size: 1.05rem;
       font-weight: 600;
     }
@@ -482,8 +488,8 @@
     .burn-guide-next {
       border-radius: 999px;
       color: #fff;
-      background: linear-gradient(180deg, #cf7974, #bd625e);
-      box-shadow: 0 12px 28px rgba(181, 98, 92, 0.28);
+      background: linear-gradient(180deg, #e59aba, #cf6f9d);
+      box-shadow: 0 12px 28px rgba(207, 111, 157, 0.26);
       font-size: 1.12rem;
       font-weight: 700;
     }
@@ -498,18 +504,11 @@
       width: 11px;
       height: 11px;
       border-radius: 999px;
-      background: #e7d9d2;
+      background: #f2d7e3;
     }
 
     .burn-guide-dots span.is-active {
-      background: #c86f6a;
-    }
-
-    .record-header__back,
-    [data-record-back-home],
-    .record-camera-header button,
-    .record-outline-button {
-      border-radius: 999px !important;
+      background: #d979a4;
     }
 
     @media (max-width: 520px) {
@@ -588,12 +587,23 @@
         overlay.hidden = true;
       };
 
+      const guideTitles = [
+        "写真をアップする",
+        "場所と感想を入力",
+        "タイトルと配置を選ぶ",
+        "好みの背景を選んで",
+        "完成！保存！"
+      ];
+
       const render = () => {
         const step = steps[index];
         stepEl.textContent = `STEP ${index + 1} / ${steps.length}`;
-        titleEl.textContent = step.title;
-        copyEl.textContent = step.copy;
+        titleEl.textContent = guideTitles[index] || step.title;
+        copyEl.textContent = guideTitles[index] || step.copy;
         visualEl.innerHTML = step.visual;
+        if (index === 2) {
+          visualEl.querySelector(".burn-guide-mini-photos")?.remove();
+        }
         nextButton.textContent = index === steps.length - 1 ? "はじめる" : "次へ";
         skipButton.textContent = index === steps.length - 1 ? "戻る" : "スキップ";
         dotsEl.innerHTML = steps.map((_, dotIndex) => `<span class="${dotIndex === index ? "is-active" : ""}"></span>`).join("");

@@ -691,8 +691,8 @@ const _='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800
         `).join("")}
       </div>
       <div class="love-diagnosis__nav">
+        <button class="button button--ghost" type="button" data-love-page-prev ${t<=0?"disabled":""}>戻る</button>
         <button class="button button--primary" type="button" data-love-page-next ${a?"":"disabled"}>${i?"結果を見る":"次へ"}</button>
-        <button class="button button--ghost" type="button" data-love-page-prev ${t<=0?"disabled":""}>前へ</button>
       </div>
     </section>
   `}function pe(e){return`

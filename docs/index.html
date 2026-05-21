@@ -5975,6 +5975,29 @@
   </style>
   <link rel="stylesheet" href="glassmorphism.css">
   <style>
+    .popup-buttons-bar {
+      background: transparent !important;
+    }
+
+    .popup-buttons-bar .container,
+    .popup-buttons-bar .popup-buttons,
+    .popup-buttons-bar .gift-fan-menu,
+    .popup-buttons-bar .footer-burn-card-row {
+      border: 0 !important;
+      outline: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    .popup-buttons-bar .popup-buttons::before,
+    .popup-buttons-bar .popup-buttons::after,
+    .popup-buttons-bar .gift-fan-menu::before,
+    .popup-buttons-bar .gift-fan-menu::after,
+    .popup-buttons-bar .footer-burn-card-row::before,
+    .popup-buttons-bar .footer-burn-card-row::after {
+      display: none !important;
+    }
+
     .footer-burn-card-row .burn-card {
       border: 0 !important;
     }
