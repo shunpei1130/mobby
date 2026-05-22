@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>谷口布実 表現スイッチ診断 | Mobby</title>
+  <meta name="description" content="20問であなたの表現スタイル、魅せ方、推し方を8タイプから診断する谷口布実さん向けモビー診断ラフ案です。" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="谷口布実 表現スイッチ診断" />
+  <meta property="og:description" content="凛アクション、透明ビューティー、役に入る、素で惹く。あなたに近い表現スイッチを20問で診断します。" />
+  <meta property="og:image" content="img/taniguchi-mobby-action.png" />
+  <meta name="theme-color" content="#f6f4f8" />
+  <link rel="icon" type="image/jpeg" href="../16school/favicon/fav.jpg" />
+  <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --font-ja: 'Yomogi', cursive;
+      --bg: #f6f4f8;
+      --surface: #ffffff;
+      --text-main: #1d1d1f;
+      --text-sub: #77747e;
+      --accent: #b24f73;
+      --accent-hover: #c26082;
+      --accent-soft: #fff0f5;
+      --line: #d7d2dc;
+      --cool: #496d8a;
+      --shadow-sm: 0 2px 8px rgba(42,34,48,0.05);
+      --shadow-lg: 0 12px 30px rgba(42,34,48,0.10);
+      --radius: 20px;
+      --radius-sm: 12px;
+    }
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    body { margin: 0; font-family: var(--font-ja); background: var(--bg); color: var(--text-main); line-height: 1.6; }
+    a { color: var(--accent); text-decoration: none; }
+    .wrap { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
+    header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 0; cursor: pointer; }
+    .logo { width: 30px; height: 30px; border-radius: 10px; background-image: url('../16school/logo.jpg'); background-size: cover; background-position: center; box-shadow: 0 4px 10px rgba(178,79,115,0.24); margin-right: 10px; }
+    .title h1 { font-size: 14px; margin: 0; font-weight: 600; }
+    .title p { margin: 0; color: var(--text-sub); font-size: 12px; }
+    .nav { display: flex; gap: 12px; align-items: center; }
+    .nav a { color: var(--text-main); font-size: 11px; font-weight: 500; padding: 8px 16px; border-radius: 8px; transition: background 0.2s; cursor: pointer; }
+    .nav a:hover { background: rgba(0,0,0,0.05); }
+    .nav a.active { background: var(--accent-soft); color: var(--accent); }
+    button, .social-link { border: 1px solid transparent; background: rgba(0,0,0,0.05); color: var(--text-main); padding: 10px 18px; border-radius: 999px; cursor: pointer; font-size: 13px; font-weight: 500; font-family: inherit; transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1), background 0.2s ease, box-shadow 0.2s ease; display: inline-flex; align-items: center; justify-content: center; }
+    button:hover, .social-link:hover { background: rgba(0,0,0,0.08); transform: translateY(-1px); }
+    button:active, .social-link:active { transform: translateY(0) scale(0.96); }
+    button.primary, .social-link.primary { background: var(--accent); color: #fff; box-shadow: 0 4px 12px rgba(178,79,115,0.22); }
+    button.primary:hover, .social-link.primary:hover { background: var(--accent-hover); box-shadow: 0 6px 16px rgba(178,79,115,0.30); }
+    button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+    .panel { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow-lg); padding: 32px; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.8); }
+    .kicker { color: var(--accent); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 8px; }
+    .big { font-size: 24px; font-weight: 700; margin: 0 0 16px; color: var(--text-main); }
+    .text-body { color: var(--text-sub); font-size: 14px; line-height: 1.8; }
+    .hero-image { width: min(360px, 100%); aspect-ratio: 1 / 1; object-fit: cover; border-radius: 18px; box-shadow: var(--shadow-sm); margin: 0 auto 28px; display: block; }
+    .progress-wrap { margin-bottom: 20px; }
+    .progress-meta { display: flex; justify-content: space-between; color: var(--text-sub); font-size: 12px; margin-bottom: 8px; }
+    .progress-track { height: 8px; border-radius: 999px; background: rgba(0,0,0,0.06); overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 999px; background: var(--accent); transition: width 0.25s ease; }
+    .qCard { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 22px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
+    .qText { font-size: 16px; line-height: 1.8; margin: 0 0 18px; color: var(--text-main); }
+    .likert-labels { display: flex; justify-content: space-between; color: var(--text-sub); font-size: 11px; margin-bottom: 10px; gap: 12px; }
+    .likert-buttons { display: grid; grid-template-columns: repeat(7, minmax(28px, 1fr)); gap: 8px; align-items: center; }
+    .likert-btn { aspect-ratio: 1 / 1; min-width: 0; padding: 0; border-radius: 50%; border: 2px solid var(--line); background: #fff; box-shadow: none; }
+    .likert-btn.left { border-color: rgba(73,109,138,0.58); }
+    .likert-btn.mid { border-color: #b8b8bd; }
+    .likert-btn.right { border-color: rgba(178,79,115,0.58); }
+    .likert-btn.selected.left { background: var(--cool); border-color: var(--cool); }
+    .likert-btn.selected.mid { background: #8e8e93; border-color: #8e8e93; }
+    .likert-btn.selected.right { background: var(--accent); border-color: var(--accent); }
+    .fade-in { animation: fadeIn 0.35s ease both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .result-hero { text-align: center; }
+    .result-img { width: min(420px, 100%); aspect-ratio: 1 / 1; object-fit: cover; border-radius: 20px; box-shadow: var(--shadow-lg); margin-bottom: 22px; }
+    .type-code { display: inline-flex; align-items: center; justify-content: center; min-width: 92px; padding: 8px 14px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 700; margin-bottom: 12px; }
+    .axis-row { margin: 18px 0; }
+    .axis-meta { display: flex; justify-content: space-between; gap: 12px; color: var(--text-sub); font-size: 12px; margin-bottom: 8px; }
+    .axis-meta span { min-width: 0; }
+    .axis-bar { height: 12px; border-radius: 999px; background: linear-gradient(90deg, #dce8f1 0%, #f6f6f6 50%, #ffe4ef 100%); position: relative; overflow: hidden; }
+    .axis-dot { position: absolute; top: 50%; width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 4px solid var(--accent); transform: translate(-50%, -50%); box-shadow: var(--shadow-sm); }
+    .section-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }
+    .mini { background: #fafafa; border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+    .mini h3 { margin: 0 0 8px; font-size: 14px; }
+    .mini p { margin: 0; color: var(--text-sub); font-size: 13px; line-height: 1.75; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 28px; }
+    .social-links { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 24px; }
+    .characters-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 24px; }
+    .char-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-sm); }
+    .char-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+    .char-body { padding: 16px; }
+    .char-body h3 { margin: 0 0 8px; font-size: 16px; }
+    .char-body p { margin: 0; color: var(--text-sub); font-size: 13px; line-height: 1.7; }
+    @media (max-width: 640px) {
+      .wrap { padding: 24px 14px 56px; }
+      header { margin-bottom: 24px; }
+      .panel { padding: 22px; border-radius: 16px; }
+      .big { font-size: 21px; }
+      .section-grid, .characters-grid { grid-template-columns: 1fr; }
+      .likert-buttons { gap: 6px; }
+      .nav { width: 100%; }
+      .nav a { flex: 1; text-align: center; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand" id="brandHome">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="title">
+          <h1>谷口布実 表現スイッチ診断</h1>
+          <p>Mobby rough preview</p>
+        </div>
+      </div>
+      <nav class="nav">
+        <a id="navDiagnosis" class="active">診断</a>
+        <a id="navCharacters">8タイプ</a>
+      </nav>
+    </header>
+    <main id="app"></main>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "mobby_taniguchi_fumi_diagnosis_v1";
+    const PAGE_SIZE = 4;
+    const AXIS_KEYS = ["A", "B", "C"];
+
+    const SOCIAL_LINKS = [
+      {label:"Official", url:"https://www.ohtapro.co.jp/talent/taniguchifumi.html"},
+      {label:"Instagram", url:"https://www.instagram.com/fumi_2001_/"},
+      {label:"YouTube", url:"https://www.youtube.com/channel/UCC6eGjAweyEWxtw7QJha_XQ"}
+    ];
+
+    const AXES = {
+      A: { key:"A", name:"表現スタイル", left:"凛アクション", right:"透明ビューティー", leftCode:"凛", rightCode:"透" },
+      B: { key:"B", name:"魅せ方", left:"役に入る", right:"素で惹く", leftCode:"役", rightCode:"素" },
+      C: { key:"C", name:"推し方", left:"ひとり深掘り", right:"みんなで共有", leftCode:"ひ", rightCode:"シ" }
+    };
+
+    const QUESTIONS = [
+      {id:"A1", axis:"A", text:"凛とした立ち姿や、目線だけで空気が変わる表現に惹かれる", reverse:false},
+      {id:"A2", axis:"A", text:"アクションや殺陣のように、体で感情を伝える表現を見ると胸が熱くなる", reverse:false},
+      {id:"A3", axis:"A", text:"かっこよさの中にある静かな覚悟を見つけるのが好き", reverse:false},
+      {id:"A4", axis:"A", text:"メイクや髪型で雰囲気が変わる瞬間を見ると、何度も見返したくなる", reverse:true},
+      {id:"A5", axis:"A", text:"透明感のある表情や、やわらかい空気づくりに惹かれやすい", reverse:true},
+      {id:"A6", axis:"A", text:"美容やスタイリングの変化から、その人の魅力を語りたくなる", reverse:true},
+      {id:"A7", axis:"A", text:"強さとやわらかさのギャップが見える人ほど気になってしまう", reverse:false},
+
+      {id:"B1", axis:"B", text:"作品や役柄の中で見せる表情から、深い魅力を感じる", reverse:false},
+      {id:"B2", axis:"B", text:"演じている時の目線や間の取り方に、その人らしさを見つけたい", reverse:false},
+      {id:"B3", axis:"B", text:"舞台裏や練習の積み重ねを知ると、出演シーンがもっと好きになる", reverse:false},
+      {id:"B4", axis:"B", text:"素の話し方や日常のテンポに触れると、一気に親近感が湧く", reverse:true},
+      {id:"B5", axis:"B", text:"短い動画の自然なリアクションや笑顔を、つい何度も見てしまう", reverse:true},
+      {id:"B6", axis:"B", text:"作り込まれた姿より、ふとした瞬間の人柄に惹かれることが多い", reverse:true},
+      {id:"B7", axis:"B", text:"役の顔と素の顔、その切り替わりが見えるほど応援したくなる", reverse:false},
+
+      {id:"C1", axis:"C", text:"好きになったら、過去動画や出演情報をひとりでじっくり掘りたい", reverse:false},
+      {id:"C2", axis:"C", text:"お気に入りの表情や言葉は、自分の中で大事に保存しておきたい", reverse:false},
+      {id:"C3", axis:"C", text:"作品や投稿を見た後、しばらく余韻に浸る時間が好き", reverse:false},
+      {id:"C4", axis:"C", text:"よかった投稿や出演情報は、同じ温度で好きな人と共有したくなる", reverse:true},
+      {id:"C5", axis:"C", text:"コメントやストーリーズで、自分の好きなポイントを言葉にしたい", reverse:true},
+      {id:"C6", axis:"C", text:"新しい企画が出たら、みんなで盛り上がる入口があるとうれしい", reverse:true}
+    ];
+
+    const CHARACTERS = {
+      "凛役ひ": {
+        name:"静かな殺陣ヒロインモビィ",
+        summary:"凛とした役の表情を、ひとりで深く受け取るタイプ。",
+        catch:"あなたは、静かな一瞬の奥にある覚悟まで見つけられる人です。",
+        hook:"派手な言葉より、構え、視線、呼吸の変化に引き込まれます。殺陣やアクションの中にある物語を、自分のペースでじっくり味わえるのが魅力です。",
+        downside:"深く見すぎる分、共有する前に言葉を選びすぎてしまうことも。短い一言でも、好きな温度はちゃんと伝わります。",
+        perception:"落ち着いていて、作品の細部を見る力がある人。感想に説得力が出やすいです。",
+        strength:"表情や所作の小さな変化から、役の背景まで想像できること。",
+        weakness:"自分の中で完結しやすく、推しポイントを外に出すタイミングを逃しがちです。",
+        advice:"今日の好きな一瞬を、スクショではなく言葉で一つだけ残してみてください。応援の輪郭が濃くなります。",
+        image:"img/taniguchi-mobby-action.png"
+      },
+      "凛役シ": {
+        name:"物語共鳴モビィ",
+        summary:"作品や役柄の魅力を、みんなと語り合って広げるタイプ。",
+        catch:"あなたは、好きな物語の熱を周りへ伝えられる人です。",
+        hook:"出演情報や役の背景を知るほど、見どころを誰かに話したくなります。凛とした表現の中にある感情を共有できるので、作品への入口を作るのが上手です。",
+        downside:"語りたいポイントが多くなると、熱量が先に走ることも。最初は一番刺さった場面だけを出すと、相手も受け取りやすくなります。",
+        perception:"感想を届けるのが上手で、作品を見たくさせる人と思われやすいです。",
+        strength:"役の魅力と本人の努力をつなげて、応援の言葉にできること。",
+        weakness:"共有の反応を気にしすぎると、自分の純粋な感動が少し揺れやすいです。",
+        advice:"投稿するなら、好きな場面と理由を一文ずつに分けてみてください。熱さが伝わりやすくなります。",
+        image:"img/taniguchi-mobby-beauty.png"
+      },
+      "凛素ひ": {
+        name:"まっすぐ挑戦モビィ",
+        summary:"素の努力や挑戦の姿を、静かに応援したくなるタイプ。",
+        catch:"あなたは、表に出る前の積み重ねに心を動かされる人です。",
+        hook:"練習、挑戦、継続。見えないところで前に進む姿に惹かれます。飾らない言葉の中にある強さを、自分の中で大事に育てられるタイプです。",
+        downside:"応援したい気持ちが強いほど、見守るだけになりやすいです。小さなリアクションでも、本人に届く支えになります。",
+        perception:"誠実で、長く応援できる人。派手ではないけれど信頼感があります。",
+        strength:"短期的な話題より、続ける姿勢や変化を見逃さないこと。",
+        weakness:"応援を表に出すのを遠慮して、存在感が薄くなりがちです。",
+        advice:"いいなと思った投稿には、ひとことだけでも反応してみてください。静かな応援も形にすると届きます。",
+        image:"img/taniguchi-mobby-action.png"
+      },
+      "凛素シ": {
+        name:"アクション応援モビィ",
+        summary:"凛とした挑戦と素の明るさを、みんなで応援したいタイプ。",
+        catch:"あなたは、挑戦する姿を楽しい応援に変えられる人です。",
+        hook:"かっこいい表情と、素の親しみやすさ。そのギャップを見つけると誰かに伝えたくなります。作品もSNSも横断して、応援のきっかけを作れるタイプです。",
+        downside:"盛り上げたい気持ちが強いほど、情報を追う量が増えて疲れることも。自分が楽しく続けられる距離を残すのが大切です。",
+        perception:"明るくて行動が早い人。企画や出演情報を広げる起点になりやすいです。",
+        strength:"好きなポイントを短くわかりやすく共有して、周りを巻き込めること。",
+        weakness:"反応の速さを優先しすぎて、深い感想を置き去りにする時があります。",
+        advice:"拡散したい時ほど、自分の好きな理由を一つ添えてみてください。応援にあなたらしさが出ます。",
+        image:"img/taniguchi-mobby-beauty.png"
+      },
+      "透役ひ": {
+        name:"透明感ストーリーモビィ",
+        summary:"役の中で変わる透明感を、ひとりで丁寧に味わうタイプ。",
+        catch:"あなたは、表情の余白から物語を感じ取れる人です。",
+        hook:"メイク、衣装、光の当たり方で変わる雰囲気に敏感です。かわいさや透明感だけでなく、その奥にある役の感情まで見つけたくなります。",
+        downside:"細部に惹かれる分、感想が長くなりすぎることも。まず一番好きだった表情から言葉にするとまとまりやすいです。",
+        perception:"繊細で、世界観を受け取るのが上手な人。美しさの理由を言語化できます。",
+        strength:"ビジュアルと物語をつなげて見る力があること。",
+        weakness:"完璧な言葉にしようとして、発信する前に止まりやすいです。",
+        advice:"今日の推しポイントは、色、表情、言葉のどれか一つから選ぶと残しやすくなります。",
+        image:"img/taniguchi-mobby-action.png"
+      },
+      "透役シ": {
+        name:"変身ムードモビィ",
+        summary:"役やメイクで変わるムードを、みんなと楽しむタイプ。",
+        catch:"あなたは、変化のワクワクを共有するのが上手な人です。",
+        hook:"新しいビジュアルや役柄を見るたびに、どんな世界観なのか語りたくなります。美容と演技の両方をつなげて、見た人の興味を広げられるタイプです。",
+        downside:"変化を追うのが楽しい分、次の投稿を待ちすぎて焦れることも。過去の好きな変身を見返すと、応援の熱が安定します。",
+        perception:"感性が軽やかで、推しの魅力を楽しく紹介できる人と思われやすいです。",
+        strength:"見た目の変化から企画や作品への興味を作れること。",
+        weakness:"新しさに反応しすぎて、定番の魅力を見落とす時があります。",
+        advice:"共有するなら、前の雰囲気との違いを一つ添えてみてください。変身の面白さが伝わります。",
+        image:"img/taniguchi-mobby-beauty.png"
+      },
+      "透素ひ": {
+        name:"ひとり磨きモビィ",
+        summary:"美容や日常の姿から、自分のペースで刺激を受け取るタイプ。",
+        catch:"あなたは、好きな人の変化を自分の前向きさに変えられる人です。",
+        hook:"メイク、ヘアケア、日常の雰囲気。素の発信から、自分も少し整えたくなるヒントを受け取ります。憧れを比べる材料ではなく、行動のきっかけにできます。",
+        downside:"自分磨きに向かうほど、理想との差を気にしてしまうことも。真似するより、自分に合う一部だけ取り入れるのが合っています。",
+        perception:"落ち着いていて、自分のペースを大切にする人。好きなものを生活に馴染ませるのが上手です。",
+        strength:"発信を見て終わりにせず、自分の小さな変化につなげられること。",
+        weakness:"ひとりで完結しやすく、好きな気持ちを言葉にしないまま過ぎることがあります。",
+        advice:"今日いいなと思った雰囲気を、服、髪、言葉のどれか一つで取り入れてみてください。",
+        image:"img/taniguchi-mobby-action.png"
+      },
+      "透素シ": {
+        name:"おふみ共感モビィ",
+        summary:"素の親しみと美容の楽しさを、みんなで分かち合うタイプ。",
+        catch:"あなたは、共感から応援の輪を広げられる人です。",
+        hook:"自然な笑顔、飾らない話し方、真似したくなる美容の工夫。近い距離で楽しめる魅力を見つけると、友達にも教えたくなります。",
+        downside:"共感が強いほど、反応や数字まで気になってしまうことも。まず自分が楽しかったかを軸にすると、応援が軽やかに続きます。",
+        perception:"親しみやすく、好きなものを周りと一緒に楽しめる人と思われやすいです。",
+        strength:"ファン同士の会話を生みやすく、投稿を参加型の楽しみに変えられること。",
+        weakness:"周りの盛り上がりに合わせすぎて、自分の本音が後回しになる時があります。",
+        advice:"好きな投稿を共有する時は、自分が真似したいポイントを一つ添えると会話が生まれます。",
+        image:"img/taniguchi-mobby-beauty.png"
+      }
+    };
+
+    const ANS_LABEL = {
+      1:"とてもそう思う", 2:"そう思う", 3:"少しそう思う", 4:"どちらでもない",
+      5:"少しそう思わない", 6:"そう思わない", 7:"まったくそう思わない"
+    };
+
+    const defaultState = () => ({step:"intro", page:0, answers:{}, questionOrder:[], axes:null});
+    let state = loadState();
+    const app = document.getElementById("app");
+
+    function loadState(){
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? {...defaultState(), ...JSON.parse(raw)} : defaultState();
+      } catch { return defaultState(); }
+    }
+
+    function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    function resetDiagnosis(){ state = defaultState(); localStorage.removeItem(STORAGE_KEY); render(); }
+
+    function getQuestionOrder(){
+      if(Array.isArray(state.questionOrder) && state.questionOrder.length === QUESTIONS.length) return state.questionOrder;
+      state.questionOrder = AXIS_KEYS.flatMap(axis => QUESTIONS.filter(q => q.axis === axis)).map(q => q.id);
+      saveState();
+      return state.questionOrder;
+    }
+
+    function getQuestions(){ return getQuestionOrder().map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean); }
+
+    function computeResult(){
+      const SCALE = 7, MID = 4, MAX_DEV = 3, GAMMA = 1.35, EXTREME_BONUS = 0.35, COHERENCE_SHRINK = 0.20;
+      const raw = {A:0, B:0, C:0}, absRaw = {A:0, B:0, C:0}, maxRaw = {A:0, B:0, C:0}, allAnswers = [];
+      const weightOf = ans => (ans === 1 || ans === 7) ? 1 + EXTREME_BONUS : 1;
+      const shapeAns = ans => {
+        const centered = MID - ans;
+        const t = centered / MAX_DEV;
+        const mag = Math.min(1, Math.abs(t));
+        return Math.sign(t) * Math.pow(mag, GAMMA);
+      };
+      QUESTIONS.forEach(q => {
+        const ansRaw = state.answers[q.id];
+        if(!ansRaw) return;
+        allAnswers.push(ansRaw);
+        const ansAdj = q.reverse ? (SCALE + 1 - ansRaw) : ansRaw;
+        const w = weightOf(ansRaw) * (q.importance ?? 1);
+        const contrib = w * shapeAns(ansAdj);
+        raw[q.axis] += contrib;
+        absRaw[q.axis] += Math.abs(contrib);
+        maxRaw[q.axis] += w;
+      });
+      const norm = {}, pos = {}, hard = {}, decisiveness = {}, confidenceLevel = {}, confidenceLabel = {};
+      AXIS_KEYS.forEach(k => {
+        const denom = maxRaw[k] || 1;
+        const coherence = absRaw[k] ? Math.abs(raw[k]) / absRaw[k] : 0;
+        const adjusted = raw[k] * (1 - COHERENCE_SHRINK * (1 - coherence));
+        norm[k] = Math.max(-1, Math.min(1, adjusted / denom));
+        hard[k] = norm[k] > 0 ? "L" : "R";
+        pos[k] = Math.max(0, Math.min(100, 50 - norm[k] * 50));
+        decisiveness[k] = Math.min(1, Math.abs(norm[k]));
+        if(decisiveness[k] >= 0.50) { confidenceLevel[k] = "strong"; confidenceLabel[k] = "はっきり"; }
+        else if(decisiveness[k] >= 0.25) { confidenceLevel[k] = "moderate"; confidenceLabel[k] = "やや"; }
+        else { confidenceLevel[k] = "mid"; confidenceLabel[k] = "場面による"; }
+      });
+      const code = (hard.A === "L" ? AXES.A.leftCode : AXES.A.rightCode) + (hard.B === "L" ? AXES.B.leftCode : AXES.B.rightCode) + (hard.C === "L" ? AXES.C.leftCode : AXES.C.rightCode);
+      const freq = {1:0,2:0,3:0,4:0,5:0,6:0,7:0};
+      allAnswers.forEach(a => freq[a]++);
+      const straightLine = allAnswers.length ? Math.max(...Object.values(freq)) / allAnswers.length >= 0.80 : false;
+      const adjacentTypes = [];
+      AXIS_KEYS.forEach(k => {
+        if(confidenceLevel[k] === "mid") {
+          const altHard = {...hard, [k]: hard[k] === "L" ? "R" : "L"};
+          const altCode = (altHard.A === "L" ? AXES.A.leftCode : AXES.A.rightCode) + (altHard.B === "L" ? AXES.B.leftCode : AXES.B.rightCode) + (altHard.C === "L" ? AXES.C.leftCode : AXES.C.rightCode);
+          if(CHARACTERS[altCode] && altCode !== code) adjacentTypes.push({axis:k, code:altCode, name:CHARACTERS[altCode].name});
+        }
+      });
+      return {code, char: CHARACTERS[code], norm, pos, hard, decisiveness, confidenceLevel, confidenceLabel, straightLine, adjacentTypes};
+    }
+
+    function isComplete(){ return Object.keys(state.answers || {}).length >= QUESTIONS.length; }
+
+    function render(){
+      document.getElementById("navDiagnosis").classList.toggle("active", state.step !== "characters");
+      document.getElementById("navCharacters").classList.toggle("active", state.step === "characters");
+      if(state.step === "intro") renderIntro();
+      else if(state.step === "quiz") renderQuiz();
+      else if(state.step === "characters") renderCharacters();
+      else renderResult();
+    }
+
+    function socialLinksHtml(){
+      return `<div class="social-links">${SOCIAL_LINKS.map((link, i) => `<a class="social-link ${i === 1 ? "primary" : ""}" href="${link.url}" target="_blank" rel="noopener">${link.label}</a>`).join("")}</div>`;
+    }
+
+    function renderIntro(){
+      const count = Object.keys(state.answers).length;
+      app.innerHTML = `
+        <div class="panel fade-in" style="text-align:center; padding:60px 20px;">
+          <img class="hero-image" src="img/taniguchi-mobby-action.png" alt="谷口布実さんの世界観に合わせた殺陣稽古空間のMobby">
+          <p class="kicker">Mobby rough preview</p>
+          <h2 class="big">谷口布実 表現スイッチ診断</h2>
+          <p class="text-body" style="max-width:500px; margin:0 auto 30px;">直感で選ぶ20問から、あなたが惹かれる表現、応援したくなる魅せ方、ファンとして楽しみやすい入口を診断します。</p>
+          <button class="primary" id="btnStart" style="padding:16px 32px; font-size:16px;">${count > 0 ? "診断を再開する" : "診断をはじめる"}</button>
+          ${count > 0 ? `<p style="font-size:12px; color:#86868b; margin-top:16px;">${count} / ${QUESTIONS.length}問 回答済み</p>` : ""}
+          ${socialLinksHtml()}
+        </div>`;
+      document.getElementById("btnStart").onclick = () => {
+        state.step = "quiz";
+        getQuestionOrder();
+        const idx = getQuestions().findIndex(q => !state.answers[q.id]);
+        state.page = idx >= 0 ? Math.floor(idx / PAGE_SIZE) : 0;
+        saveState();
+        render();
+      };
+    }
+
+    function renderQuiz(){
+      const qs = getQuestions();
+      const start = state.page * PAGE_SIZE;
+      const currentQs = qs.slice(start, start + PAGE_SIZE);
+      const totalPage = Math.ceil(qs.length / PAGE_SIZE);
+      const progress = Math.round((Object.keys(state.answers).length / qs.length) * 100);
+      const qHtml = currentQs.map((q, i) => {
+        const val = state.answers[q.id];
+        return `<div class="qCard fade-in" style="animation-delay:${i*0.05}s"><div class="kicker" style="color:#86868b; margin-bottom:4px;">Q${start+i+1}</div><p class="qText">${q.text}</p><div class="likert7"><div class="likert-labels"><span>${AXES[q.axis].left}</span><span>${AXES[q.axis].right}</span></div><div class="likert-buttons">${[1,2,3,4,5,6,7].map(n => { const side = n <= 3 ? "left" : (n === 4 ? "mid" : "right"); const sel = val === n ? "selected" : ""; return `<button type="button" class="likert-btn ${side} ${sel}" data-qid="${q.id}" data-val="${n}" aria-label="${ANS_LABEL[n]}"></button>`; }).join("")}</div></div></div>`;
+      }).join("");
+      app.innerHTML = `<div class="panel"><div class="progress-wrap"><div class="progress-meta"><span>進行状況</span><span>${progress}%</span></div><div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div></div><div style="margin-top:30px;">${qHtml}</div><div style="display:flex; justify-content:space-between; gap:12px; margin-top:30px;"><button id="btnPrev" ${state.page===0 ? "disabled":""}>戻る</button><button class="primary" id="btnNext">${state.page === totalPage - 1 ? "結果を見る" : "次へ"}</button></div></div>`;
+      currentQs.forEach(q => {
+        document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(btn => {
+          btn.onclick = () => {
+            state.answers[q.id] = parseInt(btn.dataset.val, 10);
+            document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(b => b.classList.remove("selected"));
+            btn.classList.add("selected");
+            saveState();
+            const p = Math.round((Object.keys(state.answers).length / qs.length) * 100);
+            document.querySelector(".progress-fill").style.width = p + "%";
+            document.querySelector(".progress-meta span:last-child").innerText = p + "%";
+          };
+        });
+      });
+      document.getElementById("btnPrev").onclick = () => { if(state.page > 0) state.page--; saveState(); render(); };
+      document.getElementById("btnNext").onclick = () => {
+        const missing = currentQs.filter(q => !state.answers[q.id]);
+        if(missing.length){ alert("このページの質問にすべて回答してください。"); return; }
+        if(state.page < totalPage - 1){ state.page++; saveState(); render(); }
+        else { state.axes = computeResult(); state.step = "result"; saveState(); render(); }
+      };
+    }
+
+    function renderAxis(result){
+      return AXIS_KEYS.map(k => {
+        const a = AXES[k];
+        return `<div class="axis-row"><div class="axis-meta"><span>${a.name}: ${a.left}</span><span>${result.confidenceLabel[k]}</span><span>${a.right}</span></div><div class="axis-bar"><div class="axis-dot" style="left:${result.pos[k]}%"></div></div></div>`;
+      }).join("");
+    }
+
+    function renderResult(){
+      if(!isComplete()){ state.step = "intro"; render(); return; }
+      const result = state.axes || computeResult();
+      const c = result.char;
+      app.innerHTML = `<div class="panel fade-in result-hero"><p class="kicker">RESULT</p><span class="type-code">TYPE ${result.code}</span><h2 class="big">${c.name}</h2><img class="result-img" src="${c.image}" alt="${c.name}"><p class="text-body" style="max-width:560px; margin:0 auto;">${c.summary}</p><p style="font-size:17px; font-weight:700; margin:22px auto 0; max-width:560px;">${c.catch}</p>${socialLinksHtml()}</div><div class="panel fade-in"><p class="kicker">3 AXES</p><h2 class="big">あなたの表現スイッチ</h2>${renderAxis(result)}${result.straightLine ? `<p class="text-body" style="color:#b24f73;">同じ回答が多めです。気分を変えてもう一度試すと、少し違う結果になるかもしれません。</p>` : ""}${result.adjacentTypes.length ? `<p class="text-body">近いタイプ: ${result.adjacentTypes.map(t => t.name).join(" / ")}</p>` : ""}</div><div class="panel fade-in"><p class="kicker">DETAIL</p><h2 class="big">このタイプの見え方</h2><div class="section-grid"><div class="mini"><h3>共感ポイント</h3><p>${c.hook}</p></div><div class="mini"><h3>迷いやすい時</h3><p>${c.downside}</p></div><div class="mini"><h3>周りから</h3><p>${c.perception}</p></div><div class="mini"><h3>今日のヒント</h3><p>${c.advice}</p></div><div class="mini"><h3>強み</h3><p>${c.strength}</p></div><div class="mini"><h3>気をつけたいこと</h3><p>${c.weakness}</p></div></div><div class="actions"><button class="primary" id="btnChars">8タイプを見る</button><button id="btnAgain">もう一度診断する</button></div></div>`;
+      document.getElementById("btnChars").onclick = () => { state.step = "characters"; saveState(); render(); };
+      document.getElementById("btnAgain").onclick = resetDiagnosis;
+    }
+
+    function renderCharacters(){
+      const cards = Object.entries(CHARACTERS).map(([code, c]) => `<article class="char-card fade-in"><img src="${c.image}" alt="${c.name}"><div class="char-body"><p class="kicker">TYPE ${code}</p><h3>${c.name}</h3><p>${c.summary}</p></div></article>`).join("");
+      app.innerHTML = `<div class="panel fade-in"><p class="kicker">8 TYPES</p><h2 class="big">表現スイッチ 8タイプ</h2><p class="text-body">殺陣やアクションの凛とした魅力、美容や動画で見える透明感、役としての表現と素の親しみから、ファンが語りやすい8タイプに分けています。</p><div class="characters-grid">${cards}</div><div class="actions"><button class="primary" id="btnBackDiagnosis">${isComplete() ? "結果に戻る" : "診断する"}</button></div></div>`;
+      document.getElementById("btnBackDiagnosis").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
+    }
+
+    document.getElementById("brandHome").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
+    document.getElementById("navDiagnosis").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
+    document.getElementById("navCharacters").onclick = () => { state.step = "characters"; saveState(); render(); };
+    render();
+  </script>
+</body>
+</html>
