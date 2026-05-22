@@ -128,6 +128,55 @@
       align-self: start;
     }
 
+    .record-template-option {
+      position: relative;
+      transition: opacity 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+    }
+
+    .record-template-option:not(.is-selected) {
+      opacity: 0.58;
+    }
+
+    .record-template-option.is-selected {
+      border-color: #ffb84d !important;
+      background: linear-gradient(180deg, #fff8e8, #fff1cf) !important;
+      color: #2c2119 !important;
+      transform: translateY(-1px);
+      box-shadow:
+        0 0 0 3px rgba(255, 184, 77, 0.3),
+        0 14px 28px rgba(119, 78, 32, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
+    }
+
+    .record-template-option.is-selected::after {
+      content: "選択中";
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      z-index: 4;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 46px;
+      height: 20px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: #1f1712;
+      color: #fff8ed;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      box-shadow: 0 6px 14px rgba(31, 23, 18, 0.22);
+      pointer-events: none;
+    }
+
+    .record-template-option.is-selected img {
+      outline: 3px solid #ffb84d;
+      outline-offset: -3px;
+      filter: saturate(1.08) contrast(1.04);
+    }
+
     .burn-guide-overlay {
       position: fixed;
       inset: 0;
@@ -404,6 +453,7 @@
       align-content: end;
       padding: 8px;
       min-height: 116px;
+      position: relative;
       color: #5c504b;
       font-size: 0.72rem;
       text-align: center;
@@ -421,8 +471,38 @@
 
     .burn-guide-template.is-selected,
     .burn-guide-bg.is-selected {
-      border-color: #c86f6a;
-      box-shadow: 0 0 0 2px rgba(200, 111, 106, 0.16);
+      border-color: #ffb84d;
+      background-color: #fff8e8;
+      box-shadow:
+        0 0 0 3px rgba(255, 184, 77, 0.3),
+        0 14px 28px rgba(119, 78, 32, 0.2);
+    }
+
+    .burn-guide-template.is-selected::after {
+      content: "選択中";
+      position: absolute;
+      top: -10px;
+      right: -7px;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 46px;
+      height: 20px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: #1f1712;
+      color: #fff8ed;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      box-shadow: 0 6px 14px rgba(31, 23, 18, 0.22);
+      pointer-events: none;
+    }
+
+    .burn-guide-template:not(.is-selected) {
+      opacity: 0.58;
     }
 
     .burn-guide-bg {

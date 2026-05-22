@@ -18,6 +18,52 @@
     .page--compose .compose-stage-back {
       border-radius: 999px !important;
     }
+
+    .page--compose .compose-mode-switch__button.is-active,
+    .page--compose .template-thumb.is-active {
+      position: relative;
+      border-color: #ffb84d !important;
+      background: linear-gradient(180deg, #fff4d8, #ffe2a8) !important;
+      color: #2c2119 !important;
+      box-shadow:
+        0 0 0 3px rgba(255, 184, 77, 0.28),
+        0 12px 26px rgba(119, 78, 32, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
+    }
+
+    .page--compose .compose-mode-switch__button.is-active::after,
+    .page--compose .template-thumb.is-active::after {
+      content: "選択中";
+      position: absolute;
+      top: -9px;
+      right: -6px;
+      z-index: 4;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 46px;
+      height: 20px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: #1f1712;
+      color: #fff8ed;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      box-shadow: 0 6px 14px rgba(31, 23, 18, 0.22);
+      pointer-events: none;
+    }
+
+    .page--compose .template-thumb.is-active .template-thumb__preview {
+      outline: 3px solid #ffb84d;
+      outline-offset: -3px;
+      filter: saturate(1.08) contrast(1.04);
+    }
+
+    .page--compose .template-thumb:not(.is-active) {
+      opacity: 0.62;
+    }
   </style>
 </head>
 <body>
