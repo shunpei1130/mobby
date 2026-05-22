@@ -5,6 +5,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>BURNでページをつくる</title>
   <script type="module" crossorigin src="./assets/burnRecord-CEFJ408q.js?v=clear-initial-copy"></script>
+  <script>
+    (() => {
+      const MAX_MEMO_CHARS = 56;
+      const MAX_MEMO_LINES = 4;
+
+      function syncMemoLimit(input) {
+        if (!input || !input.matches("[data-record-memo], [data-record-edit-memo]")) return;
+        let value = String(input.value || "").replace(/\r\n/g, "\n");
+        let lines = value.split("\n");
+        if (lines.length > MAX_MEMO_LINES) {
+          lines = lines.slice(0, MAX_MEMO_LINES);
+          value = lines.join("\n");
+        }
+        if (value.length > MAX_MEMO_CHARS) value = value.slice(0, MAX_MEMO_CHARS);
+        if (input.value !== value) input.value = value;
+
+        const limit = input.closest(".record-field")?.querySelector("[data-record-memo-limit], .record-field__limit");
+        const nextLimitText = `${value.length}/${MAX_MEMO_CHARS}文字・${value.split("\n").length}/${MAX_MEMO_LINES}行`;
+        if (limit && limit.textContent !== nextLimitText) limit.textContent = nextLimitText;
+      }
+
+      function syncAllMemoLimits() {
+        document.querySelectorAll("[data-record-memo], [data-record-edit-memo]").forEach(syncMemoLimit);
+      }
+
+      document.addEventListener("input", (event) => syncMemoLimit(event.target));
+      document.addEventListener("keydown", (event) => {
+        const input = event.target;
+        if (!input?.matches?.("[data-record-memo], [data-record-edit-memo]")) return;
+        if (event.key === "Enter" && String(input.value || "").split(/\r\n|\n|\r/).length >= MAX_MEMO_LINES) {
+          event.preventDefault();
+        }
+      });
+
+      new MutationObserver(syncAllMemoLimits).observe(document.documentElement, { childList: true, subtree: true });
+      document.addEventListener("DOMContentLoaded", syncAllMemoLimits);
+    })();
+  </script>
+  <script>
+    (() => {
+      const HEART_ICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='none' stroke='%2353463d' stroke-width='5' stroke-linecap='round' stroke-linejoin='round' d='M32 54S8 39 8 22c0-8 6-14 14-14 5 0 9 3 10 7 1-4 5-7 10-7 8 0 14 6 14 14 0 17-24 32-24 32Z'/%3E%3C/svg%3E";
+      const fixBrokenHeartIcon = (root = document) => {
+        root.querySelectorAll?.('img[src$="/image/icon/feature/like.webp"], img[src="image/icon/feature/like.webp"]').forEach((img) => {
+          img.src = HEART_ICON;
+        });
+      };
+      document.addEventListener("error", (event) => {
+        const target = event.target;
+        if (target?.tagName === "IMG" && /\/?image\/icon\/feature\/like\.webp$/.test(target.getAttribute("src") || "")) {
+          target.src = HEART_ICON;
+        }
+      }, true);
+      new MutationObserver((records) => {
+        records.forEach((record) => record.addedNodes.forEach((node) => {
+          if (node.nodeType === 1) fixBrokenHeartIcon(node);
+        }));
+      }).observe(document.documentElement, { childList: true, subtree: true });
+      document.addEventListener("DOMContentLoaded", () => fixBrokenHeartIcon());
+    })();
+  </script>
   <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
   <link rel="modulepreload" crossorigin href="./assets/icons-BAsau70F.js?v=iconfix">
   <link rel="modulepreload" crossorigin href="./assets/record-CKgMcgCu.js?v=clear-initial-copy">
@@ -573,6 +633,30 @@
       display: grid !important;
     }
 
+    .record-page--complete [data-record-complete-back] {
+      position: fixed !important;
+      top: calc(env(safe-area-inset-top, 0px) + 12px) !important;
+      left: 12px !important;
+      z-index: 30 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 44px !important;
+      height: 44px !important;
+      min-height: 44px !important;
+      padding: 0 !important;
+      border: 1px solid rgba(78, 57, 51, .12) !important;
+      border-radius: 999px !important;
+      background: rgba(255, 255, 255, .92) !important;
+      color: #3e302c !important;
+      box-shadow: 0 10px 24px rgba(77, 48, 39, .14) !important;
+    }
+
+    .record-page--complete [data-record-complete-back] svg {
+      width: 22px !important;
+      height: 22px !important;
+    }
+
     .record-title-field input,
     .record-template-slot--title {
       border: 0 !important;
@@ -585,18 +669,96 @@
     }
 
     .record-generated-page .record-template-slot--title {
-      display: block !important;
-      align-content: start !important;
-      place-items: initial !important;
-      padding: 5.5% !important;
+      display: grid !important;
+      align-content: center !important;
+      place-items: center !important;
+      padding: 3.5% !important;
       overflow: hidden !important;
-      color: #4f4440 !important;
+      color: #302623 !important;
       font-family: Shippori Mincho, "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif !important;
-      font-size: clamp(0.54rem, 3.03cqw, 0.74rem) !important;
-      font-weight: 400 !important;
-      line-height: 1.74 !important;
-      text-align: left !important;
+      font-size: clamp(.82rem, 4.1cqw, 1rem) !important;
+      font-weight: 700 !important;
+      line-height: 1.25 !important;
+      text-align: center !important;
       white-space: pre-line !important;
+      overflow-wrap: anywhere !important;
+    }
+
+    .record-generated-page .record-generated-page__date {
+      display: none !important;
+    }
+
+    .record-generated-page .record-template-slot--text {
+      overflow: visible !important;
+      gap: 1.1cqw !important;
+      padding: 3.8% !important;
+    }
+
+    .record-generated-page .record-template-slot--text strong {
+      max-width: 100% !important;
+      padding-bottom: .8cqw !important;
+      font-size: clamp(.5rem, 3.1cqw, .82rem) !important;
+      line-height: 1.2 !important;
+      white-space: nowrap !important;
+      overflow-wrap: anywhere !important;
+      overflow: hidden !important;
+      text-overflow: clip !important;
+    }
+
+    .record-generated-page .record-template-slot--text p {
+      overflow: visible !important;
+      display: block !important;
+      font-size: clamp(.44rem, 2.45cqw, .62rem) !important;
+      line-height: 1.35 !important;
+      white-space: pre-line !important;
+      overflow-wrap: anywhere !important;
+    }
+
+    .record-page--camera.is-inputting .record-camera-stage,
+    .record-page--camera.is-inputting .record-capture-sheet,
+    .record-page--edit-memory .record-edit-card {
+      width: min(calc(100vw - 36px), 430px) !important;
+      max-width: 430px !important;
+      box-sizing: border-box !important;
+    }
+
+    .record-page--edit-memory {
+      width: min(100%, 466px) !important;
+      padding-inline: 18px !important;
+    }
+
+    .record-page--edit-memory .record-edit-card > img {
+      width: 100% !important;
+      height: auto !important;
+      aspect-ratio: 1.42 / 1 !important;
+      object-fit: cover !important;
+    }
+
+    .record-page--camera.is-inputting .record-field > textarea {
+      width: 100%;
+      min-height: 126px;
+      padding: 16px 14px;
+      border: 1.5px solid rgba(86, 63, 56, .26) !important;
+      border-radius: 10px;
+      background: #fff !important;
+      color: inherit;
+      font: inherit;
+      line-height: 1.6;
+      resize: vertical;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.92), 0 8px 18px rgba(69,47,38,.12) !important;
+    }
+
+    .record-page--camera.is-inputting .record-field > textarea:focus {
+      border-color: rgba(184, 97, 90, .72) !important;
+      box-shadow: 0 0 0 3px rgba(200,111,106,.16), 0 10px 20px rgba(69,47,38,.14) !important;
+      outline: none !important;
+    }
+
+    .record-page--camera.is-inputting .record-field__limit {
+      display: block !important;
+      margin-top: -4px;
+      color: #9b8a82;
+      font-size: .74rem;
     }
 
     @media (max-width: 520px) {
@@ -722,12 +884,261 @@
       const root = document.getElementById("recordRoot");
       if (!root) return;
 
+      const waitForImage = (img) => {
+        if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+        return new Promise((resolve) => {
+          img.addEventListener("load", resolve, { once: true });
+          img.addEventListener("error", resolve, { once: true });
+        });
+      };
+
+      const imageToDataUrl = async (img) => {
+        const src = img.currentSrc || img.src || "";
+        if (!src || src.startsWith("data:")) return src;
+        try {
+          const response = await fetch(src, { cache: "force-cache" });
+          if (!response.ok) return src;
+          const blob = await response.blob();
+          return await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(String(reader.result || src));
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          });
+        } catch (_) {
+          return src;
+        }
+      };
+
+      const drawWrappedText = (ctx, text, x, y, maxWidth, lineHeight, maxHeight) => {
+        const rawLines = String(text || "").split(/\r\n|\n|\r/);
+        let cursorY = y;
+        for (const rawLine of rawLines) {
+          let line = "";
+          for (const char of rawLine) {
+            const testLine = line + char;
+            if (line && ctx.measureText(testLine).width > maxWidth) {
+              if (cursorY + lineHeight > y + maxHeight) return;
+              ctx.fillText(line, x, cursorY);
+              cursorY += lineHeight;
+              line = char;
+            } else {
+              line = testLine;
+            }
+          }
+          if (cursorY + lineHeight > y + maxHeight) return;
+          ctx.fillText(line, x, cursorY);
+          cursorY += lineHeight;
+        }
+      };
+
+      const drawContainedImage = (ctx, img, x, y, width, height, fit = "cover", feather = false) => {
+        const naturalWidth = img.naturalWidth || img.width;
+        const naturalHeight = img.naturalHeight || img.height;
+        if (!naturalWidth || !naturalHeight || width <= 0 || height <= 0) return;
+
+        const scale = fit === "contain"
+          ? Math.min(width / naturalWidth, height / naturalHeight)
+          : Math.max(width / naturalWidth, height / naturalHeight);
+        const drawWidth = naturalWidth * scale;
+        const drawHeight = naturalHeight * scale;
+        const drawX = x + (width - drawWidth) / 2;
+        const drawY = y + (height - drawHeight) / 2;
+
+        if (!feather) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(x, y, width, height);
+          ctx.clip();
+          ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+          ctx.restore();
+          return;
+        }
+
+        const layer = document.createElement("canvas");
+        layer.width = Math.max(1, Math.round(width));
+        layer.height = Math.max(1, Math.round(height));
+        const layerCtx = layer.getContext("2d");
+        layerCtx.drawImage(img, drawX - x, drawY - y, drawWidth, drawHeight);
+
+        const pixels = layerCtx.getImageData(0, 0, layer.width, layer.height);
+        const fadeX = Math.max(1, layer.width * 0.07);
+        const fadeY = Math.max(1, layer.height * 0.07);
+        for (let py = 0; py < layer.height; py += 1) {
+          const alphaY = Math.min(1, py / fadeY, (layer.height - 1 - py) / fadeY);
+          for (let px = 0; px < layer.width; px += 1) {
+            const alphaX = Math.min(1, px / fadeX, (layer.width - 1 - px) / fadeX);
+            const alpha = Math.max(0, Math.min(alphaX, alphaY));
+            pixels.data[(py * layer.width + px) * 4 + 3] *= alpha;
+          }
+        }
+        layerCtx.putImageData(pixels, 0, 0);
+        ctx.drawImage(layer, x, y);
+      };
+
+      const drawPinIcon = (ctx, element, pageRect, scale) => {
+        const icon = element.querySelector("svg");
+        if (!icon) return 0;
+
+        const iconRect = icon.getBoundingClientRect();
+        if (iconRect.width <= 0 || iconRect.height <= 0) return 0;
+        const style = getComputedStyle(icon);
+        if (style.visibility === "hidden" || style.display === "none" || Number(style.opacity) === 0) return 0;
+
+        const x = (iconRect.left - pageRect.left) * scale;
+        const y = (iconRect.top - pageRect.top) * scale;
+        const width = iconRect.width * scale;
+        const height = iconRect.height * scale;
+        const color = style.color || getComputedStyle(element).color || "#b46a62";
+
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = Math.max(1, 1.8 * scale);
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.beginPath();
+        ctx.ellipse(x + width / 2, y + height * 0.38, width * 0.27, height * 0.3, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x + width * 0.5, y + height * 0.98);
+        ctx.bezierCurveTo(x + width * 0.22, y + height * 0.68, x + width * 0.18, y + height * 0.5, x + width * 0.18, y + height * 0.38);
+        ctx.bezierCurveTo(x + width * 0.18, y + height * 0.15, x + width * 0.32, y + height * 0.04, x + width * 0.5, y + height * 0.04);
+        ctx.bezierCurveTo(x + width * 0.68, y + height * 0.04, x + width * 0.82, y + height * 0.15, x + width * 0.82, y + height * 0.38);
+        ctx.bezierCurveTo(x + width * 0.82, y + height * 0.5, x + width * 0.78, y + height * 0.68, x + width * 0.5, y + height * 0.98);
+        ctx.stroke();
+        ctx.restore();
+
+        return Math.max(0, (iconRect.right - element.getBoundingClientRect().left + 4) * scale);
+      };
+
+      const drawElementText = (ctx, element, pageRect, scale) => {
+        const text = String(element.textContent || "").trim();
+        if (!text) return;
+
+        const rect = element.getBoundingClientRect();
+        if (rect.width <= 0 || rect.height <= 0) return;
+        const style = getComputedStyle(element);
+        if (style.visibility === "hidden" || style.display === "none" || Number(style.opacity) === 0) return;
+
+        const fontSize = parseFloat(style.fontSize) || 14;
+        const lineHeight = style.lineHeight === "normal" ? fontSize * 1.4 : parseFloat(style.lineHeight) || fontSize * 1.4;
+        const fontWeight = style.fontWeight || "400";
+        const fontFamily = style.fontFamily || "serif";
+        const x = (rect.left - pageRect.left) * scale;
+        const y = (rect.top - pageRect.top) * scale;
+        const width = rect.width * scale;
+        const height = rect.height * scale;
+        const padTop = (parseFloat(style.paddingTop) || 0) * scale;
+        const padRight = (parseFloat(style.paddingRight) || 0) * scale;
+        const padBottom = (parseFloat(style.paddingBottom) || 0) * scale;
+        const padLeft = (parseFloat(style.paddingLeft) || 0) * scale;
+
+        ctx.save();
+        ctx.fillStyle = style.color || "#302623";
+        ctx.font = `${fontWeight} ${fontSize * scale}px ${fontFamily}`;
+        ctx.textBaseline = "top";
+        ctx.textAlign = style.textAlign === "center" ? "center" : style.textAlign === "right" ? "right" : "left";
+
+        const isTemplateText = Boolean(element.closest(".record-template-slot--text"));
+        const contentHeight = Math.max(1, height - padTop - padBottom);
+        const drawHeight = isTemplateText
+          ? Math.max(contentHeight, (pageRect.bottom - rect.top) * scale - padTop)
+          : contentHeight;
+        const textY = style.alignContent === "center" || style.placeItems.includes("center")
+          ? y + padTop + Math.max(0, (contentHeight - lineHeight * scale) / 2)
+          : y + padTop;
+        const textX = ctx.textAlign === "center"
+          ? x + width / 2
+          : ctx.textAlign === "right"
+            ? x + width - padRight
+            : x + padLeft;
+        const iconOffset = element.matches(".record-template-slot--text strong") ? drawPinIcon(ctx, element, pageRect, scale) : 0;
+        const adjustedTextX = ctx.textAlign === "left" ? Math.max(textX, x + iconOffset) : textX;
+        const maxWidth = Math.max(1, width - padLeft - padRight - (adjustedTextX - textX));
+        if (element.matches(".record-template-slot--text strong")) {
+          ctx.fillText(text, adjustedTextX, textY, maxWidth);
+          ctx.restore();
+          return;
+        }
+        drawWrappedText(ctx, text, adjustedTextX, textY, maxWidth, lineHeight * scale, drawHeight);
+        ctx.restore();
+      };
+
+      const drawPageToCanvas = async (page, canvas, scale) => {
+        const ctx = canvas.getContext("2d");
+        const pageRect = page.getBoundingClientRect();
+        const pageStyle = getComputedStyle(page);
+        ctx.fillStyle = pageStyle.backgroundColor && pageStyle.backgroundColor !== "rgba(0, 0, 0, 0)"
+          ? pageStyle.backgroundColor
+          : "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const images = Array.from(page.querySelectorAll("img"));
+        for (const element of images) {
+          const rect = element.getBoundingClientRect();
+          if (rect.width <= 0 || rect.height <= 0) continue;
+          const x = (rect.left - pageRect.left) * scale;
+          const y = (rect.top - pageRect.top) * scale;
+          const width = rect.width * scale;
+          const height = rect.height * scale;
+
+          await waitForImage(element);
+          const feather = Boolean(element.closest(".record-generated-page--photo-soft .record-template-slot--image"));
+          drawContainedImage(ctx, element, x, y, width, height, getComputedStyle(element).objectFit || "cover", feather);
+        }
+
+        page.querySelectorAll(".record-template-slot--title, .record-template-slot--text strong, .record-template-slot--text p").forEach((element) => {
+          drawElementText(ctx, element, pageRect, scale);
+        });
+      };
+
+      const saveGeneratedPage = async () => {
+        const page = root.querySelector(".record-generated-page");
+        const button = root.querySelector("[data-record-save-page]");
+        if (!page) return;
+
+        if (button) button.setAttribute("aria-busy", "true");
+        try {
+          await Promise.all(Array.from(page.querySelectorAll("img")).map(waitForImage));
+          const rect = page.getBoundingClientRect();
+          const width = Math.max(1, Math.round(rect.width));
+          const height = Math.max(1, Math.round(rect.height));
+          const scale = Math.max(2, Math.min(4, window.devicePixelRatio || 2));
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.round(width * scale);
+          canvas.height = Math.round(height * scale);
+          await drawPageToCanvas(page, canvas, scale);
+
+          const link = document.createElement("a");
+          link.download = `mobby-page-${new Date().toISOString().slice(0, 10)}.png`;
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+        } catch (error) {
+          console.error("[record-save-page]", error);
+          alert("画像保存に失敗しました。時間をおいてもう一度試してください。");
+        } finally {
+          if (button) button.removeAttribute("aria-busy");
+        }
+      };
+
       const addHomeReturn = () => {
         const actions = root.querySelector(".record-page--complete .record-complete-actions");
-        if (!actions || actions.querySelector("[data-record-home-return]")) return;
+        if (!actions) return;
 
         const saveButton = actions.querySelector("[data-record-save-page]");
         if (!saveButton) return;
+
+        const completePage = root.querySelector(".record-page--complete");
+        if (completePage && !completePage.querySelector("[data-record-complete-back]")) {
+          const backButton = document.createElement("button");
+          backButton.type = "button";
+          backButton.dataset.recordCompleteBack = "true";
+          backButton.setAttribute("aria-label", "戻る");
+          backButton.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.8 6.8 9.3 12l5.5 5.2"/></svg>';
+          completePage.insertAdjacentElement("afterbegin", backButton);
+        }
+
+        if (actions.querySelector("[data-record-home-return]")) return;
 
         const homeButton = document.createElement("button");
         homeButton.type = "button";
@@ -737,9 +1148,21 @@
       };
 
       root.addEventListener("click", (event) => {
+        if (event.target.closest("[data-record-save-page]")) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          saveGeneratedPage();
+          return;
+        }
+        if (event.target.closest("[data-record-complete-back]")) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          root.querySelector(".record-page--complete [data-record-stage='select']")?.click();
+          return;
+        }
         if (!event.target.closest("[data-record-home-return]")) return;
         window.location.href = "../index.html";
-      });
+      }, true);
 
       new MutationObserver(addHomeReturn).observe(root, {
         childList: true,

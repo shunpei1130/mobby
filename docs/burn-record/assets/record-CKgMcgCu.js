@@ -139,7 +139,8 @@
           </label>
           <label class="record-field">
             <span>感想 <em>必須</em></span>
-            <input type="text" data-record-memo value="${o(e.memo||"")}" placeholder="例: カフェの雰囲気が素敵だった" required />
+            <textarea data-record-memo placeholder="例: カフェの雰囲気が素敵だった" maxlength="${y.memoMaxChars}" rows="${y.memoMaxLines}" required>${o(e.memo||"")}</textarea>
+            <small class="record-field__limit" data-record-memo-limit>最大${y.memoMaxLines}行 / ${y.memoMaxChars}文字まで</small>
           </label>
           ${I(e)}
         `:""}
@@ -201,7 +202,7 @@
         <label class="record-field">
           <span>感想 <em>必須</em></span>
           <textarea data-record-edit-memo placeholder="例: カフェの雰囲気が素敵だった" maxlength="${y.memoMaxChars}" required>${o(e.memo||"")}</textarea>
-          <small class="record-field__limit">最大${y.memoMaxLines}行 / ${y.memoMaxChars}文字まで</small>
+          <small class="record-field__limit" data-record-memo-limit>最大${y.memoMaxLines}行 / ${y.memoMaxChars}文字まで</small>
         </label>
         ${I(e,{edit:!0})}
         <div class="record-tag-fields record-tag-fields--extra" aria-label="追加タグ">
