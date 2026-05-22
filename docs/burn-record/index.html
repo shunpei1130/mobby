@@ -46,7 +46,7 @@
   <script>
     (() => {
       const HEART_ICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='none' stroke='%2353463d' stroke-width='5' stroke-linecap='round' stroke-linejoin='round' d='M32 54S8 39 8 22c0-8 6-14 14-14 5 0 9 3 10 7 1-4 5-7 10-7 8 0 14 6 14 14 0 17-24 32-24 32Z'/%3E%3C/svg%3E";
-      const PIN_ICON_SRC = "./assets/ref/pin_toka.png";
+      const PIN_ICON_SRC = "./assets/reference/pin_toka.png";
       const fixBrokenHeartIcon = (root = document) => {
         root.querySelectorAll?.('img[src$="/image/icon/feature/like.webp"], img[src="image/icon/feature/like.webp"]').forEach((img) => {
           img.src = HEART_ICON;
@@ -488,7 +488,7 @@
         radial-gradient(circle at 86% 12%, rgba(255,255,255,.9) 0 3%, transparent 3.4%),
         radial-gradient(circle at 10% 76%, rgba(255,255,255,.8) 0 4%, transparent 4.4%),
         linear-gradient(135deg, rgba(255,255,255,.45), transparent 18%),
-        url("./assets/back_ex_galpink-imx5GIIH.webp") center / cover no-repeat;
+        url("./assets/background/back_ex_galpink-imx5GIIH.webp") center / cover no-repeat;
       box-shadow: 0 12px 28px rgba(77, 48, 39, 0.14);
     }
 
@@ -714,13 +714,16 @@
     }
 
     .record-generated-page .record-template-slot--text strong {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: .32em !important;
       max-width: 100% !important;
       padding-bottom: .8cqw !important;
       font-size: clamp(.5rem, 3.1cqw, .82rem) !important;
       line-height: 1.2 !important;
       white-space: nowrap !important;
       overflow-wrap: anywhere !important;
-      overflow: hidden !important;
+      overflow: visible !important;
       text-overflow: clip !important;
     }
 
@@ -736,6 +739,8 @@
     .record-template-slot--text strong img[data-record-pin-image] {
       width: clamp(12px, 4.1cqw, 16px) !important;
       height: clamp(12px, 4.1cqw, 16px) !important;
+      max-width: none !important;
+      max-height: none !important;
     }
 
     .record-generated-page .record-template-slot--text p {
@@ -843,12 +848,12 @@
         {
           title: "タイトルと配置を選ぼう",
           copy: "写真がそろったら、順番やテンプレートを選びます。ページタイトルもここで決めましょう。",
-          visual: '<div class="burn-guide-template-panel"><div class="burn-guide-mini-photos"><div class="burn-guide-mini-photo"><img class="burn-guide-real-photo" src="../reference/splash_photo1.jpg" alt=""><span>配置順</span><div class="burn-guide-order">↑ 1 ↓</div></div><div class="burn-guide-mini-photo"><img class="burn-guide-real-photo" src="../reference/splash_photo2.jpg" alt=""><span>配置順</span><div class="burn-guide-order">↑ 2 ↓</div></div><div class="burn-guide-mini-photo"><img class="burn-guide-real-photo" src="../reference/splash_photo3.jpg" alt=""><span>配置順</span><div class="burn-guide-order">↑ 3 ↓</div></div></div><p>Template</p><div class="burn-guide-template-row"><div class="burn-guide-template is-selected"><img src="./assets/template001-C4MCDSgU.webp" alt="">Template 001</div><div class="burn-guide-template"><img src="./assets/template002-BCt9LpnA.webp" alt="">Template 002</div></div><p>Page title</p><input value="菜月とこうきは伝説かも!?" readonly /></div>'
+          visual: '<div class="burn-guide-template-panel"><div class="burn-guide-mini-photos"><div class="burn-guide-mini-photo"><img class="burn-guide-real-photo" src="../reference/splash_photo1.jpg" alt=""><span>配置順</span><div class="burn-guide-order">↑ 1 ↓</div></div><div class="burn-guide-mini-photo"><img class="burn-guide-real-photo" src="../reference/splash_photo2.jpg" alt=""><span>配置順</span><div class="burn-guide-order">↑ 2 ↓</div></div><div class="burn-guide-mini-photo"><img class="burn-guide-real-photo" src="../reference/splash_photo3.jpg" alt=""><span>配置順</span><div class="burn-guide-order">↑ 3 ↓</div></div></div><p>Template</p><div class="burn-guide-template-row"><div class="burn-guide-template is-selected"><img src="./assets/template/template001-C4MCDSgU.webp" alt="">Template 001</div><div class="burn-guide-template"><img src="./assets/template/template002-BCt9LpnA.webp" alt="">Template 002</div></div><p>Page title</p><input value="菜月とこうきは伝説かも!?" readonly /></div>'
         },
         {
           title: "背景を選ぼう",
           copy: "プレビューを見ながら、ページに合う背景を選べます。雰囲気に合う一枚で、思い出をもっとかわいく。",
-          visual: '<img class="burn-guide-page-image" src="../reference/splash_page.webp" alt=""><div style="height:14px"></div><div class="burn-guide-background-row"><div class="burn-guide-bg"><img src="./assets/back_ex13-DNPGpq3n.webp" alt=""></div><div class="burn-guide-bg is-selected"><img src="./assets/back_ex26-DBw7egja.webp" alt=""></div><div class="burn-guide-bg"><img src="./assets/back_newwave_4-B20ILSGG.webp" alt=""></div></div>'
+          visual: '<img class="burn-guide-page-image" src="../reference/splash_page.webp" alt=""><div style="height:14px"></div><div class="burn-guide-background-row"><div class="burn-guide-bg"><img src="./assets/background/back_ex13-DNPGpq3n.webp" alt=""></div><div class="burn-guide-bg is-selected"><img src="./assets/background/back_ex26-DBw7egja.webp" alt=""></div><div class="burn-guide-bg"><img src="./assets/background/back_newwave_4-B20ILSGG.webp" alt=""></div></div>'
         },
         {
           title: "完成・保存しよう",
@@ -1024,9 +1029,12 @@
         const height = iconRect.height * scale;
         const color = style.color || getComputedStyle(element).color || "#b46a62";
 
+        const elementRect = element.getBoundingClientRect();
+        const gap = (parseFloat(getComputedStyle(element).fontSize) || iconRect.width) * 0.32;
+
         if (icon.matches("img") && icon.complete && icon.naturalWidth > 0) {
           ctx.drawImage(icon, x, y, width, height);
-          return Math.max(0, (iconRect.right - element.getBoundingClientRect().left + 4) * scale);
+          return Math.max(0, (iconRect.right - elementRect.left + gap) * scale);
         }
 
         ctx.save();
@@ -1059,7 +1067,7 @@
         ctx.stroke();
         ctx.restore();
 
-        return Math.max(0, (iconRect.right - element.getBoundingClientRect().left + 4) * scale);
+        return Math.max(0, (iconRect.right - elementRect.left + gap) * scale);
       };
 
       const drawElementText = (ctx, element, pageRect, scale) => {
@@ -1095,7 +1103,8 @@
         const drawHeight = isTemplateText
           ? Math.max(contentHeight, (pageRect.bottom - rect.top) * scale - padTop)
           : contentHeight;
-        const textY = style.alignContent === "center" || style.placeItems.includes("center")
+        const isPinHeading = element.matches(".record-template-slot--text strong");
+        const textY = isPinHeading || style.alignContent === "center" || style.placeItems.includes("center")
           ? y + padTop + Math.max(0, (contentHeight - lineHeight * scale) / 2)
           : y + padTop;
         const textX = ctx.textAlign === "center"
@@ -1103,10 +1112,10 @@
           : ctx.textAlign === "right"
             ? x + width - padRight
             : x + padLeft;
-        const iconOffset = element.matches(".record-template-slot--text strong") ? drawPinIcon(ctx, element, pageRect, scale) : 0;
+        const iconOffset = isPinHeading ? drawPinIcon(ctx, element, pageRect, scale) : 0;
         const adjustedTextX = ctx.textAlign === "left" ? Math.max(textX, x + iconOffset) : textX;
         const maxWidth = Math.max(1, width - padLeft - padRight - (adjustedTextX - textX));
-        if (element.matches(".record-template-slot--text strong")) {
+        if (isPinHeading) {
           ctx.fillText(text, adjustedTextX, textY, maxWidth);
           ctx.restore();
           return;
