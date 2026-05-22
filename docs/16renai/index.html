@@ -645,11 +645,6 @@
       background: transparent;
     }
 
-    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis-tabs {
-      width: 100%;
-      margin-bottom: 18px;
-    }
-
     .page--diagnosis:has([data-love-diagnosis-start]) [data-love-diagnosis-panel] {
       width: 100%;
       margin-top: 0 !important;
@@ -817,10 +812,178 @@
       }
     }
 
+    .page--diagnosis:has([data-love-diagnosis-start]) [data-love-diagnosis-panel] > .love-diagnosis {
+      position: relative;
+      overflow: hidden;
+      width: 100% !important;
+      min-height: 520px !important;
+      padding: 54px 28px 46px !important;
+      border: 1px solid rgba(248, 171, 184, .56) !important;
+      border-radius: 26px !important;
+      background:
+        radial-gradient(circle at 18% 10%, rgba(255, 229, 234, .76), transparent 24%),
+        linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(255, 248, 249, .98)) !important;
+      box-shadow: 0 22px 46px rgba(116, 72, 78, .14), inset 0 0 0 1px rgba(255, 255, 255, .9) !important;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis-tabs {
+      width: 100% !important;
+      justify-self: stretch !important;
+      margin-bottom: 18px !important;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) [data-love-diagnosis-panel] > .love-diagnosis::before {
+      content: "" !important;
+      display: block !important;
+      position: absolute;
+      left: -14%;
+      right: -14%;
+      bottom: -68px;
+      height: 170px;
+      border-radius: 50% 50% 0 0;
+      background: linear-gradient(180deg, rgba(255, 231, 236, 0), rgba(255, 216, 226, .72));
+      pointer-events: none;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) [data-love-diagnosis-panel] > .love-diagnosis::after {
+      content: "" !important;
+      display: block !important;
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 12% 13%, rgba(246, 129, 147, .17) 0 7px, transparent 8px),
+        radial-gradient(ellipse at 88% 17%, rgba(246, 129, 147, .15) 0 9px, transparent 10px),
+        radial-gradient(ellipse at 9% 84%, rgba(246, 129, 147, .13) 0 12px, transparent 13px),
+        radial-gradient(ellipse at 90% 73%, rgba(246, 129, 147, .14) 0 8px, transparent 9px);
+      pointer-events: none;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__hero {
+      z-index: 1;
+      gap: 16px !important;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__eyebrow {
+      color: #ee7888 !important;
+      font-size: 15px !important;
+      letter-spacing: .18em !important;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-ornament,
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      color: #f1a4af;
+      font-size: 16px;
+      letter-spacing: 0;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-ornament::before,
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-ornament::after,
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-divider::before,
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-divider::after {
+      content: "";
+      width: 70px;
+      max-width: 24vw;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(239, 152, 164, .72), transparent);
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-divider {
+      margin: 2px 0;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__hero h3 {
+      color: #624148 !important;
+      font-family: "Yu Mincho", "Hiragino Mincho ProN", "YuMincho", serif !important;
+      font-size: clamp(28px, 7vw, 42px) !important;
+      font-weight: 800 !important;
+      line-height: 1.75 !important;
+      letter-spacing: 0 !important;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__hero h3 strong {
+      color: #ee7084;
+      font-size: 1.16em;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__hero p:not(.love-diagnosis__eyebrow) {
+      max-width: 300px;
+      margin: 0 auto !important;
+      color: #76585d !important;
+      font-family: "Yu Mincho", "Hiragino Mincho ProN", "YuMincho", serif !important;
+      font-size: 15px !important;
+      font-weight: 700 !important;
+      line-height: 1.95 !important;
+      letter-spacing: .06em !important;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__intro-grid,
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-character-row {
+      display: none !important;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) [data-love-diagnosis-start] {
+      z-index: 1;
+      width: min(100%, 320px) !important;
+      min-height: 72px !important;
+      margin-top: 34px !important;
+      padding: 0 28px !important;
+      border: 1px solid rgba(255, 255, 255, .76) !important;
+      border-radius: 999px !important;
+      background: linear-gradient(180deg, #f99aad, #ee6f86) !important;
+      color: #fff !important;
+      box-shadow: 0 16px 28px rgba(229, 91, 111, .28), inset 0 1px rgba(255, 255, 255, .5) !important;
+      font-size: 20px !important;
+      font-weight: 800 !important;
+      letter-spacing: .1em !important;
+    }
+
   </style>
   <link rel="stylesheet" href="../glassmorphism.css">
 </head>
 <body>
   <div id="loveRoot"></div>
+  <script>
+    (() => {
+      const labels = new Map([
+        ["[data-love-tab-diagnosis]", "診断"],
+        ["[data-love-character-list]", "キャラ一覧"],
+        ["[data-love-compatibility]", "相性を見る"],
+        ["[data-love-reset]", "リセット"],
+        ["[data-love-type-guide]", "タイプ解説"]
+      ]);
+
+      const updateIntro = () => {
+        labels.forEach((text, selector) => {
+          document.querySelectorAll(selector).forEach((el) => {
+            if (el.textContent !== text) el.textContent = text;
+          });
+        });
+        document.querySelectorAll("[data-love-diagnosis-start]").forEach((el) => {
+          const text = "♡　診断をはじめる　›";
+          if (el.textContent !== text) el.textContent = text;
+        });
+
+        const hero = document.querySelector(".love-diagnosis--intro .love-diagnosis__hero");
+        if (!hero || hero.dataset.renaiIntroReady === "true") return;
+        hero.dataset.renaiIntroReady = "true";
+        hero.innerHTML = `
+          <div class="love-intro-ornament" aria-hidden="true">❤︎ ❤ ❤︎</div>
+          <p class="love-diagnosis__eyebrow">・ 恋愛モビー診断 ・</p>
+          <h3>あなたの恋愛タイプを<br><strong>4つの軸</strong>で診断します。</h3>
+          <div class="love-intro-divider" aria-hidden="true">❤</div>
+          <p>直感で選ぶ40問の質問から、あなたの恋愛タイプを16種類から診断します。</p>
+        `;
+      };
+
+      const observer = new MutationObserver(updateIntro);
+      observer.observe(document.getElementById("loveRoot"), { childList: true, subtree: true });
+      document.addEventListener("DOMContentLoaded", updateIntro);
+      updateIntro();
+    })();
+  </script>
 </body>
 </html>
