@@ -7,6 +7,21 @@
   <script type="module" crossorigin src="./assets/burnRecord-CEFJ408q.js?v=clear-initial-copy"></script>
   <script>
     (() => {
+      const restoreBackgroundScroll = (left) => {
+        const grid = document.querySelector("[data-record-background-grid]");
+        if (grid) grid.scrollLeft = left;
+      };
+
+      document.addEventListener("click", (event) => {
+        if (!event.target.closest("[data-record-background]")) return;
+        const left = document.querySelector("[data-record-background-grid]")?.scrollLeft || 0;
+        requestAnimationFrame(() => restoreBackgroundScroll(left));
+        window.setTimeout(() => restoreBackgroundScroll(left), 0);
+      }, true);
+    })();
+  </script>
+  <script>
+    (() => {
       const MAX_MEMO_CHARS = 56;
       const MAX_MEMO_LINES = 4;
 
@@ -90,6 +105,29 @@
   <link rel="stylesheet" crossorigin href="./assets/components-Cas7KQML.css?v=edit-save-clean">
   <link rel="stylesheet" crossorigin href="./assets/record-bTKggYDr.css?v=step4-backgrounds">
   <style>
+    .record-background-option {
+      grid-template-rows: auto min-content;
+      align-content: start;
+    }
+
+    .record-background-option .record-background-option__none {
+      display: grid;
+      place-items: center;
+      align-self: start;
+      justify-self: stretch;
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      aspect-ratio: 1 / 1.414;
+      box-sizing: border-box;
+      border: 1px dashed rgba(78, 57, 51, .18);
+      border-radius: 4px;
+    }
+
+    .record-background-option > span:not(.record-background-option__none) {
+      align-self: start;
+    }
+
     .burn-guide-overlay {
       position: fixed;
       inset: 0;
