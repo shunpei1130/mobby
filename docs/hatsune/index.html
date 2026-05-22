@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>初音 こころ整う暮らし診断 | Mobby</title>
+  <meta name="description" content="20問であなたの整え方、感性の質感、好きの届け方を8タイプから診断する初音さん向けモビー診断ラフ案です。" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="初音 こころ整う暮らし診断" />
+  <meta property="og:description" content="和室暮らし、茶道、日記、旅、日本文化。あなたに近い暮らしのムードを20問で診断します。" />
+  <meta property="og:image" content="img/hatsune-mobby-washitsu.png" />
+  <meta name="theme-color" content="#f4f7f0" />
+  <link rel="icon" type="image/jpeg" href="../16school/favicon/fav.jpg" />
+  <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --font-ja: 'Yomogi', cursive;
+      --bg: #f4f7f0;
+      --surface: #fffefa;
+      --text-main: #1d1d1f;
+      --text-sub: #73736f;
+      --accent: #5d8b79;
+      --accent-soft: #eaf5ef;
+      --line: #d7d9d1;
+      --right: #b06a4a;
+      --shadow-sm: 0 2px 8px rgba(39,54,46,0.05);
+      --shadow-lg: 0 12px 30px rgba(39,54,46,0.10);
+      --radius: 20px;
+      --radius-sm: 12px;
+    }
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    body { margin: 0; font-family: var(--font-ja); background: var(--bg); color: var(--text-main); line-height: 1.6; }
+    a { color: var(--accent); text-decoration: none; }
+    .wrap { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
+    header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 0; cursor: pointer; }
+    .logo { width: 30px; height: 30px; border-radius: 10px; background-image: url('../16school/logo.jpg'); background-size: cover; background-position: center; box-shadow: 0 4px 10px rgba(93,139,121,0.28); margin-right: 10px; }
+    .title h1 { font-size: 14px; margin: 0; font-weight: 600; }
+    .title p { margin: 0; color: var(--text-sub); font-size: 12px; }
+    .nav { display: flex; gap: 12px; align-items: center; }
+    .nav a { color: var(--text-main); font-size: 11px; font-weight: 500; padding: 8px 16px; border-radius: 8px; transition: background 0.2s; cursor: pointer; }
+    .nav a:hover { background: rgba(0,0,0,0.05); }
+    .nav a.active { background: var(--accent-soft); color: var(--accent); }
+    button, .social-link { border: 1px solid transparent; background: rgba(0,0,0,0.05); color: var(--text-main); padding: 10px 18px; border-radius: 999px; cursor: pointer; font-size: 13px; font-weight: 500; font-family: inherit; transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1), background 0.2s ease, box-shadow 0.2s ease; display: inline-flex; align-items: center; justify-content: center; }
+    button:hover, .social-link:hover { background: rgba(0,0,0,0.08); transform: translateY(-1px); }
+    button:active, .social-link:active { transform: translateY(0) scale(0.96); }
+    button.primary, .social-link.primary { background: var(--accent); color: #fff; box-shadow: 0 4px 12px rgba(93,139,121,0.25); }
+    button.primary:hover, .social-link.primary:hover { background: #6a9c89; box-shadow: 0 6px 16px rgba(93,139,121,0.35); }
+    button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+    .panel { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow-lg); padding: 32px; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.86); }
+    .kicker { color: var(--accent); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 8px; }
+    .big { font-size: 24px; font-weight: 700; margin: 0 0 16px; color: var(--text-main); }
+    .text-body { color: var(--text-sub); font-size: 14px; line-height: 1.8; }
+    .hero-image { width: min(360px, 100%); aspect-ratio: 1 / 1; object-fit: cover; border-radius: 18px; box-shadow: var(--shadow-sm); margin: 0 auto 28px; display: block; }
+    .progress-wrap { margin-bottom: 20px; }
+    .progress-meta { display: flex; justify-content: space-between; color: var(--text-sub); font-size: 12px; margin-bottom: 8px; }
+    .progress-track { height: 8px; border-radius: 999px; background: rgba(0,0,0,0.06); overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 999px; background: var(--accent); transition: width 0.25s ease; }
+    .qCard { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 22px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
+    .qText { font-size: 16px; line-height: 1.8; margin: 0 0 18px; color: var(--text-main); }
+    .likert-labels { display: flex; justify-content: space-between; color: var(--text-sub); font-size: 11px; margin-bottom: 10px; gap: 14px; }
+    .likert-labels span:last-child { text-align: right; }
+    .likert-buttons { display: grid; grid-template-columns: repeat(7, minmax(28px, 1fr)); gap: 8px; align-items: center; }
+    .likert-btn { aspect-ratio: 1 / 1; min-width: 0; padding: 0; border-radius: 50%; border: 2px solid var(--line); background: #fff; box-shadow: none; }
+    .likert-btn.left { border-color: rgba(93,139,121,0.62); }
+    .likert-btn.mid { border-color: #b8b8bd; }
+    .likert-btn.right { border-color: rgba(176,106,74,0.62); }
+    .likert-btn.selected.left { background: var(--accent); border-color: var(--accent); }
+    .likert-btn.selected.mid { background: #8e8e93; border-color: #8e8e93; }
+    .likert-btn.selected.right { background: var(--right); border-color: var(--right); }
+    .fade-in { animation: fadeIn 0.35s ease both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .result-hero { text-align: center; }
+    .result-img { width: min(420px, 100%); aspect-ratio: 1 / 1; object-fit: cover; border-radius: 20px; box-shadow: var(--shadow-lg); margin-bottom: 22px; }
+    .type-code { display: inline-flex; align-items: center; justify-content: center; min-width: 92px; padding: 8px 14px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 700; margin-bottom: 12px; }
+    .axis-row { margin: 18px 0; }
+    .axis-meta { display: flex; justify-content: space-between; gap: 12px; color: var(--text-sub); font-size: 12px; margin-bottom: 8px; }
+    .axis-meta span { flex: 1; }
+    .axis-meta span:nth-child(2) { text-align: center; }
+    .axis-meta span:last-child { text-align: right; }
+    .axis-bar { height: 12px; border-radius: 999px; background: linear-gradient(90deg, #d9efe4 0%, #f6f6f6 50%, #f4dccf 100%); position: relative; overflow: hidden; }
+    .axis-dot { position: absolute; top: 50%; width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 4px solid var(--accent); transform: translate(-50%, -50%); box-shadow: var(--shadow-sm); }
+    .section-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }
+    .mini { background: #fafafa; border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+    .mini h3 { margin: 0 0 8px; font-size: 14px; }
+    .mini p { margin: 0; color: var(--text-sub); font-size: 13px; line-height: 1.8; }
+    .characters-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 24px; }
+    .char-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-sm); }
+    .char-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+    .char-body { padding: 16px; }
+    .char-body h3 { margin: 0 0 8px; font-size: 16px; }
+    .char-body p { margin: 0; color: var(--text-sub); font-size: 13px; line-height: 1.7; }
+    .actions, .social-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+    .social-links { margin-top: 18px; }
+    @media (max-width: 600px) {
+      .wrap { padding: 28px 14px 60px; }
+      header { flex-direction: column; align-items: flex-start; margin-bottom: 28px; }
+      .panel { padding: 24px 16px; border-radius: 18px; }
+      .big { font-size: 22px; }
+      .qCard { padding: 18px 14px; }
+      .qText { font-size: 15px; }
+      .likert-buttons { gap: 6px; }
+      .section-grid, .characters-grid { grid-template-columns: 1fr; }
+      .social-link { width: calc(50% - 6px); padding: 10px 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand" id="brandHome">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="title">
+          <h1>初音 こころ整う暮らし診断</h1>
+          <p>Mobby rough preview</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="ページ内メニュー">
+        <a id="navDiagnosis" class="active">診断</a>
+        <a id="navCharacters">タイプ一覧</a>
+      </nav>
+    </header>
+    <main id="app"></main>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "hatsune_life_type_v1";
+    const PAGE_SIZE = 5;
+    const AXIS_KEYS = ["A", "B", "C"];
+    const SOCIAL_LINKS = [
+      {label:"Instagram", url:"https://www.instagram.com/____o82__/"},
+      {label:"Mobby", url:"https://www.mobby.online/"},
+      {label:"Interview", url:"https://www.beyondmag.jp/posts/1044"},
+      {label:"Book", url:"https://www.hanmoto.com/bd/isbn/9784046078162"}
+    ];
+
+    const AXES = {
+      A: { key:"A", name:"暮らしの重心", left:"整える", right:"巡る", leftCode:"と", rightCode:"め" },
+      B: { key:"B", name:"感性の質感", left:"和の余白", right:"クリアな混ざり", leftCode:"わ", rightCode:"く" },
+      C: { key:"C", name:"好きの届け方", left:"綴る", right:"ひらく", leftCode:"つ", rightCode:"ひ" }
+    };
+
+    const QUESTIONS = [
+      {id:"A1", axis:"A", text:"一日の始まりは、部屋や机を少し整えるところから入りたい", reverse:false},
+      {id:"A2", axis:"A", text:"茶器、本、ノートなど、いつもの定位置があると心が落ち着く", reverse:false},
+      {id:"A3", axis:"A", text:"予定を増やすより、家で静かに呼吸できる時間を守りたい", reverse:false},
+      {id:"A4", axis:"A", text:"知らない街の路地や小さなお店に、ふらっと寄り道したくなる", reverse:true},
+      {id:"A5", axis:"A", text:"旅先で見つけた器や言葉が、その後の暮らしを少し変えることがある", reverse:true},
+      {id:"A6", axis:"A", text:"同じ毎日でも、季節や場所に合わせて気分を巡らせたい", reverse:true},
+
+      {id:"B1", axis:"B", text:"畳、木、陶器、古い本のような静かな質感に惹かれる", reverse:false},
+      {id:"B2", axis:"B", text:"お茶を点てる時間のように、手順そのものを味わうのが好き", reverse:false},
+      {id:"B3", axis:"B", text:"余白のある写真や文章のほうが、あとからじんわり残る", reverse:false},
+      {id:"B4", axis:"B", text:"文鳥がそばにいるような、やわらかく小さな気配を大切にしたい", reverse:false},
+      {id:"B5", axis:"B", text:"和の空気に、カメラや現代的な服の軽さが混ざる感じが好き", reverse:true},
+      {id:"B6", axis:"B", text:"古いものだけでなく、今っぽい抜け感や透明感も取り入れたい", reverse:true},
+      {id:"B7", axis:"B", text:"好きな文化を、暮らしや旅の中で自由に組み合わせたい", reverse:true},
+
+      {id:"C1", axis:"C", text:"大切な出来事は、すぐ投稿するより日記のように一度自分の中で言葉にしたい", reverse:false},
+      {id:"C2", axis:"C", text:"写真を撮る時も、残したい気持ちや空気を先に考える", reverse:false},
+      {id:"C3", axis:"C", text:"本やノートに書いた短い言葉が、自分を支えてくれることがある", reverse:false},
+      {id:"C4", axis:"C", text:"見つけたお店や景色は、誰かにも歩いてみてほしくなる", reverse:true},
+      {id:"C5", axis:"C", text:"好きなお茶や器の話は、友人と分け合うともっと楽しくなる", reverse:true},
+      {id:"C6", axis:"C", text:"自分が心を動かされた文化や場所は、SNSでも開いて届けたい", reverse:true},
+      {id:"C7", axis:"C", text:"ひとりで味わう時間と同じくらい、好きが広がる瞬間もうれしい", reverse:true}
+    ];
+
+    const CHARACTERS = {
+      "とわつ": {
+        name:"和室日記モビィ",
+        summary:"静かな部屋と日記の余白で、自分の心を丁寧に整えるタイプ。",
+        catch:"あなたは、暮らしの小さな手触りを言葉にして、心の置き場所を作れる人です。",
+        hook:"畳、茶器、木の机、読みかけの本。整った場所に座ると、気持ちがほどけて本音が見えやすくなります。派手な変化より、毎日の静かな積み重ねがあなたの魅力です。",
+        downside:"整えることに集中しすぎると、外の風が入りにくくなることも。小さな散歩や季節の花を一つ足すだけで、余白がやわらかく動きます。",
+        perception:"落ち着いている、言葉が丁寧、空気を静かに整えてくれると思われやすいです。",
+        strength:"感情を急がせず、暮らしの中で自分の芯を取り戻す力。",
+        weakness:"考えを寝かせすぎて、伝えるタイミングを逃すことがあります。",
+        advice:"今日のヒントは、机の上に好きな器とノートを一つずつ置くこと。整った小さな場所が、次の言葉を連れてきます。",
+        image:"img/hatsune-mobby-washitsu.png"
+      },
+      "とわひ": {
+        name:"お茶会ひだまりモビィ",
+        summary:"和の落ち着きを、人と過ごすやわらかな時間へ開いていくタイプ。",
+        catch:"あなたは、お茶を淹れるように場を整え、相手の心までほぐせる人です。",
+        hook:"静かな時間が好きなのに、誰かと向き合うと自然にあたたかさが広がります。器を選ぶ、席を整える、少しだけ近況を話す。そんな何気ない所作に魅力が出ます。",
+        downside:"相手を心地よくしたい気持ちが強いと、自分の疲れに気づきにくい日も。招く前に、ひとりで飲む一杯を大切にすると無理が残りません。",
+        perception:"やさしい、話しやすい、丁寧な時間をくれると思われやすいです。",
+        strength:"落ち着いた空気を、人と分け合えるひらかれたやさしさ。",
+        weakness:"場を整えようとして、自分の本音を少し後回しにすることがあります。",
+        advice:"今日のヒントは、好きなお茶を誰かに一言添えてすすめること。小さな共有があなたらしいひだまりになります。",
+        image:"img/hatsune-mobby-journey.png"
+      },
+      "とくつ": {
+        name:"クリア思考モビィ",
+        summary:"整った暮らしに透明感のある感性を重ね、考えを静かに磨くタイプ。",
+        catch:"あなたは、古いものと今の空気をすっきり混ぜて、自分だけの基準を作れる人です。",
+        hook:"和室の静けさも、現代的な服やカメラの軽さも、どちらも自然に受け取れる人です。ノートに書き出すと、頭の中のもやがほどけて、好きなものの輪郭が見えてきます。",
+        downside:"きれいに整理しようとするほど、まだ言葉にならない感覚を置き去りにすることも。曖昧なままの一文を残すと、後から大事な手がかりになります。",
+        perception:"知的、透明感がある、静かだけれど感性がはっきりしていると思われやすいです。",
+        strength:"暮らしの中の違和感や美しさを、澄んだ言葉に変える力。",
+        weakness:"納得できる形になるまで、外に出すのをためらいやすいです。",
+        advice:"今日のヒントは、好きと苦手を一つずつ書くこと。きれいにまとめなくても、そこから自分の基準が見えてきます。",
+        image:"img/hatsune-mobby-washitsu.png"
+      },
+      "とくひ": {
+        name:"余白デザインモビィ",
+        summary:"整った場所から、和と現代の軽やかさを人へ伝えるタイプ。",
+        catch:"あなたは、暮らしの余白を見せ方まで含めて美しく整えられる人です。",
+        hook:"器、服、本、写真の光。要素を詰め込まず、余白を残して見せるのが上手です。人に伝える時も、説明しすぎないからこそ世界観が残ります。",
+        downside:"きれいに見せたい気持ちが強いと、生活の温度が少し薄くなることも。手書きのメモや使いかけの道具をあえて残すと、空気が近くなります。",
+        perception:"センスがいい、空間づくりが上手、真似したくなると思われやすいです。",
+        strength:"静けさと抜け感を組み合わせて、見る人が入りたくなる世界を作る力。",
+        weakness:"見せ方を考えすぎて、始めるまでに時間がかかることがあります。",
+        advice:"今日のヒントは、写真の中に余白を残すこと。器や本を一つ主役にすると、初音さんらしい静かな共有になります。",
+        image:"img/hatsune-mobby-journey.png"
+      },
+      "めわつ": {
+        name:"旅する言葉モビィ",
+        summary:"旅先の文化や景色を、自分だけの言葉として持ち帰るタイプ。",
+        catch:"あなたは、歩いた場所の空気を日記の一文に変えられる人です。",
+        hook:"知らない駅、古い喫茶、旅先で出会った器。心が動いた瞬間をすぐ消費せず、自分の中でゆっくり熟成させます。帰ってから書く言葉に、その旅の温度が残ります。",
+        downside:"味わう時間を大切にするほど、共有が後回しになりやすいです。帰り道に一枚だけ写真を選んでおくと、言葉もあとから追いつきます。",
+        perception:"感受性が豊か、旅の切り取り方が素敵、言葉に余韻があると思われやすいです。",
+        strength:"移動や出会いから、長く残る気づきを拾い上げる力。",
+        weakness:"感じたことを大切にしすぎて、外に出す前にしまい込みがちです。",
+        advice:"今日のヒントは、行きたい場所を一つだけメモすること。理由まで書くと、次の旅があなたの言葉から始まります。",
+        image:"img/hatsune-mobby-washitsu.png"
+      },
+      "めわひ": {
+        name:"文化さんぽモビィ",
+        summary:"和の空気を味わいながら、好きな場所を人と分け合うタイプ。",
+        catch:"あなたは、街歩きや文化の楽しさを、やわらかく周りへ開ける人です。",
+        hook:"神社、喫茶、古道具屋、季節の景色。ひとりで見つけた好きな場所も、誰かと話すともう一度好きになれる人です。日本文化を堅くせず、日常の近くに置けます。",
+        downside:"人にすすめたい気持ちが強い時ほど、説明が多くなりすぎることも。まず一枚の写真や一言の余韻で入口を作ると、相手が入りやすくなります。",
+        perception:"一緒に散歩したい、詳しいのに押しつけない、暮らしを楽しんでいると思われやすいです。",
+        strength:"文化の魅力を、日常の会話や小さな旅に翻訳する力。",
+        weakness:"予定を広げすぎると、自分が休む時間が足りなくなることがあります。",
+        advice:"今日のヒントは、誰かを連れて行きたい場所を一つ保存すること。共有したい気持ちが、次の企画の種になります。",
+        image:"img/hatsune-mobby-journey.png"
+      },
+      "めくつ": {
+        name:"透明アンテナモビィ",
+        summary:"旅や日常で拾った新しい感覚を、自分の中で静かに結晶化するタイプ。",
+        catch:"あなたは、古さと新しさの間にあるきらっとした気配を見つけられる人です。",
+        hook:"街の光、古い看板、カメラ越しの色、偶然聞いた言葉。見過ごされそうなものに反応するアンテナがあります。それを一度自分の中にしまうことで、独自の透明感が生まれます。",
+        downside:"感じる量が多いぶん、頭の中が散らかりやすい日も。写真、言葉、場所のどれか一つに絞って残すと、気分が澄みます。",
+        perception:"観察眼がある、感性がクリア、静かに面白いものを見つけると思われやすいです。",
+        strength:"日常の中から新しい組み合わせを見つけ、自分らしい美意識へ育てる力。",
+        weakness:"興味が広がるほど、一つの形にまとめるまで迷いやすいです。",
+        advice:"今日のヒントは、気になった景色を三語だけでメモすること。短い言葉のほうが、あとで鮮度を取り戻せます。",
+        image:"img/hatsune-mobby-washitsu.png"
+      },
+      "めくひ": {
+        name:"好き共有モビィ",
+        summary:"旅、文化、暮らしの発見を、軽やかに人へ届けていくタイプ。",
+        catch:"あなたは、好きなものを見つける力と、それをひらいて届ける明るさを持つ人です。",
+        hook:"気になる場所へ行って、写真を撮り、言葉を添えて、誰かの次の休日を少し楽しくする。和の雰囲気も今っぽい軽さも、自然に混ぜて共有できます。",
+        downside:"共有したいものが多いと、ひとつひとつの余韻が薄くなることも。今日はこれ、と主役を決めると、あなたの好きがまっすぐ届きます。",
+        perception:"情報の選び方が素敵、行ってみたくなる、世界観が親しみやすいと思われやすいです。",
+        strength:"自分の発見を、誰かの行動や会話につながる形で届ける力。",
+        weakness:"反応を意識しすぎると、自分が本当に惹かれた理由を見失うことがあります。",
+        advice:"今日のヒントは、好きな場所の理由を一文で添えること。写真よりも、その一文が次の共感を連れてきます。",
+        image:"img/hatsune-mobby-journey.png"
+      }
+    };
+
+    const ANS_LABEL = {1:"そう思う", 2:"ややそう思う", 3:"少しそう思う", 4:"どちらでもない", 5:"少しそう思わない", 6:"ややそう思わない", 7:"そう思わない"};
+    const defaultState = () => ({step:"intro", page:0, answers:{}, questionOrder:[], axes:null});
+    let state = loadState();
+    const app = document.getElementById("app");
+
+    function loadState(){
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? {...defaultState(), ...JSON.parse(raw)} : defaultState();
+      } catch { return defaultState(); }
+    }
+    function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    function resetDiagnosis(){ state = defaultState(); localStorage.removeItem(STORAGE_KEY); render(); }
+    function getQuestionOrder(){
+      if(Array.isArray(state.questionOrder) && state.questionOrder.length === QUESTIONS.length) return state.questionOrder;
+      state.questionOrder = AXIS_KEYS.flatMap(axis => QUESTIONS.filter(q => q.axis === axis)).map(q => q.id);
+      saveState();
+      return state.questionOrder;
+    }
+    function getQuestions(){ return getQuestionOrder().map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean); }
+
+    function computeResult(){
+      const SCALE = 7, MID = 4, MAX_DEV = 3, GAMMA = 1.35, EXTREME_BONUS = 0.35, COHERENCE_SHRINK = 0.20;
+      const raw = {A:0, B:0, C:0}, absRaw = {A:0, B:0, C:0}, maxRaw = {A:0, B:0, C:0}, allAnswers = [];
+      const weightOf = ans => (ans === 1 || ans === 7) ? 1 + EXTREME_BONUS : 1;
+      const shapeAns = ans => {
+        const centered = MID - ans;
+        const t = centered / MAX_DEV;
+        const mag = Math.min(1, Math.abs(t));
+        return Math.sign(t) * Math.pow(mag, GAMMA);
+      };
+      QUESTIONS.forEach(q => {
+        const ansRaw = state.answers[q.id];
+        if(!ansRaw) return;
+        allAnswers.push(ansRaw);
+        const ansAdj = q.reverse ? (SCALE + 1 - ansRaw) : ansRaw;
+        const w = weightOf(ansRaw) * (q.importance ?? 1);
+        const contrib = w * shapeAns(ansAdj);
+        raw[q.axis] += contrib;
+        absRaw[q.axis] += Math.abs(contrib);
+        maxRaw[q.axis] += w;
+      });
+      const norm = {}, pos = {}, hard = {}, decisiveness = {}, confidenceLevel = {}, confidenceLabel = {};
+      AXIS_KEYS.forEach(k => {
+        const denom = maxRaw[k] || 1;
+        const coherence = absRaw[k] ? Math.abs(raw[k]) / absRaw[k] : 0;
+        const adjusted = raw[k] * (1 - COHERENCE_SHRINK * (1 - coherence));
+        norm[k] = Math.max(-1, Math.min(1, adjusted / denom));
+        hard[k] = norm[k] > 0 ? "L" : "R";
+        pos[k] = Math.max(0, Math.min(100, 50 - norm[k] * 50));
+        decisiveness[k] = Math.min(1, Math.abs(norm[k]));
+        if(decisiveness[k] >= 0.50) { confidenceLevel[k] = "strong"; confidenceLabel[k] = "はっきり"; }
+        else if(decisiveness[k] >= 0.25) { confidenceLevel[k] = "moderate"; confidenceLabel[k] = "やや"; }
+        else { confidenceLevel[k] = "mid"; confidenceLabel[k] = "場面による"; }
+      });
+      const code = (hard.A === "L" ? AXES.A.leftCode : AXES.A.rightCode) + (hard.B === "L" ? AXES.B.leftCode : AXES.B.rightCode) + (hard.C === "L" ? AXES.C.leftCode : AXES.C.rightCode);
+      const freq = {1:0,2:0,3:0,4:0,5:0,6:0,7:0};
+      allAnswers.forEach(a => freq[a]++);
+      const straightLine = allAnswers.length ? Math.max(...Object.values(freq)) / allAnswers.length >= 0.80 : false;
+      const adjacentTypes = [];
+      AXIS_KEYS.forEach(k => {
+        if(confidenceLevel[k] === "mid") {
+          const altHard = {...hard, [k]: hard[k] === "L" ? "R" : "L"};
+          const altCode = (altHard.A === "L" ? AXES.A.leftCode : AXES.A.rightCode) + (altHard.B === "L" ? AXES.B.leftCode : AXES.B.rightCode) + (altHard.C === "L" ? AXES.C.leftCode : AXES.C.rightCode);
+          if(CHARACTERS[altCode] && altCode !== code) adjacentTypes.push({axis:k, code:altCode, name:CHARACTERS[altCode].name});
+        }
+      });
+      return {code, char: CHARACTERS[code], norm, pos, hard, decisiveness, confidenceLevel, confidenceLabel, straightLine, adjacentTypes};
+    }
+
+    function isComplete(){ return Object.keys(state.answers || {}).length >= QUESTIONS.length; }
+    function render(){
+      document.getElementById("navDiagnosis").classList.toggle("active", state.step !== "characters");
+      document.getElementById("navCharacters").classList.toggle("active", state.step === "characters");
+      if(state.step === "intro") renderIntro();
+      else if(state.step === "quiz") renderQuiz();
+      else if(state.step === "characters") renderCharacters();
+      else renderResult();
+    }
+    function socialLinksHtml(){
+      return `<div class="social-links">${SOCIAL_LINKS.map((link, i) => `<a class="social-link ${i === 0 ? "primary" : ""}" href="${link.url}" target="_blank" rel="noopener">${link.label}</a>`).join("")}</div>`;
+    }
+    function renderIntro(){
+      const count = Object.keys(state.answers).length;
+      app.innerHTML = `
+        <div class="panel fade-in" style="text-align:center; padding:60px 20px;">
+          <img class="hero-image" src="img/hatsune-mobby-washitsu.png" alt="初音さんの世界観に合わせた和室とMobby">
+          <p class="kicker">Mobby rough preview</p>
+          <h2 class="big">初音 こころ整う<br>暮らし診断</h2>
+          <p class="text-body" style="max-width:460px; margin:0 auto 30px;">直感で選ぶ20問から、暮らしの整え方、和の余白と透明感、好きなものの届け方を診断します。和室、茶道、日記、旅、日本文化のムードを混ぜた初音さん向けのラフ案です。</p>
+          <button class="primary" id="btnStart" style="padding:16px 32px; font-size:16px;">${count > 0 ? "診断を再開する" : "診断をはじめる"}</button>
+          ${count > 0 ? `<p style="font-size:12px; color:#73736f; margin-top:16px;">${count} / ${QUESTIONS.length}問 回答済み</p>` : ""}
+        </div>`;
+      document.getElementById("btnStart").onclick = () => {
+        state.step = "quiz";
+        getQuestionOrder();
+        const idx = getQuestions().findIndex(q => !state.answers[q.id]);
+        state.page = idx >= 0 ? Math.floor(idx / PAGE_SIZE) : 0;
+        saveState();
+        render();
+      };
+    }
+    function renderQuiz(){
+      const qs = getQuestions();
+      const start = state.page * PAGE_SIZE;
+      const currentQs = qs.slice(start, start + PAGE_SIZE);
+      const totalPage = Math.ceil(qs.length / PAGE_SIZE);
+      const progress = Math.round((Object.keys(state.answers).length / qs.length) * 100);
+      const qHtml = currentQs.map((q, i) => {
+        const val = state.answers[q.id];
+        return `<div class="qCard fade-in" style="animation-delay:${i*0.05}s"><div class="kicker" style="color:#73736f; margin-bottom:4px;">Q${start+i+1}</div><p class="qText">${q.text}</p><div class="likert7"><div class="likert-labels"><span>${AXES[q.axis].left}</span><span>${AXES[q.axis].right}</span></div><div class="likert-buttons">${[1,2,3,4,5,6,7].map(n => { const side = n <= 3 ? "left" : (n === 4 ? "mid" : "right"); const sel = val === n ? "selected" : ""; return `<button type="button" class="likert-btn ${side} ${sel}" data-qid="${q.id}" data-val="${n}" aria-label="${ANS_LABEL[n]}"></button>`; }).join("")}</div></div></div>`;
+      }).join("");
+      app.innerHTML = `<div class="panel"><div class="progress-wrap"><div class="progress-meta"><span>進行状況</span><span>${progress}%</span></div><div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div></div><div style="margin-top:30px;">${qHtml}</div><div style="display:flex; justify-content:space-between; margin-top:30px;"><button id="btnPrev" ${state.page===0 ? "disabled":""}>戻る</button><button class="primary" id="btnNext">${state.page === totalPage - 1 ? "結果を見る" : "次へ"}</button></div></div>`;
+      currentQs.forEach(q => {
+        document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(btn => {
+          btn.onclick = () => {
+            state.answers[q.id] = parseInt(btn.dataset.val, 10);
+            document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(b => b.classList.remove("selected"));
+            btn.classList.add("selected");
+            saveState();
+            const p = Math.round((Object.keys(state.answers).length / qs.length) * 100);
+            document.querySelector(".progress-fill").style.width = p + "%";
+            document.querySelector(".progress-meta span:last-child").innerText = p + "%";
+          };
+        });
+      });
+      document.getElementById("btnPrev").onclick = () => { if(state.page > 0) state.page--; saveState(); render(); };
+      document.getElementById("btnNext").onclick = () => {
+        const missing = currentQs.filter(q => !state.answers[q.id]);
+        if(missing.length){ alert("このページの質問にすべて回答してください。"); return; }
+        if(state.page < totalPage - 1){ state.page++; saveState(); render(); }
+        else { state.axes = computeResult(); state.step = "result"; saveState(); render(); }
+      };
+    }
+    function renderAxis(result){
+      return AXIS_KEYS.map(k => {
+        const a = AXES[k];
+        return `<div class="axis-row"><div class="axis-meta"><span>${a.name}: ${a.left}</span><span>${result.confidenceLabel[k]}</span><span>${a.right}</span></div><div class="axis-bar"><div class="axis-dot" style="left:${result.pos[k]}%"></div></div></div>`;
+      }).join("");
+    }
+    function renderResult(){
+      if(!isComplete()){ state.step = "intro"; render(); return; }
+      const result = state.axes || computeResult();
+      const c = result.char;
+      app.innerHTML = `<div class="panel fade-in result-hero"><p class="kicker">RESULT</p><span class="type-code">TYPE ${result.code}</span><h2 class="big">${c.name}</h2><img class="result-img" src="${c.image}" alt="${c.name}"><p class="text-body" style="max-width:560px; margin:0 auto;">${c.summary}</p><p style="font-size:17px; font-weight:700; margin:22px auto 0; max-width:560px;">${c.catch}</p>${socialLinksHtml()}</div><div class="panel fade-in"><p class="kicker">3 AXES</p><h2 class="big">あなたの暮らしバランス</h2>${renderAxis(result)}${result.straightLine ? `<p class="text-body" style="color:#b06a4a;">同じ回答が多めです。気分を変えてもう一度試すと、少し違う結果になるかもしれません。</p>` : ""}${result.adjacentTypes.length ? `<p class="text-body">近いタイプ: ${result.adjacentTypes.map(t => t.name).join(" / ")}</p>` : ""}</div><div class="panel fade-in"><p class="kicker">DETAIL</p><h2 class="big">このタイプの見え方</h2><div class="section-grid"><div class="mini"><h3>似合うムード</h3><p>${c.hook}</p></div><div class="mini"><h3>しんどい時</h3><p>${c.downside}</p></div><div class="mini"><h3>周りから</h3><p>${c.perception}</p></div><div class="mini"><h3>今日の暮らしヒント</h3><p>${c.advice}</p></div><div class="mini"><h3>強み</h3><p>${c.strength}</p></div><div class="mini"><h3>気をつけたいこと</h3><p>${c.weakness}</p></div></div><div class="actions"><button class="primary" id="btnChars">8タイプを見る</button><button id="btnAgain">もう一度診断する</button></div></div>`;
+      document.getElementById("btnChars").onclick = () => { state.step = "characters"; saveState(); render(); };
+      document.getElementById("btnAgain").onclick = resetDiagnosis;
+    }
+    function renderCharacters(){
+      const cards = Object.entries(CHARACTERS).map(([code, c]) => `<article class="char-card fade-in"><img src="${c.image}" alt="${c.name}"><div class="char-body"><p class="kicker">TYPE ${code}</p><h3>${c.name}</h3><p>${c.summary}</p></div></article>`).join("");
+      app.innerHTML = `<div class="panel fade-in"><p class="kicker">8 TYPES</p><h2 class="big">暮らし診断 8タイプ</h2><p class="text-body">2枚のラフ画像をサンプルとして交互に配置しています。和室、茶道、日記、旅、好きな場所を分け合うムードを、タイプごとに少しずつ表現しています。</p><div class="characters-grid">${cards}</div><div class="actions"><button class="primary" id="btnBackDiagnosis">${isComplete() ? "結果に戻る" : "診断する"}</button></div></div>`;
+      document.getElementById("btnBackDiagnosis").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
+    }
+    document.getElementById("brandHome").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
+    document.getElementById("navDiagnosis").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
+    document.getElementById("navCharacters").onclick = () => { state.step = "characters"; saveState(); render(); };
+    render();
+  </script>
+</body>
+</html>
