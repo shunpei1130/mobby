@@ -162,7 +162,7 @@
       border: 0;
       border-radius: 999px;
       background: #c86f6a !important;
-      color: #fff !important;
+      color: #2f2029 !important;
       box-shadow: 0 12px 26px rgba(181, 98, 92, 0.22);
       font-weight: 700;
       opacity: 1 !important;
@@ -650,6 +650,45 @@
 
     .record-page--complete .record-complete-actions [data-record-home-return] {
       display: grid !important;
+    }
+
+    .record-page--complete [data-record-save-page] {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 219, 235, 0.72) !important;
+      border-radius: 999px !important;
+      background:
+        radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0) 28%),
+        linear-gradient(135deg, rgba(255, 157, 205, 0.86), rgba(226, 83, 152, 0.78) 48%, rgba(255, 190, 217, 0.72)) !important;
+      color: #2f2029 !important;
+      -webkit-backdrop-filter: blur(20px) saturate(1.45) !important;
+      backdrop-filter: blur(20px) saturate(1.45) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.86),
+        inset 0 -18px 30px rgba(177, 45, 111, 0.18),
+        0 16px 34px rgba(218, 84, 150, 0.3),
+        0 4px 12px rgba(255, 255, 255, 0.42) !important;
+      font-weight: 800 !important;
+      letter-spacing: 0.03em;
+      text-shadow: 0 1px 4px rgba(255, 255, 255, 0.42);
+    }
+
+    .record-page--complete [data-record-save-page]::before {
+      content: "";
+      position: absolute;
+      inset: 2px 8px auto;
+      height: 42%;
+      border-radius: inherit;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0));
+      pointer-events: none;
+    }
+
+    .record-page--complete [data-record-save-page]:active {
+      transform: translateY(1px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.76),
+        inset 0 -14px 26px rgba(177, 45, 111, 0.22),
+        0 10px 24px rgba(218, 84, 150, 0.24) !important;
     }
 
     .record-page--complete [data-record-complete-back] {
