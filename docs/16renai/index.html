@@ -982,6 +982,16 @@
       const observer = new MutationObserver(updateIntro);
       observer.observe(document.getElementById("loveRoot"), { childList: true, subtree: true });
       document.addEventListener("DOMContentLoaded", updateIntro);
+      const scrollDiagnosisTop = () => {
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+        document.querySelector(".page--diagnosis")?.scrollTo?.({ top: 0, left: 0, behavior: "auto" });
+      };
+      document.addEventListener("click", (event) => {
+        const target = event.target.closest("[data-love-diagnosis-start], [data-love-page-prev], [data-love-page-next], [data-love-gate-back]");
+        if (!target) return;
+        window.requestAnimationFrame(scrollDiagnosisTop);
+        window.setTimeout(scrollDiagnosisTop, 0);
+      }, true);
       updateIntro();
     })();
   </script>
