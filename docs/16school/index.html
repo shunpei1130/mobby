@@ -676,9 +676,6 @@
       padding: 14px 22px;
       font-size: 14px;
     }
-    .mama-share {
-      display: none !important;
-    }
     .mama-ghost {
       background: #ffffff;
       color: #b04a6b;
@@ -1215,7 +1212,6 @@
       cursor: pointer;
     }
   </style>
-  <link rel="stylesheet" href="../glassmorphism.css">
 </head>
 <body>
 
@@ -1230,7 +1226,9 @@
           <h1 id="titleHome">診断一覧</h1>
 <div id="titleMenu" class="title-menu" style="display:none; position:absolute; top:calc(100% + 8px); left:0; min-width:210px; padding:8px; border:1px solid var(--line, #d2d2d7); border-radius:12px; background:var(--surface, #ffffff); box-shadow:var(--shadow-sm, 0 2px 8px rgba(0,0,0,0.15)); z-index:30;">
   <a href="/16school/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main, #1d1d1f); text-decoration:none; font-size:12px;">学校モビー診断</a>
+  <a href="/16school/mama/" id="btnOpenMamaFromTitle" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main, #1d1d1f); text-decoration:none; font-size:12px;">ママモビー診断</a>
   <a href="/16love/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main, #1d1d1f); text-decoration:none; font-size:12px;">メンヘラモビー診断</a>
+  <a href="/16night/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main, #1d1d1f); text-decoration:none; font-size:12px;">夜職モビー診断</a>
   <a href="/16stan/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main, #1d1d1f); text-decoration:none; font-size:12px;">推し活モビー診断</a>
 </div>
         </div>
@@ -2628,12 +2626,9 @@ const means = {};
         titleMenu.classList.remove("is-open");
       }
     });
-    const btnOpenMamaFromTitle = document.getElementById("btnOpenMamaFromTitle");
-    if (btnOpenMamaFromTitle) {
-      btnOpenMamaFromTitle.onclick = () => {
-        window.location.href = generateMamaShareLink();
-      };
-    }
+    document.getElementById("btnOpenMamaFromTitle").onclick = () => {
+      window.location.href = generateMamaShareLink();
+    };
     document.getElementById("navDiagnosis").onclick = (e) => {
       e.preventDefault();
       // 回答が完了している場合は結果画面を表示
@@ -3946,6 +3941,30 @@ gateSubmitButton.onclick = async () => {
           </div>
 
           <!-- ママに共有セクション -->
+          <div class="mama-share share-panel" style="text-align:center; animation-delay:0.28s;">
+          <div class="mama-share-content">
+            <p class="kicker" style="color:#e6507a;">👩‍👧 ママにも共有</p>
+            <h3 class="mama-share-title">ママモビー診断を送ってみよう</h3>
+            <p class="text-body" style="font-size:13px; margin:0 0 14px;">
+              ママの学生時代の恋愛観がわかるかも！？
+            </p>
+            <div class="mama-share-steps">
+              <span class="mama-step"><span class="mama-step-num">1</span>あなたの結果を送る</span>
+              <span class="mama-step"><span class="mama-step-num">2</span>ママが診断</span>
+              <span class="mama-step"><span class="mama-step-num">3</span>タイプ比較</span>
+            </div>
+            <div class="mama-share-actions">
+              <button id="btnShareMamaLine" class="mama-line"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
+                LINEでママに送る</button>
+              <button id="btnOpenMama" class="mama-open">👩‍👧 ママモビー診断を開く</button>
+              <button id="btnShareMamaCopy" class="mama-ghost">📋 招待文をコピー</button>
+            </div>
+              <div id="mamaShareSuccess" class="mama-share-success">
+                ✓ コピーしました！ママに貼り付けて送ってね
+              </div>
+            </div>
+          </div>
+          </div>
         </div>
 
         <div class="panel fade-in" style="margin-top:32px; text-align:center;">

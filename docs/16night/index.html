@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ja">
 
 <head>
@@ -954,7 +954,6 @@
             }
         }
     </style>
-  <link rel="stylesheet" href="../glassmorphism.css">
 </head>
 
 <body>
@@ -1551,7 +1550,7 @@ requestAnimationFrame(() => render());
                         snsSaveHint.textContent = "保存を開始しました。うまくいかない場合は結果画面をスクショしてください。";
                         const dl = document.createElement("a");
                         dl.href = snsImagePath;
-                        dl.download = `${sanitizeDownloadName(ch.name)}-sns.webp`;
+                        dl.download = `${sanitizeDownloadName(ch.name)}-sns.png`;
                         dl.rel = "noopener";
                         document.body.appendChild(dl);
                         dl.click();

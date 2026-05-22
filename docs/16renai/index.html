@@ -150,6 +150,63 @@
       justify-self: center;
     }
 
+    .love-share-card-recommend {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 6px;
+      color: #e23d75;
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .love-share-card-star {
+      color: #e23d75;
+      font-size: 12px;
+      font-weight: 900;
+      margin: 0 5px;
+      line-height: 1;
+    }
+
+    .love-share-card-inline {
+      display: grid;
+      gap: 12px;
+      justify-items: center;
+      padding: 14px;
+      border: 1px solid rgba(244, 114, 182, 0.18);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: 0 18px 44px rgba(190, 60, 105, 0.1);
+    }
+
+    .love-share-card-inline img {
+      display: block;
+      width: min(100%, 360px);
+      height: auto;
+      border-radius: 14px;
+      box-shadow: 0 12px 30px rgba(88, 46, 60, 0.16);
+    }
+
+    .love-type-affirmation__head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .love-type-affirmation__head img {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+      flex: 0 0 auto;
+    }
+
+    .love-type-affirmation__head h4 {
+      margin: 0;
+    }
+
     .love-diagnosis-tabs {
       display: grid !important;
       grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
@@ -271,6 +328,20 @@
       font-size: 23px;
     }
 
+    .love-result-code {
+      display: inline-flex;
+      align-items: center;
+      margin-left: 8px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(226, 61, 117, 0.1);
+      color: #e23d75;
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1;
+      vertical-align: middle;
+    }
+
     .love-axis-card,
     .love-question,
     .love-axis-bar,
@@ -289,6 +360,74 @@
       max-width: 280px;
       justify-self: center;
       width: 100%;
+    }
+
+    .love-result-actions {
+      display: grid;
+      grid-template-columns: 1fr !important;
+      max-width: 240px;
+      justify-items: stretch;
+    }
+
+    .love-result-actions .button--full {
+      width: 100%;
+    }
+
+    .love-compatibility-cta {
+      background: linear-gradient(135deg, #f472b6 0%, #e23d75 100%);
+      border-color: rgba(226, 61, 117, 0.35);
+      color: #fff;
+      box-shadow: 0 14px 30px rgba(226, 61, 117, 0.24);
+    }
+
+    .love-diagnosis--gate {
+      gap: 22px;
+    }
+
+    .love-gate-hero {
+      text-align: left;
+    }
+
+    .love-gate-form {
+      display: grid;
+      gap: 16px;
+      padding: 20px;
+      border: 1px solid rgba(244, 114, 182, 0.18);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: 0 18px 50px rgba(190, 60, 105, 0.1);
+    }
+
+    .love-gate-field {
+      display: grid;
+      gap: 7px;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .love-gate-field .field__input {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid rgba(120, 55, 78, 0.18);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.94);
+      padding: 0 14px;
+      color: var(--ink);
+      font: inherit;
+      font-weight: 600;
+    }
+
+    .love-gate-field .field__input:focus {
+      outline: 2px solid rgba(244, 114, 182, 0.32);
+      border-color: rgba(244, 114, 182, 0.65);
+    }
+
+    .love-gate-error {
+      margin: 0;
+      color: #d3385f;
+      font-size: 13px;
+      font-weight: 700;
     }
 
     .love-answer-grid--scale {

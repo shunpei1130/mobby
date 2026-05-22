@@ -1,4 +1,4 @@
-﻿const ANS_LABEL = { 1: "とても当てはまる", 2: "当てはまる", 3: "やや当てはまる", 4: "どちらでもない", 5: "やや当てはまらない", 6: "当てはまらない", 7: "全く当てはまらない" };
+const ANS_LABEL = { 1: "とても当てはまる", 2: "当てはまる", 3: "やや当てはまる", 4: "どちらでもない", 5: "やや当てはまらない", 6: "当てはまらない", 7: "全く当てはまらない" };
 const STORAGE_KEY = "love_char_diag_v1";
 const PAGE_SIZE = 5;
 const AGE_OPTIONS = ["16歳未満", "16歳", "17歳", "18歳", "19歳", "20歳", "21歳", "22歳", "23歳", "24歳", "25歳", "26歳", "27歳", "28歳", "29歳以上"];
@@ -311,7 +311,7 @@ function renderResult() {
     const lineShareHref = getPreferredLineShareUrl(shareTextRaw, shareUrlRaw);
     const lineShareTarget = getPreferredLineShareTarget();
     const keyImageWebpPath = `img/key/${ch.name}.webp`;
-    const keyImagePngPath = `img/key/${ch.name}.webp`;
+    const keyImagePngPath = `img/key/${ch.name}.png`;
     const keyImageBackPath = "img/key/ura.jpg";
     app.innerHTML = `<div class="panel fade-in"><div class="result-hero"><p class="kicker">診断結果</p><h2 class="big" style="font-size:28px;">${ch.name}</h2><p class="text-body" style="color:var(--text-main);font-weight:600;font-size:16px;margin-bottom:16px;">${ch.catch}</p><div class="char-image-placeholder"><img src="img/${ch.name}.jpg" alt="${ch.name}" onerror="this.parentElement.textContent='画像準備中'"></div><div style="display:inline-block;background:var(--surface2);padding:6px 16px;border-radius:20px;font-size:12px;font-family:monospace;color:var(--text-sub);">TYPE: ${res.code}</div></div>
   <div style="margin-top:24px;padding:20px;background:linear-gradient(135deg,rgba(167,139,250,0.15),rgba(244,114,182,0.15));border-radius:16px;border:1px solid var(--accent);text-align:center;"><p style="font-size:11px;font-weight:700;color:var(--accent);margin:0 0 8px;">😈💜 恋愛メンヘラ度</p><p style="font-size:36px;font-weight:700;margin:0 0 4px;color:${gaugeColor};">Lv.${res.level}</p><p style="font-size:18px;font-weight:600;margin:0 0 12px;color:var(--text-main);">${res.menheraLevel.name}</p><p style="font-size:13px;color:var(--text-sub);margin:0 0 16px;">${res.menheraLevel.desc}</p><div class="menhera-gauge-bar"><div class="menhera-gauge-fill" style="width:${res.menheraScore}%;background:linear-gradient(90deg,#4ade80,#facc15,#f472b6);"></div></div><div class="menhera-gauge-labels"><span>メンタル鉄壁</span><span>恋愛ゾンビ</span></div></div>
@@ -398,7 +398,7 @@ function renderResult() {
                 snsSaveHint.textContent = "保存を開始しました。うまくいかない場合は結果画面をスクショしてください。";
                 const dl = document.createElement("a");
                 dl.href = snsImagePath;
-                dl.download = `${sanitizeDownloadName(ch.name)}-sns.webp`;
+                dl.download = `${sanitizeDownloadName(ch.name)}-sns.png`;
                 dl.rel = "noopener";
                 document.body.appendChild(dl);
                 dl.click();
