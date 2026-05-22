@@ -42,6 +42,57 @@
   justify-self: center;
 }
 
+.compositing-shell.is-template-selecting .compositing-stage-card {
+  max-width: 190px;
+  padding: 10px;
+}
+
+.compositing-shell.is-template-selecting .compositing-stage-wrap {
+  border-radius: 14px;
+}
+
+.compositing-shell.is-template-selecting .compositing-layout {
+  grid-template-columns: minmax(0, 315px);
+  justify-content: center;
+  gap: 12px;
+}
+
+.compositing-shell.is-template-selecting .compositing-stage-card {
+  grid-column: 1;
+}
+
+.compositing-shell.is-template-selecting .compositing-toggle {
+  display: none;
+}
+
+.compositing-shell.is-template-selecting .compositing-controls-card {
+  display: grid;
+  gap: 10px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.compositing-shell.is-template-selecting .compositing-section-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.compositing-shell.is-template-selecting .compositing-template-grid {
+  order: 2;
+}
+
+.compositing-shell.is-template-selecting .compositing-confirm-btn {
+  order: 1;
+}
+
+.compositing-shell.is-template-selecting .compositing-template-btn {
+  padding: 4px;
+  border-radius: 14px;
+}
+
 .compositing-stage-wrap {
   position: relative;
   width: 100%;
@@ -161,21 +212,26 @@
 
 .compositing-template-grid {
   display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
 }
 
 .compositing-template-btn {
   display: grid;
-  grid-template-columns: 72px minmax(0, 1fr);
-  gap: 12px;
-  align-items: center;
-  padding: 10px;
-  border-radius: 18px;
+  grid-template-rows: auto;
+  align-items: start;
+  min-width: 0;
+  padding: 8px;
+  border-radius: 16px;
   border: 1px solid rgba(133, 101, 85, 0.16);
   background: rgba(255,255,255,0.82);
   cursor: pointer;
-  text-align: left;
+  text-align: center;
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.compositing-template-meta {
+  display: none;
 }
 
 .compositing-template-btn.is-active {
@@ -185,9 +241,9 @@
 }
 
 .compositing-template-thumb {
-  width: 72px;
-  height: 72px;
-  border-radius: 14px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
   overflow: hidden;
   border: 1px solid rgba(133, 101, 85, 0.12);
   background: #fff;
@@ -203,15 +259,22 @@
 .compositing-template-meta strong {
   display: block;
   color: var(--color-earth);
-  font-size: 0.92rem;
-  margin-bottom: 4px;
+  font-size: 0.76rem;
+  line-height: 1.25;
+  margin-bottom: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .compositing-template-meta span {
   display: block;
   color: #8a7a6a;
-  font-size: 0.8rem;
-  line-height: 1.5;
+  font-size: 0.68rem;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .compositing-upload {
@@ -463,6 +526,54 @@
   font-weight: 900;
 }
 
+.compositing-splash__mock--template-select {
+  width: min(100%, 260px);
+  justify-items: center;
+  gap: 8px;
+  padding: 12px;
+}
+
+.compositing-splash__selected-template {
+  width: 118px;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border: 6px solid #fff;
+  border-radius: 18px;
+  background: #f3e9de;
+  box-shadow: 0 10px 24px rgba(126, 91, 62, 0.14);
+}
+
+.compositing-splash__confirm {
+  width: 100%;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: linear-gradient(145deg, #ff8a12, #f45a00);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.compositing-splash__template-tiles {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.compositing-splash__template-tile {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border: 2px solid rgba(255, 117, 156, 0.7);
+  border-radius: 13px;
+  background: #fff;
+  padding: 3px;
+}
+
 .compositing-splash__template {
   display: grid;
   grid-template-columns: 72px minmax(0, 1fr);
@@ -476,6 +587,8 @@
 }
 
 .compositing-splash__template img,
+.compositing-splash__selected-template img,
+.compositing-splash__template-tile img,
 .compositing-splash__poster img {
   width: 100%;
   height: 100%;
@@ -959,6 +1072,20 @@
     grid-template-columns: 1fr;
   }
 
+  .compositing-shell.is-template-selecting .compositing-layout {
+    grid-template-columns: minmax(0, 315px);
+    gap: 10px;
+  }
+
+  .compositing-shell.is-template-selecting .compositing-stage-card {
+    max-width: 174px;
+    padding: 8px;
+  }
+
+  .compositing-shell.is-template-selecting .compositing-template-btn {
+    padding: 3px;
+  }
+
   .compositing-upload-btn {
     width: 100%;
   }
@@ -1024,6 +1151,25 @@
     width: min(100%, 310px);
     padding: 10px;
     gap: 8px;
+  }
+
+  .compositing-splash__mock--template-select {
+    width: min(100%, 242px);
+    gap: 6px;
+  }
+
+  .compositing-splash__selected-template {
+    width: 102px;
+    border-width: 5px;
+  }
+
+  .compositing-splash__confirm {
+    min-height: 36px;
+    font-size: 0.76rem;
+  }
+
+  .compositing-splash__template-tiles {
+    gap: 6px;
   }
 
   .compositing-splash__mock-title {

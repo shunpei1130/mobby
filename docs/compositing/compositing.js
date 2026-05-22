@@ -56,27 +56,20 @@ const compositingState = {
 
 function getCompositingSplashSteps() {
   const mainTemplate = COMPOSITING_TEMPLATES[0];
-  const secondTemplate = COMPOSITING_TEMPLATES[1] || mainTemplate;
-  const thirdTemplate = COMPOSITING_TEMPLATES[2] || mainTemplate;
   const splashPosterSrc = "compositing/reference/flier_mobby.webp";
+  const templateThumbs = COMPOSITING_TEMPLATES.map((template) => `
+            <span class="compositing-splash__template-tile"><img src="${template.src}" alt=""></span>
+  `).join("");
   return [
     {
       title: "テンプレートを選ぼう",
       text: "まずは好きなポスターテンプレートを選択。<br>雰囲気に合うデザインから始められます。",
       visual: `
-        <div class="compositing-splash__mock">
-          <div class="compositing-splash__mock-title">テンプレート</div>
-          <div class="compositing-splash__template">
-            <span class="compositing-splash__template-thumb"><img src="${mainTemplate.src}" alt=""></span>
-            <span><strong>${mainTemplate.name}</strong><span>${mainTemplate.description}</span></span>
-          </div>
-          <div class="compositing-splash__template">
-            <span class="compositing-splash__template-thumb"><img src="${secondTemplate.src}" alt=""></span>
-            <span><strong>${secondTemplate.name}</strong><span>${secondTemplate.description}</span></span>
-          </div>
-          <div class="compositing-splash__template">
-            <span class="compositing-splash__template-thumb"><img src="${thirdTemplate.src}" alt=""></span>
-            <span><strong>${thirdTemplate.name}</strong><span>${thirdTemplate.description}</span></span>
+        <div class="compositing-splash__mock compositing-splash__mock--template-select">
+          <div class="compositing-splash__selected-template"><img src="${mainTemplate.src}" alt=""></div>
+          <div class="compositing-splash__confirm">このテンプレートで決定する</div>
+          <div class="compositing-splash__template-tiles">
+${templateThumbs}
           </div>
         </div>`
     },
@@ -238,6 +231,7 @@ function setCompositingSection(sectionId, open) {
 }
 
 function setCompositingFlow(templateConfirmed, subjectReady = false) {
+  const shell = document.querySelector(".compositing-shell");
   const templateSection = document.querySelector('[data-compositing-section="template"]');
   const uploadSection = document.querySelector('[data-compositing-section="upload"]');
   const uploadBody = document.querySelector('[data-compositing-body="upload"]');
@@ -246,6 +240,8 @@ function setCompositingFlow(templateConfirmed, subjectReady = false) {
   const rotationBlock = document.getElementById("compositingRotationBlock");
   const actions = document.getElementById("compositingActions");
   const lead = document.getElementById("compositingLead");
+
+  if (shell) shell.classList.toggle("is-template-selecting", !templateConfirmed);
 
   if (!templateConfirmed) {
     if (templateSection) templateSection.hidden = false;
