@@ -6651,7 +6651,6 @@
           <div id="compositingSplash" class="compositing-splash" hidden role="dialog" aria-modal="true" aria-label="ポスター作成のはじめ方">
             <div class="compositing-splash__backdrop" aria-hidden="true"></div>
             <div class="compositing-splash__card">
-              <button id="compositingSplashClose" class="compositing-splash__close" type="button" aria-label="閉じる">×</button>
               <span class="compositing-splash__spark compositing-splash__spark--left" aria-hidden="true">✦</span>
               <span class="compositing-splash__spark compositing-splash__spark--left-small" aria-hidden="true">✦</span>
               <span class="compositing-splash__spark compositing-splash__spark--right" aria-hidden="true">♥</span>
@@ -6892,7 +6891,7 @@
               </a>
             </div>
             <div class="gift-fan-actions" aria-hidden="false">
-              <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openCompositingPopup" data-fan-item="compositing"><span class="footer-btn-icon" data-icon="image" aria-hidden="true"></span><span>ポスター<br>作成</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></button>
+              <a class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openCompositingPopup" data-fan-item="compositing" href="compositing.html"><span class="footer-btn-icon" data-icon="image" aria-hidden="true"></span><span>ポスター<br>作成</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></a>
               <button class="btn btn-secondary action-box-btn gift-fan-action" id="openEncyclopediaPopup" data-fan-item="encyclopedia"><span class="footer-btn-icon" data-icon="book" aria-hidden="true"></span><span>図鑑</span></button>
               <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openVotePopup" data-fan-item="vote"><span class="footer-btn-icon" data-icon="vote" aria-hidden="true"></span><span>投票</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></button>
               <button class="btn btn-secondary action-box-btn gift-fan-action" id="openFaqPopup" data-fan-item="faq"><span class="footer-btn-icon" data-icon="mail" aria-hidden="true"></span><span>お問い合わせ</span></button>
@@ -8988,16 +8987,8 @@
       openPopup('votePopup');
       await syncVoteState();
     });
-    document.getElementById('openCompositingPopup')?.addEventListener('click', async () => {
-      try {
-        await ensureCompositingTool();
-      } catch (error) {
-        console.error('Failed to initialize compositing tool:', error);
-        alert('ポスター作成ツールの読み込みに失敗しました。時間をおいて再度お試しください。');
-        return;
-      }
-      openPopup('compositingPopup');
-      window.showCompositingSplash?.();
+    document.getElementById('openCompositingPopup')?.addEventListener('click', (e) => {
+      e.stopPropagation();
     });
     document.getElementById('goMobbyDiagnosis')?.addEventListener('click', () => openPopup('diagnosisPopup'));
     const diagnosisLauncher = document.getElementById('openPricePopup');

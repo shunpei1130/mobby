@@ -65,7 +65,7 @@ function getCompositingSplashSteps() {
       text: "まずは好きなポスターテンプレートを選択。<br>雰囲気に合うデザインから始められます。",
       visual: `
         <div class="compositing-splash__mock">
-          <div class="compositing-splash__mock-title">テンプレート <span>⌄</span></div>
+          <div class="compositing-splash__mock-title">テンプレート</div>
           <div class="compositing-splash__template">
             <span class="compositing-splash__template-thumb"><img src="${mainTemplate.src}" alt=""></span>
             <span><strong>${mainTemplate.name}</strong><span>${mainTemplate.description}</span></span>
@@ -109,12 +109,16 @@ function getCompositingSplashSteps() {
     {
       title: "保存して完了",
       text: "仕上がりを確認したら画像を保存。<br>あなただけのMobbyポスターが完成です。",
-      visual: `<div class="compositing-splash__poster compositing-splash__poster--complete"><img src="${splashPosterSrc}" alt=""><span class="compositing-splash__save-pill">画像を保存</span></div>`
+      visual: `
+        <div class="compositing-splash__complete-card">
+          <div class="compositing-splash__poster compositing-splash__poster--complete"><img src="${splashPosterSrc}" alt=""></div>
+        </div>`
     }
   ];
 }
 
 function renderCompositingSplash() {
+  const splash = document.getElementById("compositingSplash");
   const content = document.getElementById("compositingSplashContent");
   const count = document.getElementById("compositingSplashCount");
   const dots = document.getElementById("compositingSplashDots");
@@ -128,12 +132,22 @@ function renderCompositingSplash() {
   content.innerHTML = `
     <div class="compositing-splash__badge">STEP ${index + 1}</div>
     <h3 class="compositing-splash__title">${step.title}</h3>
-    <p class="compositing-splash__text">${step.text}</p>
     ${step.visual}
   `;
   count.textContent = `${index + 1} / ${steps.length}`;
   dots.innerHTML = steps.map((_, dotIndex) => `<span class="compositing-splash__dot ${dotIndex === index ? "is-active" : ""}"></span>`).join("");
   next.textContent = index === steps.length - 1 ? "はじめる" : "次へ";
+
+  const card = content.closest(".compositing-splash__card");
+  const scrollTargets = [splash, card, content];
+  scrollTargets.forEach((element) => {
+    if (element) element.scrollTop = 0;
+  });
+  requestAnimationFrame(() => {
+    scrollTargets.forEach((element) => {
+      if (element) element.scrollTop = 0;
+    });
+  });
 }
 
 function hideCompositingSplash() {
@@ -482,7 +496,6 @@ function initCompositingTool() {
     renderCompositingSplash();
   });
   document.getElementById("compositingSplashSkip")?.addEventListener("click", hideCompositingSplash);
-  document.getElementById("compositingSplashClose")?.addEventListener("click", hideCompositingSplash);
 
   document.querySelectorAll("[data-compositing-toggle]").forEach((button) => {
     button.addEventListener("click", () => {
