@@ -6210,6 +6210,137 @@
       border: 0 !important;
       box-shadow: none !important;
     }
+
+    @media (min-width: 1024px) {
+      #main-content {
+        display: grid;
+        grid-template-columns: minmax(420px, 1fr) minmax(420px, 1fr);
+        grid-template-areas:
+          "title title"
+          "left right"
+          "legal legal";
+        align-items: start;
+        column-gap: clamp(28px, 4vw, 72px);
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 18px clamp(28px, 5vw, 64px) 42px;
+      }
+
+      .hero-intro {
+        display: contents;
+        min-height: 0;
+        padding: 0;
+      }
+
+      .mobby-title,
+      .hero-intro .headline {
+        grid-area: title;
+        justify-self: center;
+        text-align: center;
+      }
+
+      .mobby-title {
+        padding-top: 0;
+      }
+
+      .mobby-title img {
+        width: min(24vw, 220px);
+        margin: 0 auto;
+      }
+
+      .hero-intro .headline {
+        margin-top: 132px;
+        margin-bottom: 0;
+      }
+
+      .hero-intro .hero {
+        grid-area: left;
+        width: 100%;
+        min-width: 0;
+      }
+
+      .hero-intro .hero .container {
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+      }
+
+      .hero-intro .hero-carousel-shell {
+        width: min(420px, 100%);
+        margin: -10px auto 10px;
+      }
+
+      .hero-diagnosis-menu {
+        width: 100%;
+        max-width: 520px;
+        margin: 24px auto 0;
+      }
+
+      .popup-buttons-bar {
+        grid-area: right;
+        width: 100%;
+        align-self: center;
+        margin: 0;
+        padding: 0;
+      }
+
+      .popup-buttons-bar .container,
+      .popup-buttons-bar .popup-buttons,
+      .popup-buttons-bar .gift-fan-menu {
+        width: 100%;
+        max-width: 520px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .popup-buttons-bar .footer-burn-card-row {
+        width: min(460px, 100%);
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .popup-buttons-bar .footer-burn-card-row .burn-card {
+        min-height: 165px;
+      }
+
+      .popup-buttons-bar .footer-burn-card-row .burn-card-copy,
+      .popup-buttons-bar .footer-burn-card-row .burn-card-media {
+        min-height: 165px;
+      }
+
+      .popup-buttons-bar .footer-burn-card-row .burn-card-copy {
+        padding: 30px 30px 26px;
+      }
+
+      .popup-buttons-bar .footer-burn-card-row .burn-card-media img {
+        min-height: 165px;
+      }
+
+      .popup-buttons-bar .footer-burn-card-row .burn-card-text {
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+      .popup-buttons-bar .footer-burn-card-row .burn-card-title {
+        font-size: clamp(1.85rem, 4.3vw, 2.7rem);
+      }
+
+      #mobbyDiagnosisWrapper {
+        grid-column: 2;
+        grid-row: 2;
+        align-self: end;
+        justify-content: center !important;
+        margin-top: 0 !important;
+        transform: translateY(calc(100% + 18px));
+      }
+
+      .legal-links {
+        grid-area: legal;
+        justify-self: center;
+        text-align: center;
+        margin-top: 32px;
+      }
+    }
   </style>
 </head>
 
