@@ -209,10 +209,15 @@
 
     .love-diagnosis-tabs {
       display: grid !important;
-      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      grid-template-rows: repeat(2, 31px) !important;
       grid-auto-rows: 31px !important;
       gap: 7px !important;
       align-items: start !important;
+      justify-self: center !important;
+      width: min(100%, 340px) !important;
+      max-width: 340px !important;
+      margin-inline: auto !important;
       padding: 0 !important;
       border: 0 !important;
       border-radius: 0 !important;
@@ -243,8 +248,10 @@
       -webkit-backdrop-filter: blur(22px) saturate(1.22);
       backdrop-filter: blur(22px) saturate(1.22);
       font-size: 10px !important;
-      line-height: 31px !important;
+      line-height: 1 !important;
       white-space: nowrap;
+      display: grid !important;
+      place-items: center !important;
     }
 
     .love-diagnosis-tabs__item::before {
@@ -288,8 +295,8 @@
     }
 
     .love-diagnosis-tabs__item:nth-child(5) {
-      grid-column: 1 !important;
-      grid-row: 3 !important;
+      grid-column: 2 !important;
+      grid-row: 2 !important;
     }
 
     .love-diagnosis-tabs__item:nth-child(1) {
@@ -303,12 +310,12 @@
     }
 
     .love-diagnosis-tabs__item:nth-child(3) {
-      grid-column: 1 !important;
-      grid-row: 2 !important;
+      grid-column: 3 !important;
+      grid-row: 1 !important;
     }
 
     .love-diagnosis-tabs__item:nth-child(4) {
-      grid-column: 2 !important;
+      grid-column: 1 !important;
       grid-row: 2 !important;
     }
 
@@ -508,7 +515,7 @@
 
     @media (max-width: 520px) {
       .love-diagnosis-tabs {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
       .love-diagnosis__nav {
@@ -518,11 +525,15 @@
 
     .love-diagnosis-tabs {
       display: grid !important;
-      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-      grid-template-rows: repeat(3, 31px) !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      grid-template-rows: repeat(2, 31px) !important;
       grid-auto-rows: 31px !important;
       gap: 7px !important;
       align-items: start !important;
+      justify-self: center !important;
+      width: min(100%, 340px) !important;
+      max-width: 340px !important;
+      margin-inline: auto !important;
       padding: 0 !important;
       border: 0 !important;
       border-radius: 0 !important;
@@ -538,7 +549,9 @@
       min-height: 31px !important;
       max-height: 31px !important;
       padding: 0 10px !important;
-      line-height: 31px !important;
+      line-height: 1 !important;
+      display: grid !important;
+      place-items: center !important;
     }
 
     .love-diagnosis-tabs__item:nth-child(1) {
@@ -552,18 +565,18 @@
     }
 
     .love-diagnosis-tabs__item:nth-child(3) {
-      grid-column: 1 !important;
-      grid-row: 2 !important;
+      grid-column: 3 !important;
+      grid-row: 1 !important;
     }
 
     .love-diagnosis-tabs__item:nth-child(4) {
-      grid-column: 2 !important;
+      grid-column: 1 !important;
       grid-row: 2 !important;
     }
 
     .love-diagnosis-tabs__item:nth-child(5) {
-      grid-column: 1 !important;
-      grid-row: 3 !important;
+      grid-column: 2 !important;
+      grid-row: 2 !important;
     }
 
     [data-love-diagnosis-panel] {
@@ -841,8 +854,8 @@
       position: relative;
       overflow: hidden;
       width: 100% !important;
-      min-height: 520px !important;
-      padding: 54px 28px 46px !important;
+      min-height: 430px !important;
+      padding: 30px 24px 28px !important;
       border: 1px solid rgba(248, 171, 184, .56) !important;
       border-radius: 26px !important;
       background:
@@ -854,7 +867,7 @@
     .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis-tabs {
       width: 100% !important;
       justify-self: stretch !important;
-      margin-bottom: 18px !important;
+      margin-bottom: 12px !important;
     }
 
     .page--diagnosis:has([data-love-diagnosis-start]) [data-love-diagnosis-panel] > .love-diagnosis::before {
@@ -885,12 +898,12 @@
 
     .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__hero {
       z-index: 1;
-      gap: 16px !important;
+      gap: 10px !important;
     }
 
     .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__eyebrow {
       color: #ee7888 !important;
-      font-size: 15px !important;
+      font-size: 13px !important;
       letter-spacing: .18em !important;
     }
 
@@ -917,15 +930,15 @@
     }
 
     .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-divider {
-      margin: 2px 0;
+      margin: 0;
     }
 
     .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__hero h3 {
       color: #624148 !important;
       font-family: "Yu Mincho", "Hiragino Mincho ProN", "YuMincho", serif !important;
-      font-size: clamp(28px, 7vw, 42px) !important;
+      font-size: clamp(24px, 6vw, 34px) !important;
       font-weight: 800 !important;
-      line-height: 1.75 !important;
+      line-height: 1.48 !important;
       letter-spacing: 0 !important;
     }
 
@@ -939,9 +952,9 @@
       margin: 0 auto !important;
       color: #76585d !important;
       font-family: "Yu Mincho", "Hiragino Mincho ProN", "YuMincho", serif !important;
-      font-size: 15px !important;
+      font-size: 13px !important;
       font-weight: 700 !important;
-      line-height: 1.95 !important;
+      line-height: 1.7 !important;
       letter-spacing: .06em !important;
     }
 
@@ -953,15 +966,15 @@
     .page--diagnosis:has([data-love-diagnosis-start]) [data-love-diagnosis-start] {
       z-index: 1;
       width: min(100%, 320px) !important;
-      min-height: 72px !important;
-      margin-top: 34px !important;
+      min-height: 60px !important;
+      margin-top: 22px !important;
       padding: 0 28px !important;
       border: 1px solid rgba(255, 255, 255, .76) !important;
       border-radius: 999px !important;
       background: linear-gradient(180deg, #f99aad, #ee6f86) !important;
       color: #fff !important;
       box-shadow: 0 16px 28px rgba(229, 91, 111, .28), inset 0 1px rgba(255, 255, 255, .5) !important;
-      font-size: 20px !important;
+      font-size: 18px !important;
       font-weight: 800 !important;
       letter-spacing: .1em !important;
     }
