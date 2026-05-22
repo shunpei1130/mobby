@@ -6648,6 +6648,24 @@
             <div class="compositing-loading-spinner" aria-hidden="true"></div>
             <p class="compositing-loading-text">画像を処理しています...</p>
           </div>
+          <div id="compositingSplash" class="compositing-splash" hidden role="dialog" aria-modal="true" aria-label="ポスター作成のはじめ方">
+            <div class="compositing-splash__backdrop" aria-hidden="true"></div>
+            <div class="compositing-splash__card">
+              <button id="compositingSplashClose" class="compositing-splash__close" type="button" aria-label="閉じる">×</button>
+              <span class="compositing-splash__spark compositing-splash__spark--left" aria-hidden="true">✦</span>
+              <span class="compositing-splash__spark compositing-splash__spark--left-small" aria-hidden="true">✦</span>
+              <span class="compositing-splash__spark compositing-splash__spark--right" aria-hidden="true">♥</span>
+              <span class="compositing-splash__spark compositing-splash__spark--right-small" aria-hidden="true">✦</span>
+              <span class="compositing-splash__accent compositing-splash__accent--left" aria-hidden="true"></span>
+              <span class="compositing-splash__accent compositing-splash__accent--right" aria-hidden="true"></span>
+              <span class="compositing-splash__heartline" aria-hidden="true"></span>
+              <div id="compositingSplashContent" class="compositing-splash__content"></div>
+              <div class="compositing-splash__count" id="compositingSplashCount">1 / 4</div>
+              <div class="compositing-splash__dots" id="compositingSplashDots" aria-hidden="true"></div>
+              <button id="compositingSplashNext" class="compositing-splash__next" type="button">次へ</button>
+              <button id="compositingSplashSkip" class="compositing-splash__skip" type="button">スキップ</button>
+            </div>
+          </div>
           <div class="compositing-head">
             <h2>ポスター作成</h2>
             <p id="compositingLead">背景を抜くかそのまま使うかを選んで、テンプレに配置できます。外部サイトで背景透過した画像を使用するときれいな画像が完成します。</p>
@@ -8979,6 +8997,7 @@
         return;
       }
       openPopup('compositingPopup');
+      window.showCompositingSplash?.();
     });
     document.getElementById('goMobbyDiagnosis')?.addEventListener('click', () => openPopup('diagnosisPopup'));
     const diagnosisLauncher = document.getElementById('openPricePopup');

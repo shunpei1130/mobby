@@ -41,6 +41,8 @@ const compositingState = {
   templateId: COMPOSITING_TEMPLATES[0]?.id || "",
   templateImage: null,
   subjectCanvas: null,
+  splashIndex: 0,
+  splashShown: false,
   dragPointerId: null,
   dragOffsetX: 0,
   dragOffsetY: 0,
@@ -51,6 +53,104 @@ const compositingState = {
     rotation: 0
   }
 };
+
+function getCompositingSplashSteps() {
+  const mainTemplate = COMPOSITING_TEMPLATES[0];
+  const secondTemplate = COMPOSITING_TEMPLATES[1] || mainTemplate;
+  const thirdTemplate = COMPOSITING_TEMPLATES[2] || mainTemplate;
+  const splashPosterSrc = "compositing/reference/flier_mobby.webp";
+  return [
+    {
+      title: "テンプレートを選ぼう",
+      text: "まずは好きなポスターテンプレートを選択。<br>雰囲気に合うデザインから始められます。",
+      visual: `
+        <div class="compositing-splash__mock">
+          <div class="compositing-splash__mock-title">テンプレート <span>⌄</span></div>
+          <div class="compositing-splash__template">
+            <span class="compositing-splash__template-thumb"><img src="${mainTemplate.src}" alt=""></span>
+            <span><strong>${mainTemplate.name}</strong><span>${mainTemplate.description}</span></span>
+          </div>
+          <div class="compositing-splash__template">
+            <span class="compositing-splash__template-thumb"><img src="${secondTemplate.src}" alt=""></span>
+            <span><strong>${secondTemplate.name}</strong><span>${secondTemplate.description}</span></span>
+          </div>
+          <div class="compositing-splash__template">
+            <span class="compositing-splash__template-thumb"><img src="${thirdTemplate.src}" alt=""></span>
+            <span><strong>${thirdTemplate.name}</strong><span>${thirdTemplate.description}</span></span>
+          </div>
+        </div>`
+    },
+    {
+      title: "画像をアップロード",
+      text: "合成したい画像を選んでアップロード。<br>背景を抜いて使うか、そのまま使うかも選べます。",
+      visual: `
+        <div class="compositing-splash__mock">
+          <div class="compositing-splash__upload">
+            <strong>画像をアップロード</strong>
+            <div class="compositing-splash__upload-box"><span class="compositing-splash__image-icon"></span><span>タップして画像を選ぶ</span></div>
+            <div class="compositing-splash__down">⌄</div>
+            <div class="compositing-splash__choice"><span class="compositing-splash__cut-icon"></span>背景を抜いて使う</div>
+            <div class="compositing-splash__plain-choice"><span class="compositing-splash__small-image-icon"></span>画像をそのまま使う</div>
+          </div>
+        </div>`
+    },
+    {
+      title: "画像を調整しよう",
+      text: "合成した画像の位置や見え方を調整。<br>人物サイズや角度を整えて、自然な仕上がりにできます。",
+      visual: `
+        <div class="compositing-splash__poster"><img src="${splashPosterSrc}" alt=""></div>
+        <div class="compositing-splash__sliders">
+          <div class="compositing-splash__slider-label">人物サイズ</div>
+          <div class="compositing-splash__slider"></div>
+          <div class="compositing-splash__slider-label">角度調整</div>
+          <div class="compositing-splash__slider"></div>
+        </div>`
+    },
+    {
+      title: "保存して完了",
+      text: "仕上がりを確認したら画像を保存。<br>あなただけのMobbyポスターが完成です。",
+      visual: `<div class="compositing-splash__poster compositing-splash__poster--complete"><img src="${splashPosterSrc}" alt=""><span class="compositing-splash__save-pill">画像を保存</span></div>`
+    }
+  ];
+}
+
+function renderCompositingSplash() {
+  const content = document.getElementById("compositingSplashContent");
+  const count = document.getElementById("compositingSplashCount");
+  const dots = document.getElementById("compositingSplashDots");
+  const next = document.getElementById("compositingSplashNext");
+  if (!content || !count || !dots || !next) return;
+
+  const steps = getCompositingSplashSteps();
+  const index = Math.min(Math.max(compositingState.splashIndex, 0), steps.length - 1);
+  const step = steps[index];
+  content.className = `compositing-splash__content compositing-splash__content--step${index + 1}`;
+  content.innerHTML = `
+    <div class="compositing-splash__badge">STEP ${index + 1}</div>
+    <h3 class="compositing-splash__title">${step.title}</h3>
+    <p class="compositing-splash__text">${step.text}</p>
+    ${step.visual}
+  `;
+  count.textContent = `${index + 1} / ${steps.length}`;
+  dots.innerHTML = steps.map((_, dotIndex) => `<span class="compositing-splash__dot ${dotIndex === index ? "is-active" : ""}"></span>`).join("");
+  next.textContent = index === steps.length - 1 ? "はじめる" : "次へ";
+}
+
+function hideCompositingSplash() {
+  const splash = document.getElementById("compositingSplash");
+  if (splash) splash.hidden = true;
+}
+
+function showCompositingSplash() {
+  const splash = document.getElementById("compositingSplash");
+  if (!splash) return;
+  compositingState.splashIndex = 0;
+  compositingState.splashShown = true;
+  renderCompositingSplash();
+  splash.hidden = false;
+}
+
+window.showCompositingSplash = showCompositingSplash;
 
 function loadExternalScript(src) {
   const existing = document.querySelector(`script[src="${src}"]`);
@@ -371,6 +471,18 @@ function initCompositingTool() {
   setCompositingFlow(false);
   renderCompositingTemplates();
   setActiveCompositingTemplate(compositingState.templateId).catch(console.error);
+
+  document.getElementById("compositingSplashNext")?.addEventListener("click", () => {
+    const lastIndex = getCompositingSplashSteps().length - 1;
+    if (compositingState.splashIndex >= lastIndex) {
+      hideCompositingSplash();
+      return;
+    }
+    compositingState.splashIndex += 1;
+    renderCompositingSplash();
+  });
+  document.getElementById("compositingSplashSkip")?.addEventListener("click", hideCompositingSplash);
+  document.getElementById("compositingSplashClose")?.addEventListener("click", hideCompositingSplash);
 
   document.querySelectorAll("[data-compositing-toggle]").forEach((button) => {
     button.addEventListener("click", () => {
