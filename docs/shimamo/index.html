@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>しまも きもちチューニング診断 | Mobby</title>
+  <meta name="description" content="20問であなたの音楽の受け取り方、表現ムード、楽しみ方を8タイプから診断する、しまもさん向けモビー診断ラフ案です。" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="しまも きもちチューニング診断" />
+  <meta property="og:description" content="寄り添い、高鳴り、繊細、力強さ。あなたに近い音楽ムードを20問で診断します。" />
+  <meta property="og:image" content="img/shimamo-mobby-studio.png" />
+  <meta name="theme-color" content="#f7fbf7" />
+  <link rel="icon" type="image/jpeg" href="../16school/favicon/fav.jpg" />
+  <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --font-ja: 'Yomogi', cursive;
+      --bg: #f7fbf7;
+      --surface: #ffffff;
+      --text-main: #1d1d1f;
+      --text-sub: #77777d;
+      --accent: #e75d6b;
+      --accent-soft: #fff0f2;
+      --line: #d6d9d8;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+      --shadow-lg: 0 12px 30px rgba(38,60,58,0.10);
+      --radius: 20px;
+      --radius-sm: 12px;
+    }
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    body {
+      margin: 0;
+      font-family: var(--font-ja);
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    .wrap { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand { display: flex; align-items: center; gap: 0; cursor: pointer; }
+    .logo {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background-image: url('../16school/logo.jpg');
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 4px 10px rgba(231,93,107,0.26);
+      margin-right: 10px;
+    }
+    .title h1 { font-size: 14px; margin: 0; font-weight: 600; }
+    .title p { margin: 0; color: var(--text-sub); font-size: 12px; }
+    .nav { display: flex; gap: 12px; align-items: center; }
+    .nav a {
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+    .nav a:hover { background: rgba(0,0,0,0.05); }
+    .nav a.active { background: var(--accent-soft); color: var(--accent); }
+    button, .social-link {
+      border: 1px solid transparent;
+      background: rgba(0,0,0,0.05);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+      transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1), background 0.2s ease, box-shadow 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    button:hover, .social-link:hover { background: rgba(0,0,0,0.08); transform: translateY(-1px); }
+    button:active, .social-link:active { transform: translateY(0) scale(0.96); }
+    button.primary, .social-link.primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(231,93,107,0.26);
+    }
+    button.primary:hover, .social-link.primary:hover {
+      background: #ef6b78;
+      box-shadow: 0 6px 16px rgba(231,93,107,0.34);
+    }
+    button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+    .panel {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      padding: 32px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255,255,255,0.8);
+    }
+    .kicker {
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0 0 8px;
+    }
+    .big { font-size: 24px; font-weight: 700; margin: 0 0 16px; color: var(--text-main); }
+    .text-body { color: var(--text-sub); font-size: 14px; line-height: 1.8; }
+    .hero-image {
+      width: min(360px, 100%);
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 18px;
+      box-shadow: var(--shadow-sm);
+      margin: 0 auto 28px;
+      display: block;
+    }
+    .progress-wrap { margin-bottom: 20px; }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-sub);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+    .progress-track { height: 8px; border-radius: 999px; background: rgba(0,0,0,0.06); overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 999px; background: var(--accent); transition: width 0.25s ease; }
+    .qCard {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 22px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .qText { font-size: 16px; line-height: 1.8; margin: 0 0 18px; color: var(--text-main); }
+    .likert-labels {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--text-sub);
+      font-size: 11px;
+      margin-bottom: 10px;
+    }
+    .likert-buttons { display: grid; grid-template-columns: repeat(7, minmax(28px, 1fr)); gap: 8px; align-items: center; }
+    .likert-btn {
+      aspect-ratio: 1 / 1;
+      min-width: 0;
+      padding: 0;
+      border-radius: 50%;
+      border: 2px solid var(--line);
+      background: #fff;
+      box-shadow: none;
+    }
+    .likert-btn.left { border-color: rgba(74,124,140,0.58); }
+    .likert-btn.mid { border-color: #b8b8bd; }
+    .likert-btn.right { border-color: rgba(255,149,0,0.58); }
+    .likert-btn.selected.left { background: #4a7c8c; border-color: #4a7c8c; }
+    .likert-btn.selected.mid { background: #8e8e93; border-color: #8e8e93; }
+    .likert-btn.selected.right { background: #ff9500; border-color: #ff9500; }
+    .fade-in { animation: fadeIn 0.35s ease both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .result-hero { text-align: center; }
+    .result-img {
+      width: min(420px, 100%);
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 20px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 22px;
+    }
+    .type-code {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 92px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .axis-row { margin: 18px 0; }
+    .axis-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--text-sub);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+    .axis-bar {
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #d9edf0 0%, #f6f6f6 50%, #ffe5c1 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .axis-dot {
+      position: absolute;
+      top: 50%;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      border: 4px solid var(--accent);
+      transform: translate(-50%, -50%);
+      box-shadow: var(--shadow-sm);
+    }
+    .section-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }
+    .mini { background: #fafafa; border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+    .mini h3 { margin: 0 0 8px; font-size: 14px; }
+    .mini p { margin: 0; color: var(--text-sub); font-size: 13px; line-height: 1.8; }
+    .characters-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 24px; }
+    .char-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-sm); }
+    .char-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+    .char-body { padding: 16px; }
+    .char-body h3 { margin: 0 0 8px; font-size: 16px; }
+    .char-body p { margin: 0; color: var(--text-sub); font-size: 13px; line-height: 1.7; }
+    .actions, .social-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+    .social-links { margin-top: 18px; }
+    @media (max-width: 600px) {
+      .wrap { padding: 28px 14px 60px; }
+      header { flex-direction: column; align-items: flex-start; margin-bottom: 28px; }
+      .panel { padding: 24px 16px; border-radius: 18px; }
+      .big { font-size: 22px; }
+      .qCard { padding: 18px 14px; }
+      .qText { font-size: 15px; }
+      .likert-buttons { gap: 6px; }
+      .section-grid, .characters-grid { grid-template-columns: 1fr; }
+      .social-link { width: calc(50% - 6px); padding: 10px 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand" id="brandHome">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="title">
+          <h1>しまも きもちチューニング診断</h1>
+          <p>Mobby rough preview</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="ページ内メニュー">
+        <a id="navDiagnosis" class="active">診断</a>
+        <a id="navCharacters">タイプ一覧</a>
+      </nav>
+    </header>
+    <main id="app"></main>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "shimamo_tuning_type_v1";
+    const PAGE_SIZE = 5;
+    const AXIS_KEYS = ["A", "B", "C"];
+    const SOCIAL_LINKS = [
+      {label:"Official", url:"https://shimamonx.jp/"},
+      {label:"Music", url:"https://shimamonx.lnk.to/bio"},
+      {label:"X", url:"https://twitter.com/shimamonx"},
+      {label:"Instagram", url:"https://www.instagram.com/shimamonx/"}
+    ];
+
+    const AXES = {
+      A: { key:"A", name:"音楽の受け取り方", left:"寄り添い", right:"高鳴り", leftCode:"よ", rightCode:"た" },
+      B: { key:"B", name:"表現ムード", left:"繊細", right:"力強さ", leftCode:"せ", rightCode:"つ" },
+      C: { key:"C", name:"楽しみ方", left:"浸る", right:"共有", leftCode:"ひ", rightCode:"し" }
+    };
+
+    const QUESTIONS = [
+      {id:"A1", axis:"A", text:"曲を聴くなら、まず心を落ち着かせてくれる声に惹かれる", reverse:false},
+      {id:"A2", axis:"A", text:"疲れた日は、そっと横にいてくれるような歌詞がほしくなる", reverse:false},
+      {id:"A3", axis:"A", text:"プレイリストには、深夜にひとりで聴きたい曲が多い", reverse:false},
+      {id:"A4", axis:"A", text:"初めて聴く曲でも、サビで一気に気分が上がると好きになりやすい", reverse:true},
+      {id:"A5", axis:"A", text:"ライブや動画では、思わず一緒に口ずさみたくなる瞬間を待っている", reverse:true},
+      {id:"A6", axis:"A", text:"落ち込んだ時ほど、背中を押してくれる明るい曲を選びたい", reverse:true},
+      {id:"A7", axis:"A", text:"音楽には、静かに包まれる日と一気に走り出したい日の両方がある", reverse:true},
+
+      {id:"B1", axis:"B", text:"声の小さな揺れや息づかいまで伝わる曲に弱い", reverse:false},
+      {id:"B2", axis:"B", text:"派手な展開より、言葉がじわっと残る曲を何度も聴き返す", reverse:false},
+      {id:"B3", axis:"B", text:"泣きたい気持ちを無理に元気づけず、ちゃんと置いておける曲が好き", reverse:false},
+      {id:"B4", axis:"B", text:"歌詞の一行に自分の気持ちが重なると、その曲が特別になる", reverse:false},
+      {id:"B5", axis:"B", text:"サビで景色が開けるような、力強いボーカルに心を持っていかれる", reverse:true},
+      {id:"B6", axis:"B", text:"悩みを吹き飛ばすような、まっすぐ届くメッセージに惹かれる", reverse:true},
+      {id:"B7", axis:"B", text:"小さく始まって最後に大きく広がる曲展開が好きだ", reverse:true},
+
+      {id:"C1", axis:"C", text:"好きな曲は、まずひとりで何回も聴いて自分の中に入れたい", reverse:false},
+      {id:"C2", axis:"C", text:"感情が動いた曲ほど、すぐには言葉にせず余韻を残しておきたい", reverse:false},
+      {id:"C3", axis:"C", text:"イヤホンで世界を閉じて、曲の中に深く潜る時間が好き", reverse:false},
+      {id:"C4", axis:"C", text:"いい曲に出会ったら、すぐ誰かに送ったり投稿したくなる", reverse:true},
+      {id:"C5", axis:"C", text:"コメントや感想で、同じ曲を好きな人と気持ちを分け合いたい", reverse:true},
+      {id:"C6", axis:"C", text:"ライブや配信では、みんなで同じ瞬間を作っている感じがうれしい", reverse:true}
+    ];
+
+    const CHARACTERS = {
+      "よせひ": {
+        name:"余白に寄り添うモビィ",
+        summary:"静かな声や言葉の余韻を、自分のペースで大切に受け取るタイプ。",
+        catch:"あなたは、曲の中の小さな息づかいまで拾える人です。",
+        hook:"派手に盛り上がるより、心の奥にそっと触れる一節が残ります。夜の部屋、イヤホン、ノートの端に書きたくなる言葉。しまもさんの繊細な歌声と相性がいい、余白を味わえる聞き手です。",
+        downside:"気持ちを抱え込みすぎると、いい曲ほどひとりで閉じ込めてしまうことも。ほんの一言だけでも感想を外に出すと、余韻がやさしく広がります。",
+        perception:"落ち着いている、感受性が深い、言葉を丁寧に受け取る人と思われやすいです。",
+        strength:"小さな感情の揺れを見逃さず、自分だけの大切な曲に育てられること。",
+        weakness:"共感していても表に出にくく、周りには静かに見えることがあります。",
+        advice:"今日は、刺さった歌詞を一行だけメモしてみてください。気持ちのチューニングが合いやすくなります。",
+        image:"img/shimamo-mobby-studio.png"
+      },
+      "よせし": {
+        name:"やさしさ共有モビィ",
+        summary:"寄り添う曲の温度を、誰かにもそっと分けられるタイプ。",
+        catch:"あなたは、やさしい曲を小さな灯りみたいに手渡せる人です。",
+        hook:"つらい日に聴いて救われた曲、眠る前に落ち着けた声、そっと背中をなでてくれる歌詞。自分が受け取った温度を、押しつけずに共有できるのが魅力です。",
+        downside:"相手を気遣うほど、自分の気持ちを後回しにしがち。まずは自分がどう感じたかを言葉にすると、共有にも芯が出ます。",
+        perception:"やさしい、安心する、いい曲を教えてくれる人と思われやすいです。",
+        strength:"共感を会話に変えて、音楽を人との距離を縮めるきっかけにできること。",
+        weakness:"相手の反応を見すぎると、自分の好きが少し揺れやすくなります。",
+        advice:"今日は、好きな曲を一曲だけ誰かに送るならどの曲かを選んでみてください。",
+        image:"img/shimamo-mobby-live.png"
+      },
+      "よつひ": {
+        name:"内熱バラードモビィ",
+        summary:"静かに聴きながら、内側では強い感情を燃やしているタイプ。",
+        catch:"あなたは、やわらかい声の奥にある強さを見つけられる人です。",
+        hook:"泣ける曲、踏ん張れる曲、言えなかった気持ちを代わりに歌ってくれる曲。外側は静かでも、心の中では大きなドラマが動いています。",
+        downside:"感情が深く入りすぎると、曲から戻るまで時間がかかることも。聴き終わったら水を飲む、少し歩くなど、現実へ戻る合図を作ると楽です。",
+        perception:"芯がある、感情が豊か、見た目より熱い人と思われやすいです。",
+        strength:"静かな曲からも力を受け取り、自分の中で前に進むエネルギーへ変えられること。",
+        weakness:"言葉にする前に気持ちがいっぱいになりやすいです。",
+        advice:"今日は、最後にもう一度聴きたいサビを決めてからリピートすると、余韻が整います。",
+        image:"img/shimamo-mobby-studio.png"
+      },
+      "よつし": {
+        name:"エール共鳴モビィ",
+        summary:"寄り添いから始まり、最後は周りにも力を渡せるタイプ。",
+        catch:"あなたは、やさしさを応援に変えられる人です。",
+        hook:"落ち込んでいる誰かに、がんばれだけではなく大丈夫も届けたい。しまもさんの繊細さと力強さの両方に反応しやすく、曲の温度を共鳴として広げられます。",
+        downside:"励ましたい気持ちが強い時ほど、自分も疲れていることに気づきにくいです。まず自分の音量を少し下げると、言葉がやさしく届きます。",
+        perception:"前向き、聞き上手、自然に励ましてくれる人と思われやすいです。",
+        strength:"相手の気持ちを見ながら、必要な時にちょうどいいエールを届けられること。",
+        weakness:"周りを元気づけようとして、休むタイミングを逃すことがあります。",
+        advice:"今日は、応援したい人に送るならどのフレーズかをひとつ選んでみてください。",
+        image:"img/shimamo-mobby-live.png"
+      },
+      "たせひ": {
+        name:"ときめき余韻モビィ",
+        summary:"高鳴る曲に惹かれながら、余韻はひとりでじっくり味わうタイプ。",
+        catch:"あなたは、胸が弾んだ瞬間を大切に保存できる人です。",
+        hook:"サビで一気に好きになる、でもすぐには騒がず心の中で何度も再生する。明るさと繊細さが同居していて、曲のきらめきを自分だけの宝物にできます。",
+        downside:"好きが強いほど、言葉にするのをためらうことも。短い感想でも残すと、あとで見返した時にその日の高鳴りが戻ってきます。",
+        perception:"感性がかわいい、好きなものへの集中力がある、余韻を楽しめる人と思われやすいです。",
+        strength:"ときめきを深く味わい、自分の気分を上手に上げられること。",
+        weakness:"好きな気持ちをしまい込みすぎて、共有のチャンスを逃すことがあります。",
+        advice:"今日は、リピートしたくなった瞬間の時間を覚えておくと、好きの理由が見えます。",
+        image:"img/shimamo-mobby-studio.png"
+      },
+      "たせし": {
+        name:"きらめき拡散モビィ",
+        summary:"心が動いた瞬間を、SNSや会話で軽やかに広げられるタイプ。",
+        catch:"あなたは、いい曲のきらめきを見つけたらすぐ光らせられる人です。",
+        hook:"サビ、声、歌詞、表情。好きになったポイントをすぐ言葉にできて、周りにも聴いてほしくなります。しまもさんのSNS発の広がり方と相性がいい、熱量の伝達役です。",
+        downside:"反応が気になりすぎると、自分の好きより数字や空気を見てしまうことも。まず一番好きな理由を自分に言ってから共有すると、投稿に温度が残ります。",
+        perception:"明るい、発見が早い、好きなものを楽しそうに広げる人と思われやすいです。",
+        strength:"曲の魅力を短い言葉や空気感で伝え、誰かの再生ボタンを押せること。",
+        weakness:"盛り上げたい気持ちが先に立つと、余韻を置き去りにしがちです。",
+        advice:"今日は、曲をすすめるなら一言目に何を書くかだけ決めてみてください。",
+        image:"img/shimamo-mobby-live.png"
+      },
+      "たつひ": {
+        name:"直感リピートモビィ",
+        summary:"力強いフックに直感で惹かれ、ひとりで何度も聴き込むタイプ。",
+        catch:"あなたは、刺さった曲を自分の中で育てるリピート職人です。",
+        hook:"一度引っかかったメロディや言葉を、何回も聴いて確かめたい人。強いサビやまっすぐな声に惹かれながら、最終的には自分だけの解釈へ深く潜っていきます。",
+        downside:"気に入った曲に集中しすぎると、新しい曲へ移るまで時間がかかることも。似た気分の曲を一曲だけ足すと、世界が広がります。",
+        perception:"こだわりがある、集中力が高い、好きな曲への解像度が高い人と思われやすいです。",
+        strength:"直感で掴んだ好きの理由を、聴き込みながら自分の言葉にできること。",
+        weakness:"強く刺さるほど、他の人と感想を合わせるのが難しくなることがあります。",
+        advice:"今日は、リピートしている曲の好きな音をひとつだけ探してみてください。",
+        image:"img/shimamo-mobby-studio.png"
+      },
+      "たつし": {
+        name:"フルボリュームライブモビィ",
+        summary:"高鳴りと力強さを、みんなで浴びるように楽しむタイプ。",
+        catch:"あなたは、曲が始まった瞬間に場の温度を上げられる人です。",
+        hook:"ライブ、配信、コメント、みんなで同じサビを待つ時間。強い声やまっすぐなメッセージに反応し、その熱を周りにも広げられます。",
+        downside:"常に盛り上がっていたい時ほど、静かな曲を飛ばしてしまうことも。たまに音量を下げると、次の高鳴りがもっと鮮やかになります。",
+        perception:"元気、反応がいい、一緒に聴くと楽しい人と思われやすいです。",
+        strength:"音楽の熱をその場の空気に変え、周りを巻き込んで楽しめること。",
+        weakness:"勢いがある分、細かい感情の変化を見落としやすい時があります。",
+        advice:"今日は、盛り上がる曲の前に静かな一曲を挟むと、気持ちの波がきれいに作れます。",
+        image:"img/shimamo-mobby-live.png"
+      }
+    };
+
+    const ANS_LABEL = {
+      1:"そう思う", 2:"ややそう思う", 3:"少しそう思う", 4:"どちらでもない",
+      5:"少しそう思わない", 6:"ややそう思わない", 7:"そう思わない"
+    };
+    const defaultState = () => ({step:"intro", page:0, answers:{}, questionOrder:[], axes:null});
+    let state = loadState();
+    const app = document.getElementById("app");
+
+    function loadState(){
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? {...defaultState(), ...JSON.parse(raw)} : defaultState();
+      } catch { return defaultState(); }
+    }
+    function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    function resetDiagnosis(){ state = defaultState(); localStorage.removeItem(STORAGE_KEY); render(); }
+    function getQuestionOrder(){
+      if(Array.isArray(state.questionOrder) && state.questionOrder.length === QUESTIONS.length) return state.questionOrder;
+      state.questionOrder = AXIS_KEYS.flatMap(axis => QUESTIONS.filter(q => q.axis === axis)).map(q => q.id);
+      saveState();
+      return state.questionOrder;
+    }
+    function getQuestions(){ return getQuestionOrder().map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean); }
+
+    function computeResult(){
+      const SCALE = 7, MID = 4, MAX_DEV = 3, GAMMA = 1.35, EXTREME_BONUS = 0.35, COHERENCE_SHRINK = 0.20;
+      const raw = {A:0, B:0, C:0}, absRaw = {A:0, B:0, C:0}, maxRaw = {A:0, B:0, C:0}, allAnswers = [];
+      const weightOf = ans => (ans === 1 || ans === 7) ? 1 + EXTREME_BONUS : 1;
+      const shapeAns = ans => {
+        const centered = MID - ans;
+        const t = centered / MAX_DEV;
+        const mag = Math.min(1, Math.abs(t));
+        return Math.sign(t) * Math.pow(mag, GAMMA);
+      };
+      QUESTIONS.forEach(q => {
+        const ansRaw = state.answers[q.id];
+        if(!ansRaw) return;
+        allAnswers.push(ansRaw);
+        const ansAdj = q.reverse ? (SCALE + 1 - ansRaw) : ansRaw;
+        const w = weightOf(ansRaw) * (q.importance ?? 1);
+        const contrib = w * shapeAns(ansAdj);
+        raw[q.axis] += contrib;
+        absRaw[q.axis] += Math.abs(contrib);
+        maxRaw[q.axis] += w;
+      });
+      const norm = {}, pos = {}, hard = {}, decisiveness = {}, confidenceLevel = {}, confidenceLabel = {};
+      AXIS_KEYS.forEach(k => {
+        const denom = maxRaw[k] || 1;
+        const coherence = absRaw[k] ? Math.abs(raw[k]) / absRaw[k] : 0;
+        const adjusted = raw[k] * (1 - COHERENCE_SHRINK * (1 - coherence));
+        norm[k] = Math.max(-1, Math.min(1, adjusted / denom));
+        hard[k] = norm[k] > 0 ? "L" : "R";
+        pos[k] = Math.max(0, Math.min(100, 50 - norm[k] * 50));
+        decisiveness[k] = Math.min(1, Math.abs(norm[k]));
+        if(decisiveness[k] >= 0.50) { confidenceLevel[k] = "strong"; confidenceLabel[k] = "はっきり"; }
+        else if(decisiveness[k] >= 0.25) { confidenceLevel[k] = "moderate"; confidenceLabel[k] = "やや"; }
+        else { confidenceLevel[k] = "mid"; confidenceLabel[k] = "場面による"; }
+      });
+      const code = (hard.A === "L" ? AXES.A.leftCode : AXES.A.rightCode) + (hard.B === "L" ? AXES.B.leftCode : AXES.B.rightCode) + (hard.C === "L" ? AXES.C.leftCode : AXES.C.rightCode);
+      const freq = {1:0,2:0,3:0,4:0,5:0,6:0,7:0};
+      allAnswers.forEach(a => freq[a]++);
+      const straightLine = allAnswers.length ? Math.max(...Object.values(freq)) / allAnswers.length >= 0.80 : false;
+      const adjacentTypes = [];
+      AXIS_KEYS.forEach(k => {
+        if(confidenceLevel[k] === "mid") {
+          const altHard = {...hard, [k]: hard[k] === "L" ? "R" : "L"};
+          const altCode = (altHard.A === "L" ? AXES.A.leftCode : AXES.A.rightCode) + (altHard.B === "L" ? AXES.B.leftCode : AXES.B.rightCode) + (altHard.C === "L" ? AXES.C.leftCode : AXES.C.rightCode);
+          if(CHARACTERS[altCode] && altCode !== code) adjacentTypes.push({axis:k, code:altCode, name:CHARACTERS[altCode].name});
+        }
+      });
+      return {code, char: CHARACTERS[code], norm, pos, hard, decisiveness, confidenceLevel, confidenceLabel, straightLine, adjacentTypes};
+    }
+
+    function isComplete(){ return Object.keys(state.answers || {}).length >= QUESTIONS.length; }
+    function render(){
+      document.getElementById("navDiagnosis").classList.toggle("active", state.step !== "characters");
+      document.getElementById("navCharacters").classList.toggle("active", state.step === "characters");
+      if(state.step === "intro") renderIntro();
+      else if(state.step === "quiz") renderQuiz();
+      else if(state.step === "characters") renderCharacters();
+      else renderResult();
+    }
+    function socialLinksHtml(){
+      return `<div class="social-links">${SOCIAL_LINKS.map((link, i) => `<a class="social-link ${i === 1 ? "primary" : ""}" href="${link.url}" target="_blank" rel="noopener">${link.label}</a>`).join("")}</div>`;
+    }
+    function renderIntro(){
+      const count = Object.keys(state.answers).length;
+      app.innerHTML = `
+        <div class="panel fade-in" style="text-align:center; padding:60px 20px;">
+          <img class="hero-image" src="img/shimamo-mobby-studio.png" alt="しまもさんの音楽性に合わせたホームスタジオのMobby">
+          <p class="kicker">Mobby rough preview</p>
+          <h2 class="big">しまも きもちチューニング診断</h2>
+          <p class="text-body" style="max-width:460px; margin:0 auto 30px;">直感で選ぶ20問から、あなたが音楽をどう受け取り、どんな声や言葉に惹かれ、どんなふうに楽しむかを診断します。</p>
+          <button class="primary" id="btnStart" style="padding:16px 32px; font-size:16px;">${count > 0 ? "診断を再開する" : "診断をはじめる"}</button>
+          ${count > 0 ? `<p style="font-size:12px; color:#86868b; margin-top:16px;">${count} / ${QUESTIONS.length}問 回答済み</p>` : ""}
+          ${socialLinksHtml()}
+        </div>`;
+      document.getElementById("btnStart").onclick = () => {
+        state.step = "quiz";
+        getQuestionOrder();
+        const idx = getQuestions().findIndex(q => !state.answers[q.id]);
+        state.page = idx >= 0 ? Math.floor(idx / PAGE_SIZE) : 0;
+        saveState();
+        render();
+      };
+    }
+    function renderQuiz(){
+      const qs = getQuestions();
+      const start = state.page * PAGE_SIZE;
+      const currentQs = qs.slice(start, start + PAGE_SIZE);
+      const totalPage = Math.ceil(qs.length / PAGE_SIZE);
+      const progress = Math.round((Object.keys(state.answers).length / qs.length) * 100);
+      const qHtml = currentQs.map((q, i) => {
+        const val = state.answers[q.id];
+        return `<div class="qCard fade-in" style="animation-delay:${i*0.05}s"><div class="kicker" style="color:#86868b; margin-bottom:4px;">Q${start+i+1}</div><p class="qText">${q.text}</p><div class="likert7"><div class="likert-labels"><span>${AXES[q.axis].left}</span><span>${AXES[q.axis].right}</span></div><div class="likert-buttons">${[1,2,3,4,5,6,7].map(n => { const side = n <= 3 ? "left" : (n === 4 ? "mid" : "right"); const sel = val === n ? "selected" : ""; return `<button type="button" class="likert-btn ${side} ${sel}" data-qid="${q.id}" data-val="${n}" aria-label="${ANS_LABEL[n]}"></button>`; }).join("")}</div></div></div>`;
+      }).join("");
+      app.innerHTML = `<div class="panel"><div class="progress-wrap"><div class="progress-meta"><span>進行状況</span><span>${progress}%</span></div><div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div></div><div style="margin-top:30px;">${qHtml}</div><div style="display:flex; justify-content:space-between; margin-top:30px;"><button id="btnPrev" ${state.page===0 ? "disabled":""}>戻る</button><button class="primary" id="btnNext">${state.page === totalPage - 1 ? "結果を見る" : "次へ"}</button></div></div>`;
+      currentQs.forEach(q => {
+        document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(btn => {
+          btn.onclick = () => {
+            state.answers[q.id] = parseInt(btn.dataset.val, 10);
+            document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(b => b.classList.remove("selected"));
+            btn.classList.add("selected");
+            saveState();
+            const p = Math.round((Object.keys(state.answers).length / qs.length) * 100);
+            document.querySelector(".progress-fill").style.width = p + "%";
+            document.querySelector(".progress-meta span:last-child").innerText = p + "%";
+          };
+        });
+      });
+      document.getElementById("btnPrev").onclick = () => { if(state.page > 0) state.page--; saveState(); render(); };
+      document.getElementById("btnNext").onclick = () => {
+        const missing = currentQs.filter(q => !state.answers[q.id]);
+        if(missing.length){ alert("このページの質問にすべて回答してください。"); return; }
+        if(state.page < totalPage - 1){ state.page++; saveState(); render(); }
+        else { state.axes = computeResult(); state.step = "result"; saveState(); render(); }
+      };
+    }
+    function renderAxis(result){
+      return AXIS_KEYS.map(k => {
+        const a = AXES[k];
+        return `<div class="axis-row"><div class="axis-meta"><span>${a.name}: ${a.left}</span><span>${result.confidenceLabel[k]}</span><span>${a.right}</span></div><div class="axis-bar"><div class="axis-dot" style="left:${result.pos[k]}%"></div></div></div>`;
+      }).join("");
+    }
+    function renderResult(){
+      if(!isComplete()){ state.step = "intro"; render(); return; }
+      const result = state.axes || computeResult();
+      const c = result.char;
+      app.innerHTML = `<div class="panel fade-in result-hero"><p class="kicker">RESULT</p><span class="type-code">TYPE ${result.code}</span><h2 class="big">${c.name}</h2><img class="result-img" src="${c.image}" alt="${c.name}"><p class="text-body" style="max-width:560px; margin:0 auto;">${c.summary}</p><p style="font-size:17px; font-weight:700; margin:22px auto 0; max-width:560px;">${c.catch}</p>${socialLinksHtml()}</div><div class="panel fade-in"><p class="kicker">3 AXES</p><h2 class="big">あなたのきもちチューニング</h2>${renderAxis(result)}${result.straightLine ? `<p class="text-body" style="color:#ff9500;">同じ回答が多めです。気分を変えてもう一度試すと、少し違う結果になるかもしれません。</p>` : ""}${result.adjacentTypes.length ? `<p class="text-body">近いタイプ: ${result.adjacentTypes.map(t => t.name).join(" / ")}</p>` : ""}</div><div class="panel fade-in"><p class="kicker">DETAIL</p><h2 class="big">このタイプの見え方</h2><div class="section-grid"><div class="mini"><h3>共感ポイント</h3><p>${c.hook}</p></div><div class="mini"><h3>しんどい時</h3><p>${c.downside}</p></div><div class="mini"><h3>周りから</h3><p>${c.perception}</p></div><div class="mini"><h3>今日のヒント</h3><p>${c.advice}</p></div><div class="mini"><h3>強み</h3><p>${c.strength}</p></div><div class="mini"><h3>気をつけたいこと</h3><p>${c.weakness}</p></div></div><div class="actions"><button class="primary" id="btnChars">8タイプを見る</button><button id="btnAgain">もう一度診断する</button></div></div>`;
+      document.getElementById("btnChars").onclick = () => { state.step = "characters"; saveState(); render(); };
+      document.getElementById("btnAgain").onclick = resetDiagnosis;
+    }
+    function renderCharacters(){
+      const cards = Object.entries(CHARACTERS).map(([code, c]) => `<article class="char-card fade-in"><img src="${c.image}" alt="${c.name}"><div class="char-body"><p class="kicker">TYPE ${code}</p><h3>${c.name}</h3><p>${c.summary}</p></div></article>`).join("");
+      app.innerHTML = `<div class="panel fade-in"><p class="kicker">8 TYPES</p><h2 class="big">きもちチューニング 8タイプ</h2><p class="text-body">しまもさんの声、歌詞、SNSで広がる共感、ライブ感から、8つの音楽ムードに分けています。</p><div class="characters-grid">${cards}</div><div class="actions"><button class="primary" id="btnBackDiagnosis">${isComplete() ? "結果に戻る" : "診断する"}</button></div></div>`;
+      document.getElementById("btnBackDiagnosis").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
+    }
+    document.getElementById("brandHome").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
+    document.getElementById("navDiagnosis").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
+    document.getElementById("navCharacters").onclick = () => { state.step = "characters"; saveState(); render(); };
+    render();
+  </script>
+</body>
+</html>
