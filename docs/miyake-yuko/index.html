@@ -205,6 +205,20 @@
     const STORAGE_KEY = "miyake_yuko_beauty_mood_type_v1";
     const PAGE_SIZE = 5;
     const AXIS_KEYS = ["A", "B", "C"];
+    const AGE_OPTIONS = [
+      {value:"13", label:"13歳"},
+      {value:"14", label:"14歳"},
+      {value:"15", label:"15歳"},
+      {value:"16", label:"16歳"},
+      {value:"17", label:"17歳"},
+      {value:"18", label:"18歳"},
+      {value:"19", label:"19歳"},
+      {value:"20", label:"20歳"},
+      {value:"21", label:"21歳"},
+      {value:"22", label:"22歳"},
+      {value:"23-25", label:"23〜25歳"},
+      {value:"26+", label:"26歳以上"}
+    ];
     const SOCIAL_LINKS = [
       {label:"Instagram", url:"https://www.instagram.com/yuko_miyake/"},
       {label:"X", url:"https://twitter.com/yukomiyake1128"},
@@ -401,7 +415,7 @@
     };
 
     const ANS_LABEL = {1:"そう思う", 2:"ややそう思う", 3:"少しそう思う", 4:"どちらでもない", 5:"少しそう思わない", 6:"ややそう思わない", 7:"そう思わない"};
-    const defaultState = () => ({step:"intro", page:0, answers:{}, questionOrder:[], axes:null});
+    const defaultState = () => ({step:"intro", page:0, answers:{}, questionOrder:[], axes:null, profile:{name:"", email:"", age:""}, sentToLead:false});
     let state = loadState();
     const app = document.getElementById("app");
 
@@ -413,6 +427,7 @@
     }
     function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
     function resetDiagnosis(){ state = defaultState(); localStorage.removeItem(STORAGE_KEY); render(); }
+    function isRegistered(){ return !!(state.profile && state.profile.name && state.profile.email && state.profile.age); }
     function getQuestionOrder(){
       if(Array.isArray(state.questionOrder) && state.questionOrder.length === QUESTIONS.length) return state.questionOrder;
       state.questionOrder = AXIS_KEYS.flatMap(axis => QUESTIONS.filter(q => q.axis === axis)).map(q => q.id);
@@ -478,6 +493,7 @@
       document.getElementById("navCharacters").classList.toggle("active", state.step === "characters");
       if(state.step === "intro") renderIntro();
       else if(state.step === "quiz") renderQuiz();
+      else if(state.step === "gate") renderGate();
       else if(state.step === "characters") renderCharacters();
       else renderResult();
     }
@@ -533,7 +549,7 @@
         const missing = currentQs.filter(q => !state.answers[q.id]);
         if(missing.length){ alert("このページの質問にすべて回答してください。"); return; }
         if(state.page < totalPage - 1){ state.page++; saveState(); render(); }
-        else { state.axes = computeResult(); state.step = "result"; saveState(); render(); }
+        else { state.axes = computeResult(); state.step = isRegistered() ? "result" : "gate"; saveState(); render(); }
       };
     }
     function renderAxis(result){
@@ -542,7 +558,101 @@
         return `<div class="axis-row"><div class="axis-meta"><span>${a.name}: ${a.left}</span><span>${result.confidenceLabel[k]}</span><span>${a.right}</span></div><div class="axis-bar"><div class="axis-dot" style="left:${result.pos[k]}%"></div></div></div>`;
       }).join("");
     }
+    function renderGate(){
+      if(isRegistered()){ state.step = "result"; saveState(); render(); return; }
+      const result = state.axes || computeResult();
+      const ageOptions = AGE_OPTIONS.map(age => `<button type="button" class="age-btn" data-age="${age.value}" style="padding:10px 16px; border-radius:12px; border:2px solid var(--line); background:#fff; color:var(--text-main); font-size:13px; cursor:pointer; transition:all 0.2s;">${age.label}</button>`).join("");
+      app.innerHTML = `<div class="panel fade-in">
+        <p class="kicker">あと少しで結果が見れます</p>
+        <h2 class="big">結果を見る前に入力してください</h2>
+        <p class="text-body" style="margin-top:-6px;">入力後すぐにあなたのビューティームードタイプを表示します。</p>
+        <div style="margin-top:22px; display:grid; gap:12px; max-width:520px;">
+          <div>
+            <div style="font-size:12px; color:var(--text-sub); margin-bottom:6px;">ニックネーム</div>
+            <input id="regName" type="text" placeholder="例）ゆうこ" style="width:100%; padding:14px; border-radius:14px; border:1px solid var(--line); background:#fff; color:var(--text-main); font-size:14px;">
+          </div>
+          <div>
+            <div style="font-size:12px; color:var(--text-sub); margin-bottom:6px;">メールアドレス</div>
+            <input id="regEmail" type="email" placeholder="example@gmail.com" style="width:100%; padding:14px; border-radius:14px; border:1px solid var(--line); background:#fff; color:var(--text-main); font-size:14px;">
+          </div>
+          <div>
+            <div style="font-size:12px; color:var(--text-sub); margin-bottom:6px;">年齢</div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">${ageOptions}</div>
+            <input id="regAge" type="hidden" value="">
+          </div>
+          <label style="display:flex; gap:10px; align-items:flex-start; font-size:12px; color:var(--text-sub);">
+            <input id="regConsent" type="checkbox" style="margin-top:3px;">
+            <span>入力した情報を連絡・改善のために保存することに同意します。</span>
+          </label>
+          <div id="regErr" style="display:none; color:#d33; font-size:12px;"></div>
+          <div style="display:flex; gap:10px; margin-top:8px;">
+            <button id="btnGateBack" style="background:transparent; color:var(--text-sub);">戻る</button>
+            <button class="primary" id="btnGateGo" style="flex:1; padding:14px 18px;">結果を見る</button>
+          </div>
+          <div id="gatePendingMsg" style="display:none; font-size:12px; color:var(--text-sub); text-align:center;">送信を受け付けました。結果を準備しています...</div>
+          <div style="margin-top:10px; font-size:11px; color:var(--text-sub);">送信される内容：ニックネーム、年齢、メール、診断タイプ、各軸の傾向</div>
+        </div>
+      </div>`;
+
+      const nameEl = document.getElementById("regName");
+      const emailEl = document.getElementById("regEmail");
+      const ageEl = document.getElementById("regAge");
+      nameEl.value = state.profile?.name || "";
+      emailEl.value = state.profile?.email || "";
+      ageEl.value = state.profile?.age || "";
+      const ageButtons = Array.from(document.querySelectorAll(".age-btn"));
+      const refreshAgeButtons = () => {
+        ageButtons.forEach(btn => {
+          const isSelected = btn.dataset.age === ageEl.value;
+          btn.style.background = isSelected ? "var(--accent-soft)" : "#fff";
+          btn.style.borderColor = isSelected ? "var(--accent)" : "var(--line)";
+          btn.style.color = isSelected ? "var(--accent)" : "var(--text-main)";
+        });
+      };
+      ageButtons.forEach(btn => {
+        btn.onclick = () => {
+          ageEl.value = btn.dataset.age || "";
+          refreshAgeButtons();
+        };
+      });
+      refreshAgeButtons();
+
+      document.getElementById("btnGateBack").onclick = () => { state.step = "quiz"; saveState(); render(); };
+      document.getElementById("btnGateGo").onclick = async () => {
+        const errEl = document.getElementById("regErr");
+        const pendingEl = document.getElementById("gatePendingMsg");
+        const submitEl = document.getElementById("btnGateGo");
+        errEl.style.display = "none";
+        const name = (nameEl.value || "").trim();
+        const email = (emailEl.value || "").trim();
+        const age = (ageEl.value || "").trim();
+        const consent = document.getElementById("regConsent").checked;
+        const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        if(!name){ errEl.textContent = "ニックネームを入力してください"; errEl.style.display = "block"; return; }
+        if(!age){ errEl.textContent = "年齢を選択してください"; errEl.style.display = "block"; return; }
+        if(!email){ errEl.textContent = "メールアドレスを入力してください"; errEl.style.display = "block"; return; }
+        if(!emailOk){ errEl.textContent = "メールアドレスを正しく入力してください"; errEl.style.display = "block"; return; }
+        if(!consent){ errEl.textContent = "同意にチェックしてください"; errEl.style.display = "block"; return; }
+        submitEl.disabled = true;
+        submitEl.textContent = "結果を準備中...";
+        pendingEl.style.display = "block";
+        state.profile = {name, email, age};
+        try {
+          await fetch("/api/lead", {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({name, email, age, type:result.code, diagnosisName:result.char?.name || "", source:"miyake-yuko", createdAt:new Date().toISOString()}),
+            keepalive:true
+          });
+          state.sentToLead = true;
+        } catch (_) {}
+        state.step = "result";
+        saveState();
+        render();
+      };
+    }
     function renderResult(){
+      if(!isRegistered()){ state.step = "gate"; saveState(); render(); return; }
       if(!isComplete()){ state.step = "intro"; render(); return; }
       const result = computeResult();
       state.axes = result;
@@ -638,6 +748,48 @@
       app.innerHTML = `<div class="panel fade-in"><p class="kicker">8 TYPES</p><h2 class="big">ビューティームード診断 8タイプ</h2><p class="text-body characters-intro">2枚のラフ画像をサンプルとして交互に配置しています。渡韓美容、韓国コスメ、透明感、グロウ感、ファンに共有したくなる提案力を、タイプごとに少しずつ表現しています。</p><div class="characters-grid">${cards}</div><div class="actions"><button class="primary" id="btnBackDiagnosis">${isComplete() ? "結果に戻る" : "診断する"}</button></div></div>`;
       document.getElementById("btnBackDiagnosis").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
     }
+    function showTypeGuideModal(){
+      const modalHtml = `<div id="typeGuideOverlay" style="position:fixed; inset:0; z-index:100; background:rgba(0,0,0,0.42); display:flex; align-items:center; justify-content:center; padding:18px;">
+        <div style="width:min(700px, 100%); max-height:88vh; overflow:auto; background:#fff; border-radius:20px; box-shadow:0 24px 60px rgba(0,0,0,0.22); padding:26px;">
+          <button id="typeGuideClose" aria-label="閉じる" style="float:right; width:36px; height:36px; padding:0; border-radius:50%;">×</button>
+          <div style="text-align:center; clear:both; margin-bottom:24px;">
+            <p class="kicker">TYPE CODE GUIDE</p>
+            <h2 class="big" style="font-size:22px; margin-bottom:8px;">タイプコード解説</h2>
+            <p class="text-body" style="font-size:13px;">3文字のひらがなコードは、渡韓ビューティームード診断の3つの軸の傾向を表しています。</p>
+          </div>
+          <div style="display:grid; gap:16px;">${renderTypeGuideContent()}</div>
+        </div>
+      </div>`;
+      document.body.insertAdjacentHTML("beforeend", modalHtml);
+      const overlay = document.getElementById("typeGuideOverlay");
+      document.getElementById("typeGuideClose").onclick = () => overlay.remove();
+      overlay.onclick = e => { if(e.target === overlay) overlay.remove(); };
+    }
+    function renderTypeGuideContent(){
+      const axisData = [
+        {key:"A", name:"美容設計", left:"つ", leftName:"積み重ね", leftDesc:"毎日のケアや定番を丁寧に育てる", right:"わ", rightName:"渡韓アップデート", rightDesc:"韓国美容や新しい情報を取り入れる"},
+        {key:"B", name:"印象ムード", left:"と", leftName:"透明感", leftDesc:"清潔感・淡さ・抜け感", right:"ぐ", rightName:"グロウ", rightDesc:"ツヤ・血色感・華やかな輝き"},
+        {key:"C", name:"届け方", left:"じ", leftName:"自分軸", leftDesc:"自分の感覚でじっくり選ぶ", right:"し", rightName:"シェア提案", rightDesc:"誰かに共有して楽しむ"}
+      ];
+      return axisData.map(a => `<div style="background:#f7f7f9; border-radius:16px; padding:18px;">
+        <h3 style="color:var(--accent); margin:0 0 12px; font-size:15px;">軸${a.key}: ${a.name}</h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div style="background:#fff; padding:14px; border-radius:12px; border-left:4px solid #34b27b;">
+            <div style="font-size:28px; font-weight:800; color:#34b27b; line-height:1;">${a.left}</div>
+            <div style="font-size:13px; font-weight:800; margin:8px 0 4px;">${a.leftName}</div>
+            <div style="font-size:11px; color:var(--text-sub);">${a.leftDesc}</div>
+          </div>
+          <div style="background:#fff; padding:14px; border-radius:12px; border-left:4px solid #9b6bd3;">
+            <div style="font-size:28px; font-weight:800; color:#9b6bd3; line-height:1;">${a.right}</div>
+            <div style="font-size:13px; font-weight:800; margin:8px 0 4px;">${a.rightName}</div>
+            <div style="font-size:11px; color:var(--text-sub);">${a.rightDesc}</div>
+          </div>
+        </div>
+      </div>`).join("") + `<div style="background:#fff; padding:16px; border-radius:12px; border:1px solid var(--line);">
+        <div style="font-size:13px; font-weight:800; color:var(--accent); margin-bottom:8px;">コードの読み方</div>
+        <div style="font-size:12px; color:var(--text-sub); line-height:1.7;">例: <span style="font-family:monospace; background:#f7f7f9; padding:2px 8px; border-radius:6px; font-weight:700;">つとじ</span><br>積み重ね(つ) + 透明感(と) + 自分軸(じ) = 積み重ね透明感モビィ</div>
+      </div>`;
+    }
     const titleHome = document.getElementById("titleHome");
     const titleMenu = document.getElementById("titleMenu");
     titleHome.onclick = (e) => {
@@ -650,7 +802,7 @@
     });
     document.getElementById("logoHome").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
     document.getElementById("navDiagnosis").onclick = (e) => { e.preventDefault(); state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
-    document.getElementById("navTypeGuide").onclick = (e) => { e.preventDefault(); state.step = "characters"; saveState(); render(); };
+    document.getElementById("navTypeGuide").onclick = (e) => { e.preventDefault(); showTypeGuideModal(); };
     document.getElementById("navCharacters").onclick = (e) => { e.preventDefault(); state.step = "characters"; saveState(); render(); };
     document.getElementById("btnReset").onclick = resetDiagnosis;
     render();
