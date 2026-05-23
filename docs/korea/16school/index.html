@@ -1918,6 +1918,7 @@ function gotoDiagnosisHome(){
   page: 0,
   answers: {},
   profile: { name: "", email: "", age: "" }, // ニックネーム、メール（任意）、年齢
+  sentToSheet: false,
   type: "", // 診断コード（ホーム側連携用）
   diagnosisName: "", // 診断名（ホーム側連携用）
   axes: null, // 診断軸（ホーム側連携用）
@@ -2179,6 +2180,7 @@ function gotoDiagnosisHome(){
       state.questionOrder = null;
       state.gender = null;
       state.profile = { name: "", email: "", age: "" };  // プロフィール情報もクリア
+      state.sentToSheet = false;
       state.type = "";
       state.diagnosisName = "";
       state.axes = null;
@@ -3216,6 +3218,8 @@ function renderGate(){
   };
 
   document.getElementById("btnGateGo").onclick = async () => {
+    const btn = document.getElementById("btnGateGo");
+    if (btn.disabled) return;
     const errEl = document.getElementById("regErr");
     errEl.style.display = "none";
 
@@ -3231,12 +3235,23 @@ function renderGate(){
     if(!email){ errEl.textContent = "이메일 주소를 입력해주세요"; errEl.style.display="block"; return; }
     if(!emailOk){ errEl.textContent = "メールアドレスを正しく入力してください"; errEl.style.display="block"; return; }
     if(!consent){ errEl.textContent = "同意にチェックしてください"; errEl.style.display="block"; return; }
+    if (state.sentToSheet) {
+      state.profile = { name, email, age };
+      state.step = "result";
+      saveState();
+      render();
+      return;
+    }
 
-    const btn = document.getElementById("btnGateGo");
     btn.disabled = true;
     btn.textContent = "送信中…";
 
     try{
+      state.profile = { name, email, age };
+      state.step = "result";
+      state.sentToSheet = true;
+      saveState();
+
       // 各質問の回答データを整形（質問ID -> 回答値のマッピング）
       const questionAnswers = {};
       const questions = getQuestions();
@@ -3305,6 +3320,10 @@ function renderGate(){
 
       render();
     }catch(e){
+      state.profile = { name: "", email: "", age: "" };
+      state.step = "gate";
+      state.sentToSheet = false;
+      saveState();
       errEl.textContent = e?.message || "전송에 실패했습니다";
       errEl.style.display="block";
       btn.disabled = false;

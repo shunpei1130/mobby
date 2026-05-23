@@ -2212,7 +2212,8 @@
     }
 
     /* FAQお問い合わせフォーム */
-    .faq-contact-form {
+    .faq-contact-form,
+    .collab-request-form {
       background: rgba(255, 255, 255, 0.88);
       border: 1px solid rgba(47, 79, 79, 0.14);
       border-radius: 22px;
@@ -2221,7 +2222,9 @@
     }
 
     .faq-contact-form input:focus,
-    .faq-contact-form textarea:focus {
+    .faq-contact-form textarea:focus,
+    .collab-request-form input:focus,
+    .collab-request-form textarea:focus {
       border-color: rgba(210, 105, 30, 0.4);
       box-shadow: 0 0 0 3px rgba(210, 105, 30, 0.1);
     }
@@ -7193,6 +7196,18 @@
       overflow: visible !important;
     }
 
+    .hero-collab-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="request"] {
+      border-color: rgba(73, 184, 124, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(210, 244, 224, 0.76), rgba(78, 200, 132, 0.34)) !important;
+      color: #176b3d !important;
+      font-size: 0.66rem !important;
+      line-height: 1.2 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(73, 184, 124, 0.18) !important;
+    }
+
     .hero-collab-diagnosis-menu .hero-collab-diagnosis-list {
       list-style: none;
       justify-content: center !important;
@@ -7598,11 +7613,24 @@
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16love/index.html" data-diagnosis-item="love"><span class="footer-btn-icon" data-icon="cloud" aria-hidden="true"></span><span>メンヘラ</span></a>
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16stan/index.html" data-diagnosis-item="oshi"><span class="footer-btn-icon" data-icon="star" aria-hidden="true"></span><span>推し</span></a>
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16renai/index.html" data-diagnosis-item="romance"><span class="footer-btn-icon" data-icon="heart" aria-hidden="true"></span><span>恋愛</span></a>
-                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" type="button" data-diagnosis-item="blank-1" aria-label="コラボ予定1"><span class="gift-fan-collab-badge">コラボ!</span></button>
-                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" type="button" data-diagnosis-item="blank-2" aria-label="コラボ予定2"><span class="gift-fan-collab-badge">コラボ!</span></button>
-                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" type="button" data-diagnosis-item="blank-3" aria-label="コラボ予定3"><span class="gift-fan-collab-badge">コラボ!</span></button>
               </div>
             </div>
+          </div>
+          <div class="hero-collab-diagnosis-menu">
+            <ul class="hero-collab-diagnosis-list" aria-label="コラボ診断">
+              <li>
+                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" type="button" data-diagnosis-item="blank-1" aria-label="コラボ予定1"><span class="gift-fan-collab-badge">コラボ!</span></button>
+              </li>
+              <li>
+                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" type="button" data-diagnosis-item="blank-2" aria-label="コラボ予定2"><span class="gift-fan-collab-badge">コラボ!</span></button>
+              </li>
+              <li>
+                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" type="button" data-diagnosis-item="blank-3" aria-label="コラボ予定3"><span class="gift-fan-collab-badge">コラボ!</span></button>
+              </li>
+              <li>
+                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" id="openCollabRequestPopup" type="button" data-diagnosis-item="request" aria-label="コラボ診断依頼はこちら"><span>コラボ診断<br>依頼はこちら</span></button>
+              </li>
+            </ul>
           </div>
         </div>
       </section>
@@ -8190,6 +8218,36 @@
           <a class="btn btn-primary" href="16stan/index.html">推し活モビー診断</a>
           <a class="btn btn-primary" href="16renai/index.html">恋愛モビー診断</a>
           <a class="btn btn-primary" href="/mypage-register.html">診断まとめマイページ作成</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="collabRequestPopup" class="popup-overlay" aria-hidden="true">
+      <div class="popup-content">
+        <button class="popup-close" id="closeCollabRequestPopup" aria-label="閉じる">×</button>
+        <div class="container">
+          <h2>コラボ診断依頼</h2>
+          <p class="lead">コラボ診断の内容を送ってください。</p>
+          <div class="collab-request-form reveal delay-200" style="margin-top:18px;">
+            <form id="collabRequestForm" action="mailto:info@mobby.online" method="post" enctype="text/plain">
+              <div class="form-group">
+                <label for="collabRequestName" style="display:block;margin-bottom:8px;font-weight:700;color:var(--color-earth);">名前 <span style="color:#d2691e;">*</span></label>
+                <input id="collabRequestName" name="name" type="text" required autocomplete="name" placeholder="お名前"
+                  style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;transition:border-color 0.2s;">
+              </div>
+              <div class="form-group" style="margin-top:16px;">
+                <label for="collabRequestEmail" style="display:block;margin-bottom:8px;font-weight:700;color:var(--color-earth);">メールアドレス <span style="color:#d2691e;">*</span></label>
+                <input id="collabRequestEmail" name="email" type="email" required autocomplete="email" placeholder="you@example.com"
+                  style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;transition:border-color 0.2s;">
+              </div>
+              <div class="form-group" style="margin-top:16px;">
+                <label for="collabRequestMessage" style="display:block;margin-bottom:8px;font-weight:700;color:var(--color-earth);">文章 <span style="color:#d2691e;">*</span></label>
+                <textarea id="collabRequestMessage" name="message" required rows="6" placeholder="コラボ診断の内容をご記入ください"
+                  style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;resize:vertical;transition:border-color 0.2s;"></textarea>
+              </div>
+              <button class="btn btn-primary" type="submit" style="margin-top:20px;width:100%;">info@mobby.onlineに送る</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -10347,6 +10405,7 @@
     document.getElementById('closeSnsPopup')?.addEventListener('click', () => closePopup('snsPopup'));
     document.getElementById('closeEncyclopediaPopup')?.addEventListener('click', () => closePopup('encyclopediaPopup'));
     document.getElementById('closeDiagnosisPopup')?.addEventListener('click', () => closePopup('diagnosisPopup'));
+    document.getElementById('closeCollabRequestPopup')?.addEventListener('click', () => closePopup('collabRequestPopup'));
     document.getElementById('closeVotePopup')?.addEventListener('click', () => closePopup('votePopup'));
     document.getElementById('closeCompositingPopup')?.addEventListener('click', () => closePopup('compositingPopup'));
 
@@ -10372,6 +10431,9 @@
     document.getElementById('diagnosisPopup')?.addEventListener('click', (e) => {
       if (e.target.id === 'diagnosisPopup') closePopup('diagnosisPopup');
     });
+    document.getElementById('collabRequestPopup')?.addEventListener('click', (e) => {
+      if (e.target.id === 'collabRequestPopup') closePopup('collabRequestPopup');
+    });
     document.getElementById('votePopup')?.addEventListener('click', (e) => {
       if (e.target.id === 'votePopup') closePopup('votePopup');
     });
@@ -10389,6 +10451,7 @@
         if (document.getElementById('snsPopup')?.classList.contains('is-open')) closePopup('snsPopup');
         if (document.getElementById('encyclopediaPopup')?.classList.contains('is-open')) closePopup('encyclopediaPopup');
         if (document.getElementById('diagnosisPopup')?.classList.contains('is-open')) closePopup('diagnosisPopup');
+        if (document.getElementById('collabRequestPopup')?.classList.contains('is-open')) closePopup('collabRequestPopup');
         if (document.getElementById('votePopup')?.classList.contains('is-open')) closePopup('votePopup');
         if (document.getElementById('compositingPopup')?.classList.contains('is-open')) closePopup('compositingPopup');
       }
@@ -11363,6 +11426,34 @@
 
     bindReservationForm("priceReservationFormCamera");
     initAcrylicStripeButton();
+
+    document.getElementById("openCollabRequestPopup")?.addEventListener("click", () => openPopup("collabRequestPopup"));
+
+    document.getElementById("collabRequestForm")?.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const form = e.target;
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const name = String(document.getElementById("collabRequestName")?.value ?? "").trim();
+      const email = String(document.getElementById("collabRequestEmail")?.value ?? "").trim();
+      const message = String(document.getElementById("collabRequestMessage")?.value ?? "").trim();
+      const subject = "コラボ診断依頼";
+      const body = [
+        "コラボ診断依頼",
+        "",
+        `名前: ${name}`,
+        `メールアドレス: ${email}`,
+        "",
+        "文章:",
+        message
+      ].join("\n");
+
+      window.location.href = `mailto:info@mobby.online?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    });
 
     /* faqContactForm */
     document.getElementById("faqContactForm")?.addEventListener("submit", async (e) => {

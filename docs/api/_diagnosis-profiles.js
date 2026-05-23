@@ -9,6 +9,7 @@ const SOURCE_META = {
   "16school": { label: "学校モビー診断", shortLabel: "学校", accent: "#ff8a65" },
   "16mama": { label: "ママモビー診断", shortLabel: "ママ", accent: "#ffb74d" },
   "16love": { label: "メンヘラモビー診断", shortLabel: "メンヘラ", accent: "#ef5350" },
+  "16renai": { label: "恋愛モビー診断", shortLabel: "恋愛", accent: "#f472b6" },
   "16stan": { label: "推し活モビー診断", shortLabel: "推し活", accent: "#66bb6a" },
   "16night": { label: "夜職モビー診断", shortLabel: "夜職", accent: "#42a5f5" },
   unknown: { label: "未分類", shortLabel: "未分類", accent: "#9e9e9e" }
@@ -24,6 +25,9 @@ const SOURCE_ALIASES = {
   "16love": "16love",
   love: "16love",
   menhera: "16love",
+  "16renai": "16renai",
+  renai: "16renai",
+  romance: "16renai",
   "16stan": "16stan",
   stan: "16stan",
   oshi: "16stan",
@@ -83,6 +87,7 @@ function detectSourceFromTitle(payload) {
   if (!title) return "unknown";
   if (title.includes("ママ")) return "16mama";
   if (title.includes("学校")) return "16school";
+  if (title.includes("恋愛モビー")) return "16renai";
   if (title.includes("推し")) return "16stan";
   if (title.includes("夜")) return "16night";
   if (title.includes("メンヘラ") || title.includes("恋")) return "16love";
