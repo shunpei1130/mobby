@@ -39,6 +39,8 @@
   
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/line-ai-mobby-cta.css">
+  <script src="../shared/line-ai-mobby-cta.js"></script>
   
   <!-- 構造化データ -->
   <script type="application/ld+json">
@@ -3694,6 +3696,19 @@ gateSubmitButton.onclick = async () => {
       const descriptionToShow = useMainDesc 
         ? (char.hook || char.description) 
         : (char.midDesc || char.hook || char.description);
+      const lineAiDiagnosisPayload = {
+        source: "16school",
+        sourceLabel: "学校モビー診断",
+        resultId: res.code,
+        resultName: char.name || res.code,
+        resultSummary: descriptionToShow || char.catch || char.summary || "",
+        traits: [
+          char.catch || char.summary || "",
+          ...["A","B","C","D"].map(k => `${res.axes[k].name}: ${res.hard[k] === "L" ? res.axes[k].left : res.axes[k].right}`)
+        ].filter(Boolean).slice(0, 8),
+        pagePath: "/16school/",
+        createdAt: new Date().toISOString()
+      };
 
       app.innerHTML = `
         <div class="panel fade-in">
@@ -3720,6 +3735,8 @@ gateSubmitButton.onclick = async () => {
                TYPE: ${res.code}
              </div>
           </div>
+
+          <div id="line-ai-mobby-cta" data-line-ai-mobby-cta data-diagnosis="${encodeURIComponent(JSON.stringify(lineAiDiagnosisPayload))}"></div>
 
           <div style="margin-top:40px;">
             <p class="kicker" style="margin-bottom:16px;">4つの軸の傾向</p>

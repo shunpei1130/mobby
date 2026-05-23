@@ -745,6 +745,7 @@ const _='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800
           <p>${o.shortCopy}</p>
         </div>
       </article>
+      <div id="line-ai-mobby-cta" data-line-ai-mobby-cta data-diagnosis="${encodeURIComponent(JSON.stringify({source:"16renai",sourceLabel:"恋愛モビー診断",resultId:t.resultCode,resultName:o.typeName,resultSummary:o.shortCopy||"",traits:[...r.tendency,...r.needs].filter(Boolean).slice(0,8),pagePath:"/16renai/",createdAt:new Date().toISOString()}))}"></div>
       ${i?`
         <section class="love-share-card-inline" aria-label="共有カード">
           <img src="${i}" alt="${o.typeName} share card" loading="lazy" decoding="async" fetchpriority="low" />
