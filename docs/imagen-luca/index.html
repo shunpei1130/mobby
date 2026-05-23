@@ -198,6 +198,78 @@
       color: var(--text-sub);
     }
 
+    .result-panel,
+    .result-panel p,
+    .result-panel li,
+    .result-panel h2,
+    .result-panel h3,
+    .result-panel .text-body,
+    .result-panel .kicker,
+    .result-panel .type-chip {
+      color: #111;
+    }
+
+    .axis-card {
+      margin-top: 24px;
+      padding: 24px;
+      border: 1px solid rgba(158,127,107,.18);
+      border-radius: 20px;
+      background: rgba(255,255,255,.72);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .axis-list {
+      display: grid;
+      gap: 18px;
+      margin-top: 16px;
+    }
+
+    .axis-labels {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .axis-labels span:nth-child(2) { text-align: center; }
+    .axis-labels span:nth-child(3) { text-align: right; }
+
+    .axis-track {
+      position: relative;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #d7ecfb 0%, #f5f7f6 50%, #f8dfb8 100%);
+      overflow: visible;
+    }
+
+    .axis-marker {
+      position: absolute;
+      top: 50%;
+      width: 16px;
+      height: 16px;
+      border: 4px solid #df6f82;
+      border-radius: 999px;
+      background: #fff;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 2px 8px rgba(223,111,130,.22);
+    }
+
+    .axis-note {
+      margin-top: 22px;
+      padding: 18px;
+      border-left: 3px solid #df6f82;
+      border-radius: 16px;
+      background: rgba(255,244,244,.76);
+    }
+
+    .axis-note h3 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: #df6f82;
+    }
+
     .primary {
       background: linear-gradient(135deg, var(--accent), #3d8f7d);
       color: #fff;
@@ -696,6 +768,18 @@
     const toast = document.getElementById("toast");
     const STORAGE_KEY = "mobby_yopipi_diagnosis_v1";
     const PAGE_SIZE = 4;
+    const AGE_OPTIONS = [
+      { value: "13", label: "13歳" },
+      { value: "14", label: "14歳" },
+      { value: "15", label: "15歳" },
+      { value: "16", label: "16歳" },
+      { value: "17", label: "17歳" },
+      { value: "18", label: "18歳" },
+      { value: "19", label: "19歳" },
+      { value: "20", label: "20歳" },
+      { value: "21", label: "21歳" },
+      { value: "22", label: "22歳以上" }
+    ];
     const SITE = {
       "lang": "ja",
       "slug": "imagen-luca",
@@ -703,8 +787,8 @@
       "metaDescription": "水彩、女性の日常と感情、透明感のある物語をテーマにしたimagen_lucaさん向けMobby診断ラフです。",
       "ogDescription": "あなたはLucaさんの水彩世界ならどのストーリータイプ？",
       "officialLabel": "imagen_luca official links",
-      "officialTitle": "結果からLucaさんの作品導線へ",
-      "officialDescription": "診断で世界観に興味を持った人が、SNS、作品、告知ページへ移動できる構成にできます。",
+      "officialTitle": "lucaさんの作品を見てみよう",
+      "officialDescription": "あなたの中でふわふわしていたものがきっと言語化された<br>そのうえでlucaさんの作品を見てみたらまた違った色が浮かんでくるかもしれない",
       "introKicker": "LUCA WATERCOLOR STORY",
       "introTitle": "Lucaの水彩ストーリー<br>タイプ診断",
       "introDescription": "32問で、水彩の色、日常の感情、物語の余白から、あなたに近いストーリータイプを診断します。",
@@ -770,8 +854,15 @@
             "code": "MORN",
             "name": "朝光の透明感",
             "catch": "淡い光で始まるやさしいタイプ。",
-            "image": "img/morning.jpg",
+            "image": "img/8mobby/朝光の透明感モビー.jpg",
             "hook": "水彩のにじみと朝の空気が似合う、静かなはじまりのタイプです。",
+            "lucaLetter": [
+                  "あなたは、まだ誰にも触れられていない朝の光みたいな人。",
+                  "無理に強く見せなくても、あなたの中にあるやさしさや静けさは、ちゃんと誰かの心に届きます。",
+                  "急いで色を濃くしようとしなくて大丈夫。淡いまま、透明なまま、少しずつ自分の輪郭を描いていけばいいと思います。"
+            ],
+            "lucaScene": "白いカーテン越しの朝、まだ言葉になる前の気持ちを抱えた女の子の水彩画。",
+            "lucaCharm": "淡いままでも、ちゃんと光っている。",
             "strengths": [
                   "透明感がある",
                   "保存されやすい",
@@ -792,8 +883,15 @@
             "code": "CAFE",
             "name": "カフェ窓辺の余韻",
             "catch": "日常の中の小さな感情を拾うタイプ。",
-            "image": "img/cafe.jpg",
+            "image": "img/8mobby/カフェ窓辺の余韻モビー.jpg",
             "hook": "何気ない時間にある気持ちの揺れを大事にするタイプです。",
+            "lucaLetter": [
+                  "あなたは、日常の中にある小さな感情を見逃さない人。",
+                  "何でもない時間、誰かの視線、カップの湯気、窓に映る光。そういうものの中に物語を見つけられる感性があります。",
+                  "大きな出来事がなくても、あなたの毎日はちゃんと絵になります。つまらないと思った日も、あとから見返すと優しい一場面だったりします。"
+            ],
+            "lucaScene": "カフェの窓辺で、言葉にしないまま遠くを見ている女の子の水彩画。",
+            "lucaCharm": "何気ない日ほど、あとから大切になる。",
             "strengths": [
                   "日常に寄り添う",
                   "共感される",
@@ -814,8 +912,15 @@
             "code": "RAIN",
             "name": "雨の日の感情線",
             "catch": "少し切ない色を大事にするタイプ。",
-            "image": "img/rain.jpg",
+            "image": "img/8mobby/雨の日の感情線モビー.jpg",
             "hook": "雨、涙、曇り空のような情緒に惹かれるタイプです。",
+            "lucaLetter": [
+                  "あなたは、少し切ない色をきれいだと思える人。",
+                  "悲しさや寂しさをただ暗いものとして終わらせず、その中にあるやさしさまで見つけられる感性があります。",
+                  "泣きそうな日や、何となく沈む日も、無理に晴れに変えなくていいです。雨の日にしか見えない光もあります。"
+            ],
+            "lucaScene": "雨粒のにじむ窓の前で、少しだけ目を伏せている女の子の水彩画。",
+            "lucaCharm": "悲しい色にも、やさしい光は混ざっている。",
             "strengths": [
                   "感情が深い",
                   "余韻がある",
@@ -836,8 +941,15 @@
             "code": "FLOW",
             "name": "花束の記憶",
             "catch": "色と香りのように記憶に残るタイプ。",
-            "image": "img/flower.jpg",
+            "image": "img/8mobby/花束の記憶モビー.jpg",
             "hook": "花、髪、服の色から感情を受け取るタイプです。",
+            "lucaLetter": [
+                  "あなたは、色や香りのように記憶を残せる人。",
+                  "人との時間、もらった言葉、好きだった服の色、季節の花。そういうものを感情ごと大切にできる人です。",
+                  "華やかでいたい気持ちと、繊細で傷つきやすい気持ちは、どちらもあなたの魅力です。どちらかを隠さなくて大丈夫。"
+            ],
+            "lucaScene": "花束を抱えながら、少し照れたようにこちらを見る女の子の水彩画。",
+            "lucaCharm": "忘れたくない気持ちは、花みたいに残していい。",
             "strengths": [
                   "華やか",
                   "女性らしさがある",
@@ -858,8 +970,15 @@
             "code": "LETTER",
             "name": "手紙を待つ人",
             "catch": "言葉にならない気持ちを持つタイプ。",
-            "image": "img/letter.jpg",
+            "image": "img/8mobby/手紙を待つ人モビー.jpg",
             "hook": "届く前の言葉、返事を待つ時間のような余白に惹かれます。",
+            "lucaLetter": [
+                  "あなたは、言葉になる前の気持ちを大切にできる人。",
+                  "すぐに答えを出したり、すぐに伝えたりしなくても、心の中でゆっくり育っている感情があります。",
+                  "言えなかったこと、返事を待っている時間、途中で止まった言葉。それも全部、あなたの物語の一部です。"
+            ],
+            "lucaScene": "机の上に開いた手紙と、まだ返事を書けずにいる女の子の水彩画。",
+            "lucaCharm": "言葉にならない時間にも、ちゃんと意味がある。",
             "strengths": [
                   "物語性がある",
                   "共感される",
@@ -880,8 +999,15 @@
             "code": "CITY",
             "name": "夕暮れの街角",
             "catch": "都会の中の感情を拾うタイプ。",
-            "image": "img/city.jpg",
+            "image": "img/8mobby/夕暮れの街角モビー.jpg",
             "hook": "人混みの中の孤独や、帰り道の光に物語を感じるタイプです。",
+            "lucaLetter": [
+                  "あなたは、人混みの中でも自分だけの感情を持っている人。",
+                  "街の光、帰り道、すれ違う人、少し寂しい夕暮れ。そういう景色に、自分だけの物語を重ねられます。",
+                  "誰かと一緒にいても、ひとりでいても、心の中にある静かな場面を大切にしてください。あなたの孤独は、冷たいものではなく、深さのある色です。"
+            ],
+            "lucaScene": "夕暮れの街角で、ネオンと空の色に包まれて立つ女の子の水彩画。",
+            "lucaCharm": "人混みの中の静けさも、あなたの大切な居場所。",
             "strengths": [
                   "現代的",
                   "感情移入される",
@@ -902,8 +1028,15 @@
             "code": "DREAM",
             "name": "夢色の境界線",
             "catch": "現実と空想の間を漂うタイプ。",
-            "image": "img/dream.jpg",
+            "image": "img/8mobby/夢色の境界線モビー.jpg",
             "hook": "ふわっとした輪郭や不思議な色に惹かれるタイプです。",
+            "lucaLetter": [
+                  "あなたは、現実と空想のあいだにある曖昧な色を愛せる人。",
+                  "はっきりしない気持ち、不思議な夢、説明できない懐かしさ。そういうものを無理に言葉にしなくても、感覚で受け取れる人です。",
+                  "現実的じゃないと言われる感性も、あなたにとっては大事な宝物です。ふわっとしたまま残るものほど、長く心に残ることがあります。"
+            ],
+            "lucaScene": "空と部屋の境目が溶けて、夢の中に立っているような女の子の水彩画。",
+            "lucaCharm": "曖昧なまま残る気持ちも、美しい。",
             "strengths": [
                   "幻想的",
                   "世界観が強い",
@@ -924,8 +1057,15 @@
             "code": "BOOK",
             "name": "小さな物語の栞",
             "catch": "作品を何度も見返したいタイプ。",
-            "image": "img/book.jpg",
+            "image": "img/8mobby/小さな物語の栞モビー.jpg",
             "hook": "一枚の絵を本の一ページのように大事にするタイプです。",
+            "lucaLetter": [
+                  "あなたは、一枚の絵や一つの記憶を長く大切にできる人。",
+                  "すぐに消費するより、何度も見返して、少しずつ好きになっていくタイプです。",
+                  "心に残ったものを、無理に次へ流さなくて大丈夫。好きなページに栞を挟むみたいに、自分の中にそっと置いておいてください。"
+            ],
+            "lucaScene": "小さな本を抱えて、静かな部屋で物語を読み返している女の子の水彩画。",
+            "lucaCharm": "何度も見返したくなるものが、あなたの本当の好き。",
             "strengths": [
                   "保存されやすい",
                   "長く愛される",
@@ -943,6 +1083,104 @@
             ]
       }
 };
+    const DIAGNOSIS_DETAILS = {
+      morning: {
+        copy: "淡いまま、ちゃんと誰かの心に残る人。",
+        atmosphere: "あなたは、強い言葉や派手な存在感よりも、静かな空気で印象を残す人です。その場を大きく動かすタイプではないけれど、あとからふと思い出されるようなやさしい余韻があります。",
+        story: "あなたの中には、まだ始まっていない物語のような透明な気配があります。何かを急いで形にするより、少しずつ光が差し込むように、自分の気持ちを育てていく人です。",
+        worlds: ["朝の光", "白いカーテン", "透明なグラス", "淡い空", "まだ誰もいない部屋", "何かが始まる直前の静けさ"],
+        colors: "アイボリー、ペールブルー、淡いゴールド。強く主張する色よりも、光を含んだようなやわらかい色が似合います。",
+        season: "春の朝。まだ空気が少し冷たくて、部屋に光だけが先に入ってくる時間。",
+        emotion: "あなたは、はっきりした答えよりも、心が少し軽くなるような安心感を大切にします。誰かに強く求められるより、静かに受け止めてもらえることに惹かれます。",
+        relationship: "あなたは、相手に無理に踏み込まず、やわらかく距離を取れる人です。その控えめな優しさが、相手にとっては安心できる場所になります。",
+        viewing: "絵の中の「光」と「余白」に注目してみてください。人物そのものだけでなく、背景の淡さや、何も描かれていない空間に気持ちが残っているはずです。",
+        common: ["静かな場所が好き", "朝や夕方の光に弱い", "余白のあるデザインに惹かれる", "白や淡い色を見ると落ち着く", "強い言葉より、やさしい沈黙に安心する"]
+      },
+      cafe: {
+        copy: "何気ない一日から、小さな物語を見つける人。",
+        atmosphere: "あなたは、日常の中にある小さな変化を見逃さない人です。誰かの視線、カップの湯気、窓に映る光。そういう些細なものの中に感情を見つけられます。",
+        story: "あなたの物語は、大きな事件ではなく、静かな日常の中にあります。何でもないように見える一日も、あなたの中ではちゃんと意味のある一場面として残っていきます。",
+        worlds: ["カフェの窓辺", "木のテーブル", "湯気の立つカップ", "ノートとペン", "ひとりで過ごす午後", "誰かを待つ時間"],
+        colors: "ミルクティー、ラテベージュ、ココアブラウン。あたたかくて、少し落ち着いた色があなたの雰囲気に合います。",
+        season: "秋の午後。窓から少し斜めに光が入って、時間がゆっくり流れているような瞬間。",
+        emotion: "あなたは、派手な楽しさよりも、心がじんわり満たされるような感覚を大切にします。誰かと同じ空間にいて、言葉が少なくても安心できる時間に惹かれます。",
+        relationship: "あなたは、相手の小さな表情や空気の変化に気づきやすい人です。だからこそ、言葉にされていない気持ちまで受け取ってしまうことがあります。",
+        viewing: "人物の視線や、沈黙している時間に注目してみてください。何も起きていないように見える絵の中に、小さな感情の揺れが隠れているはずです。",
+        common: ["カフェや喫茶店の空気が好き", "窓辺の席を選びがち", "何気ない会話をあとから思い出す", "静かな日常系の作品に惹かれる", "人の表情や視線をよく見ている"]
+      },
+      rain: {
+        copy: "切なさの中にあるやさしさを、見逃さない人。",
+        atmosphere: "あなたは、明るさだけでは表せない深い感情を持っている人です。少し寂しい空気や、曇った日の静けさにも美しさを見つけられます。",
+        story: "あなたの中には、雨の日にしか開かない物語があります。悲しさや寂しさをただ暗いものとして終わらせず、その奥にあるやさしさまで感じ取れる人です。",
+        worlds: ["雨粒のついた窓", "濡れた道", "傘", "曇り空", "青みのある影", "涙のあとに残る静けさ"],
+        colors: "レインブルー、グレーラベンダー、くすみネイビー。少し影のある色や、にじむような青があなたの感情に合います。",
+        season: "梅雨の夕方。雨が止みそうで止まない、街の音が少し遠くなる時間。",
+        emotion: "あなたは、悲しさをなかったことにしない人です。楽しいだけでは届かない気持ちや、弱さの中にあるやさしさを大切にしています。",
+        relationship: "あなたは、人の痛みに気づきやすい人です。ただ、そのぶん自分の気持ちまで抱え込んでしまうことがあります。",
+        viewing: "にじみやぼかしの奥にある感情を探してみてください。輪郭が曖昧な部分ほど、その絵の本音が隠れているかもしれません。",
+        common: ["雨の日の雰囲気が嫌いじゃない", "少し切ない作品に惹かれる", "明るすぎる言葉より、静かな共感が好き", "音楽や絵で気持ちを整理する", "泣きそうな色をきれいだと思う"]
+      },
+      flower: {
+        copy: "忘れたくない気持ちを、色と香りで残せる人。",
+        atmosphere: "あなたは、華やかさと繊細さをどちらも持っている人です。明るく見える瞬間の中にも、誰かには見せていない柔らかい感情があります。",
+        story: "あなたの物語は、花の色や季節の匂いと一緒に記憶されていきます。誰かにもらった言葉、好きだった服の色、忘れたくない景色を、感情ごと大切に残せる人です。",
+        worlds: ["花束", "リボン", "春色の服", "髪に触れる花", "やわらかい香り", "記念日のような光"],
+        colors: "ローズピンク、コーラル、セージグリーン。やわらかく華やかで、少し余韻のある色が似合います。",
+        season: "春の昼下がり。花が少し揺れて、光の中にやわらかい影が落ちる時間。",
+        emotion: "あなたは、好きだったものや大切だった瞬間を、簡単に手放さない人です。記憶を飾るように、心の中でそっと残しておくことがあります。",
+        relationship: "あなたは、人に喜んでもらうことや、気持ちを形にすることが得意です。ただ、華やかに見えるぶん、寂しさに気づかれにくいこともあります。",
+        viewing: "花や服の色が、どんな気持ちを表しているか見てみてください。色の組み合わせに、その人物の記憶や感情が滲んでいるはずです。",
+        common: ["花やリボンのモチーフに惹かれる", "色で気分が変わりやすい", "記念日や思い出を大切にする", "写真や小物を残しがち", "華やかだけど繊細なものが好き"]
+      },
+      letter: {
+        copy: "言葉になる前の気持ちを、ずっと大切にできる人。",
+        atmosphere: "あなたは、すぐに言葉にできない感情をたくさん持っている人です。静かに見えても、心の中ではいろいろな思いがゆっくり動いています。",
+        story: "あなたの物語には、まだ送られていない手紙のような気持ちがあります。言えなかったこと、返事を待つ時間、途中で止まった言葉。そういう余白が、あなたの深さをつくっています。",
+        worlds: ["便箋", "封筒", "ノート", "万年筆", "書きかけの文章", "返事を待つ静かな部屋"],
+        colors: "パーチメントベージュ、ダスティピンク、インクブラウン。古い紙や淡いインクのような、やさしく沈んだ色が似合います。",
+        season: "冬の夜。机の灯りだけがついていて、外の音が少し遠くなる時間。",
+        emotion: "あなたは、すぐに答えを出すよりも、気持ちが形になるまで待つことを大切にします。曖昧なままの思いにも、ちゃんと意味があると感じられる人です。",
+        relationship: "あなたは、簡単に本音を見せるタイプではありません。でも一度心を許した相手には、とても深く、長く気持ちを向ける人です。",
+        viewing: "描かれていない言葉を想像してみてください。その人物が何を言えなかったのか、誰に何を届けたかったのかを考えると、絵の見え方が変わります。",
+        common: ["手紙やノートのモチーフが好き", "LINEの文章を何度も書き直す", "言えなかったことをあとから思い出す", "静かな文章や詩に惹かれる", "本音を出すまで時間がかかる"]
+      },
+      city: {
+        copy: "人混みの中でも、自分だけの静かな物語を持っている人。",
+        atmosphere: "あなたは、都会的で少し切ない空気を持っている人です。人と一緒にいても、自分だけの内側の世界をどこかで大切にしています。",
+        story: "あなたの物語は、帰り道や夕暮れの街に似ています。誰かと過ごした時間のあと、ひとりになった瞬間に、心の中で感情がゆっくり浮かび上がる人です。",
+        worlds: ["夕暮れの街", "駅", "街灯", "帰り道", "濡れた道路", "遠くに見えるビルの灯り"],
+        colors: "サンセットオレンジ、モーブ、トワイライトブルー。昼と夜の境目にあるような、少し大人っぽい色が似合います。",
+        season: "秋の夕暮れ。空が少しずつ暗くなって、街の灯りがひとつずつ増えていく時間。",
+        emotion: "あなたは、ひとりの時間にしか整理できない感情を大切にしています。寂しさも孤独も、あなたにとっては自分に戻るための大事な感覚です。",
+        relationship: "あなたは、人と関わることが嫌いなわけではないけれど、自分の内側まで簡単には入れません。ほどよい距離感の中で、深くつながれる相手を大切にします。",
+        viewing: "背景の光と人物の距離感を見てみてください。その人が街の中で何を感じているのか、風景と表情の間に物語があるはずです。",
+        common: ["帰り道の空気が好き", "夕方の街を見ると少し切なくなる", "ひとりで歩く時間が必要", "映画のワンシーンみたいな絵に惹かれる", "人混みの中で急に考え込むことがある"]
+      },
+      dream: {
+        copy: "現実と空想のあいだにある、曖昧な美しさを愛せる人。",
+        atmosphere: "あなたは、どこか掴みきれない不思議な空気を持っている人です。はっきり説明できないけれど、なぜか記憶に残る。そんな印象があります。",
+        story: "あなたの物語は、夢と現実の境目にあります。説明できない懐かしさ、不思議な色、輪郭の溶けた景色。そういう曖昧なものを、そのまま美しいと感じられる人です。",
+        worlds: ["雲", "月", "鏡", "溶けた空", "浮かぶ紙片", "夢の中の部屋"],
+        colors: "ラベンダー、ペールアクア、ミルキーピンク。現実感が少し薄れるような、淡く幻想的な色が似合います。",
+        season: "夏の夜明け前。夢から覚めたばかりで、まだ現実が少しぼやけている時間。",
+        emotion: "あなたは、言葉にできない感覚や、理由のない懐かしさを大切にします。現実的かどうかよりも、自分の心が反応するかどうかを重視する人です。",
+        relationship: "あなたは、自分の世界を大切にする人です。すべてを説明しなくても、感覚で分かってくれる相手に強く惹かれます。",
+        viewing: "現実なのか夢なのか曖昧な部分を楽しんでみてください。輪郭が溶けているところや、色が重なっているところに、その絵の余韻が残っています。",
+        common: ["夢の内容を覚えていることが多い", "不思議な色や空に惹かれる", "説明できない懐かしさに弱い", "現実的すぎるものより余白のあるものが好き", "自分だけの世界観を持っている"]
+      },
+      book: {
+        copy: "好きなものを、何度も見返しながら大切にできる人。",
+        atmosphere: "あなたは、すぐに消えていくものより、長く心に残るものを大切にする人です。静かだけれど、好きなものへの気持ちは深く、簡単には薄れません。",
+        story: "あなたの物語は、本の中に挟まれた栞のように、静かに残っています。何度も見返したくなる一枚、忘れたくない一言、心の中に置いておきたい景色を大切に抱えています。",
+        worlds: ["本", "栞", "読書灯", "古い紙", "小さな机", "静かな図書室"],
+        colors: "アンティークアイボリー、オリーブ、淡いゴールド。時間が経つほど味わいが増すような、落ち着いた色が似合います。",
+        season: "冬の午後。静かな部屋で、外の光が少しずつ弱くなっていく時間。",
+        emotion: "あなたは、好きなものをすぐに消費せず、ゆっくり味わうことを大切にします。心に残ったものを何度も見返して、そのたびに少し違う感情を見つける人です。",
+        relationship: "あなたは、広く浅くよりも、狭く深い関係を大切にします。一度大事だと思った人やものを、長く大切にし続けるタイプです。",
+        viewing: "一枚の絵を、本の一ページとして読んでみてください。その前後にどんな物語があるのかを想像すると、絵の中に長く留まれるはずです。",
+        common: ["本や紙ものが好き", "好きな作品を何度も見返す", "思い出の品を捨てるのが苦手", "静かな場所にいると落ち着く", "長く愛せるものに惹かれる"]
+      }
+    };
     const QUESTIONS = [
       {
             "id": "Q01",
@@ -1108,12 +1346,16 @@
 
     const state = loadState();
 
+    function defaultState() {
+      return { step: "intro", page: 0, answers: {}, currentKey: null, profile: { name: "", email: "", age: "" }, sentToLead: false };
+    }
+
     function loadState() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) return JSON.parse(raw);
+        if (raw) return { ...defaultState(), ...JSON.parse(raw) };
       } catch (error) {}
-      return { step: "intro", page: 0, answers: {}, currentKey: null };
+      return defaultState();
     }
 
     function saveState() {
@@ -1125,8 +1367,14 @@
       state.page = 0;
       state.answers = {};
       state.currentKey = null;
+      state.profile = { name: "", email: "", age: "" };
+      state.sentToLead = false;
       saveState();
       render();
+    }
+
+    function isRegistered() {
+      return !!(state.profile && state.profile.name && state.profile.email && state.profile.age);
     }
 
     function answeredCount() {
@@ -1138,7 +1386,7 @@
     }
 
     function updateNavActive() {
-      document.getElementById("navDiagnosis").classList.toggle("active", ["intro", "quiz", "result", "guide"].includes(state.step));
+      document.getElementById("navDiagnosis").classList.toggle("active", ["intro", "quiz", "gate", "result", "guide"].includes(state.step));
       document.getElementById("navCharacters").classList.toggle("active", state.step === "characters");
     }
 
@@ -1147,6 +1395,7 @@
       updateNavActive();
       if (state.step === "quiz") renderQuiz();
       else if (state.step === "characters") renderCharacters();
+      else if (state.step === "gate") renderGate();
       else if (state.step === "result") renderResult();
       else if (state.step === "guide") renderTypeGuide();
       else renderIntro();
@@ -1247,7 +1496,7 @@
         }
         if (state.page >= totalPages - 1) {
           state.currentKey = computeResult().key;
-          state.step = "result";
+          state.step = isRegistered() ? "result" : "gate";
         } else {
           state.page += 1;
         }
@@ -1267,13 +1516,193 @@
       return { key, scores, char: CHARACTERS[key] };
     }
 
-    function renderResult() {
+    function renderDiagnosisDetails(details) {
+      return `
+        <div class="info-card result-feature">
+          <p class="kicker" style="margin-bottom:10px;">一言コピー</p>
+          <p class="text-body" style="font-size:18px;line-height:1.7;margin:0;font-weight:800;">${details.copy}</p>
+        </div>
+        <div class="card-grid">
+          <div class="info-card"><h3>あなたの雰囲気</h3><p class="text-body" style="margin:0;">${details.atmosphere}</p></div>
+          <div class="info-card"><h3>あなたの中にある物語</h3><p class="text-body" style="margin:0;">${details.story}</p></div>
+        </div>
+        <div class="card-grid">
+          <div class="info-card"><h3>あなたが大切にしている感情</h3><p class="text-body" style="margin:0;">${details.emotion}</p></div>
+          <div class="info-card"><h3>人との関わり方</h3><p class="text-body" style="margin:0;">${details.relationship}</p></div>
+        </div>
+        <div class="info-card" style="margin-top:24px;"><h3>lucaさんの作品を見るなら</h3><p class="text-body" style="margin:0;">${details.viewing}</p></div>
+      `;
+    }
+
+    const MOOD_AXES = [
+      {
+        title: "感情の出方",
+        left: "透明感",
+        center: "余韻",
+        right: "深い情緒",
+        weights: { morning: 12, cafe: 38, flower: 48, letter: 55, book: 58, dream: 66, city: 72, rain: 88 }
+      },
+      {
+        title: "物語の舞台",
+        left: "日常",
+        center: "記憶",
+        right: "幻想",
+        weights: { cafe: 16, city: 34, letter: 45, flower: 50, book: 58, morning: 62, rain: 68, dream: 88 }
+      },
+      {
+        title: "距離感",
+        left: "自分の内側",
+        center: "誰かとの時間",
+        right: "作品の余白",
+        weights: { letter: 18, book: 24, rain: 34, city: 44, cafe: 56, flower: 62, morning: 72, dream: 82 }
+      }
+    ];
+
+    function weightedAxisPosition(scores, weights) {
+      let total = 0;
+      let weighted = 0;
+      Object.entries(weights).forEach(([key, position]) => {
+        const score = scores[key] || 0;
+        total += score;
+        weighted += score * position;
+      });
+      return total ? Math.round(weighted / total) : 50;
+    }
+
+    function renderMoodAxes(result) {
+      const entries = Object.entries(result.scores).sort((a, b) => b[1] - a[1]);
+      const nearTypes = entries.slice(1, 3).map(([key]) => CHARACTERS[key].name).join(" / ");
+      return `
+        <div class="axis-card">
+          <p class="kicker" style="margin-bottom:6px;">あなたの水彩ムード</p>
+          <div class="axis-list">
+            ${MOOD_AXES.map((axis) => {
+              const position = weightedAxisPosition(result.scores, axis.weights);
+              return `
+                <div>
+                  <div class="axis-labels">
+                    <span>${axis.title}：${axis.left}</span>
+                    <span>${axis.center}</span>
+                    <span>${axis.right}</span>
+                  </div>
+                  <div class="axis-track"><span class="axis-marker" style="left:${position}%;"></span></div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+          <div class="axis-note">
+            <h3>場合によっては...</h3>
+            <p class="text-body" style="margin:0;font-weight:800;">近いタイプ：${nearTypes || result.char.name}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderGate() {
+      if (isRegistered()) { state.step = "result"; saveState(); render(); return; }
       const result = state.currentKey ? { key: state.currentKey, char: CHARACTERS[state.currentKey] } : computeResult();
+      const ageOptions = AGE_OPTIONS.map((age) => `<button type="button" class="age-btn" data-age="${age.value}" style="padding:10px 16px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--text-main);font-size:13px;cursor:pointer;transition:all .2s;">${age.label}</button>`).join("");
+      app.innerHTML = `<div class="panel fade-in">
+        <p class="kicker">あと少しで結果が見れます</p>
+        <h2 class="big">結果を見る前に入力してください</h2>
+        <p class="text-body" style="margin-top:-6px;color:#111;">入力後すぐにあなたの水彩ストーリータイプを表示します。</p>
+        <div style="margin-top:22px;display:grid;gap:12px;max-width:520px;">
+          <div>
+            <div style="font-size:12px;color:var(--text-sub);margin-bottom:6px;">ニックネーム</div>
+            <input id="regName" type="text" placeholder="例）るか" style="width:100%;padding:14px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--text-main);font-size:14px;">
+          </div>
+          <div>
+            <div style="font-size:12px;color:var(--text-sub);margin-bottom:6px;">メールアドレス</div>
+            <input id="regEmail" type="email" placeholder="example@gmail.com" style="width:100%;padding:14px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--text-main);font-size:14px;">
+          </div>
+          <div>
+            <div style="font-size:12px;color:var(--text-sub);margin-bottom:6px;">年齢</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">${ageOptions}</div>
+            <input id="regAge" type="hidden" value="">
+          </div>
+          <label style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--text-sub);line-height:1.7;">
+            <input id="regConsent" type="checkbox" style="margin-top:3px;">
+            <span>入力した情報を連絡・改善のために保存することに同意します。</span>
+          </label>
+          <div id="regErr" style="display:none;color:#d33;font-size:12px;"></div>
+          <div style="display:flex;gap:10px;margin-top:8px;">
+            <button id="btnGateBack" type="button" style="background:transparent;color:var(--text-sub);">戻る</button>
+            <button class="primary" id="btnGateGo" type="button" style="flex:1;padding:14px 18px;">結果を見る</button>
+          </div>
+          <div id="gatePendingMsg" style="display:none;font-size:12px;color:var(--text-sub);text-align:center;">送信を受け付けました。結果を準備しています...</div>
+          <div style="margin-top:10px;font-size:11px;color:var(--text-sub);">送信される内容：ニックネーム、年齢、メール、診断タイプ、回答傾向</div>
+        </div>
+      </div>`;
+
+      const nameEl = document.getElementById("regName");
+      const emailEl = document.getElementById("regEmail");
+      const ageEl = document.getElementById("regAge");
+      nameEl.value = state.profile?.name || "";
+      emailEl.value = state.profile?.email || "";
+      ageEl.value = state.profile?.age || "";
+      const ageButtons = Array.from(document.querySelectorAll(".age-btn"));
+      const refreshAgeButtons = () => {
+        ageButtons.forEach((button) => {
+          const selected = button.dataset.age === ageEl.value;
+          button.style.background = selected ? "var(--accent-soft)" : "#fff";
+          button.style.borderColor = selected ? "var(--accent)" : "var(--line)";
+          button.style.color = selected ? "var(--accent)" : "var(--text-main)";
+        });
+      };
+      ageButtons.forEach((button) => {
+        button.onclick = () => {
+          ageEl.value = button.dataset.age || "";
+          refreshAgeButtons();
+        };
+      });
+      refreshAgeButtons();
+
+      document.getElementById("btnGateBack").onclick = () => { state.step = "quiz"; saveState(); render(); };
+      document.getElementById("btnGateGo").onclick = async () => {
+        const errEl = document.getElementById("regErr");
+        const pendingEl = document.getElementById("gatePendingMsg");
+        const submitEl = document.getElementById("btnGateGo");
+        errEl.style.display = "none";
+        const name = (nameEl.value || "").trim();
+        const email = (emailEl.value || "").trim();
+        const age = (ageEl.value || "").trim();
+        const consent = document.getElementById("regConsent").checked;
+        const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        if (!name) { errEl.textContent = "ニックネームを入力してください"; errEl.style.display = "block"; return; }
+        if (!age) { errEl.textContent = "年齢を選択してください"; errEl.style.display = "block"; return; }
+        if (!email) { errEl.textContent = "メールアドレスを入力してください"; errEl.style.display = "block"; return; }
+        if (!emailOk) { errEl.textContent = "メールアドレスを正しく入力してください"; errEl.style.display = "block"; return; }
+        if (!consent) { errEl.textContent = "同意にチェックしてください"; errEl.style.display = "block"; return; }
+        submitEl.disabled = true;
+        submitEl.textContent = "結果を準備中...";
+        pendingEl.style.display = "block";
+        state.profile = { name, email, age };
+        try {
+          await fetch("/api/lead", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email, age, type: result.char?.code || result.key, diagnosisName: result.char?.name || "", source: "imagen-luca", createdAt: new Date().toISOString() }),
+            keepalive: true
+          });
+          state.sentToLead = true;
+        } catch (error) {}
+        state.step = "result";
+        saveState();
+        render();
+      };
+    }
+
+    function renderResult() {
+      if (!isRegistered()) { state.step = "gate"; saveState(); render(); return; }
+      if (!isCompleted() && !state.currentKey) { state.step = "intro"; saveState(); render(); return; }
+      const computed = computeResult();
+      const result = state.currentKey ? { key: state.currentKey, scores: computed.scores, char: CHARACTERS[state.currentKey] } : computed;
       const ch = result.char;
+      const details = DIAGNOSIS_DETAILS[result.key];
       const shareText = encodeURIComponent(SITE.shareResultText.replace("{result}", ch.name));
       const shareUrl = encodeURIComponent(SITE.publicUrl);
       app.innerHTML = `
-        <div class="panel fade-in">
+        <div class="panel fade-in result-panel">
           <div class="result-hero">
             <p class="kicker">${SITE.labels.result}</p>
             <h2 class="big" style="font-size:34px;">${ch.name}</h2>
@@ -1281,15 +1710,15 @@
             <div class="char-image-placeholder"><img src="${ch.image}" alt="${ch.name}"></div>
             <div class="type-chip">TYPE: ${ch.code}</div>
           </div>
+          ${renderMoodAxes(result)}
+          ${details ? renderDiagnosisDetails(details) : ""}
           <div class="info-card result-feature">
-            <p class="kicker" style="margin-bottom:10px;">WORLD VIEW</p>
-            <p class="text-body" style="font-size:15px;line-height:1.8;margin:0;color:var(--text-main);">${ch.hook}</p>
+            <p class="kicker" style="margin-bottom:10px;">lucaさんからの小さな手紙</p>
+            <div class="text-body" style="font-size:15px;line-height:1.9;margin:0;color:var(--text-main);">
+              ${ch.lucaLetter.map((item) => `<p style="margin:0 0 12px;">${item}</p>`).join("")}
+            </div>
+            <div style="margin-top:18px;padding:18px;border:1px solid rgba(158,127,107,.18);border-radius:18px;background:rgba(255,255,255,.62);"><h3>お守りの言葉</h3><p class="text-body" style="margin:0;color:var(--text-main);font-weight:700;">${ch.lucaCharm}</p></div>
           </div>
-          <div class="card-grid">
-            <div class="info-card"><h3>${SITE.labels.strengths}</h3><ul>${ch.strengths.map((item) => `<li>${item}</li>`).join("")}</ul></div>
-            <div class="info-card"><h3>${SITE.labels.cautions}</h3><ul>${ch.cautions.map((item) => `<li>${item}</li>`).join("")}</ul></div>
-          </div>
-          <div class="info-card" style="margin-top:24px;"><h3>${SITE.labels.collabAdvice}</h3><ul>${ch.advice.map((item) => `<li>${item}</li>`).join("")}</ul></div>
           <section class="result-product-content">
             <p class="kicker" style="margin-bottom:12px;">${SITE.officialLabel}</p>
             <h3 style="font-size:20px;margin:0 0 8px;color:var(--text-main);">${SITE.officialTitle}</h3>
@@ -1338,19 +1767,56 @@
       });
     }
 
+    function renderTypeGuideContent() {
+      const axisData = [
+        { key: "A", name: "感情の出方", left: "と", leftName: "透明感", leftDesc: "淡さ、静けさ、やさしい余韻を大切にする", right: "じ", rightName: "深い情緒", rightDesc: "切なさ、曖昧さ、奥行きのある感情に惹かれる" },
+        { key: "B", name: "物語の舞台", left: "に", leftName: "日常", leftDesc: "窓辺、帰り道、生活の中にある小さな物語", right: "げ", rightName: "幻想", rightDesc: "夢、光、現実と空想のあいだにある世界" },
+        { key: "C", name: "距離感", left: "う", leftName: "内側", leftDesc: "言葉になる前の気持ちや、ひとりで味わう余白", right: "よ", rightName: "余白", rightDesc: "見る人の想像が広がる、余白のある表現" }
+      ];
+      return axisData.map((axis) => `<div style="background:#f7f7f9;border-radius:16px;padding:18px;">
+        <h3 style="color:var(--accent);margin:0 0 12px;font-size:15px;">軸${axis.key}: ${axis.name}</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div style="background:#fff;padding:14px;border-radius:12px;border-left:4px solid #5aa9d6;">
+            <div style="font-size:18px;font-weight:800;color:#256f99;line-height:1.2;">${axis.left}</div>
+            <div style="font-size:13px;font-weight:800;margin:8px 0 4px;">${axis.leftName}</div>
+            <div style="font-size:11px;color:#111;line-height:1.7;">${axis.leftDesc}</div>
+          </div>
+          <div style="background:#fff;padding:14px;border-radius:12px;border-left:4px solid #df6f82;">
+            <div style="font-size:18px;font-weight:800;color:#bf5168;line-height:1.2;">${axis.right}</div>
+            <div style="font-size:13px;font-weight:800;margin:8px 0 4px;">${axis.rightName}</div>
+            <div style="font-size:11px;color:#111;line-height:1.7;">${axis.rightDesc}</div>
+          </div>
+        </div>
+      </div>`).join("") + `<div style="background:#fff;padding:16px;border-radius:12px;border:1px solid var(--line);">
+        <div style="font-size:13px;font-weight:800;color:var(--accent);margin-bottom:8px;">結果画面のバーの読み方</div>
+        <div style="font-size:12px;color:#111;line-height:1.8;">例：<span style="font-family:monospace;background:#f7f7f9;padding:2px 8px;border-radius:6px;font-weight:800;">とにう</span><br>透明感(と) + 日常(に) + 内側(う) のように、3つのひらがなで水彩ムードの傾きを表します。結果画面のバーは、中央に近いほど「場面による」、左右どちらかに寄るほどそのムードが強めです。</div>
+      </div>`;
+    }
+
     function renderTypeGuide() {
-      const rows = Object.entries(CHARACTERS).map(([key, ch]) => `
-        <div class="info-card" style="margin:0;">
-          <h3 style="color:var(--accent);margin-bottom:10px;">${ch.code}: ${ch.name}</h3>
-          <p class="text-body" style="margin:0;color:var(--text-main);font-size:13px;">${ch.catch}</p>
-        </div>`).join("");
-      app.innerHTML = `
-        <div class="panel fade-in">
-          <p class="kicker">TYPE CODE GUIDE</p>
-          <h2 class="big" style="font-size:28px;">${SITE.labels.typeGuide}</h2>
-          <p class="text-body">${SITE.guideDescription}</p>
-          <div class="card-grid">${rows}</div>
-        </div>`;
+      state.step = isCompleted() ? (isRegistered() ? "result" : "gate") : "intro";
+      saveState();
+      render();
+      showTypeGuideModal();
+    }
+
+    function showTypeGuideModal() {
+      if (document.getElementById("typeGuideOverlay")) return;
+      const modalHtml = `<div id="typeGuideOverlay" style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.42);display:flex;align-items:center;justify-content:center;padding:18px;">
+        <div style="width:min(700px,100%);max-height:88vh;overflow:auto;background:#fff;border-radius:20px;box-shadow:0 24px 60px rgba(0,0,0,.22);padding:26px;">
+          <button id="typeGuideClose" aria-label="閉じる" style="float:right;width:36px;height:36px;padding:0;border-radius:50%;">×</button>
+          <div style="text-align:center;clear:both;margin-bottom:24px;">
+            <p class="kicker">TYPE GUIDE</p>
+            <h2 class="big" style="font-size:22px;margin-bottom:8px;">水彩ムードの軸解説</h2>
+            <p class="text-body" style="font-size:13px;color:#111;">結果画面に出る3つのバーは、あなたがどんな水彩世界に惹かれやすいかを表しています。</p>
+          </div>
+          <div style="display:grid;gap:16px;">${renderTypeGuideContent()}</div>
+        </div>
+      </div>`;
+      document.body.insertAdjacentHTML("beforeend", modalHtml);
+      const overlay = document.getElementById("typeGuideOverlay");
+      document.getElementById("typeGuideClose").onclick = () => overlay.remove();
+      overlay.onclick = (event) => { if (event.target === overlay) overlay.remove(); };
     }
 
     async function copyResult(ch) {
@@ -1387,9 +1853,7 @@
 
     document.getElementById("btnReset").onclick = resetState;
     document.getElementById("btnTypeGuide").onclick = () => {
-      state.step = "guide";
-      saveState();
-      render();
+      showTypeGuideModal();
     };
     document.getElementById("logoHome").onclick = () => { window.location.href = "../index.html?skipSplash=1"; };
 
