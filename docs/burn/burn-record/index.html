@@ -1,0 +1,1393 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>BURNでページをつくる</title>
+  <script type="module" crossorigin src="./assets/burnRecord-CEFJ408q.js?v=clear-initial-copy"></script>
+  <script>
+    (() => {
+      const restoreBackgroundScroll = (left) => {
+        const grid = document.querySelector("[data-record-background-grid]");
+        if (grid) grid.scrollLeft = left;
+      };
+
+      document.addEventListener("click", (event) => {
+        if (!event.target.closest("[data-record-background]")) return;
+        const left = document.querySelector("[data-record-background-grid]")?.scrollLeft || 0;
+        requestAnimationFrame(() => restoreBackgroundScroll(left));
+        window.setTimeout(() => restoreBackgroundScroll(left), 0);
+      }, true);
+    })();
+  </script>
+  <script>
+    (() => {
+      const MAX_MEMO_CHARS = 56;
+      const MAX_MEMO_LINES = 4;
+
+      function syncMemoLimit(input) {
+        if (!input || !input.matches("[data-record-memo], [data-record-edit-memo]")) return;
+        let value = String(input.value || "").replace(/\r\n/g, "\n");
+        let lines = value.split("\n");
+        if (lines.length > MAX_MEMO_LINES) {
+          lines = lines.slice(0, MAX_MEMO_LINES);
+          value = lines.join("\n");
+        }
+        if (value.length > MAX_MEMO_CHARS) value = value.slice(0, MAX_MEMO_CHARS);
+        if (input.value !== value) input.value = value;
+
+        const limit = input.closest(".record-field")?.querySelector("[data-record-memo-limit], .record-field__limit");
+        const nextLimitText = `${value.length}/${MAX_MEMO_CHARS}文字・${value.split("\n").length}/${MAX_MEMO_LINES}行`;
+        if (limit && limit.textContent !== nextLimitText) limit.textContent = nextLimitText;
+      }
+
+      function syncAllMemoLimits() {
+        document.querySelectorAll("[data-record-memo], [data-record-edit-memo]").forEach(syncMemoLimit);
+      }
+
+      document.addEventListener("input", (event) => syncMemoLimit(event.target));
+      document.addEventListener("keydown", (event) => {
+        const input = event.target;
+        if (!input?.matches?.("[data-record-memo], [data-record-edit-memo]")) return;
+        if (event.key === "Enter" && String(input.value || "").split(/\r\n|\n|\r/).length >= MAX_MEMO_LINES) {
+          event.preventDefault();
+        }
+      });
+
+      new MutationObserver(syncAllMemoLimits).observe(document.documentElement, { childList: true, subtree: true });
+      document.addEventListener("DOMContentLoaded", syncAllMemoLimits);
+    })();
+  </script>
+  <script>
+    (() => {
+      const HEART_ICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='none' stroke='%2353463d' stroke-width='5' stroke-linecap='round' stroke-linejoin='round' d='M32 54S8 39 8 22c0-8 6-14 14-14 5 0 9 3 10 7 1-4 5-7 10-7 8 0 14 6 14 14 0 17-24 32-24 32Z'/%3E%3C/svg%3E";
+      const PIN_ICON_SRC = "./assets/reference/pin_toka.png";
+      const fixBrokenHeartIcon = (root = document) => {
+        root.querySelectorAll?.('img[src$="/image/icon/feature/like.webp"], img[src="image/icon/feature/like.webp"]').forEach((img) => {
+          img.src = HEART_ICON;
+        });
+      };
+      const replacePinIcons = (root = document) => {
+        root.querySelectorAll?.(".record-input-wrap svg, .record-template-slot--text strong svg").forEach((svg) => {
+          const path = svg.querySelector("path")?.getAttribute("d") || "";
+          if (!path.includes("5.2-9.2") && !path.includes("5.2 0 1 0")) return;
+          const img = document.createElement("img");
+          img.src = PIN_ICON_SRC;
+          img.alt = "";
+          img.decoding = "async";
+          img.loading = "eager";
+          img.dataset.recordPinImage = "true";
+          img.setAttribute("aria-hidden", "true");
+          svg.replaceWith(img);
+        });
+      };
+      document.addEventListener("error", (event) => {
+        const target = event.target;
+        if (target?.tagName === "IMG" && /\/?image\/icon\/feature\/like\.webp$/.test(target.getAttribute("src") || "")) {
+          target.src = HEART_ICON;
+        }
+      }, true);
+      new MutationObserver((records) => {
+        records.forEach((record) => record.addedNodes.forEach((node) => {
+          if (node.nodeType === 1) fixBrokenHeartIcon(node);
+          if (node.nodeType === 1) replacePinIcons(node);
+        }));
+      }).observe(document.documentElement, { childList: true, subtree: true });
+      document.addEventListener("DOMContentLoaded", () => {
+        fixBrokenHeartIcon();
+        replacePinIcons();
+      });
+    })();
+  </script>
+  <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="./assets/icons-BAsau70F.js?v=iconfix">
+  <link rel="modulepreload" crossorigin href="./assets/record-CKgMcgCu.js?v=clear-initial-copy">
+  <link rel="stylesheet" crossorigin href="./assets/components-Cas7KQML.css?v=edit-save-clean">
+  <link rel="stylesheet" crossorigin href="./assets/record-bTKggYDr.css?v=step4-backgrounds">
+  <style>
+    .record-background-option {
+      grid-template-rows: auto min-content;
+      align-content: start;
+    }
+
+    .record-background-option .record-background-option__none {
+      display: grid;
+      place-items: center;
+      align-self: start;
+      justify-self: stretch;
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      aspect-ratio: 1 / 1.414;
+      box-sizing: border-box;
+      border: 1px dashed rgba(78, 57, 51, .18);
+      border-radius: 4px;
+    }
+
+    .record-background-option > span:not(.record-background-option__none) {
+      align-self: start;
+    }
+
+    .record-template-option {
+      position: relative;
+      transition: opacity 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+    }
+
+    .record-template-option:not(.is-selected) {
+      opacity: 0.58;
+    }
+
+    .record-template-option.is-selected {
+      border-color: #ffb84d !important;
+      background: linear-gradient(180deg, #fff8e8, #fff1cf) !important;
+      color: #2c2119 !important;
+      transform: translateY(-1px);
+      box-shadow:
+        0 0 0 3px rgba(255, 184, 77, 0.3),
+        0 14px 28px rgba(119, 78, 32, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
+    }
+
+    .record-template-option.is-selected::after {
+      content: "選択中";
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      z-index: 4;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 46px;
+      height: 20px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: #1f1712;
+      color: #fff8ed;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      box-shadow: 0 6px 14px rgba(31, 23, 18, 0.22);
+      pointer-events: none;
+    }
+
+    .record-template-option.is-selected img {
+      outline: 3px solid #ffb84d;
+      outline-offset: -3px;
+      filter: saturate(1.08) contrast(1.04);
+    }
+
+    .burn-guide-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 5000;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: rgba(25, 22, 20, 0.55);
+      -webkit-backdrop-filter: blur(3px);
+      backdrop-filter: blur(3px);
+    }
+
+    .burn-guide-overlay[hidden] {
+      display: none;
+    }
+
+    .burn-guide-card {
+      width: min(100%, 440px);
+      max-height: min(86vh, 720px);
+      display: grid;
+      gap: 18px;
+      padding: 32px 24px 26px;
+      overflow: auto;
+      border: 1px solid rgba(255, 214, 232, 0.62);
+      border-radius: 26px;
+      background:
+        linear-gradient(145deg, rgba(255, 248, 252, 0.58), rgba(255, 229, 241, 0.36)) !important;
+      -webkit-backdrop-filter: blur(18px) saturate(1.18);
+      backdrop-filter: blur(18px) saturate(1.18);
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.7),
+        0 28px 80px rgba(109, 54, 78, 0.24);
+      color: #3a2730;
+      text-align: center;
+      font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+    }
+
+    .burn-guide-step {
+      margin: 0;
+      color: #d979a4;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .burn-guide-title {
+      margin: 0;
+      font-size: clamp(1.75rem, 7vw, 2.25rem);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      line-height: 1.35;
+    }
+
+    .burn-guide-heart {
+      display: none;
+    }
+
+    .burn-guide-copy {
+      display: none;
+    }
+
+    .record-edit-card [data-record-update-memory] {
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 54px;
+      margin-top: 14px;
+      border: 0;
+      border-radius: 999px;
+      background: #c86f6a !important;
+      color: #2f2029 !important;
+      box-shadow: 0 12px 26px rgba(181, 98, 92, 0.22);
+      font-weight: 700;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+
+    .burn-guide-visual {
+      width: min(100%, 420px);
+      margin: 0 auto;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.62);
+      border-radius: 24px;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.72), rgba(255, 236, 245, 0.34) 58%, rgba(255, 248, 238, 0.42));
+      -webkit-backdrop-filter: blur(20px) saturate(1.22);
+      backdrop-filter: blur(20px) saturate(1.22);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.82),
+        inset 0 -18px 28px rgba(255, 255, 255, 0.16),
+        0 18px 42px rgba(109, 54, 78, 0.16);
+    }
+
+    .burn-guide-upload {
+      display: grid;
+      place-items: center;
+      gap: 12px;
+      min-height: 190px;
+      border: 1.5px dashed rgba(217, 121, 164, 0.34);
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0) 34%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.66), rgba(255, 235, 245, 0.38));
+      color: #7b5063;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        0 12px 30px rgba(109, 54, 78, 0.12);
+    }
+
+    .burn-guide-upload strong {
+      display: grid;
+      place-items: center;
+      width: 58px;
+      height: 58px;
+      border: 1px solid rgba(217, 121, 164, 0.42);
+      border-radius: 999px;
+      color: #b95f88;
+      font-size: 2rem;
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .burn-guide-photo {
+      width: 100%;
+      aspect-ratio: 1.45 / 1;
+      border-radius: 7px;
+      background:
+        radial-gradient(circle at 32% 34%, #f6d1bf 0 7%, transparent 7.4%),
+        radial-gradient(circle at 63% 32%, #3b312d 0 10%, transparent 10.4%),
+        linear-gradient(90deg, transparent 0 47%, #2f2927 47% 72%, transparent 72%),
+        linear-gradient(135deg, #d8c9bd, #f0e8df 42%, #c9b8ac 43% 70%, #fff7ef);
+      background-size: 100% 100%;
+    }
+
+    .burn-guide-real-photo {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1.45 / 1;
+      border-radius: 7px;
+      object-fit: cover;
+      background: #f5eee8;
+    }
+
+    .burn-guide-memory-card {
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid rgba(78, 57, 51, 0.08);
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 12px 26px rgba(77, 48, 39, 0.1);
+    }
+
+    .burn-guide-memory-card .burn-guide-final-image {
+      width: 100%;
+      max-width: 270px;
+    }
+
+    .burn-guide-form {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+      text-align: left;
+    }
+
+    .burn-guide-field {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 46px;
+      padding: 0 12px;
+      border: 1px solid rgba(78, 57, 51, 0.12);
+      border-radius: 10px;
+      color: #7a675f;
+      background: #fff;
+      font-family: system-ui, sans-serif;
+      font-size: 0.88rem;
+    }
+
+    .burn-guide-mini-photos {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .burn-guide-mini-photo {
+      display: grid;
+      gap: 8px;
+      justify-items: center;
+      color: #6e5a53;
+      font-size: 0.78rem;
+    }
+
+    .burn-guide-mini-photo .burn-guide-photo {
+      aspect-ratio: 1.28 / 1;
+      border-radius: 4px;
+    }
+
+    .burn-guide-mini-photo .burn-guide-real-photo {
+      aspect-ratio: 1.28 / 1;
+      border-radius: 4px;
+    }
+
+    .burn-guide-order {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-width: 74px;
+      min-height: 28px;
+      border-radius: 999px;
+      background: #fff;
+      box-shadow: 0 5px 14px rgba(77, 48, 39, 0.1);
+      color: #7d514c;
+      font-size: 0.82rem;
+    }
+
+    .burn-guide-template-row,
+    .burn-guide-background-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .burn-guide-template-panel {
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid rgba(78, 57, 51, 0.08);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.7);
+      text-align: left;
+    }
+
+    .burn-guide-template-panel p {
+      margin: 0;
+      color: #4f4440;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1rem;
+    }
+
+    .burn-guide-template-panel input {
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 46px;
+      padding: 0 14px;
+      border: 1.5px solid rgba(200, 111, 106, 0.58);
+      border-radius: 12px;
+      background: linear-gradient(180deg, #fff, #fff8f5);
+      color: #3d2f2b;
+      font: inherit;
+      font-weight: 700;
+      box-shadow: 0 8px 22px rgba(200, 111, 106, 0.16);
+    }
+
+    .burn-guide-template,
+    .burn-guide-bg {
+      min-height: 82px;
+      border: 1px solid rgba(78, 57, 51, 0.12);
+      border-radius: 10px;
+      background:
+        linear-gradient(#79716c 0 0) 18% 16% / 56% 13% no-repeat,
+        linear-gradient(#f4cfd0 0 0) 18% 36% / 34% 18% no-repeat,
+        linear-gradient(#77716f 0 0) 62% 36% / 26% 18% no-repeat,
+        linear-gradient(#77716f 0 0) 18% 61% / 31% 19% no-repeat,
+        linear-gradient(#f4cfd0 0 0) 62% 61% / 28% 19% no-repeat,
+        #fff;
+    }
+
+    .burn-guide-template {
+      display: grid;
+      align-content: end;
+      padding: 8px;
+      min-height: 116px;
+      position: relative;
+      color: #5c504b;
+      font-size: 0.72rem;
+      text-align: center;
+    }
+
+    .burn-guide-template img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1 / 1.42;
+      margin-bottom: 8px;
+      object-fit: cover;
+      border-radius: 4px;
+      background: #fff;
+    }
+
+    .burn-guide-template.is-selected,
+    .burn-guide-bg.is-selected {
+      border-color: #ffb84d;
+      background-color: #fff8e8;
+      box-shadow:
+        0 0 0 3px rgba(255, 184, 77, 0.3),
+        0 14px 28px rgba(119, 78, 32, 0.2);
+    }
+
+    .burn-guide-template.is-selected::after {
+      content: "選択中";
+      position: absolute;
+      top: -10px;
+      right: -7px;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 46px;
+      height: 20px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: #1f1712;
+      color: #fff8ed;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      box-shadow: 0 6px 14px rgba(31, 23, 18, 0.22);
+      pointer-events: none;
+    }
+
+    .burn-guide-template:not(.is-selected) {
+      opacity: 0.58;
+    }
+
+    .burn-guide-bg {
+      width: 34px;
+      height: 48px;
+      min-height: 0;
+      overflow: hidden;
+      background: radial-gradient(circle at 70% 28%, rgba(255, 255, 255, 0.9), transparent 18%), linear-gradient(135deg, #ffd5e5, #d8b5ff 48%, #ffe9f4);
+    }
+
+    .burn-guide-bg img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      object-fit: cover;
+      border-radius: 9px;
+    }
+
+    .burn-guide-background-row {
+      width: max-content;
+      grid-template-columns: repeat(3, 34px);
+      justify-content: center;
+      margin: 0 auto;
+      gap: 6px;
+    }
+
+    .burn-guide-bg:nth-child(2) {
+      background: linear-gradient(135deg, #fff1fa, #ffc2dd 45%, #b59cff);
+    }
+
+    .burn-guide-bg:nth-child(3) {
+      background: linear-gradient(135deg, #faf5ef, #d8cec5);
+    }
+
+    .burn-guide-page {
+      width: min(76%, 300px);
+      aspect-ratio: 1 / 1.42;
+      margin: 0 auto;
+      position: relative;
+      display: block;
+      padding: 16px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #f7bee0, #ffcde7 42%, #d7bcff);
+      color: #4e3933;
+      font-size: 0.9rem;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.5);
+    }
+
+    .burn-guide-page::before,
+    .burn-guide-page::after {
+      content: "";
+      position: absolute;
+      border-radius: 3px;
+      background: var(--guide-photo-bg, linear-gradient(135deg, #d8c9bd, #f0e8df));
+      box-shadow: 0 4px 10px rgba(77, 48, 39, 0.16);
+    }
+
+    .burn-guide-page::before {
+      left: 13%;
+      top: 20%;
+      width: 35%;
+      height: 18%;
+    }
+
+    .burn-guide-page::after {
+      right: 11%;
+      top: 44%;
+      width: 38%;
+      height: 22%;
+    }
+
+    .burn-guide-page span {
+      position: absolute;
+      left: 13%;
+      bottom: 15%;
+      width: 36%;
+      height: 18%;
+      border-radius: 3px;
+      background: var(--guide-photo-bg, linear-gradient(135deg, #c9b8ac, #fff7ef));
+      box-shadow: 0 4px 10px rgba(77, 48, 39, 0.16);
+    }
+
+    .burn-guide-page strong {
+      position: relative;
+      z-index: 1;
+      display: block;
+      margin-top: 4px;
+      text-align: center;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .burn-guide-final-image {
+      position: relative;
+      width: min(76%, 240px);
+      aspect-ratio: 1240 / 1754;
+      margin: 0 auto;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 86% 12%, rgba(255,255,255,.9) 0 3%, transparent 3.4%),
+        radial-gradient(circle at 10% 76%, rgba(255,255,255,.8) 0 4%, transparent 4.4%),
+        linear-gradient(135deg, rgba(255,255,255,.45), transparent 18%),
+        url("./assets/background/back_ex_galpink-imx5GIIH.webp") center / cover no-repeat;
+      box-shadow: 0 12px 28px rgba(77, 48, 39, 0.14);
+    }
+
+    .burn-guide-page-image {
+      display: block;
+      width: min(66%, 210px);
+      aspect-ratio: 1240 / 1754;
+      margin: 0 auto;
+      object-fit: cover;
+      box-shadow: 0 12px 28px rgba(77, 48, 39, 0.14);
+      background: #fff;
+    }
+
+    .burn-guide-final-image::before,
+    .burn-guide-final-image::after,
+    .burn-guide-final-photo {
+      content: "";
+      position: absolute;
+      border-radius: 4px;
+      background: var(--guide-photo-bg, linear-gradient(135deg, #d8c9bd, #f0e8df));
+      box-shadow: 0 5px 14px rgba(77, 48, 39, 0.18);
+      filter: saturate(1.04);
+    }
+
+    .burn-guide-final-image::before {
+      left: 10%;
+      top: 18%;
+      width: 38%;
+      height: 22%;
+    }
+
+    .burn-guide-final-image::after {
+      right: 10%;
+      top: 43%;
+      width: 38%;
+      height: 22%;
+    }
+
+    .burn-guide-final-photo {
+      left: 10%;
+      bottom: 12%;
+      width: 38%;
+      height: 22%;
+    }
+
+    .burn-guide-final-title {
+      position: absolute;
+      top: 7%;
+      left: 8%;
+      right: 8%;
+      color: #322522;
+      font-size: 0.88rem;
+      font-weight: 700;
+      line-height: 1.3;
+      text-align: center;
+    }
+
+    .burn-guide-final-note {
+      position: absolute;
+      right: 8%;
+      top: 24%;
+      width: 36%;
+      color: #6f4d48;
+      font-size: 0.68rem;
+      line-height: 1.65;
+      text-align: left;
+    }
+
+    .burn-guide-rule {
+      display: none;
+    }
+
+    .burn-guide-rule::before,
+    .burn-guide-rule::after {
+      content: "";
+      height: 1px;
+      background: rgba(199, 146, 140, 0.28);
+    }
+
+    .burn-guide-actions {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .burn-guide-skip,
+    .burn-guide-next {
+      min-height: 54px;
+      border: 0;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .burn-guide-skip {
+      border-radius: 999px;
+      color: #bd5f89;
+      background: rgba(255, 255, 255, 0.48);
+      border: 1px solid rgba(255, 214, 232, 0.72);
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.82), 0 10px 22px rgba(109, 54, 78, 0.1);
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .burn-guide-next {
+      border-radius: 999px;
+      color: #fff;
+      background: linear-gradient(180deg, #e59aba, #cf6f9d);
+      box-shadow: 0 12px 28px rgba(207, 111, 157, 0.26);
+      font-size: 1.12rem;
+      font-weight: 700;
+    }
+
+    .burn-guide-dots {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .burn-guide-dots span {
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      background: #f2d7e3;
+    }
+
+    .burn-guide-dots span.is-active {
+      background: #d979a4;
+    }
+
+    .record-header__back,
+    [data-record-back-home],
+    .record-camera-header button,
+    .record-outline-button,
+    [data-record-home-return],
+    .record-page--preview [data-record-stage="select"],
+    .record-page--preview .record-page-preview-card__copy button[data-record-stage="select"] {
+      border: 1px solid rgba(255, 255, 255, 0.56) !important;
+      border-radius: 999px !important;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.2) 58%, rgba(255, 244, 250, 0.28)) !important;
+      color: rgba(62, 48, 44, 0.9) !important;
+      -webkit-backdrop-filter: blur(18px) saturate(1.35) !important;
+      backdrop-filter: blur(18px) saturate(1.35) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.82),
+        inset 0 -14px 22px rgba(255, 255, 255, 0.12),
+        0 10px 22px rgba(78, 57, 39, 0.12) !important;
+    }
+
+    .record-header__back svg,
+    [data-record-back-home] svg,
+    .record-camera-header button svg,
+    .record-outline-button svg,
+    .record-page--preview [data-record-stage="select"] svg {
+      color: currentColor !important;
+      stroke: currentColor !important;
+    }
+
+    .record-page--complete .record-complete-actions [data-record-home-return] {
+      display: grid !important;
+    }
+
+    .record-page--complete [data-record-save-page] {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 219, 235, 0.72) !important;
+      border-radius: 999px !important;
+      background:
+        radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0) 28%),
+        linear-gradient(135deg, rgba(255, 157, 205, 0.86), rgba(226, 83, 152, 0.78) 48%, rgba(255, 190, 217, 0.72)) !important;
+      color: #2f2029 !important;
+      -webkit-backdrop-filter: blur(20px) saturate(1.45) !important;
+      backdrop-filter: blur(20px) saturate(1.45) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.86),
+        inset 0 -18px 30px rgba(177, 45, 111, 0.18),
+        0 16px 34px rgba(218, 84, 150, 0.3),
+        0 4px 12px rgba(255, 255, 255, 0.42) !important;
+      font-weight: 800 !important;
+      letter-spacing: 0.03em;
+      text-shadow: 0 1px 4px rgba(255, 255, 255, 0.42);
+    }
+
+    .record-page--complete [data-record-save-page]::before {
+      content: "";
+      position: absolute;
+      inset: 2px 8px auto;
+      height: 42%;
+      border-radius: inherit;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0));
+      pointer-events: none;
+    }
+
+    .record-page--complete [data-record-save-page]:active {
+      transform: translateY(1px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.76),
+        inset 0 -14px 26px rgba(177, 45, 111, 0.22),
+        0 10px 24px rgba(218, 84, 150, 0.24) !important;
+    }
+
+    .record-page--complete [data-record-complete-back] {
+      position: fixed !important;
+      top: calc(env(safe-area-inset-top, 0px) + 12px) !important;
+      left: 12px !important;
+      z-index: 30 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 44px !important;
+      height: 44px !important;
+      min-height: 44px !important;
+      padding: 0 !important;
+      border: 1px solid rgba(78, 57, 51, .12) !important;
+      border-radius: 999px !important;
+      background: rgba(255, 255, 255, .92) !important;
+      color: #3e302c !important;
+      box-shadow: 0 10px 24px rgba(77, 48, 39, .14) !important;
+    }
+
+    .record-page--complete [data-record-complete-back] svg {
+      width: 22px !important;
+      height: 22px !important;
+    }
+
+    .record-title-field input,
+    .record-template-slot--title {
+      border: 0 !important;
+      background: transparent !important;
+      background-color: transparent !important;
+      background-image: none !important;
+      box-shadow: none !important;
+      -webkit-appearance: none !important;
+      appearance: none !important;
+    }
+
+    .record-generated-page .record-template-slot--title {
+      display: grid !important;
+      align-content: center !important;
+      place-items: center !important;
+      padding: 3.5% !important;
+      overflow: hidden !important;
+      color: #302623 !important;
+      font-family: Shippori Mincho, "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif !important;
+      font-size: clamp(.82rem, 4.1cqw, 1rem) !important;
+      font-weight: 700 !important;
+      line-height: 1.25 !important;
+      text-align: center !important;
+      white-space: pre-line !important;
+      overflow-wrap: anywhere !important;
+    }
+
+    .record-generated-page .record-generated-page__date {
+      display: none !important;
+    }
+
+    .record-generated-page .record-template-slot--text {
+      overflow: visible !important;
+      gap: 1.1cqw !important;
+      padding: 3.8% !important;
+    }
+
+    .record-generated-page .record-template-slot--text strong {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: .32em !important;
+      max-width: 100% !important;
+      padding-bottom: .8cqw !important;
+      font-size: clamp(.5rem, 3.1cqw, .82rem) !important;
+      line-height: 1.2 !important;
+      white-space: nowrap !important;
+      overflow-wrap: anywhere !important;
+      overflow: visible !important;
+      text-overflow: clip !important;
+    }
+
+    .record-input-wrap img[data-record-pin-image],
+    .record-template-slot--text strong img[data-record-pin-image] {
+      flex: 0 0 auto !important;
+      width: 1em !important;
+      height: 1em !important;
+      object-fit: contain !important;
+      display: inline-block !important;
+    }
+
+    .record-template-slot--text strong img[data-record-pin-image] {
+      width: clamp(12px, 4.1cqw, 16px) !important;
+      height: clamp(12px, 4.1cqw, 16px) !important;
+      max-width: none !important;
+      max-height: none !important;
+    }
+
+    .record-generated-page .record-template-slot--text p {
+      overflow: visible !important;
+      display: block !important;
+      font-size: clamp(.44rem, 2.45cqw, .62rem) !important;
+      line-height: 1.35 !important;
+      white-space: pre-line !important;
+      overflow-wrap: anywhere !important;
+    }
+
+    .record-page--camera.is-inputting .record-camera-stage,
+    .record-page--camera.is-inputting .record-capture-sheet,
+    .record-page--edit-memory .record-edit-card {
+      width: min(calc(100vw - 36px), 430px) !important;
+      max-width: 430px !important;
+      box-sizing: border-box !important;
+    }
+
+    .record-page--edit-memory {
+      width: min(100%, 466px) !important;
+      padding-inline: 18px !important;
+    }
+
+    .record-page--edit-memory .record-edit-card > img {
+      width: 100% !important;
+      height: auto !important;
+      aspect-ratio: 1.42 / 1 !important;
+      object-fit: cover !important;
+    }
+
+    .record-page--camera.is-inputting .record-field > textarea {
+      width: 100%;
+      min-height: 126px;
+      padding: 16px 14px;
+      border: 1.5px solid rgba(86, 63, 56, .26) !important;
+      border-radius: 10px;
+      background: #fff !important;
+      color: inherit;
+      font: inherit;
+      line-height: 1.6;
+      resize: vertical;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.92), 0 8px 18px rgba(69,47,38,.12) !important;
+    }
+
+    .record-page--camera.is-inputting .record-field > textarea:focus {
+      border-color: rgba(184, 97, 90, .72) !important;
+      box-shadow: 0 0 0 3px rgba(200,111,106,.16), 0 10px 20px rgba(69,47,38,.14) !important;
+      outline: none !important;
+    }
+
+    .record-page--camera.is-inputting .record-field__limit {
+      display: block !important;
+      margin-top: -4px;
+      color: #9b8a82;
+      font-size: .74rem;
+    }
+
+    @media (max-width: 520px) {
+      .burn-guide-overlay {
+        padding: 18px;
+      }
+
+      .burn-guide-card {
+        padding: 28px 18px 22px;
+        border-radius: 24px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="../../glassmorphism.css">
+</head>
+<body>
+  <main id="recordRoot"></main>
+  <div class="burn-guide-overlay" id="burnGuideOverlay" role="dialog" aria-modal="true" aria-labelledby="burnGuideTitle">
+    <section class="burn-guide-card">
+      <p class="burn-guide-step" id="burnGuideStep">STEP 1 / 5</p>
+      <h2 class="burn-guide-title" id="burnGuideTitle">写真を追加しよう</h2>
+      <div class="burn-guide-heart" aria-hidden="true">♡</div>
+      <p class="burn-guide-copy" id="burnGuideCopy">まずは思い出の写真をアップロードします。大きな追加枠をタップして、1〜3枚の写真を選びましょう。</p>
+      <div class="burn-guide-visual" id="burnGuideVisual" aria-hidden="true"></div>
+      <div class="burn-guide-rule" aria-hidden="true">♡</div>
+      <div class="burn-guide-actions">
+        <button class="burn-guide-skip" type="button" id="burnGuideSkip">スキップ</button>
+        <button class="burn-guide-next" type="button" id="burnGuideNext">次へ</button>
+      </div>
+      <div class="burn-guide-dots" id="burnGuideDots" aria-hidden="true"></div>
+    </section>
+  </div>
+  <script>
+    (() => {
+      const overlay = document.getElementById("burnGuideOverlay");
+      if (!overlay) return;
+
+      const steps = [
+        {
+          title: "写真を追加しよう",
+          copy: "まずは思い出の写真をアップロードします。大きな追加枠をタップして、1〜3枚の写真を選びましょう。",
+          visual: '<div class="burn-guide-upload"><strong>＋</strong><span>写真を追加</span></div>'
+        },
+        {
+          title: "場所と感想を入れよう",
+          copy: "写真を追加したら、場所と感想を入力します。ページに載せたい一言もここで記録できます。",
+          visual: '<div class="burn-guide-memory-card"><img class="burn-guide-real-photo" src="../reference/splash_photo1.jpg" alt=""><div class="burn-guide-form"><div class="burn-guide-field">◎　代官山</div><div class="burn-guide-field">☵　カフェの雰囲気が素敵だった</div></div></div>'
+        },
+        {
+          title: "タイトルと配置を選ぼう",
+          copy: "写真がそろったら、順番やテンプレートを選びます。ページタイトルもここで決めましょう。",
+          visual: '<div class="burn-guide-template-panel"><div class="burn-guide-mini-photos"><div class="burn-guide-mini-photo"><img class="burn-guide-real-photo" src="../reference/splash_photo1.jpg" alt=""><span>配置順</span><div class="burn-guide-order">↑ 1 ↓</div></div><div class="burn-guide-mini-photo"><img class="burn-guide-real-photo" src="../reference/splash_photo2.jpg" alt=""><span>配置順</span><div class="burn-guide-order">↑ 2 ↓</div></div><div class="burn-guide-mini-photo"><img class="burn-guide-real-photo" src="../reference/splash_photo3.jpg" alt=""><span>配置順</span><div class="burn-guide-order">↑ 3 ↓</div></div></div><p>Template</p><div class="burn-guide-template-row"><div class="burn-guide-template is-selected"><img src="./assets/template/template001-C4MCDSgU.webp" alt="">Template 001</div><div class="burn-guide-template"><img src="./assets/template/template002-BCt9LpnA.webp" alt="">Template 002</div></div><p>Page title</p><input value="菜月とこうきは伝説かも!?" readonly /></div>'
+        },
+        {
+          title: "背景を選ぼう",
+          copy: "プレビューを見ながら、ページに合う背景を選べます。雰囲気に合う一枚で、思い出をもっとかわいく。",
+          visual: '<img class="burn-guide-page-image" src="../reference/splash_page.webp" alt=""><div style="height:14px"></div><div class="burn-guide-background-row"><div class="burn-guide-bg"><img src="./assets/background/back_ex13-DNPGpq3n.webp" alt=""></div><div class="burn-guide-bg is-selected"><img src="./assets/background/back_ex26-DBw7egja.webp" alt=""></div><div class="burn-guide-bg"><img src="./assets/background/back_newwave_4-B20ILSGG.webp" alt=""></div></div>'
+        },
+        {
+          title: "完成・保存しよう",
+          copy: "最後に1ページになった思い出を保存して完成です。できあがったページは、そのまま見返せます。",
+          visual: '<img class="burn-guide-page-image" src="../reference/splash_page.webp" alt=""><div class="burn-guide-field" style="justify-content:center;margin-top:14px">↓　写真を保存</div>'
+        }
+      ];
+
+      let index = 0;
+      const stepEl = document.getElementById("burnGuideStep");
+      const titleEl = document.getElementById("burnGuideTitle");
+      const copyEl = document.getElementById("burnGuideCopy");
+      const visualEl = document.getElementById("burnGuideVisual");
+      const dotsEl = document.getElementById("burnGuideDots");
+      const nextButton = document.getElementById("burnGuideNext");
+      const skipButton = document.getElementById("burnGuideSkip");
+
+      const close = () => {
+        overlay.hidden = true;
+      };
+
+      const guideTitles = [
+        "写真をアップする",
+        "場所と感想を入力",
+        "タイトルと配置を選ぶ",
+        "好みの背景を選んで",
+        "完成！保存！"
+      ];
+
+      const render = () => {
+        const step = steps[index];
+        stepEl.textContent = `STEP ${index + 1} / ${steps.length}`;
+        titleEl.textContent = guideTitles[index] || step.title;
+        copyEl.textContent = guideTitles[index] || step.copy;
+        visualEl.innerHTML = step.visual;
+        if (index === 2) {
+          visualEl.querySelector(".burn-guide-mini-photos")?.remove();
+        }
+        nextButton.textContent = index === steps.length - 1 ? "はじめる" : "次へ";
+        skipButton.textContent = index === steps.length - 1 ? "戻る" : "スキップ";
+        dotsEl.innerHTML = steps.map((_, dotIndex) => `<span class="${dotIndex === index ? "is-active" : ""}"></span>`).join("");
+      };
+
+      nextButton.addEventListener("click", () => {
+        if (index >= steps.length - 1) {
+          close();
+          return;
+        }
+        index += 1;
+        render();
+      });
+
+      skipButton.addEventListener("click", () => {
+        if (index === steps.length - 1) {
+          index -= 1;
+          render();
+          return;
+        }
+        close();
+      });
+
+      render();
+    })();
+
+    (() => {
+      const root = document.getElementById("recordRoot");
+      if (!root) return;
+
+      const waitForImage = (img) => {
+        if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+        return new Promise((resolve) => {
+          img.addEventListener("load", resolve, { once: true });
+          img.addEventListener("error", resolve, { once: true });
+        });
+      };
+
+      const imageToDataUrl = async (img) => {
+        const src = img.currentSrc || img.src || "";
+        if (!src || src.startsWith("data:")) return src;
+        try {
+          const response = await fetch(src, { cache: "force-cache" });
+          if (!response.ok) return src;
+          const blob = await response.blob();
+          return await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(String(reader.result || src));
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          });
+        } catch (_) {
+          return src;
+        }
+      };
+
+      const drawWrappedText = (ctx, text, x, y, maxWidth, lineHeight, maxHeight) => {
+        const rawLines = String(text || "").split(/\r\n|\n|\r/);
+        let cursorY = y;
+        for (const rawLine of rawLines) {
+          let line = "";
+          for (const char of rawLine) {
+            const testLine = line + char;
+            if (line && ctx.measureText(testLine).width > maxWidth) {
+              if (cursorY + lineHeight > y + maxHeight) return;
+              ctx.fillText(line, x, cursorY);
+              cursorY += lineHeight;
+              line = char;
+            } else {
+              line = testLine;
+            }
+          }
+          if (cursorY + lineHeight > y + maxHeight) return;
+          ctx.fillText(line, x, cursorY);
+          cursorY += lineHeight;
+        }
+      };
+
+      const drawContainedImage = (ctx, img, x, y, width, height, fit = "cover", feather = false) => {
+        const naturalWidth = img.naturalWidth || img.width;
+        const naturalHeight = img.naturalHeight || img.height;
+        if (!naturalWidth || !naturalHeight || width <= 0 || height <= 0) return;
+
+        const scale = fit === "contain"
+          ? Math.min(width / naturalWidth, height / naturalHeight)
+          : Math.max(width / naturalWidth, height / naturalHeight);
+        const drawWidth = naturalWidth * scale;
+        const drawHeight = naturalHeight * scale;
+        const drawX = x + (width - drawWidth) / 2;
+        const drawY = y + (height - drawHeight) / 2;
+
+        if (!feather) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(x, y, width, height);
+          ctx.clip();
+          ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+          ctx.restore();
+          return;
+        }
+
+        const layer = document.createElement("canvas");
+        layer.width = Math.max(1, Math.round(width));
+        layer.height = Math.max(1, Math.round(height));
+        const layerCtx = layer.getContext("2d");
+        layerCtx.drawImage(img, drawX - x, drawY - y, drawWidth, drawHeight);
+
+        const pixels = layerCtx.getImageData(0, 0, layer.width, layer.height);
+        const fadeX = Math.max(1, layer.width * 0.07);
+        const fadeY = Math.max(1, layer.height * 0.07);
+        for (let py = 0; py < layer.height; py += 1) {
+          const alphaY = Math.min(1, py / fadeY, (layer.height - 1 - py) / fadeY);
+          for (let px = 0; px < layer.width; px += 1) {
+            const alphaX = Math.min(1, px / fadeX, (layer.width - 1 - px) / fadeX);
+            const alpha = Math.max(0, Math.min(alphaX, alphaY));
+            pixels.data[(py * layer.width + px) * 4 + 3] *= alpha;
+          }
+        }
+        layerCtx.putImageData(pixels, 0, 0);
+        ctx.drawImage(layer, x, y);
+      };
+
+      const drawPinIcon = (ctx, element, pageRect, scale) => {
+        const icon = element.querySelector("[data-record-pin-image], svg");
+        if (!icon) return 0;
+
+        const iconRect = icon.getBoundingClientRect();
+        if (iconRect.width <= 0 || iconRect.height <= 0) return 0;
+        const style = getComputedStyle(icon);
+        if (style.visibility === "hidden" || style.display === "none" || Number(style.opacity) === 0) return 0;
+
+        const x = (iconRect.left - pageRect.left) * scale;
+        const y = (iconRect.top - pageRect.top) * scale;
+        const width = iconRect.width * scale;
+        const height = iconRect.height * scale;
+        const color = style.color || getComputedStyle(element).color || "#b46a62";
+
+        const elementRect = element.getBoundingClientRect();
+        const gap = (parseFloat(getComputedStyle(element).fontSize) || iconRect.width) * 0.32;
+
+        if (icon.matches("img") && icon.complete && icon.naturalWidth > 0) {
+          ctx.drawImage(icon, x, y, width, height);
+          return Math.max(0, (iconRect.right - elementRect.left + gap) * scale);
+        }
+
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = Math.max(1, 1.8 * scale);
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.translate(x, y);
+        ctx.scale(width / 24, height / 24);
+        ctx.beginPath();
+        ctx.moveTo(8.05, 4.6);
+        ctx.lineTo(15.95, 4.6);
+        ctx.lineTo(14.9, 9.8);
+        ctx.lineTo(18.15, 13.05);
+        ctx.bezierCurveTo(18.51, 13.41, 18.25, 14.03, 17.73, 14.03);
+        ctx.lineTo(6.27, 14.03);
+        ctx.bezierCurveTo(5.75, 14.03, 5.49, 13.41, 5.85, 13.05);
+        ctx.lineTo(9.1, 9.8);
+        ctx.closePath();
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(12, 14.05);
+        ctx.lineTo(12, 20.45);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(9.95, 19.05);
+        ctx.lineTo(12, 21.4);
+        ctx.lineTo(14.05, 19.05);
+        ctx.stroke();
+        ctx.restore();
+
+        return Math.max(0, (iconRect.right - elementRect.left + gap) * scale);
+      };
+
+      const drawElementText = (ctx, element, pageRect, scale) => {
+        const text = String(element.textContent || "").trim();
+        if (!text) return;
+
+        const rect = element.getBoundingClientRect();
+        if (rect.width <= 0 || rect.height <= 0) return;
+        const style = getComputedStyle(element);
+        if (style.visibility === "hidden" || style.display === "none" || Number(style.opacity) === 0) return;
+
+        const fontSize = parseFloat(style.fontSize) || 14;
+        const lineHeight = style.lineHeight === "normal" ? fontSize * 1.4 : parseFloat(style.lineHeight) || fontSize * 1.4;
+        const fontWeight = style.fontWeight || "400";
+        const fontFamily = style.fontFamily || "serif";
+        const x = (rect.left - pageRect.left) * scale;
+        const y = (rect.top - pageRect.top) * scale;
+        const width = rect.width * scale;
+        const height = rect.height * scale;
+        const padTop = (parseFloat(style.paddingTop) || 0) * scale;
+        const padRight = (parseFloat(style.paddingRight) || 0) * scale;
+        const padBottom = (parseFloat(style.paddingBottom) || 0) * scale;
+        const padLeft = (parseFloat(style.paddingLeft) || 0) * scale;
+
+        ctx.save();
+        ctx.fillStyle = style.color || "#302623";
+        ctx.font = `${fontWeight} ${fontSize * scale}px ${fontFamily}`;
+        ctx.textBaseline = "top";
+        ctx.textAlign = style.textAlign === "center" ? "center" : style.textAlign === "right" ? "right" : "left";
+
+        const isTemplateText = Boolean(element.closest(".record-template-slot--text"));
+        const contentHeight = Math.max(1, height - padTop - padBottom);
+        const drawHeight = isTemplateText
+          ? Math.max(contentHeight, (pageRect.bottom - rect.top) * scale - padTop)
+          : contentHeight;
+        const isPinHeading = element.matches(".record-template-slot--text strong");
+        const textY = isPinHeading || style.alignContent === "center" || style.placeItems.includes("center")
+          ? y + padTop + Math.max(0, (contentHeight - lineHeight * scale) / 2)
+          : y + padTop;
+        const textX = ctx.textAlign === "center"
+          ? x + width / 2
+          : ctx.textAlign === "right"
+            ? x + width - padRight
+            : x + padLeft;
+        const iconOffset = isPinHeading ? drawPinIcon(ctx, element, pageRect, scale) : 0;
+        const adjustedTextX = ctx.textAlign === "left" ? Math.max(textX, x + iconOffset) : textX;
+        const maxWidth = Math.max(1, width - padLeft - padRight - (adjustedTextX - textX));
+        if (isPinHeading) {
+          ctx.fillText(text, adjustedTextX, textY, maxWidth);
+          ctx.restore();
+          return;
+        }
+        drawWrappedText(ctx, text, adjustedTextX, textY, maxWidth, lineHeight * scale, drawHeight);
+        ctx.restore();
+      };
+
+      const drawPageToCanvas = async (page, canvas, scale) => {
+        const ctx = canvas.getContext("2d");
+        const pageRect = page.getBoundingClientRect();
+        const pageStyle = getComputedStyle(page);
+        ctx.fillStyle = pageStyle.backgroundColor && pageStyle.backgroundColor !== "rgba(0, 0, 0, 0)"
+          ? pageStyle.backgroundColor
+          : "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const images = Array.from(page.querySelectorAll("img"));
+        for (const element of images) {
+          if (element.matches("[data-record-pin-image]")) continue;
+          const rect = element.getBoundingClientRect();
+          if (rect.width <= 0 || rect.height <= 0) continue;
+          const x = (rect.left - pageRect.left) * scale;
+          const y = (rect.top - pageRect.top) * scale;
+          const width = rect.width * scale;
+          const height = rect.height * scale;
+
+          await waitForImage(element);
+          const feather = Boolean(element.closest(".record-generated-page--photo-soft .record-template-slot--image"));
+          drawContainedImage(ctx, element, x, y, width, height, getComputedStyle(element).objectFit || "cover", feather);
+        }
+
+        page.querySelectorAll(".record-template-slot--title, .record-template-slot--text strong, .record-template-slot--text p").forEach((element) => {
+          drawElementText(ctx, element, pageRect, scale);
+        });
+      };
+
+      const saveGeneratedPage = async () => {
+        const page = root.querySelector(".record-generated-page");
+        const button = root.querySelector("[data-record-save-page]");
+        if (!page) return;
+
+        if (button) button.setAttribute("aria-busy", "true");
+        try {
+          await Promise.all(Array.from(page.querySelectorAll("img")).map(waitForImage));
+          const rect = page.getBoundingClientRect();
+          const width = Math.max(1, Math.round(rect.width));
+          const height = Math.max(1, Math.round(rect.height));
+          const scale = Math.max(2, Math.min(4, window.devicePixelRatio || 2));
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.round(width * scale);
+          canvas.height = Math.round(height * scale);
+          await drawPageToCanvas(page, canvas, scale);
+
+          const link = document.createElement("a");
+          link.download = `mobby-page-${new Date().toISOString().slice(0, 10)}.png`;
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+        } catch (error) {
+          console.error("[record-save-page]", error);
+          alert("画像保存に失敗しました。時間をおいてもう一度試してください。");
+        } finally {
+          if (button) button.removeAttribute("aria-busy");
+        }
+      };
+
+      const addHomeReturn = () => {
+        const actions = root.querySelector(".record-page--complete .record-complete-actions");
+        if (!actions) return;
+
+        const saveButton = actions.querySelector("[data-record-save-page]");
+        if (!saveButton) return;
+
+        const completePage = root.querySelector(".record-page--complete");
+        if (completePage && !completePage.querySelector("[data-record-complete-back]")) {
+          const backButton = document.createElement("button");
+          backButton.type = "button";
+          backButton.dataset.recordCompleteBack = "true";
+          backButton.setAttribute("aria-label", "戻る");
+          backButton.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.8 6.8 9.3 12l5.5 5.2"/></svg>';
+          completePage.insertAdjacentElement("afterbegin", backButton);
+        }
+
+        if (actions.querySelector("[data-record-home-return]")) return;
+
+        const homeButton = document.createElement("button");
+        homeButton.type = "button";
+        homeButton.dataset.recordHomeReturn = "true";
+        homeButton.innerHTML = "<span>Homeに戻る</span>";
+        saveButton.insertAdjacentElement("afterend", homeButton);
+      };
+
+      root.addEventListener("click", (event) => {
+        if (event.target.closest("[data-record-save-page]")) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          saveGeneratedPage();
+          return;
+        }
+        if (event.target.closest("[data-record-complete-back]")) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          root.querySelector(".record-page--complete [data-record-stage='select']")?.click();
+          return;
+        }
+        if (!event.target.closest("[data-record-home-return]")) return;
+        window.location.href = "../../index.html";
+      }, true);
+
+      new MutationObserver(addHomeReturn).observe(root, {
+        childList: true,
+        subtree: true
+      });
+      addHomeReturn();
+    })();
+  </script>
+</body>
+</html>

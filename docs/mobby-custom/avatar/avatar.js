@@ -1,4 +1,4 @@
-import { createEditor } from "../js/editor.js";
+﻿import { createEditor } from "../js/editor.js";
 
 const TYPE_LIST = [
   "カップル自撮りモビィ",
@@ -46,10 +46,10 @@ const NEON_COLORS = [
 
 const DECO_TEMPLATES = [
   { id: "none", label: "なし", file: "" },
-  { id: "sparkle", label: "キラキラ", file: "sparkle.png" },
-  { id: "heart", label: "ハート", file: "heart.png" },
-  { id: "gal", label: "平成ギャル", file: "gal.png" },
-  { id: "simple", label: "シンプル枠", file: "simple.png" },
+  { id: "sparkle", label: "キラキラ", file: "sparkle.webp" },
+  { id: "heart", label: "ハート", file: "heart.webp" },
+  { id: "gal", label: "平成ギャル", file: "gal.webp" },
+  { id: "simple", label: "シンプル枠", file: "simple.webp" },
 ];
 
 const typeSelect = document.getElementById("typeSelect");

@@ -1,0 +1,267 @@
+:root {
+  --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, .72), rgba(255, 255, 255, .28) 48%, rgba(255, 246, 238, .2));
+  --glass-bg-strong: linear-gradient(145deg, rgba(255, 255, 255, .86), rgba(255, 255, 255, .44) 50%, rgba(255, 244, 236, .3));
+  --glass-border: rgba(255, 255, 255, .68);
+  --glass-border-soft: rgba(255, 255, 255, .42);
+  --glass-shadow: 0 18px 42px rgba(88, 63, 48, .16), inset 0 1px rgba(255, 255, 255, .88), inset 0 -1px rgba(255, 255, 255, .24);
+  --glass-shadow-soft: 0 10px 26px rgba(88, 63, 48, .11), inset 0 1px rgba(255, 255, 255, .76);
+  --glass-highlight: linear-gradient(180deg, rgba(255, 255, 255, .72), rgba(255, 255, 255, .08));
+}
+
+:where(
+  .card,
+  .hero-card,
+  .burn-card,
+  .vote-card,
+  .sns-link-card,
+  .price-card,
+  .product-tab-card,
+  .acrylic-series-card,
+  .acrylic-status-card,
+  .acrylic-summary-card,
+  .try-card,
+  .info-card,
+  .love-card,
+  .char-card,
+  .qcard,
+  .qCard,
+  .panel,
+  .record-start-card,
+  .record-memory-card,
+  .record-select-card,
+  .record-page-preview-card,
+  .record-photo-adjust-panel,
+  .record-posting-overlay__inner,
+  .burn-guide-card,
+  .burn-guide-visual,
+  .burn-guide-memory-card,
+  .burn-guide-template-panel,
+  .compose-preview,
+  .compose-group,
+  .compose-disclosure__panel,
+  .compose-custom-tools,
+  .compose-custom-inspector,
+  .compose-text-tray,
+  .love-diagnosis__hero,
+  .love-question,
+  .love-axis-card,
+  .love-axis-bar,
+  .love-result-hero,
+  .love-character-card,
+  .love-character-detail,
+  .love-compatibility,
+  .love-result-sections section,
+  .love-character-list,
+  .diagnosis-menu-frame,
+  .gift-fan-menu,
+  .popup-buttons,
+  .section-block,
+  .empty-panel,
+  .search-box,
+  .profile-card,
+  .profile-form,
+  .issue-form
+) {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-color: var(--glass-border) !important;
+  background: var(--glass-bg) !important;
+  box-shadow: var(--glass-shadow) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(1.28) !important;
+  backdrop-filter: blur(22px) saturate(1.28) !important;
+}
+
+:where(
+  .card,
+  .hero-card,
+  .burn-card,
+  .vote-card,
+  .sns-link-card,
+  .price-card,
+  .product-tab-card,
+  .acrylic-series-card,
+  .acrylic-status-card,
+  .acrylic-summary-card,
+  .try-card,
+  .info-card,
+  .love-card,
+  .char-card,
+  .qcard,
+  .qCard,
+  .panel,
+  .record-start-card,
+  .record-memory-card,
+  .record-select-card,
+  .record-page-preview-card,
+  .record-photo-adjust-panel,
+  .record-posting-overlay__inner,
+  .burn-guide-card,
+  .burn-guide-visual,
+  .burn-guide-memory-card,
+  .burn-guide-template-panel,
+  .compose-preview,
+  .compose-group,
+  .compose-disclosure__panel,
+  .compose-custom-tools,
+  .compose-custom-inspector,
+  .compose-text-tray,
+  .love-diagnosis__hero,
+  .love-question,
+  .love-axis-card,
+  .love-axis-bar,
+  .love-result-hero,
+  .love-character-card,
+  .love-character-detail,
+  .love-compatibility,
+  .love-result-sections section,
+  .love-character-list,
+  .diagnosis-menu-frame,
+  .gift-fan-menu,
+  .popup-buttons,
+  .section-block,
+  .empty-panel,
+  .search-box,
+  .profile-card,
+  .profile-form,
+  .issue-form
+)::before {
+  content: "";
+  position: absolute;
+  inset: 1px 1px auto;
+  height: 48%;
+  border-radius: inherit;
+  background: var(--glass-highlight);
+  opacity: .8;
+  pointer-events: none;
+  z-index: -1;
+}
+
+:where(
+  .card,
+  .hero-card,
+  .burn-card,
+  .vote-card,
+  .sns-link-card,
+  .price-card,
+  .product-tab-card,
+  .acrylic-series-card,
+  .acrylic-status-card,
+  .acrylic-summary-card,
+  .try-card,
+  .info-card,
+  .love-card,
+  .char-card,
+  .qcard,
+  .qCard,
+  .panel,
+  .record-start-card,
+  .record-memory-card,
+  .record-select-card,
+  .record-page-preview-card,
+  .record-photo-adjust-panel,
+  .record-posting-overlay__inner,
+  .burn-guide-card,
+  .burn-guide-visual,
+  .burn-guide-memory-card,
+  .burn-guide-template-panel,
+  .compose-preview,
+  .compose-group,
+  .compose-disclosure__panel,
+  .compose-custom-tools,
+  .compose-custom-inspector,
+  .compose-text-tray,
+  .love-diagnosis__hero,
+  .love-question,
+  .love-axis-card,
+  .love-axis-bar,
+  .love-result-hero,
+  .love-character-card,
+  .love-character-detail,
+  .love-compatibility,
+  .love-result-sections section,
+  .love-character-list,
+  .diagnosis-menu-frame,
+  .gift-fan-menu,
+  .popup-buttons,
+  .section-block,
+  .empty-panel,
+  .search-box,
+  .profile-card,
+  .profile-form,
+  .issue-form
+)::after {
+  content: "";
+  position: absolute;
+  top: -35%;
+  left: -22%;
+  width: 42%;
+  height: 170%;
+  transform: rotate(18deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .34), transparent);
+  opacity: .72;
+  pointer-events: none;
+  z-index: -1;
+}
+
+:where(.primary, .button--primary, .record-primary-button, .burn-guide-next, .compose-submit-button, .sns-save-btn) {
+  color: #fff !important;
+  border-color: rgba(255, 255, 255, .48) !important;
+  background:
+    linear-gradient(135deg, rgba(210, 101, 96, .88), rgba(189, 85, 91, .76) 48%, rgba(255, 172, 154, .54)) !important;
+  box-shadow:
+    0 16px 34px rgba(180, 82, 82, .28),
+    inset 0 1px rgba(255, 255, 255, .68),
+    inset 0 -14px 24px rgba(111, 42, 45, .18) !important;
+}
+
+:where(input, textarea, select, .field__input, .field__textarea, .record-input-wrap, .record-field > input, .record-title-field input, .compose-custom-inspector__textarea, .compose-custom-inspector__select) {
+  border-color: rgba(255, 255, 255, .58) !important;
+  background: rgba(255, 255, 255, .58) !important;
+  box-shadow: inset 0 1px rgba(255, 255, 255, .82), 0 8px 18px rgba(88, 63, 48, .08) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(1.2) !important;
+  backdrop-filter: blur(14px) saturate(1.2) !important;
+}
+
+:where(.record-template-option.is-selected, .record-background-option.is-selected, .love-answer-option.is-selected, .compose-mode-switch__button.is-active, .compose-text-tray__option.is-active, .compose-text-tray__align-button.is-active, .love-diagnosis-tabs__item.is-active) {
+  border-color: rgba(255, 255, 255, .82) !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .56), 0 14px 30px rgba(180, 101, 90, .2), inset 0 1px rgba(255, 255, 255, .9) !important;
+}
+
+:where(.record-generated-page, .compose-sheet, .record-posting-overlay__page, .burn-guide-page, .burn-guide-final-image, .burn-guide-page-image) {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  :where(.card, .hero-card, .burn-card, .vote-card, .sns-link-card, .price-card, .product-tab-card, .acrylic-series-card, .acrylic-status-card, .acrylic-summary-card, .try-card, .info-card, .love-card, .char-card, .qcard, .qCard, .panel) {
+    background: rgba(255, 255, 255, .88) !important;
+  }
+}
+
+.sns-link-card {
+  color: #fffaf2 !important;
+  border-color: rgba(255, 255, 255, .62) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .34),
+    inset 0 -18px 30px rgba(25, 18, 28, .18),
+    0 16px 34px rgba(74, 55, 40, .2) !important;
+}
+
+.sns-link-card.instagram {
+  background:
+    radial-gradient(circle at 18% 16%, rgba(255, 255, 255, .42), rgba(255, 255, 255, 0) 28%),
+    linear-gradient(135deg, #6f35ff 0%, #d934a5 46%, #ff8b62 72%, #ffd36b 100%) !important;
+}
+
+.sns-link-card.tiktok {
+  background:
+    radial-gradient(circle at 18% 16%, rgba(255, 255, 255, .24), rgba(255, 255, 255, 0) 30%),
+    linear-gradient(135deg, #111 0%, #26262e 52%, #ff3b6b 78%, #00f2ea 120%) !important;
+}
+
+.sns-link-card span,
+.sns-link-card small {
+  color: #fffaf2 !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, .22);
+}
