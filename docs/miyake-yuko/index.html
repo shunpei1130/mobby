@@ -678,9 +678,7 @@
             <p class="text-body" style="color:#111111; font-weight:600; font-size:15px; line-height:1.9; margin:0 0 18px;">${beauty.note}</p>
             <div class="section-grid">
               <div class="mini"><h3>似合う美容キーワード</h3><p>${beauty.keywords.join(" / ")}</p></div>
-              <div class="mini"><h3>おすすめ導線</h3><p>${beauty.cta}</p></div>
               <div class="mini"><h3>合いそうな美容アイテム</h3><p>${beauty.items.join(" / ")}</p></div>
-              <div class="mini"><h3>保存したくなる一言</h3><p>${beauty.line}</p></div>
             </div>
           </div>` : "";
       app.innerHTML = `
@@ -771,8 +769,6 @@
           <p style="font-size:13px; line-height:1.8; margin:0 0 12px;">${beauty.note}</p>
           <div style="display:grid; gap:10px;">
             <div style="padding:12px; background:#fff; border:1px solid var(--line); border-radius:12px;"><h3 style="font-size:13px; margin:0 0 6px;">似合う美容キーワード</h3><p style="font-size:13px; line-height:1.7; margin:0;">${beauty.keywords.join(" / ")}</p></div>
-            <div style="padding:12px; background:#fff; border:1px solid var(--line); border-radius:12px;"><h3 style="font-size:13px; margin:0 0 6px;">おすすめ導線</h3><p style="font-size:13px; line-height:1.7; margin:0;">${beauty.cta}</p></div>
-            <div style="padding:12px; background:#fff; border:1px solid var(--line); border-radius:12px;"><h3 style="font-size:13px; margin:0 0 6px;">保存したくなる一言</h3><p style="font-size:13px; line-height:1.7; margin:0;">${beauty.line}</p></div>
           </div>
         </div>` : "";
       const modal = `<div id="charModalOverlay" style="position:fixed; inset:0; z-index:100; background:rgba(0,0,0,0.42); display:flex; align-items:center; justify-content:center; padding:18px;">
