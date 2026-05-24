@@ -1084,6 +1084,9 @@
     (() => {
       const root = document.getElementById("recordRoot");
       if (!root) return;
+      let preparedPageSave = null;
+      let preparedPageElement = null;
+      let preparePageSavePromise = null;
 
       const waitForImage = (img) => {
         if (img.complete && img.naturalWidth > 0) return Promise.resolve();
@@ -1316,44 +1319,92 @@
         });
       };
 
+      const buildGeneratedPageFile = async (page) => {
+        await Promise.all(Array.from(page.querySelectorAll("img")).map(waitForImage));
+        const rect = page.getBoundingClientRect();
+        const width = Math.max(1, Math.round(rect.width));
+        const height = Math.max(1, Math.round(rect.height));
+        const scale = Math.max(2, Math.min(4, window.devicePixelRatio || 2));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(width * scale);
+        canvas.height = Math.round(height * scale);
+        await drawPageToCanvas(page, canvas, scale);
+
+        const fileName = `mobby-page-${new Date().toISOString().slice(0, 10)}.png`;
+        const blob = await new Promise((resolve, reject) => {
+          canvas.toBlob((result) => {
+            if (result) resolve(result);
+            else reject(new Error("Canvas export failed"));
+          }, "image/png");
+        });
+
+        return {
+          blob,
+          file: new File([blob], fileName, { type: "image/png" }),
+          fileName,
+        };
+      };
+
+      const prepareGeneratedPageSave = () => {
+        const page = root.querySelector(".record-generated-page");
+        const button = root.querySelector("[data-record-save-page]");
+        if (!page) return;
+
+        if (preparedPageElement === page && preparedPageSave) return;
+        if (preparedPageElement === page && preparePageSavePromise) return;
+
+        preparedPageElement = page;
+        preparedPageSave = null;
+        if (button) {
+          button.setAttribute("aria-busy", "true");
+          button.disabled = true;
+        }
+        preparePageSavePromise = buildGeneratedPageFile(page)
+          .then((result) => {
+            if (preparedPageElement === page) preparedPageSave = result;
+            return result;
+          })
+          .catch((error) => {
+            console.error("[record-save-page:prepare]", error);
+            if (preparedPageElement === page) preparedPageSave = null;
+            throw error;
+          })
+          .finally(() => {
+            if (preparedPageElement === page) preparePageSavePromise = null;
+            if (button) {
+              button.removeAttribute("aria-busy");
+              button.disabled = false;
+            }
+          });
+      };
+
       const saveGeneratedPage = async () => {
         const page = root.querySelector(".record-generated-page");
         const button = root.querySelector("[data-record-save-page]");
         if (!page) return;
 
+        if (preparedPageElement !== page || (!preparedPageSave && !preparePageSavePromise)) {
+          prepareGeneratedPageSave();
+        }
+
         if (button) button.setAttribute("aria-busy", "true");
         try {
-          await Promise.all(Array.from(page.querySelectorAll("img")).map(waitForImage));
-          const rect = page.getBoundingClientRect();
-          const width = Math.max(1, Math.round(rect.width));
-          const height = Math.max(1, Math.round(rect.height));
-          const scale = Math.max(2, Math.min(4, window.devicePixelRatio || 2));
-          const canvas = document.createElement("canvas");
-          canvas.width = Math.round(width * scale);
-          canvas.height = Math.round(height * scale);
-          await drawPageToCanvas(page, canvas, scale);
+          const prepared = preparedPageSave || await preparePageSavePromise || await buildGeneratedPageFile(page);
+          preparedPageElement = page;
+          preparedPageSave = prepared;
 
-          const fileName = `mobby-page-${new Date().toISOString().slice(0, 10)}.png`;
-          const blob = await new Promise((resolve, reject) => {
-            canvas.toBlob((result) => {
-              if (result) resolve(result);
-              else reject(new Error("Canvas export failed"));
-            }, "image/png");
-          });
-
-          const file = new File([blob], fileName, { type: "image/png" });
-          if (navigator.canShare?.({ files: [file] }) && navigator.share) {
+          if (navigator.canShare?.({ files: [prepared.file] }) && navigator.share) {
             await navigator.share({
-              files: [file],
+              files: [prepared.file],
               title: "Mobby page",
               text: "作成したBURNページです。",
             });
             return;
           }
 
-          const objectUrl = URL.createObjectURL(blob);
+          const objectUrl = URL.createObjectURL(prepared.blob);
           const link = document.createElement("a");
-          link.download = fileName;
+          link.download = prepared.fileName;
           link.href = objectUrl;
           link.rel = "noopener";
           document.body.appendChild(link);
@@ -1374,6 +1425,7 @@
 
         const saveButton = actions.querySelector("[data-record-save-page]");
         if (!saveButton) return;
+        prepareGeneratedPageSave();
 
         const completePage = root.querySelector(".record-page--complete");
         if (completePage && !completePage.querySelector("[data-record-complete-back]")) {
