@@ -1914,6 +1914,7 @@ function gotoDiagnosisHome(){
   page: 0,
   answers: {},
   profile: { name: "", email: "", age: "" }, // ニックネーム、メール（任意）、年齢
+  sentToSheet: false,
   type: "", // 診断コード（ホーム側連携用）
   diagnosisName: "", // 診断名（ホーム側連携用）
   axes: null, // 診断軸（ホーム側連携用）
@@ -2175,6 +2176,7 @@ function gotoDiagnosisHome(){
       state.questionOrder = null;
       state.gender = null;
       state.profile = { name: "", email: "", age: "" };  // プロフィール情報もクリア
+      state.sentToSheet = false;
       state.type = "";
       state.diagnosisName = "";
       state.axes = null;
@@ -3227,6 +3229,7 @@ const setGatePending = (pending) => {
 };
 
 gateSubmitButton.onclick = async () => {
+    if (gateSubmitButton.disabled) return;
     const errEl = document.getElementById("regErr");
     errEl.style.display = "none";
 
@@ -3243,9 +3246,22 @@ gateSubmitButton.onclick = async () => {
     if(!emailOk){ errEl.textContent = "メールアドレスを正しく入力してください"; errEl.style.display="block"; return; }
     if(!consent){ errEl.textContent = "同意にチェックしてください"; errEl.style.display="block"; return; }
 
+    if (state.sentToSheet) {
+      state.profile = { name, email, age };
+      state.step = "result";
+      saveState();
+      render();
+      return;
+    }
+
     setGatePending(true);
 
     try{
+      state.profile = { name, email, age };
+      state.step = "result";
+      state.sentToSheet = true;
+      saveState();
+
       // 各質問の回答データを整形（質問ID -> 回答値のマッピング）
       const questionAnswers = {};
       const questions = getQuestions();
@@ -3314,6 +3330,10 @@ gateSubmitButton.onclick = async () => {
 
       render();
     }catch(e){
+      state.profile = { name: "", email: "", age: "" };
+      state.step = "gate";
+      state.sentToSheet = false;
+      saveState();
       errEl.textContent = e?.message || "送信に失敗しました";
       errEl.style.display="block";
       setGatePending(false);

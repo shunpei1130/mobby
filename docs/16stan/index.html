@@ -1639,13 +1639,16 @@ const setGatePending = (pending) => {
     gatePendingMsg.style.display = pending ? "block" : "none";
 };
 gateSubmitButton.onclick = async () => {
+                if (gateSubmitButton.disabled) return;
                 const name = document.getElementById("inName").value.trim(); const email = document.getElementById("inEmail").value.trim(); const age = document.getElementById("inAge").value; const err = document.getElementById("gateError");
                 err.textContent = "";
                 if (!name) { err.textContent = "ニックネームを入力してください"; return; }
                 if (!age) { err.textContent = "年齢を選択してください"; return; }
                 if (!email || !email.includes("@")) { err.textContent = "メールアドレスを入力してください"; return; }
                 setGatePending(true);
-state.profile = { name, email, age }; const { code, pcts } = computeResult(); const ch = CH[code]; state.step = "result"; saveState();
+state.profile = { name, email, age }; const { code, pcts } = computeResult(); const ch = CH[code]; state.step = "result";
+                if (state.sentToSheet) { saveState(); render(); return; }
+                state.sentToSheet = true; saveState();
                 const roundedAxes = {};["A", "B", "C", "D"].forEach(k => { roundedAxes[k] = Math.round(pcts[k]); });
                 try { await submitLead({ name, email, age, type: code, source: "16stan" }); await submitDiagnosis({ name, email, age, type: code, axes: roundedAxes, answers: state.answers, source: "16stan", createdAt: new Date().toISOString(), diagnosis_type: ch ? (ch.displayName || ch.name) : code }); } catch (e) { console.error(e); } render();
             };

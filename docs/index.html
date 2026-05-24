@@ -2212,7 +2212,8 @@
     }
 
     /* FAQお問い合わせフォーム */
-    .faq-contact-form {
+    .faq-contact-form,
+    .collab-request-form {
       background: rgba(255, 255, 255, 0.88);
       border: 1px solid rgba(47, 79, 79, 0.14);
       border-radius: 22px;
@@ -2221,7 +2222,9 @@
     }
 
     .faq-contact-form input:focus,
-    .faq-contact-form textarea:focus {
+    .faq-contact-form textarea:focus,
+    .collab-request-form input:focus,
+    .collab-request-form textarea:focus {
       border-color: rgba(210, 105, 30, 0.4);
       box-shadow: 0 0 0 3px rgba(210, 105, 30, 0.1);
     }
@@ -6438,6 +6441,1224 @@
         margin-top: 32px;
       }
     }
+
+    /* Static two-row layout for the footer actions. */
+    .popup-buttons {
+      width: min(760px, 96vw) !important;
+      padding-left: 0 !important;
+      display: block !important;
+    }
+
+    .gift-fan-menu {
+      top: 0 !important;
+      width: 100% !important;
+      height: auto !important;
+      display: grid !important;
+      gap: 0 !important;
+      row-gap: 0 !important;
+      justify-items: center;
+    }
+
+    .hero-diagnosis-menu,
+    .hero-collab-diagnosis-menu {
+      width: min(760px, calc(100% - 32px));
+      margin: 24px auto 4px;
+      position: relative;
+      z-index: 18;
+    }
+
+    .hero-collab-diagnosis-menu {
+      margin-top: 14px;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions {
+      box-sizing: border-box;
+      flex-wrap: nowrap !important;
+      justify-content: flex-start !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      scroll-snap-type: none !important;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action {
+      flex: 0 0 104px !important;
+      width: 104px !important;
+      scroll-snap-align: none;
+    }
+
+    .footer-burn-card-row {
+      order: 1;
+      width: 100%;
+      margin: 0 auto 0 !important;
+    }
+
+    .footer-burn-card-row .burn-card {
+      width: 100%;
+      margin: 0 auto 0 !important;
+      border-radius: 24px 24px 0 0;
+      background: #faf1e2;
+      background-color: #faf1e2;
+      box-shadow: none;
+    }
+
+    .gift-fan-diagnosis-actions,
+    .gift-fan-actions {
+      position: static !important;
+      inset: auto !important;
+      width: 100% !important;
+      height: auto !important;
+      display: flex !important;
+      flex-wrap: wrap !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 14px !important;
+      transform: none !important;
+      overflow: visible !important;
+      pointer-events: auto !important;
+      color: inherit !important;
+      font-size: inherit !important;
+    }
+
+    .gift-fan-actions {
+      flex-wrap: nowrap !important;
+      gap: 10px !important;
+    }
+
+    .gift-fan-menu > .gift-fan-actions {
+      overflow: hidden !important;
+    }
+
+    .gift-fan-diagnosis-actions {
+      order: 1;
+      position: relative !important;
+      padding: 38px 18px 16px !important;
+      border: 1.5px dashed rgba(237, 126, 57, 0.78);
+      border-radius: 24px;
+      background: #faf1e2;
+      background-color: #faf1e2;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.54),
+        0 12px 26px rgba(91, 67, 42, 0.1);
+    }
+
+    .gift-fan-diagnosis-actions::before {
+      content: "♡  診断メニュー  ♡";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 0 22px;
+      background: #faf1e2;
+      color: #282828;
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .gift-fan-actions {
+      order: 2;
+      box-sizing: border-box;
+      padding: 14px 12px 16px !important;
+      background: transparent;
+      background-color: transparent;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      overflow: hidden;
+    }
+
+    .gift-fan-action,
+    .gift-fan-menu.is-open .gift-fan-action[data-fan-item] {
+      position: relative !important;
+      right: auto !important;
+      bottom: auto !important;
+      width: 78px !important;
+      height: 74px !important;
+      flex: 0 0 78px !important;
+      padding: 0 !important;
+      flex-direction: column !important;
+      gap: 4px !important;
+      display: inline-flex !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      transform: none !important;
+      border-radius: 18px !important;
+      font-size: 0.78rem !important;
+      font-weight: 900 !important;
+      line-height: 1.15 !important;
+      overflow: hidden !important;
+      border: 1px solid rgba(255, 255, 255, 0.48) !important;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.18)) !important;
+      color: rgba(71, 63, 54, 0.86) !important;
+      backdrop-filter: blur(18px) saturate(1.35);
+      -webkit-backdrop-filter: blur(18px) saturate(1.35);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.72),
+        inset 0 -18px 26px rgba(255, 255, 255, 0.12),
+        0 10px 24px rgba(78, 57, 39, 0.16) !important;
+    }
+
+    .gift-fan-diagnosis-action,
+    .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action {
+      position: relative !important;
+      right: auto !important;
+      bottom: auto !important;
+      width: 104px !important;
+      height: 66px !important;
+      flex: 0 1 104px !important;
+      padding: 0 !important;
+      flex-direction: column !important;
+      gap: 5px !important;
+      display: inline-flex !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      transform: none !important;
+      border-radius: 18px !important;
+      font-size: 0.95rem !important;
+      font-weight: 900 !important;
+      line-height: 1.15 !important;
+      overflow: hidden !important;
+      border: 1px solid rgba(255, 255, 255, 0.48) !important;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.18)) !important;
+      color: rgba(71, 63, 54, 0.86) !important;
+      backdrop-filter: blur(18px) saturate(1.35);
+      -webkit-backdrop-filter: blur(18px) saturate(1.35);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.72),
+        inset 0 -18px 26px rgba(255, 255, 255, 0.12),
+        0 10px 24px rgba(78, 57, 39, 0.16) !important;
+    }
+
+    .gift-fan-action[data-fan-item="price"] {
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.66), rgba(255, 246, 230, 0.24)) !important;
+      color: rgba(86, 64, 45, 0.92) !important;
+      order: 1;
+    }
+
+    .footer-btn-icon {
+      position: relative;
+      z-index: 2;
+      display: block;
+      width: 30px;
+      height: 30px;
+      font-size: 0;
+      line-height: 0;
+      color: rgba(45, 50, 54, 0.9);
+    }
+
+    .gift-fan-action .footer-btn-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .footer-btn-icon::before {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: currentColor;
+      -webkit-mask: var(--footer-icon) center / contain no-repeat;
+      mask: var(--footer-icon) center / contain no-repeat;
+    }
+
+    .footer-btn-icon[data-icon="heart"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M32 54S8 39 8 22c0-8 6-14 14-14 5 0 9 3 10 7 1-4 5-7 10-7 8 0 14 6 14 14 0 17-24 32-24 32Z'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="school"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 54h48'/%3E%3Cpath d='M18 54V34h28v20'/%3E%3Cpath d='M24 34V21l8-7 8 7v13'/%3E%3Cpath d='M32 14V7h10v9H32'/%3E%3Cpath d='M29 54V42a3 3 0 0 1 6 0v12'/%3E%3Cpath d='M14 54V37h10'/%3E%3Cpath d='M50 54V37H40'/%3E%3Ccircle cx='32' cy='28' r='3'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="cloud"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 43h26a12 12 0 0 0 0-24 15 15 0 0 0-29-1A12 12 0 0 0 20 43Z'/%3E%3Cpath d='M20 53l-4 6'/%3E%3Cpath d='M34 53l-4 6'/%3E%3Cpath d='M48 53l-4 6'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="star"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m32 6 8 17 18 2-13 13 3 18-16-9-16 9 3-18L6 25l18-2 8-17Z'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="image"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='10' y='12' width='44' height='40' rx='3'/%3E%3Ccircle cx='39' cy='24' r='5'/%3E%3Cpath d='M12 48 27 32l10 10 7-8 10 14'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="book"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M32 51c-7-6-15-7-24-3V13c9-4 17-3 24 3v35Z'/%3E%3Cpath d='M32 51c7-6 15-7 24-3V13c-9-4-17-3-24 3v35Z'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="vote"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 31h40l6 11v15H6V42l6-11Z'/%3E%3Cpath d='M15 42h34'/%3E%3Cpath d='M28 29 17 18 31 4l16 16-12 9'/%3E%3Cpath d='M24 29h16'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="mail"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='8' y='16' width='48' height='34' rx='4'/%3E%3Cpath d='m10 19 22 18 22-18'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="share"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='17' cy='34' r='8'/%3E%3Ccircle cx='47' cy='17' r='8'/%3E%3Ccircle cx='47' cy='49' r='8'/%3E%3Cpath d='M24 30 40 21'/%3E%3Cpath d='M24 38 40 46'/%3E%3C/svg%3E");
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="school"] {
+      order: 1;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="love"] {
+      order: 2;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] {
+      order: 3;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="romance"] {
+      order: 4;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="blank-1"] {
+      order: 5;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="blank-2"] {
+      order: 6;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="blank-3"] {
+      order: 7;
+    }
+
+    @media (max-width: 520px) {
+      .hero-diagnosis-menu,
+      .hero-collab-diagnosis-menu {
+        width: min(360px, calc(100% - 16px));
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-collab-diagnosis-menu {
+        margin-top: 12px;
+      }
+
+      .gift-fan-diagnosis-actions {
+        gap: 8px !important;
+        padding: 34px 10px 12px !important;
+        border-radius: 20px;
+      }
+
+      .gift-fan-diagnosis-action,
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action {
+        width: calc((100% - 24px) / 4) !important;
+        height: 70px !important;
+        flex: 0 0 calc((100% - 24px) / 4) !important;
+        border-radius: 16px !important;
+        font-size: 0.8rem !important;
+        gap: 3px !important;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-actions {
+        width: 100% !important;
+        max-width: 100% !important;
+        gap: 8px !important;
+        padding: 34px 10px 12px !important;
+        justify-content: flex-start !important;
+        scroll-padding-left: 10px;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-action,
+      .hero-diagnosis-menu .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action {
+        width: 78px !important;
+        flex: 0 0 78px !important;
+        font-size: 0.72rem !important;
+      }
+
+      .gift-fan-actions {
+        gap: 7px !important;
+      }
+
+      .gift-fan-action,
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item] {
+        width: calc((100% - 28px) / 5) !important;
+        height: 64px !important;
+        flex: 0 0 calc((100% - 28px) / 5) !important;
+        border-radius: 16px !important;
+        font-size: 0.68rem !important;
+        gap: 2px !important;
+      }
+
+      .gift-fan-action .footer-btn-icon,
+      .gift-fan-diagnosis-action .footer-btn-icon {
+        width: 22px;
+        height: 22px;
+      }
+    }
+
+    .gift-fan-action::before,
+    .gift-fan-diagnosis-action::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0) 46%),
+        radial-gradient(circle at 24% 16%, rgba(255, 255, 255, 0.66), rgba(255, 255, 255, 0) 34%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .gift-fan-action::after,
+    .gift-fan-diagnosis-action::after {
+      content: "";
+      position: absolute;
+      inset: auto 8px 7px 8px;
+      height: 1px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.58);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .gift-fan-action,
+    .gift-fan-diagnosis-action {
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.46);
+    }
+
+    .gift-fan-action {
+      z-index: 1;
+    }
+
+    .gift-fan-action > *,
+    .gift-fan-diagnosis-action > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .gift-fan-new-badge {
+      z-index: 3;
+    }
+
+    #openCompositingPopup .gift-fan-new-badge,
+    #openVotePopup .gift-fan-new-badge {
+      display: none !important;
+    }
+
+    .gift-fan-menu.is-diagnosis-open .gift-fan-action:not([data-fan-item="price"]) {
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      transform: none !important;
+    }
+
+    .gift-fan-new-badge {
+      top: -10px !important;
+    }
+
+    @media (max-width: 520px) {
+      .popup-buttons-bar {
+        padding: 12px 0 8px;
+      }
+
+      .popup-buttons {
+        width: min(360px, 96vw) !important;
+      }
+
+      .gift-fan-diagnosis-actions,
+      .gift-fan-actions {
+        gap: 6px !important;
+      }
+
+      .gift-fan-actions {
+        flex-wrap: nowrap !important;
+      }
+
+      .gift-fan-diagnosis-actions {
+        padding: 34px 10px 12px !important;
+      }
+
+      .gift-fan-diagnosis-actions::before {
+        font-size: 1rem;
+        padding: 0 14px;
+      }
+
+      .gift-fan-action,
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item] {
+        width: calc((100% - 24px) / 5) !important;
+        height: 64px !important;
+        flex: 0 0 calc((100% - 24px) / 5) !important;
+        font-size: 0.7rem !important;
+      }
+
+      .gift-fan-diagnosis-action,
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action {
+        width: calc((100% - 18px) / 4) !important;
+        height: 70px !important;
+        flex: 0 0 calc((100% - 18px) / 4) !important;
+        font-size: 0.8rem !important;
+      }
+
+      .footer-btn-icon {
+        width: 24px;
+        height: 24px;
+      }
+
+      .gift-fan-action .footer-btn-icon {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    .hero-intro .headline {
+      position: relative;
+      z-index: 4;
+      margin-top: 28px;
+      margin-bottom: -6px;
+    }
+
+    .hero-intro .hero-carousel-shell {
+      margin-top: -88px;
+    }
+
+    @media (max-width: 768px) {
+      .hero-intro .headline {
+        margin-top: 22px;
+        margin-bottom: -4px;
+      }
+
+      .hero-intro .hero-carousel-shell {
+        margin-top: -76px;
+      }
+    }
+
+    /* Glassmorphism finish for the main action buttons. */
+    .hero-character-action,
+    .gift-fan-action,
+    .gift-fan-diagnosis-action,
+    .burn-card-arrow,
+    .gacha-btn {
+      position: relative !important;
+      overflow: hidden !important;
+      isolation: isolate;
+      border-color: rgba(255, 255, 255, 0.54) !important;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.2) 58%, rgba(255, 248, 238, 0.34)) !important;
+      color: rgba(45, 50, 54, 0.9) !important;
+      backdrop-filter: blur(22px) saturate(1.45) !important;
+      -webkit-backdrop-filter: blur(22px) saturate(1.45) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.82),
+        inset 0 -18px 28px rgba(255, 255, 255, 0.13),
+        0 12px 28px rgba(78, 57, 39, 0.17) !important;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+
+    .hero-character-action::before,
+    .gift-fan-action::before,
+    .gift-fan-diagnosis-action::before,
+    .burn-card-arrow::before,
+    .gacha-btn::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0) 44%),
+        radial-gradient(circle at 22% 14%, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0) 34%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-character-action > *,
+    .gift-fan-action > *,
+    .gift-fan-diagnosis-action > *,
+    .burn-card-arrow > *,
+    .gacha-btn > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-character-action:hover,
+    .gift-fan-action:hover,
+    .gift-fan-diagnosis-action:hover,
+    .burn-card-arrow:hover,
+    .gacha-btn:hover {
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -18px 28px rgba(255, 255, 255, 0.18),
+        0 16px 32px rgba(78, 57, 39, 0.21) !important;
+    }
+
+    .footer-burn-card-row .burn-card-arrow {
+      display: grid !important;
+      place-items: center !important;
+      font-size: 0 !important;
+      line-height: 0 !important;
+      text-indent: 0 !important;
+    }
+
+    .footer-burn-card-row .burn-card-arrow::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 2;
+      width: 9px;
+      height: 9px;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      transform-origin: center;
+      pointer-events: none;
+    }
+
+    @media (max-width: 640px) {
+      .footer-burn-card-row .burn-card-arrow::after {
+        width: 8px;
+        height: 8px;
+        border-width: 1.8px;
+      }
+    }
+
+    /* Hero diagnosis menu: keep the dotted frame stable, scroll only the buttons. */
+    .hero-diagnosis-menu,
+    .hero-collab-diagnosis-menu {
+      --hero-panel-body-height: 78px;
+      box-sizing: border-box;
+      width: min(760px, calc(100% - 32px));
+      min-height: calc(24px + var(--hero-panel-body-height) + 14px);
+      margin: 24px auto 4px;
+      padding: 24px 18px 14px;
+      position: relative;
+      z-index: 18;
+      border: 1.5px dashed rgba(237, 126, 57, 0.78);
+      border-radius: 24px;
+      background: #faf1e2;
+      background-color: #faf1e2;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.54),
+        0 12px 26px rgba(91, 67, 42, 0.1);
+    }
+
+    .hero-collab-diagnosis-menu {
+      margin-top: 14px;
+    }
+
+    .hero-diagnosis-menu::before {
+      content: "♡  診断メニュー  ♡";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 0 22px;
+      background: #faf1e2;
+      color: #282828;
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .hero-collab-diagnosis-menu::before {
+      content: "♡  コラボ診断  ♡";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 0 22px;
+      background: #faf1e2;
+      color: #282828;
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions,
+    .hero-collab-diagnosis-menu .hero-collab-diagnosis-list {
+      --hero-diagnosis-scroll-distance: 230px;
+      --hero-diagnosis-scroll-duration: 14s;
+      box-sizing: border-box;
+      width: min(430px, 100%) !important;
+      max-width: 100% !important;
+      height: var(--hero-panel-body-height) !important;
+      min-height: var(--hero-panel-body-height) !important;
+      max-height: var(--hero-panel-body-height) !important;
+      margin: 0 auto !important;
+      padding: 12px 0 0 !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      justify-content: flex-start !important;
+      align-items: flex-end !important;
+      gap: 14px !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      scroll-snap-type: none !important;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions {
+      gap: 0 !important;
+    }
+
+    .hero-diagnosis-menu .hero-diagnosis-track {
+      display: flex !important;
+      flex: 0 0 auto;
+      flex-wrap: nowrap !important;
+      align-items: flex-end !important;
+      gap: 14px !important;
+      width: max-content;
+      min-width: max-content;
+      will-change: transform;
+      animation: heroDiagnosisScroll var(--hero-diagnosis-scroll-duration) linear infinite;
+      animation-play-state: paused;
+    }
+
+    .hero-diagnosis-menu.is-scroll-ready .gift-fan-diagnosis-actions {
+      justify-content: center !important;
+      overflow-x: hidden !important;
+    }
+
+    .hero-diagnosis-menu.is-scroll-ready .hero-diagnosis-track {
+      width: 100% !important;
+      min-width: 100% !important;
+      max-width: 100% !important;
+      justify-content: space-evenly !important;
+      gap: 0 !important;
+      animation: none !important;
+      transform: none !important;
+      will-change: auto;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions.is-user-scrolling .hero-diagnosis-track {
+      animation: none;
+      transform: translateX(0);
+    }
+
+    @keyframes heroDiagnosisScroll {
+      0%,
+      24% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(calc(var(--hero-diagnosis-scroll-distance) * -1));
+      }
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions::before,
+    .hero-collab-diagnosis-menu .hero-collab-diagnosis-list::before {
+      content: none !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions::-webkit-scrollbar,
+    .hero-collab-diagnosis-menu .hero-collab-diagnosis-list::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action,
+    .hero-collab-diagnosis-menu .gift-fan-diagnosis-action {
+      width: 82px !important;
+      height: 66px !important;
+      flex: 0 0 82px !important;
+      border-radius: 14px !important;
+      font-size: 0.8rem !important;
+      scroll-snap-align: none;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="school"] {
+      border-color: rgba(80, 154, 255, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(206, 230, 255, 0.74), rgba(72, 148, 255, 0.32)) !important;
+      color: #174f9a !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(80, 154, 255, 0.18) !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="love"] {
+      border-color: rgba(159, 112, 255, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(226, 212, 255, 0.74), rgba(151, 105, 255, 0.34)) !important;
+      color: #5530a5 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(151, 105, 255, 0.18) !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] {
+      border-color: rgba(245, 190, 55, 0.55) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 240, 178, 0.78), rgba(255, 202, 64, 0.36)) !important;
+      color: #7a5600 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(245, 190, 55, 0.18) !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="romance"] {
+      border-color: rgba(255, 116, 174, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 210, 230, 0.72), rgba(255, 130, 184, 0.32)) !important;
+      color: #8a2555 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(255, 117, 178, 0.2) !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="school"] .footer-btn-icon,
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="love"] .footer-btn-icon,
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] .footer-btn-icon,
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="romance"] .footer-btn-icon {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="compositing"] {
+      border-color: rgba(255, 116, 174, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 210, 230, 0.72), rgba(255, 130, 184, 0.32)) !important;
+      color: #8a2555 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(255, 117, 178, 0.2) !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="encyclopedia"] {
+      border-color: rgba(80, 154, 255, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(206, 230, 255, 0.74), rgba(72, 148, 255, 0.32)) !important;
+      color: #174f9a !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(80, 154, 255, 0.18) !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="vote"] {
+      border-color: rgba(159, 112, 255, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(226, 212, 255, 0.74), rgba(151, 105, 255, 0.34)) !important;
+      color: #5530a5 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(151, 105, 255, 0.18) !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="faq"] {
+      border-color: rgba(245, 190, 55, 0.55) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 240, 178, 0.78), rgba(255, 202, 64, 0.36)) !important;
+      color: #7a5600 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(245, 190, 55, 0.18) !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="sns"] {
+      border-color: rgba(73, 184, 124, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(210, 244, 224, 0.76), rgba(78, 200, 132, 0.34)) !important;
+      color: #176b3d !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(73, 184, 124, 0.18) !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="compositing"] .footer-btn-icon,
+    .gift-fan-menu .gift-fan-action[data-fan-item="encyclopedia"] .footer-btn-icon,
+    .gift-fan-menu .gift-fan-action[data-fan-item="vote"] .footer-btn-icon,
+    .gift-fan-menu .gift-fan-action[data-fan-item="faq"] .footer-btn-icon,
+    .gift-fan-menu .gift-fan-action[data-fan-item="sns"] .footer-btn-icon {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .hero-collab-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item^="blank"] {
+      overflow: visible !important;
+    }
+
+    .hero-collab-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="request"] {
+      border-color: rgba(73, 184, 124, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(210, 244, 224, 0.76), rgba(78, 200, 132, 0.34)) !important;
+      color: #176b3d !important;
+      font-size: 0.66rem !important;
+      line-height: 1.2 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(73, 184, 124, 0.18) !important;
+    }
+
+    .hero-collab-diagnosis-menu .hero-collab-diagnosis-list {
+      list-style: none;
+      justify-content: center !important;
+    }
+
+    .hero-collab-diagnosis-menu .hero-collab-diagnosis-list > li {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex: 0 0 auto;
+      align-items: flex-end;
+    }
+
+    .gift-fan-collab-badge {
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      z-index: 4;
+      min-width: 48px;
+      height: 20px;
+      padding: 0 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateX(-50%);
+      border-radius: 6px;
+      background: rgba(255, 248, 239, 0.98);
+      color: #ff3e9a;
+      font-size: 9px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.06em;
+      box-shadow:
+        0 3px 8px rgba(89, 70, 52, 0.16),
+        inset 0 0 0 1px rgba(47, 79, 79, 0.18);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 520px) {
+      .hero-diagnosis-menu,
+      .hero-collab-diagnosis-menu {
+        --hero-panel-body-height: 70px;
+        width: calc(100vw - 32px);
+        max-width: 360px;
+        min-height: calc(20px + var(--hero-panel-body-height) + 12px);
+        margin-left: calc(50% - 50vw + 16px);
+        margin-right: 0;
+        padding: 20px 10px 12px;
+        border-radius: 20px;
+      }
+
+      .hero-collab-diagnosis-menu {
+        margin-top: 12px;
+      }
+
+      .hero-diagnosis-menu::before,
+      .hero-collab-diagnosis-menu::before {
+        font-size: 1rem;
+        padding: 0 14px;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-actions,
+      .hero-collab-diagnosis-menu .hero-collab-diagnosis-list {
+        height: var(--hero-panel-body-height) !important;
+        min-height: var(--hero-panel-body-height) !important;
+        max-height: var(--hero-panel-body-height) !important;
+        padding-top: 12px !important;
+        align-items: flex-end !important;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-actions {
+        gap: 0 !important;
+      }
+
+      .hero-diagnosis-menu .hero-diagnosis-track {
+        gap: 7px !important;
+      }
+
+      .hero-diagnosis-menu.is-scroll-ready .hero-diagnosis-track {
+        gap: 0 !important;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-action,
+      .hero-collab-diagnosis-menu .gift-fan-diagnosis-action {
+        width: 62px !important;
+        height: 58px !important;
+        flex: 0 0 62px !important;
+        border-radius: 13px !important;
+        font-size: 0.62rem !important;
+      }
+
+      .hero-collab-diagnosis-menu .hero-collab-diagnosis-list {
+        gap: 7px !important;
+      }
+
+      .gift-fan-collab-badge {
+        top: -10px;
+        min-width: 42px;
+        height: 18px;
+        padding: 0 6px;
+        font-size: 8px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="glassmorphism.css">
+  <style>
+    .popup-buttons-bar {
+      --gift-panel-surface: #faf1e2;
+      background: var(--gift-panel-surface) !important;
+    }
+
+    .popup-buttons-bar .container,
+    .popup-buttons-bar .popup-buttons,
+    .popup-buttons-bar #giftFanMenu.gift-fan-menu,
+    .popup-buttons-bar #giftFanMenu .burn-card {
+      border: 0 !important;
+      border-width: 0 !important;
+      outline: 0 !important;
+      background-image: none !important;
+      isolation: auto !important;
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+    }
+
+    .popup-buttons-bar .container,
+    .popup-buttons-bar .popup-buttons {
+      background: transparent !important;
+      background-color: transparent !important;
+      box-shadow: none !important;
+    }
+
+    .popup-buttons-bar .popup-buttons {
+      overflow: visible !important;
+      border-radius: 0 !important;
+    }
+
+    .popup-buttons-bar .popup-buttons::before,
+    .popup-buttons-bar .popup-buttons::after,
+    .popup-buttons-bar .gift-fan-menu::before,
+    .popup-buttons-bar .gift-fan-menu::after {
+      display: none !important;
+      content: none !important;
+    }
+
+    .popup-buttons-bar #giftFanMenu.gift-fan-menu {
+      gap: 0 !important;
+      row-gap: 0 !important;
+      overflow: hidden !important;
+      border-radius: 24px !important;
+      background: var(--gift-panel-surface) !important;
+      background-color: var(--gift-panel-surface) !important;
+      box-shadow: none !important;
+      filter: drop-shadow(0 18px 36px rgba(97, 73, 45, 0.12));
+      clip-path: inset(0 round 24px);
+    }
+
+    .popup-buttons-bar .footer-burn-card-row {
+      border: 0 !important;
+      outline: 0 !important;
+      margin: 0 auto 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    .popup-buttons-bar .footer-burn-card-row::before,
+    .popup-buttons-bar .footer-burn-card-row::after {
+      display: none !important;
+    }
+
+    .footer-burn-card-row .burn-card {
+      border: 0 !important;
+    }
+
+    .popup-buttons-bar .footer-burn-card-row .burn-card,
+    .footer-burn-card-row .burn-card {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: none !important;
+      border-color: transparent !important;
+    }
+
+    .popup-buttons-bar .footer-burn-card-row .burn-card::before,
+    .popup-buttons-bar .footer-burn-card-row .burn-card::after,
+    .footer-burn-card-row .burn-card::after,
+    .footer-burn-card-row .burn-card-media::before {
+      display: none !important;
+    }
+
+    .hero-character-action.mode {
+      overflow: hidden !important;
+    }
+
+    .hero-character-action.mode::after {
+      content: "" !important;
+      position: absolute !important;
+      right: 6px !important;
+      bottom: 6px !important;
+      z-index: 3 !important;
+      display: block !important;
+      opacity: 1 !important;
+      width: 17px !important;
+      height: 17px !important;
+      border-radius: 999px !important;
+      background-color: rgba(255, 248, 239, 0.96) !important;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236c5240' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 7a8 8 0 0 0-13.66-2.34L4 7'/%3E%3Cpath d='M4 3v4h4'/%3E%3Cpath d='M4 17a8 8 0 0 0 13.66 2.34L20 17'/%3E%3Cpath d='M20 21v-4h-4'/%3E%3C/svg%3E") !important;
+      background-repeat: no-repeat !important;
+      background-position: center !important;
+      background-size: 11px 11px !important;
+      box-shadow:
+        0 3px 8px rgba(89, 70, 52, 0.16),
+        inset 0 0 0 1px rgba(108, 82, 64, 0.18) !important;
+      pointer-events: none !important;
+    }
+
+    .popup-buttons-bar #giftFanMenu .gift-fan-actions {
+      gap: 10px !important;
+      padding: 14px 12px 16px !important;
+      overflow: hidden !important;
+      border: 0 !important;
+      outline: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      background-color: transparent !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+
+    .popup-buttons-bar .footer-burn-card-row .burn-card {
+      border-radius: 24px 24px 0 0 !important;
+      margin-bottom: 0 !important;
+      background: var(--gift-panel-surface) !important;
+      background-color: var(--gift-panel-surface) !important;
+    }
+
+    .popup-buttons-bar #giftFanMenu .gift-fan-actions .gift-fan-action.action-box-btn::before {
+      display: none !important;
+    }
+
+    .popup-buttons-bar #giftFanMenu .gift-fan-actions .gift-fan-action.action-box-btn,
+    .popup-buttons-bar #giftFanMenu .gift-fan-actions .gift-fan-action.action-box-btn.btn-secondary,
+    .popup-buttons-bar #giftFanMenu .gift-fan-actions .gift-fan-action[data-fan-item] {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.82) !important;
+    }
+
+    .popup-buttons-bar #giftFanMenu .gift-fan-actions .action-box-btn::before,
+    .popup-buttons-bar #giftFanMenu .gift-fan-actions .btn-secondary::before {
+      display: none !important;
+    }
+
+    .gift-fan-menu .gift-fan-actions .gift-fan-action[data-fan-item] .footer-btn-icon {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    @media (max-width: 520px) {
+      .popup-buttons-bar #giftFanMenu.gift-fan-menu {
+        border-radius: 20px !important;
+        clip-path: inset(0 round 20px);
+      }
+
+      .popup-buttons-bar .footer-burn-card-row .burn-card {
+        border-radius: 20px 20px 0 0 !important;
+      }
+
+      .popup-buttons-bar #giftFanMenu .gift-fan-actions {
+        gap: 6px !important;
+        padding: 12px 10px 14px !important;
+        border-radius: 0 !important;
+      }
+    }
+
+    /* Top page: unify all surface backgrounds */
+    html {
+      background-color: #faf1e2;
+    }
+
+    #main-content,
+    #main-content .hero-intro,
+    #main-content .hero,
+    #main-content .hero .container,
+    .popup-buttons-bar,
+    .popup-buttons-bar .container,
+    .popup-buttons-bar .popup-buttons,
+    .popup-buttons-bar .peek-heart-wrap,
+    #giftFanMenu.gift-fan-menu,
+    .popup-buttons-bar .footer-burn-card-row,
+    .footer-burn-card-row .burn-card,
+    .hero-diagnosis-menu,
+    .hero-collab-diagnosis-menu,
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions,
+    .hero-collab-diagnosis-menu .hero-collab-diagnosis-list {
+      background-color: #faf1e2 !important;
+    }
+
+    .burn-card,
+    .popup-buttons-bar .footer-burn-card-row .burn-card {
+      background: #faf1e2 !important;
+      background-image: none !important;
+    }
+
+    .footer-burn-card-row,
+    .popup-buttons-bar .footer-burn-card-row {
+      position: relative !important;
+      box-sizing: border-box;
+      padding: 8px !important;
+      border: 1.5px solid rgba(126, 86, 53, 0.34) !important;
+      border-radius: 18px !important;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.42), rgba(255, 246, 232, 0.1)),
+        #faf1e2 !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.82),
+        0 10px 24px rgba(97, 73, 45, 0.1) !important;
+    }
+
+    .footer-burn-card-row::before,
+    .popup-buttons-bar .footer-burn-card-row::before {
+      content: "" !important;
+      position: absolute !important;
+      inset: 3px !important;
+      display: block !important;
+      border: 1px solid rgba(255, 255, 255, 0.74) !important;
+      border-radius: 14px !important;
+      pointer-events: none !important;
+    }
+
+    .footer-burn-card-row .burn-card,
+    .popup-buttons-bar .footer-burn-card-row .burn-card {
+      border-radius: 12px !important;
+    }
+
+    @media (max-width: 520px) {
+      .footer-burn-card-row,
+      .popup-buttons-bar .footer-burn-card-row {
+        padding: 6px !important;
+        border-radius: 15px !important;
+      }
+
+      .footer-burn-card-row::before,
+      .popup-buttons-bar .footer-burn-card-row::before {
+        border-radius: 11px !important;
+      }
+
+      .footer-burn-card-row .burn-card,
+      .popup-buttons-bar .footer-burn-card-row .burn-card {
+        border-radius: 10px !important;
+      }
+    }
   </style>
 </head>
 
@@ -7081,6 +8302,36 @@
           <a class="btn btn-primary" href="16stan/index.html">推し活モビー診断</a>
           <a class="btn btn-primary" href="16renai/index.html">恋愛モビー診断</a>
           <a class="btn btn-primary" href="/mypage-register.html">診断まとめマイページ作成</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="collabRequestPopup" class="popup-overlay" aria-hidden="true">
+      <div class="popup-content">
+        <button class="popup-close" id="closeCollabRequestPopup" aria-label="閉じる">×</button>
+        <div class="container">
+          <h2>コラボ診断依頼</h2>
+          <p class="lead">コラボ診断の内容を送ってください。</p>
+          <div class="collab-request-form reveal delay-200" style="margin-top:18px;">
+            <form id="collabRequestForm" action="mailto:info@mobby.online" method="post" enctype="text/plain">
+              <div class="form-group">
+                <label for="collabRequestName" style="display:block;margin-bottom:8px;font-weight:700;color:var(--color-earth);">名前 <span style="color:#d2691e;">*</span></label>
+                <input id="collabRequestName" name="name" type="text" required autocomplete="name" placeholder="お名前"
+                  style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;transition:border-color 0.2s;">
+              </div>
+              <div class="form-group" style="margin-top:16px;">
+                <label for="collabRequestEmail" style="display:block;margin-bottom:8px;font-weight:700;color:var(--color-earth);">メールアドレス <span style="color:#d2691e;">*</span></label>
+                <input id="collabRequestEmail" name="email" type="email" required autocomplete="email" placeholder="you@example.com"
+                  style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;transition:border-color 0.2s;">
+              </div>
+              <div class="form-group" style="margin-top:16px;">
+                <label for="collabRequestMessage" style="display:block;margin-bottom:8px;font-weight:700;color:var(--color-earth);">文章 <span style="color:#d2691e;">*</span></label>
+                <textarea id="collabRequestMessage" name="message" required rows="6" placeholder="コラボ診断の内容をご記入ください"
+                  style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;resize:vertical;transition:border-color 0.2s;"></textarea>
+              </div>
+              <button class="btn btn-primary" type="submit" style="margin-top:20px;width:100%;">info@mobby.onlineに送る</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -9238,6 +10489,7 @@
     document.getElementById('closeSnsPopup')?.addEventListener('click', () => closePopup('snsPopup'));
     document.getElementById('closeEncyclopediaPopup')?.addEventListener('click', () => closePopup('encyclopediaPopup'));
     document.getElementById('closeDiagnosisPopup')?.addEventListener('click', () => closePopup('diagnosisPopup'));
+    document.getElementById('closeCollabRequestPopup')?.addEventListener('click', () => closePopup('collabRequestPopup'));
     document.getElementById('closeVotePopup')?.addEventListener('click', () => closePopup('votePopup'));
     document.getElementById('closeCompositingPopup')?.addEventListener('click', () => closePopup('compositingPopup'));
 
@@ -9263,6 +10515,9 @@
     document.getElementById('diagnosisPopup')?.addEventListener('click', (e) => {
       if (e.target.id === 'diagnosisPopup') closePopup('diagnosisPopup');
     });
+    document.getElementById('collabRequestPopup')?.addEventListener('click', (e) => {
+      if (e.target.id === 'collabRequestPopup') closePopup('collabRequestPopup');
+    });
     document.getElementById('votePopup')?.addEventListener('click', (e) => {
       if (e.target.id === 'votePopup') closePopup('votePopup');
     });
@@ -9280,6 +10535,7 @@
         if (document.getElementById('snsPopup')?.classList.contains('is-open')) closePopup('snsPopup');
         if (document.getElementById('encyclopediaPopup')?.classList.contains('is-open')) closePopup('encyclopediaPopup');
         if (document.getElementById('diagnosisPopup')?.classList.contains('is-open')) closePopup('diagnosisPopup');
+        if (document.getElementById('collabRequestPopup')?.classList.contains('is-open')) closePopup('collabRequestPopup');
         if (document.getElementById('votePopup')?.classList.contains('is-open')) closePopup('votePopup');
         if (document.getElementById('compositingPopup')?.classList.contains('is-open')) closePopup('compositingPopup');
       }
@@ -10254,6 +11510,34 @@
 
     bindReservationForm("priceReservationFormCamera");
     initAcrylicStripeButton();
+
+    document.getElementById("openCollabRequestPopup")?.addEventListener("click", () => openPopup("collabRequestPopup"));
+
+    document.getElementById("collabRequestForm")?.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const form = e.target;
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const name = String(document.getElementById("collabRequestName")?.value ?? "").trim();
+      const email = String(document.getElementById("collabRequestEmail")?.value ?? "").trim();
+      const message = String(document.getElementById("collabRequestMessage")?.value ?? "").trim();
+      const subject = "コラボ診断依頼";
+      const body = [
+        "コラボ診断依頼",
+        "",
+        `名前: ${name}`,
+        `メールアドレス: ${email}`,
+        "",
+        "文章:",
+        message
+      ].join("\n");
+
+      window.location.href = `mailto:info@mobby.online?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    });
 
     /* faqContactForm */
     document.getElementById("faqContactForm")?.addEventListener("submit", async (e) => {

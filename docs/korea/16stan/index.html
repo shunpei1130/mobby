@@ -1483,12 +1483,17 @@
                     ageEl.value = btn.dataset.age;
                 };
             });
-            document.getElementById("btnResult").onclick = async () => {
+            const gateSubmitButton = document.getElementById("btnResult");
+            gateSubmitButton.onclick = async () => {
+                if (gateSubmitButton.disabled) return;
                 const name = document.getElementById("inName").value.trim(); const email = document.getElementById("inEmail").value.trim(); const age = document.getElementById("inAge").value; const err = document.getElementById("gateError");
                 if (!name) { err.textContent = "닉네임을 입력해주세요"; return; }
                 if (!age) { err.textContent = "나이를 선택해주세요"; return; }
                 if (!email || !email.includes("@")) { err.textContent = "이메일 주소를 입력해주세요"; return; }
-                state.profile = { name, email, age }; const { code, pcts } = computeResult(); const ch = CH[code]; state.step = "result"; saveState();
+                gateSubmitButton.disabled = true; gateSubmitButton.setAttribute("aria-busy", "true");
+                state.profile = { name, email, age }; const { code, pcts } = computeResult(); const ch = CH[code]; state.step = "result";
+                if (state.sentToSheet) { saveState(); render(); return; }
+                state.sentToSheet = true; saveState();
                 const roundedAxes = {};["A", "B", "C", "D"].forEach(k => { roundedAxes[k] = Math.round(pcts[k]); });
                 try { await submitLead({ name, email, age, type: code, source: "korea_16stan" }); await submitDiagnosis({ name, email, age, type: code, axes: roundedAxes, answers: state.answers, source: "korea_16stan", createdAt: new Date().toISOString(), diagnosis_type: ch ? (ch.displayName || ch.name) : code }); } catch (e) { console.error(e); } render();
             };
