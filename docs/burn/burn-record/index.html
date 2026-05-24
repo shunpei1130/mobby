@@ -839,6 +839,74 @@
       height: 22px !important;
     }
 
+    .record-save-fallback {
+      position: fixed;
+      inset: 0;
+      z-index: 6000;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      background: rgba(24, 19, 17, .72);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+    }
+
+    .record-save-fallback[hidden] {
+      display: none;
+    }
+
+    .record-save-fallback__card {
+      width: min(100%, 430px);
+      max-height: min(92vh, 760px);
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      overflow: auto;
+      border-radius: 22px;
+      background: #fffaf6;
+      color: #2c2320;
+      box-shadow: 0 26px 70px rgba(20, 12, 8, .34);
+      text-align: center;
+    }
+
+    .record-save-fallback__card p {
+      margin: 0;
+      color: #6f5b52;
+      font-size: .92rem;
+      line-height: 1.65;
+    }
+
+    .record-save-fallback__image {
+      width: min(100%, 320px);
+      margin: 0 auto;
+      border-radius: 4px;
+      box-shadow: 0 14px 36px rgba(77, 48, 39, .22);
+      -webkit-touch-callout: default;
+      user-select: auto;
+      -webkit-user-select: auto;
+    }
+
+    .record-save-fallback__actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .record-save-fallback__actions button,
+    .record-save-fallback__actions a {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      border: 1px solid rgba(78, 57, 51, .12);
+      background: #fff;
+      color: #3e302c;
+      text-decoration: none;
+      font: inherit;
+      font-size: .9rem;
+    }
+
     .record-title-field input,
     .record-template-slot--title {
       border: 0 !important;
@@ -1096,6 +1164,26 @@
       const isMobileSaveEnvironment = () => {
         if (navigator.userAgentData?.mobile) return true;
         return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "");
+      };
+
+      const showMobileSaveFallback = (prepared) => {
+        if (!prepared?.objectUrl) return;
+        document.querySelector("[data-record-save-fallback]")?.remove();
+
+        const overlay = document.createElement("div");
+        overlay.className = "record-save-fallback";
+        overlay.dataset.recordSaveFallback = "true";
+        overlay.innerHTML = `
+          <div class="record-save-fallback__card" role="dialog" aria-modal="true" aria-label="画像を保存">
+            <p>画像を長押しして保存してください。開ける場合は「画像を開く」から保存できます。</p>
+            <img class="record-save-fallback__image" src="${prepared.objectUrl}" alt="保存するBURNページ">
+            <div class="record-save-fallback__actions">
+              <a href="${prepared.objectUrl}" target="_blank" rel="noopener">画像を開く</a>
+              <button type="button" data-record-save-fallback-close>閉じる</button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(overlay);
       };
 
       const waitForImage = (img) => {
@@ -1409,17 +1497,32 @@
 
           if (isMobileSaveEnvironment()) {
             const file = new File([prepared.blob], prepared.fileName, { type: "image/png" });
-            if (navigator.canShare?.({ files: [file] }) && navigator.share) {
-              await navigator.share({
-                files: [file],
-                title: "Mobby page",
-                text: "作成したBURNページです。",
-              });
-              return;
+            if (navigator.share) {
+              try {
+                if (navigator.canShare?.({ files: [file] })) {
+                  await navigator.share({
+                    files: [file],
+                    title: "Mobby page",
+                    text: "作成したBURNページです。",
+                  });
+                } else {
+                  await navigator.share({
+                    title: "Mobby page",
+                    text: "作成したBURNページです。",
+                    url: prepared.objectUrl,
+                  });
+                }
+                return;
+              } catch (error) {
+                if (error?.name === "AbortError") return;
+                console.warn("[record-save-page:share]", error);
+              }
             }
 
             const opened = window.open(prepared.objectUrl, "_blank", "noopener");
             if (opened) return;
+            showMobileSaveFallback(prepared);
+            return;
           }
 
           const link = document.createElement("a");
@@ -1475,6 +1578,12 @@
           event.preventDefault();
           event.stopImmediatePropagation();
           root.querySelector(".record-page--complete [data-record-stage='select']")?.click();
+          return;
+        }
+        if (event.target.closest("[data-record-save-fallback-close]")) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          document.querySelector("[data-record-save-fallback]")?.remove();
           return;
         }
         if (!event.target.closest("[data-record-home-return]")) return;
