@@ -3,6 +3,7 @@ import { Readable } from "stream";
 import health from "../api/line-ai/health.js";
 import issueToken from "../api/line-ai/issue-link-token.js";
 import webhook from "../api/line-ai/webhook.js";
+import { generateGeminiReply, generateReply } from "../api/line-ai/_ai.js";
 import { verifyLineSignature } from "../api/line-ai/_line.js";
 import { loadConversation, loadToken, loadUser, saveConversation, saveToken, saveUser } from "../api/line-ai/_storage.js";
 import { detectSafetyRisk } from "../api/line-ai/_safety.js";
@@ -56,6 +57,8 @@ async function callHealth() {
   await health({ method: "GET", headers: {} }, res);
   assert(res.statusCode === 200, "health should return 200");
   assert(res.body?.ok === true, "health should return ok");
+  assert(res.body?.provider === "mock", "health should expose provider");
+  assert(res.body?.configured?.lineAddUrl === true, "health should expose line env status");
 }
 
 async function callIssueToken() {
@@ -194,6 +197,74 @@ async function callWebhookFlow(token) {
   assert(invalidTokenRes.statusCode === 200, "invalid token webhook should return 200");
 }
 
+async function callGeminiProviderFlow() {
+  const originalFetch = globalThis.fetch;
+  const originalProvider = process.env.AI_PROVIDER;
+  const originalModel = process.env.AI_MODEL;
+  const originalGeminiKey = process.env.GEMINI_API_KEY;
+
+  const user = {
+    source: "16renai",
+    sourceLabel: "恋愛モビー診断",
+    resultName: "テスト恋愛モビー",
+    resultSummary: "言葉の温度に敏感",
+    traits: ["慎重", "やさしい"]
+  };
+
+  try {
+    process.env.AI_PROVIDER = "gemini";
+    process.env.AI_MODEL = "gemini-2.5-flash-lite";
+    process.env.GEMINI_API_KEY = "test-gemini-key";
+
+    globalThis.fetch = async (url, options) => {
+      assert(String(url).includes("gemini-2.5-flash-lite:generateContent"), "Gemini URL should include selected model");
+      assert(options?.headers?.["x-goog-api-key"] === "test-gemini-key", "Gemini request should include API key header");
+      const payload = JSON.parse(options.body);
+      assert(payload.system_instruction.parts[0].text.includes("テスト恋愛モビー"), "Gemini request should include diagnosis prompt");
+      assert(payload.contents.at(-1).parts[0].text === "LINE文面を考えたい", "Gemini request should include user message");
+      return {
+        ok: true,
+        async json() {
+          return {
+            candidates: [{
+              content: {
+                parts: [{ text: "その文面、やさしさはあるよ。少しだけ軽くして、相手が返しやすい一言にしよう。" }]
+              }
+            }]
+          };
+        }
+      };
+    };
+
+    const geminiReply = await generateGeminiReply({
+      user,
+      message: "LINE文面を考えたい",
+      history: [{ role: "user", text: "好きな人に送りたい" }]
+    });
+    assert(geminiReply.includes("返しやすい"), "Gemini reply should return model text");
+
+    globalThis.fetch = async () => ({
+      ok: false,
+      status: 429,
+      async text() {
+        return "rate limited";
+      }
+    });
+
+    const fallbackReply = await generateReply({
+      user,
+      message: "LINE文面を考えたい",
+      history: []
+    });
+    assert(fallbackReply.includes("テスト恋愛モビー"), "Gemini failure should fall back to mock reply");
+  } finally {
+    globalThis.fetch = originalFetch;
+    process.env.AI_PROVIDER = originalProvider;
+    process.env.AI_MODEL = originalModel;
+    process.env.GEMINI_API_KEY = originalGeminiKey;
+  }
+}
+
 process.env.LINE_ADD_URL = process.env.LINE_ADD_URL || "https://lin.ee/test";
 process.env.LINE_CHANNEL_SECRET = process.env.LINE_CHANNEL_SECRET || "line-secret-test";
 process.env.MOBBY_LINE_AI_SECRET = process.env.MOBBY_LINE_AI_SECRET || "mobby-secret-test";
@@ -205,5 +276,6 @@ await callHealth();
 const token = await callIssueToken();
 await callInvalidIssueToken();
 await callWebhookFlow(token);
+await callGeminiProviderFlow();
 
-console.log("LINE AI Mobby MVP-0 validation passed");
+console.log("LINE AI Mobby MVP-2 validation passed");
