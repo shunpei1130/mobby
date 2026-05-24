@@ -1093,6 +1093,11 @@
         preparedPageSave = null;
       };
 
+      const isMobileSaveEnvironment = () => {
+        if (navigator.userAgentData?.mobile) return true;
+        return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "");
+      };
+
       const waitForImage = (img) => {
         if (img.complete && img.naturalWidth > 0) return Promise.resolve();
         return new Promise((resolve) => {
@@ -1401,6 +1406,21 @@
           const prepared = preparedPageSave || await preparePageSavePromise || await buildGeneratedPageFile(page);
           preparedPageElement = page;
           preparedPageSave = prepared;
+
+          if (isMobileSaveEnvironment()) {
+            const file = new File([prepared.blob], prepared.fileName, { type: "image/png" });
+            if (navigator.canShare?.({ files: [file] }) && navigator.share) {
+              await navigator.share({
+                files: [file],
+                title: "Mobby page",
+                text: "作成したBURNページです。",
+              });
+              return;
+            }
+
+            const opened = window.open(prepared.objectUrl, "_blank", "noopener");
+            if (opened) return;
+          }
 
           const link = document.createElement("a");
           link.download = prepared.fileName;
