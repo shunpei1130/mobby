@@ -143,6 +143,14 @@
       color: #111111 !important;
       font-weight: 600;
     }
+    #charModalOverlay h2,
+    #charModalOverlay h3,
+    #charModalOverlay p {
+      color: #111111 !important;
+    }
+    #charModalOverlay p {
+      font-weight: 600;
+    }
     .actions, .social-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
     .social-links { margin-top: 18px; }
     .result-hero .text-body,
@@ -166,7 +174,8 @@
       .likert-btn[data-val="2"], .likert-btn[data-val="6"] { width: 40px; height: 40px; }
       .likert-btn[data-val="3"], .likert-btn[data-val="5"] { width: 32px; height: 32px; }
       .likert-btn[data-val="4"] { width: 24px; height: 24px; }
-      .section-grid, .characters-grid { grid-template-columns: 1fr; }
+      .section-grid { grid-template-columns: 1fr; }
+      .characters-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
       .social-link { width: calc(50% - 6px); padding: 10px 12px; }
     }
   </style>
@@ -489,7 +498,7 @@
     function render(){
       window.scrollTo(0, 0);
       document.getElementById("navDiagnosis").classList.toggle("active", state.step !== "characters");
-      document.getElementById("navTypeGuide").classList.toggle("active", state.step === "characters");
+      document.getElementById("navTypeGuide").classList.remove("active");
       document.getElementById("navCharacters").classList.toggle("active", state.step === "characters");
       if(state.step === "intro") renderIntro();
       else if(state.step === "quiz") renderQuiz();
@@ -744,9 +753,52 @@
       document.getElementById("btnAgain").onclick = resetDiagnosis;
     }
     function renderCharacters(){
-      const cards = Object.entries(CHARACTERS).map(([code, c]) => `<article class="char-card fade-in"><img src="${c.image}" alt="${c.name}"><div class="char-body"><p class="kicker">TYPE ${code}</p><h3>${c.name}</h3><p>${c.summary}</p></div></article>`).join("");
+      const cards = Object.entries(CHARACTERS).map(([code, c]) => `<article class="char-card fade-in"><img src="${c.image}" alt="${c.name}"><div class="char-body"><p class="kicker">TYPE ${code}</p><h3>${c.name}</h3><p>${c.summary}</p><button class="primary" style="width:100%; font-size:12px; margin-top:14px;" data-code="${code}">詳細</button></div></article>`).join("");
       app.innerHTML = `<div class="panel fade-in"><p class="kicker">8 TYPES</p><h2 class="big">ビューティームード診断 8タイプ</h2><p class="text-body characters-intro">2枚のラフ画像をサンプルとして交互に配置しています。渡韓美容、韓国コスメ、透明感、グロウ感、ファンに共有したくなる提案力を、タイプごとに少しずつ表現しています。</p><div class="characters-grid">${cards}</div><div class="actions"><button class="primary" id="btnBackDiagnosis">${isComplete() ? "結果に戻る" : "診断する"}</button></div></div>`;
+      document.querySelectorAll("button[data-code]").forEach(btn => { btn.onclick = () => showCharDetail(btn.dataset.code); });
       document.getElementById("btnBackDiagnosis").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
+    }
+    function showCharDetail(code){
+      const c = CHARACTERS[code];
+      if(!c) return;
+      const beauty = BEAUTY_NOTES[c.name];
+      const beautyHtml = beauty ? `
+        <div style="margin-top:20px; padding:14px; background:#fff7fb; border-radius:12px; border-left:3px solid var(--accent);">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+            <img src="img/miyake_icon.png" alt="三宅裕子さん" style="width:42px; height:42px; border-radius:50%; object-fit:cover; box-shadow:var(--shadow-sm);">
+            <h3 style="font-size:14px; font-weight:700; color:var(--accent); margin:0;">beauty note by 三宅裕子</h3>
+          </div>
+          <p style="font-size:13px; line-height:1.8; margin:0 0 12px;">${beauty.note}</p>
+          <div style="display:grid; gap:10px;">
+            <div style="padding:12px; background:#fff; border:1px solid var(--line); border-radius:12px;"><h3 style="font-size:13px; margin:0 0 6px;">似合う美容キーワード</h3><p style="font-size:13px; line-height:1.7; margin:0;">${beauty.keywords.join(" / ")}</p></div>
+            <div style="padding:12px; background:#fff; border:1px solid var(--line); border-radius:12px;"><h3 style="font-size:13px; margin:0 0 6px;">おすすめ導線</h3><p style="font-size:13px; line-height:1.7; margin:0;">${beauty.cta}</p></div>
+            <div style="padding:12px; background:#fff; border:1px solid var(--line); border-radius:12px;"><h3 style="font-size:13px; margin:0 0 6px;">保存したくなる一言</h3><p style="font-size:13px; line-height:1.7; margin:0;">${beauty.line}</p></div>
+          </div>
+        </div>` : "";
+      const modal = `<div id="charModalOverlay" style="position:fixed; inset:0; z-index:100; background:rgba(0,0,0,0.42); display:flex; align-items:center; justify-content:center; padding:18px;">
+        <div style="width:min(560px, 100%); max-height:88vh; overflow:auto; background:#fff; border-radius:20px; box-shadow:0 24px 60px rgba(0,0,0,0.22); padding:22px;">
+          <button id="charModalClose" aria-label="閉じる" style="float:right; width:36px; height:36px; padding:0; border-radius:50%;">×</button>
+          <div style="text-align:center; clear:both;">
+            <p class="kicker">TYPE ${code}</p>
+            <img src="${c.image}" alt="${c.name}" style="width:min(260px, 100%); aspect-ratio:1/1; object-fit:cover; border-radius:16px; box-shadow:var(--shadow-sm); margin:0 auto 18px; display:block;">
+            <h2 style="font-size:24px; margin:0 0 12px;">${c.name}</h2>
+            <p style="font-size:14px; font-weight:700; line-height:1.8; margin:0 0 18px;">${c.catch}</p>
+          </div>
+          <div style="margin-bottom:16px;"><h3 style="font-size:14px; font-weight:700; color:var(--accent); margin:0 0 8px;">似合うムード</h3><p style="font-size:13px; line-height:1.8; margin:0;">${c.hook}</p></div>
+          <div style="margin-bottom:16px; padding:12px; background:#fff5f5; border-radius:12px; border-left:3px solid #ff6b6b;"><h3 style="font-size:14px; font-weight:700; color:#ff6b6b; margin:0 0 8px;">しんどい時</h3><p style="font-size:13px; line-height:1.8; margin:0;">${c.downside}</p></div>
+          <div style="margin-bottom:16px; padding:12px; background:#f0f9ff; border-radius:12px; border-left:3px solid #4dabf7;"><h3 style="font-size:14px; font-weight:700; color:#4dabf7; margin:0 0 8px;">周りからの見え方</h3><p style="font-size:13px; line-height:1.8; margin:0;">${c.perception}</p></div>
+          <div style="display:grid; gap:10px;">
+            <div style="padding:12px; background:#fafafa; border:1px solid var(--line); border-radius:12px;"><h3 style="font-size:13px; margin:0 0 6px;">強み</h3><p style="font-size:13px; line-height:1.7; margin:0;">${c.strength}</p></div>
+            <div style="padding:12px; background:#fafafa; border:1px solid var(--line); border-radius:12px;"><h3 style="font-size:13px; margin:0 0 6px;">気をつけたいこと</h3><p style="font-size:13px; line-height:1.7; margin:0;">${c.weakness}</p></div>
+            <div style="padding:12px; background:#fafafa; border:1px solid var(--line); border-radius:12px;"><h3 style="font-size:13px; margin:0 0 6px;">今日の美容ヒント</h3><p style="font-size:13px; line-height:1.7; margin:0;">${c.advice}</p></div>
+          </div>
+          ${beautyHtml}
+        </div>
+      </div>`;
+      document.body.insertAdjacentHTML("beforeend", modal);
+      const overlay = document.getElementById("charModalOverlay");
+      document.getElementById("charModalClose").onclick = () => overlay.remove();
+      overlay.onclick = e => { if(e.target === overlay) overlay.remove(); };
     }
     function showTypeGuideModal(){
       const modalHtml = `<div id="typeGuideOverlay" style="position:fixed; inset:0; z-index:100; background:rgba(0,0,0,0.42); display:flex; align-items:center; justify-content:center; padding:18px;">
