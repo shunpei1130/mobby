@@ -5865,7 +5865,7 @@
       box-sizing: border-box;
       width: min(430px, 100%) !important;
       max-width: 100% !important;
-      height: 78px !important;
+      height: 98px !important;
       margin: 0 auto !important;
       padding: 12px 0 0 !important;
       border: 0 !important;
@@ -5875,10 +5875,10 @@
       display: flex !important;
       flex-wrap: nowrap !important;
       justify-content: flex-start !important;
-      align-items: flex-end !important;
+      align-items: flex-start !important;
       gap: 0 !important;
       overflow-x: auto !important;
-      overflow-y: hidden !important;
+      overflow-y: visible !important;
       scroll-snap-type: none !important;
       scroll-behavior: smooth;
       scrollbar-width: none;
@@ -5889,7 +5889,7 @@
       display: flex !important;
       flex: 0 0 auto;
       flex-wrap: nowrap !important;
-      align-items: flex-end !important;
+      align-items: flex-start !important;
       gap: 14px !important;
       width: max-content;
       min-width: max-content;
@@ -5913,6 +5913,7 @@
         transform: translateX(0);
       }
 
+      78%,
       100% {
         transform: translateX(calc(var(--hero-diagnosis-scroll-distance) * -1));
       }
@@ -5975,10 +5976,41 @@
         0 12px 26px rgba(255, 117, 178, 0.2) !important;
     }
 
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="blank-1"].beauty-collab {
+      border-color: rgba(238, 141, 66, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 226, 194, 0.78), rgba(255, 159, 88, 0.36)) !important;
+      color: #8a4217 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(238, 141, 66, 0.18) !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="blank-2"].beauty-collab {
+      border-color: rgba(234, 188, 48, 0.54) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 244, 184, 0.82), rgba(255, 213, 76, 0.38)) !important;
+      color: #7a5900 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(234, 188, 48, 0.18) !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="blank-3"].beauty-collab {
+      border-color: rgba(74, 174, 218, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(210, 242, 255, 0.82), rgba(91, 191, 232, 0.34)) !important;
+      color: #17607d !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(74, 174, 218, 0.18) !important;
+    }
+
     .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="school"] .footer-btn-icon,
     .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="love"] .footer-btn-icon,
     .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] .footer-btn-icon,
-    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="romance"] .footer-btn-icon {
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="romance"] .footer-btn-icon,
+    .hero-diagnosis-menu .gift-fan-diagnosis-action.beauty-collab .footer-btn-icon {
       background: transparent !important;
       border: 0 !important;
       box-shadow: none !important;
@@ -6048,6 +6080,18 @@
       overflow: visible !important;
     }
 
+    .footer-btn-icon[data-icon="beauty-mirror"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='4.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='27' cy='25' r='15'/%3E%3Ccircle cx='27' cy='25' r='20'/%3E%3Cpath d='M16 42c3 4 1 7-2 10-2 3-1 7 2 9 3 2 7 1 9-2 2-3 1-7 4-10 2-2 5-1 8-3'/%3E%3Cpath d='M41 38c4-4 11-3 15 1s4 11 0 15c-5 5-12 8-16 5-4-3-10-11-8-17 1-4 5-5 9-4Z'/%3E%3Cpath d='M42 48c4-1 6-3 7-7 1 4 3 6 7 7-4 1-6 3-7 7-1-4-3-6-7-7Z'/%3E%3Cpath d='M50 17c3-1 5-3 6-6 1 3 3 5 6 6-3 1-5 3-6 6-1-3-3-5-6-6Z'/%3E%3Ccircle cx='11' cy='40' r='2.5'/%3E%3Ccircle cx='58' cy='30' r='2.5'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="beauty-compact"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='4.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 27c0-10 8-18 18-18s18 8 18 18'/%3E%3Cellipse cx='34' cy='27' rx='20' ry='7'/%3E%3Cpath d='M20 29c4 5 24 5 28 0'/%3E%3Cpath d='M25 24l8-8M34 27l10-10'/%3E%3Cpath d='M14 30c3 16 13 24 27 24 7 0 13-3 16-7'/%3E%3Cellipse cx='34' cy='39' rx='15' ry='10'/%3E%3Cellipse cx='34' cy='39' rx='11' ry='7'/%3E%3Cpath d='M56 36l-10 22c-1 3 0 6 3 7s6 0 7-3l10-22'/%3E%3Cpath d='M55 35c3-5 10-6 13-2 2 3 1 7-3 10'/%3E%3Cpath d='M6 30c3-1 5-3 6-6 1 3 3 5 6 6-3 1-5 3-6 6-1-3-3-5-6-6Z'/%3E%3Cpath d='M31 6c2 0 3-1 4-3 1 2 2 3 4 3-2 1-3 2-4 4-1-2-2-3-4-4Z'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="watercolor-story"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='4.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M25 24c-7 1-13 6-14 14-2 11 6 19 18 20 11 1 20-5 22-14 1-5-3-5-1-9 1-4 5-4 3-10-3-8-13-11-28-1Z'/%3E%3Ccircle cx='23' cy='34' r='3.5'/%3E%3Ccircle cx='31' cy='30' r='3.5'/%3E%3Ccircle cx='39' cy='33' r='3.5'/%3E%3Ccircle cx='20' cy='42' r='3.5'/%3E%3Ccircle cx='29' cy='48' r='3.5'/%3E%3Ccircle cx='41' cy='44' r='4'/%3E%3Cpath d='M43 56 56 28'/%3E%3Cpath d='m56 28 4 2-12 28c-1 2-3 3-5 2s-2-3-1-5'/%3E%3Cpath d='M55 27c0-4 4-8 5-11 3 4 3 8-1 12'/%3E%3Cpath d='M20 20c-4-4-2-10 4-12 2 4 1 9-4 12Z'/%3E%3Cpath d='M39 23c-3-5 0-10 7-10 1 5-2 9-7 10Z'/%3E%3Cpath d='M28 18c-4-5-2-12 4-14 4 5 2 11-1 14'/%3E%3Cpath d='M5 21c3-1 5-3 6-7 1 4 3 6 6 7-3 1-5 3-6 7-1-4-3-6-6-7Z'/%3E%3Cpath d='M51 46c2-1 4-3 5-5 1 2 3 4 5 5-2 1-4 3-5 5-1-2-3-4-5-5Z'/%3E%3Cpath d='M47 55c2 0 3 1 4 3 1-2 2-3 4-3-2-1-3-2-4-4-1 2-2 3-4 4Z'/%3E%3Ccircle cx='8' cy='52' r='2'/%3E%3C/svg%3E");
+    }
+
     .gift-fan-collab-badge {
       position: absolute;
       top: -11px;
@@ -6074,12 +6118,43 @@
       white-space: nowrap;
     }
 
+    .hero-diagnosis-menu .beauty-collab .gift-fan-collab-badge {
+      top: auto;
+      bottom: -16px;
+    }
+
+    .gift-fan-person-badge {
+      position: absolute;
+      top: -17px;
+      left: 50%;
+      z-index: 4;
+      min-width: 54px;
+      height: 20px;
+      padding: 0 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateX(-50%);
+      border-radius: 6px;
+      background: rgba(255, 248, 239, 0.98);
+      color: #6c5240;
+      font-size: 9px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.03em;
+      box-shadow:
+        0 3px 8px rgba(89, 70, 52, 0.16),
+        inset 0 0 0 1px rgba(47, 79, 79, 0.18);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
     @media (max-width: 520px) {
       .hero-diagnosis-menu {
         width: calc(100vw - 32px);
         max-width: 360px;
-        margin-left: calc(50% - 50vw + 16px);
-        margin-right: 0;
+        margin-left: auto;
+        margin-right: auto;
         padding: 20px 10px 12px;
         border-radius: 20px;
       }
@@ -6090,9 +6165,9 @@
       }
 
       .hero-diagnosis-menu .gift-fan-diagnosis-actions {
-        height: 70px !important;
+        height: 88px !important;
         padding-top: 12px !important;
-        align-items: flex-end !important;
+        align-items: flex-start !important;
         gap: 0 !important;
       }
 
@@ -6114,6 +6189,28 @@
         height: 18px;
         padding: 0 6px;
         font-size: 8px;
+      }
+
+      .hero-diagnosis-menu .beauty-collab .gift-fan-collab-badge {
+        top: auto;
+        bottom: -15px;
+      }
+
+      .gift-fan-person-badge {
+        top: -15px;
+        min-width: 42px;
+        height: 18px;
+        padding: 0 6px;
+        font-size: 8px;
+      }
+
+      .popup-buttons-bar .popup-buttons,
+      .popup-buttons-bar .gift-fan-menu,
+      .popup-buttons-bar .footer-burn-card-row {
+        width: calc(100vw - 32px) !important;
+        max-width: 360px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
       }
     }
   </style>
@@ -6392,9 +6489,9 @@
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16love/index.html" data-diagnosis-item="love"><span class="footer-btn-icon" data-icon="cloud" aria-hidden="true"></span><span>メンヘラ</span></a>
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16stan/index.html" data-diagnosis-item="oshi"><span class="footer-btn-icon" data-icon="star" aria-hidden="true"></span><span>推し</span></a>
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16renai/index.html" data-diagnosis-item="romance"><span class="footer-btn-icon" data-icon="heart" aria-hidden="true"></span><span>恋愛</span></a>
-                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" type="button" data-diagnosis-item="blank-1" aria-label="コラボ予定1"><span class="gift-fan-collab-badge">コラボ!</span></button>
-                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" type="button" data-diagnosis-item="blank-2" aria-label="コラボ予定2"><span class="gift-fan-collab-badge">コラボ!</span></button>
-                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" type="button" data-diagnosis-item="blank-3" aria-label="コラボ予定3"><span class="gift-fan-collab-badge">コラボ!</span></button>
+                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" type="button" data-diagnosis-item="blank-1" aria-label="ビューティー"><span class="gift-fan-person-badge">日向葵衣さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-mirror" aria-hidden="true"></span><span>ビューティー</span></button>
+                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" type="button" data-diagnosis-item="blank-2" aria-label="beauty mood"><span class="gift-fan-person-badge">三宅裕子さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-compact" aria-hidden="true"></span><span>beauty<br>mood</span></button>
+                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" type="button" data-diagnosis-item="blank-3" aria-label="水彩ストーリー"><span class="gift-fan-person-badge">Lucaさん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="watercolor-story" aria-hidden="true"></span><span>水彩<br>ストーリー</span></button>
               </div>
             </div>
           </div>
