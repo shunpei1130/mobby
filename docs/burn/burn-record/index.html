@@ -128,16 +128,19 @@
       align-self: start;
     }
 
-    .record-template-option {
+    .record-template-option,
+    .record-background-option {
       position: relative;
       transition: opacity 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
     }
 
-    .record-template-option:not(.is-selected) {
+    .record-template-option:not(.is-selected),
+    .record-background-option:not(.is-selected) {
       opacity: 0.58;
     }
 
-    .record-template-option.is-selected {
+    .record-template-option.is-selected,
+    .record-background-option.is-selected {
       border-color: #ffb84d !important;
       background: linear-gradient(180deg, #fff8e8, #fff1cf) !important;
       color: #2c2119 !important;
@@ -148,7 +151,8 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
     }
 
-    .record-template-option.is-selected::after {
+    .record-template-option.is-selected::after,
+    .record-background-option.is-selected::after {
       content: "選択中";
       position: absolute;
       top: 5px;
@@ -171,7 +175,9 @@
       pointer-events: none;
     }
 
-    .record-template-option.is-selected img {
+    .record-template-option.is-selected img,
+    .record-background-option.is-selected img,
+    .record-background-option.is-selected .record-background-option__none {
       outline: 3px solid #ffb84d;
       outline-offset: -3px;
       filter: saturate(1.08) contrast(1.04);
@@ -833,6 +839,74 @@
       height: 22px !important;
     }
 
+    .record-save-fallback {
+      position: fixed;
+      inset: 0;
+      z-index: 6000;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      background: rgba(24, 19, 17, .72);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+    }
+
+    .record-save-fallback[hidden] {
+      display: none;
+    }
+
+    .record-save-fallback__card {
+      width: min(100%, 430px);
+      max-height: min(92vh, 760px);
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      overflow: auto;
+      border-radius: 22px;
+      background: #fffaf6;
+      color: #2c2320;
+      box-shadow: 0 26px 70px rgba(20, 12, 8, .34);
+      text-align: center;
+    }
+
+    .record-save-fallback__card p {
+      margin: 0;
+      color: #6f5b52;
+      font-size: .92rem;
+      line-height: 1.65;
+    }
+
+    .record-save-fallback__image {
+      width: min(100%, 320px);
+      margin: 0 auto;
+      border-radius: 4px;
+      box-shadow: 0 14px 36px rgba(77, 48, 39, .22);
+      -webkit-touch-callout: default;
+      user-select: auto;
+      -webkit-user-select: auto;
+    }
+
+    .record-save-fallback__actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .record-save-fallback__actions button,
+    .record-save-fallback__actions a {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      border: 1px solid rgba(78, 57, 51, .12);
+      background: #fff;
+      color: #3e302c;
+      text-decoration: none;
+      font: inherit;
+      font-size: .9rem;
+    }
+
     .record-title-field input,
     .record-template-slot--title {
       border: 0 !important;
@@ -1078,6 +1152,42 @@
     (() => {
       const root = document.getElementById("recordRoot");
       if (!root) return;
+      let preparedPageSave = null;
+      let preparedPageElement = null;
+      let preparePageSavePromise = null;
+
+      const clearPreparedPageSave = () => {
+        if (preparedPageSave?.objectUrl) URL.revokeObjectURL(preparedPageSave.objectUrl);
+        preparedPageSave = null;
+      };
+
+      const isMobileSaveEnvironment = () => {
+        if (navigator.userAgentData?.mobile) return true;
+        const userAgent = navigator.userAgent || "";
+        if (/Android|iPhone|iPad|iPod/i.test(userAgent)) return true;
+        if (/Macintosh/i.test(userAgent) && navigator.maxTouchPoints > 1) return true;
+        return window.matchMedia?.("(pointer: coarse)")?.matches === true;
+      };
+
+      const showMobileSaveFallback = (prepared) => {
+        if (!prepared?.objectUrl) return;
+        document.querySelector("[data-record-save-fallback]")?.remove();
+
+        const overlay = document.createElement("div");
+        overlay.className = "record-save-fallback";
+        overlay.dataset.recordSaveFallback = "true";
+        overlay.innerHTML = `
+          <div class="record-save-fallback__card" role="dialog" aria-modal="true" aria-label="画像を保存">
+            <p>画像を長押しして保存してください。開ける場合は「画像を開く」から保存できます。</p>
+            <img class="record-save-fallback__image" src="${prepared.objectUrl}" alt="保存するBURNページ">
+            <div class="record-save-fallback__actions">
+              <a href="${prepared.objectUrl}" target="_blank" rel="noopener">画像を開く</a>
+              <button type="button" data-record-save-fallback-close>閉じる</button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(overlay);
+      };
 
       const waitForImage = (img) => {
         if (img.complete && img.naturalWidth > 0) return Promise.resolve();
@@ -1310,27 +1420,121 @@
         });
       };
 
+      const buildGeneratedPageFile = async (page) => {
+        await Promise.all(Array.from(page.querySelectorAll("img")).map(waitForImage));
+        const rect = page.getBoundingClientRect();
+        const width = Math.max(1, Math.round(rect.width));
+        const height = Math.max(1, Math.round(rect.height));
+        const scale = Math.max(2, Math.min(4, window.devicePixelRatio || 2));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(width * scale);
+        canvas.height = Math.round(height * scale);
+        await drawPageToCanvas(page, canvas, scale);
+
+        const fileName = `mobby-page-${new Date().toISOString().slice(0, 10)}.png`;
+        const blob = await new Promise((resolve, reject) => {
+          canvas.toBlob((result) => {
+            if (result) resolve(result);
+            else reject(new Error("Canvas export failed"));
+          }, "image/png");
+        });
+
+        return {
+          blob,
+          fileName,
+          objectUrl: URL.createObjectURL(blob),
+        };
+      };
+
+      const prepareGeneratedPageSave = () => {
+        const page = root.querySelector(".record-generated-page");
+        const button = root.querySelector("[data-record-save-page]");
+        if (!page) return;
+
+        if (preparedPageElement === page && preparedPageSave) return;
+        if (preparedPageElement === page && preparePageSavePromise) return;
+
+        preparedPageElement = page;
+        clearPreparedPageSave();
+        if (button) {
+          button.setAttribute("aria-busy", "true");
+          button.disabled = true;
+        }
+        preparePageSavePromise = buildGeneratedPageFile(page)
+          .then((result) => {
+            if (preparedPageElement === page) {
+              preparedPageSave = result;
+            } else if (result.objectUrl) {
+              URL.revokeObjectURL(result.objectUrl);
+            }
+            return result;
+          })
+          .catch((error) => {
+            console.error("[record-save-page:prepare]", error);
+            if (preparedPageElement === page) clearPreparedPageSave();
+            throw error;
+          })
+          .finally(() => {
+            if (preparedPageElement === page) preparePageSavePromise = null;
+            if (button) {
+              button.removeAttribute("aria-busy");
+              button.disabled = false;
+            }
+          });
+      };
+
       const saveGeneratedPage = async () => {
         const page = root.querySelector(".record-generated-page");
         const button = root.querySelector("[data-record-save-page]");
         if (!page) return;
 
+        if (preparedPageElement !== page || (!preparedPageSave && !preparePageSavePromise)) {
+          prepareGeneratedPageSave();
+        }
+
         if (button) button.setAttribute("aria-busy", "true");
         try {
-          await Promise.all(Array.from(page.querySelectorAll("img")).map(waitForImage));
-          const rect = page.getBoundingClientRect();
-          const width = Math.max(1, Math.round(rect.width));
-          const height = Math.max(1, Math.round(rect.height));
-          const scale = Math.max(2, Math.min(4, window.devicePixelRatio || 2));
-          const canvas = document.createElement("canvas");
-          canvas.width = Math.round(width * scale);
-          canvas.height = Math.round(height * scale);
-          await drawPageToCanvas(page, canvas, scale);
+          const prepared = preparedPageSave || await preparePageSavePromise || await buildGeneratedPageFile(page);
+          preparedPageElement = page;
+          preparedPageSave = prepared;
+
+          if (isMobileSaveEnvironment()) {
+            const file = new File([prepared.blob], prepared.fileName, { type: "image/png" });
+            if (navigator.share) {
+              try {
+                if (navigator.canShare?.({ files: [file] })) {
+                  await navigator.share({
+                    files: [file],
+                    title: "Mobby page",
+                    text: "作成したBURNページです。",
+                  });
+                } else {
+                  await navigator.share({
+                    title: "Mobby page",
+                    text: "作成したBURNページです。",
+                    url: prepared.objectUrl,
+                  });
+                }
+                return;
+              } catch (error) {
+                if (error?.name === "AbortError") return;
+                console.warn("[record-save-page:share]", error);
+              }
+            }
+
+            const opened = window.open(prepared.objectUrl, "_blank", "noopener");
+            if (opened) return;
+            showMobileSaveFallback(prepared);
+            return;
+          }
 
           const link = document.createElement("a");
-          link.download = `mobby-page-${new Date().toISOString().slice(0, 10)}.png`;
-          link.href = canvas.toDataURL("image/png");
+          link.download = prepared.fileName;
+          link.href = prepared.objectUrl;
+          link.rel = "noopener";
+          document.body.appendChild(link);
           link.click();
+          link.remove();
         } catch (error) {
           console.error("[record-save-page]", error);
           alert("画像保存に失敗しました。時間をおいてもう一度試してください。");
@@ -1345,6 +1549,7 @@
 
         const saveButton = actions.querySelector("[data-record-save-page]");
         if (!saveButton) return;
+        prepareGeneratedPageSave();
 
         const completePage = root.querySelector(".record-page--complete");
         if (completePage && !completePage.querySelector("[data-record-complete-back]")) {
@@ -1376,6 +1581,12 @@
           event.preventDefault();
           event.stopImmediatePropagation();
           root.querySelector(".record-page--complete [data-record-stage='select']")?.click();
+          return;
+        }
+        if (event.target.closest("[data-record-save-fallback-close]")) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          document.querySelector("[data-record-save-fallback]")?.remove();
           return;
         }
         if (!event.target.closest("[data-record-home-return]")) return;
