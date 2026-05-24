@@ -1163,7 +1163,10 @@
 
       const isMobileSaveEnvironment = () => {
         if (navigator.userAgentData?.mobile) return true;
-        return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "");
+        const userAgent = navigator.userAgent || "";
+        if (/Android|iPhone|iPad|iPod/i.test(userAgent)) return true;
+        if (/Macintosh/i.test(userAgent) && navigator.maxTouchPoints > 1) return true;
+        return window.matchMedia?.("(pointer: coarse)")?.matches === true;
       };
 
       const showMobileSaveFallback = (prepared) => {
