@@ -148,7 +148,8 @@
       .likert-btn[data-val="2"], .likert-btn[data-val="6"] { width: 40px; height: 40px; }
       .likert-btn[data-val="3"], .likert-btn[data-val="5"] { width: 32px; height: 32px; }
       .likert-btn[data-val="4"] { width: 24px; height: 24px; }
-      .section-grid, .characters-grid { grid-template-columns: 1fr; }
+      .section-grid { grid-template-columns: 1fr; }
+      .characters-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
       .social-link { width: calc(50% - 6px); padding: 10px 12px; }
     }
   </style>
@@ -461,7 +462,7 @@
     function render(){
       window.scrollTo(0, 0);
       document.getElementById("navDiagnosis").classList.toggle("active", state.step !== "characters");
-      document.getElementById("navTypeGuide").classList.toggle("active", state.step === "characters");
+      document.getElementById("navTypeGuide").classList.remove("active");
       document.getElementById("navCharacters").classList.toggle("active", state.step === "characters");
       if(state.step === "intro") renderIntro();
       else if(state.step === "quiz") renderQuiz();
@@ -723,7 +724,7 @@
           </div>
         </article>`;
       }).join("");
-      app.innerHTML = `<div class="panel fade-in"><p class="kicker">タイプ解説</p><h2 class="big">ビューティー診断 with 日向葵衣</h2><p class="text-body characters-intro">それぞれのタイプごとに、似合うムード、日向葵衣からの一言、今日できる小さな美容ミッションをまとめています。結果だけで終わらず、明日からの見せ方やケアに使えるタイプ解説です。</p><div class="characters-grid">${cards}</div><div class="actions"><button class="primary" id="btnBackDiagnosis">${isComplete() ? "結果に戻る" : "診断する"}</button></div></div>`;
+      app.innerHTML = `<div class="panel fade-in"><h2 class="big">ビューティー診断 with 日向葵衣</h2><p class="text-body characters-intro">それぞれのタイプごとに、似合うムード、日向葵衣からの一言、今日できる小さな美容ミッションをまとめています。結果だけで終わらず、明日からの見せ方やケアに使えるタイプ解説です。</p><div class="characters-grid">${cards}</div><div class="actions"><button class="primary" id="btnBackDiagnosis">${isComplete() ? "結果に戻る" : "診断する"}</button></div></div>`;
       document.querySelectorAll("button[data-code]").forEach(btn => { btn.onclick = () => showCharDetail(btn.dataset.code); });
       document.getElementById("btnBackDiagnosis").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
     }
