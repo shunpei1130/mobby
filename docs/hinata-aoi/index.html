@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>ビューティー診断 with 日向葵衣 | Mobby</title>
+  <meta name="description" content="20問であなたのリラックス感、透明感、グロウ感、シェアしたくなるビューティ傾向を8タイプから診断する日向葵衣さん向けモビー診断ラフ案です。" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ビューティー診断 with 日向葵衣" />
+  <meta property="og:description" content="美容、癒し、猫、温泉、透明感、グロウ。あなたに近いビューティタイプを20問で診断します。" />
+  <meta property="og:image" content="img/hinata-mobby-healing.png" />
+  <meta name="theme-color" content="#fff7ed" />
+  <link rel="icon" type="image/jpeg" href="../16school/favicon/fav.jpg" />
+  <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --font-ja: 'Yomogi', cursive;
+      --bg: #fff7ed;
+      --surface: #ffffff;
+      --text-main: #1d1d1f;
+      --text-sub: #1d1d1f;
+      --accent: #d96f79;
+      --accent-soft: #fff0ef;
+      --line: #d2d2d7;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+      --shadow-lg: 0 12px 30px rgba(0,0,0,0.08);
+      --radius: 20px;
+      --radius-sm: 12px;
+    }
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    body { margin: 0; font-family: var(--font-ja); background: var(--bg); color: var(--text-main); line-height: 1.6; }
+    a { color: var(--accent); text-decoration: none; }
+    .wrap { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
+    header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 0; cursor: pointer; }
+    .logo { width: 30px; height: 30px; border-radius: 10px; background-image: url('../16school/logo.jpg'); background-size: cover; background-position: center; box-shadow: 0 4px 10px rgba(217,111,121,0.3); margin-right: 10px; }
+    .title h1 { font-size: 14px; margin: 0; font-weight: 600; }
+    .title p { margin: 0; color: var(--text-sub); font-size: 12px; }
+    .title { position: relative; }
+    .title h1 { cursor: pointer; }
+    .title-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      min-width: 210px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      z-index: 30;
+      display: none;
+    }
+    .title-menu.is-open { display: block; }
+    .title-menu a {
+      display: block;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: var(--text-main);
+      text-decoration: none;
+      font-size: 12px;
+    }
+    .title-menu a:hover { background: rgba(0,0,0,0.05); }
+    .nav { display: flex; gap: 12px; align-items: center; }
+    .nav a { color: var(--text-main); font-size: 11px; font-weight: 500; padding: 8px 16px; border-radius: 8px; transition: background 0.2s; cursor: pointer; }
+    .nav a:hover { background: rgba(0,0,0,0.05); }
+    .nav a.active { background: var(--accent-soft); color: var(--accent); }
+    button, .social-link { border: 1px solid transparent; background: rgba(0,0,0,0.05); color: var(--text-main); padding: 10px 18px; border-radius: 999px; cursor: pointer; font-size: 13px; font-weight: 500; font-family: inherit; transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1), background 0.2s ease, box-shadow 0.2s ease; display: inline-flex; align-items: center; justify-content: center; }
+    button:hover, .social-link:hover { background: rgba(0,0,0,0.08); transform: translateY(-1px); }
+    button:active, .social-link:active { transform: translateY(0) scale(0.96); }
+    button.primary, .social-link.primary { background: var(--accent); color: #fff; box-shadow: 0 4px 12px rgba(217,111,121,0.25); }
+    button.primary:hover, .social-link.primary:hover { background: #e47b85; box-shadow: 0 6px 16px rgba(217,111,121,0.35); }
+    button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+    .panel { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow-lg); padding: 32px; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.8); }
+    .kicker { color: var(--accent); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 8px; }
+    .big { font-size: 24px; font-weight: 700; margin: 0 0 16px; color: var(--text-main); }
+    .text-body { color: #1d1d1f; font-size: 14px; line-height: 1.8; }
+    .hero-image { width: min(360px, 100%); aspect-ratio: 1 / 1; object-fit: cover; border-radius: 18px; box-shadow: var(--shadow-sm); margin: 0 auto 28px; display: block; }
+    .progress-wrap { margin-bottom: 20px; }
+    .progress-meta { display: flex; justify-content: space-between; color: var(--text-sub); font-size: 12px; margin-bottom: 8px; }
+    .progress-track { height: 8px; border-radius: 999px; background: rgba(0,0,0,0.06); overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 999px; background: var(--accent); transition: width 0.25s ease; }
+    .qCard { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 22px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
+    .qText { font-size: 16px; line-height: 1.8; margin: 0 0 18px; color: var(--text-main); }
+    .likert-labels { display: flex; justify-content: space-between; color: var(--text-sub); font-size: 11px; margin-bottom: 10px; }
+    .likert-buttons { display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .likert-btn { appearance: none; -webkit-appearance: none; padding: 0; border-radius: 50%; border: 3px solid var(--line); background: #fff; box-shadow: none; }
+    .likert-btn[data-val="1"], .likert-btn[data-val="7"] { width: 76px; height: 76px; }
+    .likert-btn[data-val="2"], .likert-btn[data-val="6"] { width: 58px; height: 58px; }
+    .likert-btn[data-val="3"], .likert-btn[data-val="5"] { width: 44px; height: 44px; }
+    .likert-btn[data-val="4"] { width: 30px; height: 30px; }
+    .likert-btn.left { border-color: rgba(0,113,227,0.55); }
+    .likert-btn.mid { border-color: #b8b8bd; }
+    .likert-btn.right { border-color: rgba(255,149,0,0.55); }
+    .likert-btn.selected.left { background: var(--accent); border-color: var(--accent); }
+    .likert-btn.selected.mid { background: #8e8e93; border-color: #8e8e93; }
+    .likert-btn.selected.right { background: #ff9500; border-color: #ff9500; }
+    .fade-in { animation: fadeIn 0.35s ease both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .result-hero { text-align: center; }
+    .result-img { width: min(420px, 100%); aspect-ratio: 1 / 1; object-fit: cover; border-radius: 20px; box-shadow: var(--shadow-lg); margin-bottom: 22px; }
+    .axis-row { margin: 18px 0; }
+    .axis-meta { display: flex; justify-content: space-between; gap: 12px; color: #111111; font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+    .axis-bar { height: 12px; border-radius: 999px; background: linear-gradient(90deg, #dceeff 0%, #f6f6f6 50%, #ffe8c7 100%); position: relative; overflow: hidden; }
+    .axis-dot { position: absolute; top: 50%; width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 4px solid var(--accent); transform: translate(-50%, -50%); box-shadow: var(--shadow-sm); }
+    .section-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }
+    .mini { background: #fafafa; border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+    .mini h3 { margin: 0 0 8px; font-size: 14px; }
+    .mini p { margin: 0; color: #111111; font-size: 13px; line-height: 1.8; font-weight: 600; }
+    #detailSections .text-body,
+    #detailSections .mini p {
+      color: #111111 !important;
+      font-weight: 600;
+    }
+    .characters-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 24px; }
+    .char-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-sm); }
+    .char-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+    .char-body { padding: 16px; }
+    .char-body h3 { margin: 0 0 8px; font-size: 16px; color: #111111; font-weight: 800; }
+    .char-body p { margin: 0; color: #1d1d1f; font-size: 13px; line-height: 1.7; }
+    .characters-grid .char-body p,
+    .characters-grid .kicker,
+    .characters-intro {
+      color: #111111 !important;
+      font-weight: 600;
+    }
+    .actions, .social-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+    .social-links { margin-top: 18px; }
+    .result-hero .text-body,
+    .result-hero .social-link,
+    .panel .text-body {
+      color: #111111 !important;
+      font-weight: 600;
+    }
+    .result-hero .social-link.primary {
+      color: #ffffff !important;
+    }
+    @media (max-width: 600px) {
+      .wrap { padding: 28px 14px 60px; }
+      header { flex-direction: column; align-items: flex-start; margin-bottom: 28px; }
+      .panel { padding: 24px 16px; border-radius: 18px; }
+      .big { font-size: 22px; }
+      .qCard { padding: 18px 14px; }
+      .qText { font-size: 15px; }
+      .likert-buttons { gap: 6px; }
+      .likert-btn[data-val="1"], .likert-btn[data-val="7"] { width: 48px; height: 48px; }
+      .likert-btn[data-val="2"], .likert-btn[data-val="6"] { width: 40px; height: 40px; }
+      .likert-btn[data-val="3"], .likert-btn[data-val="5"] { width: 32px; height: 32px; }
+      .likert-btn[data-val="4"] { width: 24px; height: 24px; }
+      .section-grid { grid-template-columns: 1fr; }
+      .characters-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+      .social-link { width: calc(50% - 6px); padding: 10px 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand" id="brandHome">
+        <div class="logo" id="logoHome" aria-hidden="true"></div>
+        <div class="title">
+          <h1 id="titleHome">診断一覧</h1>
+          <div id="titleMenu" class="title-menu">
+            <a href="/16school/">蟄ｦ譬｡繝｢繝薙・診断</a>
+            <a href="/16school/mama/">繝槭・繝｢繝薙・診断</a>
+            <a href="/16love/">メンヘラモビー診断</a>
+            <a href="/16night/">螟懆・繝｢繝薙・診断</a>
+            <a href="/16stan/">推し活モビー診断</a>
+            <a href="/miyake-yuko/">透明感ビューティムード診断 with 三宅裕子</a>
+            <a href="/hinata-aoi/">ビューティー診断 with 日向葵衣</a>
+          </div>
+          <p>Mobby rough preview</p>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <nav class="nav" aria-label="ページ内メニュー">
+          <a href="#" id="navDiagnosis" class="active">診断</a>
+          <a href="#" id="navTypeGuide">タイプ解説</a>
+          <a href="#" id="navCharacters">キャラ一覧</a>
+        </nav>
+        <button id="btnReset" style="font-size:11px;">リセット</button>
+      </div>
+    </header>
+    <main id="app"></main>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "hinata_aoi_beauty_type_v2";
+    const PAGE_SIZE = 5;
+    const AXIS_KEYS = ["A", "B", "C"];
+    const AGE_OPTIONS = [
+      {value:"13", label:"13歳"},
+      {value:"14", label:"14歳"},
+      {value:"15", label:"15歳"},
+      {value:"16", label:"16歳"},
+      {value:"17", label:"17歳"},
+      {value:"18", label:"18歳"},
+      {value:"19", label:"19歳"},
+      {value:"20", label:"20歳"},
+      {value:"21", label:"21歳"},
+      {value:"22", label:"22歳"},
+      {value:"23-25", label:"23〜25歳"},
+      {value:"26+", label:"26歳以上"}
+    ];
+    const SOCIAL_LINKS = [
+      {label:"X", url:"http://twitter.com/hinataaoi_x"},
+      {label:"Instagram", url:"https://www.instagram.com/aoi_hnta/"},
+      {label:"YouTube", url:"http://www.youtube.com/@hinata_aoi"},
+      {label:"Official Site", url:"https://hinataaoi.net/"}
+    ];
+
+    const AXES = {
+      A: { key:"A", name:"癒しスタイル", left:"リラックス", right:"きらめき", leftCode:"り", rightCode:"き" },
+      B: { key:"B", name:"ビューティームード", left:"透明感", right:"グロウ", leftCode:"と", rightCode:"ぐ" },
+      C: { key:"C", name:"楽しみ方", left:"マイペース", right:"シェア", leftCode:"ま", rightCode:"し" }
+    };
+
+    const QUESTIONS = [
+      {id:"A1", axis:"A", text:"予定の前に、まず呼吸が整う時間をつくりたい", reverse:false},
+      {id:"A2", axis:"A", text:"猫が丸くなるみたいな、静かで安心できる空気に惹かれる", reverse:false},
+      {id:"A3", axis:"A", text:"温泉上がりのような、ほっとゆるむ美容時間が好き", reverse:false},
+      {id:"A4", axis:"A", text:"メイクや服に、見た瞬間に気分が上がる華やかさを入れたい", reverse:true},
+      {id:"A5", axis:"A", text:"写真に残すなら、少しきらっと目を引くポイントがほしい", reverse:true},
+      {id:"A6", axis:"A", text:"落ち着きだけでなく、ファンと一緒に明るく盛り上がれる雰囲気も大切", reverse:true},
+
+      {id:"B1", axis:"B", text:"肌や服は、透明感と清潔感が伝わる軽さを大切にしたい", reverse:false},
+      {id:"B2", axis:"B", text:"白、淡いブルー、やわらかな素材に自然と惹かれる", reverse:false},
+      {id:"B3", axis:"B", text:"近くで見たときにやさしく見える、抜け感のある美しさが好き", reverse:false},
+      {id:"B4", axis:"B", text:"ASMRのように、声や空気までやわらかく感じるムードが落ち着く", reverse:false},
+      {id:"B5", axis:"B", text:"ツヤ、血色感、光の反射でいきいき見せるのが好き", reverse:true},
+      {id:"B6", axis:"B", text:"撮影やお出かけでは、顔まわりにぱっと華やぐポイントを入れたい", reverse:true},
+      {id:"B7", axis:"B", text:"温泉後みたいなうるおい感やグロウ感を、印象に残したい", reverse:true},
+
+      {id:"C1", axis:"C", text:"美容や趣味は、ひとりで試して自分のペースで整えたい", reverse:false},
+      {id:"C2", axis:"C", text:"好きなものは、周りの反応より自分の心地よさを基準に選ぶ", reverse:false},
+      {id:"C3", axis:"C", text:"猫と過ごすような静かな時間があると、自分らしさが戻ってくる", reverse:false},
+      {id:"C4", axis:"C", text:"いいと思ったコスメや過ごし方は、誰かに教えたくなる", reverse:true},
+      {id:"C5", axis:"C", text:"ファンや友人の反応を想像すると、身支度や撮影が楽しくなる", reverse:true},
+      {id:"C6", axis:"C", text:"かわいい、癒された、と思った瞬間はSNSでも共有したくなる", reverse:true},
+      {id:"C7", axis:"C", text:"自分だけで楽しむより、同じムードを誰かと分け合えるとうれしい", reverse:true}
+    ];
+
+    const CHARACTERS = {
+      "りとま": {
+        name:"リラックス透明感タイプ",
+        summary:"静かな癒しと透明感を重ねて、自分のペースで美しさを整えるタイプ。",
+        catch:"あなたは、温泉上がりのようなやわらかい空気と清潔感が魅力のビューティタイプです。",
+        hook:"急いで盛るより、深呼吸できる空気を作るのが得意。淡い色、やわらかな声、猫と過ごすような静かな時間が、あなたの透明感を自然に引き出します。",
+        downside:"控えめにまとまりすぎると、せっかくの魅力が伝わるまで時間がかかることも。小さなツヤや明るいリップを一つ足すと、やさしさのまま印象が残ります。",
+        perception:"癒される、話しかけやすい、自然体できれいと思われやすいです。",
+        strength:"自分のペースで空気を整え、相手までほっとさせる力。",
+        weakness:"遠慮が続くと、好きなものを選ぶ前に周りへ合わせすぎることがあります。",
+        advice:"今日のヒントは、保湿と淡い色を味方にすること。温泉後みたいなうるおいを意識すると透明感が締まります。",
+        image:"img/8mobby/リラックス透明感モビー.png"
+      },
+      "りとし": {
+        name:"癒しシェアタイプ",
+        summary:"やさしい癒しを、自分だけでなく周りにもそっと分けられるタイプ。",
+        catch:"あなたは、ほっとする空気をそのまま誰かの小さな癒しに変えられるビューティタイプです。",
+        hook:"好きな香り、落ち着く音、猫のように力が抜ける表情。自分が癒されたものを、押しつけずに共有できるところが魅力です。",
+        downside:"相手の反応を見すぎると、自分が本当に休める選択を後回しにしがち。まず自分の温度が整っているかを確認すると、共有する言葉にも余白が出ます。",
+        perception:"一緒にいると安心する、声や雰囲気がやさしい、距離感が心地いいと思われやすいです。",
+        strength:"癒しを会話や共感に変えて、周りの気分までやわらげる力。",
+        weakness:"みんなに届けたい気持ちが強いほど、ひとりで休むタイミングを逃すことがあります。",
+        advice:"今日のヒントは、好きな癒しを一言添えて共有すること。猫小物や湯けむり感のある写真も相性がいいです。",
+        image:"img/8mobby/癒しシェアモビー.png"
+      },
+      "りぐま": {
+        name:"うるおいマイペースタイプ",
+        summary:"自分のリズムでケアを重ね、内側からうるおいと元気を育てるタイプ。",
+        catch:"あなたは、自分だけの美容ルーティンでグロウ感を育てるビューティタイプです。",
+        hook:"スキンケア、湯船、温かい飲み物、静かな趣味時間。自分に戻れる習慣を持っている人です。そこに少しツヤを足すと、無理のない華やかさが生まれます。",
+        downside:"マイペースを守りたい時ほど、外に伝わる明るさが弱く見えることも。血色感や髪のツヤで、元気のサインを小さく出すと安心です。",
+        perception:"落ち着いている、肌や空気感がきれい、自分の世界があると思われやすいです。",
+        strength:"自分の機嫌を丁寧に取り、コンディションを内側から整える力。",
+        weakness:"ひとりで完結しやすく、よさが周りに伝わりきらないことがあります。",
+        advice:"今日のヒントは、いつものケアに光る質感を一つだけ足すこと。温泉後のほてりのような血色感が似合います。",
+        image:"img/8mobby/うるおいマイペースモビー.png"
+      },
+      "りぐし": {
+        name:"やさしさグロウタイプ",
+        summary:"やさしい雰囲気に明るいツヤを重ねて、場をほっと華やかにするタイプ。",
+        catch:"あなたは、親しみやすさとグロウ感を両立できるビューティタイプです。",
+        hook:"やわらかい笑顔や声の温度に、ツヤ肌や明るい色を少しだけ重ねる。強すぎない華やかさで、周りの気分まで上げられます。",
+        downside:"みんなを明るくしたい気持ちが強いと、疲れていても元気に見せがち。無理な日は、光より保湿を優先するくらいでちょうどいいです。",
+        perception:"親しみやすい、かわいい、場が明るくなると思われやすいです。",
+        strength:"癒しと華やかさを両立し、自然に人を惹きつける力。",
+        weakness:"明るく見せようとして、自分の疲れに気づくのが遅れることがあります。",
+        advice:"今日のヒントは、ツヤを足す日は服をシンプルにすること。表情と肌のうるおいが主役になります。",
+        image:"img/8mobby/やさしさグロウモビー.png"
+      },
+      "きとま": {
+        name:"ときめき透明感タイプ",
+        summary:"透明感を軸にしながら、少しきらっとする高揚感を楽しむタイプ。",
+        catch:"あなたは、清潔感の中に今日だけのときめきを一粒入れるビューティタイプです。",
+        hook:"淡いメイクや軽い素材をベースに、明るい小物やきらめきを少しだけ。自分の中で気分が上がるポイントを見つけるのが上手です。",
+        downside:"ときめきを大事にするほど、方向性が散らばる日も。透明感のあるベースを一つ決めると、きらめきがきれいに残ります。",
+        perception:"可憐、透明感がある、でもちゃんと華があると思われやすいです。",
+        strength:"やさしい印象の中に、軽やかな高揚感を差し込む力。",
+        weakness:"好きな要素を足しすぎると、繊細さがぼやけることがあります。",
+        advice:"今日のヒントは、きらめきを一点だけに絞ること。猫の目みたいな小さな光を意識すると印象に残ります。",
+        image:"img/8mobby/ときめき透明感モビー.png"
+      },
+      "きとし": {
+        name:"きらめき共感タイプ",
+        summary:"明るいときめきを、ファンや友人と分け合うのが上手なタイプ。",
+        catch:"あなたは、かわいい、いいね、を自然に広げられるビューティタイプです。",
+        hook:"新しいメイク、かわいい服、撮りたくなる光。自分がときめいた瞬間を、誰かにも見せたくなる人です。透明感があるから、華やかでも親しみやすく届きます。",
+        downside:"反応がほしくなるほど、発信のための選択になりがち。自分が本当に好きかを一度確認すると、共感の温度が上がります。",
+        perception:"明るい、かわいい、真似したくなる、共有したくなると思われやすいです。",
+        strength:"ときめきを言葉や写真にして、ファンや友人と楽しめる力。",
+        weakness:"反応を気にしすぎると、選ぶまでに迷いが増えます。",
+        advice:"今日のヒントは、一番好きなポイントを先に決めてから撮ること。猫小物や淡い光を添えると世界観がまとまります。",
+        image:"img/8mobby/きらめき共感モビー.png"
+      },
+      "きぐま": {
+        name:"自分磨きグロウタイプ",
+        summary:"自分のための美容時間で、内側から光るムードを育てるタイプ。",
+        catch:"あなたは、きれいになりたい気持ちを自分のリズムで育てるビューティタイプです。",
+        hook:"新しいケアを試す、体を温める、鏡の前で少し表情を変えてみる。誰かに見せる前に、自分が納得できるグロウ感を作る人です。",
+        downside:"理想を追うほど、まだ足りないところに目が向きやすいです。昨日より少し整った部分を見つけると、気持ちがやわらぎます。",
+        perception:"努力家、肌や表情がきれい、自分を磨いていると思われやすいです。",
+        strength:"自分の変化を楽しみながら、継続して美しさを育てる力。",
+        weakness:"ひとりで頑張りすぎて、休むことを後回しにしがちです。",
+        advice:"今日のヒントは、成果を出したい日ほど最後に温まる時間を入れること。温泉気分の休息までが美容です。",
+        image:"img/8mobby/自分磨きグロウモビー.png"
+      },
+      "きぐし": {
+        name:"ステージビューティタイプ",
+        summary:"見られる瞬間も楽しみに変え、華やかな共有ムードを作るタイプ。",
+        catch:"あなたは、光が当たる場所で自分らしく輝けるビューティタイプです。",
+        hook:"撮影、イベント、SNS、誰かに届く瞬間。そこでどう見えるかを考えるのが楽しく、表情や服やメイクまで一つのムードとして整えられます。",
+        downside:"期待に応えたい気持ちが強いと、ずっとオンのままになりがち。ステージの外では、猫のように力を抜く時間も必要です。",
+        perception:"華がある、プロ意識がある、見ているだけで元気になると思われやすいです。",
+        strength:"自分の魅力を場に合わせて届け、見る人の気分まで上げる力。",
+        weakness:"見られる意識が高いぶん、素の休息が足りなくなることがあります。",
+        advice:"今日のヒントは、華やかな日の帰宅後に癒しルーティンまで予定に入れること。湯けむりみたいな余白が次の輝きになります。",
+        image:"img/8mobby/ステージビューティモビー.png"
+      }
+    };
+
+    const HINATA_BEAUTY_NOTES = {};
+    [
+      {
+        message:"無理に目立とうとしなくても、静かな空気そのものが魅力になるタイプ。美容も盛るより整えることを大切にすると、あなたらしい透明感が出ます。緊張した日は、休む時間まで美容の一部として扱ってください。",
+        mission:"今日は何もしない美容の日をつくる",
+        share:"静かなまま、ちゃんと可愛い。あなたの透明感は、急がないところから生まれます。"
+      },
+      {
+        message:"自分が癒されたものを、誰かにもそっと渡せるタイプ。そのやさしさはとても素敵ですが、みんなに届けようとしすぎる前に、自分がほっとしているかも確認してあげてください。",
+        mission:"お気に入りの癒しアイテムをひとつ、ストーリーや友達に共有する",
+        share:"あなたのやさしさは、誰かの今日を少し軽くする力があります。"
+      },
+      {
+        message:"自分のリズムで少しずつ綺麗になっていくタイプ。毎日のスキンケアや、湯船につかる時間、温かい飲み物を飲む時間が、うるおい感や安心感を育ててくれます。",
+        mission:"夜の保湿ルーティンを固定する",
+        share:"あなたの可愛さは、誰かに急かされない場所でゆっくり育ちます。"
+      },
+      {
+        message:"親しみやすさと華やかさのバランスが上手なタイプ。ツヤ肌や血色感のあるピンク系が似合いやすいです。盛りすぎず、リップか目元のどちらかを主役にするとやさしさが残ります。",
+        mission:"ツヤを足す日は、服や小物を少しシンプルにする",
+        share:"場を明るくするけど、まぶしすぎない。そこがいちばんの魅力です。"
+      },
+      {
+        message:"透明感の中に小さなときめきを入れるのが似合うタイプ。派手にしなくても、ひとつだけ光るポイントがあると魅力的に見えます。迷った日は、ベースを透明感に戻してみてください。",
+        mission:"今日の主役ポイントを1つだけ決める",
+        share:"あなたのときめきは、大きな光ではなく、近くで気づく小さな輝きです。"
+      },
+      {
+        message:"可愛いと思ったものを周りに広げるのが上手なタイプ。新しいコスメ、似合った服、可愛い写真を共有すると明るさが伝わります。ただし投稿前に、本当に好きかを一度だけ確認してみてください。",
+        mission:"今日のかわいいポイントを写真に残す",
+        share:"あなたの可愛いは、ひとりで終わらず、誰かの真似したい気持ちになります。"
+      },
+      {
+        message:"ちゃんと自分を磨けるタイプ。誰かに見せるためだけではなく、自分が納得したいから綺麗になろうとするところが素敵です。足りないところより、昨日より整った部分を見つけてあげてください。",
+        mission:"自分磨きの記録を写真やメモで残す",
+        share:"誰かに急かされなくても、自分の光を育てていける人です。"
+      },
+      {
+        message:"見られる瞬間を楽しめるタイプ。撮影、イベント、SNSなど、誰かに届く場面で魅力を出すのが上手です。オンでいる時間が長いほど、ステージの外で力を抜く時間も予定に入れてください。",
+        mission:"撮影やお出かけの日は、帰宅後の癒しルーティンまで予定に入れる",
+        share:"人を浴びるだけじゃなく、その場の空気ごと明るくできる人です。"
+      }
+    ].forEach((note, index) => {
+      const code = Object.keys(CHARACTERS)[index];
+      if (code) HINATA_BEAUTY_NOTES[code] = note;
+    });
+
+    const ANS_LABEL = {1:"そう思う", 2:"ややそう思う", 3:"少しそう思う", 4:"どちらでもない", 5:"少しそう思わない", 6:"ややそう思わない", 7:"そう思わない"};
+    const defaultState = () => ({step:"intro", page:0, answers:{}, questionOrder:[], axes:null, profile:{name:"", email:"", age:""}, sentToLead:false});
+    let state = loadState();
+    const app = document.getElementById("app");
+
+    function loadState(){
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? {...defaultState(), ...JSON.parse(raw)} : defaultState();
+      } catch { return defaultState(); }
+    }
+    function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    function resetDiagnosis(){ state = defaultState(); localStorage.removeItem(STORAGE_KEY); render(); }
+    function isRegistered(){ return !!(state.profile && state.profile.name && state.profile.email && state.profile.age); }
+    function getQuestionOrder(){
+      if(Array.isArray(state.questionOrder) && state.questionOrder.length === QUESTIONS.length) return state.questionOrder;
+      state.questionOrder = AXIS_KEYS.flatMap(axis => QUESTIONS.filter(q => q.axis === axis)).map(q => q.id);
+      saveState();
+      return state.questionOrder;
+    }
+    function getQuestions(){ return getQuestionOrder().map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean); }
+
+    function computeResult(){
+      const SCALE = 7, MID = 4, MAX_DEV = 3, GAMMA = 1.35, EXTREME_BONUS = 0.35, COHERENCE_SHRINK = 0.20;
+      const raw = {A:0, B:0, C:0}, absRaw = {A:0, B:0, C:0}, maxRaw = {A:0, B:0, C:0}, allAnswers = [];
+      const weightOf = ans => (ans === 1 || ans === 7) ? 1 + EXTREME_BONUS : 1;
+      const shapeAns = ans => {
+        const centered = MID - ans;
+        const t = centered / MAX_DEV;
+        const mag = Math.min(1, Math.abs(t));
+        return Math.sign(t) * Math.pow(mag, GAMMA);
+      };
+      QUESTIONS.forEach(q => {
+        const ansRaw = state.answers[q.id];
+        if(!ansRaw) return;
+        allAnswers.push(ansRaw);
+        const ansAdj = q.reverse ? (SCALE + 1 - ansRaw) : ansRaw;
+        const w = weightOf(ansRaw) * (q.importance ?? 1);
+        const contrib = w * shapeAns(ansAdj);
+        raw[q.axis] += contrib;
+        absRaw[q.axis] += Math.abs(contrib);
+        maxRaw[q.axis] += w;
+      });
+      const norm = {}, pos = {}, hard = {}, decisiveness = {}, confidenceLevel = {}, confidenceLabel = {};
+      AXIS_KEYS.forEach(k => {
+        const denom = maxRaw[k] || 1;
+        const coherence = absRaw[k] ? Math.abs(raw[k]) / absRaw[k] : 0;
+        const adjusted = raw[k] * (1 - COHERENCE_SHRINK * (1 - coherence));
+        norm[k] = Math.max(-1, Math.min(1, adjusted / denom));
+        hard[k] = norm[k] > 0 ? "L" : "R";
+        pos[k] = Math.max(0, Math.min(100, 50 - norm[k] * 50));
+        decisiveness[k] = Math.min(1, Math.abs(norm[k]));
+        if(decisiveness[k] >= 0.50) { confidenceLevel[k] = "strong"; confidenceLabel[k] = "はっきり"; }
+        else if(decisiveness[k] >= 0.25) { confidenceLevel[k] = "moderate"; confidenceLabel[k] = "やや"; }
+        else { confidenceLevel[k] = "mid"; confidenceLabel[k] = "場面による"; }
+      });
+      const code = (hard.A === "L" ? AXES.A.leftCode : AXES.A.rightCode) + (hard.B === "L" ? AXES.B.leftCode : AXES.B.rightCode) + (hard.C === "L" ? AXES.C.leftCode : AXES.C.rightCode);
+      const freq = {1:0,2:0,3:0,4:0,5:0,6:0,7:0};
+      allAnswers.forEach(a => freq[a]++);
+      const straightLine = allAnswers.length ? Math.max(...Object.values(freq)) / allAnswers.length >= 0.80 : false;
+      const adjacentTypes = [];
+      AXIS_KEYS.forEach(k => {
+        if(confidenceLevel[k] === "mid") {
+          const altHard = {...hard, [k]: hard[k] === "L" ? "R" : "L"};
+          const altCode = (altHard.A === "L" ? AXES.A.leftCode : AXES.A.rightCode) + (altHard.B === "L" ? AXES.B.leftCode : AXES.B.rightCode) + (altHard.C === "L" ? AXES.C.leftCode : AXES.C.rightCode);
+          if(CHARACTERS[altCode] && altCode !== code) adjacentTypes.push({axis:k, code:altCode, name:CHARACTERS[altCode].name});
+        }
+      });
+      return {code, char: CHARACTERS[code], norm, pos, hard, decisiveness, confidenceLevel, confidenceLabel, straightLine, adjacentTypes};
+    }
+
+    function isComplete(){ return Object.keys(state.answers || {}).length >= QUESTIONS.length; }
+    function render(){
+      window.scrollTo(0, 0);
+      document.getElementById("navDiagnosis").classList.toggle("active", state.step !== "characters");
+      document.getElementById("navTypeGuide").classList.remove("active");
+      document.getElementById("navCharacters").classList.toggle("active", state.step === "characters");
+      if(state.step === "intro") renderIntro();
+      else if(state.step === "quiz") renderQuiz();
+      else if(state.step === "gate") renderGate();
+      else if(state.step === "characters") renderCharacters();
+      else renderResult();
+    }
+    function socialLinksHtml(){
+      return `<div class="social-links">${SOCIAL_LINKS.map((link, i) => `<a class="social-link ${i === 1 ? "primary" : ""}" href="${link.url}" target="_blank" rel="noopener">${link.label}</a>`).join("")}</div>`;
+    }
+    function renderIntro(){
+      const count = Object.keys(state.answers).length;
+      app.innerHTML = `
+        <div class="panel fade-in" style="text-align:center; padding:60px 20px;">
+          <img class="hero-image" src="img/8mobby/やさしさグロウモビー.png" alt="日向葵衣さんの世界観に合わせたやさしさグロウモビー">
+          <p class="kicker">Mobby rough preview</p>
+          <h2 class="big">ビューティー診断<br>with 日向葵衣</h2>
+          <p class="text-body" style="max-width:460px; margin:0 auto 30px;">直感で選ぶ20問から、リラックス感、透明感、グロウ感、シェアしたくなる明るさを診断します。猫や温泉のような癒しも少し混ぜた、日向葵衣さん向けのラフ案です。</p>
+          <button class="primary" id="btnStart" style="padding:16px 32px; font-size:16px;">${count > 0 ? "診断を再開する" : "診断をはじめる"}</button>
+          ${count > 0 ? `<p style="font-size:12px; color:#1d1d1f; margin-top:16px;">${count} / ${QUESTIONS.length}問 回答済み</p>` : ""}
+        </div>`;
+      document.getElementById("btnStart").onclick = () => {
+        state.step = "quiz";
+        getQuestionOrder();
+        const idx = getQuestions().findIndex(q => !state.answers[q.id]);
+        state.page = idx >= 0 ? Math.floor(idx / PAGE_SIZE) : 0;
+        saveState();
+        render();
+      };
+    }
+    function renderQuiz(){
+      const qs = getQuestions();
+      const start = state.page * PAGE_SIZE;
+      const currentQs = qs.slice(start, start + PAGE_SIZE);
+      const totalPage = Math.ceil(qs.length / PAGE_SIZE);
+      const progress = Math.round((Object.keys(state.answers).length / qs.length) * 100);
+      const qHtml = currentQs.map((q, i) => {
+        const val = state.answers[q.id];
+        return `<div class="qCard fade-in" style="animation-delay:${i*0.05}s"><div class="kicker" style="color:#1d1d1f; margin-bottom:4px;">Q${start+i+1}</div><p class="qText">${q.text}</p><div class="likert7"><div class="likert-labels"><span>${AXES[q.axis].left}</span><span>${AXES[q.axis].right}</span></div><div class="likert-buttons">${[1,2,3,4,5,6,7].map(n => { const side = n <= 3 ? "left" : (n === 4 ? "mid" : "right"); const sel = val === n ? "selected" : ""; return `<button type="button" class="likert-btn ${side} ${sel}" data-qid="${q.id}" data-val="${n}" aria-label="${ANS_LABEL[n]}"></button>`; }).join("")}</div></div></div>`;
+      }).join("");
+      app.innerHTML = `<div class="panel"><div class="progress-wrap"><div class="progress-meta"><span>進行状況</span><span>${progress}%</span></div><div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div></div><div style="margin-top:30px;">${qHtml}</div><div style="display:flex; justify-content:space-between; margin-top:30px;"><button id="btnPrev" ${state.page===0 ? "disabled":""}>戻る</button><button class="primary" id="btnNext">${state.page === totalPage - 1 ? "結果を見る" : "次へ"}</button></div></div>`;
+      currentQs.forEach(q => {
+        document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(btn => {
+          btn.onclick = () => {
+            state.answers[q.id] = parseInt(btn.dataset.val, 10);
+            document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(b => b.classList.remove("selected"));
+            btn.classList.add("selected");
+            saveState();
+            const p = Math.round((Object.keys(state.answers).length / qs.length) * 100);
+            document.querySelector(".progress-fill").style.width = p + "%";
+            document.querySelector(".progress-meta span:last-child").innerText = p + "%";
+          };
+        });
+      });
+      document.getElementById("btnPrev").onclick = () => { if(state.page > 0) state.page--; saveState(); render(); };
+      document.getElementById("btnNext").onclick = () => {
+        const missing = currentQs.filter(q => !state.answers[q.id]);
+        if(missing.length){ alert("このページの質問にすべて回答してください。"); return; }
+        if(state.page < totalPage - 1){ state.page++; saveState(); render(); }
+        else { state.axes = computeResult(); state.step = isRegistered() ? "result" : "gate"; saveState(); render(); }
+      };
+    }
+    function renderAxis(result){
+      return AXIS_KEYS.map(k => {
+        const a = AXES[k];
+        return `<div class="axis-row"><div class="axis-meta"><span>${a.name}: ${a.left}</span><span>${result.confidenceLabel[k]}</span><span>${a.right}</span></div><div class="axis-bar"><div class="axis-dot" style="left:${result.pos[k]}%"></div></div></div>`;
+      }).join("");
+    }
+    function renderGate(){
+      if(isRegistered()){ state.step = "result"; saveState(); render(); return; }
+      const result = state.axes || computeResult();
+      const ageOptions = AGE_OPTIONS.map(age => `<button type="button" class="age-btn" data-age="${age.value}" style="padding:10px 16px; border-radius:12px; border:2px solid var(--line); background:#fff; color:var(--text-main); font-size:13px; cursor:pointer; transition:all 0.2s;">${age.label}</button>`).join("");
+      app.innerHTML = `<div class="panel fade-in">
+        <p class="kicker">あと少しで結果が見れます</p>
+        <h2 class="big">結果を見る前に入力してください</h2>
+        <p class="text-body" style="margin-top:-6px;">入力後すぐにあなたのビューティータイプを表示します。</p>
+        <div style="margin-top:22px; display:grid; gap:12px; max-width:520px;">
+          <div>
+            <div style="font-size:12px; color:var(--text-sub); margin-bottom:6px;">ニックネーム</div>
+            <input id="regName" type="text" placeholder="例）あおい" style="width:100%; padding:14px; border-radius:14px; border:1px solid var(--line); background:#fff; color:var(--text-main); font-size:14px;">
+          </div>
+          <div>
+            <div style="font-size:12px; color:var(--text-sub); margin-bottom:6px;">メールアドレス</div>
+            <input id="regEmail" type="email" placeholder="example@gmail.com" style="width:100%; padding:14px; border-radius:14px; border:1px solid var(--line); background:#fff; color:var(--text-main); font-size:14px;">
+          </div>
+          <div>
+            <div style="font-size:12px; color:var(--text-sub); margin-bottom:6px;">年齢</div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">${ageOptions}</div>
+            <input id="regAge" type="hidden" value="">
+          </div>
+          <label style="display:flex; gap:10px; align-items:flex-start; font-size:12px; color:var(--text-sub);">
+            <input id="regConsent" type="checkbox" style="margin-top:3px;">
+            <span>入力した情報を連絡・改善のために保存することに同意します。</span>
+          </label>
+          <div id="regErr" style="display:none; color:#d33; font-size:12px;"></div>
+          <div style="display:flex; gap:10px; margin-top:8px;">
+            <button id="btnGateBack" style="background:transparent; color:var(--text-sub);">戻る</button>
+            <button class="primary" id="btnGateGo" style="flex:1; padding:14px 18px;">結果を見る</button>
+          </div>
+          <div id="gatePendingMsg" style="display:none; font-size:12px; color:var(--text-sub); text-align:center;">送信を受け付けました。結果を準備しています...</div>
+          <div style="margin-top:10px; font-size:11px; color:var(--text-sub);">送信される内容：ニックネーム、年齢、メール、診断タイプ、各軸の傾向</div>
+        </div>
+      </div>`;
+
+      const nameEl = document.getElementById("regName");
+      const emailEl = document.getElementById("regEmail");
+      const ageEl = document.getElementById("regAge");
+      nameEl.value = state.profile?.name || "";
+      emailEl.value = state.profile?.email || "";
+      ageEl.value = state.profile?.age || "";
+      const ageButtons = Array.from(document.querySelectorAll(".age-btn"));
+      const refreshAgeButtons = () => {
+        ageButtons.forEach(btn => {
+          const isSelected = btn.dataset.age === ageEl.value;
+          btn.style.background = isSelected ? "var(--accent-soft)" : "#fff";
+          btn.style.borderColor = isSelected ? "var(--accent)" : "var(--line)";
+          btn.style.color = isSelected ? "var(--accent)" : "var(--text-main)";
+        });
+      };
+      ageButtons.forEach(btn => {
+        btn.onclick = () => {
+          ageEl.value = btn.dataset.age || "";
+          refreshAgeButtons();
+        };
+      });
+      refreshAgeButtons();
+
+      document.getElementById("btnGateBack").onclick = () => { state.step = "quiz"; saveState(); render(); };
+      document.getElementById("btnGateGo").onclick = async () => {
+        const errEl = document.getElementById("regErr");
+        const pendingEl = document.getElementById("gatePendingMsg");
+        const submitEl = document.getElementById("btnGateGo");
+        errEl.style.display = "none";
+        const name = (nameEl.value || "").trim();
+        const email = (emailEl.value || "").trim();
+        const age = (ageEl.value || "").trim();
+        const consent = document.getElementById("regConsent").checked;
+        const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        if(!name){ errEl.textContent = "ニックネームを入力してください"; errEl.style.display = "block"; return; }
+        if(!age){ errEl.textContent = "年齢を選択してください"; errEl.style.display = "block"; return; }
+        if(!email){ errEl.textContent = "メールアドレスを入力してください"; errEl.style.display = "block"; return; }
+        if(!emailOk){ errEl.textContent = "メールアドレスを正しく入力してください"; errEl.style.display = "block"; return; }
+        if(!consent){ errEl.textContent = "同意にチェックしてください"; errEl.style.display = "block"; return; }
+        submitEl.disabled = true;
+        submitEl.textContent = "結果を準備中...";
+        pendingEl.style.display = "block";
+        state.profile = {name, email, age};
+        try {
+          await fetch("/api/lead", {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({name, email, age, type:result.code, diagnosisName:result.char?.name || "", source:"hinata-aoi", createdAt:new Date().toISOString()}),
+            keepalive:true
+          });
+          state.sentToLead = true;
+        } catch (_) {}
+        state.step = "result";
+        saveState();
+        render();
+      };
+    }
+    function renderResult(){
+      if(!isRegistered()){ state.step = "gate"; saveState(); render(); return; }
+      if(!isComplete()){ state.step = "intro"; render(); return; }
+      const result = computeResult();
+      state.axes = result;
+      saveState();
+      const c = result.char;
+      const beauty = HINATA_BEAUTY_NOTES[result.code];
+      const beautyHtml = beauty ? `
+          <div class="panel fade-in" style="background:linear-gradient(135deg, #fff7fb 0%, #fff 100%); border-left:4px solid var(--accent);">
+            <p class="kicker">HINATA BEAUTY NOTE</p>
+            <div style="margin:0 0 18px;">
+              <div style="display:flex; align-items:center; gap:16px; margin:0 0 14px;">
+                <img src="img/hinatatoka.png" alt="日向葵衣からの一言" style="width:96px; height:96px; object-fit:cover; border-radius:50%; box-shadow:var(--shadow-sm); flex:0 0 auto;">
+                <h2 class="big" style="margin:0;">日向葵衣からの一言</h2>
+              </div>
+              <p class="text-body" style="color:#111111; font-weight:600; font-size:15px; line-height:1.9; margin:0;">${beauty.message}</p>
+            </div>
+            <div class="section-grid">
+              <div class="mini"><h3>今日の小さな美容ミッション</h3><p>${beauty.mission}</p></div>
+              <div class="mini"><h3>シェア用一言</h3><p>${beauty.share}</p></div>
+            </div>
+          </div>` : "";
+      app.innerHTML = `
+        <div class="panel fade-in">
+          <div class="result-hero">
+            <p class="kicker">診断結果</p>
+            <h2 class="big" style="font-size:28px;">${c.name}</h2>
+            <p class="text-body" style="color:var(--text-main); font-weight:600; font-size:16px; max-width:560px; margin:0 auto 18px;">
+              ${c.catch}
+            </p>
+            <img class="result-img" src="${c.image}" alt="${c.name}">
+            <p class="text-body" style="max-width:560px; margin:18px auto 0;">${c.summary}</p>
+            ${socialLinksHtml()}
+          </div>
+        </div>
+
+        <div class="panel fade-in">
+          <p class="kicker">3 AXES</p>
+          <h2 class="big">あなたのビューティバランス</h2>
+          ${renderAxis(result)}
+          ${result.straightLine ? `<p class="text-body" style="color:#ff9500; margin-top:18px;">同じ回答が多めです。気分を変えてもう一度試すと、少し違う結果になるかもしれません。</p>` : ""}
+          ${result.adjacentTypes.length ? `
+            <div style="margin-top:22px; padding:16px; background:#fff8f6; border-radius:14px; border-left:4px solid var(--accent);">
+              <p style="font-size:13px; font-weight:700; color:var(--accent); margin:0 0 8px;">場合によっては...</p>
+              <p class="text-body" style="margin:0;">近いタイプ: ${result.adjacentTypes.map(t => t.name).join(" / ")}</p>
+            </div>
+          ` : ""}
+        </div>
+
+        <div id="detailSections">
+          <div class="panel fade-in">
+            <p class="kicker">MOOD</p>
+            <h2 class="big">似合うムード</h2>
+            <p class="text-body" style="color:#111111; font-weight:600; font-size:15px; line-height:1.9; margin:0;">${c.hook}</p>
+          </div>
+
+          <div class="panel fade-in" style="background:linear-gradient(135deg, #fff5f5 0%, #fff 100%); border-left:4px solid #ff6b6b;">
+            <p class="kicker" style="color:#ff6b6b;">WHEN TIRED</p>
+            <h2 class="big">しんどい時</h2>
+            <p class="text-body" style="color:#111111; font-weight:600; font-size:15px; line-height:1.9; margin:0;">${c.downside}</p>
+          </div>
+
+          <div class="panel fade-in" style="background:linear-gradient(135deg, #f0f9ff 0%, #fff 100%); border-left:4px solid #4dabf7;">
+            <p class="kicker" style="color:#4dabf7;">FROM OTHERS</p>
+            <h2 class="big">周りからの見え方</h2>
+            <p class="text-body" style="color:#111111; font-weight:600; font-size:15px; line-height:1.9; margin:0;">${c.perception}</p>
+          </div>
+
+          <div class="panel fade-in">
+            <p class="kicker">CARE POINT</p>
+            <h2 class="big">今日の美容ヒント</h2>
+            <div class="section-grid">
+              <div class="mini"><h3>強み</h3><p>${c.strength}</p></div>
+              <div class="mini"><h3>気をつけたいこと</h3><p>${c.weakness}</p></div>
+              <div class="mini" style="grid-column:1 / -1;"><h3>今日の美容ヒント</h3><p>${c.advice}</p></div>
+            </div>
+          </div>
+          ${beautyHtml}
+        </div>
+
+        <div class="panel fade-in" style="text-align:center;">
+          <p class="kicker">NEXT</p>
+          <div class="actions">
+            <button class="primary" id="btnAgain">もう一度診断する</button>
+          </div>
+        </div>`;
+      document.getElementById("btnAgain").onclick = resetDiagnosis;
+    }
+    function renderCharacters(){
+      const cards = Object.entries(CHARACTERS).map(([code, c]) => {
+        return `<article class="char-card fade-in">
+          <img src="${c.image}" alt="${c.name}">
+          <div class="char-body">
+            <h3>${c.name}</h3>
+            <p>${c.catch}</p>
+            <button class="primary" style="width:100%; font-size:12px; margin-top:14px;" data-code="${code}">詳細</button>
+          </div>
+        </article>`;
+      }).join("");
+      app.innerHTML = `<div class="panel fade-in"><h2 class="big">ビューティー診断 with 日向葵衣</h2><p class="text-body characters-intro">それぞれのタイプごとに、似合うムード、日向葵衣からの一言、今日できる小さな美容ミッションをまとめています。結果だけで終わらず、明日からの見せ方やケアに使えるタイプ解説です。</p><div class="characters-grid">${cards}</div><div class="actions"><button class="primary" id="btnBackDiagnosis">${isComplete() ? "結果に戻る" : "診断する"}</button></div></div>`;
+      document.querySelectorAll("button[data-code]").forEach(btn => { btn.onclick = () => showCharDetail(btn.dataset.code); });
+      document.getElementById("btnBackDiagnosis").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
+    }
+    function showCharDetail(code){
+      const c = CHARACTERS[code];
+      const beauty = HINATA_BEAUTY_NOTES[code];
+      const beautyHtml = beauty ? `
+        <div style="margin-top:20px; padding:14px; background:#fff7fb; border-radius:12px; border-left:3px solid var(--accent);">
+          <h3 style="font-size:14px; font-weight:700; color:var(--accent); margin:0 0 8px;">日向葵衣からの一言</h3>
+          <p style="font-size:13px; line-height:1.8; margin:0 0 12px;">${beauty.message}</p>
+          <div style="display:grid; gap:10px;">
+            <div style="padding:12px; background:#fff; border:1px solid var(--line); border-radius:12px;"><h3 style="font-size:13px; margin:0 0 6px;">今日の小さな美容ミッション</h3><p style="font-size:13px; line-height:1.7; margin:0;">${beauty.mission}</p></div>
+            <div style="padding:12px; background:#fff; border:1px solid var(--line); border-radius:12px;"><h3 style="font-size:13px; margin:0 0 6px;">シェア用一言</h3><p style="font-size:13px; line-height:1.7; margin:0;">${beauty.share}</p></div>
+          </div>
+        </div>` : "";
+      const modal = `<div id="charModalOverlay" style="position:fixed; inset:0; z-index:100; background:rgba(0,0,0,0.42); display:flex; align-items:center; justify-content:center; padding:18px;">
+        <div style="width:min(560px, 100%); max-height:88vh; overflow:auto; background:#fff; border-radius:20px; box-shadow:0 24px 60px rgba(0,0,0,0.22); padding:22px;">
+          <button id="charModalClose" aria-label="閉じる" style="float:right; width:36px; height:36px; padding:0; border-radius:50%;">×</button>
+          <div style="text-align:center; clear:both;">
+            <img src="${c.image}" alt="${c.name}" style="width:min(260px, 100%); aspect-ratio:1/1; object-fit:cover; border-radius:16px; box-shadow:var(--shadow-sm); margin:0 auto 18px; display:block;">
+            <h2 style="font-size:24px; margin:0 0 12px;">${c.name}</h2>
+            <p style="font-size:14px; font-weight:700; line-height:1.8; margin:0 0 18px;">${c.catch}</p>
+          </div>
+          <div style="margin-bottom:16px;"><h3 style="font-size:14px; font-weight:700; color:var(--accent); margin:0 0 8px;">似合うムード</h3><p style="font-size:13px; line-height:1.8; margin:0;">${c.hook}</p></div>
+          <div style="margin-bottom:16px; padding:12px; background:#fff5f5; border-radius:12px; border-left:3px solid #ff6b6b;"><h3 style="font-size:14px; font-weight:700; color:#ff6b6b; margin:0 0 8px;">しんどい時</h3><p style="font-size:13px; line-height:1.8; margin:0;">${c.downside}</p></div>
+          <div style="margin-bottom:16px; padding:12px; background:#f0f9ff; border-radius:12px; border-left:3px solid #4dabf7;"><h3 style="font-size:14px; font-weight:700; color:#4dabf7; margin:0 0 8px;">周りからの見え方</h3><p style="font-size:13px; line-height:1.8; margin:0;">${c.perception}</p></div>
+          <div style="display:grid; gap:10px;">
+            <div style="padding:12px; background:#fafafa; border:1px solid var(--line); border-radius:12px;"><h3 style="font-size:13px; margin:0 0 6px;">強み</h3><p style="font-size:13px; line-height:1.7; margin:0;">${c.strength}</p></div>
+            <div style="padding:12px; background:#fafafa; border:1px solid var(--line); border-radius:12px;"><h3 style="font-size:13px; margin:0 0 6px;">気をつけたいこと</h3><p style="font-size:13px; line-height:1.7; margin:0;">${c.weakness}</p></div>
+            <div style="padding:12px; background:#fafafa; border:1px solid var(--line); border-radius:12px;"><h3 style="font-size:13px; margin:0 0 6px;">今日の美容ヒント</h3><p style="font-size:13px; line-height:1.7; margin:0;">${c.advice}</p></div>
+          </div>
+          ${beautyHtml}
+        </div>
+      </div>`;
+      document.body.insertAdjacentHTML("beforeend", modal);
+      const overlay = document.getElementById("charModalOverlay");
+      document.getElementById("charModalClose").onclick = () => overlay.remove();
+      overlay.onclick = e => { if(e.target === overlay) overlay.remove(); };
+    }
+    function showTypeGuideModal(){
+      const modalHtml = `<div id="typeGuideOverlay" style="position:fixed; inset:0; z-index:100; background:rgba(0,0,0,0.42); display:flex; align-items:center; justify-content:center; padding:18px;">
+        <div style="width:min(700px, 100%); max-height:88vh; overflow:auto; background:#fff; border-radius:20px; box-shadow:0 24px 60px rgba(0,0,0,0.22); padding:26px;">
+          <button id="typeGuideClose" aria-label="閉じる" style="float:right; width:36px; height:36px; padding:0; border-radius:50%;">×</button>
+          <div style="text-align:center; clear:both; margin-bottom:24px;">
+            <p class="kicker">TYPE CODE GUIDE</p>
+            <h2 class="big" style="font-size:22px; margin-bottom:8px;">タイプコード解説</h2>
+            <p class="text-body" style="font-size:13px;">3文字のひらがなコードは、ビューティー診断の3つの軸の傾向を表しています。</p>
+          </div>
+          <div style="display:grid; gap:16px;">${renderTypeGuideContent()}</div>
+        </div>
+      </div>`;
+      document.body.insertAdjacentHTML("beforeend", modalHtml);
+      const overlay = document.getElementById("typeGuideOverlay");
+      document.getElementById("typeGuideClose").onclick = () => overlay.remove();
+      overlay.onclick = e => { if(e.target === overlay) overlay.remove(); };
+    }
+    function renderTypeGuideContent(){
+      const axisData = [
+        {key:"A", name:"癒しスタイル", left:"り", leftName:"リラックス", leftDesc:"静かでやわらかい癒し", right:"き", rightName:"きらめき", rightDesc:"明るく目を引く華やかさ"},
+        {key:"B", name:"ビューティームード", left:"と", leftName:"透明感", leftDesc:"清潔感・淡さ・抜け感", right:"ぐ", rightName:"グロウ", rightDesc:"ツヤ・血色感・輝き"},
+        {key:"C", name:"楽しみ方", left:"ま", leftName:"マイペース", leftDesc:"自分のリズムで整える", right:"し", rightName:"シェア", rightDesc:"誰かと共有して楽しむ"}
+      ];
+      return axisData.map(a => `<div style="background:#f7f7f9; border-radius:16px; padding:18px;">
+        <h3 style="color:var(--accent); margin:0 0 12px; font-size:15px;">軸${a.key}: ${a.name}</h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div style="background:#fff; padding:14px; border-radius:12px; border-left:4px solid #34b27b;">
+            <div style="font-size:28px; font-weight:800; color:#34b27b; line-height:1;">${a.left}</div>
+            <div style="font-size:13px; font-weight:800; margin:8px 0 4px;">${a.leftName}</div>
+            <div style="font-size:11px; color:var(--text-sub);">${a.leftDesc}</div>
+          </div>
+          <div style="background:#fff; padding:14px; border-radius:12px; border-left:4px solid #9b6bd3;">
+            <div style="font-size:28px; font-weight:800; color:#9b6bd3; line-height:1;">${a.right}</div>
+            <div style="font-size:13px; font-weight:800; margin:8px 0 4px;">${a.rightName}</div>
+            <div style="font-size:11px; color:var(--text-sub);">${a.rightDesc}</div>
+          </div>
+        </div>
+      </div>`).join("") + `<div style="background:#fff; padding:16px; border-radius:12px; border:1px solid var(--line);">
+        <div style="font-size:13px; font-weight:800; color:var(--accent); margin-bottom:8px;">コードの読み方</div>
+        <div style="font-size:12px; color:var(--text-sub); line-height:1.7;">例: <span style="font-family:monospace; background:#f7f7f9; padding:2px 8px; border-radius:6px; font-weight:700;">りとま</span><br>リラックス(り) + 透明感(と) + マイペース(ま) = リラックス透明感タイプ</div>
+      </div>`;
+    }
+    const titleHome = document.getElementById("titleHome");
+    const titleMenu = document.getElementById("titleMenu");
+    titleHome.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      titleMenu.classList.toggle("is-open");
+    };
+    document.addEventListener("click", (e) => {
+      if (!titleMenu.contains(e.target) && e.target !== titleHome) titleMenu.classList.remove("is-open");
+    });
+    document.getElementById("logoHome").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
+    document.getElementById("navDiagnosis").onclick = (e) => { e.preventDefault(); state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
+    document.getElementById("navTypeGuide").onclick = (e) => { e.preventDefault(); showTypeGuideModal(); };
+    document.getElementById("navCharacters").onclick = (e) => { e.preventDefault(); state.step = "characters"; saveState(); render(); };
+    document.getElementById("btnReset").onclick = resetDiagnosis;
+    render();
+  </script>
+</body>
+</html>
