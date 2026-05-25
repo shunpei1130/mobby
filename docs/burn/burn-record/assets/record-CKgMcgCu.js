@@ -76,7 +76,7 @@ import{g as l,i as h}from"./icons-BAsau70F.js";const P=new URL(""+new URL("templ
 
       <div class="record-camera-stage record-camera-stage--${c} ${a?"has-photo":""} ${a&&!t?"is-reviewing":""} ${a&&t?"is-inputting":""}">
         <div class="record-camera-preview record-camera-preview--${c} ${a?"has-photo":""} ${a&&!t?"is-reviewing":""} ${a&&t?"is-inputting":""}">
-        ${a?`<button class="record-frame-switch" type="button" data-record-switch-frame aria-label="写真枠を切り替え"><span>${c==="portrait"?"縦":"横"}</span></button><img class="record-filter-${o(n)}" src="${e.imageData}" alt="" style="object-position:${Number(e.pageCrop?.x)||50}% ${Number(e.pageCrop?.y)||50}%;transform:scale(${p});transform-origin:center;" ${h()} />`:`<button class="record-frame-switch" type="button" data-record-switch-frame aria-label="写真枠を切り替え">
+        ${a?`<button class="record-frame-switch" type="button" data-record-switch-frame aria-label="写真枠を切り替え"><span>${c==="portrait"?"縦":"横"}</span></button><img class="record-filter-${o(n)}" src="${e.imageData}" alt="" style="object-position:${Math.min(100,Math.max(0,(Number(e.pageCrop?.x)||.5)*100))}% ${Math.min(100,Math.max(0,(Number(e.pageCrop?.y)||.5)*100))}%;transform:scale(${p});transform-origin:center;" ${h()} />`:`<button class="record-frame-switch" type="button" data-record-switch-frame aria-label="写真枠を切り替え">
                <span>${c==="portrait"?"縦":"横"}</span>
              </button>
              <video class="record-camera-video" data-record-camera-video autoplay playsinline muted></video>
@@ -309,7 +309,7 @@ import{g as l,i as h}from"./icons-BAsau70F.js";const P=new URL(""+new URL("templ
                 ${l("pencil")}
               </button>
               <button class="record-select-card__toggle" type="button" data-record-toggle-memory="${s.id}" aria-pressed="${$}">
-                ${s.imageData?`<img class="record-select-card__image record-select-card__image--${s.frame==="portrait"?"portrait":"landscape"}" src="${s.imageData}" alt="" style="object-position:${Number(s.pageCrop?.x)||50}% ${Number(s.pageCrop?.y)||50}%;transform:scale(${Math.min(2.4,Math.max(1,Number(s.pageCrop?.zoom||s.zoom)||1))});transform-origin:center;" ${h()} />`:'<span class="record-select-card__image-placeholder">photo</span>'}
+                ${s.imageData?`<img class="record-select-card__image record-select-card__image--${s.frame==="portrait"?"portrait":"landscape"}" src="${s.imageData}" alt="" style="object-position:${Math.min(100,Math.max(0,(Number(s.pageCrop?.x)||.5)*100))}% ${Math.min(100,Math.max(0,(Number(s.pageCrop?.y)||.5)*100))}%;transform:scale(${Math.min(2.4,Math.max(1,Number(s.pageCrop?.zoom||s.zoom)||1))});transform-origin:center;" ${h()} />`:'<span class="record-select-card__image-placeholder">photo</span>'}
                 <span class="record-select-card__check" aria-hidden="true">${$?l("check"):""}</span>
               </button>
               <div class="record-select-card__copy">
@@ -338,7 +338,7 @@ import{g as l,i as h}from"./icons-BAsau70F.js";const P=new URL(""+new URL("templ
   `}function Ae(e,r=0){return r>=2?{...e,height:Math.min(100-e.y,e.height+1.4)}:{...e,y:Math.max(0,e.y-1.4),height:e.height+Math.min(1.4,e.y)}}function O(e,r=w,a="",t="",n=v,i=!0){const c=ve(r),p=_e(n),m=String(a||"").trim()||"A day to remember",_=Le(t),g=d=>{const b=String((d==null?void 0:d.place)||"").trim().length,k=String((d==null?void 0:d.memo)||"").trim().length,f=b*1.4+k;return f>=62?" is-very-dense":f>=38?" is-dense":""},s=(d,b,k)=>{const f=`record-template-upload-${k}`;return d?`
       <label class="record-template-slot record-template-slot--image" style="${L(b)}" for="${f}">
         <input id="${f}" type="file" accept="image/*" data-record-slot-upload="${k}" hidden />
-        <img src="${d.imageData}" alt="" style="object-position:${Number(d.pageCrop?.x)||50}% ${Number(d.pageCrop?.y)||50}%;transform:scale(${Math.min(2.4,Math.max(1,Number(d.pageCrop?.zoom||d.zoom)||1))});transform-origin:center;" ${h()} />
+        <img src="${d.imageData}" alt="" style="object-position:${Math.min(100,Math.max(0,(Number(d.pageCrop?.x)||.5)*100))}% ${Math.min(100,Math.max(0,(Number(d.pageCrop?.y)||.5)*100))}%;transform:scale(${Math.min(2.4,Math.max(1,Number(d.pageCrop?.zoom||d.zoom)||1))});transform-origin:center;" ${h()} />
       </label>
     `:`
         <label class="record-template-slot record-template-slot--image is-empty" style="${L(b)}" for="${f}">
