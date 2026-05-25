@@ -1218,8 +1218,16 @@
       let preparePageSavePromise = null;
 
       const clearPreparedPageSave = () => {
-        if (preparedPageSave?.objectUrl) URL.revokeObjectURL(preparedPageSave.objectUrl);
+        if (preparedPageSave?.objectUrl && preparedPageSave.objectUrl.startsWith("blob:")) {
+          URL.revokeObjectURL(preparedPageSave.objectUrl);
+        }
         preparedPageSave = null;
+      };
+
+      const isMobileSaveEnvironment = () => {
+        return navigator.userAgentData?.mobile === true
+          || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "")
+          || (/Macintosh/i.test(navigator.userAgent || "") && navigator.maxTouchPoints > 1);
       };
 
       const downloadPreparedPage = (prepared) => {
@@ -1501,24 +1509,22 @@
         const rect = page.getBoundingClientRect();
         const width = Math.max(1, Math.round(rect.width));
         const height = Math.max(1, Math.round(rect.height));
-        const scale = Math.max(2, Math.min(4, window.devicePixelRatio || 2));
+        const isMobile = navigator.userAgentData?.mobile === true
+          || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "")
+          || (/Macintosh/i.test(navigator.userAgent || "") && navigator.maxTouchPoints > 1);
+        const scale = isMobile ? 2 : Math.max(2, Math.min(4, window.devicePixelRatio || 2));
         const canvas = document.createElement("canvas");
         canvas.width = Math.round(width * scale);
         canvas.height = Math.round(height * scale);
         await drawPageToCanvas(page, canvas, scale);
 
         const fileName = `mobby-page-${new Date().toISOString().slice(0, 10)}.png`;
-        const blob = await new Promise((resolve, reject) => {
-          canvas.toBlob((result) => {
-            if (result) resolve(result);
-            else reject(new Error("Canvas export failed"));
-          }, "image/png");
-        });
+        const dataUrl = canvas.toDataURL("image/png");
+        if (!dataUrl || dataUrl === "data:,") throw new Error("Canvas export failed");
 
         return {
-          blob,
           fileName,
-          objectUrl: URL.createObjectURL(blob),
+          objectUrl: dataUrl,
         };
       };
 
@@ -1555,7 +1561,7 @@
           .catch((error) => {
             console.error("[record-save-page:prepare]", error);
             if (preparedPageElement === page) clearPreparedPageSave();
-            throw error;
+            return null;
           })
           .finally(() => {
             if (preparedPageElement === page) preparePageSavePromise = null;
@@ -1582,9 +1588,15 @@
           prepareGeneratedPageSave();
         }
 
-        if (button) button.setAttribute("aria-busy", "true");
+        if (button) {
+          button.setAttribute("aria-busy", "true");
+          button.dataset.recordPreparing = "true";
+          button.disabled = true;
+        }
+        setSavePreparingState(page, button, true);
         try {
           const prepared = preparedPageSave || await preparePageSavePromise || await buildGeneratedPageFile(page);
+          if (!prepared) throw new Error("Canvas export failed");
           preparedPageElement = page;
           preparedPageSave = prepared;
           if (button) {
@@ -1596,7 +1608,12 @@
           console.error("[record-save-page]", error);
           alert("画像保存に失敗しました。時間をおいてもう一度試してください。");
         } finally {
-          if (button) button.removeAttribute("aria-busy");
+          if (button) {
+            button.removeAttribute("aria-busy");
+            delete button.dataset.recordPreparing;
+            button.disabled = false;
+          }
+          setSavePreparingState(page, button, false);
         }
       };
 
@@ -1606,9 +1623,15 @@
 
         const saveButton = actions.querySelector("[data-record-save-page]");
         if (!saveButton) return;
+        if (isMobileSaveEnvironment()) {
+          saveButton.removeAttribute("aria-busy");
+          delete saveButton.dataset.recordPreparing;
+          saveButton.disabled = false;
+        } else {
         prepareGeneratedPageSave();
         requestAnimationFrame(() => prepareGeneratedPageSave());
         window.setTimeout(() => prepareGeneratedPageSave(), 250);
+        }
 
         const completePage = root.querySelector(".record-page--complete");
         if (completePage && !completePage.querySelector("[data-record-complete-back]")) {
