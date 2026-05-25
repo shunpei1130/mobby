@@ -1276,8 +1276,18 @@
       const waitForImage = (img) => {
         if (img.complete && img.naturalWidth > 0) return Promise.resolve();
         return new Promise((resolve) => {
-          img.addEventListener("load", resolve, { once: true });
-          img.addEventListener("error", resolve, { once: true });
+          const done = () => {
+            window.clearTimeout(timer);
+            img.removeEventListener("load", done);
+            img.removeEventListener("error", done);
+            resolve();
+          };
+          const timer = window.setTimeout(done, 1800);
+          img.loading = "eager";
+          img.decoding = "sync";
+          img.addEventListener("load", done, { once: true });
+          img.addEventListener("error", done, { once: true });
+          if (img.complete) done();
         });
       };
 
@@ -1494,7 +1504,6 @@
           const width = rect.width * scale;
           const height = rect.height * scale;
 
-          await waitForImage(element);
           const feather = Boolean(element.closest(".record-generated-page--photo-soft .record-template-slot--image"));
           drawContainedImage(ctx, element, x, y, width, height, getComputedStyle(element).objectFit || "cover", feather);
         }
