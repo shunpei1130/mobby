@@ -7688,6 +7688,92 @@
       border-radius: 12px !important;
     }
 
+    .hero-diagnosis-all-toggle {
+      position: absolute;
+      top: 0;
+      left: max(10px, calc(50% - 300px));
+      z-index: 3;
+      transform: translateY(-50%);
+      min-height: 34px;
+      padding: 8px 14px;
+      border: 1px solid rgba(154, 105, 79, 0.32);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.86);
+      color: rgba(70, 52, 43, 0.9);
+      box-shadow: 0 8px 20px rgba(78, 57, 39, 0.14);
+      font-size: 0.82rem;
+      font-weight: 900;
+      line-height: 1;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .hero-diagnosis-all-toggle::after {
+      content: "＋";
+      display: inline-block;
+      margin-left: 6px;
+      color: #b46a6e;
+      font-weight: 900;
+    }
+
+    .hero-diagnosis-menu.is-expanded .hero-diagnosis-all-toggle::after {
+      content: "−";
+    }
+
+    .hero-diagnosis-menu.is-expanded .gift-fan-diagnosis-actions {
+      height: auto !important;
+      min-height: 222px !important;
+      padding-top: 40px !important;
+      padding-bottom: 26px !important;
+      overflow: visible !important;
+      pointer-events: auto !important;
+    }
+
+    .hero-diagnosis-menu.is-expanded .hero-diagnosis-track {
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: none !important;
+      flex-wrap: wrap !important;
+      justify-content: center !important;
+      align-items: flex-start !important;
+      column-gap: 14px !important;
+      row-gap: 20px !important;
+      animation: none !important;
+      transform: none !important;
+    }
+
+    .hero-diagnosis-menu.is-expanded .gift-fan-diagnosis-action {
+      margin-top: 0 !important;
+      margin-bottom: 12px !important;
+      pointer-events: auto !important;
+    }
+
+    .hero-diagnosis-menu.is-expanded .gift-fan-diagnosis-action.beauty-collab {
+      margin-top: 18px !important;
+      margin-bottom: 18px !important;
+    }
+
+    .hero-diagnosis-menu.is-expanded .beauty-collab .gift-fan-person-badge {
+      bottom: calc(100% + 4px) !important;
+    }
+
+    .hero-diagnosis-menu.is-expanded .beauty-collab .gift-fan-collab-badge {
+      top: calc(100% + 4px) !important;
+    }
+
+    @media (max-width: 520px) {
+      .hero-diagnosis-all-toggle {
+        left: 10px;
+        padding: 7px 10px;
+        font-size: 0.72rem;
+      }
+
+      .hero-diagnosis-menu.is-expanded .gift-fan-diagnosis-actions {
+        min-height: 270px !important;
+        padding-top: 44px !important;
+      }
+    }
+
     @media (max-width: 520px) {
       .footer-burn-card-row,
       .popup-buttons-bar .footer-burn-card-row {
@@ -7750,7 +7836,8 @@
             </div>
           </div>
           <div class="hero-diagnosis-menu">
-            <div class="gift-fan-diagnosis-actions" aria-hidden="false">
+            <button class="hero-diagnosis-all-toggle" id="heroDiagnosisAllToggle" type="button" aria-expanded="false" aria-controls="heroDiagnosisActions">すべての診断</button>
+            <div class="gift-fan-diagnosis-actions" id="heroDiagnosisActions" aria-hidden="false">
               <div class="hero-diagnosis-track">
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16school/index.html" data-diagnosis-item="school"><span class="footer-btn-icon" data-icon="school" aria-hidden="true"></span><span>学校</span></a>
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16love/index.html" data-diagnosis-item="love"><span class="footer-btn-icon" data-icon="cloud" aria-hidden="true"></span><span>メンヘラ</span></a>
@@ -11687,6 +11774,21 @@
   </script>
   <script>
     (function () {
+      function initHeroDiagnosisAllToggle() {
+        const menu = document.querySelector('.hero-diagnosis-menu');
+        const toggle = document.getElementById('heroDiagnosisAllToggle');
+        if (!menu || !toggle || toggle.dataset.ready === 'true') return;
+
+        toggle.dataset.ready = 'true';
+        toggle.addEventListener('click', () => {
+          const expanded = !menu.classList.contains('is-expanded');
+          const track = menu.querySelector('.hero-diagnosis-track');
+          menu.classList.toggle('is-expanded', expanded);
+          toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+          if (track) track.style.animationPlayState = expanded ? 'paused' : '';
+        });
+      }
+
       function initHeroDiagnosisAutoAdvance() {
         const scroller = document.querySelector('.hero-diagnosis-menu .gift-fan-diagnosis-actions');
         if (!scroller || scroller.dataset.autoAdvanceReady === 'true') return;
@@ -11701,6 +11803,10 @@
         scroller.style.scrollSnapType = 'none';
 
         const updateAnimation = () => {
+          if (scroller.closest('.hero-diagnosis-menu')?.classList.contains('is-expanded')) {
+            track.style.animationPlayState = 'paused';
+            return;
+          }
           const distance = Math.max(0, track.scrollWidth - scroller.clientWidth);
           scroller.style.setProperty('--hero-diagnosis-scroll-distance', `${distance}px`);
           scroller.style.setProperty('--hero-diagnosis-scroll-duration', `${Math.max(8, distance / 18)}s`);
@@ -11717,11 +11823,18 @@
       }
 
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initHeroDiagnosisAutoAdvance, { once: true });
+        document.addEventListener('DOMContentLoaded', () => {
+          initHeroDiagnosisAllToggle();
+          initHeroDiagnosisAutoAdvance();
+        }, { once: true });
       } else {
+        initHeroDiagnosisAllToggle();
         initHeroDiagnosisAutoAdvance();
       }
-      window.addEventListener('load', initHeroDiagnosisAutoAdvance, { once: true });
+      window.addEventListener('load', () => {
+        initHeroDiagnosisAllToggle();
+        initHeroDiagnosisAutoAdvance();
+      }, { once: true });
     })();
   </script>
 
