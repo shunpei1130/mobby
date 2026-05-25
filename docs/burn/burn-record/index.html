@@ -1092,6 +1092,49 @@
     }
 
     @media (max-width: 520px) {
+      .record-page--camera.is-reviewing .record-camera-stage.is-reviewing {
+        height: 100svh !important;
+        align-items: flex-end !important;
+        justify-content: center !important;
+        padding: calc(env(safe-area-inset-top) + 116px) 0 calc(env(safe-area-inset-bottom) + 382px) !important;
+        box-sizing: border-box !important;
+      }
+
+      .record-page--camera.is-reviewing .record-camera-preview.has-photo.record-camera-preview--landscape {
+        width: min(86vw, 390px) !important;
+        aspect-ratio: 1.205 / 1 !important;
+      }
+
+      .record-page--camera.is-reviewing .record-camera-preview.has-photo.record-camera-preview--portrait {
+        width: min(64vw, 310px) !important;
+        aspect-ratio: .89 / 1 !important;
+      }
+
+      .record-page--camera.is-reviewing .record-camera-preview.has-photo img {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        object-position: center !important;
+      }
+
+      .record-select-card img.record-select-card__image--landscape,
+      .record-select-card img.record-select-card__image--portrait {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        object-fit: cover !important;
+        object-position: center !important;
+      }
+
+      .record-select-card img.record-select-card__image--landscape {
+        aspect-ratio: 1.205 / 1 !important;
+      }
+
+      .record-select-card img.record-select-card__image--portrait {
+        aspect-ratio: .89 / 1 !important;
+      }
+
       .burn-guide-overlay {
         padding: 18px;
       }
