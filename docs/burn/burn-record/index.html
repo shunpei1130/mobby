@@ -777,6 +777,13 @@
     }
 
     .record-page--complete [data-record-save-page] {
+      display: grid !important;
+      gap: 10px;
+      justify-items: center;
+      align-items: center;
+      min-height: 58px;
+      padding: 18px 8px;
+      text-decoration: none;
       position: relative;
       overflow: hidden;
       border: 1px solid rgba(255, 219, 235, 0.72) !important;
@@ -813,6 +820,60 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.76),
         inset 0 -14px 26px rgba(177, 45, 111, 0.22),
         0 10px 24px rgba(218, 84, 150, 0.24) !important;
+    }
+
+    .record-page--complete [data-record-save-page][aria-busy="true"],
+    .record-page--complete [data-record-save-page]:disabled {
+      opacity: 0.55 !important;
+      pointer-events: none !important;
+    }
+
+    .record-page--complete [data-record-save-page][data-record-preparing="true"] {
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    .record-page--complete .record-generated-page {
+      isolation: isolate;
+    }
+
+    .record-page--complete .record-generated-page.is-preparing-save::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      background: rgba(255, 255, 255, 0.04);
+      -webkit-backdrop-filter: grayscale(1) contrast(1.02);
+      backdrop-filter: grayscale(1) contrast(1.02);
+      animation: recordSaveColorRise 2.4s ease-in-out forwards;
+      will-change: transform;
+    }
+
+    .record-save-preparing {
+      display: none;
+      width: 100%;
+      min-height: 58px;
+      margin-top: 0;
+      place-items: center;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0) 28%),
+        linear-gradient(135deg, rgba(255, 232, 244, 0.92), rgba(255, 190, 217, 0.82));
+      color: #7b3158;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      box-shadow: 0 12px 26px rgba(218, 84, 150, 0.18);
+    }
+
+    .record-save-preparing.is-visible {
+      display: grid;
+    }
+
+    @keyframes recordSaveColorRise {
+      0% { transform: translateY(0%); opacity: 1; }
+      72% { transform: translateY(-100%); opacity: 1; }
+      100% { transform: translateY(-100%); opacity: 0; }
     }
 
     .record-page--complete [data-record-complete-back] {
@@ -1161,32 +1222,47 @@
         preparedPageSave = null;
       };
 
-      const isMobileSaveEnvironment = () => {
-        if (navigator.userAgentData?.mobile) return true;
-        const userAgent = navigator.userAgent || "";
-        if (/Android|iPhone|iPad|iPod/i.test(userAgent)) return true;
-        if (/Macintosh/i.test(userAgent) && navigator.maxTouchPoints > 1) return true;
-        return window.matchMedia?.("(pointer: coarse)")?.matches === true;
+      const downloadPreparedPage = (prepared) => {
+        if (!prepared?.objectUrl) return;
+        const link = document.createElement("a");
+        link.download = prepared.fileName;
+        link.href = prepared.objectUrl;
+        link.rel = "noopener";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
       };
 
-      const showMobileSaveFallback = (prepared) => {
-        if (!prepared?.objectUrl) return;
-        document.querySelector("[data-record-save-fallback]")?.remove();
+      const promoteSaveButtonToDownloadLink = (button, prepared) => {
+        if (!button || !prepared?.objectUrl || button.matches("a")) return;
+        const link = document.createElement("a");
+        Array.from(button.attributes).forEach((attribute) => {
+          if (attribute.name === "type" || attribute.name === "disabled" || attribute.name === "aria-busy" || attribute.name === "data-record-preparing") return;
+          link.setAttribute(attribute.name, attribute.value);
+        });
+        link.href = prepared.objectUrl;
+        link.download = prepared.fileName;
+        link.rel = "noopener";
+        link.innerHTML = button.innerHTML;
+        link.dataset.recordPreparedDownload = prepared.objectUrl;
+        link.dataset.recordPreparedFileName = prepared.fileName;
+        button.replaceWith(link);
+      };
 
-        const overlay = document.createElement("div");
-        overlay.className = "record-save-fallback";
-        overlay.dataset.recordSaveFallback = "true";
-        overlay.innerHTML = `
-          <div class="record-save-fallback__card" role="dialog" aria-modal="true" aria-label="画像を保存">
-            <p>画像を長押しして保存してください。開ける場合は「画像を開く」から保存できます。</p>
-            <img class="record-save-fallback__image" src="${prepared.objectUrl}" alt="保存するBURNページ">
-            <div class="record-save-fallback__actions">
-              <a href="${prepared.objectUrl}" target="_blank" rel="noopener">画像を開く</a>
-              <button type="button" data-record-save-fallback-close>閉じる</button>
-            </div>
-          </div>
-        `;
-        document.body.appendChild(overlay);
+      const setSavePreparingState = (page, button, isPreparing) => {
+        if (page) page.classList.toggle("is-preparing-save", isPreparing);
+        const actions = button?.closest(".record-complete-actions") || root.querySelector(".record-page--complete .record-complete-actions");
+        if (!actions) return;
+        let status = actions.querySelector("[data-record-save-preparing]");
+        if (!status) {
+          status = document.createElement("div");
+          status.className = "record-save-preparing";
+          status.dataset.recordSavePreparing = "true";
+          status.textContent = "保存準備中...";
+          status.setAttribute("aria-live", "polite");
+          actions.prepend(status);
+        }
+        status.classList.toggle("is-visible", isPreparing);
       };
 
       const waitForImage = (img) => {
@@ -1458,12 +1534,19 @@
         clearPreparedPageSave();
         if (button) {
           button.setAttribute("aria-busy", "true");
+          button.dataset.recordPreparing = "true";
           button.disabled = true;
         }
+        setSavePreparingState(page, button, true);
         preparePageSavePromise = buildGeneratedPageFile(page)
           .then((result) => {
             if (preparedPageElement === page) {
               preparedPageSave = result;
+              if (button) {
+                button.dataset.recordPreparedDownload = result.objectUrl;
+                button.dataset.recordPreparedFileName = result.fileName;
+                promoteSaveButtonToDownloadLink(button, result);
+              }
             } else if (result.objectUrl) {
               URL.revokeObjectURL(result.objectUrl);
             }
@@ -1478,8 +1561,10 @@
             if (preparedPageElement === page) preparePageSavePromise = null;
             if (button) {
               button.removeAttribute("aria-busy");
+              delete button.dataset.recordPreparing;
               button.disabled = false;
             }
+            setSavePreparingState(page, button, false);
           });
       };
 
@@ -1487,6 +1572,11 @@
         const page = root.querySelector(".record-generated-page");
         const button = root.querySelector("[data-record-save-page]");
         if (!page) return;
+
+        if (preparedPageSave?.objectUrl) {
+          downloadPreparedPage(preparedPageSave);
+          return;
+        }
 
         if (preparedPageElement !== page || (!preparedPageSave && !preparePageSavePromise)) {
           prepareGeneratedPageSave();
@@ -1497,44 +1587,11 @@
           const prepared = preparedPageSave || await preparePageSavePromise || await buildGeneratedPageFile(page);
           preparedPageElement = page;
           preparedPageSave = prepared;
-
-          if (isMobileSaveEnvironment()) {
-            const file = new File([prepared.blob], prepared.fileName, { type: "image/png" });
-            if (navigator.share) {
-              try {
-                if (navigator.canShare?.({ files: [file] })) {
-                  await navigator.share({
-                    files: [file],
-                    title: "Mobby page",
-                    text: "作成したBURNページです。",
-                  });
-                } else {
-                  await navigator.share({
-                    title: "Mobby page",
-                    text: "作成したBURNページです。",
-                    url: prepared.objectUrl,
-                  });
-                }
-                return;
-              } catch (error) {
-                if (error?.name === "AbortError") return;
-                console.warn("[record-save-page:share]", error);
-              }
-            }
-
-            const opened = window.open(prepared.objectUrl, "_blank", "noopener");
-            if (opened) return;
-            showMobileSaveFallback(prepared);
-            return;
+          if (button) {
+            button.dataset.recordPreparedDownload = prepared.objectUrl;
+            button.dataset.recordPreparedFileName = prepared.fileName;
           }
-
-          const link = document.createElement("a");
-          link.download = prepared.fileName;
-          link.href = prepared.objectUrl;
-          link.rel = "noopener";
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
+          downloadPreparedPage(prepared);
         } catch (error) {
           console.error("[record-save-page]", error);
           alert("画像保存に失敗しました。時間をおいてもう一度試してください。");
@@ -1550,6 +1607,8 @@
         const saveButton = actions.querySelector("[data-record-save-page]");
         if (!saveButton) return;
         prepareGeneratedPageSave();
+        requestAnimationFrame(() => prepareGeneratedPageSave());
+        window.setTimeout(() => prepareGeneratedPageSave(), 250);
 
         const completePage = root.querySelector(".record-page--complete");
         if (completePage && !completePage.querySelector("[data-record-complete-back]")) {
@@ -1571,6 +1630,9 @@
       };
 
       root.addEventListener("click", (event) => {
+        if (event.target.closest("a[data-record-save-page]")) {
+          return;
+        }
         if (event.target.closest("[data-record-save-page]")) {
           event.preventDefault();
           event.stopImmediatePropagation();
@@ -1581,12 +1643,6 @@
           event.preventDefault();
           event.stopImmediatePropagation();
           root.querySelector(".record-page--complete [data-record-stage='select']")?.click();
-          return;
-        }
-        if (event.target.closest("[data-record-save-fallback-close]")) {
-          event.preventDefault();
-          event.stopImmediatePropagation();
-          document.querySelector("[data-record-save-fallback]")?.remove();
           return;
         }
         if (!event.target.closest("[data-record-home-return]")) return;
