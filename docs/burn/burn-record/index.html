@@ -1091,6 +1091,12 @@
       font-size: .74rem;
     }
 
+    .record-page--camera .record-frame-switch,
+    .record-page--camera .record-photo-adjust-panel,
+    .record-page--camera .record-photo-frame-options {
+      display: none !important;
+    }
+
     @media (max-width: 520px) {
       .record-page--camera.is-reviewing .record-camera-stage.is-reviewing {
         position: fixed !important;
@@ -1124,6 +1130,12 @@
         height: auto !important;
         max-height: none !important;
         min-height: 0 !important;
+      }
+
+      .record-page--camera .record-frame-switch,
+      .record-page--camera .record-photo-adjust-panel,
+      .record-page--camera .record-photo-frame-options {
+        display: none !important;
       }
 
       .record-page--camera.is-reviewing .record-camera-preview.has-photo.record-camera-preview--landscape {

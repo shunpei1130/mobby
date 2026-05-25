@@ -13,12 +13,19 @@
 .record-page--camera.is-inputting .record-input-wrap,.record-page--camera.is-inputting .record-field>input,.record-page--edit-memory .record-input-wrap,.record-page--edit-memory .record-field textarea{border:1.5px solid rgba(86,63,56,.26)!important;background:#fff!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.92),0 8px 18px rgba(69,47,38,.12)!important}.record-page--camera.is-inputting .record-input-wrap:focus-within,.record-page--camera.is-inputting .record-field>input:focus,.record-page--edit-memory .record-input-wrap:focus-within,.record-page--edit-memory .record-field textarea:focus{border-color:rgba(184,97,90,.72)!important;box-shadow:0 0 0 3px rgba(200,111,106,.16),0 10px 20px rgba(69,47,38,.14)!important;outline:none!important}
 .record-page--camera.is-inputting .record-input-time,.record-page--edit-memory .record-edit-card__time{display:none!important}
 .record-page--edit-memory .record-tag-fields--extra,.record-page--edit-memory .record-field__limit{display:none!important}.record-edit-card [data-record-update-memory]{display:flex!important;align-items:center;justify-content:center;width:100%;min-height:54px;margin-top:14px;border:0;border-radius:999px;background:#c86f6a!important;color:#fff!important;box-shadow:0 12px 26px rgba(181,98,92,.22);font-weight:700;opacity:1!important;visibility:visible!important}
+.record-page--camera .record-frame-switch,.record-page--camera .record-photo-adjust-panel,.record-page--camera .record-photo-frame-options{display:none!important}
 
 @media (max-width: 520px) {
   .record-page--camera.is-inputting .record-camera-preview.has-photo {
     height: auto !important;
     max-height: none !important;
     min-height: 0 !important;
+  }
+
+  .record-page--camera .record-frame-switch,
+  .record-page--camera .record-photo-adjust-panel,
+  .record-page--camera .record-photo-frame-options {
+    display: none !important;
   }
 
   .record-page--camera.is-inputting .record-camera-preview.has-photo.record-camera-preview--landscape {
