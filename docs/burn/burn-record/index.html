@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>BURNでページをつくる</title>
-  <script type="module" crossorigin src="./assets/burnRecord-CEFJ408q.js?v=clear-initial-copy"></script>
+  <script type="module" crossorigin src="./assets/burnRecord-CEFJ408q.js?v=slot-crop-sync"></script>
   <script>
     (() => {
       const restoreBackgroundScroll = (left) => {
@@ -101,7 +101,7 @@
   </script>
   <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
   <link rel="modulepreload" crossorigin href="./assets/icons-BAsau70F.js?v=iconfix">
-  <link rel="modulepreload" crossorigin href="./assets/record-CKgMcgCu.js?v=clear-initial-copy">
+  <link rel="modulepreload" crossorigin href="./assets/record-CKgMcgCu.js?v=slot-crop-sync">
   <link rel="stylesheet" crossorigin href="./assets/components-Cas7KQML.css?v=edit-save-clean">
   <link rel="stylesheet" crossorigin href="./assets/record-bTKggYDr.css?v=step4-backgrounds">
   <style>
@@ -1093,24 +1093,46 @@
 
     @media (max-width: 520px) {
       .record-page--camera.is-reviewing .record-camera-stage.is-reviewing {
-        height: 100svh !important;
-        align-items: flex-end !important;
+        height: auto !important;
+        min-height: 0 !important;
+        align-items: center !important;
         justify-content: center !important;
-        padding: calc(env(safe-area-inset-top) + 116px) 0 calc(env(safe-area-inset-bottom) + 382px) !important;
+        padding: calc(env(safe-area-inset-top) + 118px) 0 0 !important;
         box-sizing: border-box !important;
       }
 
+      .record-page--camera.is-reviewing .record-camera-preview.has-photo,
+      .record-page--camera.is-inputting .record-camera-preview.has-photo {
+        --record-review-max-height: calc(100svh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 430px);
+        max-height: max(210px, var(--record-review-max-height)) !important;
+        overflow: hidden !important;
+        background: transparent !important;
+      }
+
       .record-page--camera.is-reviewing .record-camera-preview.has-photo.record-camera-preview--landscape {
-        width: min(86vw, 390px) !important;
+        width: min(86vw, 390px, calc(max(210px, var(--record-review-max-height)) * 1.205)) !important;
         aspect-ratio: 1.205 / 1 !important;
       }
 
       .record-page--camera.is-reviewing .record-camera-preview.has-photo.record-camera-preview--portrait {
-        width: min(64vw, 310px) !important;
+        width: min(64vw, 310px, calc(max(210px, var(--record-review-max-height)) * .89)) !important;
         aspect-ratio: .89 / 1 !important;
       }
 
-      .record-page--camera.is-reviewing .record-camera-preview.has-photo img {
+      .record-page--camera.is-inputting .record-camera-preview.has-photo.record-camera-preview--landscape {
+        width: min(100%, 308px) !important;
+        aspect-ratio: 1.205 / 1 !important;
+      }
+
+      .record-page--camera.is-inputting .record-camera-preview.has-photo.record-camera-preview--portrait {
+        width: min(72%, 230px) !important;
+        aspect-ratio: .89 / 1 !important;
+      }
+
+      .record-page--camera.is-reviewing .record-camera-preview.has-photo img,
+      .record-page--camera.is-inputting .record-camera-preview.has-photo img,
+      .record-select-card img.record-select-card__image,
+      .record-template-slot--image img {
         display: block !important;
         width: 100% !important;
         height: 100% !important;
