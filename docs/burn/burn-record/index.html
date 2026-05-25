@@ -1504,20 +1504,21 @@
         });
       };
 
-      const buildGeneratedPageFile = async (page) => {
+      const buildGeneratedPageCanvas = async (page, { mobile = false } = {}) => {
         await Promise.all(Array.from(page.querySelectorAll("img")).map(waitForImage));
         const rect = page.getBoundingClientRect();
         const width = Math.max(1, Math.round(rect.width));
         const height = Math.max(1, Math.round(rect.height));
-        const isMobile = navigator.userAgentData?.mobile === true
-          || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "")
-          || (/Macintosh/i.test(navigator.userAgent || "") && navigator.maxTouchPoints > 1);
-        const scale = isMobile ? 2 : Math.max(2, Math.min(4, window.devicePixelRatio || 2));
+        const scale = mobile ? 2 : Math.max(2, Math.min(4, window.devicePixelRatio || 2));
         const canvas = document.createElement("canvas");
         canvas.width = Math.round(width * scale);
         canvas.height = Math.round(height * scale);
         await drawPageToCanvas(page, canvas, scale);
+        return canvas;
+      };
 
+      const buildGeneratedPageDataUrl = async (page) => {
+        const canvas = await buildGeneratedPageCanvas(page, { mobile: true });
         const fileName = `mobby-page-${new Date().toISOString().slice(0, 10)}.png`;
         const dataUrl = canvas.toDataURL("image/png");
         if (!dataUrl || dataUrl === "data:,") throw new Error("Canvas export failed");
@@ -1525,6 +1526,23 @@
         return {
           fileName,
           objectUrl: dataUrl,
+        };
+      };
+
+      const buildGeneratedPageFile = async (page) => {
+        const canvas = await buildGeneratedPageCanvas(page, { mobile: false });
+        const fileName = `mobby-page-${new Date().toISOString().slice(0, 10)}.png`;
+        const blob = await new Promise((resolve, reject) => {
+          canvas.toBlob((result) => {
+            if (result) resolve(result);
+            else reject(new Error("Canvas export failed"));
+          }, "image/png");
+        });
+
+        return {
+          blob,
+          fileName,
+          objectUrl: URL.createObjectURL(blob),
         };
       };
 
@@ -1578,6 +1596,30 @@
         const page = root.querySelector(".record-generated-page");
         const button = root.querySelector("[data-record-save-page]");
         if (!page) return;
+
+        if (isMobileSaveEnvironment()) {
+          if (button) {
+            button.setAttribute("aria-busy", "true");
+            button.dataset.recordPreparing = "true";
+            button.disabled = true;
+          }
+          setSavePreparingState(page, button, true);
+          try {
+            const prepared = await buildGeneratedPageDataUrl(page);
+            downloadPreparedPage(prepared);
+          } catch (error) {
+            console.error("[record-save-page:mobile]", error);
+            alert("画像保存に失敗しました。時間をおいてもう一度試してください。");
+          } finally {
+            if (button) {
+              button.removeAttribute("aria-busy");
+              delete button.dataset.recordPreparing;
+              button.disabled = false;
+            }
+            setSavePreparingState(page, button, false);
+          }
+          return;
+        }
 
         if (preparedPageSave?.objectUrl) {
           downloadPreparedPage(preparedPageSave);
