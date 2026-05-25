@@ -1157,6 +1157,12 @@
         object-position: center !important;
       }
 
+      .record-page--camera.is-reviewing .record-camera-preview.has-photo.record-camera-preview--landscape.record-camera-preview--source-portrait img,
+      .record-page--camera.is-inputting .record-camera-preview.has-photo.record-camera-preview--landscape.record-camera-preview--source-portrait img {
+        object-fit: contain !important;
+        background: #efe7e0 !important;
+      }
+
       .record-select-card img.record-select-card__image--landscape,
       .record-select-card img.record-select-card__image--portrait {
         display: block !important;
@@ -1290,6 +1296,32 @@
       });
 
       render();
+    })();
+
+    (() => {
+      const root = document.getElementById("recordRoot");
+      if (!root) return;
+
+      const syncPreviewSourceOrientation = () => {
+        root.querySelectorAll(".record-camera-preview.has-photo img").forEach((image) => {
+          const preview = image.closest(".record-camera-preview");
+          if (!preview) return;
+          const apply = () => {
+            const isPortrait = image.naturalHeight > image.naturalWidth;
+            const isLandscape = image.naturalWidth >= image.naturalHeight;
+            preview.classList.toggle("record-camera-preview--source-portrait", isPortrait);
+            preview.classList.toggle("record-camera-preview--source-landscape", isLandscape);
+          };
+          if (image.complete && image.naturalWidth && image.naturalHeight) {
+            apply();
+          } else {
+            image.addEventListener("load", apply, { once: true });
+          }
+        });
+      };
+
+      syncPreviewSourceOrientation();
+      new MutationObserver(syncPreviewSourceOrientation).observe(root, { childList: true, subtree: true });
     })();
 
     (() => {

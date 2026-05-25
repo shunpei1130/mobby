@@ -38,4 +38,10 @@
     object-fit: cover !important;
     object-position: center !important;
   }
+
+  .record-page--camera.is-reviewing .record-camera-preview.has-photo.record-camera-preview--landscape.record-camera-preview--source-portrait img,
+  .record-page--camera.is-inputting .record-camera-preview.has-photo.record-camera-preview--landscape.record-camera-preview--source-portrait img {
+    object-fit: contain !important;
+    background: #efe7e0 !important;
+  }
 }
