@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>BURNでページをつくる</title>
-  <script type="module" crossorigin src="./assets/burnRecord-CEFJ408q.js?v=clear-initial-copy"></script>
+  <script type="module" crossorigin src="./assets/burnRecord-CEFJ408q.js?v=slot-crop-sync"></script>
   <script>
     (() => {
       const restoreBackgroundScroll = (left) => {
@@ -101,7 +101,7 @@
   </script>
   <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
   <link rel="modulepreload" crossorigin href="./assets/icons-BAsau70F.js?v=iconfix">
-  <link rel="modulepreload" crossorigin href="./assets/record-CKgMcgCu.js?v=clear-initial-copy">
+  <link rel="modulepreload" crossorigin href="./assets/record-CKgMcgCu.js?v=slot-crop-sync">
   <link rel="stylesheet" crossorigin href="./assets/components-Cas7KQML.css?v=edit-save-clean">
   <link rel="stylesheet" crossorigin href="./assets/record-bTKggYDr.css?v=step4-backgrounds">
   <style>
@@ -777,6 +777,13 @@
     }
 
     .record-page--complete [data-record-save-page] {
+      display: grid !important;
+      gap: 10px;
+      justify-items: center;
+      align-items: center;
+      min-height: 58px;
+      padding: 18px 8px;
+      text-decoration: none;
       position: relative;
       overflow: hidden;
       border: 1px solid rgba(255, 219, 235, 0.72) !important;
@@ -813,6 +820,60 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.76),
         inset 0 -14px 26px rgba(177, 45, 111, 0.22),
         0 10px 24px rgba(218, 84, 150, 0.24) !important;
+    }
+
+    .record-page--complete [data-record-save-page][aria-busy="true"],
+    .record-page--complete [data-record-save-page]:disabled {
+      opacity: 0.55 !important;
+      pointer-events: none !important;
+    }
+
+    .record-page--complete [data-record-save-page][data-record-preparing="true"] {
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    .record-page--complete .record-generated-page {
+      isolation: isolate;
+    }
+
+    .record-page--complete .record-generated-page.is-preparing-save::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      background: rgba(255, 255, 255, 0.04);
+      -webkit-backdrop-filter: grayscale(1) contrast(1.02);
+      backdrop-filter: grayscale(1) contrast(1.02);
+      animation: recordSaveColorRise 2.4s ease-in-out forwards;
+      will-change: transform;
+    }
+
+    .record-save-preparing {
+      display: none;
+      width: 100%;
+      min-height: 58px;
+      margin-top: 0;
+      place-items: center;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0) 28%),
+        linear-gradient(135deg, rgba(255, 232, 244, 0.92), rgba(255, 190, 217, 0.82));
+      color: #7b3158;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      box-shadow: 0 12px 26px rgba(218, 84, 150, 0.18);
+    }
+
+    .record-save-preparing.is-visible {
+      display: grid;
+    }
+
+    @keyframes recordSaveColorRise {
+      0% { transform: translateY(0%); opacity: 1; }
+      72% { transform: translateY(-100%); opacity: 1; }
+      100% { transform: translateY(-100%); opacity: 0; }
     }
 
     .record-page--complete [data-record-complete-back] {
@@ -1030,7 +1091,112 @@
       font-size: .74rem;
     }
 
+    .record-page--camera .record-frame-switch,
+    .record-page--camera .record-photo-adjust-panel,
+    .record-page--camera .record-photo-frame-options {
+      display: none !important;
+    }
+
+    .record-page--select [data-compose-from-record],
+    .record-page--select .record-select-compose {
+      display: none !important;
+    }
+
     @media (max-width: 520px) {
+      .record-page--camera.is-reviewing .record-camera-stage.is-reviewing {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 2 !important;
+        height: calc(100svh - env(safe-area-inset-bottom) - 382px) !important;
+        min-height: 0 !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: calc(env(safe-area-inset-top) + 94px) 0 0 !important;
+        box-sizing: border-box !important;
+        pointer-events: none !important;
+      }
+
+      .record-page--camera.is-reviewing .record-camera-preview.has-photo {
+        pointer-events: auto !important;
+        margin-inline: auto !important;
+      }
+
+      .record-page--camera.is-reviewing .record-camera-preview.has-photo,
+      .record-page--camera.is-inputting .record-camera-preview.has-photo {
+        --record-review-max-height: calc(100svh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 430px);
+        max-height: max(210px, var(--record-review-max-height)) !important;
+        overflow: hidden !important;
+        background: transparent !important;
+      }
+
+      .record-page--camera.is-inputting .record-camera-preview.has-photo {
+        height: auto !important;
+        max-height: none !important;
+        min-height: 0 !important;
+      }
+
+      .record-page--camera .record-frame-switch,
+      .record-page--camera .record-photo-adjust-panel,
+      .record-page--camera .record-photo-frame-options {
+        display: none !important;
+      }
+
+      .record-page--camera.is-reviewing .record-camera-preview.has-photo.record-camera-preview--landscape {
+        width: min(86vw, 390px, calc(max(210px, var(--record-review-max-height)) * 1.205)) !important;
+        aspect-ratio: 1.205 / 1 !important;
+      }
+
+      .record-page--camera.is-reviewing .record-camera-preview.has-photo.record-camera-preview--portrait {
+        width: min(64vw, 310px, calc(max(210px, var(--record-review-max-height)) * .89)) !important;
+        aspect-ratio: .89 / 1 !important;
+      }
+
+      .record-page--camera.is-inputting .record-camera-preview.has-photo.record-camera-preview--landscape {
+        width: min(100%, 308px) !important;
+        aspect-ratio: 1.205 / 1 !important;
+      }
+
+      .record-page--camera.is-inputting .record-camera-preview.has-photo.record-camera-preview--portrait {
+        width: min(72%, 230px) !important;
+        aspect-ratio: .89 / 1 !important;
+      }
+
+      .record-page--camera.is-reviewing .record-camera-preview.has-photo img,
+      .record-page--camera.is-inputting .record-camera-preview.has-photo img,
+      .record-select-card img.record-select-card__image,
+      .record-template-slot--image img {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        object-position: center !important;
+      }
+
+      .record-page--camera.is-reviewing .record-camera-preview.has-photo.record-camera-preview--landscape.record-camera-preview--source-portrait img,
+      .record-page--camera.is-inputting .record-camera-preview.has-photo.record-camera-preview--landscape.record-camera-preview--source-portrait img {
+        object-fit: contain !important;
+        background: #efe7e0 !important;
+      }
+
+      .record-select-card img.record-select-card__image--landscape,
+      .record-select-card img.record-select-card__image--portrait {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        object-fit: cover !important;
+        object-position: center !important;
+      }
+
+      .record-select-card img.record-select-card__image--landscape {
+        aspect-ratio: 1.205 / 1 !important;
+      }
+
+      .record-select-card img.record-select-card__image--portrait {
+        aspect-ratio: .89 / 1 !important;
+      }
+
       .burn-guide-overlay {
         padding: 18px;
       }
@@ -1152,48 +1318,135 @@
     (() => {
       const root = document.getElementById("recordRoot");
       if (!root) return;
+
+      const syncPreviewSourceOrientation = () => {
+        root.querySelectorAll(".record-camera-preview.has-photo img").forEach((image) => {
+          const preview = image.closest(".record-camera-preview");
+          if (!preview) return;
+          const apply = () => {
+            const isPortrait = image.naturalHeight > image.naturalWidth;
+            const isLandscape = image.naturalWidth >= image.naturalHeight;
+            preview.classList.toggle("record-camera-preview--source-portrait", isPortrait);
+            preview.classList.toggle("record-camera-preview--source-landscape", isLandscape);
+          };
+          if (image.complete && image.naturalWidth && image.naturalHeight) {
+            apply();
+          } else {
+            image.addEventListener("load", apply, { once: true });
+          }
+        });
+      };
+
+      syncPreviewSourceOrientation();
+      new MutationObserver(syncPreviewSourceOrientation).observe(root, { childList: true, subtree: true });
+    })();
+
+    (() => {
+      const root = document.getElementById("recordRoot");
+      if (!root) return;
       let preparedPageSave = null;
       let preparedPageElement = null;
       let preparePageSavePromise = null;
 
       const clearPreparedPageSave = () => {
-        if (preparedPageSave?.objectUrl) URL.revokeObjectURL(preparedPageSave.objectUrl);
+        if (preparedPageSave?.objectUrl && preparedPageSave.objectUrl.startsWith("blob:")) {
+          URL.revokeObjectURL(preparedPageSave.objectUrl);
+        }
         preparedPageSave = null;
       };
 
       const isMobileSaveEnvironment = () => {
-        if (navigator.userAgentData?.mobile) return true;
-        const userAgent = navigator.userAgent || "";
-        if (/Android|iPhone|iPad|iPod/i.test(userAgent)) return true;
-        if (/Macintosh/i.test(userAgent) && navigator.maxTouchPoints > 1) return true;
-        return window.matchMedia?.("(pointer: coarse)")?.matches === true;
+        return navigator.userAgentData?.mobile === true
+          || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "")
+          || (/Macintosh/i.test(navigator.userAgent || "") && navigator.maxTouchPoints > 1);
       };
 
-      const showMobileSaveFallback = (prepared) => {
+      const downloadPreparedPage = (prepared) => {
         if (!prepared?.objectUrl) return;
-        document.querySelector("[data-record-save-fallback]")?.remove();
+        const link = document.createElement("a");
+        link.download = prepared.fileName;
+        link.href = prepared.objectUrl;
+        link.rel = "noopener";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      };
 
-        const overlay = document.createElement("div");
-        overlay.className = "record-save-fallback";
-        overlay.dataset.recordSaveFallback = "true";
-        overlay.innerHTML = `
-          <div class="record-save-fallback__card" role="dialog" aria-modal="true" aria-label="画像を保存">
-            <p>画像を長押しして保存してください。開ける場合は「画像を開く」から保存できます。</p>
-            <img class="record-save-fallback__image" src="${prepared.objectUrl}" alt="保存するBURNページ">
-            <div class="record-save-fallback__actions">
-              <a href="${prepared.objectUrl}" target="_blank" rel="noopener">画像を開く</a>
-              <button type="button" data-record-save-fallback-close>閉じる</button>
-            </div>
-          </div>
-        `;
-        document.body.appendChild(overlay);
+      const dataUrlToBlob = (dataUrl) => {
+        const parts = String(dataUrl || "").match(/^data:([^;,]+)?(;base64)?,(.*)$/);
+        if (!parts) return null;
+        const mimeType = parts[1] || "application/octet-stream";
+        const payload = parts[3] || "";
+        const binary = parts[2] ? atob(payload) : decodeURIComponent(payload);
+        const bytes = new Uint8Array(binary.length);
+        for (let index = 0; index < binary.length; index += 1) {
+          bytes[index] = binary.charCodeAt(index);
+        }
+        return new Blob([bytes], { type: mimeType });
+      };
+
+      const sharePreparedFile = async (prepared, title = "Memory page") => {
+        if (!prepared?.blob || typeof File === "undefined") return false;
+        const file = new File([prepared.blob], prepared.fileName || "mobby-page.png", {
+          type: prepared.blob.type || "image/png"
+        });
+        if (!navigator.canShare?.({ files: [file] })) return false;
+        try {
+          await navigator.share({ files: [file], title });
+          return true;
+        } catch (error) {
+          if (error?.name === "AbortError") return "aborted";
+          throw error;
+        }
+      };
+
+      const promoteSaveButtonToDownloadLink = (button, prepared) => {
+        if (!button || !prepared?.objectUrl || button.matches("a")) return;
+        const link = document.createElement("a");
+        Array.from(button.attributes).forEach((attribute) => {
+          if (attribute.name === "type" || attribute.name === "disabled" || attribute.name === "aria-busy" || attribute.name === "data-record-preparing") return;
+          link.setAttribute(attribute.name, attribute.value);
+        });
+        link.href = prepared.objectUrl;
+        link.download = prepared.fileName;
+        link.rel = "noopener";
+        link.innerHTML = button.innerHTML;
+        link.dataset.recordPreparedDownload = prepared.objectUrl;
+        link.dataset.recordPreparedFileName = prepared.fileName;
+        button.replaceWith(link);
+      };
+
+      const setSavePreparingState = (page, button, isPreparing) => {
+        if (page) page.classList.toggle("is-preparing-save", isPreparing);
+        const actions = button?.closest(".record-complete-actions") || root.querySelector(".record-page--complete .record-complete-actions");
+        if (!actions) return;
+        let status = actions.querySelector("[data-record-save-preparing]");
+        if (!status) {
+          status = document.createElement("div");
+          status.className = "record-save-preparing";
+          status.dataset.recordSavePreparing = "true";
+          status.textContent = "保存準備中...";
+          status.setAttribute("aria-live", "polite");
+          actions.prepend(status);
+        }
+        status.classList.toggle("is-visible", isPreparing);
       };
 
       const waitForImage = (img) => {
         if (img.complete && img.naturalWidth > 0) return Promise.resolve();
         return new Promise((resolve) => {
-          img.addEventListener("load", resolve, { once: true });
-          img.addEventListener("error", resolve, { once: true });
+          const done = () => {
+            window.clearTimeout(timer);
+            img.removeEventListener("load", done);
+            img.removeEventListener("error", done);
+            resolve();
+          };
+          const timer = window.setTimeout(done, 1800);
+          img.loading = "eager";
+          img.decoding = "sync";
+          img.addEventListener("load", done, { once: true });
+          img.addEventListener("error", done, { once: true });
+          if (img.complete) done();
         });
       };
 
@@ -1410,7 +1663,6 @@
           const width = rect.width * scale;
           const height = rect.height * scale;
 
-          await waitForImage(element);
           const feather = Boolean(element.closest(".record-generated-page--photo-soft .record-template-slot--image"));
           drawContainedImage(ctx, element, x, y, width, height, getComputedStyle(element).objectFit || "cover", feather);
         }
@@ -1420,17 +1672,33 @@
         });
       };
 
-      const buildGeneratedPageFile = async (page) => {
+      const buildGeneratedPageCanvas = async (page, { mobile = false } = {}) => {
         await Promise.all(Array.from(page.querySelectorAll("img")).map(waitForImage));
         const rect = page.getBoundingClientRect();
         const width = Math.max(1, Math.round(rect.width));
         const height = Math.max(1, Math.round(rect.height));
-        const scale = Math.max(2, Math.min(4, window.devicePixelRatio || 2));
+        const scale = mobile ? 2 : Math.max(2, Math.min(4, window.devicePixelRatio || 2));
         const canvas = document.createElement("canvas");
         canvas.width = Math.round(width * scale);
         canvas.height = Math.round(height * scale);
         await drawPageToCanvas(page, canvas, scale);
+        return canvas;
+      };
 
+      const buildGeneratedPageDataUrl = async (page) => {
+        const canvas = await buildGeneratedPageCanvas(page, { mobile: true });
+        const fileName = `mobby-page-${new Date().toISOString().slice(0, 10)}.png`;
+        const dataUrl = canvas.toDataURL("image/png");
+        if (!dataUrl || dataUrl === "data:,") throw new Error("Canvas export failed");
+
+        return {
+          fileName,
+          objectUrl: dataUrl,
+        };
+      };
+
+      const buildGeneratedPageFile = async (page, { mobile = false } = {}) => {
+        const canvas = await buildGeneratedPageCanvas(page, { mobile });
         const fileName = `mobby-page-${new Date().toISOString().slice(0, 10)}.png`;
         const blob = await new Promise((resolve, reject) => {
           canvas.toBlob((result) => {
@@ -1458,12 +1726,19 @@
         clearPreparedPageSave();
         if (button) {
           button.setAttribute("aria-busy", "true");
+          button.dataset.recordPreparing = "true";
           button.disabled = true;
         }
+        setSavePreparingState(page, button, true);
         preparePageSavePromise = buildGeneratedPageFile(page)
           .then((result) => {
             if (preparedPageElement === page) {
               preparedPageSave = result;
+              if (button) {
+                button.dataset.recordPreparedDownload = result.objectUrl;
+                button.dataset.recordPreparedFileName = result.fileName;
+                promoteSaveButtonToDownloadLink(button, result);
+              }
             } else if (result.objectUrl) {
               URL.revokeObjectURL(result.objectUrl);
             }
@@ -1472,14 +1747,16 @@
           .catch((error) => {
             console.error("[record-save-page:prepare]", error);
             if (preparedPageElement === page) clearPreparedPageSave();
-            throw error;
+            return null;
           })
           .finally(() => {
             if (preparedPageElement === page) preparePageSavePromise = null;
             if (button) {
               button.removeAttribute("aria-busy");
+              delete button.dataset.recordPreparing;
               button.disabled = false;
             }
+            setSavePreparingState(page, button, false);
           });
       };
 
@@ -1488,58 +1765,89 @@
         const button = root.querySelector("[data-record-save-page]");
         if (!page) return;
 
+        if (isMobileSaveEnvironment()) {
+          if (button) {
+            button.setAttribute("aria-busy", "true");
+            button.dataset.recordPreparing = "true";
+            button.disabled = true;
+          }
+          setSavePreparingState(page, button, true);
+          try {
+            const prepared = await buildGeneratedPageFile(page, { mobile: true });
+            const shared = await sharePreparedFile(prepared, "Memory page");
+            if (!shared) downloadPreparedPage(prepared);
+          } catch (error) {
+            console.error("[record-save-page:mobile]", error);
+            alert("画像保存に失敗しました。時間をおいてもう一度試してください。");
+          } finally {
+            if (button) {
+              button.removeAttribute("aria-busy");
+              delete button.dataset.recordPreparing;
+              button.disabled = false;
+            }
+            setSavePreparingState(page, button, false);
+          }
+          return;
+        }
+
+        if (preparedPageSave?.objectUrl) {
+          downloadPreparedPage(preparedPageSave);
+          return;
+        }
+
         if (preparedPageElement !== page || (!preparedPageSave && !preparePageSavePromise)) {
           prepareGeneratedPageSave();
         }
 
-        if (button) button.setAttribute("aria-busy", "true");
+        if (button) {
+          button.setAttribute("aria-busy", "true");
+          button.dataset.recordPreparing = "true";
+          button.disabled = true;
+        }
+        setSavePreparingState(page, button, true);
         try {
           const prepared = preparedPageSave || await preparePageSavePromise || await buildGeneratedPageFile(page);
+          if (!prepared) throw new Error("Canvas export failed");
           preparedPageElement = page;
           preparedPageSave = prepared;
-
-          if (isMobileSaveEnvironment()) {
-            const file = new File([prepared.blob], prepared.fileName, { type: "image/png" });
-            if (navigator.share) {
-              try {
-                if (navigator.canShare?.({ files: [file] })) {
-                  await navigator.share({
-                    files: [file],
-                    title: "Mobby page",
-                    text: "作成したBURNページです。",
-                  });
-                } else {
-                  await navigator.share({
-                    title: "Mobby page",
-                    text: "作成したBURNページです。",
-                    url: prepared.objectUrl,
-                  });
-                }
-                return;
-              } catch (error) {
-                if (error?.name === "AbortError") return;
-                console.warn("[record-save-page:share]", error);
-              }
-            }
-
-            const opened = window.open(prepared.objectUrl, "_blank", "noopener");
-            if (opened) return;
-            showMobileSaveFallback(prepared);
-            return;
+          if (button) {
+            button.dataset.recordPreparedDownload = prepared.objectUrl;
+            button.dataset.recordPreparedFileName = prepared.fileName;
           }
-
-          const link = document.createElement("a");
-          link.download = prepared.fileName;
-          link.href = prepared.objectUrl;
-          link.rel = "noopener";
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
+          downloadPreparedPage(prepared);
         } catch (error) {
           console.error("[record-save-page]", error);
           alert("画像保存に失敗しました。時間をおいてもう一度試してください。");
         } finally {
-          if (button) button.removeAttribute("aria-busy");
+          if (button) {
+            button.removeAttribute("aria-busy");
+            delete button.dataset.recordPreparing;
+            button.disabled = false;
+          }
+          setSavePreparingState(page, button, false);
+        }
+      };
+
+      const saveDraftPhoto = async () => {
+        const image = root.querySelector(".record-camera-preview.has-photo img");
+        const blob = dataUrlToBlob(image?.currentSrc || image?.src || "");
+        if (!blob) return;
+        const prepared = {
+          blob,
+          fileName: `mobby-photo-${new Date().toISOString().slice(0, 10)}.jpg`,
+          objectUrl: URL.createObjectURL(blob)
+        };
+        try {
+          if (isMobileSaveEnvironment()) {
+            const shared = await sharePreparedFile(prepared, "Memory photo");
+            if (shared) return;
+            if (shared === "aborted") return;
+          }
+          downloadPreparedPage(prepared);
+        } finally {
+          window.setTimeout(() => {
+            if (prepared.objectUrl) URL.revokeObjectURL(prepared.objectUrl);
+          }, 1000);
         }
       };
 
@@ -1549,7 +1857,15 @@
 
         const saveButton = actions.querySelector("[data-record-save-page]");
         if (!saveButton) return;
+        if (isMobileSaveEnvironment()) {
+          saveButton.removeAttribute("aria-busy");
+          delete saveButton.dataset.recordPreparing;
+          saveButton.disabled = false;
+        } else {
         prepareGeneratedPageSave();
+        requestAnimationFrame(() => prepareGeneratedPageSave());
+        window.setTimeout(() => prepareGeneratedPageSave(), 250);
+        }
 
         const completePage = root.querySelector(".record-page--complete");
         if (completePage && !completePage.querySelector("[data-record-complete-back]")) {
@@ -1571,22 +1887,25 @@
       };
 
       root.addEventListener("click", (event) => {
+        if (event.target.closest("a[data-record-save-page]")) {
+          return;
+        }
         if (event.target.closest("[data-record-save-page]")) {
           event.preventDefault();
           event.stopImmediatePropagation();
           saveGeneratedPage();
           return;
         }
+        if (event.target.closest("[data-record-save-photo]")) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          saveDraftPhoto();
+          return;
+        }
         if (event.target.closest("[data-record-complete-back]")) {
           event.preventDefault();
           event.stopImmediatePropagation();
           root.querySelector(".record-page--complete [data-record-stage='select']")?.click();
-          return;
-        }
-        if (event.target.closest("[data-record-save-fallback-close]")) {
-          event.preventDefault();
-          event.stopImmediatePropagation();
-          document.querySelector("[data-record-save-fallback]")?.remove();
           return;
         }
         if (!event.target.closest("[data-record-home-return]")) return;
