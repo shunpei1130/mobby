@@ -5886,6 +5886,7 @@
       scroll-behavior: smooth;
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
+      pointer-events: none;
     }
 
     .hero-diagnosis-menu .hero-diagnosis-track {
@@ -5903,21 +5904,6 @@
 
     .hero-diagnosis-menu.is-scroll-ready .hero-diagnosis-track {
       animation-play-state: running;
-    }
-
-    .hero-diagnosis-menu .gift-fan-diagnosis-actions.is-user-scrolling .hero-diagnosis-track {
-      animation: none;
-      transform: translateX(0);
-    }
-
-    .hero-diagnosis-menu.is-scroll-ready .gift-fan-diagnosis-actions.is-user-scrolling {
-      overflow-x: auto !important;
-      cursor: grab;
-    }
-
-    .hero-diagnosis-menu.is-scroll-ready .gift-fan-diagnosis-actions.is-user-scrolling.is-dragging {
-      cursor: grabbing;
-      user-select: none;
     }
 
     @keyframes heroDiagnosisScroll {
@@ -7160,11 +7146,6 @@
       animation: heroDiagnosisScroll var(--hero-diagnosis-scroll-duration) linear infinite !important;
       animation-play-state: running;
       will-change: transform;
-    }
-
-    .hero-diagnosis-menu .gift-fan-diagnosis-actions.is-user-scrolling .hero-diagnosis-track {
-      animation: none;
-      transform: translateX(0);
     }
 
     @keyframes heroDiagnosisScroll {
@@ -11719,9 +11700,6 @@
         scroller.dataset.autoAdvanceReady = 'true';
         scroller.style.scrollSnapType = 'none';
 
-        let userScrollTimerId = 0;
-        let dragState = null;
-
         const updateAnimation = () => {
           const distance = Math.max(0, track.scrollWidth - scroller.clientWidth);
           scroller.style.setProperty('--hero-diagnosis-scroll-distance', `${distance}px`);
@@ -11729,62 +11707,7 @@
           track.style.animationPlayState = distance <= 1 ? 'paused' : '';
         };
 
-        const pauseThenResume = ({ resetPosition = false } = {}) => {
-          scroller.classList.add('is-user-scrolling');
-          updateAnimation();
-          if (userScrollTimerId) window.clearTimeout(userScrollTimerId);
-          userScrollTimerId = window.setTimeout(() => {
-            if (resetPosition) scroller.scrollLeft = 0;
-            scroller.classList.remove('is-user-scrolling');
-            scroller.classList.remove('is-dragging');
-            updateAnimation();
-          }, 4200);
-        };
-
-        const startDrag = (event) => {
-          if (event.button && event.button !== 0) return;
-          pauseThenResume();
-          dragState = {
-            pointerId: event.pointerId,
-            startX: event.clientX,
-            scrollLeft: scroller.scrollLeft,
-            moved: false,
-          };
-          scroller.classList.add('is-dragging');
-          scroller.setPointerCapture?.(event.pointerId);
-        };
-        const moveDrag = (event) => {
-          if (!dragState || dragState.pointerId !== event.pointerId) return;
-          const delta = event.clientX - dragState.startX;
-          if (Math.abs(delta) > 3) dragState.moved = true;
-          scroller.scrollLeft = dragState.scrollLeft - delta;
-          pauseThenResume();
-          event.preventDefault();
-        };
-        const endDrag = (event) => {
-          if (!dragState || dragState.pointerId !== event.pointerId) return;
-          if (dragState.moved) {
-            scroller.querySelectorAll('a, button').forEach((item) => {
-              item.dataset.dragSuppressClick = 'true';
-              window.setTimeout(() => delete item.dataset.dragSuppressClick, 80);
-            });
-          }
-          dragState = null;
-          scroller.classList.remove('is-dragging');
-          pauseThenResume();
-        };
-
-        scroller.addEventListener('pointerdown', startDrag);
-        scroller.addEventListener('pointermove', moveDrag);
-        scroller.addEventListener('pointerup', endDrag);
-        scroller.addEventListener('pointercancel', endDrag);
-        scroller.addEventListener('click', (event) => {
-          if (!event.target.closest('[data-drag-suppress-click="true"]')) return;
-          event.preventDefault();
-          event.stopPropagation();
-        }, true);
-        ['wheel', 'touchstart', 'focusin'].forEach((eventName) => scroller.addEventListener(eventName, () => pauseThenResume(), { passive: true }));
-        window.addEventListener('resize', () => pauseThenResume({ resetPosition: true }), { passive: true });
+        window.addEventListener('resize', updateAnimation, { passive: true });
         document.addEventListener('visibilitychange', () => {
           if (!document.hidden) updateAnimation();
         });
