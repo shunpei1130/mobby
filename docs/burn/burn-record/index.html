@@ -1306,6 +1306,34 @@
         link.remove();
       };
 
+      const dataUrlToBlob = (dataUrl) => {
+        const parts = String(dataUrl || "").match(/^data:([^;,]+)?(;base64)?,(.*)$/);
+        if (!parts) return null;
+        const mimeType = parts[1] || "application/octet-stream";
+        const payload = parts[3] || "";
+        const binary = parts[2] ? atob(payload) : decodeURIComponent(payload);
+        const bytes = new Uint8Array(binary.length);
+        for (let index = 0; index < binary.length; index += 1) {
+          bytes[index] = binary.charCodeAt(index);
+        }
+        return new Blob([bytes], { type: mimeType });
+      };
+
+      const sharePreparedFile = async (prepared, title = "Memory page") => {
+        if (!prepared?.blob || typeof File === "undefined") return false;
+        const file = new File([prepared.blob], prepared.fileName || "mobby-page.png", {
+          type: prepared.blob.type || "image/png"
+        });
+        if (!navigator.canShare?.({ files: [file] })) return false;
+        try {
+          await navigator.share({ files: [file], title });
+          return true;
+        } catch (error) {
+          if (error?.name === "AbortError") return "aborted";
+          throw error;
+        }
+      };
+
       const promoteSaveButtonToDownloadLink = (button, prepared) => {
         if (!button || !prepared?.objectUrl || button.matches("a")) return;
         const link = document.createElement("a");
@@ -1603,8 +1631,8 @@
         };
       };
 
-      const buildGeneratedPageFile = async (page) => {
-        const canvas = await buildGeneratedPageCanvas(page, { mobile: false });
+      const buildGeneratedPageFile = async (page, { mobile = false } = {}) => {
+        const canvas = await buildGeneratedPageCanvas(page, { mobile });
         const fileName = `mobby-page-${new Date().toISOString().slice(0, 10)}.png`;
         const blob = await new Promise((resolve, reject) => {
           canvas.toBlob((result) => {
@@ -1679,8 +1707,9 @@
           }
           setSavePreparingState(page, button, true);
           try {
-            const prepared = await buildGeneratedPageDataUrl(page);
-            downloadPreparedPage(prepared);
+            const prepared = await buildGeneratedPageFile(page, { mobile: true });
+            const shared = await sharePreparedFile(prepared, "Memory page");
+            if (!shared) downloadPreparedPage(prepared);
           } catch (error) {
             console.error("[record-save-page:mobile]", error);
             alert("画像保存に失敗しました。時間をおいてもう一度試してください。");
@@ -1733,6 +1762,29 @@
         }
       };
 
+      const saveDraftPhoto = async () => {
+        const image = root.querySelector(".record-camera-preview.has-photo img");
+        const blob = dataUrlToBlob(image?.currentSrc || image?.src || "");
+        if (!blob) return;
+        const prepared = {
+          blob,
+          fileName: `mobby-photo-${new Date().toISOString().slice(0, 10)}.jpg`,
+          objectUrl: URL.createObjectURL(blob)
+        };
+        try {
+          if (isMobileSaveEnvironment()) {
+            const shared = await sharePreparedFile(prepared, "Memory photo");
+            if (shared) return;
+            if (shared === "aborted") return;
+          }
+          downloadPreparedPage(prepared);
+        } finally {
+          window.setTimeout(() => {
+            if (prepared.objectUrl) URL.revokeObjectURL(prepared.objectUrl);
+          }, 1000);
+        }
+      };
+
       const addHomeReturn = () => {
         const actions = root.querySelector(".record-page--complete .record-complete-actions");
         if (!actions) return;
@@ -1776,6 +1828,12 @@
           event.preventDefault();
           event.stopImmediatePropagation();
           saveGeneratedPage();
+          return;
+        }
+        if (event.target.closest("[data-record-save-photo]")) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          saveDraftPhoto();
           return;
         }
         if (event.target.closest("[data-record-complete-back]")) {
