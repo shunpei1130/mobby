@@ -309,7 +309,7 @@
                 ${l("pencil")}
               </button>
               <button class="record-select-card__toggle" type="button" data-record-toggle-memory="${s.id}" aria-pressed="${$}">
-                ${s.imageData?`<img class="record-select-card__image" src="${s.imageData}" alt="" ${h()} />`:'<span class="record-select-card__image-placeholder">photo</span>'}
+                ${s.imageData?`<img class="record-select-card__image record-select-card__image--${s.frame==="portrait"?"portrait":"landscape"}" src="${s.imageData}" alt="" ${h()} />`:'<span class="record-select-card__image-placeholder">photo</span>'}
                 <span class="record-select-card__check" aria-hidden="true">${$?l("check"):""}</span>
               </button>
               <div class="record-select-card__copy">
