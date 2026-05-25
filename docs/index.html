@@ -6122,16 +6122,19 @@
     }
 
     .hero-diagnosis-menu .beauty-collab .gift-fan-collab-badge {
-      top: auto;
-      bottom: -16px;
+      top: calc(100% + 4px);
+      bottom: auto;
     }
 
     .gift-fan-person-badge {
       position: absolute;
-      top: -17px;
+      top: auto;
+      bottom: calc(100% + 4px);
       left: 50%;
       z-index: 4;
-      min-width: 54px;
+      width: 58px;
+      min-width: 58px;
+      max-width: 58px;
       height: 20px;
       padding: 0 8px;
       display: inline-flex;
@@ -6150,6 +6153,8 @@
         inset 0 0 0 1px rgba(47, 79, 79, 0.18);
       pointer-events: none;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     @media (max-width: 520px) {
@@ -6195,13 +6200,16 @@
       }
 
       .hero-diagnosis-menu .beauty-collab .gift-fan-collab-badge {
-        top: auto;
-        bottom: -15px;
+        top: calc(100% + 4px);
+        bottom: auto;
       }
 
       .gift-fan-person-badge {
-        top: -15px;
-        min-width: 42px;
+        top: auto;
+        bottom: calc(100% + 4px);
+        width: 54px;
+        min-width: 54px;
+        max-width: 54px;
         height: 18px;
         padding: 0 6px;
         font-size: 8px;
@@ -7029,7 +7037,7 @@
     /* Hero diagnosis menu: keep the dotted frame stable, scroll only the buttons. */
     .hero-diagnosis-menu,
     .hero-collab-diagnosis-menu {
-      --hero-panel-body-height: 78px;
+      --hero-panel-body-height: 94px;
       box-sizing: border-box;
       width: min(760px, calc(100% - 32px));
       min-height: calc(24px + var(--hero-panel-body-height) + 14px);
@@ -7104,7 +7112,7 @@
       align-items: flex-end !important;
       gap: 14px !important;
       overflow-x: auto !important;
-      overflow-y: hidden !important;
+      overflow-y: visible !important;
       scroll-snap-type: none !important;
       scroll-behavior: smooth;
       scrollbar-width: none;
@@ -7129,19 +7137,19 @@
     }
 
     .hero-diagnosis-menu.is-scroll-ready .gift-fan-diagnosis-actions {
-      justify-content: center !important;
+      justify-content: flex-start !important;
       overflow-x: hidden !important;
     }
 
     .hero-diagnosis-menu.is-scroll-ready .hero-diagnosis-track {
-      width: 100% !important;
-      min-width: 100% !important;
-      max-width: 100% !important;
-      justify-content: space-evenly !important;
-      gap: 0 !important;
-      animation: none !important;
-      transform: none !important;
-      will-change: auto;
+      width: max-content !important;
+      min-width: max-content !important;
+      max-width: none !important;
+      justify-content: flex-start !important;
+      gap: 14px !important;
+      animation: heroDiagnosisScroll var(--hero-diagnosis-scroll-duration) linear infinite !important;
+      animation-play-state: running;
+      will-change: transform;
     }
 
     .hero-diagnosis-menu .gift-fan-diagnosis-actions.is-user-scrolling .hero-diagnosis-track {
@@ -7151,12 +7159,17 @@
 
     @keyframes heroDiagnosisScroll {
       0%,
-      24% {
+      18% {
         transform: translateX(0);
       }
 
-      100% {
+      72%,
+      99.8% {
         transform: translateX(calc(var(--hero-diagnosis-scroll-distance) * -1));
+      }
+
+      100% {
+        transform: translateX(0);
       }
     }
 
@@ -7293,6 +7306,29 @@
       overflow: visible !important;
     }
 
+    .hero-diagnosis-menu .gift-fan-diagnosis-action.beauty-collab {
+      overflow: visible !important;
+    }
+
+    .hero-diagnosis-menu .beauty-collab .gift-fan-person-badge,
+    .hero-diagnosis-menu .beauty-collab .gift-fan-collab-badge {
+      position: absolute !important;
+      left: 50% !important;
+      z-index: 6 !important;
+      transform: translateX(-50%) !important;
+      pointer-events: none !important;
+    }
+
+    .hero-diagnosis-menu .beauty-collab .gift-fan-person-badge {
+      top: auto !important;
+      bottom: calc(100% + 4px) !important;
+    }
+
+    .hero-diagnosis-menu .beauty-collab .gift-fan-collab-badge {
+      top: calc(100% + 4px) !important;
+      bottom: auto !important;
+    }
+
     .hero-collab-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="request"] {
       border-color: rgba(73, 184, 124, 0.5) !important;
       background:
@@ -7348,12 +7384,12 @@
     @media (max-width: 520px) {
       .hero-diagnosis-menu,
       .hero-collab-diagnosis-menu {
-        --hero-panel-body-height: 70px;
+        --hero-panel-body-height: 104px;
         width: calc(100vw - 32px);
         max-width: 360px;
         min-height: calc(20px + var(--hero-panel-body-height) + 12px);
-        margin-left: calc(50% - 50vw + 16px);
-        margin-right: 0;
+        margin-left: auto;
+        margin-right: auto;
         padding: 20px 10px 12px;
         border-radius: 20px;
       }
@@ -7373,8 +7409,8 @@
         height: var(--hero-panel-body-height) !important;
         min-height: var(--hero-panel-body-height) !important;
         max-height: var(--hero-panel-body-height) !important;
-        padding-top: 12px !important;
-        align-items: flex-end !important;
+        padding: 22px 0 24px !important;
+        align-items: flex-start !important;
       }
 
       .hero-diagnosis-menu .gift-fan-diagnosis-actions {
@@ -7382,11 +7418,14 @@
       }
 
       .hero-diagnosis-menu .hero-diagnosis-track {
+        align-items: flex-start !important;
         gap: 7px !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
       }
 
       .hero-diagnosis-menu.is-scroll-ready .hero-diagnosis-track {
-        gap: 0 !important;
+        gap: 7px !important;
       }
 
       .hero-diagnosis-menu .gift-fan-diagnosis-action,
@@ -7408,6 +7447,22 @@
         height: 18px;
         padding: 0 6px;
         font-size: 8px;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-action.beauty-collab {
+        overflow: visible !important;
+      }
+
+      .hero-diagnosis-menu .beauty-collab .gift-fan-person-badge {
+        position: absolute !important;
+        top: auto !important;
+        bottom: calc(100% + 4px) !important;
+      }
+
+      .hero-diagnosis-menu .beauty-collab .gift-fan-collab-badge {
+        position: absolute !important;
+        top: calc(100% + 4px) !important;
+        bottom: auto !important;
       }
     }
   </style>
