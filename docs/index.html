@@ -11660,7 +11660,7 @@
           const distance = Math.max(0, track.scrollWidth - scroller.clientWidth);
           scroller.style.setProperty('--hero-diagnosis-scroll-distance', `${distance}px`);
           scroller.style.setProperty('--hero-diagnosis-scroll-duration', `${Math.max(8, distance / 18)}s`);
-          if (distance <= 1) track.style.animationPlayState = 'paused';
+          track.style.animationPlayState = distance <= 1 ? 'paused' : '';
         };
 
         const pauseThenResume = () => {
