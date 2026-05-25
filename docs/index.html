@@ -5910,6 +5910,16 @@
       transform: translateX(0);
     }
 
+    .hero-diagnosis-menu.is-scroll-ready .gift-fan-diagnosis-actions.is-user-scrolling {
+      overflow-x: auto !important;
+      cursor: grab;
+    }
+
+    .hero-diagnosis-menu.is-scroll-ready .gift-fan-diagnosis-actions.is-user-scrolling.is-dragging {
+      cursor: grabbing;
+      user-select: none;
+    }
+
     @keyframes heroDiagnosisScroll {
       0%,
       24% {
@@ -11710,6 +11720,7 @@
         scroller.style.scrollSnapType = 'none';
 
         let userScrollTimerId = 0;
+        let dragState = null;
 
         const updateAnimation = () => {
           const distance = Math.max(0, track.scrollWidth - scroller.clientWidth);
@@ -11718,19 +11729,62 @@
           track.style.animationPlayState = distance <= 1 ? 'paused' : '';
         };
 
-        const pauseThenResume = () => {
+        const pauseThenResume = ({ resetPosition = false } = {}) => {
           scroller.classList.add('is-user-scrolling');
           updateAnimation();
           if (userScrollTimerId) window.clearTimeout(userScrollTimerId);
           userScrollTimerId = window.setTimeout(() => {
-            scroller.scrollLeft = 0;
+            if (resetPosition) scroller.scrollLeft = 0;
             scroller.classList.remove('is-user-scrolling');
+            scroller.classList.remove('is-dragging');
             updateAnimation();
-          }, 1800);
+          }, 4200);
         };
 
-        ['pointerdown', 'wheel', 'touchstart', 'focusin'].forEach((eventName) => scroller.addEventListener(eventName, pauseThenResume, { passive: true }));
-        window.addEventListener('resize', pauseThenResume, { passive: true });
+        const startDrag = (event) => {
+          if (event.button && event.button !== 0) return;
+          pauseThenResume();
+          dragState = {
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            scrollLeft: scroller.scrollLeft,
+            moved: false,
+          };
+          scroller.classList.add('is-dragging');
+          scroller.setPointerCapture?.(event.pointerId);
+        };
+        const moveDrag = (event) => {
+          if (!dragState || dragState.pointerId !== event.pointerId) return;
+          const delta = event.clientX - dragState.startX;
+          if (Math.abs(delta) > 3) dragState.moved = true;
+          scroller.scrollLeft = dragState.scrollLeft - delta;
+          pauseThenResume();
+          event.preventDefault();
+        };
+        const endDrag = (event) => {
+          if (!dragState || dragState.pointerId !== event.pointerId) return;
+          if (dragState.moved) {
+            scroller.querySelectorAll('a, button').forEach((item) => {
+              item.dataset.dragSuppressClick = 'true';
+              window.setTimeout(() => delete item.dataset.dragSuppressClick, 80);
+            });
+          }
+          dragState = null;
+          scroller.classList.remove('is-dragging');
+          pauseThenResume();
+        };
+
+        scroller.addEventListener('pointerdown', startDrag);
+        scroller.addEventListener('pointermove', moveDrag);
+        scroller.addEventListener('pointerup', endDrag);
+        scroller.addEventListener('pointercancel', endDrag);
+        scroller.addEventListener('click', (event) => {
+          if (!event.target.closest('[data-drag-suppress-click="true"]')) return;
+          event.preventDefault();
+          event.stopPropagation();
+        }, true);
+        ['wheel', 'touchstart', 'focusin'].forEach((eventName) => scroller.addEventListener(eventName, () => pauseThenResume(), { passive: true }));
+        window.addEventListener('resize', () => pauseThenResume({ resetPosition: true }), { passive: true });
         document.addEventListener('visibilitychange', () => {
           if (!document.hidden) updateAnimation();
         });
