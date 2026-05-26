@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>うわさのあのこ 噂の推しポイント診断 | Mobby</title>
+  <meta name="description" content="20問であなたが惹かれる推しポイント、応援の仕方、シェアしたくなる噂の広がり方を8タイプから診断する、うわさのあのこさん向けモビー診断ラフ案です。" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="うわさのあのこ 噂の推しポイント診断" />
+  <meta property="og:description" content="親しみ、インパクト、かわいげ、勢い、見守る、シェア。あなたの推しポイントを20問で診断します。" />
+  <meta property="og:image" content="img/uwasa-mobby-room.png" />
+  <meta name="theme-color" content="#fff4f8" />
+  <link rel="icon" type="image/jpeg" href="../16school/favicon/fav.jpg" />
+  <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --font-ja: 'Yomogi', cursive;
+      --bg: #fff4f8;
+      --surface: #ffffff;
+      --text-main: #1d1d1f;
+      --text-sub: #86868b;
+      --accent: #ec5f95;
+      --accent-soft: #ffeaf2;
+      --line: #d2d2d7;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+      --shadow-lg: 0 12px 30px rgba(0,0,0,0.08);
+      --radius: 20px;
+      --radius-sm: 12px;
+    }
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    body { margin: 0; font-family: var(--font-ja); background: var(--bg); color: var(--text-main); line-height: 1.6; }
+    a { color: var(--accent); text-decoration: none; }
+    .wrap { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
+    header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 0; cursor: pointer; }
+    .logo { width: 30px; height: 30px; border-radius: 10px; background-image: url('../16school/logo.jpg'); background-size: cover; background-position: center; box-shadow: 0 4px 10px rgba(236,95,149,0.3); margin-right: 10px; }
+    .title h1 { font-size: 14px; margin: 0; font-weight: 600; }
+    .title p { margin: 0; color: var(--text-sub); font-size: 12px; }
+    .nav { display: flex; gap: 12px; align-items: center; }
+    .nav a { color: var(--text-main); font-size: 11px; font-weight: 500; padding: 8px 16px; border-radius: 8px; transition: background 0.2s; cursor: pointer; }
+    .nav a:hover { background: rgba(0,0,0,0.05); }
+    .nav a.active { background: var(--accent-soft); color: var(--accent); }
+    button, .social-link { border: 1px solid transparent; background: rgba(0,0,0,0.05); color: var(--text-main); padding: 10px 18px; border-radius: 999px; cursor: pointer; font-size: 13px; font-weight: 500; font-family: inherit; transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1), background 0.2s ease, box-shadow 0.2s ease; display: inline-flex; align-items: center; justify-content: center; }
+    button:hover, .social-link:hover { background: rgba(0,0,0,0.08); transform: translateY(-1px); }
+    button:active, .social-link:active { transform: translateY(0) scale(0.96); }
+    button.primary, .social-link.primary { background: var(--accent); color: #fff; box-shadow: 0 4px 12px rgba(236,95,149,0.25); }
+    button.primary:hover, .social-link.primary:hover { background: #f06d9f; box-shadow: 0 6px 16px rgba(236,95,149,0.35); }
+    button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+    .panel { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow-lg); padding: 32px; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.8); }
+    .kicker { color: var(--accent); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 8px; }
+    .big { font-size: 24px; font-weight: 700; margin: 0 0 16px; color: var(--text-main); letter-spacing: 0; }
+    .text-body { color: var(--text-sub); font-size: 14px; line-height: 1.8; }
+    .hero-image { width: min(360px, 100%); aspect-ratio: 1 / 1; object-fit: cover; border-radius: 18px; box-shadow: var(--shadow-sm); margin: 0 auto 28px; display: block; }
+    .progress-wrap { margin-bottom: 20px; }
+    .progress-meta { display: flex; justify-content: space-between; color: var(--text-sub); font-size: 12px; margin-bottom: 8px; }
+    .progress-track { height: 8px; border-radius: 999px; background: rgba(0,0,0,0.06); overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 999px; background: var(--accent); transition: width 0.25s ease; }
+    .qCard { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 22px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
+    .qText { font-size: 16px; line-height: 1.8; margin: 0 0 18px; color: var(--text-main); }
+    .likert-labels { display: flex; justify-content: space-between; color: var(--text-sub); font-size: 11px; margin-bottom: 10px; }
+    .likert-buttons { display: grid; grid-template-columns: repeat(7, minmax(28px, 1fr)); gap: 8px; align-items: center; }
+    .likert-btn { aspect-ratio: 1 / 1; min-width: 0; padding: 0; border-radius: 50%; border: 2px solid var(--line); background: #fff; box-shadow: none; }
+    .likert-btn.left { border-color: rgba(236,95,149,0.58); }
+    .likert-btn.mid { border-color: #b8b8bd; }
+    .likert-btn.right { border-color: rgba(255,149,0,0.55); }
+    .likert-btn.selected.left { background: var(--accent); border-color: var(--accent); }
+    .likert-btn.selected.mid { background: #8e8e93; border-color: #8e8e93; }
+    .likert-btn.selected.right { background: #ff9500; border-color: #ff9500; }
+    .fade-in { animation: fadeIn 0.35s ease both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .result-hero { text-align: center; }
+    .result-img { width: min(420px, 100%); aspect-ratio: 1 / 1; object-fit: cover; border-radius: 20px; box-shadow: var(--shadow-lg); margin-bottom: 22px; }
+    .type-code { display: inline-flex; align-items: center; justify-content: center; min-width: 92px; padding: 8px 14px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 700; margin-bottom: 12px; }
+    .axis-row { margin: 18px 0; }
+    .axis-meta { display: flex; justify-content: space-between; gap: 12px; color: var(--text-sub); font-size: 12px; margin-bottom: 8px; }
+    .axis-bar { height: 12px; border-radius: 999px; background: linear-gradient(90deg, #ffe4f1 0%, #f6f6f6 50%, #ffe8c7 100%); position: relative; overflow: hidden; }
+    .axis-dot { position: absolute; top: 50%; width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 4px solid var(--accent); transform: translate(-50%, -50%); box-shadow: var(--shadow-sm); }
+    .section-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }
+    .mini { background: #fafafa; border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+    .mini h3 { margin: 0 0 8px; font-size: 14px; }
+    .mini p { margin: 0; color: var(--text-sub); font-size: 13px; line-height: 1.8; }
+    .characters-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 24px; }
+    .char-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-sm); }
+    .char-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+    .char-body { padding: 16px; }
+    .char-body h3 { margin: 0 0 8px; font-size: 16px; }
+    .char-body p { margin: 0; color: var(--text-sub); font-size: 13px; line-height: 1.7; }
+    .actions, .social-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+    .social-links { margin-top: 18px; }
+    @media (max-width: 600px) {
+      .wrap { padding: 28px 14px 60px; }
+      header { flex-direction: column; align-items: flex-start; margin-bottom: 28px; }
+      .panel { padding: 24px 16px; border-radius: 18px; }
+      .big { font-size: 22px; }
+      .qCard { padding: 18px 14px; }
+      .qText { font-size: 15px; }
+      .likert-buttons { gap: 6px; }
+      .section-grid, .characters-grid { grid-template-columns: 1fr; }
+      .social-link { width: calc(50% - 6px); padding: 10px 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand" id="brandHome">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="title">
+          <h1>うわさのあのこ 噂の推しポイント診断</h1>
+          <p>Mobby rough preview</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="ページ内メニュー">
+        <a id="navDiagnosis" class="active">診断</a>
+        <a id="navCharacters">タイプ一覧</a>
+      </nav>
+    </header>
+    <main id="app"></main>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "uwasa_anoko_oshi_point_v1";
+    const PAGE_SIZE = 5;
+    const AXIS_KEYS = ["A", "B", "C"];
+    const SOCIAL_LINKS = [
+      {label:"TikTok", url:"https://www.tiktok.com/@uwasano_anoko"},
+      {label:"X", url:"https://x.com/uwasa_manager"},
+      {label:"Fantia", url:"https://fantia.jp/posts/2002370"},
+      {label:"lit.link", url:"https://lit.link/uwasanoanoko"}
+    ];
+
+    const AXES = {
+      A: { key:"A", name:"噂の広がり方", left:"親しみ", right:"インパクト", leftCode:"お", rightCode:"い" },
+      B: { key:"B", name:"推しポイント", left:"かわいげ", right:"勢い", leftCode:"か", rightCode:"い" },
+      C: { key:"C", name:"楽しみ方", left:"見守る", right:"シェア", leftCode:"み", rightCode:"し" }
+    };
+
+    const QUESTIONS = [
+      {id:"A1", axis:"A", text:"投稿を見ると、まずその人柄の近さに惹かれる", reverse:false},
+      {id:"A2", axis:"A", text:"強いインパクトより、何度も見たくなる親しみやすさが残る", reverse:false},
+      {id:"A3", axis:"A", text:"うわさちゃん、と呼びたくなる距離感がある人を応援したい", reverse:false},
+      {id:"A4", axis:"A", text:"最初の数秒で記憶に残る強さがある投稿に惹かれる", reverse:true},
+      {id:"A5", axis:"A", text:"かわいいだけでなく、ひと目で噂したくなる引きの強さが大事", reverse:true},
+      {id:"A6", axis:"A", text:"目標に向けて一気に走る勢いを見せられると追いたくなる", reverse:true},
+
+      {id:"B1", axis:"B", text:"素の反応や笑い方に、かわいげが出る瞬間が好き", reverse:false},
+      {id:"B2", axis:"B", text:"ゲームや好きなものを話している時の無邪気さに惹かれる", reverse:false},
+      {id:"B3", axis:"B", text:"完璧に作り込むより、少し抜けのあるかわいさが残ると親しみやすい", reverse:false},
+      {id:"B4", axis:"B", text:"コメントで応援したくなるのは、守りたくなるかわいげを感じた時だ", reverse:false},
+      {id:"B5", axis:"B", text:"挑戦や目標を前に出している姿を見ると熱が入る", reverse:true},
+      {id:"B6", axis:"B", text:"かわいさより、前に進む勢いが見える投稿の方が刺さる", reverse:true},
+      {id:"B7", axis:"B", text:"バズりそうな強さやテンポ感があると、つい最後まで見てしまう", reverse:true},
+
+      {id:"C1", axis:"C", text:"好きな投稿は、自分のペースで静かに見守りたい", reverse:false},
+      {id:"C2", axis:"C", text:"フォロワー数や目標を見ても、急かすより長く応援したくなる", reverse:false},
+      {id:"C3", axis:"C", text:"お気に入りの動画は、ひとりで何度も見返すことが多い", reverse:false},
+      {id:"C4", axis:"C", text:"いいと思った動画は、すぐ友だちに送ったり共有したくなる", reverse:true},
+      {id:"C5", axis:"C", text:"コメント欄で一緒に盛り上がる時間も含めて楽しい", reverse:true},
+      {id:"C6", axis:"C", text:"目標達成に近づく瞬間は、みんなで一緒に見届けたい", reverse:true},
+      {id:"C7", axis:"C", text:"結果や推しポイントを投稿して、ファン同士の会話を増やしたい", reverse:true}
+    ];
+
+    const CHARACTERS = {
+      "おかみ": {
+        name:"親しみかわいげモビィ",
+        summary:"近さとかわいげを大切に、じっくり好きが深まっていくタイプ。",
+        catch:"気づいたらまた見ている。そんな日常の近さが、あなたの推しポイントです。",
+        hook:"大きな仕掛けより、何気ない表情や素の反応に惹かれます。ゲームの話やゆるい日常の切り取りまで、近い距離で見守りたくなる人です。",
+        downside:"静かに好きでいたい気持ちが強くなると、応援が相手に届きにくいことも。いいと思った瞬間だけでも反応を残すと、距離感が少し近づきます。",
+        perception:"やさしく応援してくれる、長く見てくれる、安心感のあるファンと思われやすいです。",
+        strength:"小さな魅力を見つけて、長く大切にできること。",
+        weakness:"遠慮しすぎると、好きな気持ちを伝える機会を逃しやすいです。",
+        advice:"今日のヒントは、好きだった一瞬を短い言葉で残すこと。静かな応援にもちゃんと熱が宿ります。",
+        image:"img/uwasa-mobby-room.png"
+      },
+      "おかし": {
+        name:"応援したくなるモビィ",
+        summary:"親しみやすいかわいげを、コメントや共有でそっと広げられるタイプ。",
+        catch:"かわいい、応援したい、誰かにも見てほしい。その温度を自然に渡せます。",
+        hook:"うわさちゃんらしい近さや素直な表情を見ると、コメントしたくなる人。強く押し出すより、楽しい空気を一緒に作るのが得意です。",
+        downside:"相手の反応を考えすぎると、投稿する言葉が固くなりがち。短くても自分の温度がある一言の方が、伝わりやすいです。",
+        perception:"一緒に盛り上げてくれる、場を明るくしてくれる、応援上手と思われやすいです。",
+        strength:"好きな空気を周りにやさしく広げられること。",
+        weakness:"みんなの反応に合わせすぎて、自分の好きが薄く見えることがあります。",
+        advice:"今日のヒントは、かわいいと思った理由を一つだけ添えること。応援がぐっと具体的になります。",
+        image:"img/uwasa-mobby-buzz.png"
+      },
+      "おいみ": {
+        name:"じわっと沼るモビィ",
+        summary:"親しみやすさの奥にある勢いを、自分のペースで追いかけるタイプ。",
+        catch:"最初は気軽に見ていたのに、気づけば目標まで見守りたくなる人です。",
+        hook:"日常の近さに惹かれつつ、ふとした挑戦や前向きな宣言に心が動きます。勢いを真正面から浴びるより、じわじわ熱くなっていく応援が似合います。",
+        downside:"見守る姿勢が強いぶん、盛り上がるタイミングで一歩遅れることも。ここだと思った時は、少しだけ前に出ると楽しくなります。",
+        perception:"静かだけどちゃんと見てくれる、変化に気づいてくれる、信頼できる応援者と思われやすいです。",
+        strength:"長期的な目標や成長を、途中経過ごと好きになれること。",
+        weakness:"熱があるのに外からは伝わりにくいことがあります。",
+        advice:"今日のヒントは、前よりよかったところを一つ言葉にすること。じわっとした好きが応援に変わります。",
+        image:"img/uwasa-mobby-room.png"
+      },
+      "おいし": {
+        name:"コメント盛り上げモビィ",
+        summary:"近い距離感と前向きな勢いを、コメント欄の熱に変えられるタイプ。",
+        catch:"この感じ、みんなで見たい。そう思った瞬間に場を明るくできる人です。",
+        hook:"親しみやすさを入口にしながら、目標へ向かう勢いをみんなで応援したくなります。コメント欄や共有先で会話のきっかけを作れるタイプです。",
+        downside:"盛り上げたい気持ちが強いと、少し言葉が急ぎ足になることも。相手らしさに触れてから応援すると、温度がきれいに届きます。",
+        perception:"反応が明るい、コメントがうれしい、場を動かしてくれると思われやすいです。",
+        strength:"応援の熱を、見える形にして広げられること。",
+        weakness:"反応の多さを気にしすぎると、疲れやすくなります。",
+        advice:"今日のヒントは、盛り上げる前に好きなポイントを一言置くこと。応援の芯が伝わります。",
+        image:"img/uwasa-mobby-buzz.png"
+      },
+      "いかみ": {
+        name:"一目で気になるモビィ",
+        summary:"ひと目のインパクトとかわいげに反応し、自分の中で大切に残すタイプ。",
+        catch:"最初の一瞬で気になる。でも好きになる理由は、ちゃんとかわいげにあります。",
+        hook:"目を引くサムネやテンポのよさに惹かれつつ、最後に残るのは表情のやわらかさ。強さと近さのバランスを静かに楽しめます。",
+        downside:"見た目の引きに惹かれやすいぶん、次々に気になるものが増えることも。残った印象を見返すと、本当に好きなポイントが見えてきます。",
+        perception:"センスよく見つけてくれる、反応が早い、でも落ち着いて見てくれると思われやすいです。",
+        strength:"最初の引きと内側の魅力、両方を見つけられること。",
+        weakness:"気になる理由を言葉にする前に、次へ移りやすいです。",
+        advice:"今日のヒントは、なぜ気になったかを一つメモすること。推しポイントがはっきりします。",
+        image:"img/uwasa-mobby-room.png"
+      },
+      "いかし": {
+        name:"バズ予感モビィ",
+        summary:"一瞬の引きとかわいげを見つけ、誰かに教えたくなるタイプ。",
+        catch:"これ、広がりそう。そう感じた瞬間に、推しポイントを共有できます。",
+        hook:"インパクトのある投稿を見つけるのが早く、かわいげや親しみもセットで伝えられます。友だちに送る時の一言まで、自然に明るいタイプです。",
+        downside:"広がりそうかどうかを見すぎると、自分の好きが後回しになることも。まずは自分がどこで笑ったかを大切にすると、共有の言葉が強くなります。",
+        perception:"見つけるのが早い、紹介がうまい、一緒に見ると楽しいと思われやすいです。",
+        strength:"刺さる瞬間を見つけて、軽やかに広げられること。",
+        weakness:"バズ感に引っ張られて、静かな魅力を見落とすことがあります。",
+        advice:"今日のヒントは、広がりそうな理由と好きな理由を分けて書くこと。紹介の説得力が増します。",
+        image:"img/uwasa-mobby-buzz.png"
+      },
+      "いいみ": {
+        name:"勢い見守りモビィ",
+        summary:"インパクトと目標への勢いを、自分のペースで追い続けるタイプ。",
+        catch:"走っている姿を、ちゃんと見届けたい。熱を静かに持ち続ける人です。",
+        hook:"テンポのいい投稿や前向きな宣言に惹かれます。すぐ騒ぐより、目標へ近づく過程を見守ることで応援の熱が増していきます。",
+        downside:"見守ることに徹しすぎると、ここぞという時の応援が届きにくいことも。節目だけでも反応を残すと、気持ちが形になります。",
+        perception:"落ち着いて応援してくれる、目標を覚えてくれている、頼もしいと思われやすいです。",
+        strength:"勢いに流されず、長く応援を続けられること。",
+        weakness:"外からは熱量が低く見えることがあります。",
+        advice:"今日のヒントは、節目の投稿にだけでも一言反応すること。見守る応援がちゃんと届きます。",
+        image:"img/uwasa-mobby-room.png"
+      },
+      "いいし": {
+        name:"噂拡散モビィ",
+        summary:"インパクトと勢いを見つけ、ファン同士の会話に変えられるタイプ。",
+        catch:"いま見てほしい、みんなで広げたい。その熱量があなたの魅力です。",
+        hook:"目標へ進む勢い、コメント欄の盛り上がり、共有したくなる一瞬。推しの勢いを自分だけで止めず、周りの人も巻き込んで楽しめます。",
+        downside:"熱が高いぶん、反応が薄い時に少し不安になることも。広げる前に、自分が楽しいかを確認すると長く続けられます。",
+        perception:"勢いがある、情報が早い、推し活の空気を作れると思われやすいです。",
+        strength:"好きなものを話題に変え、応援の輪を作れること。",
+        weakness:"盛り上げ役に回りすぎて、自分の休む時間を忘れやすいです。",
+        advice:"今日のヒントは、共有する時に自分の一番好きな場面を添えること。噂がただの拡散ではなく応援になります。",
+        image:"img/uwasa-mobby-buzz.png"
+      }
+    };
+
+    const ANS_LABEL = {1:"そう思う", 2:"ややそう思う", 3:"少しそう思う", 4:"どちらでもない", 5:"少しそう思わない", 6:"ややそう思わない", 7:"そう思わない"};
+    const defaultState = () => ({step:"intro", page:0, answers:{}, questionOrder:[], axes:null});
+    let state = loadState();
+    const app = document.getElementById("app");
+
+    function loadState(){
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? {...defaultState(), ...JSON.parse(raw)} : defaultState();
+      } catch { return defaultState(); }
+    }
+    function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    function resetDiagnosis(){ state = defaultState(); localStorage.removeItem(STORAGE_KEY); render(); }
+    function getQuestionOrder(){
+      if(Array.isArray(state.questionOrder) && state.questionOrder.length === QUESTIONS.length) return state.questionOrder;
+      state.questionOrder = AXIS_KEYS.flatMap(axis => QUESTIONS.filter(q => q.axis === axis)).map(q => q.id);
+      saveState();
+      return state.questionOrder;
+    }
+    function getQuestions(){ return getQuestionOrder().map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean); }
+
+    function computeResult(){
+      const SCALE = 7, MID = 4, MAX_DEV = 3, GAMMA = 1.35, EXTREME_BONUS = 0.35, COHERENCE_SHRINK = 0.20;
+      const raw = {A:0, B:0, C:0}, absRaw = {A:0, B:0, C:0}, maxRaw = {A:0, B:0, C:0}, allAnswers = [];
+      const weightOf = ans => (ans === 1 || ans === 7) ? 1 + EXTREME_BONUS : 1;
+      const shapeAns = ans => {
+        const centered = MID - ans;
+        const t = centered / MAX_DEV;
+        const mag = Math.min(1, Math.abs(t));
+        return Math.sign(t) * Math.pow(mag, GAMMA);
+      };
+      QUESTIONS.forEach(q => {
+        const ansRaw = state.answers[q.id];
+        if(!ansRaw) return;
+        allAnswers.push(ansRaw);
+        const ansAdj = q.reverse ? (SCALE + 1 - ansRaw) : ansRaw;
+        const w = weightOf(ansRaw) * (q.importance ?? 1);
+        const contrib = w * shapeAns(ansAdj);
+        raw[q.axis] += contrib;
+        absRaw[q.axis] += Math.abs(contrib);
+        maxRaw[q.axis] += w;
+      });
+      const norm = {}, pos = {}, hard = {}, decisiveness = {}, confidenceLevel = {}, confidenceLabel = {};
+      AXIS_KEYS.forEach(k => {
+        const denom = maxRaw[k] || 1;
+        const coherence = absRaw[k] ? Math.abs(raw[k]) / absRaw[k] : 0;
+        const adjusted = raw[k] * (1 - COHERENCE_SHRINK * (1 - coherence));
+        norm[k] = Math.max(-1, Math.min(1, adjusted / denom));
+        hard[k] = norm[k] > 0 ? "L" : "R";
+        pos[k] = Math.max(0, Math.min(100, 50 - norm[k] * 50));
+        decisiveness[k] = Math.min(1, Math.abs(norm[k]));
+        if(decisiveness[k] >= 0.50) { confidenceLevel[k] = "strong"; confidenceLabel[k] = "はっきり"; }
+        else if(decisiveness[k] >= 0.25) { confidenceLevel[k] = "moderate"; confidenceLabel[k] = "やや"; }
+        else { confidenceLevel[k] = "mid"; confidenceLabel[k] = "場面による"; }
+      });
+      const code = (hard.A === "L" ? AXES.A.leftCode : AXES.A.rightCode) + (hard.B === "L" ? AXES.B.leftCode : AXES.B.rightCode) + (hard.C === "L" ? AXES.C.leftCode : AXES.C.rightCode);
+      const freq = {1:0,2:0,3:0,4:0,5:0,6:0,7:0};
+      allAnswers.forEach(a => freq[a]++);
+      const straightLine = allAnswers.length ? Math.max(...Object.values(freq)) / allAnswers.length >= 0.80 : false;
+      const adjacentTypes = [];
+      AXIS_KEYS.forEach(k => {
+        if(confidenceLevel[k] === "mid") {
+          const altHard = {...hard, [k]: hard[k] === "L" ? "R" : "L"};
+          const altCode = (altHard.A === "L" ? AXES.A.leftCode : AXES.A.rightCode) + (altHard.B === "L" ? AXES.B.leftCode : AXES.B.rightCode) + (altHard.C === "L" ? AXES.C.leftCode : AXES.C.rightCode);
+          if(CHARACTERS[altCode] && altCode !== code) adjacentTypes.push({axis:k, code:altCode, name:CHARACTERS[altCode].name});
+        }
+      });
+      return {code, char: CHARACTERS[code], norm, pos, hard, decisiveness, confidenceLevel, confidenceLabel, straightLine, adjacentTypes};
+    }
+
+    function isComplete(){ return Object.keys(state.answers || {}).length >= QUESTIONS.length; }
+    function render(){
+      document.getElementById("navDiagnosis").classList.toggle("active", state.step !== "characters");
+      document.getElementById("navCharacters").classList.toggle("active", state.step === "characters");
+      if(state.step === "intro") renderIntro();
+      else if(state.step === "quiz") renderQuiz();
+      else if(state.step === "characters") renderCharacters();
+      else renderResult();
+    }
+    function socialLinksHtml(){
+      return `<div class="social-links">${SOCIAL_LINKS.map((link, i) => `<a class="social-link ${i === 0 ? "primary" : ""}" href="${link.url}" target="_blank" rel="noopener">${link.label}</a>`).join("")}</div>`;
+    }
+    function renderIntro(){
+      const count = Object.keys(state.answers).length;
+      app.innerHTML = `
+        <div class="panel fade-in" style="text-align:center; padding:60px 20px;">
+          <img class="hero-image" src="img/uwasa-mobby-room.png" alt="うわさのあのこさんの世界観に合わせた撮影部屋のMobby">
+          <p class="kicker">Mobby rough preview</p>
+          <h2 class="big">うわさのあのこ<br>噂の推しポイント診断</h2>
+          <p class="text-body" style="max-width:470px; margin:0 auto 30px;">直感で選ぶ20問から、あなたが惹かれる推しポイント、応援の仕方、シェアしたくなる瞬間を8タイプで診断します。TikTokで見たくなる近さと、目標へ向かう勢いをファン参加型にしたラフ案です。</p>
+          <button class="primary" id="btnStart" style="padding:16px 32px; font-size:16px;">${count > 0 ? "診断を再開する" : "診断をはじめる"}</button>
+          ${count > 0 ? `<p style="font-size:12px; color:#86868b; margin-top:16px;">${count} / ${QUESTIONS.length}問 回答済み</p>` : ""}
+        </div>`;
+      document.getElementById("btnStart").onclick = () => {
+        state.step = "quiz";
+        getQuestionOrder();
+        const idx = getQuestions().findIndex(q => !state.answers[q.id]);
+        state.page = idx >= 0 ? Math.floor(idx / PAGE_SIZE) : 0;
+        saveState();
+        render();
+      };
+    }
+    function renderQuiz(){
+      const qs = getQuestions();
+      const start = state.page * PAGE_SIZE;
+      const currentQs = qs.slice(start, start + PAGE_SIZE);
+      const totalPage = Math.ceil(qs.length / PAGE_SIZE);
+      const progress = Math.round((Object.keys(state.answers).length / qs.length) * 100);
+      const qHtml = currentQs.map((q, i) => {
+        const val = state.answers[q.id];
+        return `<div class="qCard fade-in" style="animation-delay:${i*0.05}s"><div class="kicker" style="color:#86868b; margin-bottom:4px;">Q${start+i+1}</div><p class="qText">${q.text}</p><div class="likert7"><div class="likert-labels"><span>${AXES[q.axis].left}</span><span>${AXES[q.axis].right}</span></div><div class="likert-buttons">${[1,2,3,4,5,6,7].map(n => { const side = n <= 3 ? "left" : (n === 4 ? "mid" : "right"); const sel = val === n ? "selected" : ""; return `<button type="button" class="likert-btn ${side} ${sel}" data-qid="${q.id}" data-val="${n}" aria-label="${ANS_LABEL[n]}"></button>`; }).join("")}</div></div></div>`;
+      }).join("");
+      app.innerHTML = `<div class="panel"><div class="progress-wrap"><div class="progress-meta"><span>進行状況</span><span>${progress}%</span></div><div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div></div><div style="margin-top:30px;">${qHtml}</div><div style="display:flex; justify-content:space-between; margin-top:30px;"><button id="btnPrev" ${state.page===0 ? "disabled":""}>戻る</button><button class="primary" id="btnNext">${state.page === totalPage - 1 ? "結果を見る" : "次へ"}</button></div></div>`;
+      currentQs.forEach(q => {
+        document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(btn => {
+          btn.onclick = () => {
+            state.answers[q.id] = parseInt(btn.dataset.val, 10);
+            document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(b => b.classList.remove("selected"));
+            btn.classList.add("selected");
+            saveState();
+            const p = Math.round((Object.keys(state.answers).length / qs.length) * 100);
+            document.querySelector(".progress-fill").style.width = p + "%";
+            document.querySelector(".progress-meta span:last-child").innerText = p + "%";
+          };
+        });
+      });
+      document.getElementById("btnPrev").onclick = () => { if(state.page > 0) state.page--; saveState(); render(); };
+      document.getElementById("btnNext").onclick = () => {
+        const missing = currentQs.filter(q => !state.answers[q.id]);
+        if(missing.length){ alert("このページの質問にすべて回答してください。"); return; }
+        if(state.page < totalPage - 1){ state.page++; saveState(); render(); }
+        else { state.axes = computeResult(); state.step = "result"; saveState(); render(); }
+      };
+    }
+    function renderAxis(result){
+      return AXIS_KEYS.map(k => {
+        const a = AXES[k];
+        return `<div class="axis-row"><div class="axis-meta"><span>${a.name}: ${a.left}</span><span>${result.confidenceLabel[k]}</span><span>${a.right}</span></div><div class="axis-bar"><div class="axis-dot" style="left:${result.pos[k]}%"></div></div></div>`;
+      }).join("");
+    }
+    function renderResult(){
+      if(!isComplete()){ state.step = "intro"; render(); return; }
+      const result = state.axes || computeResult();
+      const c = result.char;
+      app.innerHTML = `<div class="panel fade-in result-hero"><p class="kicker">RESULT</p><span class="type-code">TYPE ${result.code}</span><h2 class="big">${c.name}</h2><img class="result-img" src="${c.image}" alt="${c.name}"><p class="text-body" style="max-width:560px; margin:0 auto;">${c.summary}</p><p style="font-size:17px; font-weight:700; margin:22px auto 0; max-width:560px;">${c.catch}</p>${socialLinksHtml()}</div><div class="panel fade-in"><p class="kicker">3 AXES</p><h2 class="big">あなたの推しポイントバランス</h2>${renderAxis(result)}${result.straightLine ? `<p class="text-body" style="color:#ff9500;">同じ回答が多めです。気分を変えてもう一度試すと、少し違う結果になるかもしれません。</p>` : ""}${result.adjacentTypes.length ? `<p class="text-body">近いタイプ: ${result.adjacentTypes.map(t => t.name).join(" / ")}</p>` : ""}</div><div class="panel fade-in"><p class="kicker">DETAIL</p><h2 class="big">このタイプの楽しみ方</h2><div class="section-grid"><div class="mini"><h3>惹かれる瞬間</h3><p>${c.hook}</p></div><div class="mini"><h3>しんどい時</h3><p>${c.downside}</p></div><div class="mini"><h3>周りから</h3><p>${c.perception}</p></div><div class="mini"><h3>今日のヒント</h3><p>${c.advice}</p></div><div class="mini"><h3>強み</h3><p>${c.strength}</p></div><div class="mini"><h3>気をつけたいこと</h3><p>${c.weakness}</p></div></div><div class="actions"><button class="primary" id="btnChars">8タイプを見る</button><button id="btnAgain">もう一度診断する</button></div></div>`;
+      document.getElementById("btnChars").onclick = () => { state.step = "characters"; saveState(); render(); };
+      document.getElementById("btnAgain").onclick = resetDiagnosis;
+    }
+    function renderCharacters(){
+      const cards = Object.entries(CHARACTERS).map(([code, c]) => `<article class="char-card fade-in"><img src="${c.image}" alt="${c.name}"><div class="char-body"><p class="kicker">TYPE ${code}</p><h3>${c.name}</h3><p>${c.summary}</p></div></article>`).join("");
+      app.innerHTML = `<div class="panel fade-in"><p class="kicker">8 TYPES</p><h2 class="big">噂の推しポイント 8タイプ</h2><p class="text-body">2枚のラフ画像をサンプルとして交互に配置しています。TikTokで見たくなる親しみ、目標へ向かう勢い、コメントやシェアで広がる応援感をタイプごとに少しずつ表現しています。</p><div class="characters-grid">${cards}</div><div class="actions"><button class="primary" id="btnBackDiagnosis">${isComplete() ? "結果に戻る" : "診断する"}</button></div></div>`;
+      document.getElementById("btnBackDiagnosis").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
+    }
+    document.getElementById("brandHome").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
+    document.getElementById("navDiagnosis").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
+    document.getElementById("navCharacters").onclick = () => { state.step = "characters"; saveState(); render(); };
+    render();
+  </script>
+</body>
+</html>
