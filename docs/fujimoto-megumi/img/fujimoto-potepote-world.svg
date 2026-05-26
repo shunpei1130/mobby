@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="もちもちした制作机と小さな丸いキャラクターのラフ背景">
+  <defs>
+    <radialGradient id="bgGlow" cx="30%" cy="18%" r="78%">
+      <stop offset="0" stop-color="#fff8dc"/>
+      <stop offset="0.45" stop-color="#ffe7ee"/>
+      <stop offset="1" stop-color="#f6fbef"/>
+    </radialGradient>
+    <linearGradient id="table" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#fff5dd"/>
+      <stop offset="1" stop-color="#f4caa5"/>
+    </linearGradient>
+    <linearGradient id="pink" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#ffd7df"/>
+      <stop offset="1" stop-color="#f6aebf"/>
+    </linearGradient>
+    <linearGradient id="mint" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#d9f1e7"/>
+      <stop offset="1" stop-color="#a9d9ce"/>
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#c78982" flood-opacity="0.28"/>
+    </filter>
+    <filter id="smallShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#c78982" flood-opacity="0.20"/>
+    </filter>
+  </defs>
+
+  <rect width="1024" height="1024" fill="url(#bgGlow)"/>
+  <circle cx="158" cy="142" r="88" fill="#fff" opacity="0.56"/>
+  <circle cx="858" cy="184" r="132" fill="#fff" opacity="0.40"/>
+  <circle cx="826" cy="804" r="150" fill="#fff" opacity="0.32"/>
+
+  <g filter="url(#softShadow)">
+    <path d="M128 660c80-56 688-72 768-8 34 27 28 178-18 210-92 64-665 65-750 2-45-33-43-174 0-204z" fill="url(#table)"/>
+    <path d="M172 683c116-32 567-44 681-8" stroke="#fff9eb" stroke-width="12" stroke-linecap="round" opacity="0.72"/>
+  </g>
+
+  <g filter="url(#smallShadow)">
+    <rect x="220" y="196" width="580" height="354" rx="44" fill="#fffdf5" opacity="0.92"/>
+    <rect x="258" y="242" width="150" height="112" rx="24" fill="#ffe7ee"/>
+    <rect x="436" y="240" width="150" height="112" rx="24" fill="#e7f4ee"/>
+    <rect x="614" y="242" width="150" height="112" rx="24" fill="#fff1c9"/>
+    <rect x="258" y="386" width="506" height="30" rx="15" fill="#ecd4c3" opacity="0.75"/>
+    <rect x="258" y="442" width="340" height="28" rx="14" fill="#e7d6c9" opacity="0.55"/>
+  </g>
+
+  <g filter="url(#smallShadow)">
+    <path d="M226 589c16-52 122-60 154-12 34 52-16 118-87 116-60-2-84-48-67-104z" fill="url(#pink)"/>
+    <circle cx="252" cy="556" r="27" fill="#ffc4d0"/>
+    <circle cx="351" cy="559" r="25" fill="#ffc4d0"/>
+    <ellipse cx="301" cy="620" rx="38" ry="26" fill="#ffdfea"/>
+    <circle cx="285" cy="612" r="6" fill="#8b5d62"/>
+    <circle cx="319" cy="612" r="6" fill="#8b5d62"/>
+    <path d="M275 647c20 14 45 14 65 0" fill="none" stroke="#8b5d62" stroke-width="7" stroke-linecap="round"/>
+  </g>
+
+  <g filter="url(#smallShadow)">
+    <path d="M673 569c26-36 96-34 122 0 37 49-6 108-66 109-61 1-93-60-56-109z" fill="#ffd9e1"/>
+    <circle cx="694" cy="545" r="20" fill="#ffc4d0"/>
+    <circle cx="770" cy="546" r="19" fill="#ffc4d0"/>
+    <ellipse cx="733" cy="612" rx="31" ry="22" fill="#fff0f5"/>
+    <circle cx="721" cy="606" r="5" fill="#8b5d62"/>
+    <circle cx="746" cy="606" r="5" fill="#8b5d62"/>
+  </g>
+
+  <g filter="url(#smallShadow)">
+    <rect x="432" y="577" width="176" height="226" rx="28" fill="#fffdf8"/>
+    <path d="M462 622h116M462 664h92M462 706h122" stroke="#efd3c8" stroke-width="18" stroke-linecap="round"/>
+    <circle cx="570" cy="744" r="30" fill="#ffd4df"/>
+    <circle cx="610" cy="735" r="22" fill="#d7eee5"/>
+  </g>
+
+  <g opacity="0.92" filter="url(#smallShadow)">
+    <rect x="140" y="760" width="140" height="34" rx="17" fill="#d0eee5" transform="rotate(-13 210 777)"/>
+    <rect x="170" y="722" width="170" height="26" rx="13" fill="#ffcf86" transform="rotate(-23 255 735)"/>
+    <rect x="708" y="738" width="170" height="30" rx="15" fill="#bcded4" transform="rotate(14 793 753)"/>
+    <rect x="704" y="790" width="118" height="28" rx="14" fill="#ffc8d6" transform="rotate(-10 763 804)"/>
+  </g>
+
+  <path d="M134 314c42-45 89-42 122-12M754 354c52-45 95-38 126 4M388 146c44-24 98-22 138 4" fill="none" stroke="#fff" stroke-width="18" stroke-linecap="round" opacity="0.7"/>
+</svg>
