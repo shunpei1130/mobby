@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-  <title>ビューティー診断 with 日向葵衣 | Mobby</title>
+  <title>日向葵衣 あなたは何タイプ？ビューティ診断 | Mobby</title>
   <meta name="description" content="20問であなたのリラックス感、透明感、グロウ感、シェアしたくなるビューティ傾向を8タイプから診断します。" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="ビューティー診断 with 日向葵衣" />
+  <meta property="og:title" content="日向葵衣 あなたは何タイプ？ビューティ診断" />
   <meta property="og:description" content="美容、癒し、猫、温泉、透明感、グロウ。あなたに近いビューティタイプを20問で診断します。" />
   <meta property="og:image" content="img/hinata-mobby-healing.png" />
   <meta name="theme-color" content="#fff7ed" />
@@ -167,7 +167,7 @@
             <a href="/16night/">螟懆・繝｢繝薙・診断</a>
             <a href="/16stan/">推し活モビー診断</a>
             <a href="/miyake-yuko/">透明感ビューティムード診断 with 三宅裕子</a>
-            <a href="/hinata-aoi/">ビューティー診断 with 日向葵衣</a>
+            <a href="/hinata-aoi/">日向葵衣 あなたは何タイプ？ビューティ診断</a>
           </div>
           <p>Mobby beauty diagnosis</p>
         </div>
@@ -478,7 +478,7 @@
         <div class="panel fade-in" style="text-align:center; padding:60px 20px;">
           <img class="hero-image" src="img/8mobby/やさしさグロウモビー.png" alt="日向葵衣さんの世界観に合わせたやさしさグロウモビー">
           <p class="kicker">Mobby beauty diagnosis</p>
-          <h2 class="big">ビューティー診断<br>with 日向葵衣</h2>
+          <h2 class="big">日向葵衣<br>あなたは何タイプ？<br>ビューティ診断</h2>
           <p class="text-body" style="max-width:460px; margin:0 auto 30px;">直感で選ぶ20問から、リラックス感、透明感、グロウ感、シェアしたくなる明るさを診断します。猫や温泉のような癒しも少し混ぜた、あなたらしいビューティームードがわかる診断です。</p>
           <button class="primary" id="btnStart" style="padding:16px 32px; font-size:16px;">${count > 0 ? "診断を再開する" : "診断をはじめる"}</button>
           ${count > 0 ? `<p style="font-size:12px; color:#1d1d1f; margin-top:16px;">${count} / ${QUESTIONS.length}問 回答済み</p>` : ""}
@@ -723,7 +723,7 @@
           </div>
         </article>`;
       }).join("");
-      app.innerHTML = `<div class="panel fade-in"><h2 class="big">ビューティー診断 with 日向葵衣</h2><p class="text-body characters-intro">それぞれのタイプごとに、似合うムード、日向葵衣からの一言、今日できる小さな美容ミッションをまとめています。結果だけで終わらず、明日からの見せ方やケアに使えるタイプ解説です。</p><div class="characters-grid">${cards}</div><div class="actions"><button class="primary" id="btnBackDiagnosis">${isComplete() ? "結果に戻る" : "診断する"}</button></div></div>`;
+      app.innerHTML = `<div class="panel fade-in"><h2 class="big">日向葵衣 あなたは何タイプ？ビューティ診断</h2><p class="text-body characters-intro">それぞれのタイプごとに、似合うムード、日向葵衣からの一言、今日できる小さな美容ミッションをまとめています。結果だけで終わらず、明日からの見せ方やケアに使えるタイプ解説です。</p><div class="characters-grid">${cards}</div><div class="actions"><button class="primary" id="btnBackDiagnosis">${isComplete() ? "結果に戻る" : "診断する"}</button></div></div>`;
       document.querySelectorAll("button[data-code]").forEach(btn => { btn.onclick = () => showCharDetail(btn.dataset.code); });
       document.getElementById("btnBackDiagnosis").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
     }
