@@ -4,8 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
   <title>渡韓ビューティームード診断with三宅裕子 | Mobby</title>
-  <meta name="description" content="20問であなたの美容設計、印象ムード、届け方を8タイプから診断する三宅裕子さん向けモビー診断ラフ案です。" />
-  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content="20問であなたの美容設計、印象ムード、届け方を8タイプから診断する渡韓ビューティームード診断with三宅裕子です。" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="渡韓ビューティームード診断with三宅裕子" />
   <meta property="og:description" content="渡韓美容、韓国コスメ、日常の積み重ね、透明感とグロウ。あなたに近いビューティームードを20問で診断します。" />
@@ -195,7 +194,7 @@
             <a href="/16stan/">推し活モビー診断</a>
             <a href="/miyake-yuko/">渡韓ビューティームード診断with三宅裕子</a>
           </div>
-          <p>Mobby rough preview</p>
+          <p>Beauty mood diagnosis</p>
         </div>
       </div>
       <div style="display:flex; align-items:center; gap:10px;">
@@ -514,9 +513,9 @@
       app.innerHTML = `
         <div class="panel fade-in" style="text-align:center; padding:60px 20px;">
           <img class="hero-image" src="img/8mobby/韓国コスメ案内モビー.png" alt="韓国コスメ案内モビィ">
-          <p class="kicker">Mobby rough preview</p>
+          <p class="kicker">Beauty mood diagnosis</p>
           <h2 class="big">渡韓ビューティームード診断<br>with三宅裕子</h2>
-          <p class="text-body" style="max-width:460px; margin:0 auto 30px;">直感で選ぶ20問から、美容の積み重ね方、透明感とグロウの印象、誰かに届けたくなる提案力を診断します。三宅裕子さんの渡韓美容、韓国コスメ、モデルらしい上品さを参考にしたラフ案です。</p>
+          <p class="text-body" style="max-width:460px; margin:0 auto 30px;">直感で選ぶ20問から、美容の積み重ね方、透明感とグロウの印象、誰かに届けたくなる提案力を診断します。三宅裕子さんの渡韓美容、韓国コスメ、モデルらしい上品さをもとに、あなたに近いビューティームードを見つけます。</p>
           <button class="primary" id="btnStart" style="padding:16px 32px; font-size:16px;">${count > 0 ? "診断を再開する" : "診断をはじめる"}</button>
           ${count > 0 ? `<p style="font-size:12px; color:#1d1d1f; margin-top:16px;">${count} / ${QUESTIONS.length}問 回答済み</p>` : ""}
         </div>`;
@@ -752,7 +751,7 @@
     }
     function renderCharacters(){
       const cards = Object.entries(CHARACTERS).map(([code, c]) => `<article class="char-card fade-in"><img src="${c.image}" alt="${c.name}"><div class="char-body"><p class="kicker">TYPE ${code}</p><h3>${c.name}</h3><p>${c.summary}</p><button class="primary" style="width:100%; font-size:12px; margin-top:14px;" data-code="${code}">詳細</button></div></article>`).join("");
-      app.innerHTML = `<div class="panel fade-in"><p class="kicker">8 TYPES</p><h2 class="big">ビューティームード診断 8タイプ</h2><p class="text-body characters-intro">2枚のラフ画像をサンプルとして交互に配置しています。渡韓美容、韓国コスメ、透明感、グロウ感、ファンに共有したくなる提案力を、タイプごとに少しずつ表現しています。</p><div class="characters-grid">${cards}</div><div class="actions"><button class="primary" id="btnBackDiagnosis">${isComplete() ? "結果に戻る" : "診断する"}</button></div></div>`;
+      app.innerHTML = `<div class="panel fade-in"><p class="kicker">8 TYPES</p><h2 class="big">ビューティームード診断 8タイプ</h2><p class="text-body characters-intro">渡韓美容、韓国コスメ、透明感、グロウ感、ファンに共有したくなる提案力を、タイプごとに少しずつ表現しています。</p><div class="characters-grid">${cards}</div><div class="actions"><button class="primary" id="btnBackDiagnosis">${isComplete() ? "結果に戻る" : "診断する"}</button></div></div>`;
       document.querySelectorAll("button[data-code]").forEach(btn => { btn.onclick = () => showCharDetail(btn.dataset.code); });
       document.getElementById("btnBackDiagnosis").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
     }
