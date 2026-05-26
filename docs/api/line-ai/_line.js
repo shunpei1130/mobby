@@ -1,5 +1,7 @@
 import { createHmac, timingSafeEqual } from "crypto";
 
+const MARK_AS_READ_TIMEOUT_MS = 1500;
+
 export async function readRawBody(req) {
   if (Buffer.isBuffer(req.body)) return req.body;
   if (typeof req.body === "string") return Buffer.from(req.body, "utf8");
@@ -26,9 +28,13 @@ export async function markLineMessageAsRead(markAsReadToken) {
   const accessToken = process.env.LINE_CHANNEL_ACCESS_TOKEN;
   if (!token || !accessToken) return { ok: false, skipped: token ? "missing_access_token" : "missing_mark_token" };
 
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), MARK_AS_READ_TIMEOUT_MS);
+
   try {
     const response = await fetch("https://api.line.me/v2/bot/chat/markAsRead", {
       method: "POST",
+      signal: controller.signal,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`
@@ -46,6 +52,8 @@ export async function markLineMessageAsRead(markAsReadToken) {
   } catch (error) {
     console.error("[LINE AI] Mark as read failed:", { message: error?.message });
     return { ok: false, error };
+  } finally {
+    clearTimeout(timeout);
   }
 }
 
