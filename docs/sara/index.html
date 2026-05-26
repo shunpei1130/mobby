@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>咲来 札幌オレンジムード診断 | Mobby</title>
+  <meta name="description" content="20問であなたの見せ方、ムード、参加導線を8タイプから診断する咲来さん向けモビー診断ラフ案です。" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="咲来 札幌オレンジムード診断" />
+  <meta property="og:description" content="札幌、おでかけ、あるある共感、ASMR、ロールプレイ。あなたに近い咲来さんムードを20問で診断します。" />
+  <meta property="og:image" content="img/sara-mobby-sapporo-orange.png" />
+  <meta name="theme-color" content="#fff8f0" />
+  <link rel="icon" type="image/jpeg" href="../16school/favicon/fav.jpg" />
+  <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --font-ja: 'Yomogi', cursive;
+      --bg: #fff8f0;
+      --surface: #ffffff;
+      --text-main: #1d1d1f;
+      --text-sub: #747474;
+      --accent: #f97316;
+      --accent-soft: #fff1e7;
+      --line: #ded8d2;
+      --right: #2a9d8f;
+      --shadow-sm: 0 2px 8px rgba(61,45,28,0.05);
+      --shadow-lg: 0 12px 30px rgba(61,45,28,0.10);
+      --radius: 20px;
+      --radius-sm: 12px;
+    }
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    body { margin: 0; font-family: var(--font-ja); background: var(--bg); color: var(--text-main); line-height: 1.6; }
+    a { color: var(--accent); text-decoration: none; }
+    .wrap { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
+    header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 0; cursor: pointer; }
+    .logo { width: 30px; height: 30px; border-radius: 10px; background-image: url('../16school/logo.jpg'); background-size: cover; background-position: center; box-shadow: 0 4px 10px rgba(249,115,22,0.28); margin-right: 10px; }
+    .title h1 { font-size: 14px; margin: 0; font-weight: 600; }
+    .title p { margin: 0; color: var(--text-sub); font-size: 12px; }
+    .nav { display: flex; gap: 12px; align-items: center; }
+    .nav a { color: var(--text-main); font-size: 11px; font-weight: 500; padding: 8px 16px; border-radius: 8px; transition: background 0.2s; cursor: pointer; }
+    .nav a:hover { background: rgba(0,0,0,0.05); }
+    .nav a.active { background: var(--accent-soft); color: var(--accent); }
+    button, .social-link { border: 1px solid transparent; background: rgba(0,0,0,0.05); color: var(--text-main); padding: 10px 18px; border-radius: 999px; cursor: pointer; font-size: 13px; font-weight: 500; font-family: inherit; transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1), background 0.2s ease, box-shadow 0.2s ease; display: inline-flex; align-items: center; justify-content: center; }
+    button:hover, .social-link:hover { background: rgba(0,0,0,0.08); transform: translateY(-1px); }
+    button:active, .social-link:active { transform: translateY(0) scale(0.96); }
+    button.primary, .social-link.primary { background: var(--accent); color: #fff; box-shadow: 0 4px 12px rgba(249,115,22,0.25); }
+    button.primary:hover, .social-link.primary:hover { background: #ea580c; box-shadow: 0 6px 16px rgba(249,115,22,0.35); }
+    button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+    .panel { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow-lg); padding: 32px; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.86); }
+    .kicker { color: var(--accent); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 8px; }
+    .big { font-size: 24px; font-weight: 700; margin: 0 0 16px; color: var(--text-main); }
+    .text-body { color: var(--text-sub); font-size: 14px; line-height: 1.8; }
+    .hero-image { width: min(360px, 100%); aspect-ratio: 1 / 1; object-fit: cover; border-radius: 18px; box-shadow: var(--shadow-sm); margin: 0 auto 28px; display: block; }
+    .progress-wrap { margin-bottom: 20px; }
+    .progress-meta { display: flex; justify-content: space-between; color: var(--text-sub); font-size: 12px; margin-bottom: 8px; }
+    .progress-track { height: 8px; border-radius: 999px; background: rgba(0,0,0,0.06); overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 999px; background: var(--accent); transition: width 0.25s ease; }
+    .qCard { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 22px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
+    .qText { font-size: 16px; line-height: 1.8; margin: 0 0 18px; color: var(--text-main); }
+    .likert-labels { display: flex; justify-content: space-between; color: var(--text-sub); font-size: 11px; margin-bottom: 10px; gap: 14px; }
+    .likert-labels span:last-child { text-align: right; }
+    .likert-buttons { display: grid; grid-template-columns: repeat(7, minmax(28px, 1fr)); gap: 8px; align-items: center; }
+    .likert-btn { aspect-ratio: 1 / 1; min-width: 0; padding: 0; border-radius: 50%; border: 2px solid var(--line); background: #fff; box-shadow: none; }
+    .likert-btn.left { border-color: rgba(249,115,22,0.62); }
+    .likert-btn.mid { border-color: #b8b8bd; }
+    .likert-btn.right { border-color: rgba(42,157,143,0.68); }
+    .likert-btn.selected.left { background: var(--accent); border-color: var(--accent); }
+    .likert-btn.selected.mid { background: #8e8e93; border-color: #8e8e93; }
+    .likert-btn.selected.right { background: var(--right); border-color: var(--right); }
+    .fade-in { animation: fadeIn 0.35s ease both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .result-hero { text-align: center; }
+    .result-img { width: min(420px, 100%); aspect-ratio: 1 / 1; object-fit: cover; border-radius: 20px; box-shadow: var(--shadow-lg); margin-bottom: 22px; }
+    .type-code { display: inline-flex; align-items: center; justify-content: center; min-width: 92px; padding: 8px 14px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 700; margin-bottom: 12px; }
+    .axis-row { margin: 18px 0; }
+    .axis-meta { display: flex; justify-content: space-between; gap: 12px; color: var(--text-sub); font-size: 12px; margin-bottom: 8px; }
+    .axis-meta span { flex: 1; }
+    .axis-meta span:nth-child(2) { text-align: center; }
+    .axis-meta span:last-child { text-align: right; }
+    .axis-bar { height: 12px; border-radius: 999px; background: linear-gradient(90deg, #ffe0ca 0%, #f6f6f6 50%, #d8f4ef 100%); position: relative; overflow: hidden; }
+    .axis-dot { position: absolute; top: 50%; width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 4px solid var(--accent); transform: translate(-50%, -50%); box-shadow: var(--shadow-sm); }
+    .section-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }
+    .mini { background: #fafafa; border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+    .mini h3 { margin: 0 0 8px; font-size: 14px; }
+    .mini p { margin: 0; color: var(--text-sub); font-size: 13px; line-height: 1.8; }
+    .characters-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 24px; }
+    .char-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-sm); }
+    .char-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+    .char-body { padding: 16px; }
+    .char-body h3 { margin: 0 0 8px; font-size: 16px; }
+    .char-body p { margin: 0; color: var(--text-sub); font-size: 13px; line-height: 1.7; }
+    .actions, .social-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+    .social-links { margin-top: 18px; }
+    @media (max-width: 600px) {
+      .wrap { padding: 28px 14px 60px; }
+      header { flex-direction: column; align-items: flex-start; margin-bottom: 28px; }
+      .panel { padding: 24px 16px; border-radius: 18px; }
+      .big { font-size: 22px; }
+      .qCard { padding: 18px 14px; }
+      .qText { font-size: 15px; }
+      .likert-buttons { gap: 6px; }
+      .section-grid, .characters-grid { grid-template-columns: 1fr; }
+      .social-link { width: calc(50% - 6px); padding: 10px 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand" id="brandHome">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="title">
+          <h1>咲来 札幌オレンジムード診断</h1>
+          <p>Mobby rough preview</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="ページ内メニュー">
+        <a id="navDiagnosis" class="active">診断</a>
+        <a id="navCharacters">タイプ一覧</a>
+      </nav>
+    </header>
+    <main id="app"></main>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "sara_sapporo_orange_type_v1";
+    const PAGE_SIZE = 5;
+    const AXIS_KEYS = ["A", "B", "C"];
+    const SOCIAL_LINKS = [
+      {label:"TikTok", url:"https://www.tiktok.com/@sara_h06_"},
+      {label:"Mobby", url:"https://www.mobby.online/"},
+      {label:"Sapporo", url:"https://sapporo-list.info/newchitose_airport-tiktok/"}
+    ];
+
+    const AXES = {
+      A: { key:"A", name:"見せ方", left:"あるある共感", right:"札幌おでかけ", leftCode:"あ", rightCode:"さ" },
+      B: { key:"B", name:"ムード", left:"明るいオレンジ", right:"やさしい癒し", leftCode:"お", rightCode:"や" },
+      C: { key:"C", name:"参加導線", left:"ひとり視聴", right:"シェア参加", leftCode:"ひ", rightCode:"し" }
+    };
+
+    const QUESTIONS = [
+      {id:"A1", axis:"A", text:"投稿を見る時は、まず「わかる」と言いたくなる場面に反応しやすい", reverse:false},
+      {id:"A2", axis:"A", text:"女上司あるあるのような、身近な人間関係ネタに惹かれる", reverse:false},
+      {id:"A3", axis:"A", text:"短い動画でも、表情や間の取り方で共感が伝わるものが好き", reverse:false},
+      {id:"A4", axis:"A", text:"カフェ、空港、街歩きなど、場所の空気が見える投稿に惹かれる", reverse:true},
+      {id:"A5", axis:"A", text:"北海道や札幌らしさが少し入っていると、つい見たくなる", reverse:true},
+      {id:"A6", axis:"A", text:"誰かの休日やおでかけ気分を、自分の予定にも重ねて楽しみたい", reverse:true},
+
+      {id:"B1", axis:"B", text:"明るいオレンジのような、見た瞬間に元気が出る雰囲気が好き", reverse:false},
+      {id:"B2", axis:"B", text:"テンポよく笑える投稿や、ぱっと気分が上がる動画を保存しやすい", reverse:false},
+      {id:"B3", axis:"B", text:"PRでも、明るく自然に紹介してくれると見やすい", reverse:false},
+      {id:"B4", axis:"B", text:"ママ世代や友人同士で話題にしやすい親近感があると安心する", reverse:false},
+      {id:"B5", axis:"B", text:"ASMRやロールプレイのように、やわらかく癒される空気も好き", reverse:true},
+      {id:"B6", axis:"B", text:"メイクやサロン風の静かな撮影空間に、ほっとすることがある", reverse:true},
+      {id:"B7", axis:"B", text:"元気さよりも、声や仕草のやさしさに引き込まれる日がある", reverse:true},
+
+      {id:"C1", axis:"C", text:"好きな動画は、まず自分のペースでゆっくり見たい", reverse:false},
+      {id:"C2", axis:"C", text:"共感したことも、すぐコメントするより心の中で楽しむことが多い", reverse:false},
+      {id:"C3", axis:"C", text:"投稿を見て、ひとりで次のおでかけ候補を考える時間が好き", reverse:false},
+      {id:"C4", axis:"C", text:"「これわかる」と思った動画は友人にも送りたくなる", reverse:true},
+      {id:"C5", axis:"C", text:"診断結果が出たら、ストーリーやコメントで共有したくなる", reverse:true},
+      {id:"C6", axis:"C", text:"好きなカフェや商品は、誰かと一緒に試すともっと楽しい", reverse:true},
+      {id:"C7", axis:"C", text:"投稿がきっかけで会話やおすすめが広がるのがうれしい", reverse:true}
+    ];
+
+    const CHARACTERS = {
+      "あおひ": {
+        name:"あるある観察モビィ",
+        summary:"日常の小さな違和感や共感ポイントを、ひとりでじっくり味わうタイプ。",
+        catch:"あなたは、短い動画の中にある「それわかる」を見つけるのが上手な人です。",
+        hook:"女上司あるある、職場の空気、ちょっとした表情の変化。誰かに言う前に、自分の中で静かに笑える感度があります。",
+        downside:"共感していても外に出さないことが多く、好きが相手に伝わりにくい日も。ひとことだけコメントすると、動画との距離が近くなります。",
+        perception:"観察力がある、落ち着いて見てくれる、反応が丁寧と思われやすいです。",
+        strength:"日常の共感ポイントを拾い、投稿の面白さを深く味わう力。",
+        weakness:"見るだけで満足して、参加するきっかけを逃すことがあります。",
+        advice:"今日のヒントは、共感した場面を一つだけメモすること。次に見返した時の楽しさが残ります。",
+        image:"img/sara-mobby-sapporo-orange.png"
+      },
+      "あおし": {
+        name:"コメント共感モビィ",
+        summary:"明るいあるあるネタに反応して、コメントや共有で場を温めるタイプ。",
+        catch:"あなたは、共感を言葉にして、投稿の会話を広げられる人です。",
+        hook:"「わかる」「こういう人いる」と言えるだけで、動画の楽しさが周りにも伝わります。咲来さんの明るいテンポと相性がいい参加タイプです。",
+        downside:"反応したい気持ちが強いと、勢いでコメントしすぎることも。自分が本当に好きだったポイントに絞ると、共感の温度が伝わります。",
+        perception:"話しやすい、コメントが明るい、一緒に見ると楽しいと思われやすいです。",
+        strength:"共感をきっかけに、投稿の外側にも会話を作る力。",
+        weakness:"みんなの反応を気にしすぎると、自分の感じ方が薄くなることがあります。",
+        advice:"今日のヒントは、好きな動画に短い感想を残すこと。小さな反応が次の企画の種になります。",
+        image:"img/sara-mobby-roleplay.png"
+      },
+      "あやひ": {
+        name:"ほっとロールプレイモビィ",
+        summary:"身近な共感ネタの中でも、やさしい声や癒しの間を大切にするタイプ。",
+        catch:"あなたは、あるあるの面白さと癒しの空気を同時に受け取れる人です。",
+        hook:"ロールプレイ、ASMR、メイクやサロン風の空間。日常ネタでも、声や仕草がやわらかいと安心して見られます。",
+        downside:"癒しを求める日ほど、刺激の強い投稿から少し距離を置きたくなることも。自分に合うテンポを選ぶと、動画時間が心地よくなります。",
+        perception:"穏やか、感受性がやわらかい、空気感まで見てくれると思われやすいです。",
+        strength:"笑える場面の奥にある、やさしい温度を感じ取る力。",
+        weakness:"気に入っても外に出す反応が少なく、推しポイントが伝わりにくいです。",
+        advice:"今日のヒントは、ほっとした投稿を保存すること。あとで見返せる癒しの棚になります。",
+        image:"img/sara-mobby-sapporo-orange.png"
+      },
+      "あやし": {
+        name:"癒し共有モビィ",
+        summary:"やさしいロールプレイやASMRの心地よさを、人にもすすめたくなるタイプ。",
+        catch:"あなたは、癒された瞬間を誰かと分け合える人です。",
+        hook:"メイク、サロン、声の距離感、ゆっくりした動き。見ていて落ち着く投稿を、友人や同じ気分の人にも届けたくなります。",
+        downside:"癒しを共有したい時ほど、相手の好みに合うか気になることも。自分がどこにほっとしたかを添えると、すすめ方が自然になります。",
+        perception:"やさしい、おすすめが心地いい、距離感が上手と思われやすいです。",
+        strength:"安心できるムードを、押しつけずに共有する力。",
+        weakness:"相手に合わせすぎると、自分の好きがぼやけることがあります。",
+        advice:"今日のヒントは、癒された理由を一言で添えること。共有がぐっと伝わりやすくなります。",
+        image:"img/sara-mobby-roleplay.png"
+      },
+      "さおひ": {
+        name:"札幌さんぽモビィ",
+        summary:"札幌やおでかけの空気を、自分の予定に重ねて楽しむタイプ。",
+        catch:"あなたは、街の空気やカフェ時間から次の楽しみを見つけられる人です。",
+        hook:"札幌の街、カフェ、空港、おでかけ先のちょっとした光。投稿を見ながら、自分ならどこへ行くかを考えるのが得意です。",
+        downside:"調べるだけで満足して、実際に行くタイミングを逃すことも。気になった場所を一つだけ保存しておくと、次の休日につながります。",
+        perception:"暮らしを楽しんでいる、街歩きの感度がある、落ち着いた好奇心があると思われやすいです。",
+        strength:"投稿を見て、日常の行き先や楽しみへ変換する力。",
+        weakness:"ひとりで計画を温めすぎて、共有前に熱が冷めることがあります。",
+        advice:"今日のヒントは、行きたい場所を一つだけ決めること。小さなおでかけが気分を明るくします。",
+        image:"img/sara-mobby-sapporo-orange.png"
+      },
+      "さおし": {
+        name:"どさんこ拡散モビィ",
+        summary:"札幌らしい明るさや地域感を、友人やSNSにも広げたくなるタイプ。",
+        catch:"あなたは、地元感のある投稿を会話のきっかけにできる人です。",
+        hook:"北海道らしさ、札幌の街、オレンジの明るさ。見て楽しいだけでなく、誰かに教えたくなる入口を見つけるのが上手です。",
+        downside:"広げたい気持ちが強いと、情報量が多くなりすぎることも。最初は一枚の画像や一言だけで、相手が入りやすくなります。",
+        perception:"情報感度がある、地元ネタに強い、シェアが楽しいと思われやすいです。",
+        strength:"地域感のある投稿を、参加や来店につながる会話に変える力。",
+        weakness:"反応を期待しすぎると、気軽な共有が重くなることがあります。",
+        advice:"今日のヒントは、札幌で行きたい場所を一人にだけ送ること。会話の始まりになります。",
+        image:"img/sara-mobby-roleplay.png"
+      },
+      "さやひ": {
+        name:"おでかけ癒しモビィ",
+        summary:"おでかけの楽しさと、やさしい癒しの時間をどちらも大切にするタイプ。",
+        catch:"あなたは、外に出る元気と、帰ってほっとする余白を両方持っている人です。",
+        hook:"カフェや街歩きで気分を上げつつ、ASMRやロールプレイで心を落ち着ける。咲来さんの明るさと癒しをバランスよく楽しめます。",
+        downside:"予定を詰めると癒しの時間が足りなくなることも。おでかけの後に、静かな動画を見る時間までセットにすると整います。",
+        perception:"バランス感覚がある、やさしいけれど行動力もあると思われやすいです。",
+        strength:"外向きの楽しさと内向きの癒しを、日常の中で切り替える力。",
+        weakness:"どちらも大事にしたくて、予定が中途半端に増えることがあります。",
+        advice:"今日のヒントは、おでかけ先と休む場所を一緒に決めること。最後まで気分よく過ごせます。",
+        image:"img/sara-mobby-sapporo-orange.png"
+      },
+      "さやし": {
+        name:"ファミリー共感モビィ",
+        summary:"札幌のおでかけ感や癒しムードを、家族や友人と分け合うタイプ。",
+        catch:"あなたは、誰かと一緒に楽しめる投稿や場所を見つけるのが上手な人です。",
+        hook:"ママ世代の共感、おでかけ情報、癒しの空気。自分だけでなく、周りの人も楽しめるかを自然に考えられます。",
+        downside:"みんなに合うものを選ぼうとして、決めるまで時間がかかることも。まず自分が行きたいか、見たいかを基準にすると選びやすくなります。",
+        perception:"気配り上手、親しみやすい、家族や友人との時間を大切にしていると思われやすいです。",
+        strength:"投稿を、家族や友人との会話や行動につなげる力。",
+        weakness:"周りに合わせすぎて、自分の好きが後回しになることがあります。",
+        advice:"今日のヒントは、誰と楽しみたいかを先に決めること。共有する理由がはっきりします。",
+        image:"img/sara-mobby-roleplay.png"
+      }
+    };
+
+    const ANS_LABEL = {1:"そう思う", 2:"ややそう思う", 3:"少しそう思う", 4:"どちらでもない", 5:"少しそう思わない", 6:"ややそう思わない", 7:"そう思わない"};
+    const defaultState = () => ({step:"intro", page:0, answers:{}, questionOrder:[], axes:null});
+    let state = loadState();
+    const app = document.getElementById("app");
+
+    function loadState(){
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? {...defaultState(), ...JSON.parse(raw)} : defaultState();
+      } catch { return defaultState(); }
+    }
+    function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    function resetDiagnosis(){ state = defaultState(); localStorage.removeItem(STORAGE_KEY); render(); }
+    function getQuestionOrder(){
+      if(Array.isArray(state.questionOrder) && state.questionOrder.length === QUESTIONS.length) return state.questionOrder;
+      state.questionOrder = AXIS_KEYS.flatMap(axis => QUESTIONS.filter(q => q.axis === axis)).map(q => q.id);
+      saveState();
+      return state.questionOrder;
+    }
+    function getQuestions(){ return getQuestionOrder().map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean); }
+
+    function computeResult(){
+      const SCALE = 7, MID = 4, MAX_DEV = 3, GAMMA = 1.35, EXTREME_BONUS = 0.35, COHERENCE_SHRINK = 0.20;
+      const raw = {A:0, B:0, C:0}, absRaw = {A:0, B:0, C:0}, maxRaw = {A:0, B:0, C:0}, allAnswers = [];
+      const weightOf = ans => (ans === 1 || ans === 7) ? 1 + EXTREME_BONUS : 1;
+      const shapeAns = ans => {
+        const centered = MID - ans;
+        const t = centered / MAX_DEV;
+        const mag = Math.min(1, Math.abs(t));
+        return Math.sign(t) * Math.pow(mag, GAMMA);
+      };
+      QUESTIONS.forEach(q => {
+        const ansRaw = state.answers[q.id];
+        if(!ansRaw) return;
+        allAnswers.push(ansRaw);
+        const ansAdj = q.reverse ? (SCALE + 1 - ansRaw) : ansRaw;
+        const w = weightOf(ansRaw) * (q.importance ?? 1);
+        const contrib = w * shapeAns(ansAdj);
+        raw[q.axis] += contrib;
+        absRaw[q.axis] += Math.abs(contrib);
+        maxRaw[q.axis] += w;
+      });
+      const norm = {}, pos = {}, hard = {}, decisiveness = {}, confidenceLevel = {}, confidenceLabel = {};
+      AXIS_KEYS.forEach(k => {
+        const denom = maxRaw[k] || 1;
+        const coherence = absRaw[k] ? Math.abs(raw[k]) / absRaw[k] : 0;
+        const adjusted = raw[k] * (1 - COHERENCE_SHRINK * (1 - coherence));
+        norm[k] = Math.max(-1, Math.min(1, adjusted / denom));
+        hard[k] = norm[k] > 0 ? "L" : "R";
+        pos[k] = Math.max(0, Math.min(100, 50 - norm[k] * 50));
+        decisiveness[k] = Math.min(1, Math.abs(norm[k]));
+        if(decisiveness[k] >= 0.50) { confidenceLevel[k] = "strong"; confidenceLabel[k] = "はっきり"; }
+        else if(decisiveness[k] >= 0.25) { confidenceLevel[k] = "moderate"; confidenceLabel[k] = "やや"; }
+        else { confidenceLevel[k] = "mid"; confidenceLabel[k] = "場面による"; }
+      });
+      const code = (hard.A === "L" ? AXES.A.leftCode : AXES.A.rightCode) + (hard.B === "L" ? AXES.B.leftCode : AXES.B.rightCode) + (hard.C === "L" ? AXES.C.leftCode : AXES.C.rightCode);
+      const freq = {1:0,2:0,3:0,4:0,5:0,6:0,7:0};
+      allAnswers.forEach(a => freq[a]++);
+      const straightLine = allAnswers.length ? Math.max(...Object.values(freq)) / allAnswers.length >= 0.80 : false;
+      const adjacentTypes = [];
+      AXIS_KEYS.forEach(k => {
+        if(confidenceLevel[k] === "mid") {
+          const altHard = {...hard, [k]: hard[k] === "L" ? "R" : "L"};
+          const altCode = (altHard.A === "L" ? AXES.A.leftCode : AXES.A.rightCode) + (altHard.B === "L" ? AXES.B.leftCode : AXES.B.rightCode) + (altHard.C === "L" ? AXES.C.leftCode : AXES.C.rightCode);
+          if(CHARACTERS[altCode] && altCode !== code) adjacentTypes.push({axis:k, code:altCode, name:CHARACTERS[altCode].name});
+        }
+      });
+      return {code, char: CHARACTERS[code], norm, pos, hard, decisiveness, confidenceLevel, confidenceLabel, straightLine, adjacentTypes};
+    }
+
+    function isComplete(){ return Object.keys(state.answers || {}).length >= QUESTIONS.length; }
+    function render(){
+      document.getElementById("navDiagnosis").classList.toggle("active", state.step !== "characters");
+      document.getElementById("navCharacters").classList.toggle("active", state.step === "characters");
+      if(state.step === "intro") renderIntro();
+      else if(state.step === "quiz") renderQuiz();
+      else if(state.step === "characters") renderCharacters();
+      else renderResult();
+    }
+    function socialLinksHtml(){
+      return `<div class="social-links">${SOCIAL_LINKS.map((link, i) => `<a class="social-link ${i === 0 ? "primary" : ""}" href="${link.url}" target="_blank" rel="noopener">${link.label}</a>`).join("")}</div>`;
+    }
+    function renderIntro(){
+      const count = Object.keys(state.answers).length;
+      app.innerHTML = `
+        <div class="panel fade-in" style="text-align:center; padding:60px 20px;">
+          <img class="hero-image" src="img/sara-mobby-sapporo-orange.png" alt="咲来さんの世界観に合わせた札幌オレンジムードとMobby">
+          <p class="kicker">Mobby rough preview</p>
+          <h2 class="big">咲来 札幌オレンジ<br>ムード診断</h2>
+          <p class="text-body" style="max-width:460px; margin:0 auto 30px;">直感で選ぶ20問から、あるある共感、札幌おでかけ、明るいオレンジ感、ASMRやロールプレイの癒しムードを診断します。咲来さん向けの参加型ラフ案です。</p>
+          <button class="primary" id="btnStart" style="padding:16px 32px; font-size:16px;">${count > 0 ? "診断を再開する" : "診断をはじめる"}</button>
+          ${count > 0 ? `<p style="font-size:12px; color:#747474; margin-top:16px;">${count} / ${QUESTIONS.length}問 回答済み</p>` : ""}
+        </div>`;
+      document.getElementById("btnStart").onclick = () => {
+        state.step = "quiz";
+        getQuestionOrder();
+        const idx = getQuestions().findIndex(q => !state.answers[q.id]);
+        state.page = idx >= 0 ? Math.floor(idx / PAGE_SIZE) : 0;
+        saveState();
+        render();
+      };
+    }
+    function renderQuiz(){
+      const qs = getQuestions();
+      const start = state.page * PAGE_SIZE;
+      const currentQs = qs.slice(start, start + PAGE_SIZE);
+      const totalPage = Math.ceil(qs.length / PAGE_SIZE);
+      const progress = Math.round((Object.keys(state.answers).length / qs.length) * 100);
+      const qHtml = currentQs.map((q, i) => {
+        const val = state.answers[q.id];
+        return `<div class="qCard fade-in" style="animation-delay:${i*0.05}s"><div class="kicker" style="color:#747474; margin-bottom:4px;">Q${start+i+1}</div><p class="qText">${q.text}</p><div class="likert7"><div class="likert-labels"><span>${AXES[q.axis].left}</span><span>${AXES[q.axis].right}</span></div><div class="likert-buttons">${[1,2,3,4,5,6,7].map(n => { const side = n <= 3 ? "left" : (n === 4 ? "mid" : "right"); const sel = val === n ? "selected" : ""; return `<button type="button" class="likert-btn ${side} ${sel}" data-qid="${q.id}" data-val="${n}" aria-label="${ANS_LABEL[n]}"></button>`; }).join("")}</div></div></div>`;
+      }).join("");
+      app.innerHTML = `<div class="panel"><div class="progress-wrap"><div class="progress-meta"><span>進行状況</span><span>${progress}%</span></div><div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div></div><div style="margin-top:30px;">${qHtml}</div><div style="display:flex; justify-content:space-between; margin-top:30px;"><button id="btnPrev" ${state.page===0 ? "disabled":""}>戻る</button><button class="primary" id="btnNext">${state.page === totalPage - 1 ? "結果を見る" : "次へ"}</button></div></div>`;
+      currentQs.forEach(q => {
+        document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(btn => {
+          btn.onclick = () => {
+            state.answers[q.id] = parseInt(btn.dataset.val, 10);
+            document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach(b => b.classList.remove("selected"));
+            btn.classList.add("selected");
+            saveState();
+            const p = Math.round((Object.keys(state.answers).length / qs.length) * 100);
+            document.querySelector(".progress-fill").style.width = p + "%";
+            document.querySelector(".progress-meta span:last-child").innerText = p + "%";
+          };
+        });
+      });
+      document.getElementById("btnPrev").onclick = () => { if(state.page > 0) state.page--; saveState(); render(); };
+      document.getElementById("btnNext").onclick = () => {
+        const missing = currentQs.filter(q => !state.answers[q.id]);
+        if(missing.length){ alert("このページの質問にすべて回答してください。"); return; }
+        if(state.page < totalPage - 1){ state.page++; saveState(); render(); }
+        else { state.axes = computeResult(); state.step = "result"; saveState(); render(); }
+      };
+    }
+    function renderAxis(result){
+      return AXIS_KEYS.map(k => {
+        const a = AXES[k];
+        return `<div class="axis-row"><div class="axis-meta"><span>${a.name}: ${a.left}</span><span>${result.confidenceLabel[k]}</span><span>${a.right}</span></div><div class="axis-bar"><div class="axis-dot" style="left:${result.pos[k]}%"></div></div></div>`;
+      }).join("");
+    }
+    function renderResult(){
+      if(!isComplete()){ state.step = "intro"; render(); return; }
+      const result = state.axes || computeResult();
+      const c = result.char;
+      app.innerHTML = `<div class="panel fade-in result-hero"><p class="kicker">RESULT</p><span class="type-code">TYPE ${result.code}</span><h2 class="big">${c.name}</h2><img class="result-img" src="${c.image}" alt="${c.name}"><p class="text-body" style="max-width:560px; margin:0 auto;">${c.summary}</p><p style="font-size:17px; font-weight:700; margin:22px auto 0; max-width:560px;">${c.catch}</p>${socialLinksHtml()}</div><div class="panel fade-in"><p class="kicker">3 AXES</p><h2 class="big">あなたのムードバランス</h2>${renderAxis(result)}${result.straightLine ? `<p class="text-body" style="color:#f97316;">同じ回答が多めです。気分を変えてもう一度試すと、少し違う結果になるかもしれません。</p>` : ""}${result.adjacentTypes.length ? `<p class="text-body">近いタイプ: ${result.adjacentTypes.map(t => t.name).join(" / ")}</p>` : ""}</div><div class="panel fade-in"><p class="kicker">DETAIL</p><h2 class="big">このタイプの見え方</h2><div class="section-grid"><div class="mini"><h3>似合うムード</h3><p>${c.hook}</p></div><div class="mini"><h3>しんどい時</h3><p>${c.downside}</p></div><div class="mini"><h3>周りから</h3><p>${c.perception}</p></div><div class="mini"><h3>今日の投稿ヒント</h3><p>${c.advice}</p></div><div class="mini"><h3>強み</h3><p>${c.strength}</p></div><div class="mini"><h3>気をつけたいこと</h3><p>${c.weakness}</p></div></div><div class="actions"><button class="primary" id="btnChars">8タイプを見る</button><button id="btnAgain">もう一度診断する</button></div></div>`;
+      document.getElementById("btnChars").onclick = () => { state.step = "characters"; saveState(); render(); };
+      document.getElementById("btnAgain").onclick = resetDiagnosis;
+    }
+    function renderCharacters(){
+      const cards = Object.entries(CHARACTERS).map(([code, c]) => `<article class="char-card fade-in"><img src="${c.image}" alt="${c.name}"><div class="char-body"><p class="kicker">TYPE ${code}</p><h3>${c.name}</h3><p>${c.summary}</p></div></article>`).join("");
+      app.innerHTML = `<div class="panel fade-in"><p class="kicker">8 TYPES</p><h2 class="big">札幌オレンジムード診断 8タイプ</h2><p class="text-body">2枚のラフ画像をサンプルとして交互に配置しています。あるある共感、札幌おでかけ、オレンジの明るさ、ロールプレイの癒しを、タイプごとに少しずつ表現しています。</p><div class="characters-grid">${cards}</div><div class="actions"><button class="primary" id="btnBackDiagnosis">${isComplete() ? "結果に戻る" : "診断する"}</button></div></div>`;
+      document.getElementById("btnBackDiagnosis").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
+    }
+    document.getElementById("brandHome").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
+    document.getElementById("navDiagnosis").onclick = () => { state.step = isComplete() ? "result" : "intro"; saveState(); render(); };
+    document.getElementById("navCharacters").onclick = () => { state.step = "characters"; saveState(); render(); };
+    render();
+  </script>
+</body>
+</html>
