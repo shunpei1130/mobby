@@ -21,6 +21,34 @@ export function verifyLineSignature(rawBody, signature, channelSecret) {
   return left.length === right.length && timingSafeEqual(left, right);
 }
 
+export async function markLineMessageAsRead(markAsReadToken) {
+  const token = String(markAsReadToken || "").trim();
+  const accessToken = process.env.LINE_CHANNEL_ACCESS_TOKEN;
+  if (!token || !accessToken) return { ok: false, skipped: token ? "missing_access_token" : "missing_mark_token" };
+
+  try {
+    const response = await fetch("https://api.line.me/v2/bot/chat/markAsRead", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`
+      },
+      body: JSON.stringify({ markAsReadToken: token })
+    });
+
+    if (!response.ok) {
+      const text = await response.text().catch(() => "");
+      console.error("[LINE AI] Mark as read failed:", { status: response.status, body: text.slice(0, 200) });
+      return { ok: false, status: response.status };
+    }
+
+    return { ok: true };
+  } catch (error) {
+    console.error("[LINE AI] Mark as read failed:", { message: error?.message });
+    return { ok: false, error };
+  }
+}
+
 export async function replyLineMessage(replyToken, messages) {
   const accessToken = process.env.LINE_CHANNEL_ACCESS_TOKEN;
   if (!replyToken) return { ok: false, skipped: "missing_reply_token" };

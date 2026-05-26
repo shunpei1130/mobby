@@ -197,6 +197,145 @@ async function callWebhookFlow(token) {
   assert(invalidTokenRes.statusCode === 200, "invalid token webhook should return 200");
 }
 
+async function callWebhookMarkAsReadFlow() {
+  const originalFetch = globalThis.fetch;
+  const originalAccessToken = process.env.LINE_CHANNEL_ACCESS_TOKEN;
+  const originalConsoleError = console.error;
+  const lineUserId = "U_MARK_READ_USER";
+  const userKey = makeUserKey(lineUserId);
+
+  await saveUser(userKey, {
+    version: 1,
+    userKey,
+    source: "16school",
+    sourceLabel: "学校モビー診断",
+    resultId: "MARK_READ_TEST",
+    resultName: "既読テストモビー",
+    resultSummary: "既読化テスト用の診断結果",
+    traits: ["確認"],
+    registeredAt: new Date().toISOString(),
+    lastMessageAt: "",
+    messageCountDate: "",
+    messageCountToday: 0
+  });
+  await saveConversation(userKey, { version: 1, userKey, messages: [], summary: "", dailyCountDate: "", dailyCount: 0 });
+
+  try {
+    process.env.LINE_CHANNEL_ACCESS_TOKEN = "line-access-token-test";
+
+    const calls = [];
+    globalThis.fetch = async (url, options) => {
+      calls.push({
+        url: String(url),
+        body: options?.body,
+        authorization: options?.headers?.Authorization,
+        contentType: options?.headers?.["Content-Type"]
+      });
+      return {
+        ok: true,
+        status: 200,
+        async text() {
+          return "";
+        }
+      };
+    };
+
+    const markRes = createRes();
+    await webhook(createWebhookReq({
+      events: [{
+        type: "message",
+        replyToken: "reply-mark-read",
+        source: { type: "user", userId: lineUserId },
+        message: {
+          type: "text",
+          id: "7",
+          text: "既読化の順序を確認したい",
+          markAsReadToken: "mark-token-1"
+        }
+      }]
+    }), markRes);
+    assert(markRes.statusCode === 200, "mark-as-read webhook should return 200");
+    assert(calls[0]?.url === "https://api.line.me/v2/bot/chat/markAsRead", "mark-as-read should run before reply");
+    assert(calls[1]?.url === "https://api.line.me/v2/bot/message/reply", "reply should run after mark-as-read");
+    assert(calls[0].authorization === "Bearer line-access-token-test", "mark-as-read should use LINE access token");
+    assert(calls[0].contentType === "application/json", "mark-as-read should send JSON");
+    assert(JSON.parse(calls[0].body).markAsReadToken === "mark-token-1", "mark-as-read body should include token");
+
+    const noTokenCalls = [];
+    globalThis.fetch = async (url, options) => {
+      noTokenCalls.push({ url: String(url), body: options?.body });
+      return {
+        ok: true,
+        status: 200,
+        async text() {
+          return "";
+        }
+      };
+    };
+
+    const noTokenRes = createRes();
+    await webhook(createWebhookReq({
+      events: [{
+        type: "message",
+        replyToken: "reply-no-mark-token",
+        source: { type: "user", userId: lineUserId },
+        message: { type: "text", id: "8", text: "トークンなしの確認" }
+      }]
+    }), noTokenRes);
+    assert(noTokenRes.statusCode === 200, "message without mark token should still return 200");
+    assert(noTokenCalls.every((call) => call.url !== "https://api.line.me/v2/bot/chat/markAsRead"), "missing mark token should not call mark-as-read");
+    assert(noTokenCalls.some((call) => call.url === "https://api.line.me/v2/bot/message/reply"), "message without mark token should still reply");
+
+    const failedCalls = [];
+    const errors = [];
+    console.error = (...args) => {
+      errors.push(args);
+    };
+    globalThis.fetch = async (url, options) => {
+      failedCalls.push({ url: String(url), body: options?.body });
+      if (String(url) === "https://api.line.me/v2/bot/chat/markAsRead") {
+        return {
+          ok: false,
+          status: 500,
+          async text() {
+            return "mark failed";
+          }
+        };
+      }
+      return {
+        ok: true,
+        status: 200,
+        async text() {
+          return "";
+        }
+      };
+    };
+
+    const failedMarkRes = createRes();
+    await webhook(createWebhookReq({
+      events: [{
+        type: "message",
+        replyToken: "reply-mark-read-failed",
+        source: { type: "user", userId: lineUserId },
+        message: {
+          type: "text",
+          id: "9",
+          text: "既読化失敗時の確認",
+          markAsReadToken: "mark-token-500"
+        }
+      }]
+    }), failedMarkRes);
+    assert(failedMarkRes.statusCode === 200, "mark-as-read failure should not fail webhook");
+    assert(failedCalls[0]?.url === "https://api.line.me/v2/bot/chat/markAsRead", "failed mark-as-read should run before reply");
+    assert(failedCalls.some((call) => call.url === "https://api.line.me/v2/bot/message/reply"), "reply should continue after mark-as-read failure");
+    assert(errors.some((args) => String(args[0]).includes("Mark as read failed")), "mark-as-read failure should be logged");
+  } finally {
+    globalThis.fetch = originalFetch;
+    process.env.LINE_CHANNEL_ACCESS_TOKEN = originalAccessToken;
+    console.error = originalConsoleError;
+  }
+}
+
 async function callGeminiProviderFlow() {
   const originalFetch = globalThis.fetch;
   const originalProvider = process.env.AI_PROVIDER;
@@ -276,6 +415,7 @@ await callHealth();
 const token = await callIssueToken();
 await callInvalidIssueToken();
 await callWebhookFlow(token);
+await callWebhookMarkAsReadFlow();
 await callGeminiProviderFlow();
 
 console.log("LINE AI Mobby MVP-2 validation passed");

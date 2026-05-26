@@ -1,6 +1,12 @@
 import { createHash } from "crypto";
 import { generateReply } from "./_ai.js";
-import { replyLineMessage, readRawBody, toLineTextMessage, verifyLineSignature } from "./_line.js";
+import {
+  markLineMessageAsRead,
+  replyLineMessage,
+  readRawBody,
+  toLineTextMessage,
+  verifyLineSignature
+} from "./_line.js";
 import { buildRateLimitReply, canReply, canReplyGlobally, recordGlobalReply, recordReply } from "./_rate-limit.js";
 import { buildSafetyReply, detectSafetyRisk } from "./_safety.js";
 import {
@@ -164,6 +170,7 @@ async function handleEvent(event) {
   }
 
   if (event?.type === "message" && event?.message?.type === "text") {
+    await markLineMessageAsRead(event.message.markAsReadToken);
     await handleTextEvent(event);
   }
 }
