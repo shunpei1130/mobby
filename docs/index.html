@@ -7873,6 +7873,27 @@
               <button class="hero-character-action mode" id="heroCarouselModeButton" type="button" aria-label="カルーセル表示を切り替える">通常</button>
             </div>
           </div>
+          <div class="peek-heart-wrap">
+            <div class="heart-note-inline" id="heartNoteInline" hidden>
+              <div class="note-popup">
+                <button class="popup-close" id="closeHeartNoteInline" aria-label="Close note">×</button>
+                <div class="note-popup-inner">
+                  <div class="note-tabs" id="heartNoteTabs" hidden></div>
+                  <div class="note-popup-kicker">Private Note</div>
+                  <h2 id="heartNoteTitle">心を覗く</h2>
+                  <p id="heartNoteBody" class="note-body">ここに差し込みたい文章を置けるようにしてあります。
+ノートをそっと開いて、内側を読むような見え方です。
+
+あとでこの本文をそのまま差し替えれば使えます。</p>
+                  <div class="quote-page-controls" id="heartNoteQuotePager" hidden>
+                    <button type="button" class="quote-page-btn" id="heartNoteQuotePrev">←</button>
+                    <div class="quote-page-indicator" id="heartNoteQuoteIndicator">1 / 1</div>
+                    <button type="button" class="quote-page-btn" id="heartNoteQuoteNext">→</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="hero-diagnosis-menu">
             <div class="gift-fan-diagnosis-actions" id="heroDiagnosisActions" aria-hidden="false">
               <div class="hero-diagnosis-track">
@@ -8518,27 +8539,6 @@
     <!-- ポップアップボタン（最下部） -->
     <div class="popup-buttons-bar">
       <div class="container">
-        <div class="peek-heart-wrap">
-          <div class="heart-note-inline" id="heartNoteInline" hidden>
-            <div class="note-popup">
-              <button class="popup-close" id="closeHeartNoteInline" aria-label="Close note">×</button>
-              <div class="note-popup-inner">
-                <div class="note-tabs" id="heartNoteTabs" hidden></div>
-                <div class="note-popup-kicker">Private Note</div>
-                <h2 id="heartNoteTitle">心を覗く</h2>
-                <p id="heartNoteBody" class="note-body">ここに差し込みたい文章を置けるようにしてあります。
-ノートをそっと開いて、内側を読むような見え方です。
-
-あとでこの本文をそのまま差し替えれば使えます。</p>
-                <div class="quote-page-controls" id="heartNoteQuotePager" hidden>
-                  <button type="button" class="quote-page-btn" id="heartNoteQuotePrev">←</button>
-                  <div class="quote-page-indicator" id="heartNoteQuoteIndicator">1 / 1</div>
-                  <button type="button" class="quote-page-btn" id="heartNoteQuoteNext">→</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
         <div class="popup-buttons">
             <div class="gift-fan-menu is-open" id="giftFanMenu">
             <div class="burn-card-row footer-burn-card-row">
