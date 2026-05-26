@@ -6195,7 +6195,7 @@
         font-size: 8px;
       }
 
-      .hero-diagnosis-menu .beauty-collab .gift-fan-collab-badge {
+      .hero-collab-diagnosis-menu .beauty-collab .gift-fan-collab-badge {
         top: calc(100% + 4px);
         bottom: auto;
       }
@@ -7071,7 +7071,7 @@
     }
 
     .hero-collab-diagnosis-menu::before {
-      content: "♡  コラボ診断  ♡";
+      content: "♡  コラボ診断メニュー  ♡";
       position: absolute;
       top: 0;
       left: 50%;
@@ -7124,9 +7124,10 @@
       flex: 0 0 auto;
       flex-wrap: nowrap !important;
       align-items: flex-end !important;
+      justify-content: center !important;
       gap: 14px !important;
-      width: max-content;
-      min-width: max-content;
+      width: 100%;
+      min-width: 100%;
       will-change: transform;
       animation: heroDiagnosisScroll var(--hero-diagnosis-scroll-duration) linear infinite;
       animation-play-state: paused;
@@ -7138,14 +7139,14 @@
     }
 
     .hero-diagnosis-menu.is-scroll-ready .hero-diagnosis-track {
-      width: max-content !important;
-      min-width: max-content !important;
-      max-width: none !important;
-      justify-content: flex-start !important;
+      width: 100% !important;
+      min-width: 100% !important;
+      max-width: 100% !important;
+      justify-content: center !important;
       gap: 14px !important;
-      animation: heroDiagnosisScroll var(--hero-diagnosis-scroll-duration) linear infinite !important;
-      animation-play-state: running;
-      will-change: transform;
+      animation: none !important;
+      transform: none !important;
+      will-change: auto;
     }
 
     @keyframes heroDiagnosisScroll {
@@ -7297,12 +7298,12 @@
       overflow: visible !important;
     }
 
-    .hero-diagnosis-menu .gift-fan-diagnosis-action.beauty-collab {
+    .hero-collab-diagnosis-menu .gift-fan-diagnosis-action.beauty-collab {
       overflow: visible !important;
     }
 
-    .hero-diagnosis-menu .beauty-collab .gift-fan-person-badge,
-    .hero-diagnosis-menu .beauty-collab .gift-fan-collab-badge {
+    .hero-collab-diagnosis-menu .beauty-collab .gift-fan-person-badge,
+    .hero-collab-diagnosis-menu .beauty-collab .gift-fan-collab-badge {
       position: absolute !important;
       left: 50% !important;
       z-index: 6 !important;
@@ -7310,14 +7311,50 @@
       pointer-events: none !important;
     }
 
-    .hero-diagnosis-menu .beauty-collab .gift-fan-person-badge {
+    .hero-collab-diagnosis-menu .beauty-collab .gift-fan-person-badge {
       top: auto !important;
       bottom: calc(100% + 4px) !important;
     }
 
-    .hero-diagnosis-menu .beauty-collab .gift-fan-collab-badge {
+    .hero-collab-diagnosis-menu .beauty-collab .gift-fan-collab-badge {
       top: calc(100% + 4px) !important;
       bottom: auto !important;
+    }
+
+    .hero-collab-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="blank-1"] {
+      border-color: rgba(255, 116, 174, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 218, 234, 0.76), rgba(255, 129, 184, 0.34)) !important;
+      color: #8a2555 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(255, 117, 178, 0.2) !important;
+    }
+
+    .hero-collab-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="blank-2"] {
+      border-color: rgba(73, 184, 124, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(210, 244, 224, 0.76), rgba(78, 200, 132, 0.34)) !important;
+      color: #176b3d !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(73, 184, 124, 0.18) !important;
+    }
+
+    .hero-collab-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="blank-3"] {
+      border-color: rgba(80, 154, 255, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(206, 230, 255, 0.74), rgba(72, 148, 255, 0.32)) !important;
+      color: #174f9a !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(80, 154, 255, 0.18) !important;
+    }
+
+    .hero-collab-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item^="blank"] .footer-btn-icon {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
     }
 
     .hero-collab-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="request"] {
@@ -7410,9 +7447,10 @@
 
       .hero-diagnosis-menu .hero-diagnosis-track {
         align-items: flex-start !important;
+        justify-content: center !important;
         gap: 7px !important;
-        padding-left: 10px !important;
-        padding-right: 10px !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
       }
 
       .hero-diagnosis-menu.is-scroll-ready .hero-diagnosis-track {
@@ -7440,11 +7478,11 @@
         font-size: 8px;
       }
 
-      .hero-diagnosis-menu .gift-fan-diagnosis-action.beauty-collab {
+      .hero-collab-diagnosis-menu .gift-fan-diagnosis-action.beauty-collab {
         overflow: visible !important;
       }
 
-      .hero-diagnosis-menu .beauty-collab .gift-fan-person-badge {
+      .hero-collab-diagnosis-menu .beauty-collab .gift-fan-person-badge {
         position: absolute !important;
         top: auto !important;
         bottom: calc(100% + 4px) !important;
@@ -7836,18 +7874,27 @@
             </div>
           </div>
           <div class="hero-diagnosis-menu">
-            <button class="hero-diagnosis-all-toggle" id="heroDiagnosisAllToggle" type="button" aria-expanded="false" aria-controls="heroDiagnosisActions">すべての診断</button>
             <div class="gift-fan-diagnosis-actions" id="heroDiagnosisActions" aria-hidden="false">
               <div class="hero-diagnosis-track">
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16school/index.html" data-diagnosis-item="school"><span class="footer-btn-icon" data-icon="school" aria-hidden="true"></span><span>学校</span></a>
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16love/index.html" data-diagnosis-item="love"><span class="footer-btn-icon" data-icon="cloud" aria-hidden="true"></span><span>メンヘラ</span></a>
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16stan/index.html" data-diagnosis-item="oshi"><span class="footer-btn-icon" data-icon="star" aria-hidden="true"></span><span>推し</span></a>
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16renai/index.html" data-diagnosis-item="romance"><span class="footer-btn-icon" data-icon="heart" aria-hidden="true"></span><span>恋愛</span></a>
-                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" type="button" data-diagnosis-item="blank-1" aria-label="ビューティー"><span class="gift-fan-person-badge">日向葵衣さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-mirror" aria-hidden="true"></span><span>ビューティー</span></button>
-                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" type="button" data-diagnosis-item="blank-2" aria-label="beauty mood"><span class="gift-fan-person-badge">三宅裕子さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-compact" aria-hidden="true"></span><span>beauty<br>mood</span></button>
-                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" type="button" data-diagnosis-item="blank-3" aria-label="水彩ストーリー"><span class="gift-fan-person-badge">Lucaさん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="watercolor-story" aria-hidden="true"></span><span>水彩<br>ストーリー</span></button>
               </div>
             </div>
+          </div>
+          <div class="hero-collab-diagnosis-menu">
+            <ul class="hero-collab-diagnosis-list" aria-label="コラボ診断メニュー">
+              <li>
+                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" type="button" data-diagnosis-item="blank-1" aria-label="ビューティー診断"><span class="gift-fan-person-badge">日向葵衣さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-mirror" aria-hidden="true"></span><span>ビューティー<br>診断</span></button>
+              </li>
+              <li>
+                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" href="miyake-yuko/index.html" data-diagnosis-item="blank-2" aria-label="beauty mood 診断"><span class="gift-fan-person-badge">三宅裕子さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-compact" aria-hidden="true"></span><span>beauty mood<br>診断</span></a>
+              </li>
+              <li>
+                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" href="imagen-luca/index.html" data-diagnosis-item="blank-3" aria-label="水彩ストーリー診断"><span class="gift-fan-person-badge">Lucaさん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="watercolor-story" aria-hidden="true"></span><span>水彩ストーリー<br>診断</span></a>
+              </li>
+            </ul>
           </div>
         </div>
       </section>
