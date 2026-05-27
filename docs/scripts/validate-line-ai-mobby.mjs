@@ -361,9 +361,11 @@ async function callGeminiProviderFlow() {
       assert(options?.headers?.["x-goog-api-key"] === "test-gemini-key", "Gemini request should include API key header");
       const payload = JSON.parse(options.body);
       const systemPrompt = payload.system_instruction.parts[0].text;
-      assert(systemPrompt.includes("優しいモビー"), "Gemini prompt should use unified Mobby persona");
+      assert(systemPrompt.includes("MobbyのLINE AI「モビー」"), "Gemini prompt should use unified Mobby persona name");
+      assert(!systemPrompt.includes("優しいモビー"), "Gemini prompt should not rename Mobby as kind Mobby");
       assert(systemPrompt.includes("テスト恋愛モビー"), "Gemini request should include diagnosis as background context");
       assert(systemPrompt.includes("診断タイプごとに人格や口調を変えない"), "Gemini prompt should not vary persona by diagnosis");
+      assert(systemPrompt.includes("絵文字を自然に1〜2個使う"), "Gemini prompt should allow a few emoji");
       assert(systemPrompt.includes("自然で話しやすい会話"), "Gemini prompt should include conversational tone rule");
       assert(systemPrompt.includes("AIっぽい定型文や説明口調を避ける"), "Gemini prompt should avoid formulaic AI tone");
       assert(!systemPrompt.includes("共感 → 状況整理 → 小さい提案"), "Gemini prompt should not force a formulaic reply structure");
@@ -404,6 +406,7 @@ async function callGeminiProviderFlow() {
     });
     assert(!fallbackReply.includes("テスト恋愛モビー"), "Gemini fallback should not foreground diagnosis result");
     assert(fallbackReply.includes("LINE文面を考えたい"), "Gemini failure should fall back to mock reply");
+    assert(fallbackReply.includes("🙂"), "Gemini fallback should include a small emoji");
   } finally {
     globalThis.fetch = originalFetch;
     process.env.AI_PROVIDER = originalProvider;

@@ -51,7 +51,7 @@ function buildFollowPrompt() {
 }
 
 function buildLinkedPrompt() {
-  return "優しいモビー、準備できたよ。悩みでも愚痴でも、短く投げてくれたらちゃんと拾うね。";
+  return "モビー、準備できたよ🙂 悩みでも愚痴でも、短く投げてくれたらちゃんと拾うね。";
 }
 
 async function linkTokenToUser(event, userKey, tokenText) {

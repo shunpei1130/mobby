@@ -34,7 +34,7 @@ function historyToContents(history, message) {
 
 function loveGuardrail(message) {
   if (/追いLINE|監視|既読|位置|SNS|不安|依存|束縛/.test(message)) {
-    return "それ、気になり始めると頭の中で通知音が鳴り続けるやつだよね。今は追い確認より一回スマホ置こ。送るなら責めない一言だけにしよ。";
+    return "それ、気になり始めると頭の中で通知音が鳴り続けるやつだよね。今は追い確認より一回スマホ置こ📱 送るなら責めない一言だけにしよ。";
   }
   return "";
 }
@@ -111,5 +111,5 @@ export function generateMockReply({ message }) {
   const guarded = loveGuardrail(String(message || ""));
   if (guarded) return guarded;
 
-  return `${quotedMessage}短いけど、ちょっと気持ち乗ってそう。急いで答え出さなくていいから、まず今いちばん引っかかってるところだけ聞かせて。`;
+  return `${quotedMessage}短いけど、ちょっと気持ち乗ってそう。急いで答え出さなくていいから、まず今いちばん引っかかってるところだけ聞かせて🙂`;
 }
