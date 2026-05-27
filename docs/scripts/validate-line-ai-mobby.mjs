@@ -359,7 +359,11 @@ async function callGeminiProviderFlow() {
       assert(String(url).includes("gemini-2.5-flash-lite:generateContent"), "Gemini URL should include selected model");
       assert(options?.headers?.["x-goog-api-key"] === "test-gemini-key", "Gemini request should include API key header");
       const payload = JSON.parse(options.body);
-      assert(payload.system_instruction.parts[0].text.includes("テスト恋愛モビー"), "Gemini request should include diagnosis prompt");
+      const systemPrompt = payload.system_instruction.parts[0].text;
+      assert(systemPrompt.includes("テスト恋愛モビー"), "Gemini request should include diagnosis prompt");
+      assert(systemPrompt.includes("自然で話しやすい会話"), "Gemini prompt should include conversational tone rule");
+      assert(systemPrompt.includes("AIっぽい定型文や説明口調を避ける"), "Gemini prompt should avoid formulaic AI tone");
+      assert(!systemPrompt.includes("共感 → 状況整理 → 小さい提案"), "Gemini prompt should not force a formulaic reply structure");
       assert(payload.contents.at(-1).parts[0].text === "LINE文面を考えたい", "Gemini request should include user message");
       return {
         ok: true,

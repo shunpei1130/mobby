@@ -1,4 +1,4 @@
-import { buildSystemPrompt, getSourceMeta } from "./_prompts.js";
+import { buildSystemPrompt } from "./_prompts.js";
 
 const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash-lite";
 const GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models";
@@ -34,7 +34,7 @@ function historyToContents(history, message) {
 
 function loveGuardrail(message, user) {
   if (/追いLINE|監視|既読|位置|SNS|不安|依存|束縛/.test(message)) {
-    return `「${user?.resultName || "あなたの結果"}」のモビーとしては、不安が強い時ほど確認を増やすより一度呼吸を置こう。責めない短文か、今日は送らない選択が安全だよ。`;
+    return `それ、気になり始めると頭の中で通知音が鳴り続けるやつだよね。「${user?.resultName || "あなたの結果"}」のモビー的には、今は追い確認より一回スマホ置こ。送るなら責めない一言だけ。`;
   }
   return "";
 }
@@ -105,8 +105,6 @@ export async function generateGeminiReply({ user, message, history }) {
 }
 
 export function generateMockReply({ user, message }) {
-  const meta = getSourceMeta(user?.source);
-  const sourceLabel = user?.sourceLabel || meta?.label || "Mobby診断";
   const resultName = user?.resultName || "あなたの結果";
   const userMessage = compact(message);
 
@@ -116,14 +114,14 @@ export function generateMockReply({ user, message }) {
   }
 
   if (user?.source === "16school") {
-    return `${sourceLabel}の「${resultName}」っぽく見ると、「${userMessage}」は一人で決めなくて大丈夫。まず味方になりそうな人を1人だけ思い浮かべてみよ。`;
+    return `「${userMessage}」ね。さらっと言ってるけど、ちょっと引っかかってるやつかも。「${resultName}」のモビー的には、まずどの場面が一番モヤったか聞きたい。`;
   }
   if (user?.source === "16stan") {
-    return `${sourceLabel}の「${resultName}」なら、その熱量は大事にしてOK。「${userMessage}」は、推し活を続ける体力も一緒に守る形で考えよ。`;
+    return `「${userMessage}」かあ。好きが強いほど心も忙しくなるよね。「${resultName}」のモビー的には、今は嬉しい寄り？それとも疲れ寄り？`;
   }
   if (user?.source === "16renai") {
-    return `${sourceLabel}の「${resultName}」としては、「${userMessage}」は急いで答えを出さなくていいかも。相手の反応より、自分の安心を先に整えよ。`;
+    return `「${userMessage}」って、短いけどけっこう気持ち乗ってそう。「${resultName}」のモビー的には、急いで結論出さなくていいやつ。まず何が一番気になってる？`;
   }
 
-  return `${sourceLabel}の「${resultName}」の視点で言うと、「${userMessage}」はちゃんと大事なサイン。小さく整理して、一歩ずつで大丈夫。`;
+  return `「${userMessage}」ね。そこ気になるの、わりと自然だと思う。「${resultName}」のモビー的には、まず今の気持ちをもうちょい聞かせてほしい。`;
 }

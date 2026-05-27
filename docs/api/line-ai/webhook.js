@@ -51,7 +51,7 @@ function buildFollowPrompt() {
 }
 
 function buildLinkedPrompt(user) {
-  return `${user.resultName}のモビーとして登録できたよ。AIモビーは専門家ではないけれど、今日の悩みを短く一緒に整理するね。`;
+  return `${user.resultName}のモビー、準備できたよ。悩みでも愚痴でも、短く投げてくれたらこっちでちゃんと拾うね。`;
 }
 
 async function linkTokenToUser(event, userKey, tokenText) {
