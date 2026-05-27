@@ -42,36 +42,69 @@ async function reply(event, text) {
   return replyLineMessage(event.replyToken, [toLineTextMessage(text)]);
 }
 
-function buildRegisterPrompt() {
-  return "まだあなた専用モビーの準備ができていないみたい。診断結果画面から「LINEでモビーを追加する」を押して、合言葉を送ってね。";
-}
-
-function buildFollowPrompt() {
-  return "友だち追加ありがとう。診断結果画面で発行した合言葉を、このトークに送ってね。";
+function buildGreetingPrompt() {
+  return "モビーだよ！なんでも話してね！";
 }
 
 function buildLinkedPrompt() {
-  return "モビー、準備できたよ🙂 悩みでも愚痴でも、短く投げてくれたらちゃんと拾うね。";
+  return buildGreetingPrompt();
+}
+
+function buildDefaultUser(userKey) {
+  return {
+    version: 1,
+    userKey,
+    source: "line",
+    sourceLabel: "LINE直接",
+    resultId: "",
+    resultName: "",
+    resultSummary: "",
+    traits: [],
+    registeredAt: new Date().toISOString(),
+    lastMessageAt: "",
+    messageCountDate: "",
+    messageCountToday: 0
+  };
+}
+
+async function ensureDefaultUser(userKey) {
+  const existing = await loadUser(userKey);
+  if (existing) return existing;
+
+  const user = buildDefaultUser(userKey);
+  await saveUser(userKey, user);
+  await saveConversation(userKey, {
+    version: 1,
+    userKey,
+    messages: [{ role: "assistant", text: buildGreetingPrompt(), at: new Date().toISOString() }],
+    summary: "",
+    dailyCountDate: "",
+    dailyCount: 0
+  });
+  return user;
 }
 
 async function linkTokenToUser(event, userKey, tokenText) {
   const token = await loadToken(tokenText);
   if (!token) {
-    await reply(event, "その合言葉は見つからなかったよ。診断結果画面からもう一度発行して送ってね。");
-    return;
+    await ensureDefaultUser(userKey);
+    await reply(event, buildGreetingPrompt());
+    return true;
   }
 
   const now = Date.now();
   const expiresAt = new Date(token.expiresAt || 0).getTime();
   if (!expiresAt || expiresAt <= now) {
     await saveToken(tokenText, { ...token, status: "expired" });
-    await reply(event, "その合言葉は期限切れみたい。診断結果画面からもう一度発行して送ってね。");
-    return;
+    await ensureDefaultUser(userKey);
+    await reply(event, buildGreetingPrompt());
+    return true;
   }
 
   if (token.status === "used") {
-    await reply(event, "その合言葉はすでに使われています。新しく連携する場合は、診断結果画面からもう一度発行してね。");
-    return;
+    await ensureDefaultUser(userKey);
+    await reply(event, buildGreetingPrompt());
+    return true;
   }
 
   const diagnosis = token.diagnosis || {};
@@ -107,6 +140,7 @@ async function linkTokenToUser(event, userKey, tokenText) {
   });
 
   await reply(event, buildLinkedPrompt());
+  return true;
 }
 
 async function handleLinkedMessage(event, userKey, user, text) {
@@ -154,18 +188,18 @@ async function handleTextEvent(event) {
     return;
   }
 
-  const user = await loadUser(userKey);
-  if (!user) {
-    await reply(event, buildRegisterPrompt());
-    return;
-  }
+  const user = await ensureDefaultUser(userKey);
 
   await handleLinkedMessage(event, userKey, user, text);
 }
 
 async function handleEvent(event) {
   if (event?.type === "follow") {
-    await reply(event, buildFollowPrompt());
+    const lineUserId = event?.source?.userId;
+    if (lineUserId) {
+      await ensureDefaultUser(userKeyFromLineId(lineUserId));
+    }
+    await reply(event, buildGreetingPrompt());
     return;
   }
 

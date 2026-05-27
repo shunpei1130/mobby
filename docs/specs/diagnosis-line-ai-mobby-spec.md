@@ -3,20 +3,20 @@
 **対象ブランチ:** `feature/line-add-from-update-site`  
 **作成日:** 2026-05-23  
 **対象サイト:** Mobby診断群  
-**対象機能:** 診断結果画面からLINE追加し、診断結果に応じたAIモビーと会話できる導線
+**対象機能:** 診断結果画面からLINE追加し、共通のAIモビーと会話できる導線
 
 ---
 
 ## 1. 結論
 
-MVPでは、**1つのLINE公式アカウント + 1つのLINE Messaging API webhook + ユーザーごとの診断結果メモリ + 診断別プロンプト**で実装する。
+MVPでは、**1つのLINE公式アカウント + 1つのLINE Messaging API webhook + 共通のAIモビー人格**で実装する。
 
-ユーザーごとにLINEアカウントを分けるのではなく、同じLINE公式アカウントの中で、以下をユーザー単位で切り替える。
+ユーザーごとにLINEアカウントを分けず、同じLINE公式アカウントの中で同じ「モビー」が返信する。
+診断結果は必要な時だけ背景情報として扱い、人格や口調の切り替えには使わない。
 
 - どの診断から来たか
 - どの診断結果タイプか
-- その結果タイプの性格・弱点・刺さる言葉
-- どのAIモビー人格で返信するか
+- その結果タイプの要約や特徴
 
 初期テストフェーズでは、AIは以下の順で導入する。
 
@@ -35,17 +35,15 @@ LINE追加CTA
   ↓
 /api/line-ai/issue-link-token
   ↓
-一時合言葉コード発行
+LINE追加URL取得
   ↓
 ユーザーがLINE公式アカウントを追加
   ↓
-ユーザーが合言葉を送信
-  ↓
 /api/line-ai/webhook
   ↓
-LINE userId と診断結果を紐づけ
+LINE userId を匿名userKey化
   ↓
-以後、診断結果別AIモビーとして返信
+以後、共通のモビーとして返信
 ```
 
 ---
@@ -54,12 +52,12 @@ LINE userId と診断結果を紐づけ
 
 対象は以下4つ。
 
-| URL | 診断名 | LINE上の専門AIモビー |
+| URL | 診断名 | LINE上のAIモビー |
 |---|---|---|
-| `/16school/` | 学校モビー診断 | 学校生活・友人関係・自己理解に寄り添うAIモビー |
-| `/16stan/` | 推し活モビー診断 | 推し活・熱量管理・界隈ストレスに寄り添うAIモビー |
-| `/16love/` | メンヘラモビー診断 | 恋愛不安・依存・感情整理に寄り添うAIモビー |
-| `/16renai/` | 恋愛モビー診断 | 恋愛相談・相性・LINE文面相談に寄り添うAIモビー |
+| `/16school/` | 学校モビー診断 | 共通のモビー |
+| `/16stan/` | 推し活モビー診断 | 共通のモビー |
+| `/16love/` | メンヘラモビー診断 | 共通のモビー |
+| `/16renai/` | 恋愛モビー診断 | 共通のモビー |
 
 ---
 
@@ -90,28 +88,27 @@ LINE userId と診断結果を紐づけ
   ↓
 結果タイプ名・メインビジュアル表示
   ↓
-LINE追加CTA「あなた専用のモビーと話そう！」
+LINE追加CTA「モビーと話そう！」
   ↓
 詳しい診断結果本文
   ↓
 シェア / 再診断 / 他導線
 ```
 
-ユーザー要望の「診断結果画面の最初」は、完全な最上部ではなく、**結果が何かを見せた直後**に置く。理由は、LINE追加の意味が「この結果に基づくAIモビー」だから。
+ユーザー要望の「診断結果画面の最初」は、完全な最上部ではなく、**結果が何かを見せた直後**に置く。
 
 ### 4.2 CTA文言
 
 共通見出し:
 
 ```text
-あなただけのモビーと話そう！
+モビーと話そう！
 ```
 
 共通説明:
 
 ```text
-この診断結果をもとに、あなた専用のAIモビーがLINEで返事します。
-今日の悩み、モヤモヤ、推し活、恋愛、学校のことをそのまま送ってOK。
+LINEで追加したら、そのまま話せます。
 ```
 
 ボタン:
@@ -164,13 +161,11 @@ LINEでモビーを追加する
 1. ユーザーが診断を完了する
 2. 診断結果画面にLINE追加CTAが表示される
 3. ユーザーが「LINEでモビーを追加する」を押す
-4. フロントが診断結果データを /api/line-ai/issue-link-token に送る
-5. APIが一時合言葉コードを発行する
-6. 画面にLINE追加URLと合言葉コードを表示する
-7. ユーザーがLINE公式アカウントを友だち追加する
-8. ユーザーがLINE上で合言葉コードを送る
-9. webhookがLINE userIdと診断結果を紐づける
-10. AIモビーが初回挨拶を返信する
+4. フロントが /api/line-ai/issue-link-token からLINE追加URLを取得する
+5. 画面がLINE追加URLを開く
+6. ユーザーがLINE公式アカウントを友だち追加する
+7. AIモビーが初回挨拶を返信する
+8. 以後、ユーザーは合言葉なしでそのまま話せる
 ```
 
 ### 5.2 登録後フロー
@@ -178,8 +173,8 @@ LINEでモビーを追加する
 ```text
 1. ユーザーがLINEでメッセージを送る
 2. webhookがLINE userIdを受け取る
-3. 保存済みの診断結果・AIモビー人格を取得する
-4. 会話履歴と診断結果をAIプロンプトに入れる
+3. 未登録なら匿名userKeyの会話状態を作る
+4. 会話履歴をAIプロンプトに入れる
 5. AI APIを呼ぶ
 6. 返信をLINE reply messageで返す
 7. 会話履歴を最小限保存する
@@ -187,28 +182,30 @@ LINEでモビーを追加する
 
 ### 5.3 未登録ユーザーがLINEに送った場合
 
-ユーザーが合言葉を送っていない場合は、以下を返す。
+合言葉なしでそのまま会話を開始する。
+初回挨拶は以下にする。
 
 ```text
-まだあなた専用モビーの準備ができてないみたい。
-診断結果画面から「LINEでモビーを追加する」を押して、合言葉を送ってね。
+モビーだよ！なんでも話してね！
 ```
 
 ---
 
-## 6. なぜ合言葉コード方式にするか
+## 6. 合言葉コードを不要にする理由
 
-現在の診断結果データは主にブラウザ側にある。LINE公式アカウントを友だち追加しただけでは、Webページの診断結果とLINE userIdを直接紐づけられない。
+モビーの人格を診断別に切り替えない方針になったため、LINE会話開始に診断結果との厳密な紐づけは不要になった。
 
-そのためMVPでは、一時コードを使って安全に紐づける。
+そのため、MVPでは合言葉入力を求めない。
+LINE userIdはrawのまま保存せず、従来通り `MOBBY_LINE_AI_SECRET` で匿名userKey化して会話状態だけ保存する。
 
 ```text
-Web診断結果 → 一時コード
-LINE userId → 一時コード送信
-一時コード一致 → userIdと診断結果を保存
+LINE userId → 匿名userKey化
+匿名userKey → 会話状態保存
+診断結果 → 必須ではない背景情報
 ```
 
-将来的にはLIFFを使えば、LINE内WebアプリでユーザーID取得やログイン連携ができる。ただし初期実装ではLIFF準備コストが増えるため、MVPは合言葉コード方式を採用する。
+旧バージョンの合言葉を送ってきたユーザー向けには、互換処理として受け付けてもよい。
+ただし新規導線では合言葉を発行・表示しない。
 
 ---
 
@@ -223,7 +220,7 @@ LINE userId → 一時コード送信
 ```text
 AIモビー
 Mobby AI
-あなた専用モビー
+モビー
 ```
 
 ### 7.2 なぜ1アカウントにするか
@@ -289,9 +286,7 @@ window.MobbyLineAiCTA.render({
 
 ```js
 const res = await fetch('/api/line-ai/issue-link-token', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ diagnosis: lineAiDiagnosisPayload })
+  method: 'GET'
 });
 
 const data = await res.json();
@@ -302,23 +297,21 @@ const data = await res.json();
 #### 初期状態
 
 ```text
-あなただけのモビーと話そう！
+モビーと話そう！
 [LINEでモビーを追加する]
 ```
 
-#### トークン発行後
+#### LINE URL取得後
 
 ```text
-LINE追加後、最初にこの合言葉を送ってね
-MB-8K3X2Q
-[合言葉をコピー]
+LINEを開いて友だち追加したら、そのまま話しかけてね
 [LINEを開く]
 ```
 
 #### エラー時
 
 ```text
-今だけLINE連携の準備に失敗しました。
+今だけLINEを開けませんでした。
 時間を置いてもう一度試してね。
 ```
 
@@ -356,31 +349,18 @@ MOBBY_LINE_AI_SECRET=
 BLOB_READ_WRITE_TOKEN=
 ```
 
-### 9.3 `POST /api/line-ai/issue-link-token`
+### 9.3 `GET /api/line-ai/issue-link-token`
 
 #### 役割
 
-- 診断結果payloadを受け取る
-- 入力を検証する
-- 一時合言葉コードを発行する
-- ストレージに保存する
-- LINE追加URLと合言葉を返す
+- LINE追加URLを返す
+- 合言葉コードは発行しない
+- 旧フロント互換のためPOSTでも同じレスポンスを返してよい
 
 #### リクエスト
 
-```json
-{
-  "diagnosis": {
-    "source": "16school",
-    "sourceLabel": "学校モビー診断",
-    "resultId": "festival_mobby",
-    "resultName": "文化祭モビー",
-    "resultSummary": "場を明るくする一方で、気を遣いすぎるタイプ。",
-    "traits": ["盛り上げ役", "空気を読む", "疲れを隠す"],
-    "pagePath": "/16school/",
-    "createdAt": "2026-05-23T00:00:00.000Z"
-  }
-}
+```text
+なし
 ```
 
 #### レスポンス
@@ -388,21 +368,16 @@ BLOB_READ_WRITE_TOKEN=
 ```json
 {
   "ok": true,
-  "token": "MB-8K3X2Q",
-  "expiresAt": "2026-05-23T00:30:00.000Z",
   "lineAddUrl": "https://lin.ee/xxxxxxxx",
-  "firstMessageText": "モビー登録 MB-8K3X2Q"
+  "firstMessageText": "モビーだよ！なんでも話してね！"
 }
 ```
 
-#### トークン仕様
+#### 旧トークン互換
 
 ```text
-形式: MB-XXXXXX
-文字: 英大文字 + 数字
-有効期限: 30分
-利用回数: 1回
-保存状態: pending / used / expired
+旧導線で発行済みの MB-XXXXXX が送られた場合だけ互換処理する。
+新規発行・表示はしない。
 ```
 
 ### 9.4 `POST /api/line-ai/webhook`
@@ -412,31 +387,34 @@ BLOB_READ_WRITE_TOKEN=
 - LINE webhookを受ける
 - `x-line-signature` を検証する
 - follow / message eventを処理する
-- 合言葉コードを検出する
-- LINE userIdと診断結果を紐づける
+- LINE userIdを匿名userKey化する
+- 未登録ユーザーでもそのまま会話状態を作る
 - AI返信を生成してreply messageで返す
 
 #### 処理分岐
 
 ```text
 follow event:
-  友だち追加ありがとう + 合言葉送信案内
+  モビーだよ！なんでも話してね！
 
-message event + 合言葉あり:
-  トークン検証
+message event + 旧合言葉あり:
+  互換用トークン検証
   userKey作成
-  診断結果保存
+  診断結果があれば保存
   初回挨拶返信
 
 message event + 登録済み:
-  診断結果取得
+  会話状態取得
   rate limit確認
   safety確認
   AI生成
   reply message送信
 
 message event + 未登録:
-  診断結果画面から登録してほしい旨を返信
+  userKey作成
+  会話状態作成
+  AI生成
+  reply message送信
 ```
 
 ### 9.5 `GET /api/line-ai/health`
@@ -467,6 +445,8 @@ line-ai/users/{userKey}.json
 line-ai/conversations/{userKey}.json
 line-ai/logs/{yyyymmdd}/{eventId}.json
 ```
+
+`line-ai/tokens/` は旧合言葉互換用。新規導線では作成しない。
 
 ### 10.3 LINE userIdの扱い
 
@@ -963,26 +943,26 @@ export function detectSafetyRisk(text) {
 | F-002 | `/16stan/` の結果画面を表示 | 推し活用文言でCTAが表示される |
 | F-003 | `/16love/` の結果画面を表示 | 依存を煽らない文言でCTAが表示される |
 | F-004 | `/16renai/` の結果画面を表示 | 恋愛相談用文言でCTAが表示される |
-| F-005 | CTA押下 | token発行APIが呼ばれる |
+| F-005 | CTA押下 | LINE追加URL取得APIが呼ばれる |
 | F-006 | API失敗 | エラー文言が表示される |
 
 ### 17.2 LINE連携
 
 | No | ケース | 期待結果 |
 |---|---|---|
-| L-001 | follow event | 合言葉案内が返る |
-| L-002 | 有効な合言葉 | userKeyと診断結果が保存される |
-| L-003 | 期限切れ合言葉 | 再発行案内が返る |
-| L-004 | 使用済み合言葉 | 再利用不可になる |
-| L-005 | 未登録で通常メッセージ | 診断画面から登録案内が返る |
-| L-006 | 登録済みで通常メッセージ | 診断別AI返信が返る |
+| L-001 | follow event | 「モビーだよ！なんでも話してね！」が返る |
+| L-002 | 未登録で通常メッセージ | userKeyが作成されAI返信が返る |
+| L-003 | 旧有効合言葉 | userKeyと診断結果が保存される |
+| L-004 | 旧期限切れ合言葉 | default userが作成され挨拶が返る |
+| L-005 | 旧使用済み合言葉 | default userが作成され挨拶が返る |
+| L-006 | 登録済みで通常メッセージ | 共通モビーのAI返信が返る |
 
 ### 17.3 AI返信
 
 | No | ケース | 期待結果 |
 |---|---|---|
-| A-001 | 学校相談 | 学校モビー口調になる |
-| A-002 | 推し活相談 | 推し活モビー口調になる |
+| A-001 | 学校相談 | 共通モビーとしてやさしく返る |
+| A-002 | 推し活相談 | 共通モビーとしてやさしく返る |
 | A-003 | 恋愛不安 | 依存を煽らず落ち着かせる |
 | A-004 | 恋愛文面相談 | 返信文案を出す |
 | A-005 | 自傷示唆 | 安全テンプレートに切り替わる |
@@ -1020,7 +1000,7 @@ export function detectSafetyRisk(text) {
 
 - `_ai.js` 実装
 - Gemini 2.5 Flash-Lite接続
-- 診断別prompt実装
+- 共通モビーprompt実装
 - fallback実装
 
 ### Phase 4: テスト
@@ -1028,8 +1008,8 @@ export function detectSafetyRisk(text) {
 - Vercel previewでWebhook疎通
 - LINE Developers ConsoleでWebhook Verify
 - 実機で友だち追加
-- 合言葉登録
-- 4診断それぞれでAI人格確認
+- 合言葉なしで会話開始
+- 4診断導線で同じモビーとして返信することを確認
 
 ### Phase 5: 公開
 
@@ -1060,7 +1040,7 @@ export function detectSafetyRisk(text) {
 
 ### 20.1 LIFF連携
 
-合言葉コードをなくし、診断結果画面からLINE内Webアプリへ遷移して自動連携する。
+診断結果メモリが必要になった場合は、LINE内Webアプリへ遷移して自動連携する。
 
 ### 20.2 課金
 

@@ -26,8 +26,7 @@
   line-height: 1.8;
 }
 
-.line-ai-mobby-cta__actions,
-.line-ai-mobby-cta__token-actions {
+.line-ai-mobby-cta__actions {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -35,7 +34,6 @@
 }
 
 .line-ai-mobby-cta__button,
-.line-ai-mobby-cta__copy-button,
 .line-ai-mobby-cta__line-button {
   appearance: none;
   display: inline-flex;
@@ -60,14 +58,7 @@
   box-shadow: 0 12px 24px rgba(6, 199, 85, 0.24);
 }
 
-.line-ai-mobby-cta__copy-button {
-  border: 1px solid rgba(6, 199, 85, 0.28);
-  background: rgba(255, 255, 255, 0.85);
-  color: #143222;
-}
-
-.line-ai-mobby-cta__button:disabled,
-.line-ai-mobby-cta__copy-button:disabled {
+.line-ai-mobby-cta__button:disabled {
   opacity: 0.64;
   cursor: wait;
 }
@@ -83,35 +74,6 @@
   color: #53616f;
   font-size: 13px;
   line-height: 1.7;
-}
-
-.line-ai-mobby-cta__token {
-  display: inline-flex;
-  justify-content: center;
-  justify-self: center;
-  min-width: 164px;
-  padding: 10px 16px;
-  border: 1px dashed rgba(6, 199, 85, 0.45);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.82);
-  color: #143222;
-  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
-  font-size: 24px;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-}
-
-.line-ai-mobby-cta__first-message {
-  display: block;
-  justify-self: center;
-  max-width: 100%;
-  padding: 9px 12px;
-  border-radius: 10px;
-  background: rgba(6, 199, 85, 0.09);
-  color: #143222;
-  font-size: 13px;
-  line-height: 1.6;
-  overflow-wrap: anywhere;
 }
 
 .line-ai-mobby-cta__status {
@@ -132,7 +94,6 @@
   }
 
   .line-ai-mobby-cta__button,
-  .line-ai-mobby-cta__copy-button,
   .line-ai-mobby-cta__line-button {
     width: 100%;
   }

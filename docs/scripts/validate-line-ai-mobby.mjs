@@ -80,22 +80,23 @@ async function callIssueToken() {
     }
   }, res);
   assert(res.statusCode === 200, "valid token request should return 200");
-  assert(/^MB-[A-Z0-9]{6}$/.test(res.body?.token || ""), "token should match MB-XXXXXX");
-  assert(res.body?.firstMessageText === `モビー登録 ${res.body.token}`, "firstMessageText should include token");
-  return res.body.token;
+  assert(res.body?.lineAddUrl === "https://lin.ee/test", "LINE add info should include LINE URL");
+  assert(res.body?.firstMessageText === "モビーだよ！なんでも話してね！", "LINE add info should include greeting");
+  assert(!res.body?.token, "LINE add info should not issue a passphrase token");
 }
 
-async function callInvalidIssueToken() {
+async function callIssueTokenIgnoresDiagnosis() {
   const res = createRes();
   await issueToken({
     method: "POST",
     headers: {},
     body: { diagnosis: { source: "invalid", resultName: "x", pagePath: "/invalid/" } }
   }, res);
-  assert(res.statusCode === 400, "invalid source should return 400");
+  assert(res.statusCode === 200, "LINE add info should not require diagnosis data");
+  assert(!res.body?.token, "invalid diagnosis should still not issue a passphrase token");
 }
 
-async function callWebhookFlow(token) {
+async function callWebhookFlow() {
   const raw = JSON.stringify({ events: [] });
   assert(verifyLineSignature(Buffer.from(raw), sign(raw), process.env.LINE_CHANNEL_SECRET), "signature helper should validate");
 
@@ -105,20 +106,17 @@ async function callWebhookFlow(token) {
 
   const lineUserId = "U_VALIDATE_LINE_USER";
   const userKey = makeUserKey(lineUserId);
-  const linkRes = createRes();
+  const followRes = createRes();
   await webhook(createWebhookReq({
     events: [{
-      type: "message",
-      replyToken: "reply-link",
-      source: { type: "user", userId: lineUserId },
-      message: { type: "text", id: "1", text: `モビー登録 ${token}` }
+      type: "follow",
+      replyToken: "reply-follow",
+      source: { type: "user", userId: "U_FOLLOW_USER" }
     }]
-  }), linkRes);
-  assert(linkRes.statusCode === 200, "valid token webhook should return 200");
-
-  const linkedUser = await loadUser(userKey);
-  assert(linkedUser?.resultName === "テストモビー", "linked user should store diagnosis result");
-  assert(JSON.stringify(linkedUser).includes(lineUserId) === false, "raw LINE userId should not be stored");
+  }), followRes);
+  assert(followRes.statusCode === 200, "follow webhook should return 200");
+  const followUser = await loadUser(makeUserKey("U_FOLLOW_USER"));
+  assert(followUser?.source === "line", "follow should create a default LINE user");
 
   const replyRes = createRes();
   await webhook(createWebhookReq({
@@ -126,12 +124,48 @@ async function callWebhookFlow(token) {
       type: "message",
       replyToken: "reply-normal",
       source: { type: "user", userId: lineUserId },
-      message: { type: "text", id: "2", text: "今日は少し相談したい" }
+      message: { type: "text", id: "1", text: "今日は少し相談したい" }
     }]
   }), replyRes);
+  assert(replyRes.statusCode === 200, "direct message without passphrase should return 200");
+  const linkedUser = await loadUser(userKey);
+  assert(linkedUser?.source === "line", "direct message should create a default LINE user");
+  assert(JSON.stringify(linkedUser).includes(lineUserId) === false, "raw LINE userId should not be stored");
   let conversation = await loadConversation(userKey);
   assert(!conversation.messages.at(-1).text.includes("テストモビー"), "mock reply should not foreground diagnosis result");
   assert(conversation.messages.at(-1).text.includes("今日は少し相談したい"), "mock reply should respond to user message");
+
+  await saveToken("MB-LINK01", {
+    version: 1,
+    token: "MB-LINK01",
+    status: "pending",
+    diagnosis: {
+      source: "16school",
+      sourceLabel: "学校モビー診断",
+      resultId: "TEST",
+      resultName: "テストモビー",
+      resultSummary: "テスト用の診断結果",
+      traits: ["明るい"]
+    },
+    createdAt: new Date().toISOString(),
+    expiresAt: new Date(Date.now() + 60_000).toISOString()
+  });
+  const legacyUserId = "U_LEGACY_TOKEN_USER";
+  const legacyUserKey = makeUserKey(legacyUserId);
+  const legacyTokenRes = createRes();
+  await webhook(createWebhookReq({
+    events: [{
+      type: "message",
+      replyToken: "reply-legacy-token",
+      source: { type: "user", userId: legacyUserId },
+      message: { type: "text", id: "2", text: "モビー登録 MB-LINK01" }
+    }]
+  }), legacyTokenRes);
+  assert(legacyTokenRes.statusCode === 200, "legacy token webhook should return 200");
+  const legacyUser = await loadUser(legacyUserKey);
+  assert(legacyUser?.resultName === "テストモビー", "legacy token should still store diagnosis result");
+  const legacyConversation = await loadConversation(legacyUserKey);
+  assert(legacyConversation.messages.at(-1).text === "モビーだよ！なんでも話してね！", "legacy token should return greeting");
 
   const crisisText = "\u3082\u3046\u7121\u7406\u3001\u6d88\u3048\u305f\u3044";
   assert(detectSafetyRisk(crisisText).hasRisk, "safety detector should catch crisis text");
@@ -141,7 +175,7 @@ async function callWebhookFlow(token) {
       type: "message",
       replyToken: "reply-safety",
       source: { type: "user", userId: lineUserId },
-      message: { type: "text", id: "3", text: crisisText }
+      message: { type: "text", id: "4", text: crisisText }
     }]
   }), safetyRes);
   conversation = await loadConversation(userKey);
@@ -159,7 +193,7 @@ async function callWebhookFlow(token) {
       type: "message",
       replyToken: "reply-rate",
       source: { type: "user", userId: lineUserId },
-      message: { type: "text", id: "4", text: "\u666e\u901a\u306e\u76f8\u8ac7\u3067\u3059" }
+      message: { type: "text", id: "5", text: "\u666e\u901a\u306e\u76f8\u8ac7\u3067\u3059" }
     }]
   }), rateRes);
   conversation = await loadConversation(userKey);
@@ -179,12 +213,14 @@ async function callWebhookFlow(token) {
       type: "message",
       replyToken: "reply-expired",
       source: { type: "user", userId: "U_EXPIRED_USER" },
-      message: { type: "text", id: "5", text: "MB-OLD123" }
+      message: { type: "text", id: "6", text: "MB-OLD123" }
     }]
   }), expiredRes);
   const expiredToken = await loadToken("MB-OLD123");
   assert(expiredRes.statusCode === 200, "expired token webhook should return 200");
   assert(expiredToken.status === "expired", "expired token should be marked expired");
+  const expiredUser = await loadUser(makeUserKey("U_EXPIRED_USER"));
+  assert(expiredUser?.source === "line", "expired token should fall back to default LINE user");
 
   const invalidTokenRes = createRes();
   await webhook(createWebhookReq({
@@ -192,10 +228,12 @@ async function callWebhookFlow(token) {
       type: "message",
       replyToken: "reply-invalid",
       source: { type: "user", userId: "U_INVALID_TOKEN_USER" },
-      message: { type: "text", id: "6", text: "MB-NOPE11" }
+      message: { type: "text", id: "7", text: "MB-NOPE11" }
     }]
   }), invalidTokenRes);
   assert(invalidTokenRes.statusCode === 200, "invalid token webhook should return 200");
+  const invalidTokenUser = await loadUser(makeUserKey("U_INVALID_TOKEN_USER"));
+  assert(invalidTokenUser?.source === "line", "invalid token should fall back to default LINE user");
 }
 
 async function callWebhookMarkAsReadFlow() {
@@ -423,9 +461,9 @@ delete process.env.LINE_CHANNEL_ACCESS_TOKEN;
 delete process.env.BLOB_READ_WRITE_TOKEN;
 
 await callHealth();
-const token = await callIssueToken();
-await callInvalidIssueToken();
-await callWebhookFlow(token);
+await callIssueToken();
+await callIssueTokenIgnoresDiagnosis();
+await callWebhookFlow();
 await callWebhookMarkAsReadFlow();
 await callGeminiProviderFlow();
 

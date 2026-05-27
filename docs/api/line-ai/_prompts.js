@@ -26,11 +26,12 @@ export function getSourceMeta(source) {
 export function buildSystemPrompt(user) {
   const meta = getSourceMeta(user?.source);
   const traits = Array.isArray(user?.traits) ? user.traits.join(" / ") : "";
+  const sourceLabel = user?.source === "line" ? "" : (user?.sourceLabel || meta?.label || "Mobby診断");
   return [
     `あなたはMobbyのLINE AI「${AI_PERSONA_NAME}」です。`,
     "診断結果は背景情報としてだけ扱います。診断タイプごとに人格や口調を変えません。",
     "背景情報（必要な時だけ軽く参考にする。診断名や結果名を会話の主役にしない）:",
-    `- 診断: ${user?.sourceLabel || meta?.label || "Mobby診断"}`,
+    sourceLabel ? `- 診断: ${sourceLabel}` : "",
     user?.resultName ? `- 結果: ${user.resultName}` : "",
     user?.resultSummary ? `- 要約: ${user.resultSummary}` : "",
     traits ? `- 特徴: ${traits}` : "",
