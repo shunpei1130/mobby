@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>恋愛モビー診断</title>
+  <script type="module" crossorigin src="./assets/loveDiagnosis-PO37z9df.js?v=6"></script>
+  <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="./assets/loveMobbyDiagnosis-DTWGxZc_.js?v=6">
+  <link rel="stylesheet" crossorigin href="./assets/magazine-vH_rC7n8.css">
+  <link rel="stylesheet" href="../shared/line-ai-mobby-cta.css">
+  <script src="../shared/line-ai-mobby-cta.js"></script>
+  <style>
+    html {
+      height: auto;
+      min-height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior-y: auto;
+      scrollbar-gutter: auto;
+    }
+
+    body {
+      position: static;
+      width: 100%;
+      height: auto;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior-y: auto;
+      touch-action: pan-y;
+      background: linear-gradient(180deg, #fffaf3 0%, #f8efe4 100%);
+    }
+
+    #loveRoot {
+      min-height: 100vh;
+      min-height: 100dvh;
+      height: auto;
+      overflow: visible;
+      background: linear-gradient(180deg, #fffaf3 0%, #f8efe4 100%);
+    }
+
+    .screen-area--magazine {
+      height: auto;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow: visible;
+      overscroll-behavior-y: auto;
+      touch-action: pan-y;
+      padding: 0;
+      background: transparent;
+    }
+
+    .page--diagnosis {
+      width: min(100%, 700px);
+      min-height: 100vh;
+      min-height: 100dvh;
+      margin: 0 auto;
+      padding: calc(env(safe-area-inset-top, 0px) + 64px) 16px 32px;
+      position: relative;
+      align-content: start;
+      grid-auto-rows: max-content;
+      background: transparent;
+    }
+
+    .page--diagnosis .page-header--with-back {
+      position: fixed;
+      top: calc(env(safe-area-inset-top, 0px) + 8px);
+      left: 50%;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: min(100%, 700px);
+      padding: 0 16px;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .page--diagnosis .page-header--with-back > :not(.page-back) {
+      display: none;
+    }
+
+    .page--diagnosis .page-back--icon {
+      pointer-events: auto;
+      display: grid;
+      place-items: center;
+      width: 44px;
+      min-width: 44px;
+      height: 44px;
+      min-height: 44px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: #251d1a;
+      box-shadow: none;
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+
+    .page--diagnosis .page-back--icon svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .page--diagnosis,
+    .love-diagnosis {
+      gap: 8px;
+      align-content: start;
+      grid-auto-rows: max-content;
+    }
+
+    [data-love-diagnosis-panel] {
+      margin-top: 4px;
+    }
+
+    [data-love-diagnosis-panel] > .love-diagnosis {
+      gap: 8px;
+    }
+
+    [data-love-diagnosis-panel] .love-diagnosis__intro-grid {
+      gap: 7px;
+    }
+
+    [data-love-diagnosis-panel] .love-axis-card {
+      gap: 3px;
+      padding: 10px 12px;
+    }
+
+    [data-love-diagnosis-panel] .love-diagnosis__hero {
+      gap: 7px;
+      padding: 14px 16px;
+    }
+
+    .page--diagnosis .button,
+    .love-diagnosis .button,
+    .love-character-detail .button,
+    .love-share-card-dialog .button {
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .love-diagnosis .button--full,
+    .love-character-detail .button--full,
+    .love-share-card-dialog .button--full {
+      width: min(100%, 240px);
+      justify-self: center;
+    }
+
+    .love-share-card-recommend {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 6px;
+      color: #e23d75;
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .love-share-card-star {
+      color: #e23d75;
+      font-size: 12px;
+      font-weight: 900;
+      margin: 0 5px;
+      line-height: 1;
+    }
+
+    .love-share-card-inline {
+      display: grid;
+      gap: 12px;
+      justify-items: center;
+      padding: 14px;
+      border: 1px solid rgba(244, 114, 182, 0.18);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: 0 18px 44px rgba(190, 60, 105, 0.1);
+    }
+
+    .love-share-card-inline img {
+      display: block;
+      width: min(100%, 360px);
+      height: auto;
+      border-radius: 14px;
+      box-shadow: 0 12px 30px rgba(88, 46, 60, 0.16);
+    }
+
+    .love-type-affirmation__head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .love-type-affirmation__head img {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+      flex: 0 0 auto;
+    }
+
+    .love-type-affirmation__head h4 {
+      margin: 0;
+    }
+
+    .love-diagnosis-tabs {
+      display: grid !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      grid-template-rows: repeat(2, 31px) !important;
+      grid-auto-rows: 31px !important;
+      gap: 7px !important;
+      align-items: start !important;
+      justify-self: center !important;
+      width: min(100%, 340px) !important;
+      max-width: 340px !important;
+      margin-inline: auto !important;
+      padding: 0 !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+    }
+
+    .love-diagnosis-tabs__item {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      width: 100% !important;
+      height: 31px !important;
+      min-height: 31px !important;
+      max-height: 31px !important;
+      padding: 0 10px !important;
+      border-radius: 9px !important;
+      border: 1px solid rgba(255, 255, 255, .72);
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, .72) 0%, rgba(255, 255, 255, .34) 48%, rgba(255, 250, 244, .22) 100%);
+      color: rgba(54, 45, 39, .78);
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, .92),
+        inset 0 -1px rgba(255, 255, 255, .24),
+        0 9px 20px rgba(118, 86, 70, .09);
+      -webkit-backdrop-filter: blur(22px) saturate(1.22);
+      backdrop-filter: blur(22px) saturate(1.22);
+      font-size: 10px !important;
+      line-height: 1 !important;
+      white-space: nowrap;
+      display: grid !important;
+      place-items: center !important;
+    }
+
+    .love-diagnosis-tabs__item::before {
+      content: "";
+      position: absolute;
+      inset: 1px 1px auto;
+      height: 48%;
+      border-radius: 8px 8px 5px 5px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .62), rgba(255, 255, 255, .08));
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .love-diagnosis-tabs__item::after {
+      content: "";
+      position: absolute;
+      top: -24%;
+      left: -18%;
+      width: 48%;
+      height: 150%;
+      transform: rotate(18deg);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .34), transparent);
+      pointer-events: none;
+      opacity: .65;
+      z-index: -1;
+    }
+
+    .love-diagnosis-tabs__item.is-active {
+      border-color: rgba(238, 177, 128, .62);
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, .82) 0%, rgba(255, 250, 244, .42) 52%, rgba(255, 232, 212, .26) 100%);
+      color: #2f2824;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, .96),
+        inset 0 0 18px rgba(255, 255, 255, .28),
+        0 10px 24px rgba(160, 102, 68, .14);
+    }
+
+    .love-diagnosis-tabs__item--danger {
+      color: rgba(128, 77, 82, .86);
+    }
+
+    .love-diagnosis-tabs__item:nth-child(5) {
+      grid-column: 2 !important;
+      grid-row: 2 !important;
+    }
+
+    .love-diagnosis-tabs__item:nth-child(1) {
+      grid-column: 1 !important;
+      grid-row: 1 !important;
+    }
+
+    .love-diagnosis-tabs__item:nth-child(2) {
+      grid-column: 2 !important;
+      grid-row: 1 !important;
+    }
+
+    .love-diagnosis-tabs__item:nth-child(3) {
+      grid-column: 3 !important;
+      grid-row: 1 !important;
+    }
+
+    .love-diagnosis-tabs__item:nth-child(4) {
+      grid-column: 1 !important;
+      grid-row: 2 !important;
+    }
+
+    .love-diagnosis__hero {
+      gap: 9px;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255, 253, 249, .72);
+      border-color: rgba(255, 255, 255, .82);
+      box-shadow: 0 18px 42px rgba(118, 86, 70, .11);
+      -webkit-backdrop-filter: blur(18px);
+      backdrop-filter: blur(18px);
+    }
+
+    .love-diagnosis__hero h3,
+    .love-result-hero h3 {
+      font-size: 23px;
+    }
+
+    .love-result-code {
+      display: inline-flex;
+      align-items: center;
+      margin-left: 8px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(226, 61, 117, 0.1);
+      color: #e23d75;
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1;
+      vertical-align: middle;
+    }
+
+    .love-axis-card,
+    .love-question,
+    .love-axis-bar,
+    .love-result-sections section {
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255, 253, 249, .72);
+      border-color: rgba(255, 255, 255, .78);
+      box-shadow: 0 14px 30px rgba(118, 86, 70, .09);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+    }
+
+    .love-diagnosis__nav {
+      gap: 8px;
+      max-width: 280px;
+      justify-self: center;
+      width: 100%;
+    }
+
+    .love-result-actions {
+      display: grid;
+      grid-template-columns: 1fr !important;
+      max-width: 240px;
+      justify-items: stretch;
+    }
+
+    .love-result-actions .button--full {
+      width: 100%;
+    }
+
+    .love-compatibility-cta {
+      background: linear-gradient(135deg, #f472b6 0%, #e23d75 100%);
+      border-color: rgba(226, 61, 117, 0.35);
+      color: #fff;
+      box-shadow: 0 14px 30px rgba(226, 61, 117, 0.24);
+    }
+
+    .love-diagnosis--gate {
+      gap: 22px;
+    }
+
+    .love-gate-hero {
+      text-align: left;
+    }
+
+    .love-gate-form {
+      display: grid;
+      gap: 16px;
+      padding: 20px;
+      border: 1px solid rgba(244, 114, 182, 0.18);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: 0 18px 50px rgba(190, 60, 105, 0.1);
+    }
+
+    .love-gate-field {
+      display: grid;
+      gap: 7px;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .love-gate-field .field__input {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid rgba(120, 55, 78, 0.18);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.94);
+      padding: 0 14px;
+      color: var(--ink);
+      font: inherit;
+      font-weight: 600;
+    }
+
+    .love-gate-field .field__input:focus {
+      outline: 2px solid rgba(244, 114, 182, 0.32);
+      border-color: rgba(244, 114, 182, 0.65);
+    }
+
+    .love-gate-age-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .love-gate-age-button {
+      min-height: 40px;
+      padding: 9px 14px;
+      border: 2px solid rgba(120, 55, 78, 0.18);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.94);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+    }
+
+    .love-gate-age-button.is-selected {
+      border-color: rgba(244, 114, 182, 0.78);
+      background: rgba(244, 114, 182, 0.12);
+      color: #d3387a;
+    }
+
+    .love-gate-consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.6;
+    }
+
+    .love-gate-consent input {
+      flex: 0 0 auto;
+      width: 16px;
+      height: 16px;
+      margin-top: 2px;
+      accent-color: #d3387a;
+    }
+
+    .love-gate-error {
+      margin: 0;
+      color: #d3385f;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .love-answer-grid--scale {
+      gap: 3px;
+    }
+
+    .love-answer-option {
+      min-height: 34px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 11px;
+    }
+
+    .love-answer-option--scale {
+      min-height: 44px;
+      padding: 0;
+    }
+
+    .love-answer-option--1 span,
+    .love-answer-option--7 span {
+      width: 36px;
+    }
+
+    .love-answer-option--2 span,
+    .love-answer-option--6 span {
+      width: 31px;
+    }
+
+    .love-answer-option--3 span,
+    .love-answer-option--5 span,
+    .love-answer-option--4 span {
+      width: 25px;
+    }
+
+    .love-character-grid {
+      gap: 8px;
+    }
+
+    .love-character-card {
+      gap: 6px;
+      padding: 7px;
+      border-radius: 12px;
+      background: rgba(255, 253, 249, .68);
+      border-color: rgba(255, 255, 255, .75);
+      box-shadow: 0 12px 24px rgba(118, 86, 70, .08);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+    }
+
+    .love-character-card img {
+      border-radius: 10px;
+    }
+
+    @media (max-width: 520px) {
+      .love-diagnosis-tabs {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .love-diagnosis__nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .love-diagnosis-tabs {
+      display: grid !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      grid-template-rows: repeat(2, 31px) !important;
+      grid-auto-rows: 31px !important;
+      gap: 7px !important;
+      align-items: start !important;
+      justify-self: center !important;
+      width: min(100%, 340px) !important;
+      max-width: 340px !important;
+      margin-inline: auto !important;
+      padding: 0 !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+    }
+
+    .love-diagnosis-tabs__item {
+      width: 100% !important;
+      height: 31px !important;
+      min-height: 31px !important;
+      max-height: 31px !important;
+      padding: 0 10px !important;
+      line-height: 1 !important;
+      display: grid !important;
+      place-items: center !important;
+    }
+
+    .love-diagnosis-tabs__item:nth-child(1) {
+      grid-column: 1 !important;
+      grid-row: 1 !important;
+    }
+
+    .love-diagnosis-tabs__item:nth-child(2) {
+      grid-column: 2 !important;
+      grid-row: 1 !important;
+    }
+
+    .love-diagnosis-tabs__item:nth-child(3) {
+      grid-column: 3 !important;
+      grid-row: 1 !important;
+    }
+
+    .love-diagnosis-tabs__item:nth-child(4) {
+      grid-column: 1 !important;
+      grid-row: 2 !important;
+    }
+
+    .love-diagnosis-tabs__item:nth-child(5) {
+      grid-column: 2 !important;
+      grid-row: 2 !important;
+    }
+
+    [data-love-diagnosis-panel] {
+      margin-top: 4px !important;
+      align-self: start !important;
+    }
+
+    [data-love-diagnosis-panel] > .love-diagnosis {
+      gap: 7px !important;
+      align-content: start !important;
+      grid-auto-rows: max-content !important;
+    }
+
+    [data-love-diagnosis-panel] .love-diagnosis__intro-grid {
+      gap: 7px !important;
+    }
+
+    [data-love-diagnosis-panel] .love-axis-card {
+      min-height: 56px !important;
+      gap: 3px !important;
+      padding: 9px 12px !important;
+    }
+
+    [data-love-diagnosis-panel] .love-diagnosis__hero {
+      gap: 7px !important;
+      padding: 14px 16px !important;
+    }
+
+    [data-love-diagnosis-start] {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      width: min(100%, 360px) !important;
+      min-height: 68px !important;
+      margin-top: 8px !important;
+      padding: 0 28px !important;
+      border: 1px solid rgba(255, 255, 255, .46) !important;
+      border-radius: 24px !important;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, .7) 0%, rgba(255, 255, 255, .3) 45%, rgba(255, 232, 244, .28) 100%) padding-box,
+        linear-gradient(135deg, rgba(255, 255, 255, .72), rgba(255, 255, 255, .18) 42%, rgba(214, 140, 147, .2)) border-box !important;
+      color: rgba(48, 39, 44, .92) !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, .96),
+        inset 0 0 0 1px rgba(255, 255, 255, .18),
+        inset 0 -18px 28px rgba(255, 255, 255, .18),
+        0 18px 42px rgba(118, 86, 70, .16),
+        0 0 0 1px rgba(255, 255, 255, .24),
+        0 8px 20px rgba(214, 140, 147, .12) !important;
+      -webkit-backdrop-filter: blur(24px) saturate(1.32);
+      backdrop-filter: blur(24px) saturate(1.32);
+      font-size: 17px !important;
+      font-weight: 900 !important;
+      letter-spacing: .04em;
+    }
+
+    [data-love-diagnosis-start]::before {
+      content: "";
+      position: absolute;
+      inset: 1px 1px auto;
+      height: 48%;
+      border-radius: 23px 23px 14px 14px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .72), rgba(255, 255, 255, .08));
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    [data-love-diagnosis-start]::after {
+      content: "";
+      position: absolute;
+      top: -35%;
+      left: -20%;
+      width: 34%;
+      height: 170%;
+      transform: rotate(18deg);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .42), transparent);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .page--diagnosis {
+      align-content: start !important;
+      grid-auto-rows: max-content !important;
+    }
+
+    [data-love-diagnosis-panel] {
+      align-self: start !important;
+      margin-top: 4px !important;
+    }
+
+    [data-love-diagnosis-panel] > .love-diagnosis {
+      align-content: start !important;
+      grid-auto-rows: max-content !important;
+      gap: 7px !important;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) {
+      width: min(100%, 430px);
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: calc(env(safe-area-inset-top, 0px) + 58px) 18px 36px;
+      align-content: start !important;
+      justify-items: center;
+      background: transparent;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) [data-love-diagnosis-panel] {
+      width: 100%;
+      margin-top: 0 !important;
+      display: grid;
+      justify-items: center;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) [data-love-diagnosis-panel] > .love-diagnosis {
+      width: min(100%, 350px);
+      min-height: 438px;
+      gap: 0 !important;
+      justify-items: center;
+      align-content: center !important;
+      padding: 54px 28px 24px;
+      border: 0;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, .96);
+      box-shadow: 0 16px 34px rgba(132, 101, 84, .12);
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-corners {
+      display: none;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-corner {
+      display: none;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__hero {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      gap: 17px !important;
+      padding: 0 !important;
+      border: 0 !important;
+      border-radius: 0;
+      background: transparent !important;
+      box-shadow: none !important;
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+      text-align: center;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__eyebrow {
+      color: #0078ff;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__hero h3 {
+      color: #1f2428;
+      font-family: "Noto Sans JP", sans-serif;
+      font-size: 25px;
+      font-weight: 800;
+      line-height: 1.6;
+      letter-spacing: .02em;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__hero p {
+      color: #9b9b9b;
+      font-size: 13px;
+      line-height: 1.85;
+      letter-spacing: .03em;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__intro-grid {
+      display: none !important;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) [data-love-diagnosis-start] {
+      position: relative;
+      z-index: 1;
+      overflow: visible;
+      width: min(100%, 190px) !important;
+      min-height: 56px !important;
+      margin-top: 30px !important;
+      padding: 0 24px !important;
+      border: 0 !important;
+      border-radius: 999px !important;
+      background: #0078f2 !important;
+      color: #ffffff !important;
+      box-shadow: 0 12px 25px rgba(0, 120, 242, .28) !important;
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+      font-size: 15px !important;
+      font-weight: 800 !important;
+      letter-spacing: 0;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) [data-love-diagnosis-start]::before,
+    .page--diagnosis:has([data-love-diagnosis-start]) [data-love-diagnosis-start]::after {
+      content: none !important;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) [data-love-diagnosis-start]::before,
+    .page--diagnosis:has([data-love-diagnosis-start]) [data-love-diagnosis-start]::after,
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__hero::before,
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__hero::after,
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis::before,
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis::after {
+      content: none !important;
+      display: none !important;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-character-row {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      width: calc(100% + 28px);
+      min-height: 86px;
+      margin: 18px -14px -4px;
+      pointer-events: none;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-character-row img {
+      flex: 0 0 auto;
+      width: 70px;
+      height: 86px;
+      object-fit: contain;
+      object-position: center bottom;
+      margin-left: -12px;
+      filter: drop-shadow(0 12px 16px rgba(95, 62, 60, .18));
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-character-row img:first-child {
+      margin-left: 0;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-character-row img:nth-child(2n) {
+      transform: translateY(6px);
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-character-row img:nth-child(3) {
+      width: 76px;
+      height: 94px;
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 360px) {
+      .page--diagnosis:has([data-love-diagnosis-start]) {
+        padding-inline: 14px;
+      }
+
+      .page--diagnosis:has([data-love-diagnosis-start]) [data-love-diagnosis-panel] > .love-diagnosis {
+        padding-inline: 22px;
+      }
+
+      .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-character-row {
+        width: calc(100% + 20px);
+        margin-inline: -10px;
+      }
+
+      .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-character-row img {
+        width: 62px;
+        height: 78px;
+        margin-left: -13px;
+      }
+
+      .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__hero h3 {
+        font-size: 23px;
+      }
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) [data-love-diagnosis-panel] > .love-diagnosis {
+      position: relative;
+      overflow: hidden;
+      width: 100% !important;
+      min-height: 430px !important;
+      padding: 30px 24px 28px !important;
+      border: 1px solid rgba(248, 171, 184, .56) !important;
+      border-radius: 26px !important;
+      background:
+        radial-gradient(circle at 18% 10%, rgba(255, 229, 234, .76), transparent 24%),
+        linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(255, 248, 249, .98)) !important;
+      box-shadow: 0 22px 46px rgba(116, 72, 78, .14), inset 0 0 0 1px rgba(255, 255, 255, .9) !important;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis-tabs {
+      width: 100% !important;
+      justify-self: stretch !important;
+      margin-bottom: 12px !important;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) [data-love-diagnosis-panel] > .love-diagnosis::before {
+      content: "" !important;
+      display: block !important;
+      position: absolute;
+      left: -14%;
+      right: -14%;
+      bottom: -68px;
+      height: 170px;
+      border-radius: 50% 50% 0 0;
+      background: linear-gradient(180deg, rgba(255, 231, 236, 0), rgba(255, 216, 226, .72));
+      pointer-events: none;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) [data-love-diagnosis-panel] > .love-diagnosis::after {
+      content: "" !important;
+      display: block !important;
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 12% 13%, rgba(246, 129, 147, .17) 0 7px, transparent 8px),
+        radial-gradient(ellipse at 88% 17%, rgba(246, 129, 147, .15) 0 9px, transparent 10px),
+        radial-gradient(ellipse at 9% 84%, rgba(246, 129, 147, .13) 0 12px, transparent 13px),
+        radial-gradient(ellipse at 90% 73%, rgba(246, 129, 147, .14) 0 8px, transparent 9px);
+      pointer-events: none;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__hero {
+      z-index: 1;
+      gap: 10px !important;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__eyebrow {
+      color: #ee7888 !important;
+      font-size: 13px !important;
+      letter-spacing: .18em !important;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-ornament,
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      color: #f1a4af;
+      font-size: 16px;
+      letter-spacing: 0;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-ornament::before,
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-ornament::after,
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-divider::before,
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-divider::after {
+      content: "";
+      width: 70px;
+      max-width: 24vw;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(239, 152, 164, .72), transparent);
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-divider {
+      margin: 0;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__hero h3 {
+      color: #624148 !important;
+      font-family: "Yu Mincho", "Hiragino Mincho ProN", "YuMincho", serif !important;
+      font-size: clamp(24px, 6vw, 34px) !important;
+      font-weight: 800 !important;
+      line-height: 1.48 !important;
+      letter-spacing: 0 !important;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__hero h3 strong {
+      color: #ee7084;
+      font-size: 1.16em;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__hero p:not(.love-diagnosis__eyebrow) {
+      max-width: 300px;
+      margin: 0 auto !important;
+      color: #76585d !important;
+      font-family: "Yu Mincho", "Hiragino Mincho ProN", "YuMincho", serif !important;
+      font-size: 13px !important;
+      font-weight: 700 !important;
+      line-height: 1.7 !important;
+      letter-spacing: .06em !important;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__intro-grid,
+    .page--diagnosis:has([data-love-diagnosis-start]) .love-intro-character-row {
+      display: none !important;
+    }
+
+    .page--diagnosis:has([data-love-diagnosis-start]) [data-love-diagnosis-start] {
+      z-index: 1;
+      width: min(100%, 320px) !important;
+      min-height: 60px !important;
+      margin-top: 22px !important;
+      padding: 0 28px !important;
+      border: 1px solid rgba(255, 255, 255, .76) !important;
+      border-radius: 999px !important;
+      background: linear-gradient(180deg, #f99aad, #ee6f86) !important;
+      color: #fff !important;
+      box-shadow: 0 16px 28px rgba(229, 91, 111, .28), inset 0 1px rgba(255, 255, 255, .5) !important;
+      font-size: 18px !important;
+      font-weight: 800 !important;
+      letter-spacing: .1em !important;
+    }
+
+  </style>
+  <link rel="stylesheet" href="../glassmorphism.css">
+</head>
+<body>
+  <div id="loveRoot"></div>
+  <script>
+    (() => {
+      const labels = new Map([
+        ["[data-love-tab-diagnosis]", "診断"],
+        ["[data-love-character-list]", "キャラ一覧"],
+        ["[data-love-compatibility]", "相性を見る"],
+        ["[data-love-reset]", "リセット"],
+        ["[data-love-type-guide]", "タイプ解説"]
+      ]);
+
+      const updateIntro = () => {
+        labels.forEach((text, selector) => {
+          document.querySelectorAll(selector).forEach((el) => {
+            if (el.textContent !== text) el.textContent = text;
+          });
+        });
+        document.querySelectorAll("[data-love-diagnosis-start]").forEach((el) => {
+          const text = "♡　診断をはじめる　›";
+          if (el.textContent !== text) el.textContent = text;
+        });
+
+        const hero = document.querySelector(".love-diagnosis--intro .love-diagnosis__hero");
+        if (!hero || hero.dataset.renaiIntroReady === "true") return;
+        hero.dataset.renaiIntroReady = "true";
+        hero.innerHTML = `
+          <div class="love-intro-ornament" aria-hidden="true">❤︎ ❤ ❤︎</div>
+          <p class="love-diagnosis__eyebrow">・ 恋愛モビー診断 ・</p>
+          <h3>あなたの恋愛タイプを<br><strong>4つの軸</strong>で診断します。</h3>
+          <div class="love-intro-divider" aria-hidden="true">❤</div>
+          <p>直感で選ぶ40問の質問から、あなたの恋愛タイプを16種類から診断します。</p>
+        `;
+      };
+
+      const observer = new MutationObserver(updateIntro);
+      observer.observe(document.getElementById("loveRoot"), { childList: true, subtree: true });
+      document.addEventListener("DOMContentLoaded", updateIntro);
+      const scrollDiagnosisTop = () => {
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+        document.querySelector(".page--diagnosis")?.scrollTo?.({ top: 0, left: 0, behavior: "auto" });
+      };
+      document.addEventListener("click", (event) => {
+        const target = event.target.closest("[data-love-diagnosis-start], [data-love-page-prev], [data-love-page-next], [data-love-gate-back]");
+        if (!target) return;
+        window.requestAnimationFrame(scrollDiagnosisTop);
+        window.setTimeout(scrollDiagnosisTop, 0);
+      }, true);
+      updateIntro();
+    })();
+  </script>
+</body>
+</html>

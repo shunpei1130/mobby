@@ -378,7 +378,7 @@ export function createGallery({ db, uid, gridEl, statusEl, modalEl, modalBodyEl,
     const preview = data.thumb || data.imageUrl || "";
     const profile = profileCache.get(data.uid);
     const authorName = escapeHtml(profile?.username || profile?.displayName || getFallbackName(data.uid));
-    const authorPhoto = profile?.avatarData || "assets/watermark/mobby.png";
+    const authorPhoto = profile?.avatarData || "assets/watermark/mobby.webp";
     const rankBadge = rank && rank <= 3 ? `<div class="rankBadge rank${rank}">👑 ${rank}位</div>` : "";
 
     el.innerHTML = `
@@ -466,7 +466,7 @@ export function createGallery({ db, uid, gridEl, statusEl, modalEl, modalBodyEl,
     if (!targetUid) return;
     const profile = await fetchProfile(targetUid);
     const name = escapeHtml(profile?.username || profile?.displayName || getFallbackName(targetUid));
-    const photo = profile?.avatarData || "assets/watermark/mobby.png";
+    const photo = profile?.avatarData || "assets/watermark/mobby.webp";
     const bio = escapeHtml(profile?.bio || "").replace(/\n/g, "<br>");
     const followers = Number(profile?.followersCount || 0);
     const following = Number(profile?.followingCount || 0);
@@ -575,7 +575,7 @@ export function createGallery({ db, uid, gridEl, statusEl, modalEl, modalBodyEl,
   async function openModal(designId, data) {
     const authorProfile = await fetchProfile(data.uid);
     const authorName = escapeHtml(authorProfile?.username || authorProfile?.displayName || getFallbackName(data.uid));
-    const authorPhoto = authorProfile?.avatarData || "assets/watermark/mobby.png";
+    const authorPhoto = authorProfile?.avatarData || "assets/watermark/mobby.webp";
     const authorFollowers = Number(authorProfile?.followersCount || 0);
     const canFollow = !!uid && !!data.uid && uid !== data.uid;
     const following = canFollow ? await isFollowing(data.uid) : false;

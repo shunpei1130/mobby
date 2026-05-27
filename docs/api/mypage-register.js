@@ -10,11 +10,11 @@ import {
 
 const LOCAL_SOURCE_META = {
   "16school": { label: "学校モビー診断", shortLabel: "学校", accent: "#ff8a65" },
-  "16mama": { label: "ママモビー診断", shortLabel: "ママ", accent: "#ffb74d" },
   "16love": { label: "メンヘラモビー診断", shortLabel: "メンヘラ", accent: "#ef5350" },
-  "16stan": { label: "推し活モビー診断", shortLabel: "推し活", accent: "#66bb6a" },
-  "16night": { label: "夜職モビー診断", shortLabel: "夜職", accent: "#42a5f5" }
+  "16stan": { label: "推し活モビー診断", shortLabel: "推し活", accent: "#66bb6a" }
 };
+
+const VISIBLE_SOURCES = new Set(Object.keys(LOCAL_SOURCE_META));
 
 const AXIS_KEYS = ["A", "B", "C", "D"];
 
@@ -72,10 +72,8 @@ function sanitizeAxes(axes) {
 function sanitizeSource(source) {
   const raw = String(source || "").trim().toLowerCase();
   if (raw === "16school") return "16school";
-  if (raw === "16mama" || raw === "16school_mama" || raw === "mama") return "16mama";
   if (raw === "16love") return "16love";
   if (raw === "16stan") return "16stan";
-  if (raw === "16night") return "16night";
   return "";
 }
 
@@ -267,7 +265,7 @@ function renderRegisterPageHtml() {
     <section class="card">
       <h1>複数診断を1ページに<br>まとめて公開しよう</h1>
       <p class="lead">
-        学校・メンヘラ・推し活・夜職・ママ診断を横断して、あなた専用の自己紹介ページを生成します。<br>
+        学校・メンヘラ・推し活診断を横断して、あなた専用の自己紹介ページを生成します。<br>
         相性突合・SNS共有・画像保存までまとめて使えます。
       </p>
       <div class="chips" id="diagnosisChips"></div>
@@ -300,9 +298,7 @@ function renderRegisterPageHtml() {
       const STORAGE_TARGETS = [
         { key: "school_char_diag_v1", label: "学校", source: "16school" },
         { key: "love_char_diag_v1", label: "メンヘラ", source: "16love" },
-        { key: "stan_char_diag_v1", label: "推し活", source: "16stan" },
-        { key: "night_char_diag_v1", label: "夜職", source: "16night" },
-        { key: "mamaMobbyState", label: "ママ", source: "16mama" }
+        { key: "stan_char_diag_v1", label: "推し活", source: "16stan" }
       ];
 
       function parseStorage(key) {
@@ -504,6 +500,7 @@ export default async function handler(req, res) {
     }
 
     const normalizedDiagnostics = diagnostics
+      .filter((item) => VISIBLE_SOURCES.has(item.source))
       .slice(0, 6)
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 

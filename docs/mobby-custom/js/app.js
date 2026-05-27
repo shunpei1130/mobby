@@ -1,4 +1,4 @@
-import { db, auth, googleProvider, ensureAuthPersistence, getAuthPersistenceMode } from "./firebase.js";
+﻿import { db, auth, googleProvider, ensureAuthPersistence, getAuthPersistenceMode } from "./firebase.js";
 import { createEditor } from "./editor.js";
 import { createGallery } from "./gallery.js";
 
@@ -470,48 +470,48 @@ const DEFAULT_UNLOCKED_STICKERS = new Set([
 const LEGACY_DEFAULT_MOBBY = "屋上ひみつ恋モビー";
 
 const STICKERS = [
-  { name: "Logo", url: "assets/stickers/Logo.png" },
-  { name: "キラキラ1", url: "assets/stickers/キラキラ１.PNG" },
-  { name: "一生友達", url: "assets/stickers/キラキラ２.PNG" },
-  { name: "キラキラ2", url: "assets/stickers/キラキラ３.PNG" },
-  { name: "ハートヒョウ柄", url: "assets/stickers/ハートヒョウ柄.PNG" },
-  { name: "ハート1", url: "assets/stickers/ハート１.PNG" },
-  { name: "ハート2", url: "assets/stickers/ハート２.PNG" },
-  { name: "ハート3", url: "assets/stickers/ハート３.PNG" },
-  { name: "心友", url: "assets/stickers/心友.PNG" },
-  { name: "星1", url: "assets/stickers/星１.PNG" },
-  { name: "カップル自撮りモビー", url: "assets/stickers/モビィ透過済女/カップル自撮りモビィ.png" },
-  { name: "クラスアルバム映えモビー", url: "assets/stickers/モビィ透過済女/クラスアルバム映えモビィ.png" },
-  { name: "ストーリー撮影班モビー", url: "assets/stickers/モビィ透過済女/ストーリー撮影班モビィ.png" },
-  { name: "ストーリー匂わせモビー", url: "assets/stickers/モビィ透過済女/ストーリー匂わせモビィ.png" },
-  { name: "ネイルこだわりモビー", url: "assets/stickers/モビィ透過済女/ネイルこだわりモビィ.png" },
-  { name: "プリクラ拡散モビー", url: "assets/stickers/モビィ透過済女/プリクラ拡散モビィ.png" },
-  { name: "ロッカー手紙モビー", url: "assets/stickers/モビィ透過済女/ロッカー手紙モビィ.png" },
-  { name: "屋上ひみつ恋モビー", url: "assets/stickers/モビィ透過済女/屋上ひみつ恋モビィ.png" },
-  { name: "帰り道デートモビー", url: "assets/stickers/モビィ透過済女/帰り道デートモビィ.png" },
-  { name: "購買前溜まり場モビー", url: "assets/stickers/モビィ透過済女/購買前溜まり場モビィ.png" },
-  { name: "図書室まったりモビー", url: "assets/stickers/モビィ透過済女/図書室まったりモビィ.png" },
-  { name: "昼休みお弁当会モビー", url: "assets/stickers/モビィ透過済女/昼休みお弁当会モビィ.png" },
-  { name: "匂わせプリクラモビー", url: "assets/stickers/モビィ透過済女/匂わせプリクラモビィ.png" },
-  { name: "文化祭広報モビー", url: "assets/stickers/モビィ透過済女/文化祭広報モビィ.png" },
-  { name: "放課後こっそり通話モビー", url: "assets/stickers/モビィ透過済女/放課後こっそり通話モビィ.png" },
-  { name: "放課後即レスモビー", url: "assets/stickers/モビィ透過済女/放課後即レスモビィ.png" },
-  { name: "もしランキングモビー", url: "assets/stickers/モビィ透過済男/もしランキングモビィ.png" },
-  { name: "応援団長モビー", url: "assets/stickers/モビィ透過済男/応援団長モビィ.png" },
-  { name: "屋上自由時間モビー", url: "assets/stickers/モビィ透過済男/屋上自由時間モビィ.png" },
-  { name: "学級委員モビー", url: "assets/stickers/モビィ透過済男/学級委員モビィ.png" },
-  { name: "教科書落書きモビー", url: "assets/stickers/モビィ透過済男/教科書落書きモビィ.png" },
-  { name: "自習室モビー", url: "assets/stickers/モビィ透過済男/自習室モビィ.png" },
-  { name: "図書委員モビー", url: "assets/stickers/モビィ透過済男/図書委員モビィ.png" },
-  { name: "制服アレンジモビー", url: "assets/stickers/モビィ透過済男/制服アレンジモビィ.png" },
-  { name: "成績掲示板モビー", url: "assets/stickers/モビィ透過済男/成績掲示板モビィ.png" },
-  { name: "体育祭モビー", url: "assets/stickers/モビィ透過済男/体育祭モビィ.png" },
-  { name: "舞台袖実行委員モビー", url: "assets/stickers/モビィ透過済男/舞台袖実行委員モビィ.png" },
-  { name: "部室たまり場モビー", url: "assets/stickers/モビィ透過済男/部室たまり場モビィ.png" },
-  { name: "文化祭センターステージモビー", url: "assets/stickers/モビィ透過済男/文化祭センターステージモビィ.png" },
-  { name: "理科室研究モビー", url: "assets/stickers/モビィ透過済男/理科室研究モビィ.png" },
-  { name: "裏垢拡散モビー", url: "assets/stickers/モビィ透過済男/裏垢拡散モビィ.png" },
-  { name: "廊下ランウェイモビー", url: "assets/stickers/モビィ透過済男/廊下ランウェイモビィ.png" },
+  { name: "Logo", url: "assets/stickers/Logo.webp" },
+  { name: "キラキラ1", url: "assets/stickers/キラキラ１.webp" },
+  { name: "一生友達", url: "assets/stickers/キラキラ２.webp" },
+  { name: "キラキラ2", url: "assets/stickers/キラキラ３.webp" },
+  { name: "ハートヒョウ柄", url: "assets/stickers/ハートヒョウ柄.webp" },
+  { name: "ハート1", url: "assets/stickers/ハート１.webp" },
+  { name: "ハート2", url: "assets/stickers/ハート２.webp" },
+  { name: "ハート3", url: "assets/stickers/ハート３.webp" },
+  { name: "心友", url: "assets/stickers/心友.webp" },
+  { name: "星1", url: "assets/stickers/星１.webp" },
+  { name: "カップル自撮りモビー", url: "assets/stickers/モビィ透過済女/カップル自撮りモビィ.webp" },
+  { name: "クラスアルバム映えモビー", url: "assets/stickers/モビィ透過済女/クラスアルバム映えモビィ.webp" },
+  { name: "ストーリー撮影班モビー", url: "assets/stickers/モビィ透過済女/ストーリー撮影班モビィ.webp" },
+  { name: "ストーリー匂わせモビー", url: "assets/stickers/モビィ透過済女/ストーリー匂わせモビィ.webp" },
+  { name: "ネイルこだわりモビー", url: "assets/stickers/モビィ透過済女/ネイルこだわりモビィ.webp" },
+  { name: "プリクラ拡散モビー", url: "assets/stickers/モビィ透過済女/プリクラ拡散モビィ.webp" },
+  { name: "ロッカー手紙モビー", url: "assets/stickers/モビィ透過済女/ロッカー手紙モビィ.webp" },
+  { name: "屋上ひみつ恋モビー", url: "assets/stickers/モビィ透過済女/屋上ひみつ恋モビィ.webp" },
+  { name: "帰り道デートモビー", url: "assets/stickers/モビィ透過済女/帰り道デートモビィ.webp" },
+  { name: "購買前溜まり場モビー", url: "assets/stickers/モビィ透過済女/購買前溜まり場モビィ.webp" },
+  { name: "図書室まったりモビー", url: "assets/stickers/モビィ透過済女/図書室まったりモビィ.webp" },
+  { name: "昼休みお弁当会モビー", url: "assets/stickers/モビィ透過済女/昼休みお弁当会モビィ.webp" },
+  { name: "匂わせプリクラモビー", url: "assets/stickers/モビィ透過済女/匂わせプリクラモビィ.webp" },
+  { name: "文化祭広報モビー", url: "assets/stickers/モビィ透過済女/文化祭広報モビィ.webp" },
+  { name: "放課後こっそり通話モビー", url: "assets/stickers/モビィ透過済女/放課後こっそり通話モビィ.webp" },
+  { name: "放課後即レスモビー", url: "assets/stickers/モビィ透過済女/放課後即レスモビィ.webp" },
+  { name: "もしランキングモビー", url: "assets/stickers/モビィ透過済男/もしランキングモビィ.webp" },
+  { name: "応援団長モビー", url: "assets/stickers/モビィ透過済男/応援団長モビィ.webp" },
+  { name: "屋上自由時間モビー", url: "assets/stickers/モビィ透過済男/屋上自由時間モビィ.webp" },
+  { name: "学級委員モビー", url: "assets/stickers/モビィ透過済男/学級委員モビィ.webp" },
+  { name: "教科書落書きモビー", url: "assets/stickers/モビィ透過済男/教科書落書きモビィ.webp" },
+  { name: "自習室モビー", url: "assets/stickers/モビィ透過済男/自習室モビィ.webp" },
+  { name: "図書委員モビー", url: "assets/stickers/モビィ透過済男/図書委員モビィ.webp" },
+  { name: "制服アレンジモビー", url: "assets/stickers/モビィ透過済男/制服アレンジモビィ.webp" },
+  { name: "成績掲示板モビー", url: "assets/stickers/モビィ透過済男/成績掲示板モビィ.webp" },
+  { name: "体育祭モビー", url: "assets/stickers/モビィ透過済男/体育祭モビィ.webp" },
+  { name: "舞台袖実行委員モビー", url: "assets/stickers/モビィ透過済男/舞台袖実行委員モビィ.webp" },
+  { name: "部室たまり場モビー", url: "assets/stickers/モビィ透過済男/部室たまり場モビィ.webp" },
+  { name: "文化祭センターステージモビー", url: "assets/stickers/モビィ透過済男/文化祭センターステージモビィ.webp" },
+  { name: "理科室研究モビー", url: "assets/stickers/モビィ透過済男/理科室研究モビィ.webp" },
+  { name: "裏垢拡散モビー", url: "assets/stickers/モビィ透過済男/裏垢拡散モビィ.webp" },
+  { name: "廊下ランウェイモビー", url: "assets/stickers/モビィ透過済男/廊下ランウェイモビィ.webp" },
 ];
 const MOBBY_NAME_RE = /モビ[ィー]/;
 
@@ -1242,7 +1242,7 @@ timelineSearchInput?.addEventListener("keydown", (e) => {
   applyTimelineSearch();
 });
 
-const DEFAULT_AVATAR_URL = "assets/watermark/mobby.png";
+const DEFAULT_AVATAR_URL = "assets/watermark/mobby.webp";
 
 function setAvatarImage(el, url, title) {
   if (!el) return;
@@ -1544,7 +1544,7 @@ async function refreshTimeline() {
 }
 
 const DEFAULT_PURCHASE_PRICE = 12800;
-const DEFAULT_PURCHASE_IMAGE = "assets/templates/tshirt.png";
+const DEFAULT_PURCHASE_IMAGE = "assets/templates/tshirt.webp";
 const PURCHASE_TOP_LINKS = {
   1: "https://buy.stripe.com/dRmbJ10SN7Y13GmfZZao806",
   2: "https://buy.stripe.com/eVqfZh7hb3HLa4K9BBao807",
@@ -1555,10 +1555,10 @@ const MANUAL_PURCHASE_ITEMS = [
     id: "manual-1",
     title: "イカチ―・パコ",
     price: 6980,
-    image: "assets/ikati/イカチ―・パコ1.png",
+    image: "assets/ikati/イカチ―・パコ1.webp",
     images: [
-      "assets/ikati/イカチ―・パコ1.png",
-      "assets/ikati/イカチ―・パコ2.png"
+      "assets/ikati/イカチ―・パコ1.webp",
+      "assets/ikati/イカチ―・パコ2.webp"
     ],
     note: "スウェット・パンツ S/M",
     sizes: [
@@ -1568,7 +1568,7 @@ const MANUAL_PURCHASE_ITEMS = [
         height: "148-157cm",
         price: 6980,
         url: "https://buy.stripe.com/9B6aEX6d72DH4KqbJJao800",
-        image: "assets/ikati/stripe/イカチ―・パコ2.png"
+        image: "assets/ikati/stripe/イカチ―・パコ2.webp"
       },
       {
         id: "regular",
@@ -1576,7 +1576,7 @@ const MANUAL_PURCHASE_ITEMS = [
         height: "157-167cm",
         price: 6980,
         url: "https://buy.stripe.com/fZu14ngRLbad3Gm155ao801",
-        image: "assets/ikati/stripe/イカチ―・パコ2.png"
+        image: "assets/ikati/stripe/イカチ―・パコ2.webp"
       }
     ]
   },
@@ -1584,10 +1584,10 @@ const MANUAL_PURCHASE_ITEMS = [
     id: "manual-2",
     title: "イカチ―・ピコ",
     price: 6980,
-    image: "assets/ikati/イカチ―・ピコ1.png",
+    image: "assets/ikati/イカチ―・ピコ1.webp",
     images: [
-      "assets/ikati/イカチ―・ピコ1.png",
-      "assets/ikati/イカチ―・ピコ2.png"
+      "assets/ikati/イカチ―・ピコ1.webp",
+      "assets/ikati/イカチ―・ピコ2.webp"
     ],
     note: "スウェット・パンツ S/M",
     sizes: [
@@ -1597,7 +1597,7 @@ const MANUAL_PURCHASE_ITEMS = [
         height: "148-157cm",
         price: 6980,
         url: "https://buy.stripe.com/14A6oH44Zemp7WC011ao802",
-        image: "assets/ikati/stripe/イカチ―・ピコ2.png"
+        image: "assets/ikati/stripe/イカチ―・ピコ2.webp"
       },
       {
         id: "regular",
@@ -1605,7 +1605,7 @@ const MANUAL_PURCHASE_ITEMS = [
         height: "157-167cm",
         price: 6980,
         url: "https://buy.stripe.com/28E5kD44Z3HL2Ci6ppao803",
-        image: "assets/ikati/stripe/イカチ―・ピコ2.png"
+        image: "assets/ikati/stripe/イカチ―・ピコ2.webp"
       }
     ]
   },
@@ -1613,10 +1613,10 @@ const MANUAL_PURCHASE_ITEMS = [
     id: "manual-3",
     title: "イカチー・ンコ",
     price: 6980,
-    image: "assets/ikati/イカチー・ンコ1.png",
+    image: "assets/ikati/イカチー・ンコ1.webp",
     images: [
-      "assets/ikati/イカチー・ンコ1.png",
-      "assets/ikati/イカチー・ンコ2.png"
+      "assets/ikati/イカチー・ンコ1.webp",
+      "assets/ikati/イカチー・ンコ2.webp"
     ],
     note: "スウェット・パンツ S/M",
     sizes: [
@@ -1626,7 +1626,7 @@ const MANUAL_PURCHASE_ITEMS = [
         height: "148-157cm",
         price: 6980,
         url: "https://buy.stripe.com/9B63cvbxrceh5OufZZao804",
-        image: "assets/ikati/stripe/イカチー・ンコ2.png"
+        image: "assets/ikati/stripe/イカチー・ンコ2.webp"
       },
       {
         id: "regular",
@@ -1634,7 +1634,7 @@ const MANUAL_PURCHASE_ITEMS = [
         height: "157-167cm",
         price: 6980,
         url: "https://buy.stripe.com/aFa00j6d74LP1ye7ttao805",
-        image: "assets/ikati/stripe/イカチー・ンコ2.png"
+        image: "assets/ikati/stripe/イカチー・ンコ2.webp"
       }
     ]
   },

@@ -1113,7 +1113,7 @@
     let state = loadState();
 
     function createDefaultState(){
-      return { step:"intro", page:0, answers:{}, questionOrder:null, profile:{ name:"", email:"" } };
+      return { step:"intro", page:0, answers:{}, questionOrder:null, profile:{ name:"", email:"" }, sentToSheet:false };
     }
     function loadState(){
       try {
@@ -1122,6 +1122,7 @@
           if(!s.profile) s.profile = { name:"", email:"" };
           s.profile.name = s.profile.name || "";
           s.profile.email = s.profile.email || "";
+          s.sentToSheet = s.sentToSheet === true;
           return s;
         }
       } catch(e){}
@@ -2067,6 +2068,7 @@ const setGatePending = (pending) => {
 };
 
 gateSubmitButton.onclick = async () => {
+        if (gateSubmitButton.disabled) return;
         const errEl = document.getElementById("regErr");
         errEl.style.display = "none";
 
@@ -2077,6 +2079,14 @@ gateSubmitButton.onclick = async () => {
         if(!name){ errEl.textContent = "ニックネームを入力してください"; errEl.style.display = "block"; return; }
         if(!email){ errEl.textContent = "メールアドレスを入力してください"; errEl.style.display = "block"; return; }
         if(!emailOk){ errEl.textContent = "メールアドレスを正しく入力してください"; errEl.style.display = "block"; return; }
+
+        if (state.sentToSheet) {
+          state.profile = { name, email };
+          state.step = "result";
+          saveState();
+          render();
+          return;
+        }
 
         setGatePending(true);
         state.profile = { name, email };
@@ -2102,6 +2112,10 @@ gateSubmitButton.onclick = async () => {
           diagnosis_type: (res?.char && res.char.name) ? res.char.name : (res.code || payload.type || "")
         };
 
+        state.sentToSheet = true;
+        state.step = "result";
+        saveState();
+
         try {
           await submitLead(payload);
           submitDiagnosis(diagnosisPayload).catch((error) => {
@@ -2111,6 +2125,10 @@ gateSubmitButton.onclick = async () => {
           saveState();
           render();
         } catch (error) {
+          state.profile = { name: "", email: "" };
+          state.step = "gate";
+          state.sentToSheet = false;
+          saveState();
           errEl.textContent = "\u9001\u4fe1\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002\u6642\u9593\u3092\u304a\u3044\u3066\u518d\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002";
           errEl.style.display = "block";
           setGatePending(false);

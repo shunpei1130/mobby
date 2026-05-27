@@ -10,8 +10,8 @@
   <!-- SEO基本 -->
   <title>モビー診断 | Mobby（モビー）公式サイト</title>
   <meta name="description"
-    content="モビー診断の公式サイト。学校モビー診断、メンヘラモビー診断、推し活モビー診断、夜職モビー診断、ママモビー診断を無料で楽しめます。Mobby（モビー）のカメラ型キーホルダー公式情報も掲載。">
-  <meta name="keywords" content="モビー診断,Mobby,モビー,学校モビー診断,メンヘラモビー診断,推し活モビー診断,夜職モビー診断,ママモビー診断,カメラ型キーホルダー,モビーアウトフィット">
+    content="モビー診断の公式サイト。学校モビー診断、メンヘラモビー診断、推し活モビー診断を無料で楽しめます。Mobby（モビー）のカメラ型キーホルダー公式情報も掲載。">
+  <meta name="keywords" content="モビー診断,Mobby,モビー,学校モビー診断,メンヘラモビー診断,推し活モビー診断,カメラ型キーホルダー,モビーアウトフィット">
   <meta name="author" content="Mobby">
   <meta name="application-name" content="Mobby（モビー）">
   <meta name="robots" content="index, follow">
@@ -26,9 +26,8 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.mobby.online/">
   <meta property="og:title" content="モビー診断 | Mobby（モビー）公式サイト">
-  <meta property="og:description" content="学校モビー診断、メンヘラモビー診断、推し活モビー診断、夜職モビー診断、ママモビー診断をまとめて見られるMobby（モビー）公式サイト。">
-  <meta property="og:image" content="https://www.mobby.online/img/Mobby.png">
-  <meta property="og:image:alt" content="モビー診断 | Mobby（モビー）公式サイト">
+  <meta property="og:description" content="学校モビー診断、メンヘラモビー診断、推し活モビー診断をまとめて見られるMobby（モビー）公式サイト。">
+  <meta property="og:image" content="https://www.mobby.online/img/Mobby.webp">
   <meta property="og:site_name" content="モビー診断 | Mobby（モビー）">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:locale:alternate" content="ko_KR">
@@ -38,13 +37,12 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://www.mobby.online/">
   <meta name="twitter:title" content="モビー診断 | Mobby（モビー）公式サイト">
-  <meta name="twitter:description" content="学校・メンヘラ・推し活・夜職・ママの各モビー診断をまとめて見られる公式サイト。">
-  <meta name="twitter:image" content="https://www.mobby.online/img/Mobby.png">
-  <meta name="twitter:image:alt" content="モビー診断 | Mobby（モビー）公式サイト">
+  <meta name="twitter:description" content="学校・メンヘラ・推し活の各モビー診断をまとめて見られる公式サイト。">
+  <meta name="twitter:image" content="https://www.mobby.online/img/Mobby.webp">
 
   <!-- Favicon -->
   <link rel="icon" type="image/jpeg" href="img/favicon/fav.jpg">
-  <link rel="apple-touch-icon" href="img/Mobby.png">
+  <link rel="apple-touch-icon" href="img/Mobby.webp">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -219,16 +217,14 @@
       overflow: hidden;
 
       /* ▼ 小さく表示＋余白は白 */
-      background:
+      background-color: #fff8ef;
+      background-image:
         radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 24%),
         radial-gradient(circle at 85% 18%, rgba(255, 196, 166, 0.38), rgba(255, 196, 166, 0) 28%),
         linear-gradient(135deg, #fff8ef 0%, #f6ecda 55%, #ead8ba 100%);
-      /* 余白を白に */
-      background-image: url('img/favicon/背景.jpg');
       background-repeat: no-repeat;
-      background-position: center;
-      background-size: 50% auto;
-      background-image: none;
+      background-position: center, center, center;
+      background-size: 100% 100%, 100% 100%, cover;
       /* 横幅50%で固定 */
       /* 拡大しない・必ず収まる */
     }
@@ -262,7 +258,7 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      width: min(86vw, 1240px);
+      width: min(70vw, 520px);
       transform: translate(-50%, -50%);
       z-index: 4;
       pointer-events: none;
@@ -275,13 +271,24 @@
     .splash-logo-frame {
       position: relative;
       width: 100%;
+      aspect-ratio: 1812 / 638;
+    }
+
+    .splash-logo-img {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 1;
     }
 
     .splash-logo-mask {
       position: absolute;
       inset: 0;
-      -webkit-mask-image: url("mobby_logo2.webp");
-      mask-image: url("mobby_logo2.webp");
+      -webkit-mask-image: url("mobby-custom/assets/stickers/Logo.webp");
+      mask-image: url("mobby-custom/assets/stickers/Logo.webp");
       -webkit-mask-repeat: no-repeat;
       mask-repeat: no-repeat;
       -webkit-mask-position: center;
@@ -291,18 +298,10 @@
       pointer-events: none;
     }
 
-    .splash-logo-img {
-      display: block;
-      width: 100%;
-      height: auto;
-      opacity: 0;
-      animation: splashLogoSettle 0.01s linear 2.1s forwards;
-    }
-
     .splash-logo-reveal {
       position: absolute;
       inset: 0;
-      background: url("mobby_logo2.webp") center / contain no-repeat;
+      background: url("mobby-custom/assets/stickers/Logo.webp") center / contain no-repeat;
       clip-path: inset(0 100% 0 0);
       animation: splashLogoReveal 2.1s cubic-bezier(0.22, 1, 0.36, 1) 0.18s forwards;
     }
@@ -344,11 +343,21 @@
     }
 
     #splash-screen.is-bursting .splash-logo-shell {
-      animation: splashLogoBurst 0.78s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation: splashLogoWipeOut 0.96s cubic-bezier(0.7, 0, 0.24, 1) forwards;
     }
 
     #splash-screen.is-bursting .instruction {
       animation: splashInstructionFade 0.35s ease forwards;
+    }
+
+    @media (max-width: 640px) {
+      #splash-screen {
+        background-size: 100% 100%, 100% 100%, cover;
+      }
+
+      .splash-logo-shell {
+        width: min(82vw, 360px);
+      }
     }
 
     @keyframes splashLogoAppear {
@@ -415,20 +424,28 @@
       }
     }
 
-    @keyframes splashLogoBurst {
+    @keyframes splashLogoWipeOut {
       0% {
         opacity: 1;
         transform: translate(-50%, -50%) scale(1);
+        clip-path: inset(0 0 0 0);
         filter:
           drop-shadow(0 0 24px rgba(255, 255, 255, 0.92))
           drop-shadow(0 22px 36px rgba(79, 71, 63, 0.16));
       }
 
+      28% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.01);
+        clip-path: inset(0 0 0 0);
+      }
+
       100% {
         opacity: 0;
-        transform: translate(-50%, -62%) scale(0.88);
+        transform: translate(-50%, -50%) scale(1.01);
+        clip-path: inset(0 100% 0 0);
         filter:
-          drop-shadow(0 0 44px rgba(255, 255, 255, 0.98))
+          drop-shadow(0 0 36px rgba(255, 255, 255, 0.96))
           drop-shadow(0 36px 60px rgba(79, 71, 63, 0.08));
       }
     }
@@ -488,9 +505,9 @@
 
     .mobby-title img {
       display: block;
-      width: min(46vw, 400px);
+      width: min(34vw, 220px);
       height: auto;
-      margin: 0 auto -6%;
+      margin: 0 auto -2%;
     }
 
     @media (max-width: 768px) {
@@ -500,8 +517,8 @@
       }
 
       .mobby-title img {
-        width: min(74vw, 360px);
-        margin: 0 auto -10%;
+        width: min(44vw, 180px);
+        margin: 0 auto -4%;
       }
     }
 
@@ -511,8 +528,8 @@
       }
 
       .mobby-title img {
-        width: min(52vw, 360px);
-        margin: 0 auto -8%;
+        width: min(34vw, 220px);
+        margin: 0 auto -3%;
       }
     }
 
@@ -675,6 +692,25 @@
       }
     }
 
+    #encyclopediaTabs .ency-tab {
+      border: 1px solid rgba(255, 255, 255, 0.82) !important;
+      background: rgba(255, 255, 255, 0.64) !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.72),
+        0 3px 10px rgba(0, 0, 0, 0.06) !important;
+    }
+
+    #encyclopediaTabs .ency-tab.is-active {
+      border: 3px solid #ff74ae !important;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(255, 116, 174, 0.16)) !important;
+      box-shadow:
+        inset 0 0 0 2px rgba(255, 255, 255, 0.86),
+        0 0 0 3px rgba(255, 116, 174, 0.22),
+        0 6px 14px rgba(0, 0, 0, 0.12) !important;
+      transform: translateY(-1px);
+    }
+
     #openFaqPopup {
       background:
         linear-gradient(145deg, #417f89 0%, #69adb4 52%, #bee8eb 100%);
@@ -685,6 +721,13 @@
       background:
         linear-gradient(145deg, #d65f89 0%, #ef9a7d 54%, #f9d66d 100%);
       color: #fffaf2;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+
+    #openSnsPopup::before,
+    #openSnsPopup::after {
+      pointer-events: none;
     }
 
     #openVideoPopup {
@@ -981,6 +1024,10 @@
       position: relative;
     }
 
+    .hero-carousel-shell.floating {
+      animation: none !important;
+    }
+
     .hero-model-stage {
       width: 100%;
       position: relative;
@@ -1046,11 +1093,13 @@
 
     .hero-character-row {
       width: min(340px, calc(100% - 24px));
-      margin: 8px auto 0;
+      margin: -36px auto 0;
       display: grid;
       grid-template-columns: 56px minmax(0, 1fr) 56px;
       align-items: center;
       gap: 12px;
+      position: relative;
+      z-index: 3;
     }
 
     @media (min-width: 769px) and (max-width: 1100px) {
@@ -1069,31 +1118,50 @@
     }
 
     .hero-character-action {
+      position: relative;
       width: 56px;
       height: 56px;
       padding: 0;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: none;
+      border: 1px solid rgba(255, 255, 255, 0.48);
       border-radius: 18px;
-      background: linear-gradient(145deg, #fff8ee 0%, #efe2cf 100%);
-      color: #856555;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.18));
+      color: rgba(71, 63, 54, 0.86);
       font-size: 1.05rem;
       font-weight: 800;
       letter-spacing: 0;
+      backdrop-filter: blur(18px) saturate(1.35);
+      -webkit-backdrop-filter: blur(18px) saturate(1.35);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.95),
-        0 8px 18px rgba(89, 70, 52, 0.14);
+        inset 0 1px 0 rgba(255, 255, 255, 0.72),
+        inset 0 -18px 26px rgba(255, 255, 255, 0.12),
+        0 10px 24px rgba(78, 57, 39, 0.16);
       cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.46);
+    }
+
+    .hero-character-action::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0) 46%),
+        radial-gradient(circle at 24% 16%, rgba(255, 255, 255, 0.66), rgba(255, 255, 255, 0) 34%);
+      pointer-events: none;
+      z-index: 0;
     }
 
     .hero-character-action:hover {
       transform: translateY(-2px);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.95),
-        0 12px 24px rgba(89, 70, 52, 0.18);
+        inset 0 1px 0 rgba(255, 255, 255, 0.78),
+        inset 0 -18px 26px rgba(255, 255, 255, 0.16),
+        0 14px 28px rgba(78, 57, 39, 0.2);
     }
 
     .hero-character-action.mode {
@@ -1136,30 +1204,200 @@
         inset 0 0 0 1px rgba(108, 82, 64, 0.2);
     }
 
-    .hero-smoke-canvas {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 12;
-      pointer-events: none;
-      touch-action: manipulation;
-      opacity: 0;
-      transition: opacity 0.3s ease;
+    .burn-card {
+      position: relative;
+      width: min(760px, calc(100% - 24px));
+      min-height: 190px;
+      margin: 22px auto 0;
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(220px, 1.25fr);
+      align-items: stretch;
+      overflow: hidden;
+      border-radius: 24px;
+      text-decoration: none;
+      background:
+        linear-gradient(145deg, rgba(255, 252, 244, 0.94), rgba(255, 244, 225, 0.82));
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.78),
+        0 18px 36px rgba(97, 73, 45, 0.14);
+      isolation: isolate;
+      opacity: 1 !important;
+      transform: none !important;
     }
 
-    .hero-smoke-glow {
+    .burn-card-row {
+      width: 100%;
+      display: block !important;
+      margin: 10px auto 18px;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+
+    .burn-card-row.after-hero {
+      width: min(760px, calc(100% - 32px));
+      margin: 14px auto 22px;
+      position: relative;
+      z-index: 18;
+    }
+
+    .popup-buttons-bar .burn-card {
+      display: grid !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+
+    .hero .burn-card-row.after-hero,
+    .hero .burn-card-row.after-hero .burn-card {
+      display: grid !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto;
+    }
+
+    .burn-card::after {
+      content: "";
       position: absolute;
-      left: 22%;
-      top: 34%;
-      width: 52px;
-      height: 52px;
-      border-radius: 999px;
-      background: radial-gradient(circle, rgba(255, 234, 205, 0.45) 0%, rgba(255, 234, 205, 0) 72%);
-      filter: blur(6px);
-      z-index: 2;
+      inset: 0;
+      background:
+        radial-gradient(circle at 70% 45%, rgba(255, 255, 255, 0.28), transparent 42%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
       pointer-events: none;
-      mix-blend-mode: screen;
+      z-index: 0;
+    }
+
+    .burn-card-copy {
+      position: relative;
+      z-index: 1;
+      min-height: 190px;
+      padding: 38px 34px 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      color: #514033;
+    }
+
+    .burn-card-media {
+      position: relative;
+      z-index: 1;
+      min-height: 190px;
+      overflow: hidden;
+      display: block;
+      background: url("burn/reference/burn_mag_ref.png") center / cover no-repeat;
+    }
+
+    .burn-card-media::before {
+      content: "";
+      position: absolute;
+      inset: -8px auto -8px -18px;
+      width: 52%;
+      z-index: 1;
+      background:
+        linear-gradient(90deg, rgba(255, 252, 244, 0.98), rgba(255, 252, 244, 0.72) 34%, rgba(255, 252, 244, 0));
+      filter: blur(10px);
+      pointer-events: none;
+    }
+
+    .burn-card-media img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 190px;
+      object-fit: cover;
+      object-position: center;
+      filter: sepia(0.08) saturate(0.92) brightness(1.03);
+      opacity: 1 !important;
+    }
+
+    .burn-card-title {
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      line-height: 1.25;
+    }
+
+    .burn-card-text {
+      margin-bottom: 12px;
+      font-size: clamp(1rem, 2.6vw, 1.28rem);
+      line-height: 1.7;
+      letter-spacing: 0.08em;
+      color: rgba(38, 34, 30, 0.96);
+    }
+
+    .footer-burn-card-row .burn-card-text {
+      color: #211d1a !important;
+      opacity: 1 !important;
+      text-shadow: none;
+    }
+
+    .burn-card-arrow {
+      width: 46px;
+      height: 46px;
+      margin-top: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.68);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      color: #384149;
+      font-size: 0;
+      line-height: 1;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 8px 18px rgba(78, 57, 39, 0.12);
+    }
+
+    @media (max-width: 640px) {
+      .burn-card {
+        grid-template-columns: minmax(0, 0.95fr) minmax(145px, 1.1fr);
+        min-height: 132px;
+        border-radius: 18px;
+      }
+
+      .burn-card-copy {
+        min-height: 132px;
+        padding: 18px 14px 14px;
+      }
+
+      .burn-card-media {
+        min-height: 132px;
+      }
+
+      .burn-card-media::before {
+        inset: -8px auto -8px -16px;
+        width: 54%;
+        background:
+          linear-gradient(90deg, rgba(255, 252, 244, 0.96), rgba(255, 252, 244, 0.68) 34%, rgba(255, 252, 244, 0));
+        filter: blur(9px);
+      }
+
+      .burn-card-media img {
+        min-height: 132px;
+      }
+
+      .burn-card-title {
+        font-size: 1.55rem;
+      }
+
+      .footer-burn-card-row .burn-card-title {
+        font-size: 1.72rem;
+      }
+
+      .burn-card-text {
+        margin-bottom: 8px;
+        font-size: 0.82rem;
+        line-height: 1.55;
+        letter-spacing: 0.06em;
+      }
+
+      .burn-card-arrow {
+        width: 34px;
+        height: 34px;
+        margin-top: 12px;
+      }
+
     }
 
     #openMessagePopup {
@@ -1974,7 +2212,8 @@
     }
 
     /* FAQお問い合わせフォーム */
-    .faq-contact-form {
+    .faq-contact-form,
+    .collab-request-form {
       background: rgba(255, 255, 255, 0.88);
       border: 1px solid rgba(47, 79, 79, 0.14);
       border-radius: 22px;
@@ -1983,7 +2222,9 @@
     }
 
     .faq-contact-form input:focus,
-    .faq-contact-form textarea:focus {
+    .faq-contact-form textarea:focus,
+    .collab-request-form input:focus,
+    .collab-request-form textarea:focus {
       border-color: rgba(210, 105, 30, 0.4);
       box-shadow: 0 0 0 3px rgba(210, 105, 30, 0.1);
     }
@@ -3217,10 +3458,17 @@
       text-decoration: none;
       font-weight: 900;
       letter-spacing: 0.04em;
+      opacity: 1 !important;
+      visibility: visible !important;
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.35),
         0 12px 28px rgba(74, 55, 40, 0.18);
       transition: transform 0.2s var(--ease-soft), box-shadow 0.2s var(--ease-soft);
+    }
+
+    .sns-link-card::before,
+    .sns-link-card::after {
+      pointer-events: none;
     }
 
     .sns-link-card:hover {
@@ -3261,6 +3509,7 @@
     @media (max-width: 768px) {
       .hero-character-row {
         width: min(320px, calc(100% - 16px));
+        margin-top: -32px;
         grid-template-columns: 50px minmax(0, 1fr) 50px;
         gap: 10px;
       }
@@ -4589,17 +4838,18 @@
 
     /* 右下の法的リンク */
     .legal-links {
-      position: fixed;
-      bottom: 12px;
-      right: 12px;
+      position: static;
+      margin: 28px auto 18px;
       z-index: 30;
       display: flex;
       flex-direction: column;
       gap: 6px;
-      align-items: flex-end;
-      font-size: 0.75rem;
-      opacity: 0.6;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      opacity: 0.82;
       transition: opacity 0.3s ease;
+      color: rgba(45, 45, 45, 0.78);
     }
 
     .legal-links:hover {
@@ -4607,7 +4857,7 @@
     }
 
     .legal-links a {
-      color: var(--color-forest);
+      color: rgba(45, 45, 45, 0.78);
       text-decoration: none;
       padding: 4px 8px;
       transition: opacity 0.2s ease;
@@ -4617,12 +4867,29 @@
       text-decoration: underline;
     }
 
+    .legal-link-row {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .legal-link-row-sub {
+      font-size: 0.76rem;
+      opacity: 0.74;
+    }
+
+    .copyright {
+      margin-top: 2px;
+      letter-spacing: 0.08em;
+    }
+
     @media (max-width: 768px) {
       .legal-links {
-        font-size: 0.3rem;
-        bottom: 8px;
-        right: 8px;
-        gap: 0px;
+        margin: 22px auto 14px;
+        font-size: 0.74rem;
+        gap: 3px;
       }
 
       .legal-links a {
@@ -5007,6 +5274,2565 @@
         bottom: 34px !important;
       }
     }
+
+    /* Static two-row layout for the footer actions. */
+    .popup-buttons {
+      width: min(760px, 96vw) !important;
+      padding-left: 0 !important;
+      display: block !important;
+    }
+
+    .gift-fan-menu {
+      top: 0 !important;
+      width: 100% !important;
+      height: auto !important;
+      display: grid !important;
+      gap: 12px !important;
+      justify-items: center;
+    }
+
+    .hero-diagnosis-menu {
+      width: min(760px, calc(100% - 32px));
+      margin: 24px auto 4px;
+      position: relative;
+      z-index: 18;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions {
+      box-sizing: border-box;
+      flex-wrap: nowrap !important;
+      justify-content: flex-start !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      scroll-snap-type: none !important;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action {
+      flex: 0 0 104px !important;
+      width: 104px !important;
+      scroll-snap-align: none;
+    }
+
+    .footer-burn-card-row {
+      order: 1;
+      width: 100%;
+      margin: 0 auto 2px !important;
+    }
+
+    .footer-burn-card-row .burn-card {
+      width: 100%;
+      margin: 0 auto !important;
+    }
+
+    .gift-fan-diagnosis-actions,
+    .gift-fan-actions {
+      position: static !important;
+      inset: auto !important;
+      width: 100% !important;
+      height: auto !important;
+      display: flex !important;
+      flex-wrap: wrap !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 14px !important;
+      transform: none !important;
+      overflow: visible !important;
+      pointer-events: auto !important;
+      color: inherit !important;
+      font-size: inherit !important;
+    }
+
+    .gift-fan-actions {
+      flex-wrap: nowrap !important;
+    }
+
+    .gift-fan-diagnosis-actions {
+      order: 1;
+      position: relative !important;
+      padding: 38px 18px 16px !important;
+      border: 1.5px dashed rgba(237, 126, 57, 0.78);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.28);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.54),
+        0 12px 26px rgba(91, 67, 42, 0.1);
+    }
+
+    .gift-fan-diagnosis-actions::before {
+      content: "♡  診断メニュー  ♡";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 0 22px;
+      background: #faf1e2;
+      color: #282828;
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .gift-fan-actions {
+      order: 2;
+    }
+
+    .gift-fan-action,
+    .gift-fan-menu.is-open .gift-fan-action[data-fan-item] {
+      position: relative !important;
+      right: auto !important;
+      bottom: auto !important;
+      width: 78px !important;
+      height: 74px !important;
+      flex: 0 0 78px !important;
+      padding: 0 !important;
+      flex-direction: column !important;
+      gap: 4px !important;
+      display: inline-flex !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      transform: none !important;
+      border-radius: 18px !important;
+      font-size: 0.78rem !important;
+      font-weight: 900 !important;
+      line-height: 1.15 !important;
+      overflow: hidden !important;
+      border: 1px solid rgba(255, 255, 255, 0.48) !important;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.18)) !important;
+      color: rgba(71, 63, 54, 0.86) !important;
+      backdrop-filter: blur(18px) saturate(1.35);
+      -webkit-backdrop-filter: blur(18px) saturate(1.35);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.72),
+        inset 0 -18px 26px rgba(255, 255, 255, 0.12),
+        0 10px 24px rgba(78, 57, 39, 0.16) !important;
+    }
+
+    .gift-fan-diagnosis-action,
+    .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action {
+      position: relative !important;
+      right: auto !important;
+      bottom: auto !important;
+      width: 104px !important;
+      height: 66px !important;
+      flex: 0 1 104px !important;
+      padding: 0 !important;
+      flex-direction: column !important;
+      gap: 5px !important;
+      display: inline-flex !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      transform: none !important;
+      border-radius: 18px !important;
+      font-size: 0.95rem !important;
+      font-weight: 900 !important;
+      line-height: 1.15 !important;
+      overflow: hidden !important;
+      border: 1px solid rgba(255, 255, 255, 0.48) !important;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.18)) !important;
+      color: rgba(71, 63, 54, 0.86) !important;
+      backdrop-filter: blur(18px) saturate(1.35);
+      -webkit-backdrop-filter: blur(18px) saturate(1.35);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.72),
+        inset 0 -18px 26px rgba(255, 255, 255, 0.12),
+        0 10px 24px rgba(78, 57, 39, 0.16) !important;
+    }
+
+    .gift-fan-action[data-fan-item="price"] {
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.66), rgba(255, 246, 230, 0.24)) !important;
+      color: rgba(86, 64, 45, 0.92) !important;
+      order: 1;
+    }
+
+    .footer-btn-icon {
+      position: relative;
+      z-index: 2;
+      display: block;
+      width: 30px;
+      height: 30px;
+      font-size: 0;
+      line-height: 0;
+      color: rgba(45, 50, 54, 0.9);
+    }
+
+    .gift-fan-action .footer-btn-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .footer-btn-icon::before {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: currentColor;
+      -webkit-mask: var(--footer-icon) center / contain no-repeat;
+      mask: var(--footer-icon) center / contain no-repeat;
+    }
+
+    .footer-btn-icon[data-icon="heart"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M32 54S8 39 8 22c0-8 6-14 14-14 5 0 9 3 10 7 1-4 5-7 10-7 8 0 14 6 14 14 0 17-24 32-24 32Z'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="school"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 54h48'/%3E%3Cpath d='M18 54V34h28v20'/%3E%3Cpath d='M24 34V21l8-7 8 7v13'/%3E%3Cpath d='M32 14V7h10v9H32'/%3E%3Cpath d='M29 54V42a3 3 0 0 1 6 0v12'/%3E%3Cpath d='M14 54V37h10'/%3E%3Cpath d='M50 54V37H40'/%3E%3Ccircle cx='32' cy='28' r='3'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="cloud"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 43h26a12 12 0 0 0 0-24 15 15 0 0 0-29-1A12 12 0 0 0 20 43Z'/%3E%3Cpath d='M20 53l-4 6'/%3E%3Cpath d='M34 53l-4 6'/%3E%3Cpath d='M48 53l-4 6'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="star"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m32 6 8 17 18 2-13 13 3 18-16-9-16 9 3-18L6 25l18-2 8-17Z'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="image"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='10' y='12' width='44' height='40' rx='3'/%3E%3Ccircle cx='39' cy='24' r='5'/%3E%3Cpath d='M12 48 27 32l10 10 7-8 10 14'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="book"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M32 51c-7-6-15-7-24-3V13c9-4 17-3 24 3v35Z'/%3E%3Cpath d='M32 51c7-6 15-7 24-3V13c-9-4-17-3-24 3v35Z'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="vote"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 31h40l6 11v15H6V42l6-11Z'/%3E%3Cpath d='M15 42h34'/%3E%3Cpath d='M28 29 17 18 31 4l16 16-12 9'/%3E%3Cpath d='M24 29h16'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="mail"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='8' y='16' width='48' height='34' rx='4'/%3E%3Cpath d='m10 19 22 18 22-18'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="share"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='17' cy='34' r='8'/%3E%3Ccircle cx='47' cy='17' r='8'/%3E%3Ccircle cx='47' cy='49' r='8'/%3E%3Cpath d='M24 30 40 21'/%3E%3Cpath d='M24 38 40 46'/%3E%3C/svg%3E");
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="school"] {
+      order: 1;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="love"] {
+      order: 2;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] {
+      order: 3;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="romance"] {
+      order: 4;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="blank-1"] {
+      order: 5;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="blank-2"] {
+      order: 6;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="blank-3"] {
+      order: 7;
+    }
+
+    @media (max-width: 520px) {
+      .hero-diagnosis-menu {
+        width: min(360px, calc(100% - 16px));
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .gift-fan-diagnosis-actions {
+        gap: 8px !important;
+        padding: 34px 10px 12px !important;
+        border-radius: 20px;
+      }
+
+      .gift-fan-diagnosis-action,
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action {
+        width: calc((100% - 24px) / 4) !important;
+        height: 70px !important;
+        flex: 0 0 calc((100% - 24px) / 4) !important;
+        border-radius: 16px !important;
+        font-size: 0.8rem !important;
+        gap: 3px !important;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-actions {
+        width: 100% !important;
+        max-width: 100% !important;
+        gap: 8px !important;
+        padding: 34px 10px 12px !important;
+        justify-content: flex-start !important;
+        scroll-padding-left: 10px;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-action,
+      .hero-diagnosis-menu .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action {
+        width: 78px !important;
+        flex: 0 0 78px !important;
+        font-size: 0.72rem !important;
+      }
+
+      .gift-fan-actions {
+        gap: 7px !important;
+      }
+
+      .gift-fan-action,
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item] {
+        width: calc((100% - 28px) / 5) !important;
+        height: 64px !important;
+        flex: 0 0 calc((100% - 28px) / 5) !important;
+        border-radius: 16px !important;
+        font-size: 0.68rem !important;
+        gap: 2px !important;
+      }
+
+      .gift-fan-action .footer-btn-icon,
+      .gift-fan-diagnosis-action .footer-btn-icon {
+        width: 22px;
+        height: 22px;
+      }
+    }
+
+    .gift-fan-action::before,
+    .gift-fan-diagnosis-action::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0) 46%),
+        radial-gradient(circle at 24% 16%, rgba(255, 255, 255, 0.66), rgba(255, 255, 255, 0) 34%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .gift-fan-action::after,
+    .gift-fan-diagnosis-action::after {
+      content: "";
+      position: absolute;
+      inset: auto 8px 7px 8px;
+      height: 1px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.58);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .gift-fan-action,
+    .gift-fan-diagnosis-action {
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.46);
+    }
+
+    .gift-fan-action {
+      z-index: 1;
+    }
+
+    .gift-fan-action > *,
+    .gift-fan-diagnosis-action > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .gift-fan-new-badge {
+      z-index: 3;
+    }
+
+    #openCompositingPopup .gift-fan-new-badge,
+    #openVotePopup .gift-fan-new-badge {
+      display: none !important;
+    }
+
+    .gift-fan-menu.is-diagnosis-open .gift-fan-action:not([data-fan-item="price"]) {
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      transform: none !important;
+    }
+
+    .gift-fan-new-badge {
+      top: -10px !important;
+    }
+
+    @media (max-width: 520px) {
+      .popup-buttons-bar {
+        padding: 12px 0 8px;
+      }
+
+      .popup-buttons {
+        width: min(360px, 96vw) !important;
+      }
+
+      .gift-fan-diagnosis-actions,
+      .gift-fan-actions {
+        gap: 6px !important;
+      }
+
+      .gift-fan-actions {
+        flex-wrap: nowrap !important;
+      }
+
+      .gift-fan-diagnosis-actions {
+        padding: 34px 10px 12px !important;
+      }
+
+      .gift-fan-diagnosis-actions::before {
+        font-size: 1rem;
+        padding: 0 14px;
+      }
+
+      .gift-fan-action,
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item] {
+        width: calc((100% - 24px) / 5) !important;
+        height: 64px !important;
+        flex: 0 0 calc((100% - 24px) / 5) !important;
+        font-size: 0.7rem !important;
+      }
+
+      .gift-fan-diagnosis-action,
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action {
+        width: calc((100% - 18px) / 4) !important;
+        height: 70px !important;
+        flex: 0 0 calc((100% - 18px) / 4) !important;
+        font-size: 0.8rem !important;
+      }
+
+      .footer-btn-icon {
+        width: 24px;
+        height: 24px;
+      }
+
+      .gift-fan-action .footer-btn-icon {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    .hero-intro .headline {
+      position: relative;
+      z-index: 4;
+      margin-top: 28px;
+      margin-bottom: -6px;
+    }
+
+    .hero-intro .hero-carousel-shell {
+      margin-top: -88px;
+    }
+
+    @media (max-width: 768px) {
+      .hero-intro .headline {
+        margin-top: 22px;
+        margin-bottom: -4px;
+      }
+
+      .hero-intro .hero-carousel-shell {
+        margin-top: -76px;
+      }
+    }
+
+    /* Glassmorphism finish for the main action buttons. */
+    .hero-character-action,
+    .gift-fan-action,
+    .gift-fan-diagnosis-action,
+    .burn-card-arrow,
+    .gacha-btn {
+      position: relative !important;
+      overflow: hidden !important;
+      isolation: isolate;
+      border-color: rgba(255, 255, 255, 0.54) !important;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.2) 58%, rgba(255, 248, 238, 0.34)) !important;
+      color: rgba(45, 50, 54, 0.9) !important;
+      backdrop-filter: blur(22px) saturate(1.45) !important;
+      -webkit-backdrop-filter: blur(22px) saturate(1.45) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.82),
+        inset 0 -18px 28px rgba(255, 255, 255, 0.13),
+        0 12px 28px rgba(78, 57, 39, 0.17) !important;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+
+    .hero-character-action::before,
+    .gift-fan-action::before,
+    .gift-fan-diagnosis-action::before,
+    .burn-card-arrow::before,
+    .gacha-btn::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0) 44%),
+        radial-gradient(circle at 22% 14%, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0) 34%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-character-action > *,
+    .gift-fan-action > *,
+    .gift-fan-diagnosis-action > *,
+    .burn-card-arrow > *,
+    .gacha-btn > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-character-action:hover,
+    .gift-fan-action:hover,
+    .gift-fan-diagnosis-action:hover,
+    .burn-card-arrow:hover,
+    .gacha-btn:hover {
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -18px 28px rgba(255, 255, 255, 0.18),
+        0 16px 32px rgba(78, 57, 39, 0.21) !important;
+    }
+
+    .footer-burn-card-row .burn-card-arrow {
+      display: grid !important;
+      place-items: center !important;
+      font-size: 0 !important;
+      line-height: 0 !important;
+      text-indent: 0 !important;
+    }
+
+    .footer-burn-card-row .burn-card-arrow::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 2;
+      width: 9px;
+      height: 9px;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      transform-origin: center;
+      pointer-events: none;
+    }
+
+    @media (max-width: 640px) {
+      .footer-burn-card-row .burn-card-arrow::after {
+        width: 8px;
+        height: 8px;
+        border-width: 1.8px;
+      }
+    }
+
+    /* Hero diagnosis menu: keep the dotted frame stable, scroll only the buttons. */
+    .hero-diagnosis-menu {
+      box-sizing: border-box;
+      width: min(760px, calc(100% - 32px));
+      margin: 24px auto 4px;
+      padding: 24px 18px 14px;
+      position: relative;
+      z-index: 18;
+      border: 1.5px dashed rgba(237, 126, 57, 0.78);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.28);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.54),
+        0 12px 26px rgba(91, 67, 42, 0.1);
+    }
+
+    .hero-diagnosis-menu::before {
+      content: "♡  診断メニュー  ♡";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 0 22px;
+      background: #faf1e2;
+      color: #282828;
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions {
+      --hero-diagnosis-scroll-distance: 230px;
+      --hero-diagnosis-scroll-duration: 14s;
+      box-sizing: border-box;
+      width: min(430px, 100%) !important;
+      max-width: 100% !important;
+      height: 98px !important;
+      margin: 0 auto !important;
+      padding: 12px 0 0 !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      justify-content: flex-start !important;
+      align-items: flex-start !important;
+      gap: 0 !important;
+      overflow-x: auto !important;
+      overflow-y: visible !important;
+      scroll-snap-type: none !important;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      pointer-events: none;
+    }
+
+    .hero-diagnosis-menu .hero-diagnosis-track {
+      display: flex !important;
+      flex: 0 0 auto;
+      flex-wrap: nowrap !important;
+      align-items: flex-start !important;
+      gap: 14px !important;
+      width: max-content;
+      min-width: max-content;
+      will-change: transform;
+      animation: heroDiagnosisScroll var(--hero-diagnosis-scroll-duration) linear infinite;
+      animation-play-state: paused;
+    }
+
+    .hero-diagnosis-menu.is-scroll-ready .hero-diagnosis-track {
+      animation-play-state: running;
+    }
+
+    @keyframes heroDiagnosisScroll {
+      0%,
+      24% {
+        transform: translateX(0);
+      }
+
+      78%,
+      100% {
+        transform: translateX(calc(var(--hero-diagnosis-scroll-distance) * -1));
+      }
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions::before {
+      content: none !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action {
+      width: 82px !important;
+      height: 66px !important;
+      flex: 0 0 82px !important;
+      border-radius: 14px !important;
+      font-size: 0.8rem !important;
+      scroll-snap-align: none;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="school"] {
+      border-color: rgba(80, 154, 255, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(206, 230, 255, 0.74), rgba(72, 148, 255, 0.32)) !important;
+      color: #174f9a !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(80, 154, 255, 0.18) !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="love"] {
+      border-color: rgba(159, 112, 255, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(226, 212, 255, 0.74), rgba(151, 105, 255, 0.34)) !important;
+      color: #5530a5 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(151, 105, 255, 0.18) !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] {
+      border-color: rgba(245, 190, 55, 0.55) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 240, 178, 0.78), rgba(255, 202, 64, 0.36)) !important;
+      color: #7a5600 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(245, 190, 55, 0.18) !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="romance"] {
+      border-color: rgba(255, 116, 174, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 210, 230, 0.72), rgba(255, 130, 184, 0.32)) !important;
+      color: #8a2555 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(255, 117, 178, 0.2) !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="blank-1"].beauty-collab {
+      border-color: rgba(238, 141, 66, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 226, 194, 0.78), rgba(255, 159, 88, 0.36)) !important;
+      color: #8a4217 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(238, 141, 66, 0.18) !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="blank-2"].beauty-collab {
+      border-color: rgba(234, 188, 48, 0.54) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 244, 184, 0.82), rgba(255, 213, 76, 0.38)) !important;
+      color: #7a5900 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(234, 188, 48, 0.18) !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="blank-3"].beauty-collab {
+      border-color: rgba(74, 174, 218, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(210, 242, 255, 0.82), rgba(91, 191, 232, 0.34)) !important;
+      color: #17607d !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(74, 174, 218, 0.18) !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="school"] .footer-btn-icon,
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="love"] .footer-btn-icon,
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] .footer-btn-icon,
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="romance"] .footer-btn-icon,
+    .hero-diagnosis-menu .gift-fan-diagnosis-action.beauty-collab .footer-btn-icon {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="compositing"] {
+      border-color: rgba(255, 116, 174, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 210, 230, 0.72), rgba(255, 130, 184, 0.32)) !important;
+      color: #8a2555 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(255, 117, 178, 0.2) !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="encyclopedia"] {
+      border-color: rgba(80, 154, 255, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(206, 230, 255, 0.74), rgba(72, 148, 255, 0.32)) !important;
+      color: #174f9a !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(80, 154, 255, 0.18) !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="vote"] {
+      border-color: rgba(159, 112, 255, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(226, 212, 255, 0.74), rgba(151, 105, 255, 0.34)) !important;
+      color: #5530a5 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(151, 105, 255, 0.18) !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="faq"] {
+      border-color: rgba(245, 190, 55, 0.55) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 240, 178, 0.78), rgba(255, 202, 64, 0.36)) !important;
+      color: #7a5600 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(245, 190, 55, 0.18) !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="sns"] {
+      border-color: rgba(73, 184, 124, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(210, 244, 224, 0.76), rgba(78, 200, 132, 0.34)) !important;
+      color: #176b3d !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(73, 184, 124, 0.18) !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="compositing"] .footer-btn-icon,
+    .gift-fan-menu .gift-fan-action[data-fan-item="encyclopedia"] .footer-btn-icon,
+    .gift-fan-menu .gift-fan-action[data-fan-item="vote"] .footer-btn-icon,
+    .gift-fan-menu .gift-fan-action[data-fan-item="faq"] .footer-btn-icon,
+    .gift-fan-menu .gift-fan-action[data-fan-item="sns"] .footer-btn-icon {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item^="blank"] {
+      overflow: visible !important;
+    }
+
+    .footer-btn-icon[data-icon="beauty-mirror"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='4.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='27' cy='25' r='15'/%3E%3Ccircle cx='27' cy='25' r='20'/%3E%3Cpath d='M16 42c3 4 1 7-2 10-2 3-1 7 2 9 3 2 7 1 9-2 2-3 1-7 4-10 2-2 5-1 8-3'/%3E%3Cpath d='M41 38c4-4 11-3 15 1s4 11 0 15c-5 5-12 8-16 5-4-3-10-11-8-17 1-4 5-5 9-4Z'/%3E%3Cpath d='M42 48c4-1 6-3 7-7 1 4 3 6 7 7-4 1-6 3-7 7-1-4-3-6-7-7Z'/%3E%3Cpath d='M50 17c3-1 5-3 6-6 1 3 3 5 6 6-3 1-5 3-6 6-1-3-3-5-6-6Z'/%3E%3Ccircle cx='11' cy='40' r='2.5'/%3E%3Ccircle cx='58' cy='30' r='2.5'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="beauty-compact"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='4.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 27c0-10 8-18 18-18s18 8 18 18'/%3E%3Cellipse cx='34' cy='27' rx='20' ry='7'/%3E%3Cpath d='M20 29c4 5 24 5 28 0'/%3E%3Cpath d='M25 24l8-8M34 27l10-10'/%3E%3Cpath d='M14 30c3 16 13 24 27 24 7 0 13-3 16-7'/%3E%3Cellipse cx='34' cy='39' rx='15' ry='10'/%3E%3Cellipse cx='34' cy='39' rx='11' ry='7'/%3E%3Cpath d='M56 36l-10 22c-1 3 0 6 3 7s6 0 7-3l10-22'/%3E%3Cpath d='M55 35c3-5 10-6 13-2 2 3 1 7-3 10'/%3E%3Cpath d='M6 30c3-1 5-3 6-6 1 3 3 5 6 6-3 1-5 3-6 6-1-3-3-5-6-6Z'/%3E%3Cpath d='M31 6c2 0 3-1 4-3 1 2 2 3 4 3-2 1-3 2-4 4-1-2-2-3-4-4Z'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="watercolor-story"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='4.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M25 24c-7 1-13 6-14 14-2 11 6 19 18 20 11 1 20-5 22-14 1-5-3-5-1-9 1-4 5-4 3-10-3-8-13-11-28-1Z'/%3E%3Ccircle cx='23' cy='34' r='3.5'/%3E%3Ccircle cx='31' cy='30' r='3.5'/%3E%3Ccircle cx='39' cy='33' r='3.5'/%3E%3Ccircle cx='20' cy='42' r='3.5'/%3E%3Ccircle cx='29' cy='48' r='3.5'/%3E%3Ccircle cx='41' cy='44' r='4'/%3E%3Cpath d='M43 56 56 28'/%3E%3Cpath d='m56 28 4 2-12 28c-1 2-3 3-5 2s-2-3-1-5'/%3E%3Cpath d='M55 27c0-4 4-8 5-11 3 4 3 8-1 12'/%3E%3Cpath d='M20 20c-4-4-2-10 4-12 2 4 1 9-4 12Z'/%3E%3Cpath d='M39 23c-3-5 0-10 7-10 1 5-2 9-7 10Z'/%3E%3Cpath d='M28 18c-4-5-2-12 4-14 4 5 2 11-1 14'/%3E%3Cpath d='M5 21c3-1 5-3 6-7 1 4 3 6 6 7-3 1-5 3-6 7-1-4-3-6-6-7Z'/%3E%3Cpath d='M51 46c2-1 4-3 5-5 1 2 3 4 5 5-2 1-4 3-5 5-1-2-3-4-5-5Z'/%3E%3Cpath d='M47 55c2 0 3 1 4 3 1-2 2-3 4-3-2-1-3-2-4-4-1 2-2 3-4 4Z'/%3E%3Ccircle cx='8' cy='52' r='2'/%3E%3C/svg%3E");
+    }
+
+    .gift-fan-collab-badge {
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      z-index: 4;
+      min-width: 48px;
+      height: 20px;
+      padding: 0 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateX(-50%);
+      border-radius: 6px;
+      background: rgba(255, 248, 239, 0.98);
+      color: #ff3e9a;
+      font-size: 9px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.06em;
+      box-shadow:
+        0 3px 8px rgba(89, 70, 52, 0.16),
+        inset 0 0 0 1px rgba(47, 79, 79, 0.18);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .hero-diagnosis-menu .beauty-collab .gift-fan-collab-badge {
+      top: calc(100% + 4px);
+      bottom: auto;
+    }
+
+    .gift-fan-person-badge {
+      position: absolute;
+      top: auto;
+      bottom: calc(100% + 4px);
+      left: 50%;
+      z-index: 4;
+      width: 58px;
+      min-width: 58px;
+      max-width: 58px;
+      height: 20px;
+      padding: 0 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateX(-50%);
+      border-radius: 6px;
+      background: rgba(255, 248, 239, 0.98);
+      color: #6c5240;
+      font-size: 9px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.03em;
+      box-shadow:
+        0 3px 8px rgba(89, 70, 52, 0.16),
+        inset 0 0 0 1px rgba(47, 79, 79, 0.18);
+      pointer-events: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @media (max-width: 520px) {
+      .hero-diagnosis-menu {
+        width: calc(100vw - 32px);
+        max-width: 360px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 20px 10px 12px;
+        border-radius: 20px;
+      }
+
+      .hero-diagnosis-menu::before {
+        font-size: 1rem;
+        padding: 0 14px;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-actions {
+        height: 88px !important;
+        padding-top: 12px !important;
+        align-items: flex-start !important;
+        gap: 0 !important;
+      }
+
+      .hero-diagnosis-menu .hero-diagnosis-track {
+        gap: 7px !important;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-action {
+        width: 62px !important;
+        height: 58px !important;
+        flex: 0 0 62px !important;
+        border-radius: 13px !important;
+        font-size: 0.62rem !important;
+      }
+
+      .gift-fan-collab-badge {
+        top: -10px;
+        min-width: 42px;
+        height: 18px;
+        padding: 0 6px;
+        font-size: 8px;
+      }
+
+      .hero-collab-diagnosis-menu .beauty-collab .gift-fan-collab-badge {
+        top: calc(100% + 4px);
+        bottom: auto;
+      }
+
+      .gift-fan-person-badge {
+        top: auto;
+        bottom: calc(100% + 4px);
+        width: 54px;
+        min-width: 54px;
+        max-width: 54px;
+        height: 18px;
+        padding: 0 6px;
+        font-size: 8px;
+      }
+
+      .popup-buttons-bar .popup-buttons,
+      .popup-buttons-bar .gift-fan-menu,
+      .popup-buttons-bar .footer-burn-card-row {
+        width: calc(100vw - 32px) !important;
+        max-width: 360px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="glassmorphism.css">
+  <style>
+    .popup-buttons-bar {
+      background: transparent !important;
+    }
+
+    .popup-buttons-bar .container,
+    .popup-buttons-bar .popup-buttons,
+    .popup-buttons-bar .gift-fan-menu,
+    .popup-buttons-bar .footer-burn-card-row {
+      border: 0 !important;
+      outline: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    .popup-buttons-bar .popup-buttons::before,
+    .popup-buttons-bar .popup-buttons::after,
+    .popup-buttons-bar .gift-fan-menu::before,
+    .popup-buttons-bar .gift-fan-menu::after,
+    .popup-buttons-bar .footer-burn-card-row::before,
+    .popup-buttons-bar .footer-burn-card-row::after {
+      display: none !important;
+    }
+
+    .footer-burn-card-row .burn-card {
+      border: 0 !important;
+    }
+
+    .footer-burn-card-row .burn-card::after,
+    .footer-burn-card-row .burn-card-media::before {
+      display: none !important;
+    }
+
+    .hero-character-action.mode {
+      overflow: hidden !important;
+    }
+
+    .hero-character-action.mode::after {
+      content: "" !important;
+      position: absolute !important;
+      right: 6px !important;
+      bottom: 6px !important;
+      z-index: 3 !important;
+      display: block !important;
+      opacity: 1 !important;
+      width: 17px !important;
+      height: 17px !important;
+      border-radius: 999px !important;
+      background-color: rgba(255, 248, 239, 0.96) !important;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236c5240' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 7a8 8 0 0 0-13.66-2.34L4 7'/%3E%3Cpath d='M4 3v4h4'/%3E%3Cpath d='M4 17a8 8 0 0 0 13.66 2.34L20 17'/%3E%3Cpath d='M20 21v-4h-4'/%3E%3C/svg%3E") !important;
+      background-repeat: no-repeat !important;
+      background-position: center !important;
+      background-size: 11px 11px !important;
+      box-shadow:
+        0 3px 8px rgba(89, 70, 52, 0.16),
+        inset 0 0 0 1px rgba(108, 82, 64, 0.18) !important;
+      pointer-events: none !important;
+    }
+
+    .gift-fan-menu .gift-fan-actions .gift-fan-action[data-fan-item] {
+      border: 1px solid rgba(255, 255, 255, 0.46) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.22) 58%, rgba(255, 248, 238, 0.28)) !important;
+      color: rgba(45, 50, 54, 0.9) !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        inset 0 -14px 22px rgba(255, 255, 255, 0.12),
+        0 12px 26px rgba(78, 57, 39, 0.13) !important;
+      backdrop-filter: blur(22px) saturate(1.45) !important;
+      -webkit-backdrop-filter: blur(22px) saturate(1.45) !important;
+    }
+
+    .gift-fan-menu .gift-fan-actions .gift-fan-action[data-fan-item]::before,
+    .gift-fan-menu .gift-fan-actions .gift-fan-action[data-fan-item]::after {
+      display: block !important;
+    }
+
+    .gift-fan-menu .gift-fan-actions .gift-fan-action[data-fan-item]::before {
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.48), rgba(255, 255, 255, 0) 48%),
+        radial-gradient(circle at 24% 16%, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0) 34%) !important;
+    }
+
+    .gift-fan-menu .gift-fan-actions .gift-fan-action[data-fan-item]::after {
+      background: rgba(255, 255, 255, 0.46) !important;
+    }
+
+    .gift-fan-menu .gift-fan-actions .gift-fan-action[data-fan-item] .footer-btn-icon {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    @media (min-width: 1024px) {
+      #main-content {
+        display: grid;
+        grid-template-columns: minmax(420px, 1fr) minmax(420px, 1fr);
+        grid-template-areas:
+          "title title"
+          "left right"
+          "legal legal";
+        align-items: start;
+        column-gap: clamp(28px, 4vw, 72px);
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 18px clamp(28px, 5vw, 64px) 42px;
+      }
+
+      .hero-intro {
+        display: contents;
+        min-height: 0;
+        padding: 0;
+      }
+
+      .mobby-title,
+      .hero-intro .headline {
+        grid-area: title;
+        justify-self: center;
+        text-align: center;
+      }
+
+      .mobby-title {
+        padding-top: 0;
+      }
+
+      .mobby-title img {
+        width: min(24vw, 220px);
+        margin: 0 auto;
+      }
+
+      .hero-intro .headline {
+        margin-top: 132px;
+        margin-bottom: 0;
+      }
+
+      .hero-intro .hero {
+        grid-area: left;
+        width: 100%;
+        min-width: 0;
+      }
+
+      .hero-intro .hero .container {
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+      }
+
+      .hero-intro .hero-carousel-shell {
+        width: min(420px, 100%);
+        margin: -10px auto 10px;
+      }
+
+      .hero-diagnosis-menu {
+        width: 100%;
+        max-width: 520px;
+        margin: 24px auto 0;
+      }
+
+      .popup-buttons-bar {
+        grid-area: right;
+        width: 100%;
+        align-self: center;
+        margin: 0;
+        padding: 0;
+      }
+
+      .popup-buttons-bar .container,
+      .popup-buttons-bar .popup-buttons,
+      .popup-buttons-bar .gift-fan-menu {
+        width: 100%;
+        max-width: 520px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .popup-buttons-bar .footer-burn-card-row {
+        width: min(460px, 100%);
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .popup-buttons-bar .footer-burn-card-row .burn-card {
+        min-height: 165px;
+      }
+
+      .popup-buttons-bar .footer-burn-card-row .burn-card-copy,
+      .popup-buttons-bar .footer-burn-card-row .burn-card-media {
+        min-height: 165px;
+      }
+
+      .popup-buttons-bar .footer-burn-card-row .burn-card-copy {
+        padding: 30px 30px 26px;
+      }
+
+      .popup-buttons-bar .footer-burn-card-row .burn-card-media img {
+        min-height: 165px;
+      }
+
+      .popup-buttons-bar .footer-burn-card-row .burn-card-text {
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+      .popup-buttons-bar .footer-burn-card-row .burn-card-title {
+        font-size: clamp(1.85rem, 4.3vw, 2.7rem);
+      }
+
+      #mobbyDiagnosisWrapper {
+        grid-column: 2;
+        grid-row: 2;
+        align-self: end;
+        justify-content: center !important;
+        margin-top: 0 !important;
+        transform: translateY(calc(100% + 18px));
+      }
+
+      .legal-links {
+        grid-area: legal;
+        justify-self: center;
+        text-align: center;
+        margin-top: 32px;
+      }
+    }
+
+    /* Static two-row layout for the footer actions. */
+    .popup-buttons {
+      width: min(760px, 96vw) !important;
+      padding-left: 0 !important;
+      display: block !important;
+    }
+
+    .gift-fan-menu {
+      top: 0 !important;
+      width: 100% !important;
+      height: auto !important;
+      display: grid !important;
+      gap: 0 !important;
+      row-gap: 0 !important;
+      justify-items: center;
+    }
+
+    .hero-diagnosis-menu,
+    .hero-collab-diagnosis-menu {
+      width: min(760px, calc(100% - 32px));
+      margin: 24px auto 4px;
+      position: relative;
+      z-index: 18;
+    }
+
+    .hero-collab-diagnosis-menu {
+      margin-top: 14px;
+    }
+
+    .hero-collab-diagnosis-menu[hidden] {
+      display: none !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions {
+      box-sizing: border-box;
+      flex-wrap: nowrap !important;
+      justify-content: flex-start !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      scroll-snap-type: none !important;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action {
+      flex: 0 0 104px !important;
+      width: 104px !important;
+      scroll-snap-align: none;
+    }
+
+    .footer-burn-card-row {
+      order: 1;
+      width: 100%;
+      margin: 0 auto 0 !important;
+    }
+
+    .footer-burn-card-row .burn-card {
+      width: 100%;
+      margin: 0 auto 0 !important;
+      border-radius: 24px 24px 0 0;
+      background: #faf1e2;
+      background-color: #faf1e2;
+      box-shadow: none;
+    }
+
+    .gift-fan-diagnosis-actions,
+    .gift-fan-actions {
+      position: static !important;
+      inset: auto !important;
+      width: 100% !important;
+      height: auto !important;
+      display: flex !important;
+      flex-wrap: wrap !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 14px !important;
+      transform: none !important;
+      overflow: visible !important;
+      pointer-events: auto !important;
+      color: inherit !important;
+      font-size: inherit !important;
+    }
+
+    .gift-fan-actions {
+      flex-wrap: nowrap !important;
+      gap: 10px !important;
+    }
+
+    .gift-fan-menu > .gift-fan-actions {
+      overflow: hidden !important;
+    }
+
+    .gift-fan-diagnosis-actions {
+      order: 1;
+      position: relative !important;
+      padding: 38px 18px 16px !important;
+      border: 1.5px dashed rgba(237, 126, 57, 0.78);
+      border-radius: 24px;
+      background: #faf1e2;
+      background-color: #faf1e2;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.54),
+        0 12px 26px rgba(91, 67, 42, 0.1);
+    }
+
+    .gift-fan-diagnosis-actions::before {
+      content: "♡  診断メニュー  ♡";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 0 22px;
+      background: #faf1e2;
+      color: #282828;
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .gift-fan-actions {
+      order: 2;
+      box-sizing: border-box;
+      padding: 14px 12px 16px !important;
+      background: transparent;
+      background-color: transparent;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      overflow: hidden;
+    }
+
+    .gift-fan-action,
+    .gift-fan-menu.is-open .gift-fan-action[data-fan-item] {
+      position: relative !important;
+      right: auto !important;
+      bottom: auto !important;
+      width: 78px !important;
+      height: 74px !important;
+      flex: 0 0 78px !important;
+      padding: 0 !important;
+      flex-direction: column !important;
+      gap: 4px !important;
+      display: inline-flex !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      transform: none !important;
+      border-radius: 18px !important;
+      font-size: 0.78rem !important;
+      font-weight: 900 !important;
+      line-height: 1.15 !important;
+      overflow: hidden !important;
+      border: 1px solid rgba(255, 255, 255, 0.48) !important;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.18)) !important;
+      color: rgba(71, 63, 54, 0.86) !important;
+      backdrop-filter: blur(18px) saturate(1.35);
+      -webkit-backdrop-filter: blur(18px) saturate(1.35);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.72),
+        inset 0 -18px 26px rgba(255, 255, 255, 0.12),
+        0 10px 24px rgba(78, 57, 39, 0.16) !important;
+    }
+
+    .gift-fan-diagnosis-action,
+    .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action {
+      position: relative !important;
+      right: auto !important;
+      bottom: auto !important;
+      width: 104px !important;
+      height: 66px !important;
+      flex: 0 1 104px !important;
+      padding: 0 !important;
+      flex-direction: column !important;
+      gap: 5px !important;
+      display: inline-flex !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      transform: none !important;
+      border-radius: 18px !important;
+      font-size: 0.95rem !important;
+      font-weight: 900 !important;
+      line-height: 1.15 !important;
+      overflow: hidden !important;
+      border: 1px solid rgba(255, 255, 255, 0.48) !important;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.18)) !important;
+      color: rgba(71, 63, 54, 0.86) !important;
+      backdrop-filter: blur(18px) saturate(1.35);
+      -webkit-backdrop-filter: blur(18px) saturate(1.35);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.72),
+        inset 0 -18px 26px rgba(255, 255, 255, 0.12),
+        0 10px 24px rgba(78, 57, 39, 0.16) !important;
+    }
+
+    .gift-fan-action[data-fan-item="price"] {
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.66), rgba(255, 246, 230, 0.24)) !important;
+      color: rgba(86, 64, 45, 0.92) !important;
+      order: 1;
+    }
+
+    .footer-btn-icon {
+      position: relative;
+      z-index: 2;
+      display: block;
+      width: 30px;
+      height: 30px;
+      font-size: 0;
+      line-height: 0;
+      color: rgba(45, 50, 54, 0.9);
+    }
+
+    .gift-fan-action .footer-btn-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .footer-btn-icon::before {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: currentColor;
+      -webkit-mask: var(--footer-icon) center / contain no-repeat;
+      mask: var(--footer-icon) center / contain no-repeat;
+    }
+
+    .footer-btn-icon[data-icon="heart"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M32 54S8 39 8 22c0-8 6-14 14-14 5 0 9 3 10 7 1-4 5-7 10-7 8 0 14 6 14 14 0 17-24 32-24 32Z'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="school"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 54h48'/%3E%3Cpath d='M18 54V34h28v20'/%3E%3Cpath d='M24 34V21l8-7 8 7v13'/%3E%3Cpath d='M32 14V7h10v9H32'/%3E%3Cpath d='M29 54V42a3 3 0 0 1 6 0v12'/%3E%3Cpath d='M14 54V37h10'/%3E%3Cpath d='M50 54V37H40'/%3E%3Ccircle cx='32' cy='28' r='3'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="cloud"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 43h26a12 12 0 0 0 0-24 15 15 0 0 0-29-1A12 12 0 0 0 20 43Z'/%3E%3Cpath d='M20 53l-4 6'/%3E%3Cpath d='M34 53l-4 6'/%3E%3Cpath d='M48 53l-4 6'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="star"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m32 6 8 17 18 2-13 13 3 18-16-9-16 9 3-18L6 25l18-2 8-17Z'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="image"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='10' y='12' width='44' height='40' rx='3'/%3E%3Ccircle cx='39' cy='24' r='5'/%3E%3Cpath d='M12 48 27 32l10 10 7-8 10 14'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="book"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M32 51c-7-6-15-7-24-3V13c9-4 17-3 24 3v35Z'/%3E%3Cpath d='M32 51c7-6 15-7 24-3V13c-9-4-17-3-24 3v35Z'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="vote"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 31h40l6 11v15H6V42l6-11Z'/%3E%3Cpath d='M15 42h34'/%3E%3Cpath d='M28 29 17 18 31 4l16 16-12 9'/%3E%3Cpath d='M24 29h16'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="mail"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='8' y='16' width='48' height='34' rx='4'/%3E%3Cpath d='m10 19 22 18 22-18'/%3E%3C/svg%3E");
+    }
+
+    .footer-btn-icon[data-icon="share"] {
+      --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='17' cy='34' r='8'/%3E%3Ccircle cx='47' cy='17' r='8'/%3E%3Ccircle cx='47' cy='49' r='8'/%3E%3Cpath d='M24 30 40 21'/%3E%3Cpath d='M24 38 40 46'/%3E%3C/svg%3E");
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="school"] {
+      order: 1;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="love"] {
+      order: 2;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] {
+      order: 3;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="romance"] {
+      order: 4;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="blank-1"] {
+      order: 5;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="blank-2"] {
+      order: 6;
+    }
+
+    .gift-fan-diagnosis-action[data-diagnosis-item="blank-3"] {
+      order: 7;
+    }
+
+    @media (max-width: 520px) {
+      .hero-diagnosis-menu,
+      .hero-collab-diagnosis-menu {
+        width: min(360px, calc(100% - 16px));
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-collab-diagnosis-menu {
+        margin-top: 12px;
+      }
+
+      .gift-fan-diagnosis-actions {
+        gap: 8px !important;
+        padding: 34px 10px 12px !important;
+        border-radius: 20px;
+      }
+
+      .gift-fan-diagnosis-action,
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action {
+        width: calc((100% - 24px) / 4) !important;
+        height: 70px !important;
+        flex: 0 0 calc((100% - 24px) / 4) !important;
+        border-radius: 16px !important;
+        font-size: 0.8rem !important;
+        gap: 3px !important;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-actions {
+        width: 100% !important;
+        max-width: 100% !important;
+        gap: 8px !important;
+        padding: 34px 10px 12px !important;
+        justify-content: flex-start !important;
+        scroll-padding-left: 10px;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-action,
+      .hero-diagnosis-menu .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action {
+        width: 78px !important;
+        flex: 0 0 78px !important;
+        font-size: 0.72rem !important;
+      }
+
+      .gift-fan-actions {
+        gap: 7px !important;
+      }
+
+      .gift-fan-action,
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item] {
+        width: calc((100% - 28px) / 5) !important;
+        height: 64px !important;
+        flex: 0 0 calc((100% - 28px) / 5) !important;
+        border-radius: 16px !important;
+        font-size: 0.68rem !important;
+        gap: 2px !important;
+      }
+
+      .gift-fan-action .footer-btn-icon,
+      .gift-fan-diagnosis-action .footer-btn-icon {
+        width: 22px;
+        height: 22px;
+      }
+    }
+
+    .gift-fan-action::before,
+    .gift-fan-diagnosis-action::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0) 46%),
+        radial-gradient(circle at 24% 16%, rgba(255, 255, 255, 0.66), rgba(255, 255, 255, 0) 34%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .gift-fan-action::after,
+    .gift-fan-diagnosis-action::after {
+      content: "";
+      position: absolute;
+      inset: auto 8px 7px 8px;
+      height: 1px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.58);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .gift-fan-action,
+    .gift-fan-diagnosis-action {
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.46);
+    }
+
+    .gift-fan-action {
+      z-index: 1;
+    }
+
+    .gift-fan-action > *,
+    .gift-fan-diagnosis-action > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .gift-fan-new-badge {
+      z-index: 3;
+    }
+
+    #openCompositingPopup .gift-fan-new-badge,
+    #openVotePopup .gift-fan-new-badge {
+      display: none !important;
+    }
+
+    .gift-fan-menu.is-diagnosis-open .gift-fan-action:not([data-fan-item="price"]) {
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      transform: none !important;
+    }
+
+    .gift-fan-new-badge {
+      top: -10px !important;
+    }
+
+    @media (max-width: 520px) {
+      .popup-buttons-bar {
+        padding: 12px 0 8px;
+      }
+
+      .popup-buttons {
+        width: min(360px, 96vw) !important;
+      }
+
+      .gift-fan-diagnosis-actions,
+      .gift-fan-actions {
+        gap: 6px !important;
+      }
+
+      .gift-fan-actions {
+        flex-wrap: nowrap !important;
+      }
+
+      .gift-fan-diagnosis-actions {
+        padding: 34px 10px 12px !important;
+      }
+
+      .gift-fan-diagnosis-actions::before {
+        font-size: 1rem;
+        padding: 0 14px;
+      }
+
+      .gift-fan-action,
+      .gift-fan-menu.is-open .gift-fan-action[data-fan-item] {
+        width: calc((100% - 24px) / 5) !important;
+        height: 64px !important;
+        flex: 0 0 calc((100% - 24px) / 5) !important;
+        font-size: 0.7rem !important;
+      }
+
+      .gift-fan-diagnosis-action,
+      .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action {
+        width: calc((100% - 18px) / 4) !important;
+        height: 70px !important;
+        flex: 0 0 calc((100% - 18px) / 4) !important;
+        font-size: 0.8rem !important;
+      }
+
+      .footer-btn-icon {
+        width: 24px;
+        height: 24px;
+      }
+
+      .gift-fan-action .footer-btn-icon {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    .hero-intro .headline {
+      position: relative;
+      z-index: 4;
+      margin-top: 28px;
+      margin-bottom: -6px;
+    }
+
+    .hero-intro .hero-carousel-shell {
+      margin-top: -88px;
+    }
+
+    @media (max-width: 768px) {
+      .hero-intro .headline {
+        margin-top: 22px;
+        margin-bottom: -4px;
+      }
+
+      .hero-intro .hero-carousel-shell {
+        margin-top: -76px;
+      }
+    }
+
+    /* Glassmorphism finish for the main action buttons. */
+    .hero-character-action,
+    .gift-fan-action,
+    .gift-fan-diagnosis-action,
+    .burn-card-arrow,
+    .gacha-btn {
+      position: relative !important;
+      overflow: hidden !important;
+      isolation: isolate;
+      border-color: rgba(255, 255, 255, 0.54) !important;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.2) 58%, rgba(255, 248, 238, 0.34)) !important;
+      color: rgba(45, 50, 54, 0.9) !important;
+      backdrop-filter: blur(22px) saturate(1.45) !important;
+      -webkit-backdrop-filter: blur(22px) saturate(1.45) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.82),
+        inset 0 -18px 28px rgba(255, 255, 255, 0.13),
+        0 12px 28px rgba(78, 57, 39, 0.17) !important;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+
+    .hero-character-action::before,
+    .gift-fan-action::before,
+    .gift-fan-diagnosis-action::before,
+    .burn-card-arrow::before,
+    .gacha-btn::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0) 44%),
+        radial-gradient(circle at 22% 14%, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0) 34%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-character-action > *,
+    .gift-fan-action > *,
+    .gift-fan-diagnosis-action > *,
+    .burn-card-arrow > *,
+    .gacha-btn > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-character-action:hover,
+    .gift-fan-action:hover,
+    .gift-fan-diagnosis-action:hover,
+    .burn-card-arrow:hover,
+    .gacha-btn:hover {
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -18px 28px rgba(255, 255, 255, 0.18),
+        0 16px 32px rgba(78, 57, 39, 0.21) !important;
+    }
+
+    .footer-burn-card-row .burn-card-arrow {
+      display: grid !important;
+      place-items: center !important;
+      font-size: 0 !important;
+      line-height: 0 !important;
+      text-indent: 0 !important;
+    }
+
+    .footer-burn-card-row .burn-card-arrow::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 2;
+      width: 9px;
+      height: 9px;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      transform-origin: center;
+      pointer-events: none;
+    }
+
+    @media (max-width: 640px) {
+      .footer-burn-card-row .burn-card-arrow::after {
+        width: 8px;
+        height: 8px;
+        border-width: 1.8px;
+      }
+    }
+
+    /* Hero diagnosis menu: keep the dotted frame stable, scroll only the buttons. */
+    .hero-diagnosis-menu,
+    .hero-collab-diagnosis-menu {
+      --hero-panel-body-height: 94px;
+      box-sizing: border-box;
+      width: min(760px, calc(100% - 32px));
+      min-height: calc(24px + var(--hero-panel-body-height) + 14px);
+      margin: 24px auto 4px;
+      padding: 24px 18px 14px;
+      position: relative;
+      z-index: 18;
+      border: 1.5px dashed rgba(237, 126, 57, 0.78);
+      border-radius: 24px;
+      background: #faf1e2;
+      background-color: #faf1e2;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.54),
+        0 12px 26px rgba(91, 67, 42, 0.1);
+    }
+
+    .hero-collab-diagnosis-menu {
+      margin-top: 14px;
+    }
+
+    .hero-diagnosis-menu::before {
+      content: "♡  診断メニュー  ♡";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 0 22px;
+      background: #faf1e2;
+      color: #282828;
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .hero-collab-diagnosis-menu::before {
+      content: "♡  コラボ診断メニュー  ♡";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 0 22px;
+      background: #faf1e2;
+      color: #282828;
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions,
+    .hero-collab-diagnosis-menu .hero-collab-diagnosis-list {
+      --hero-diagnosis-scroll-distance: 230px;
+      --hero-diagnosis-scroll-duration: 14s;
+      box-sizing: border-box;
+      width: min(430px, 100%) !important;
+      max-width: 100% !important;
+      height: var(--hero-panel-body-height) !important;
+      min-height: var(--hero-panel-body-height) !important;
+      max-height: var(--hero-panel-body-height) !important;
+      margin: 0 auto !important;
+      padding: 12px 0 0 !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      justify-content: flex-start !important;
+      align-items: flex-end !important;
+      gap: 14px !important;
+      overflow-x: auto !important;
+      overflow-y: visible !important;
+      scroll-snap-type: none !important;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions {
+      gap: 0 !important;
+    }
+
+    .hero-diagnosis-menu .hero-diagnosis-track {
+      display: flex !important;
+      flex: 0 0 auto;
+      flex-wrap: nowrap !important;
+      align-items: flex-end !important;
+      justify-content: center !important;
+      gap: 14px !important;
+      width: 100%;
+      min-width: 100%;
+      will-change: transform;
+      animation: heroDiagnosisScroll var(--hero-diagnosis-scroll-duration) linear infinite;
+      animation-play-state: paused;
+    }
+
+    .hero-diagnosis-menu.is-scroll-ready .gift-fan-diagnosis-actions {
+      justify-content: flex-start !important;
+      overflow-x: hidden !important;
+    }
+
+    .hero-diagnosis-menu.is-scroll-ready .hero-diagnosis-track {
+      width: 100% !important;
+      min-width: 100% !important;
+      max-width: 100% !important;
+      justify-content: center !important;
+      gap: 14px !important;
+      animation: none !important;
+      transform: none !important;
+      will-change: auto;
+    }
+
+    @keyframes heroDiagnosisScroll {
+      0%,
+      18% {
+        transform: translateX(0);
+      }
+
+      72%,
+      99.8% {
+        transform: translateX(calc(var(--hero-diagnosis-scroll-distance) * -1));
+      }
+
+      100% {
+        transform: translateX(0);
+      }
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions::before,
+    .hero-collab-diagnosis-menu .hero-collab-diagnosis-list::before {
+      content: none !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions::-webkit-scrollbar,
+    .hero-collab-diagnosis-menu .hero-collab-diagnosis-list::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action,
+    .hero-collab-diagnosis-menu .gift-fan-diagnosis-action {
+      width: 82px !important;
+      height: 66px !important;
+      flex: 0 0 82px !important;
+      border-radius: 14px !important;
+      font-size: 0.8rem !important;
+      scroll-snap-align: none;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="school"] {
+      border-color: rgba(80, 154, 255, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(206, 230, 255, 0.74), rgba(72, 148, 255, 0.32)) !important;
+      color: #174f9a !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(80, 154, 255, 0.18) !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="love"] {
+      border-color: rgba(159, 112, 255, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(226, 212, 255, 0.74), rgba(151, 105, 255, 0.34)) !important;
+      color: #5530a5 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(151, 105, 255, 0.18) !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] {
+      border-color: rgba(245, 190, 55, 0.55) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 240, 178, 0.78), rgba(255, 202, 64, 0.36)) !important;
+      color: #7a5600 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(245, 190, 55, 0.18) !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="romance"] {
+      border-color: rgba(255, 116, 174, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 210, 230, 0.72), rgba(255, 130, 184, 0.32)) !important;
+      color: #8a2555 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(255, 117, 178, 0.2) !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="school"] .footer-btn-icon,
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="love"] .footer-btn-icon,
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] .footer-btn-icon,
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="romance"] .footer-btn-icon {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="compositing"] {
+      border-color: rgba(255, 116, 174, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 210, 230, 0.72), rgba(255, 130, 184, 0.32)) !important;
+      color: #8a2555 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(255, 117, 178, 0.2) !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="encyclopedia"] {
+      border-color: rgba(80, 154, 255, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(206, 230, 255, 0.74), rgba(72, 148, 255, 0.32)) !important;
+      color: #174f9a !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(80, 154, 255, 0.18) !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="vote"] {
+      border-color: rgba(159, 112, 255, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(226, 212, 255, 0.74), rgba(151, 105, 255, 0.34)) !important;
+      color: #5530a5 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(151, 105, 255, 0.18) !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="faq"] {
+      border-color: rgba(245, 190, 55, 0.55) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 240, 178, 0.78), rgba(255, 202, 64, 0.36)) !important;
+      color: #7a5600 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(245, 190, 55, 0.18) !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="sns"] {
+      border-color: rgba(73, 184, 124, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(210, 244, 224, 0.76), rgba(78, 200, 132, 0.34)) !important;
+      color: #176b3d !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(73, 184, 124, 0.18) !important;
+    }
+
+    .gift-fan-menu .gift-fan-action[data-fan-item="compositing"] .footer-btn-icon,
+    .gift-fan-menu .gift-fan-action[data-fan-item="encyclopedia"] .footer-btn-icon,
+    .gift-fan-menu .gift-fan-action[data-fan-item="vote"] .footer-btn-icon,
+    .gift-fan-menu .gift-fan-action[data-fan-item="faq"] .footer-btn-icon,
+    .gift-fan-menu .gift-fan-action[data-fan-item="sns"] .footer-btn-icon {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .hero-collab-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item^="blank"] {
+      overflow: visible !important;
+    }
+
+    .hero-collab-diagnosis-menu .gift-fan-diagnosis-action.beauty-collab {
+      overflow: visible !important;
+    }
+
+    .hero-collab-diagnosis-menu .beauty-collab .gift-fan-person-badge,
+    .hero-collab-diagnosis-menu .beauty-collab .gift-fan-collab-badge {
+      position: absolute !important;
+      left: 50% !important;
+      z-index: 6 !important;
+      transform: translateX(-50%) !important;
+      pointer-events: none !important;
+    }
+
+    .hero-collab-diagnosis-menu .beauty-collab .gift-fan-person-badge {
+      top: auto !important;
+      bottom: calc(100% + 4px) !important;
+    }
+
+    .hero-collab-diagnosis-menu .beauty-collab .gift-fan-collab-badge {
+      top: calc(100% + 4px) !important;
+      bottom: auto !important;
+    }
+
+    .hero-collab-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="blank-1"] {
+      border-color: rgba(255, 116, 174, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(255, 218, 234, 0.76), rgba(255, 129, 184, 0.34)) !important;
+      color: #8a2555 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(255, 117, 178, 0.2) !important;
+    }
+
+    .hero-collab-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="blank-2"] {
+      border-color: rgba(73, 184, 124, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(210, 244, 224, 0.76), rgba(78, 200, 132, 0.34)) !important;
+      color: #176b3d !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(73, 184, 124, 0.18) !important;
+    }
+
+    .hero-collab-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="blank-3"] {
+      border-color: rgba(80, 154, 255, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(206, 230, 255, 0.74), rgba(72, 148, 255, 0.32)) !important;
+      color: #174f9a !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(80, 154, 255, 0.18) !important;
+    }
+
+    .hero-collab-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item^="blank"] .footer-btn-icon {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .hero-collab-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="request"] {
+      border-color: rgba(73, 184, 124, 0.5) !important;
+      background:
+        linear-gradient(135deg, rgba(210, 244, 224, 0.76), rgba(78, 200, 132, 0.34)) !important;
+      color: #176b3d !important;
+      font-size: 0.66rem !important;
+      line-height: 1.2 !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.82),
+        0 12px 26px rgba(73, 184, 124, 0.18) !important;
+    }
+
+    .hero-collab-diagnosis-menu .hero-collab-diagnosis-list {
+      list-style: none;
+      justify-content: center !important;
+    }
+
+    .hero-collab-diagnosis-menu .hero-collab-diagnosis-list > li {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex: 0 0 auto;
+      align-items: flex-end;
+    }
+
+    .gift-fan-collab-badge {
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      z-index: 4;
+      min-width: 48px;
+      height: 20px;
+      padding: 0 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateX(-50%);
+      border-radius: 6px;
+      background: rgba(255, 248, 239, 0.98);
+      color: #ff3e9a;
+      font-size: 9px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.06em;
+      box-shadow:
+        0 3px 8px rgba(89, 70, 52, 0.16),
+        inset 0 0 0 1px rgba(47, 79, 79, 0.18);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 520px) {
+      .hero-diagnosis-menu,
+      .hero-collab-diagnosis-menu {
+        --hero-panel-body-height: 104px;
+        width: calc(100vw - 32px);
+        max-width: 360px;
+        min-height: calc(20px + var(--hero-panel-body-height) + 12px);
+        margin-left: auto;
+        margin-right: auto;
+        padding: 20px 10px 12px;
+        border-radius: 20px;
+      }
+
+      .hero-collab-diagnosis-menu {
+        margin-top: 12px;
+      }
+
+      .hero-diagnosis-menu::before,
+      .hero-collab-diagnosis-menu::before {
+        font-size: 1rem;
+        padding: 0 14px;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-actions,
+      .hero-collab-diagnosis-menu .hero-collab-diagnosis-list {
+        height: var(--hero-panel-body-height) !important;
+        min-height: var(--hero-panel-body-height) !important;
+        max-height: var(--hero-panel-body-height) !important;
+        padding: 22px 0 24px !important;
+        align-items: flex-start !important;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-actions {
+        gap: 0 !important;
+      }
+
+      .hero-diagnosis-menu .hero-diagnosis-track {
+        align-items: flex-start !important;
+        justify-content: center !important;
+        gap: 7px !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+
+      .hero-diagnosis-menu.is-scroll-ready .hero-diagnosis-track {
+        gap: 7px !important;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-action,
+      .hero-collab-diagnosis-menu .gift-fan-diagnosis-action {
+        width: 62px !important;
+        height: 58px !important;
+        flex: 0 0 62px !important;
+        border-radius: 13px !important;
+        font-size: 0.62rem !important;
+      }
+
+      .hero-collab-diagnosis-menu .hero-collab-diagnosis-list {
+        gap: 7px !important;
+      }
+
+      .gift-fan-collab-badge {
+        top: -10px;
+        min-width: 42px;
+        height: 18px;
+        padding: 0 6px;
+        font-size: 8px;
+      }
+
+      .hero-collab-diagnosis-menu .gift-fan-diagnosis-action.beauty-collab {
+        overflow: visible !important;
+      }
+
+      .hero-collab-diagnosis-menu .beauty-collab .gift-fan-person-badge {
+        position: absolute !important;
+        top: auto !important;
+        bottom: calc(100% + 4px) !important;
+      }
+
+      .hero-diagnosis-menu .beauty-collab .gift-fan-collab-badge {
+        position: absolute !important;
+        top: calc(100% + 4px) !important;
+        bottom: auto !important;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="glassmorphism.css">
+  <style>
+    .popup-buttons-bar {
+      --gift-panel-surface: #faf1e2;
+      background: var(--gift-panel-surface) !important;
+    }
+
+    .popup-buttons-bar .container,
+    .popup-buttons-bar .popup-buttons,
+    .popup-buttons-bar #giftFanMenu.gift-fan-menu,
+    .popup-buttons-bar #giftFanMenu .burn-card {
+      border: 0 !important;
+      border-width: 0 !important;
+      outline: 0 !important;
+      background-image: none !important;
+      isolation: auto !important;
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+    }
+
+    .popup-buttons-bar .container,
+    .popup-buttons-bar .popup-buttons {
+      background: transparent !important;
+      background-color: transparent !important;
+      box-shadow: none !important;
+    }
+
+    .popup-buttons-bar .popup-buttons {
+      overflow: visible !important;
+      border-radius: 0 !important;
+    }
+
+    .popup-buttons-bar .popup-buttons::before,
+    .popup-buttons-bar .popup-buttons::after,
+    .popup-buttons-bar .gift-fan-menu::before,
+    .popup-buttons-bar .gift-fan-menu::after {
+      display: none !important;
+      content: none !important;
+    }
+
+    .popup-buttons-bar #giftFanMenu.gift-fan-menu {
+      gap: 0 !important;
+      row-gap: 0 !important;
+      overflow: hidden !important;
+      border-radius: 24px !important;
+      background: var(--gift-panel-surface) !important;
+      background-color: var(--gift-panel-surface) !important;
+      box-shadow: none !important;
+      filter: drop-shadow(0 18px 36px rgba(97, 73, 45, 0.12));
+      clip-path: inset(0 round 24px);
+    }
+
+    .popup-buttons-bar .footer-burn-card-row {
+      border: 0 !important;
+      outline: 0 !important;
+      margin: 0 auto 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    .popup-buttons-bar .footer-burn-card-row::before,
+    .popup-buttons-bar .footer-burn-card-row::after {
+      display: none !important;
+    }
+
+    .footer-burn-card-row .burn-card {
+      border: 0 !important;
+    }
+
+    .popup-buttons-bar .footer-burn-card-row .burn-card,
+    .footer-burn-card-row .burn-card {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: none !important;
+      border-color: transparent !important;
+    }
+
+    .popup-buttons-bar .footer-burn-card-row .burn-card::before,
+    .popup-buttons-bar .footer-burn-card-row .burn-card::after,
+    .footer-burn-card-row .burn-card::after,
+    .footer-burn-card-row .burn-card-media::before {
+      display: none !important;
+    }
+
+    .hero-character-action.mode {
+      overflow: hidden !important;
+    }
+
+    .hero-character-action.mode::after {
+      content: "" !important;
+      position: absolute !important;
+      right: 6px !important;
+      bottom: 6px !important;
+      z-index: 3 !important;
+      display: block !important;
+      opacity: 1 !important;
+      width: 17px !important;
+      height: 17px !important;
+      border-radius: 999px !important;
+      background-color: rgba(255, 248, 239, 0.96) !important;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236c5240' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 7a8 8 0 0 0-13.66-2.34L4 7'/%3E%3Cpath d='M4 3v4h4'/%3E%3Cpath d='M4 17a8 8 0 0 0 13.66 2.34L20 17'/%3E%3Cpath d='M20 21v-4h-4'/%3E%3C/svg%3E") !important;
+      background-repeat: no-repeat !important;
+      background-position: center !important;
+      background-size: 11px 11px !important;
+      box-shadow:
+        0 3px 8px rgba(89, 70, 52, 0.16),
+        inset 0 0 0 1px rgba(108, 82, 64, 0.18) !important;
+      pointer-events: none !important;
+    }
+
+    .popup-buttons-bar #giftFanMenu .gift-fan-actions {
+      gap: 10px !important;
+      padding: 14px 12px 16px !important;
+      overflow: hidden !important;
+      border: 0 !important;
+      outline: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      background-color: transparent !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+
+    .popup-buttons-bar .footer-burn-card-row .burn-card {
+      border-radius: 24px 24px 0 0 !important;
+      margin-bottom: 0 !important;
+      background: var(--gift-panel-surface) !important;
+      background-color: var(--gift-panel-surface) !important;
+    }
+
+    .popup-buttons-bar #giftFanMenu .gift-fan-actions .gift-fan-action.action-box-btn::before {
+      display: none !important;
+    }
+
+    .popup-buttons-bar #giftFanMenu .gift-fan-actions .gift-fan-action.action-box-btn,
+    .popup-buttons-bar #giftFanMenu .gift-fan-actions .gift-fan-action.action-box-btn.btn-secondary,
+    .popup-buttons-bar #giftFanMenu .gift-fan-actions .gift-fan-action[data-fan-item] {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.82) !important;
+    }
+
+    .popup-buttons-bar #giftFanMenu .gift-fan-actions .action-box-btn::before,
+    .popup-buttons-bar #giftFanMenu .gift-fan-actions .btn-secondary::before {
+      display: none !important;
+    }
+
+    .gift-fan-menu .gift-fan-actions .gift-fan-action[data-fan-item] .footer-btn-icon {
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    @media (max-width: 520px) {
+      .popup-buttons-bar #giftFanMenu.gift-fan-menu {
+        border-radius: 20px !important;
+        clip-path: inset(0 round 20px);
+      }
+
+      .popup-buttons-bar .footer-burn-card-row .burn-card {
+        border-radius: 20px 20px 0 0 !important;
+      }
+
+      .popup-buttons-bar #giftFanMenu .gift-fan-actions {
+        gap: 6px !important;
+        padding: 12px 10px 14px !important;
+        border-radius: 0 !important;
+      }
+    }
+
+    /* Top page: unify all surface backgrounds */
+    html {
+      background-color: #faf1e2;
+    }
+
+    #main-content,
+    #main-content .hero-intro,
+    #main-content .hero,
+    #main-content .hero .container,
+    .popup-buttons-bar,
+    .popup-buttons-bar .container,
+    .popup-buttons-bar .popup-buttons,
+    .popup-buttons-bar .peek-heart-wrap,
+    #giftFanMenu.gift-fan-menu,
+    .popup-buttons-bar .footer-burn-card-row,
+    .footer-burn-card-row .burn-card,
+    .hero-diagnosis-menu,
+    .hero-collab-diagnosis-menu,
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions,
+    .hero-collab-diagnosis-menu .hero-collab-diagnosis-list {
+      background-color: #faf1e2 !important;
+    }
+
+    .burn-card,
+    .popup-buttons-bar .footer-burn-card-row .burn-card {
+      background: #faf1e2 !important;
+      background-image: none !important;
+    }
+
+    .footer-burn-card-row,
+    .popup-buttons-bar .footer-burn-card-row {
+      position: relative !important;
+      box-sizing: border-box;
+      padding: 8px !important;
+      border: 1.5px solid rgba(126, 86, 53, 0.34) !important;
+      border-radius: 18px !important;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.42), rgba(255, 246, 232, 0.1)),
+        #faf1e2 !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.82),
+        0 10px 24px rgba(97, 73, 45, 0.1) !important;
+    }
+
+    .footer-burn-card-row::before,
+    .popup-buttons-bar .footer-burn-card-row::before {
+      content: "" !important;
+      position: absolute !important;
+      inset: 3px !important;
+      display: block !important;
+      border: 1px solid rgba(255, 255, 255, 0.74) !important;
+      border-radius: 14px !important;
+      pointer-events: none !important;
+    }
+
+    .footer-burn-card-row .burn-card,
+    .popup-buttons-bar .footer-burn-card-row .burn-card {
+      border-radius: 12px !important;
+    }
+
+    .hero-diagnosis-all-toggle {
+      position: absolute;
+      top: 0;
+      left: max(10px, calc(50% - 300px));
+      z-index: 3;
+      transform: translateY(-50%);
+      min-height: 34px;
+      padding: 8px 14px;
+      border: 1px solid rgba(154, 105, 79, 0.32);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.86);
+      color: rgba(70, 52, 43, 0.9);
+      box-shadow: 0 8px 20px rgba(78, 57, 39, 0.14);
+      font-size: 0.82rem;
+      font-weight: 900;
+      line-height: 1;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .hero-diagnosis-all-toggle::after {
+      content: "＋";
+      display: inline-block;
+      margin-left: 6px;
+      color: #b46a6e;
+      font-weight: 900;
+    }
+
+    .hero-diagnosis-menu.is-expanded .hero-diagnosis-all-toggle::after {
+      content: "−";
+    }
+
+    .hero-diagnosis-menu.is-expanded .gift-fan-diagnosis-actions {
+      height: auto !important;
+      min-height: 222px !important;
+      padding-top: 40px !important;
+      padding-bottom: 26px !important;
+      overflow: visible !important;
+      pointer-events: auto !important;
+    }
+
+    .hero-diagnosis-menu.is-expanded .hero-diagnosis-track {
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: none !important;
+      flex-wrap: wrap !important;
+      justify-content: center !important;
+      align-items: flex-start !important;
+      column-gap: 14px !important;
+      row-gap: 20px !important;
+      animation: none !important;
+      transform: none !important;
+    }
+
+    .hero-diagnosis-menu.is-expanded .gift-fan-diagnosis-action {
+      margin-top: 0 !important;
+      margin-bottom: 12px !important;
+      pointer-events: auto !important;
+    }
+
+    .hero-diagnosis-menu.is-expanded .gift-fan-diagnosis-action.beauty-collab {
+      margin-top: 18px !important;
+      margin-bottom: 18px !important;
+    }
+
+    .hero-diagnosis-menu.is-expanded .beauty-collab .gift-fan-person-badge {
+      bottom: calc(100% + 4px) !important;
+    }
+
+    .hero-diagnosis-menu.is-expanded .beauty-collab .gift-fan-collab-badge {
+      top: calc(100% + 4px) !important;
+    }
+
+    @media (max-width: 520px) {
+      .hero-diagnosis-all-toggle {
+        left: 10px;
+        padding: 7px 10px;
+        font-size: 0.72rem;
+      }
+
+      .hero-diagnosis-menu.is-expanded .gift-fan-diagnosis-actions {
+        min-height: 270px !important;
+        padding-top: 44px !important;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .footer-burn-card-row,
+      .popup-buttons-bar .footer-burn-card-row {
+        padding: 6px !important;
+        border-radius: 15px !important;
+      }
+
+      .footer-burn-card-row::before,
+      .popup-buttons-bar .footer-burn-card-row::before {
+        border-radius: 11px !important;
+      }
+
+      .footer-burn-card-row .burn-card,
+      .popup-buttons-bar .footer-burn-card-row .burn-card {
+        border-radius: 10px !important;
+      }
+    }
   </style>
 </head>
 
@@ -5015,21 +7841,20 @@
   <div id="splash-screen">
     <div class="splash-logo-shell" aria-hidden="true">
       <div class="splash-logo-frame">
+        <img class="splash-logo-img" src="mobby-custom/assets/stickers/Logo.webp" alt="Mobby logo" fetchpriority="high" decoding="async" />
         <div class="splash-logo-mask splash-logo-glow"></div>
         <div class="splash-logo-reveal"></div>
         <div class="splash-logo-mask splash-logo-trace"></div>
-        <img class="splash-logo-img" src="mobby_logo2.webp" alt="Mobby logo" fetchpriority="high" decoding="async" />
       </div>
     </div>
-    <div class="instruction">TAP!</div>
   </div>
 
   <div id="main-content">
     <div class="hero-intro">
       <div class="mobby-title" aria-label="Mobby">
-        <img src="mobby_logo2_trimmed.webp" alt="Mobby" fetchpriority="high" decoding="async" />
+        <img src="mobby-custom/assets/stickers/Logo.webp" alt="Mobby" fetchpriority="high" decoding="async" />
         </div>
-      <h1 class="headline reveal delay-200">心の沈黙に耳を澄ませる</h1>
+      <h1 class="headline reveal delay-200">沈黙に耳を澄ませる</h1>
       <section class="hero">
         <div class="container reveal">
 
@@ -5045,8 +7870,6 @@
           <div class="hero-carousel-shell floating reveal delay-200">
             <div class="hero-model-stage" aria-label="Mobby 3D モデル">
               <div class="hero-model-carousel" id="heroModelCarousel" aria-live="polite"></div>
-              <div class="hero-smoke-glow" aria-hidden="true"></div>
-              <canvas id="heroSmokeCanvas" class="hero-smoke-canvas" aria-hidden="true"></canvas>
             </div>
             <div class="hero-character-row">
               <button class="hero-character-action peek-heart-btn" id="openHeartNote" type="button" aria-label="心を覗く">&#128269;&#65038;</button>
@@ -5054,10 +7877,53 @@
               <button class="hero-character-action mode" id="heroCarouselModeButton" type="button" aria-label="カルーセル表示を切り替える">通常</button>
             </div>
           </div>
+          <div class="peek-heart-wrap">
+            <div class="heart-note-inline" id="heartNoteInline" hidden>
+              <div class="note-popup">
+                <button class="popup-close" id="closeHeartNoteInline" aria-label="Close note">×</button>
+                <div class="note-popup-inner">
+                  <div class="note-tabs" id="heartNoteTabs" hidden></div>
+                  <div class="note-popup-kicker">Private Note</div>
+                  <h2 id="heartNoteTitle">心を覗く</h2>
+                  <p id="heartNoteBody" class="note-body">ここに差し込みたい文章を置けるようにしてあります。
+ノートをそっと開いて、内側を読むような見え方です。
+
+あとでこの本文をそのまま差し替えれば使えます。</p>
+                  <div class="quote-page-controls" id="heartNoteQuotePager" hidden>
+                    <button type="button" class="quote-page-btn" id="heartNoteQuotePrev">←</button>
+                    <div class="quote-page-indicator" id="heartNoteQuoteIndicator">1 / 1</div>
+                    <button type="button" class="quote-page-btn" id="heartNoteQuoteNext">→</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="hero-diagnosis-menu">
+            <div class="gift-fan-diagnosis-actions" id="heroDiagnosisActions" aria-hidden="false">
+              <div class="hero-diagnosis-track">
+                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16school/index.html" data-diagnosis-item="school"><span class="footer-btn-icon" data-icon="school" aria-hidden="true"></span><span>学校</span></a>
+                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16love/index.html" data-diagnosis-item="love"><span class="footer-btn-icon" data-icon="cloud" aria-hidden="true"></span><span>メンヘラ</span></a>
+                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16stan/index.html" data-diagnosis-item="oshi"><span class="footer-btn-icon" data-icon="star" aria-hidden="true"></span><span>推し</span></a>
+                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16renai/index.html" data-diagnosis-item="romance"><span class="footer-btn-icon" data-icon="heart" aria-hidden="true"></span><span>恋愛</span></a>
+              </div>
+            </div>
+          </div>
+          <div class="hero-collab-diagnosis-menu" hidden aria-hidden="true">
+            <ul class="hero-collab-diagnosis-list" aria-label="コラボ診断メニュー">
+              <li>
+                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" type="button" data-diagnosis-item="blank-1" aria-label="ビューティー診断"><span class="gift-fan-person-badge">日向葵衣さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-mirror" aria-hidden="true"></span><span>ビューティー<br>診断</span></button>
+              </li>
+              <li>
+                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" href="miyake-yuko/index.html" data-diagnosis-item="blank-2" aria-label="beauty mood 診断"><span class="gift-fan-person-badge">三宅裕子さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-compact" aria-hidden="true"></span><span>beauty mood<br>診断</span></a>
+              </li>
+              <li>
+                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" href="imagen-luca/index.html" data-diagnosis-item="blank-3" aria-label="水彩ストーリー診断"><span class="gift-fan-person-badge">Lucaさん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="watercolor-story" aria-hidden="true"></span><span>水彩ストーリー<br>診断</span></a>
+              </li>
+            </ul>
+          </div>
         </div>
       </section>
     </div>
-
 
     <!-- Viewfinder Overlay -->
 
@@ -5362,7 +8228,6 @@
                     <button type="button" class="acrylic-series-button" data-series-id="school">学校モビー診断</button>
                     <button type="button" class="acrylic-series-button" data-series-id="love">恋愛モビー診断</button>
                     <button type="button" class="acrylic-series-button" data-series-id="stan">推し活モビー診断</button>
-                    <button type="button" class="acrylic-series-button" data-series-id="night">夜職モビー診断</button>
                   </div>
                 </div>
                 <div id="acrylicDiagnosisStatus" class="acrylic-status-card">
@@ -5440,6 +8305,23 @@
           <div id="compositingLoadingOverlay" class="compositing-loading-overlay" hidden>
             <div class="compositing-loading-spinner" aria-hidden="true"></div>
             <p class="compositing-loading-text">画像を処理しています...</p>
+          </div>
+          <div id="compositingSplash" class="compositing-splash" hidden role="dialog" aria-modal="true" aria-label="ポスター作成のはじめ方">
+            <div class="compositing-splash__backdrop" aria-hidden="true"></div>
+            <div class="compositing-splash__card">
+              <span class="compositing-splash__spark compositing-splash__spark--left" aria-hidden="true">✦</span>
+              <span class="compositing-splash__spark compositing-splash__spark--left-small" aria-hidden="true">✦</span>
+              <span class="compositing-splash__spark compositing-splash__spark--right" aria-hidden="true">♥</span>
+              <span class="compositing-splash__spark compositing-splash__spark--right-small" aria-hidden="true">✦</span>
+              <span class="compositing-splash__accent compositing-splash__accent--left" aria-hidden="true"></span>
+              <span class="compositing-splash__accent compositing-splash__accent--right" aria-hidden="true"></span>
+              <span class="compositing-splash__heartline" aria-hidden="true"></span>
+              <div id="compositingSplashContent" class="compositing-splash__content"></div>
+              <div class="compositing-splash__count" id="compositingSplashCount">1 / 4</div>
+              <div class="compositing-splash__dots" id="compositingSplashDots" aria-hidden="true"></div>
+              <button id="compositingSplashNext" class="compositing-splash__next" type="button">次へ</button>
+              <button id="compositingSplashSkip" class="compositing-splash__skip" type="button">スキップ</button>
+            </div>
           </div>
           <div class="compositing-head">
             <h2>ポスター作成</h2>
@@ -5574,7 +8456,7 @@
         <div style="padding:28px 24px 24px;">
           <div style="text-align:center;margin-bottom:20px;">
             <h2 style="font-size:22px;font-weight:800;margin:0 0 6px;color:#4a3728;">📖 モビー図鑑</h2>
-            <p style="font-size:13px;color:#8a7a6a;margin:0;">全96タイプのモビーを見てみよう！</p>
+            <p style="font-size:13px;color:#8a7a6a;margin:0;">全112タイプのモビーを見てみよう！</p>
           </div>
           <div id="encyclopediaTabs"
             style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;"></div>
@@ -5623,56 +8505,65 @@
           <a class="btn btn-primary" href="16school/index.html">学校モビー診断</a>
           <a class="btn btn-primary" href="16love/index.html">メンヘラモビー診断</a>
           <a class="btn btn-primary" href="16stan/index.html">推し活モビー診断</a>
-          <a class="btn btn-primary" href="16night/index.html">夜職モビー診断</a>
-          <a class="btn btn-primary" href="16school/mama/index.html">ママモビー診断</a>
+          <a class="btn btn-primary" href="16renai/index.html">恋愛モビー診断</a>
           <a class="btn btn-primary" href="/mypage-register.html">診断まとめマイページ作成</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="collabRequestPopup" class="popup-overlay" aria-hidden="true">
+      <div class="popup-content">
+        <button class="popup-close" id="closeCollabRequestPopup" aria-label="閉じる">×</button>
+        <div class="container">
+          <h2>コラボ診断依頼</h2>
+          <p class="lead">コラボ診断の内容を送ってください。</p>
+          <div class="collab-request-form reveal delay-200" style="margin-top:18px;">
+            <form id="collabRequestForm" action="mailto:info@mobby.online" method="post" enctype="text/plain">
+              <div class="form-group">
+                <label for="collabRequestName" style="display:block;margin-bottom:8px;font-weight:700;color:var(--color-earth);">名前 <span style="color:#d2691e;">*</span></label>
+                <input id="collabRequestName" name="name" type="text" required autocomplete="name" placeholder="お名前"
+                  style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;transition:border-color 0.2s;">
+              </div>
+              <div class="form-group" style="margin-top:16px;">
+                <label for="collabRequestEmail" style="display:block;margin-bottom:8px;font-weight:700;color:var(--color-earth);">メールアドレス <span style="color:#d2691e;">*</span></label>
+                <input id="collabRequestEmail" name="email" type="email" required autocomplete="email" placeholder="you@example.com"
+                  style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;transition:border-color 0.2s;">
+              </div>
+              <div class="form-group" style="margin-top:16px;">
+                <label for="collabRequestMessage" style="display:block;margin-bottom:8px;font-weight:700;color:var(--color-earth);">文章 <span style="color:#d2691e;">*</span></label>
+                <textarea id="collabRequestMessage" name="message" required rows="6" placeholder="コラボ診断の内容をご記入ください"
+                  style="width:100%;padding:12px 14px;border-radius:18px;border:1px solid rgba(47,79,79,0.18);background:rgba(255,255,255,0.9);font-size:0.95rem;font-family:var(--font-ja);outline:none;resize:vertical;transition:border-color 0.2s;"></textarea>
+              </div>
+              <button class="btn btn-primary" type="submit" style="margin-top:20px;width:100%;">info@mobby.onlineに送る</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
     <!-- ポップアップボタン（最下部） -->
     <div class="popup-buttons-bar">
       <div class="container">
-        <div class="peek-heart-wrap">
-          <div class="heart-note-inline" id="heartNoteInline" hidden>
-            <div class="note-popup">
-              <button class="popup-close" id="closeHeartNoteInline" aria-label="Close note">×</button>
-              <div class="note-popup-inner">
-                <div class="note-tabs" id="heartNoteTabs" hidden></div>
-                <div class="note-popup-kicker">Private Note</div>
-                <h2 id="heartNoteTitle">心を覗く</h2>
-                <p id="heartNoteBody" class="note-body">ここに差し込みたい文章を置けるようにしてあります。
-ノートをそっと開いて、内側を読むような見え方です。
-
-あとでこの本文をそのまま差し替えれば使えます。</p>
-                <div class="quote-page-controls" id="heartNoteQuotePager" hidden>
-                  <button type="button" class="quote-page-btn" id="heartNoteQuotePrev">←</button>
-                  <div class="quote-page-indicator" id="heartNoteQuoteIndicator">1 / 1</div>
-                  <button type="button" class="quote-page-btn" id="heartNoteQuoteNext">→</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
         <div class="popup-buttons">
-          <button class="btn btn-secondary" id="openMessagePopup">文章</button>
-          <div class="gift-fan-menu is-open" id="giftFanMenu">
-            <div class="gift-fan-actions" aria-hidden="false">
-              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openPricePopup" data-fan-item="price">診断</button>
-              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openFaqPopup" data-fan-item="faq">お問い合わせ</button>
-              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openSnsPopup" data-fan-item="sns">SNS</button>
-              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openEncyclopediaPopup" data-fan-item="encyclopedia">図鑑</button>
-              <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openVotePopup" data-fan-item="vote">投票<span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></button>
-              <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openCompositingPopup" data-fan-item="compositing">ポスター作成<span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></button>
+            <div class="gift-fan-menu is-open" id="giftFanMenu">
+            <div class="burn-card-row footer-burn-card-row">
+              <a class="burn-card" href="burn/burn-record/index.html" aria-label="BURN">
+                <span class="burn-card-copy">
+                  <span class="burn-card-text">二人の思い出を<br>雑誌のページのように残す</span>
+                  <span class="burn-card-title">BURN</span>
+                </span>
+                <span class="burn-card-media" aria-hidden="true">
+                  <img src="burn/reference/burn_mag_ref.png" alt="" loading="lazy" decoding="async">
+                </span>
+              </a>
             </div>
-            <div class="gift-fan-diagnosis-actions" aria-hidden="true">
-              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16school/index.html" data-diagnosis-item="school">学校</a>
-              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16love/index.html" data-diagnosis-item="love">メンヘラ</a>
-              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16stan/index.html" data-diagnosis-item="oshi">推し</a>
-              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16night/index.html" data-diagnosis-item="night">夜職</a>
-              <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16school/mama/index.html" data-diagnosis-item="mama">ママ</a>
+            <div class="gift-fan-actions" aria-hidden="false">
+              <a class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openCompositingPopup" data-fan-item="compositing" href="compositing.html"><span class="footer-btn-icon" data-icon="image" aria-hidden="true"></span><span>ポスター<br>作成</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></a>
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openEncyclopediaPopup" data-fan-item="encyclopedia"><span class="footer-btn-icon" data-icon="book" aria-hidden="true"></span><span>図鑑</span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openVotePopup" data-fan-item="vote"><span class="footer-btn-icon" data-icon="vote" aria-hidden="true"></span><span>投票</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openFaqPopup" data-fan-item="faq"><span class="footer-btn-icon" data-icon="mail" aria-hidden="true"></span><span>お問い合わせ</span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openSnsPopup" data-fan-item="sns"><span class="footer-btn-icon" data-icon="share" aria-hidden="true"></span><span>SNS</span></button>
             </div>
           </div>
-          <button class="btn btn-secondary" id="openVideoPopup">動画</button>
         </div>
       </div>
     </div>
@@ -5686,10 +8577,17 @@
     </div>
     <!-- 右下の法的リンク -->
     <div class="legal-links">
-      <a href="/terms">利用規約</a>
-      <a href="/privacy">プライバシーポリシー</a>
-      <a href="/tokusho">特定商取引法に基づく表記</a>
-      <a href="/company">運営者情報</a>
+      <div class="legal-link-row">
+        <a href="/terms">利用規約</a>
+        <span aria-hidden="true">|</span>
+        <a href="/privacy">プライバシーポリシー</a>
+      </div>
+      <div class="legal-link-row legal-link-row-sub">
+        <a href="/tokusho">特定商取引法に基づく表記</a>
+        <span aria-hidden="true">|</span>
+        <a href="/company">運営者情報</a>
+      </div>
+      <div class="copyright">© Mobby All Rights Reserved.</div>
     </div>
   </div>
 
@@ -5761,7 +8659,7 @@
 
     const COLOR_META = {
       camera: { name: "Mobby Camera", img: "img/mobby/mobby_pink2.jpg" },
-      plush: { name: "ぬいぐるみキーホルダー", img: "img/touka.png" },
+      plush: { name: "ぬいぐるみキーホルダー", img: "img/touka.webp" },
       social: { name: "SNS", img: "img/mobby/mobby_pink2.jpg" },
       acrylic: { name: "アクリルキーホルダー", img: "16school/key/プリクラ拡散モビー.jpg" }
     };
@@ -5918,20 +8816,16 @@
 
       function syncActiveState() {
         window.__activeHeroSlide = slides[activeIndex];
-        const smokeActive = slides[activeIndex].dataset.smokeSource === "true";
         const activeImage = slides[activeIndex]?.querySelector(".hero-model-viewer");
         const activeItem = getCurrentSet().items[activeIndex];
         heroCharacterName.textContent = activeItem?.name || activeImage?.alt || "";
-        stage.classList.toggle("is-smoke-active", smokeActive);
+        stage.classList.remove("is-smoke-active");
         window.dispatchEvent(new CustomEvent("hero-slide-change", {
           detail: {
             slide: slides[activeIndex],
             index: activeIndex,
             mode: getCurrentSet().id
           }
-        }));
-        window.dispatchEvent(new CustomEvent("hero-smoke-toggle", {
-          detail: { active: smokeActive }
         }));
       }
 
@@ -6042,6 +8936,7 @@
     })();
 
     (() => {
+      return;
       const canvas = document.getElementById("heroSmokeCanvas");
       const stage = canvas?.closest(".hero-model-stage");
       const glow = stage?.querySelector(".hero-smoke-glow");
@@ -6446,11 +9341,7 @@
       if (mainContent) mainContent.classList.add('visible');
       document.body.style.overflowY = 'auto';
       if (stickyCta) stickyCta.style.display = 'block';
-      window.dispatchEvent(new CustomEvent('hero-smoke-toggle', {
-        detail: {
-          active: document.querySelector('.hero-model-stage')?.classList.contains('is-smoke-active')
-        }
-      }));
+      document.querySelector('.hero-diagnosis-menu')?.classList.add('is-scroll-ready');
       initScrollObserver();
     };
 
@@ -6466,25 +9357,31 @@
 
     if (!shouldSkipSplash && splashElement) {
       let splashDone = false;
+      let splashAutoTimer = null;
 
       const exitSplash = () => {
         if (splashDone) return;
         splashDone = true;
+        if (splashAutoTimer) {
+          window.clearTimeout(splashAutoTimer);
+          splashAutoTimer = null;
+        }
         splashElement.classList.add('is-bursting');
 
         window.setTimeout(() => {
           splashElement.classList.add('hidden');
           revealMainContent();
-        }, 420);
+        }, 960);
 
         window.setTimeout(() => {
           splashElement.remove();
-        }, 1180);
+        }, 1380);
       };
 
       splashElement.addEventListener('click', exitSplash, { once: true });
       splashElement.addEventListener('pointerdown', exitSplash, { once: true });
       splashElement.addEventListener('touchstart', exitSplash, { once: true, passive: true });
+      splashAutoTimer = window.setTimeout(exitSplash, 2400);
     }
 
     window.addEventListener('resize', () => {
@@ -6891,16 +9788,32 @@
       { name: "イカ焼きモビー", img: "16love/img/イカ焼きモビー.jpg", cat: "love", summary: "痛みを内側に抱え込みやすい、我慢強く繊細なタイプ。", catch: "全部内側で抱え込む。腕には絆創膏。痛みは見せない。" },
       { name: "情緒バグモビー", img: "16love/img/情緒バグモビー.jpg", cat: "love", summary: "感情の切替が激しく、共感で回復するタイプ。", catch: "情緒がバグりすぎ。泣いて怒って笑って、全部同時。" },
       { name: "恋愛ゾンビモビー", img: "16love/img/恋愛ゾンビモビー.jpg", cat: "love", summary: "何度沈んでも立ち上がる、不死身の恋愛タイプ。", catch: "何度沈んでも這い上がる。恋愛ゾンビ、不死身のメンヘラ。" },
+      // Romance (恋愛モビー診断) (16)
+      { name: "花束の主人公モビー", img: "16renai/image/lovemobby/花束の主人公.webp", cat: "romance", summary: "恋の主役感と、ときめきと、見せたくなる幸せを持ったタイプ。", catch: "愛される実感も、特別な瞬間も、かわいく残したい恋の主人公。" },
+      { name: "秘密の星モビー", img: "16renai/image/lovemobby/秘密の星.webp", cat: "romance", summary: "特別に愛されたいけど、その恋は二人だけで大切にしたいタイプ。", catch: "目立たなくても、二人だけの空でちゃんと輝く恋を選ぶ。" },
+      { name: "ひなたの愛され人モビー", img: "16renai/image/lovemobby/ひなたの愛され人.webp", cat: "romance", summary: "離したくない安心と、周りにも伝わる愛され感を求めやすいタイプ。", catch: "近くにいてくれる安心と、愛されている空気をまっすぐ受け取る。" },
+      { name: "雨宿りの待ち人モビー", img: "16renai/image/lovemobby/雨宿りの待ち人.webp", cat: "romance", summary: "大切にされている実感を、静かに深く受け取りたいタイプ。", catch: "急がず騒がず、雨が止むまで寄り添える恋を待っている。" },
+      { name: "風まかせの小悪魔モビー", img: "16renai/image/lovemobby/風まかせの小悪魔.webp", cat: "romance", summary: "自由さとときめき、そして少し見せたくなる魅力を持つタイプ。", catch: "つかまえたいのに風みたい。軽やかな距離感で恋を揺らす。" },
+      { name: "月影のミューズモビー", img: "16renai/image/lovemobby/月影のミューズ.webp", cat: "romance", summary: "自由でいたいけど、恋の特別感は二人だけで味わいたいタイプ。", catch: "月明かりみたいに静かで、二人だけに届くロマンを持っている。" },
+      { name: "晴れ間の本命モビー", img: "16renai/image/lovemobby/晴れ間の本命.webp", cat: "romance", summary: "自分の時間も大事にしながら、安心できる本命感を求めるタイプ。", catch: "自由に過ごしても、帰る場所はちゃんと本命のそば。" },
+      { name: "静かな灯モビー", img: "16renai/image/lovemobby/静かな灯.webp", cat: "romance", summary: "自由と安心を大事にしながら、二人だけの深い愛情を育てるタイプ。", catch: "派手に燃えなくても、消えない灯りみたいに恋を守る。" },
+      { name: "恋に旗を振る人モビー", img: "16renai/image/lovemobby/恋に旗を振る人.webp", cat: "romance", summary: "相手を支えながら、一緒にときめく時間を外にも残したいタイプ。", catch: "好きな人の隣で旗を振り、二人の楽しい瞬間を残していく。" },
+      { name: "胸奥のロマンモビー", img: "16renai/image/lovemobby/胸奥のロマン.webp", cat: "romance", summary: "相手を支えながら、二人だけのロマンチックな世界を大切にするタイプ。", catch: "胸の奥にしまった物語を、好きな人とだけ静かに育てる。" },
+      { name: "陽だまりを分ける人モビー", img: "16renai/image/lovemobby/陽だまりを分ける人.webp", cat: "romance", summary: "支え合う安心感を、周りにも伝わる形で残したいタイプ。", catch: "あたたかさを一人占めせず、好きな人と分け合える恋。" },
+      { name: "毛布をかける守り人モビー", img: "16renai/image/lovemobby/毛布をかける守り人.webp", cat: "romance", summary: "離したくない気持ちで支えながら、二人だけの安心できる関係を大事にするタイプ。", catch: "言葉より先に毛布をかける。守ることで愛を伝える人。" },
+      { name: "地図を広げる冒険家モビー", img: "16renai/image/lovemobby/地図を広げる冒険家.webp", cat: "romance", summary: "自由さとときめきを大切にしながら、楽しい恋を形に残したいタイプ。", catch: "恋を冒険みたいに楽しみ、行き先も思い出も一緒に広げる。" },
+      { name: "夜風のロマンチストモビー", img: "16renai/image/lovemobby/夜風のロマンチスト.webp", cat: "romance", summary: "自由な距離感の中で、二人だけのロマンを静かに育てるタイプ。", catch: "近すぎず遠すぎず、夜風みたいな距離でロマンを運ぶ。" },
+      { name: "余白を飾る演出家モビー", img: "16renai/image/lovemobby/余白を飾る演出家.webp", cat: "romance", summary: "自由で自然体だけど、関係性の見せ方にもセンスが出るタイプ。", catch: "無理に詰め込まず、余白までかわいく見せる恋の演出家。" },
+      { name: "静かな港の相棒モビー", img: "16renai/image/lovemobby/静かな港の相棒.webp", cat: "romance", summary: "自由と安心、そして二人だけの信頼を長く育てるタイプ。", catch: "それぞれ旅しても、戻れる港がある。静かに強い相棒の恋。" },
     ];
 
     const ENCYCLOPEDIA_CATEGORIES = [
       { key: "all", label: "📋 一覧", color: "#6b7280" },
       { key: "school_m", label: "🏫 学校♂", color: "#4a90d9" },
       { key: "school_f", label: "🏫 学校♀", color: "#e9748d" },
-      { key: "mama", label: "👩 ママ", color: "#e8a0bf" },
-      { key: "night", label: "🌙 夜職", color: "#c9a050" },
       { key: "stan", label: "🎤 推し活", color: "#9b6dff" },
       { key: "love", label: "💜 メンヘラ", color: "#b86cff" },
+      { key: "romance", label: "💗 恋愛", color: "#ff74ae" },
     ];
 
     const SCHOOL_NOTE_NAME_ALIASES = {
@@ -6934,10 +9847,9 @@
       // Render tabs
       tabsEl.innerHTML = ENCYCLOPEDIA_CATEGORIES.map(c => {
         const isActive = c.key === encyclopediaActiveTab;
-        return `<button data-cat="${c.key}" style="
-          padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;border:2px solid ${c.color};
-          background:${isActive ? c.color : 'transparent'};color:${isActive ? '#fff' : c.color};
-          transition:all 0.2s ease;
+        return `<button class="ency-tab${isActive ? ' is-active' : ''}" data-cat="${c.key}" aria-selected="${isActive ? 'true' : 'false'}" style="
+          padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;color:${c.color};
+          transition:all 0.2s ease;white-space:nowrap;
         ">${c.label}</button>`;
       }).join('');
 
@@ -6967,7 +9879,7 @@
 
       if (encyclopediaActiveTab === 'all') {
         // Group by category with section headers
-        const catOrder = ['school_m', 'school_f', 'mama', 'night', 'stan', 'love'];
+        const catOrder = ['school_m', 'school_f', 'mama', 'night', 'stan', 'love', 'romance'];
         let html = '';
         let globalIdx = 0;
         catOrder.forEach(catKey => {
@@ -6975,8 +9887,9 @@
           const ci = ENCYCLOPEDIA_CATEGORIES.find(c => c.key === catKey);
           if (!ci || catItems.length === 0) return;
           catItems.forEach((item, i) => {
+            const itemIndex = ENCYCLOPEDIA_DATA.indexOf(item);
             html += `
-            <div class="ency-card" data-idx="${globalIdx}" style="
+            <div class="ency-card" data-idx="${itemIndex}" style="
               background:#fff;border-radius:14px;overflow:hidden;cursor:pointer;
               box-shadow:0 2px 12px rgba(0,0,0,0.08);border:1px solid rgba(0,0,0,0.06);
               transition:transform 0.2s ease,box-shadow 0.2s ease;
@@ -7060,6 +9973,72 @@
     const giftFanMenu = document.getElementById('giftFanMenu');
     const giftFanToggle = document.getElementById('giftFanToggle');
     const giftFanActions = Array.from(document.querySelectorAll('#giftFanMenu .gift-fan-action'));
+
+    function initHeroDiagnosisAutoScroll() {
+      const scroller = document.querySelector('.hero-diagnosis-menu .gift-fan-diagnosis-actions');
+      if (!scroller || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      const items = Array.from(scroller.querySelectorAll('.gift-fan-diagnosis-action'));
+      if (items.length < 2) return;
+
+      let timerId = null;
+      let resumeTimerId = null;
+
+      const getItemLeft = (item) => item.offsetLeft - scroller.offsetLeft;
+
+      const getCurrentIndex = () => {
+        const currentLeft = scroller.scrollLeft;
+        return items.reduce((closestIndex, item, index) => {
+          const closestDistance = Math.abs(getItemLeft(items[closestIndex]) - currentLeft);
+          const itemDistance = Math.abs(getItemLeft(item) - currentLeft);
+          return itemDistance < closestDistance ? index : closestIndex;
+        }, 0);
+      };
+
+      const stop = () => {
+        if (timerId) {
+          window.clearTimeout(timerId);
+          timerId = null;
+        }
+      };
+
+      const queueNext = () => {
+        stop();
+        timerId = window.setTimeout(() => {
+          if (scroller.scrollWidth <= scroller.clientWidth + 2) {
+            queueNext();
+            return;
+          }
+
+          const currentIndex = getCurrentIndex();
+          const nextIndex = currentIndex >= items.length - 1 ? 0 : currentIndex + 1;
+          scroller.scrollTo({
+            left: getItemLeft(items[nextIndex]),
+            behavior: 'smooth'
+          });
+          queueNext();
+        }, 2200);
+      };
+
+      const start = () => {
+        queueNext();
+      };
+
+      const pauseThenResume = () => {
+        stop();
+        if (resumeTimerId) window.clearTimeout(resumeTimerId);
+        resumeTimerId = window.setTimeout(start, 5200);
+      };
+
+      ['pointerdown', 'wheel', 'touchstart', 'focusin'].forEach((eventName) => {
+        scroller.addEventListener(eventName, pauseThenResume, { passive: true });
+      });
+
+      window.addEventListener('resize', pauseThenResume, { passive: true });
+      start();
+    }
+
+    // Hero diagnosis auto advance is initialized in the isolated script near the end of the page.
     const giftFanDiagnosisActions = Array.from(document.querySelectorAll('#giftFanMenu .gift-fan-diagnosis-action'));
     const diagnosisFanTrigger = document.getElementById('openPricePopup');
     const heartNoteTabs = document.getElementById('heartNoteTabs');
@@ -7326,7 +10305,7 @@
       const actions = giftFanMenu.querySelector('.gift-fan-actions');
       if (actions) actions.setAttribute('aria-hidden', 'false');
       const diagnosisActions = giftFanMenu.querySelector('.gift-fan-diagnosis-actions');
-      if (diagnosisActions) diagnosisActions.setAttribute('aria-hidden', 'true');
+      if (diagnosisActions) diagnosisActions.setAttribute('aria-hidden', 'false');
     }
 
     function toggleGiftFanMenu() {
@@ -7435,7 +10414,7 @@
         return;
       }
       const cleanNoteMap = {
-        'mobby_fact_man_toka.png': {
+        'mobby_fact_man_toka.webp': {
           pages: [
             {
               title: '',
@@ -7474,7 +10453,7 @@
             }
           ]
         },
-        'mobby_gal_toka.png': {
+        'mobby_gal_toka.webp': {
           pages: [
             {
               title: '',
@@ -7497,7 +10476,7 @@
             }
           ]
         },
-        'mobby_yanki_toak.png': {
+        'mobby_yanki_toak.webp': {
           pages: [
             {
               title: '',
@@ -7540,7 +10519,7 @@
             }
           ]
         },
-        'mobby_yami_toka.png': {
+        'mobby_yami_toka.webp': {
           pages: [
             {
               title: '',
@@ -7565,7 +10544,7 @@
         }
       };
       const cleanFileName = imagePath.split('/').pop();
-      const cleanNoteLookupKey = cleanFileName?.replace(/\.webp$/i, '.png') || cleanFileName;
+      const cleanNoteLookupKey = cleanFileName?.replace(/\.webp$/i, '.webp') || cleanFileName;
       const cleanNote = cleanNoteMap[cleanNoteLookupKey] || {
         pages: [{ title: '', body: 'このキャラのノートはまだ差し込み前です。ここに個別の文章を入れていけます。' }]
       };
@@ -7576,19 +10555,19 @@
       return;
 
       const noteMap = {
-        'mobby_fact_man_toka.png': {
+        'mobby_fact_man_toka.webp': {
           title: '心の沈黙',
           body: '水溜りに移り込んだ空はやがて小さくなっていき消えていく。窓の中の小さな夜をいつまでも閉じ込めてしまいたいと、どれだけ強く願ってみてもそれは叶わないのです。\n色彩を待たぬはずの暗闇がいつまでも鮮やかでありますように、私の沈黙の中に願う。'
         },
-        'mobby_gal_toka.png': {
+        'mobby_gal_toka.webp': {
           title: '好き！',
           body: '大切なものを今よりもっともっと大切にしたい。\nずっと大切に出来たら素敵だなと思う。'
         },
-        'mobby_yanki_toak.png': {
+        'mobby_yanki_toak.webp': {
           title: '今の世の中はクソだ',
           body: '周りの目やつまらない評価でやりたいこともわからぬまま生きていく、そんな世界はクソだ'
         },
-        'mobby_yami_toka.png': {
+        'mobby_yami_toka.webp': {
           title: '満たされたい',
           body: '抱えた膝の中から顔を上げた。口を開けた一匹の白映りの鯉が私の足元で揺れ透ける地面から顔を出している。口を開けたり閉じたりする音がぱかぱかと、不思議と心地の良いリズムだった。遣る餌もないので私は右の人差し指を差し出してみる。丁度爪一枚を齧って持っていかれたが痛みはなく、血も出ていない。私のそれを喰らった白映りの鯉は満足そうに尾を振り上げ地面を揺らし去っていった。すると今度、先程の鯉が仲間の白映りの鯉を連れやってきた。二匹で口を開けては閉じ、また心地の良いリズムで私を誘った。私はまた同じように右の人差し指を差し遣る。私の人差し指は小指よりも短くなった。二匹の鯉はその陰陽のぼんやりとした白映りの躰を滑らかに魅せ、また大きく尾を振り上げ歪む地面の中へと去った。やがて私の両手両足は消え失せた。群がる白映りの鯉たちはたゆたう様子で私を喰らう。やがて痛みがやってきたがどこが痛むのかも分からず、またその痛みを解消する術も浮かばぬまま、とうとう悲鳴を上げて助けを求めることもできなかった。私の口はもうなかったから。'
         }
@@ -7664,7 +10643,7 @@
     diagnosisFanTrigger?.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      toggleGiftDiagnosisMenu();
+      openPopup('diagnosisPopup');
     });
     document.getElementById('openFaqPopup')?.addEventListener('click', () => openPopup('faqPopup'));
     document.getElementById('openSnsPopup')?.addEventListener('click', () => openPopup('snsPopup'));
@@ -7674,19 +10653,12 @@
       openPopup('votePopup');
       await syncVoteState();
     });
-    document.getElementById('openCompositingPopup')?.addEventListener('click', async () => {
-      try {
-        await ensureCompositingTool();
-      } catch (error) {
-        console.error('Failed to initialize compositing tool:', error);
-        alert('ポスター作成ツールの読み込みに失敗しました。時間をおいて再度お試しください。');
-        return;
-      }
-      openPopup('compositingPopup');
+    document.getElementById('openCompositingPopup')?.addEventListener('click', (e) => {
+      e.stopPropagation();
     });
     document.getElementById('goMobbyDiagnosis')?.addEventListener('click', () => openPopup('diagnosisPopup'));
     const diagnosisLauncher = document.getElementById('openPricePopup');
-    if (diagnosisLauncher) diagnosisLauncher.textContent = '診断';
+    if (diagnosisLauncher && diagnosisLauncher.children.length === 0) diagnosisLauncher.textContent = '診断';
     document.addEventListener('click', (e) => {
       if (!giftFanMenu?.classList.contains('is-diagnosis-open')) return;
       if (giftFanMenu.contains(e.target)) return;
@@ -7701,6 +10673,7 @@
     document.getElementById('closeSnsPopup')?.addEventListener('click', () => closePopup('snsPopup'));
     document.getElementById('closeEncyclopediaPopup')?.addEventListener('click', () => closePopup('encyclopediaPopup'));
     document.getElementById('closeDiagnosisPopup')?.addEventListener('click', () => closePopup('diagnosisPopup'));
+    document.getElementById('closeCollabRequestPopup')?.addEventListener('click', () => closePopup('collabRequestPopup'));
     document.getElementById('closeVotePopup')?.addEventListener('click', () => closePopup('votePopup'));
     document.getElementById('closeCompositingPopup')?.addEventListener('click', () => closePopup('compositingPopup'));
 
@@ -7726,6 +10699,9 @@
     document.getElementById('diagnosisPopup')?.addEventListener('click', (e) => {
       if (e.target.id === 'diagnosisPopup') closePopup('diagnosisPopup');
     });
+    document.getElementById('collabRequestPopup')?.addEventListener('click', (e) => {
+      if (e.target.id === 'collabRequestPopup') closePopup('collabRequestPopup');
+    });
     document.getElementById('votePopup')?.addEventListener('click', (e) => {
       if (e.target.id === 'votePopup') closePopup('votePopup');
     });
@@ -7743,6 +10719,7 @@
         if (document.getElementById('snsPopup')?.classList.contains('is-open')) closePopup('snsPopup');
         if (document.getElementById('encyclopediaPopup')?.classList.contains('is-open')) closePopup('encyclopediaPopup');
         if (document.getElementById('diagnosisPopup')?.classList.contains('is-open')) closePopup('diagnosisPopup');
+        if (document.getElementById('collabRequestPopup')?.classList.contains('is-open')) closePopup('collabRequestPopup');
         if (document.getElementById('votePopup')?.classList.contains('is-open')) closePopup('votePopup');
         if (document.getElementById('compositingPopup')?.classList.contains('is-open')) closePopup('compositingPopup');
       }
@@ -7928,43 +10905,6 @@
           return diagnosisName ? `16stan/img/key/${diagnosisName}.webp` : "16stan/img/key/現場至上主義推しモビー.webp";
         }
       },
-      {
-        id: "night",
-        label: "夜職モビー診断",
-        source: "16night",
-        storageKey: "night_char_diag_v1",
-        diagnosisUrl: "16night/index.html",
-        fallbackImage: "16night/img/key/もはふし_keychain_lite.jpg",
-        backImage: "16school/key/ura.jpg",
-        resolveReady(data) {
-          if (!data || typeof data !== "object") return false;
-          const answered = Object.keys(data.answers || {}).length;
-          return answered > 0 && !!(data.profile?.name && data.profile?.email && data.profile?.age && data.code);
-        },
-        resolvePendingReady() {
-          return false;
-        },
-        resolveSummary(data) {
-          return {
-            name: data?.profile?.name || "",
-            email: data?.profile?.email || "",
-            age: data?.profile?.age || "",
-            gender: "",
-            type: data?.code || "",
-            diagnosisName: data?.char?.name || "",
-            axes: data?.leftPct || {},
-            answers: data?.answers || {},
-            interested: false,
-            userId: "",
-            referrerId: "",
-            shareCount: 0
-          };
-        },
-        resolveImage(summary) {
-          const type = String(summary?.type || "").trim();
-          return type ? `16night/img/key/${type}_keychain_lite.jpg` : "16night/img/key/もはふし_keychain_lite.jpg";
-        }
-      }
     ];
 
     const acrylicSeriesChooser = document.getElementById("acrylicSeriesChooser");
@@ -8755,6 +11695,34 @@
     bindReservationForm("priceReservationFormCamera");
     initAcrylicStripeButton();
 
+    document.getElementById("openCollabRequestPopup")?.addEventListener("click", () => openPopup("collabRequestPopup"));
+
+    document.getElementById("collabRequestForm")?.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const form = e.target;
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const name = String(document.getElementById("collabRequestName")?.value ?? "").trim();
+      const email = String(document.getElementById("collabRequestEmail")?.value ?? "").trim();
+      const message = String(document.getElementById("collabRequestMessage")?.value ?? "").trim();
+      const subject = "コラボ診断依頼";
+      const body = [
+        "コラボ診断依頼",
+        "",
+        `名前: ${name}`,
+        `メールアドレス: ${email}`,
+        "",
+        "文章:",
+        message
+      ].join("\n");
+
+      window.location.href = `mailto:info@mobby.online?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    });
+
     /* faqContactForm */
     document.getElementById("faqContactForm")?.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -8855,6 +11823,71 @@
       });
     }
   </script>
+  <script>
+    (function () {
+      function initHeroDiagnosisAllToggle() {
+        const menu = document.querySelector('.hero-diagnosis-menu');
+        const toggle = document.getElementById('heroDiagnosisAllToggle');
+        if (!menu || !toggle || toggle.dataset.ready === 'true') return;
+
+        toggle.dataset.ready = 'true';
+        toggle.addEventListener('click', () => {
+          const expanded = !menu.classList.contains('is-expanded');
+          const track = menu.querySelector('.hero-diagnosis-track');
+          menu.classList.toggle('is-expanded', expanded);
+          toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+          if (track) track.style.animationPlayState = expanded ? 'paused' : '';
+        });
+      }
+
+      function initHeroDiagnosisAutoAdvance() {
+        const scroller = document.querySelector('.hero-diagnosis-menu .gift-fan-diagnosis-actions');
+        if (!scroller || scroller.dataset.autoAdvanceReady === 'true') return;
+
+        scroller.querySelectorAll('[data-auto-clone="true"]').forEach((clone) => clone.remove());
+        const track = scroller.querySelector('.hero-diagnosis-track');
+        const items = Array.from(scroller.querySelectorAll('.gift-fan-diagnosis-action'));
+        if (!track) return;
+        if (items.length < 2) return;
+
+        scroller.dataset.autoAdvanceReady = 'true';
+        scroller.style.scrollSnapType = 'none';
+
+        const updateAnimation = () => {
+          if (scroller.closest('.hero-diagnosis-menu')?.classList.contains('is-expanded')) {
+            track.style.animationPlayState = 'paused';
+            return;
+          }
+          const distance = Math.max(0, track.scrollWidth - scroller.clientWidth);
+          scroller.style.setProperty('--hero-diagnosis-scroll-distance', `${distance}px`);
+          scroller.style.setProperty('--hero-diagnosis-scroll-duration', `${Math.max(8, distance / 18)}s`);
+          track.style.animationPlayState = distance <= 1 ? 'paused' : '';
+        };
+
+        window.addEventListener('resize', updateAnimation, { passive: true });
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden) updateAnimation();
+        });
+
+        window.setTimeout(updateAnimation, 0);
+        window.setTimeout(updateAnimation, 500);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+          initHeroDiagnosisAllToggle();
+          initHeroDiagnosisAutoAdvance();
+        }, { once: true });
+      } else {
+        initHeroDiagnosisAllToggle();
+        initHeroDiagnosisAutoAdvance();
+      }
+      window.addEventListener('load', () => {
+        initHeroDiagnosisAllToggle();
+        initHeroDiagnosisAutoAdvance();
+      }, { once: true });
+    })();
+  </script>
 
   <!-- ページ遷移フェード -->
   <div class="page-transition-overlay" id="pageTransitionOverlay"></div>
@@ -8862,7 +11895,11 @@
     (function () {
       var overlay = document.getElementById('pageTransitionOverlay');
       // ページ読み込み時フェードイン
-      window.addEventListener('pageshow', function () {
+      window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+          window.location.reload();
+          return;
+        }
         overlay.classList.add('fade-in');
         overlay.classList.remove('fade-out');
         if (typeof resetTransientUiAfterHistoryRestore === 'function') {

@@ -1133,7 +1133,7 @@
     let state = loadState();
 
     function createDefaultState(){
-      return { step:"intro", page:0, answers:{}, questionOrder:null, profile:{ name:"", email:"" } };
+      return { step:"intro", page:0, answers:{}, questionOrder:null, profile:{ name:"", email:"" }, sentToSheet:false };
     }
     function loadState(){
       try {
@@ -1142,6 +1142,7 @@
           if(!s.profile) s.profile = { name:"", email:"" };
           s.profile.name = s.profile.name || "";
           s.profile.email = s.profile.email || "";
+          s.sentToSheet = s.sentToSheet === true;
           return s;
         }
       } catch(e){}
@@ -2072,6 +2073,8 @@
       };
 
       document.getElementById("btnGateGo").onclick = async () => {
+        const btn = document.getElementById("btnGateGo");
+        if (btn.disabled) return;
         const errEl = document.getElementById("regErr");
         errEl.style.display = "none";
 
@@ -2083,6 +2086,16 @@
         if(!email){ errEl.textContent = "이메일 주소를 입력해주세요"; errEl.style.display = "block"; return; }
         if(!emailOk){ errEl.textContent = "이메일 주소를 올바르게 입력해주세요"; errEl.style.display = "block"; return; }
 
+        if (state.sentToSheet) {
+          state.profile = { name, email };
+          state.step = "result";
+          saveState();
+          render();
+          return;
+        }
+
+        btn.disabled = true;
+        btn.setAttribute("aria-busy", "true");
         state.profile = { name, email };
         const res = computeResult();
         const questionAnswers = {};
@@ -2106,6 +2119,10 @@
           diagnosis_type: (res?.char && res.char.name) ? res.char.name : (res.code || payload.type || "")
         };
 
+        state.sentToSheet = true;
+        state.step = "result";
+        saveState();
+
         try {
           await submitLead(payload);
           submitDiagnosis(diagnosisPayload).catch((error) => {
@@ -2115,6 +2132,12 @@
           saveState();
           render();
         } catch (error) {
+          state.profile = { name: "", email: "" };
+          state.step = "gate";
+          state.sentToSheet = false;
+          saveState();
+          btn.disabled = false;
+          btn.removeAttribute("aria-busy");
           errEl.textContent = "送信に失敗しました。時間をおいて再度お試しください。";
           errEl.style.display = "block";
         }

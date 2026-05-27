@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="format-detection" content="telephone=no,address=no,email=no">
+  <title>Lucaの水彩ストーリータイプ診断 | Mobby</title>
+  <meta name="description" content="水彩、女性の日常と感情、透明感のある物語をテーマにしたimagen_lucaさん向けMobby診断ラフです。">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Lucaの水彩ストーリータイプ診断">
+  <meta property="og:description" content="あなたはLucaさんの水彩世界ならどのストーリータイプ？">
+  <meta property="og:url" content="https://shunpei1130.github.io/mobby/imagen-luca/">
+  <meta property="og:image" content="https://shunpei1130.github.io/mobby/imagen-luca/img/hero.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#fff8e8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-main: 'Yomogi', cursive;
+      --bg: #fff8e8;
+      --surface: #ffffff;
+      --surface2: #fff3d9;
+      --text-main: #1d1d1f;
+      --text-sub: #6e6e73;
+      --accent: #2f6f62;
+      --accent-soft: #e8f4ee;
+      --accent2: #d2691e;
+      --accent3: #aec6cf;
+      --line: #d8d0c2;
+      --danger: #c2410c;
+      --shadow-sm: 0 2px 8px rgba(64, 43, 26, 0.06);
+      --shadow-lg: 0 12px 30px rgba(64, 43, 26, 0.10);
+      color-scheme: light;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-main);
+      background:
+        radial-gradient(circle at 15% 4%, rgba(174, 198, 207, 0.34), rgba(174, 198, 207, 0) 28%),
+        radial-gradient(circle at 90% 0%, rgba(210, 105, 30, 0.14), rgba(210, 105, 30, 0) 30%),
+        var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    button {
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s, box-shadow 0.2s, border-color 0.2s;
+    }
+
+    button:hover {
+      background: #fff;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    button:active {
+      transform: translateY(0) scale(0.96);
+    }
+
+    button:disabled {
+      opacity: 0.42;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background-image: url('../16school/logo.jpg');
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 4px 10px rgba(47, 111, 98, 0.20);
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .title h1 {
+      font-size: 14px;
+      margin: 0;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--accent);
+    }
+
+    .title p {
+      margin: 0;
+      color: var(--text-sub);
+      font-size: 12px;
+    }
+
+    .title-menu a:hover {
+      background: var(--accent-soft);
+    }
+
+    .nav {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .nav a {
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: background 0.2s;
+      text-decoration: none;
+    }
+
+    .nav a:hover { background: rgba(47, 111, 98, 0.08); }
+
+    .nav a.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .panel {
+      background: var(--surface);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--line);
+    }
+
+    .fade-in {
+      animation: fadeIn 0.42s ease-out both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .kicker {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 800;
+      margin: 0 0 8px;
+    }
+
+    .big {
+      font-size: clamp(30px, 6vw, 46px);
+      line-height: 1.12;
+      margin: 0 0 16px;
+      letter-spacing: 0;
+    }
+
+    .text-body {
+      font-size: 15px;
+      color: var(--text-sub);
+    }
+
+    .result-panel,
+    .result-panel p,
+    .result-panel li,
+    .result-panel h2,
+    .result-panel h3,
+    .result-panel .text-body,
+    .result-panel .kicker,
+    .result-panel .type-chip {
+      color: #111;
+    }
+
+    .axis-card {
+      margin-top: 24px;
+      padding: 24px;
+      border: 1px solid rgba(158,127,107,.18);
+      border-radius: 20px;
+      background: rgba(255,255,255,.72);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .axis-list {
+      display: grid;
+      gap: 18px;
+      margin-top: 16px;
+    }
+
+    .axis-labels {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .axis-labels span:nth-child(2) { text-align: center; }
+    .axis-labels span:nth-child(3) { text-align: right; }
+
+    .axis-track {
+      position: relative;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #d7ecfb 0%, #f5f7f6 50%, #f8dfb8 100%);
+      overflow: visible;
+    }
+
+    .axis-marker {
+      position: absolute;
+      top: 50%;
+      width: 16px;
+      height: 16px;
+      border: 4px solid #df6f82;
+      border-radius: 999px;
+      background: #fff;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 2px 8px rgba(223,111,130,.22);
+    }
+
+    .axis-note {
+      margin-top: 22px;
+      padding: 18px;
+      border-left: 3px solid #df6f82;
+      border-radius: 16px;
+      background: rgba(255,244,244,.76);
+    }
+
+    .axis-note h3 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: #df6f82;
+    }
+
+    .primary {
+      background: linear-gradient(135deg, var(--accent), #3d8f7d);
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(47, 111, 98, 0.20);
+    }
+
+    .primary:hover {
+      background: linear-gradient(135deg, #2a6257, #347b6d);
+    }
+
+    .danger {
+      color: var(--danger);
+      background: rgba(194, 65, 12, 0.08);
+    }
+
+    .home-btn {
+      margin-right: 6px;
+      font-size: 15px;
+      padding: 6px 18px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--accent);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      gap: 22px;
+      align-items: center;
+      margin: 24px auto 30px;
+      max-width: 640px;
+      text-align: left;
+    }
+
+    .hero-art {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      background: var(--surface2);
+      min-height: 260px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--line);
+    }
+
+    .hero-art img {
+      width: 100%;
+      height: 100%;
+      min-height: 260px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-copy-card {
+      display: grid;
+      gap: 12px;
+    }
+
+    .hero-note {
+      background: var(--accent-soft);
+      border: 1px solid rgba(47, 111, 98, 0.20);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      border-radius: 14px;
+      padding: 12px 14px;
+    }
+
+    .preview-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 24px auto 0;
+      max-width: 640px;
+    }
+
+    .preview-strip img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: var(--surface2);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .progress-wrap { margin: 20px 0; }
+
+    .progress-track {
+      height: 6px;
+      background: var(--surface2);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      width: 0%;
+      transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .qCard {
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .qCard:last-child {
+      border-bottom: none;
+      margin-bottom: 10px;
+    }
+
+    .qText {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0 0 16px;
+    }
+
+    .likert7 {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px 0 6px;
+    }
+
+    .likert-labels {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 0 4px;
+    }
+
+    .likert-labels .left { color: var(--accent); }
+    .likert-labels .right { color: var(--accent2); }
+
+    .likert-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+      width: 100%;
+    }
+
+    .likert-btn {
+      appearance: none;
+      -webkit-appearance: none;
+      border: 3px solid rgba(47, 111, 98, 0.2);
+      background: transparent;
+      border-radius: 999px;
+      cursor: pointer;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1), background 180ms, border-color 180ms, box-shadow 180ms;
+      flex-shrink: 0;
+    }
+
+    .likert-btn[data-i="1"],
+    .likert-btn[data-i="7"] { width: 76px; height: 76px; }
+    .likert-btn[data-i="2"],
+    .likert-btn[data-i="6"] { width: 58px; height: 58px; }
+    .likert-btn[data-i="3"],
+    .likert-btn[data-i="5"] { width: 44px; height: 44px; }
+    .likert-btn[data-i="4"] { width: 30px; height: 30px; }
+
+    .likert-btn.left { border-color: rgba(47, 111, 98, 0.65); }
+    .likert-btn.mid { border-color: rgba(110, 110, 115, 0.45); }
+    .likert-btn.right { border-color: rgba(210, 105, 30, 0.65); }
+
+    .likert-btn.selected {
+      background: rgba(47, 111, 98, 0.22);
+      box-shadow: 0 0 0 6px rgba(47, 111, 98, 0.10);
+      border-color: var(--accent);
+    }
+
+    .likert-btn:active { transform: scale(0.92); }
+
+    .result-hero {
+      text-align: center;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 24px;
+    }
+
+    .char-image-placeholder {
+      width: 240px;
+      height: 240px;
+      margin: 20px auto;
+      border-radius: 28px;
+      background: var(--surface2);
+      display: grid;
+      place-items: center;
+      color: var(--text-sub);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .char-image-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .type-chip {
+      display: inline-block;
+      background: var(--surface2);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      color: var(--text-sub);
+      border: 1px solid var(--line);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .info-card {
+      background: var(--surface2);
+      border-radius: 18px;
+      padding: 20px;
+      border: 1px solid var(--line);
+    }
+
+    .info-card h3 {
+      margin: 0 0 12px;
+      font-size: 15px;
+      color: var(--text-main);
+    }
+
+    .info-card ul {
+      margin: 0;
+      padding-left: 20px;
+      font-size: 13px;
+      color: var(--text-main);
+    }
+
+    .info-card li { margin-bottom: 6px; }
+
+    .result-feature {
+      margin-top: 24px;
+      background: linear-gradient(135deg, #ffffff, #fff3d9);
+      border-left: 4px solid var(--accent);
+    }
+
+    .result-product-content {
+      margin-top: 24px;
+      text-align: center;
+      background: linear-gradient(145deg, #ffffff, #fff7e6);
+      border: 1px solid rgba(47, 111, 98, 0.18);
+      border-radius: 22px;
+      padding: 24px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .result-product-content::after {
+      content: "COLLAB";
+      position: absolute;
+      top: 18px;
+      right: -44px;
+      transform: rotate(20deg);
+      background: linear-gradient(135deg, var(--accent2), #f0a050);
+      color: #fff;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      padding: 6px 48px;
+    }
+
+    .link-row,
+    .share-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .share-panel {
+      margin-top: 24px;
+      text-align: center;
+      border-top: 1px solid var(--line);
+      padding-top: 24px;
+    }
+
+    .link-pill,
+    .share-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--text-main);
+      font-size: 13px;
+      font-weight: 800;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .share-x {
+      background: #111;
+      color: #fff;
+      border-color: #111;
+    }
+
+    .share-line {
+      background: #06c755;
+      color: #fff;
+      border-color: #06c755;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      transform: translate(-50%, 20px);
+      opacity: 0;
+      pointer-events: none;
+      background: rgba(29, 29, 31, 0.92);
+      color: #fff;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 13px;
+      transition: 0.24s ease;
+      z-index: 80;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .char-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .char-card {
+      background: var(--surface);
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .char-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .char-card-image {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--surface2);
+      margin-bottom: 12px;
+      border: 1px solid var(--line);
+    }
+
+    .char-card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .char-card-type {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .char-card-name {
+      font-size: 16px;
+      margin: 0 0 8px;
+      line-height: 1.35;
+    }
+
+    .char-card-desc {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin: 0 0 14px;
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--text-sub);
+      font-size: 11px;
+      margin-top: 50px;
+    }
+
+    @media (max-width: 760px) {
+      .wrap { padding: 24px 14px 70px; }
+      header { align-items: flex-start; }
+      .panel { padding: 24px 18px; border-radius: 22px; }
+      .hero-grid { grid-template-columns: 1fr; text-align: center; }
+      .hero-copy-card { order: 2; }
+      .hero-art { order: 1; max-width: 340px; margin: 0 auto; }
+      .preview-strip { grid-template-columns: repeat(4, 1fr); gap: 7px; }
+      .card-grid { grid-template-columns: 1fr; }
+      .char-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .nav { width: 100%; justify-content: flex-start; }
+    }
+
+    @media (max-width: 420px) {
+      .wrap { padding-left: 12px; padding-right: 12px; }
+      .big { font-size: 31px; }
+      .hero-art img { min-height: 220px; }
+      .preview-strip { grid-template-columns: repeat(2, 1fr); }
+      .likert7 { gap: 6px; }
+      .likert-labels { font-size: 9px; }
+      .likert-buttons { gap: 4px; }
+      .likert-btn[data-i="1"],
+      .likert-btn[data-i="7"] { width: 48px; height: 48px; }
+      .likert-btn[data-i="2"],
+      .likert-btn[data-i="6"] { width: 40px; height: 40px; }
+      .likert-btn[data-i="3"],
+      .likert-btn[data-i="5"] { width: 32px; height: 32px; }
+      .likert-btn[data-i="4"] { width: 24px; height: 24px; }
+      .char-image-placeholder { width: 220px; height: 220px; }
+      .char-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <a href="../index.html?skipSplash=1" style="text-decoration:none;">
+          <button class="home-btn" type="button">Home</button>
+        </a>
+        <div class="logo" id="logoHome" aria-hidden="true"></div>
+        <div class="title" style="position: relative;">
+          <h1 id="titleHome">診断一覧</h1>
+          <p>imagen_luca x Mobby</p>
+          <div id="titleMenu" class="title-menu" style="display:none; position:absolute; top:calc(100% + 8px); left:0; min-width:210px; padding:8px; border:1px solid var(--line); border-radius:12px; background:var(--surface); box-shadow:var(--shadow-sm); z-index:30;">
+            <a href="/16school/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main); font-size:12px;">学校モビー診断</a>
+            <a href="/16school/mama/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main); font-size:12px;">ママモビー診断</a>
+            <a href="/16love/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main); font-size:12px;">メンヘラモビー診断</a>
+            <a href="/16night/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main); font-size:12px;">夜職モビー診断</a>
+            <a href="/16stan/" style="display:block; padding:8px 10px; border-radius:8px; color:var(--text-main); font-size:12px;">推し活モビー診断</a>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <nav class="nav">
+          <a href="#" id="navDiagnosis" class="active">診断</a>
+          <a href="#" id="navCharacters">キャラ一覧</a>
+        </nav>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="danger" id="btnReset" type="button" style="font-size:11px;">リセット</button>
+          <button id="btnTypeGuide" type="button" style="font-size:11px;background:var(--accent-soft);color:var(--accent);">タイプ解説</button>
+        </div>
+      </div>
+    </header>
+
+    <main id="app"></main>
+    <footer>&copy; 2026 Mobby. All rights reserved.</footer>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite">コピーしました</div>
+
+  <script>
+    const app = document.getElementById("app");
+    const toast = document.getElementById("toast");
+    const STORAGE_KEY = "mobby_yopipi_diagnosis_v1";
+    const PAGE_SIZE = 4;
+    const AGE_OPTIONS = [
+      { value: "13", label: "13歳" },
+      { value: "14", label: "14歳" },
+      { value: "15", label: "15歳" },
+      { value: "16", label: "16歳" },
+      { value: "17", label: "17歳" },
+      { value: "18", label: "18歳" },
+      { value: "19", label: "19歳" },
+      { value: "20", label: "20歳" },
+      { value: "21", label: "21歳" },
+      { value: "22", label: "22歳以上" }
+    ];
+    const SITE = {
+      "lang": "ja",
+      "slug": "imagen-luca",
+      "title": "Lucaの水彩ストーリータイプ診断",
+      "metaDescription": "水彩、女性の日常と感情、透明感のある物語をテーマにしたimagen_lucaさん向けMobby診断ラフです。",
+      "ogDescription": "あなたはLucaさんの水彩世界ならどのストーリータイプ？",
+      "officialLabel": "imagen_luca official links",
+      "officialTitle": "lucaさんの作品を見てみよう",
+      "officialDescription": "あなたの中でふわふわしていたものがきっと言語化された<br>そのうえでlucaさんの作品を見てみたらまた違った色が浮かんでくるかもしれない",
+      "introKicker": "LUCA WATERCOLOR STORY",
+      "introTitle": "Lucaの水彩ストーリー<br>タイプ診断",
+      "introDescription": "32問で、水彩の色、日常の感情、物語の余白から、あなたに近いストーリータイプを診断します。",
+      "heroNote": "Lucaさん側の提供物は基本不要で、まずはこちらでラフ制作・画像制作・ページ制作まで進める想定です。",
+      "heroSubcopy": "正式公開前に、方向性、公開OK、リンク先だけご確認いただければ調整できます。",
+      "heroAlt": "imagen_luca dedicated Mobby visual",
+      "previewKeys": [
+            "morning",
+            "cafe",
+            "rain",
+            "flower"
+      ],
+      "charactersDescription": "水彩、透明感、女性の日常、感情の余白から作った8タイプです。",
+      "guideDescription": "回答の傾向から、Lucaさんの水彩世界に合うストーリータイプを判定します。",
+      "shareResultText": "Lucaの水彩ストーリータイプ診断の結果は「{result}」でした。",
+      "copyResultText": "Lucaの水彩ストーリータイプ診断の結果は「{result}」でした。 https://shunpei1130.github.io/mobby/imagen-luca/",
+      "publicUrl": "https://shunpei1130.github.io/mobby/imagen-luca/",
+      "links": [
+            {
+                  "label": "Instagram",
+                  "url": "https://www.instagram.com/imagen_luca/"
+            },
+            {
+                  "label": "Mobby",
+                  "url": "https://www.mobby.online/"
+            }
+      ],
+      "labels": {
+            "home": "Home",
+            "diagnosisList": "診断一覧",
+            "diagnosis": "診断",
+            "characters": "キャラ一覧",
+            "reset": "リセット",
+            "typeGuide": "タイプ解説",
+            "copied": "コピーしました",
+            "resume": "診断を再開する",
+            "start": "診断をはじめる",
+            "answered": "問 回答済み",
+            "strongAgree": "とても当てはまる",
+            "strongDisagree": "全く当てはまらない",
+            "progress": "進行状況",
+            "prev": "戻る",
+            "next": "次へ",
+            "seeResult": "結果を見る",
+            "answerAll": "このページの質問にすべて回答してください",
+            "result": "診断結果",
+            "strengths": "長所",
+            "cautions": "注意点",
+            "collabAdvice": "コラボで活かすなら",
+            "shareHeading": "結果をシェア",
+            "shareX": "X でシェア",
+            "shareLine": "LINEで送る",
+            "copy": "結果をコピー",
+            "again": "もう一度診断",
+            "detail": "詳細",
+            "allTypes": "全8タイプ",
+            "charactersTitle": "キャラクター一覧",
+            "resultCopied": "結果をコピーしました"
+      }
+};
+    const CHARACTERS = {
+      "morning": {
+            "code": "MORN",
+            "name": "朝光の透明感",
+            "catch": "淡い光で始まるやさしいタイプ。",
+            "image": "img/8mobby/朝光の透明感モビー.jpg",
+            "hook": "水彩のにじみと朝の空気が似合う、静かなはじまりのタイプです。",
+            "lucaLetter": [
+                  "あなたは、まだ誰にも触れられていない朝の光みたいな人。",
+                  "無理に強く見せなくても、あなたの中にあるやさしさや静けさは、ちゃんと誰かの心に届きます。",
+                  "急いで色を濃くしようとしなくて大丈夫。淡いまま、透明なまま、少しずつ自分の輪郭を描いていけばいいと思います。"
+            ],
+            "lucaScene": "白いカーテン越しの朝、まだ言葉になる前の気持ちを抱えた女の子の水彩画。",
+            "lucaCharm": "淡いままでも、ちゃんと光っている。",
+            "strengths": [
+                  "透明感がある",
+                  "保存されやすい",
+                  "穏やか"
+            ],
+            "cautions": [
+                  "正式公開前に、表現や導線は調整できます。",
+                  "公開写真や既存作品の転載ではなく、専用イメージとして制作します。",
+                  "つなげたいリンクが変わる場合は、結果画面の導線を差し替えます。"
+            ],
+            "advice": [
+                  "作品紹介の入口に向いています。",
+                  "SNSでシェアしやすい入口として活用できます。",
+                  "結果画面からSNS、商品、告知ページなどへ自然につなげられます。"
+            ]
+      },
+      "cafe": {
+            "code": "CAFE",
+            "name": "カフェ窓辺の余韻",
+            "catch": "日常の中の小さな感情を拾うタイプ。",
+            "image": "img/8mobby/カフェ窓辺の余韻モビー.jpg",
+            "hook": "何気ない時間にある気持ちの揺れを大事にするタイプです。",
+            "lucaLetter": [
+                  "あなたは、日常の中にある小さな感情を見逃さない人。",
+                  "何でもない時間、誰かの視線、カップの湯気、窓に映る光。そういうものの中に物語を見つけられる感性があります。",
+                  "大きな出来事がなくても、あなたの毎日はちゃんと絵になります。つまらないと思った日も、あとから見返すと優しい一場面だったりします。"
+            ],
+            "lucaScene": "カフェの窓辺で、言葉にしないまま遠くを見ている女の子の水彩画。",
+            "lucaCharm": "何気ない日ほど、あとから大切になる。",
+            "strengths": [
+                  "日常に寄り添う",
+                  "共感される",
+                  "物語が生まれる"
+            ],
+            "cautions": [
+                  "正式公開前に、表現や導線は調整できます。",
+                  "公開写真や既存作品の転載ではなく、専用イメージとして制作します。",
+                  "つなげたいリンクが変わる場合は、結果画面の導線を差し替えます。"
+            ],
+            "advice": [
+                  "日常系投稿と相性が良いです。",
+                  "SNSでシェアしやすい入口として活用できます。",
+                  "結果画面からSNS、商品、告知ページなどへ自然につなげられます。"
+            ]
+      },
+      "rain": {
+            "code": "RAIN",
+            "name": "雨の日の感情線",
+            "catch": "少し切ない色を大事にするタイプ。",
+            "image": "img/8mobby/雨の日の感情線モビー.jpg",
+            "hook": "雨、涙、曇り空のような情緒に惹かれるタイプです。",
+            "lucaLetter": [
+                  "あなたは、少し切ない色をきれいだと思える人。",
+                  "悲しさや寂しさをただ暗いものとして終わらせず、その中にあるやさしさまで見つけられる感性があります。",
+                  "泣きそうな日や、何となく沈む日も、無理に晴れに変えなくていいです。雨の日にしか見えない光もあります。"
+            ],
+            "lucaScene": "雨粒のにじむ窓の前で、少しだけ目を伏せている女の子の水彩画。",
+            "lucaCharm": "悲しい色にも、やさしい光は混ざっている。",
+            "strengths": [
+                  "感情が深い",
+                  "余韻がある",
+                  "印象に残る"
+            ],
+            "cautions": [
+                  "正式公開前に、表現や導線は調整できます。",
+                  "公開写真や既存作品の転載ではなく、専用イメージとして制作します。",
+                  "つなげたいリンクが変わる場合は、結果画面の導線を差し替えます。"
+            ],
+            "advice": [
+                  "感情に寄り添う作品導線に向いています。",
+                  "SNSでシェアしやすい入口として活用できます。",
+                  "結果画面からSNS、商品、告知ページなどへ自然につなげられます。"
+            ]
+      },
+      "flower": {
+            "code": "FLOW",
+            "name": "花束の記憶",
+            "catch": "色と香りのように記憶に残るタイプ。",
+            "image": "img/8mobby/花束の記憶モビー.jpg",
+            "hook": "花、髪、服の色から感情を受け取るタイプです。",
+            "lucaLetter": [
+                  "あなたは、色や香りのように記憶を残せる人。",
+                  "人との時間、もらった言葉、好きだった服の色、季節の花。そういうものを感情ごと大切にできる人です。",
+                  "華やかでいたい気持ちと、繊細で傷つきやすい気持ちは、どちらもあなたの魅力です。どちらかを隠さなくて大丈夫。"
+            ],
+            "lucaScene": "花束を抱えながら、少し照れたようにこちらを見る女の子の水彩画。",
+            "lucaCharm": "忘れたくない気持ちは、花みたいに残していい。",
+            "strengths": [
+                  "華やか",
+                  "女性らしさがある",
+                  "作品映えする"
+            ],
+            "cautions": [
+                  "正式公開前に、表現や導線は調整できます。",
+                  "公開写真や既存作品の転載ではなく、専用イメージとして制作します。",
+                  "つなげたいリンクが変わる場合は、結果画面の導線を差し替えます。"
+            ],
+            "advice": [
+                  "グッズや作品販売導線にも合います。",
+                  "SNSでシェアしやすい入口として活用できます。",
+                  "結果画面からSNS、商品、告知ページなどへ自然につなげられます。"
+            ]
+      },
+      "letter": {
+            "code": "LETTER",
+            "name": "手紙を待つ人",
+            "catch": "言葉にならない気持ちを持つタイプ。",
+            "image": "img/8mobby/手紙を待つ人モビー.jpg",
+            "hook": "届く前の言葉、返事を待つ時間のような余白に惹かれます。",
+            "lucaLetter": [
+                  "あなたは、言葉になる前の気持ちを大切にできる人。",
+                  "すぐに答えを出したり、すぐに伝えたりしなくても、心の中でゆっくり育っている感情があります。",
+                  "言えなかったこと、返事を待っている時間、途中で止まった言葉。それも全部、あなたの物語の一部です。"
+            ],
+            "lucaScene": "机の上に開いた手紙と、まだ返事を書けずにいる女の子の水彩画。",
+            "lucaCharm": "言葉にならない時間にも、ちゃんと意味がある。",
+            "strengths": [
+                  "物語性がある",
+                  "共感される",
+                  "静か"
+            ],
+            "cautions": [
+                  "正式公開前に、表現や導線は調整できます。",
+                  "公開写真や既存作品の転載ではなく、専用イメージとして制作します。",
+                  "つなげたいリンクが変わる場合は、結果画面の導線を差し替えます。"
+            ],
+            "advice": [
+                  "キャプションや文章投稿と相性が良いです。",
+                  "SNSでシェアしやすい入口として活用できます。",
+                  "結果画面からSNS、商品、告知ページなどへ自然につなげられます。"
+            ]
+      },
+      "city": {
+            "code": "CITY",
+            "name": "夕暮れの街角",
+            "catch": "都会の中の感情を拾うタイプ。",
+            "image": "img/8mobby/夕暮れの街角モビー.jpg",
+            "hook": "人混みの中の孤独や、帰り道の光に物語を感じるタイプです。",
+            "lucaLetter": [
+                  "あなたは、人混みの中でも自分だけの感情を持っている人。",
+                  "街の光、帰り道、すれ違う人、少し寂しい夕暮れ。そういう景色に、自分だけの物語を重ねられます。",
+                  "誰かと一緒にいても、ひとりでいても、心の中にある静かな場面を大切にしてください。あなたの孤独は、冷たいものではなく、深さのある色です。"
+            ],
+            "lucaScene": "夕暮れの街角で、ネオンと空の色に包まれて立つ女の子の水彩画。",
+            "lucaCharm": "人混みの中の静けさも、あなたの大切な居場所。",
+            "strengths": [
+                  "現代的",
+                  "感情移入される",
+                  "映像的"
+            ],
+            "cautions": [
+                  "正式公開前に、表現や導線は調整できます。",
+                  "公開写真や既存作品の転載ではなく、専用イメージとして制作します。",
+                  "つなげたいリンクが変わる場合は、結果画面の導線を差し替えます。"
+            ],
+            "advice": [
+                  "ショート動画や縦長作品と相性が良いです。",
+                  "SNSでシェアしやすい入口として活用できます。",
+                  "結果画面からSNS、商品、告知ページなどへ自然につなげられます。"
+            ]
+      },
+      "dream": {
+            "code": "DREAM",
+            "name": "夢色の境界線",
+            "catch": "現実と空想の間を漂うタイプ。",
+            "image": "img/8mobby/夢色の境界線モビー.jpg",
+            "hook": "ふわっとした輪郭や不思議な色に惹かれるタイプです。",
+            "lucaLetter": [
+                  "あなたは、現実と空想のあいだにある曖昧な色を愛せる人。",
+                  "はっきりしない気持ち、不思議な夢、説明できない懐かしさ。そういうものを無理に言葉にしなくても、感覚で受け取れる人です。",
+                  "現実的じゃないと言われる感性も、あなたにとっては大事な宝物です。ふわっとしたまま残るものほど、長く心に残ることがあります。"
+            ],
+            "lucaScene": "空と部屋の境目が溶けて、夢の中に立っているような女の子の水彩画。",
+            "lucaCharm": "曖昧なまま残る気持ちも、美しい。",
+            "strengths": [
+                  "幻想的",
+                  "世界観が強い",
+                  "記憶に残る"
+            ],
+            "cautions": [
+                  "正式公開前に、表現や導線は調整できます。",
+                  "公開写真や既存作品の転載ではなく、専用イメージとして制作します。",
+                  "つなげたいリンクが変わる場合は、結果画面の導線を差し替えます。"
+            ],
+            "advice": [
+                  "展示・作品集の導入にも向いています。",
+                  "SNSでシェアしやすい入口として活用できます。",
+                  "結果画面からSNS、商品、告知ページなどへ自然につなげられます。"
+            ]
+      },
+      "book": {
+            "code": "BOOK",
+            "name": "小さな物語の栞",
+            "catch": "作品を何度も見返したいタイプ。",
+            "image": "img/8mobby/小さな物語の栞モビー.jpg",
+            "hook": "一枚の絵を本の一ページのように大事にするタイプです。",
+            "lucaLetter": [
+                  "あなたは、一枚の絵や一つの記憶を長く大切にできる人。",
+                  "すぐに消費するより、何度も見返して、少しずつ好きになっていくタイプです。",
+                  "心に残ったものを、無理に次へ流さなくて大丈夫。好きなページに栞を挟むみたいに、自分の中にそっと置いておいてください。"
+            ],
+            "lucaScene": "小さな本を抱えて、静かな部屋で物語を読み返している女の子の水彩画。",
+            "lucaCharm": "何度も見返したくなるものが、あなたの本当の好き。",
+            "strengths": [
+                  "保存されやすい",
+                  "長く愛される",
+                  "作品導線に強い"
+            ],
+            "cautions": [
+                  "正式公開前に、表現や導線は調整できます。",
+                  "公開写真や既存作品の転載ではなく、専用イメージとして制作します。",
+                  "つなげたいリンクが変わる場合は、結果画面の導線を差し替えます。"
+            ],
+            "advice": [
+                  "作品ページや販売導線に自然につなげられます。",
+                  "SNSでシェアしやすい入口として活用できます。",
+                  "結果画面からSNS、商品、告知ページなどへ自然につなげられます。"
+            ]
+      }
+};
+    const DIAGNOSIS_DETAILS = {
+      morning: {
+        copy: "淡いまま、ちゃんと誰かの心に残る人。",
+        atmosphere: "あなたは、強い言葉や派手な存在感よりも、静かな空気で印象を残す人です。その場を大きく動かすタイプではないけれど、あとからふと思い出されるようなやさしい余韻があります。",
+        story: "あなたの中には、まだ始まっていない物語のような透明な気配があります。何かを急いで形にするより、少しずつ光が差し込むように、自分の気持ちを育てていく人です。",
+        worlds: ["朝の光", "白いカーテン", "透明なグラス", "淡い空", "まだ誰もいない部屋", "何かが始まる直前の静けさ"],
+        colors: "アイボリー、ペールブルー、淡いゴールド。強く主張する色よりも、光を含んだようなやわらかい色が似合います。",
+        season: "春の朝。まだ空気が少し冷たくて、部屋に光だけが先に入ってくる時間。",
+        emotion: "あなたは、はっきりした答えよりも、心が少し軽くなるような安心感を大切にします。誰かに強く求められるより、静かに受け止めてもらえることに惹かれます。",
+        relationship: "あなたは、相手に無理に踏み込まず、やわらかく距離を取れる人です。その控えめな優しさが、相手にとっては安心できる場所になります。",
+        viewing: "絵の中の「光」と「余白」に注目してみてください。人物そのものだけでなく、背景の淡さや、何も描かれていない空間に気持ちが残っているはずです。",
+        common: ["静かな場所が好き", "朝や夕方の光に弱い", "余白のあるデザインに惹かれる", "白や淡い色を見ると落ち着く", "強い言葉より、やさしい沈黙に安心する"]
+      },
+      cafe: {
+        copy: "何気ない一日から、小さな物語を見つける人。",
+        atmosphere: "あなたは、日常の中にある小さな変化を見逃さない人です。誰かの視線、カップの湯気、窓に映る光。そういう些細なものの中に感情を見つけられます。",
+        story: "あなたの物語は、大きな事件ではなく、静かな日常の中にあります。何でもないように見える一日も、あなたの中ではちゃんと意味のある一場面として残っていきます。",
+        worlds: ["カフェの窓辺", "木のテーブル", "湯気の立つカップ", "ノートとペン", "ひとりで過ごす午後", "誰かを待つ時間"],
+        colors: "ミルクティー、ラテベージュ、ココアブラウン。あたたかくて、少し落ち着いた色があなたの雰囲気に合います。",
+        season: "秋の午後。窓から少し斜めに光が入って、時間がゆっくり流れているような瞬間。",
+        emotion: "あなたは、派手な楽しさよりも、心がじんわり満たされるような感覚を大切にします。誰かと同じ空間にいて、言葉が少なくても安心できる時間に惹かれます。",
+        relationship: "あなたは、相手の小さな表情や空気の変化に気づきやすい人です。だからこそ、言葉にされていない気持ちまで受け取ってしまうことがあります。",
+        viewing: "人物の視線や、沈黙している時間に注目してみてください。何も起きていないように見える絵の中に、小さな感情の揺れが隠れているはずです。",
+        common: ["カフェや喫茶店の空気が好き", "窓辺の席を選びがち", "何気ない会話をあとから思い出す", "静かな日常系の作品に惹かれる", "人の表情や視線をよく見ている"]
+      },
+      rain: {
+        copy: "切なさの中にあるやさしさを、見逃さない人。",
+        atmosphere: "あなたは、明るさだけでは表せない深い感情を持っている人です。少し寂しい空気や、曇った日の静けさにも美しさを見つけられます。",
+        story: "あなたの中には、雨の日にしか開かない物語があります。悲しさや寂しさをただ暗いものとして終わらせず、その奥にあるやさしさまで感じ取れる人です。",
+        worlds: ["雨粒のついた窓", "濡れた道", "傘", "曇り空", "青みのある影", "涙のあとに残る静けさ"],
+        colors: "レインブルー、グレーラベンダー、くすみネイビー。少し影のある色や、にじむような青があなたの感情に合います。",
+        season: "梅雨の夕方。雨が止みそうで止まない、街の音が少し遠くなる時間。",
+        emotion: "あなたは、悲しさをなかったことにしない人です。楽しいだけでは届かない気持ちや、弱さの中にあるやさしさを大切にしています。",
+        relationship: "あなたは、人の痛みに気づきやすい人です。ただ、そのぶん自分の気持ちまで抱え込んでしまうことがあります。",
+        viewing: "にじみやぼかしの奥にある感情を探してみてください。輪郭が曖昧な部分ほど、その絵の本音が隠れているかもしれません。",
+        common: ["雨の日の雰囲気が嫌いじゃない", "少し切ない作品に惹かれる", "明るすぎる言葉より、静かな共感が好き", "音楽や絵で気持ちを整理する", "泣きそうな色をきれいだと思う"]
+      },
+      flower: {
+        copy: "忘れたくない気持ちを、色と香りで残せる人。",
+        atmosphere: "あなたは、華やかさと繊細さをどちらも持っている人です。明るく見える瞬間の中にも、誰かには見せていない柔らかい感情があります。",
+        story: "あなたの物語は、花の色や季節の匂いと一緒に記憶されていきます。誰かにもらった言葉、好きだった服の色、忘れたくない景色を、感情ごと大切に残せる人です。",
+        worlds: ["花束", "リボン", "春色の服", "髪に触れる花", "やわらかい香り", "記念日のような光"],
+        colors: "ローズピンク、コーラル、セージグリーン。やわらかく華やかで、少し余韻のある色が似合います。",
+        season: "春の昼下がり。花が少し揺れて、光の中にやわらかい影が落ちる時間。",
+        emotion: "あなたは、好きだったものや大切だった瞬間を、簡単に手放さない人です。記憶を飾るように、心の中でそっと残しておくことがあります。",
+        relationship: "あなたは、人に喜んでもらうことや、気持ちを形にすることが得意です。ただ、華やかに見えるぶん、寂しさに気づかれにくいこともあります。",
+        viewing: "花や服の色が、どんな気持ちを表しているか見てみてください。色の組み合わせに、その人物の記憶や感情が滲んでいるはずです。",
+        common: ["花やリボンのモチーフに惹かれる", "色で気分が変わりやすい", "記念日や思い出を大切にする", "写真や小物を残しがち", "華やかだけど繊細なものが好き"]
+      },
+      letter: {
+        copy: "言葉になる前の気持ちを、ずっと大切にできる人。",
+        atmosphere: "あなたは、すぐに言葉にできない感情をたくさん持っている人です。静かに見えても、心の中ではいろいろな思いがゆっくり動いています。",
+        story: "あなたの物語には、まだ送られていない手紙のような気持ちがあります。言えなかったこと、返事を待つ時間、途中で止まった言葉。そういう余白が、あなたの深さをつくっています。",
+        worlds: ["便箋", "封筒", "ノート", "万年筆", "書きかけの文章", "返事を待つ静かな部屋"],
+        colors: "パーチメントベージュ、ダスティピンク、インクブラウン。古い紙や淡いインクのような、やさしく沈んだ色が似合います。",
+        season: "冬の夜。机の灯りだけがついていて、外の音が少し遠くなる時間。",
+        emotion: "あなたは、すぐに答えを出すよりも、気持ちが形になるまで待つことを大切にします。曖昧なままの思いにも、ちゃんと意味があると感じられる人です。",
+        relationship: "あなたは、簡単に本音を見せるタイプではありません。でも一度心を許した相手には、とても深く、長く気持ちを向ける人です。",
+        viewing: "描かれていない言葉を想像してみてください。その人物が何を言えなかったのか、誰に何を届けたかったのかを考えると、絵の見え方が変わります。",
+        common: ["手紙やノートのモチーフが好き", "LINEの文章を何度も書き直す", "言えなかったことをあとから思い出す", "静かな文章や詩に惹かれる", "本音を出すまで時間がかかる"]
+      },
+      city: {
+        copy: "人混みの中でも、自分だけの静かな物語を持っている人。",
+        atmosphere: "あなたは、都会的で少し切ない空気を持っている人です。人と一緒にいても、自分だけの内側の世界をどこかで大切にしています。",
+        story: "あなたの物語は、帰り道や夕暮れの街に似ています。誰かと過ごした時間のあと、ひとりになった瞬間に、心の中で感情がゆっくり浮かび上がる人です。",
+        worlds: ["夕暮れの街", "駅", "街灯", "帰り道", "濡れた道路", "遠くに見えるビルの灯り"],
+        colors: "サンセットオレンジ、モーブ、トワイライトブルー。昼と夜の境目にあるような、少し大人っぽい色が似合います。",
+        season: "秋の夕暮れ。空が少しずつ暗くなって、街の灯りがひとつずつ増えていく時間。",
+        emotion: "あなたは、ひとりの時間にしか整理できない感情を大切にしています。寂しさも孤独も、あなたにとっては自分に戻るための大事な感覚です。",
+        relationship: "あなたは、人と関わることが嫌いなわけではないけれど、自分の内側まで簡単には入れません。ほどよい距離感の中で、深くつながれる相手を大切にします。",
+        viewing: "背景の光と人物の距離感を見てみてください。その人が街の中で何を感じているのか、風景と表情の間に物語があるはずです。",
+        common: ["帰り道の空気が好き", "夕方の街を見ると少し切なくなる", "ひとりで歩く時間が必要", "映画のワンシーンみたいな絵に惹かれる", "人混みの中で急に考え込むことがある"]
+      },
+      dream: {
+        copy: "現実と空想のあいだにある、曖昧な美しさを愛せる人。",
+        atmosphere: "あなたは、どこか掴みきれない不思議な空気を持っている人です。はっきり説明できないけれど、なぜか記憶に残る。そんな印象があります。",
+        story: "あなたの物語は、夢と現実の境目にあります。説明できない懐かしさ、不思議な色、輪郭の溶けた景色。そういう曖昧なものを、そのまま美しいと感じられる人です。",
+        worlds: ["雲", "月", "鏡", "溶けた空", "浮かぶ紙片", "夢の中の部屋"],
+        colors: "ラベンダー、ペールアクア、ミルキーピンク。現実感が少し薄れるような、淡く幻想的な色が似合います。",
+        season: "夏の夜明け前。夢から覚めたばかりで、まだ現実が少しぼやけている時間。",
+        emotion: "あなたは、言葉にできない感覚や、理由のない懐かしさを大切にします。現実的かどうかよりも、自分の心が反応するかどうかを重視する人です。",
+        relationship: "あなたは、自分の世界を大切にする人です。すべてを説明しなくても、感覚で分かってくれる相手に強く惹かれます。",
+        viewing: "現実なのか夢なのか曖昧な部分を楽しんでみてください。輪郭が溶けているところや、色が重なっているところに、その絵の余韻が残っています。",
+        common: ["夢の内容を覚えていることが多い", "不思議な色や空に惹かれる", "説明できない懐かしさに弱い", "現実的すぎるものより余白のあるものが好き", "自分だけの世界観を持っている"]
+      },
+      book: {
+        copy: "好きなものを、何度も見返しながら大切にできる人。",
+        atmosphere: "あなたは、すぐに消えていくものより、長く心に残るものを大切にする人です。静かだけれど、好きなものへの気持ちは深く、簡単には薄れません。",
+        story: "あなたの物語は、本の中に挟まれた栞のように、静かに残っています。何度も見返したくなる一枚、忘れたくない一言、心の中に置いておきたい景色を大切に抱えています。",
+        worlds: ["本", "栞", "読書灯", "古い紙", "小さな机", "静かな図書室"],
+        colors: "アンティークアイボリー、オリーブ、淡いゴールド。時間が経つほど味わいが増すような、落ち着いた色が似合います。",
+        season: "冬の午後。静かな部屋で、外の光が少しずつ弱くなっていく時間。",
+        emotion: "あなたは、好きなものをすぐに消費せず、ゆっくり味わうことを大切にします。心に残ったものを何度も見返して、そのたびに少し違う感情を見つける人です。",
+        relationship: "あなたは、広く浅くよりも、狭く深い関係を大切にします。一度大事だと思った人やものを、長く大切にし続けるタイプです。",
+        viewing: "一枚の絵を、本の一ページとして読んでみてください。その前後にどんな物語があるのかを想像すると、絵の中に長く留まれるはずです。",
+        common: ["本や紙ものが好き", "好きな作品を何度も見返す", "思い出の品を捨てるのが苦手", "静かな場所にいると落ち着く", "長く愛せるものに惹かれる"]
+      }
+    };
+    const QUESTIONS = [
+      {
+            "id": "Q01",
+            "key": "morning",
+            "text": "淡い朝の色に惹かれる。"
+      },
+      {
+            "id": "Q02",
+            "key": "morning",
+            "text": "透明感のある絵を見ると落ち着く。"
+      },
+      {
+            "id": "Q03",
+            "key": "morning",
+            "text": "静かな始まりの物語が好き。"
+      },
+      {
+            "id": "Q04",
+            "key": "morning",
+            "text": "白や淡い色の余白が好き。"
+      },
+      {
+            "id": "Q05",
+            "key": "cafe",
+            "text": "カフェや窓辺の絵に惹かれる。"
+      },
+      {
+            "id": "Q06",
+            "key": "cafe",
+            "text": "何気ない日常の感情が好き。"
+      },
+      {
+            "id": "Q07",
+            "key": "cafe",
+            "text": "人物の視線から物語を想像する。"
+      },
+      {
+            "id": "Q08",
+            "key": "cafe",
+            "text": "静かな時間を大事にしたい。"
+      },
+      {
+            "id": "Q09",
+            "key": "rain",
+            "text": "雨の日の絵が好き。"
+      },
+      {
+            "id": "Q10",
+            "key": "rain",
+            "text": "少し切ない色に惹かれる。"
+      },
+      {
+            "id": "Q11",
+            "key": "rain",
+            "text": "悲しさの中にやさしさがある表現が好き。"
+      },
+      {
+            "id": "Q12",
+            "key": "rain",
+            "text": "にじみやぼかしに感情を感じる。"
+      },
+      {
+            "id": "Q13",
+            "key": "flower",
+            "text": "花のある絵に惹かれる。"
+      },
+      {
+            "id": "Q14",
+            "key": "flower",
+            "text": "色で気持ちを表す作品が好き。"
+      },
+      {
+            "id": "Q15",
+            "key": "flower",
+            "text": "人物と植物の組み合わせが好き。"
+      },
+      {
+            "id": "Q16",
+            "key": "flower",
+            "text": "華やかだけど繊細な表現が好き。"
+      },
+      {
+            "id": "Q17",
+            "key": "letter",
+            "text": "手紙やノートのモチーフが好き。"
+      },
+      {
+            "id": "Q18",
+            "key": "letter",
+            "text": "言葉にする前の感情に惹かれる。"
+      },
+      {
+            "id": "Q19",
+            "key": "letter",
+            "text": "返事を待つような絵が好き。"
+      },
+      {
+            "id": "Q20",
+            "key": "letter",
+            "text": "余白のある文章も好き。"
+      },
+      {
+            "id": "Q21",
+            "key": "city",
+            "text": "夕暮れの街並みに惹かれる。"
+      },
+      {
+            "id": "Q22",
+            "key": "city",
+            "text": "都会の中の静かな感情が好き。"
+      },
+      {
+            "id": "Q23",
+            "key": "city",
+            "text": "帰り道の光に物語を感じる。"
+      },
+      {
+            "id": "Q24",
+            "key": "city",
+            "text": "映画のワンシーンのような絵が好き。"
+      },
+      {
+            "id": "Q25",
+            "key": "dream",
+            "text": "夢の中のような色が好き。"
+      },
+      {
+            "id": "Q26",
+            "key": "dream",
+            "text": "現実と空想が混ざる絵に惹かれる。"
+      },
+      {
+            "id": "Q27",
+            "key": "dream",
+            "text": "輪郭が少し溶ける表現が好き。"
+      },
+      {
+            "id": "Q28",
+            "key": "dream",
+            "text": "見る人に解釈が残る作品が好き。"
+      },
+      {
+            "id": "Q29",
+            "key": "book",
+            "text": "本や栞のモチーフが好き。"
+      },
+      {
+            "id": "Q30",
+            "key": "book",
+            "text": "一枚の絵を何度も見返したい。"
+      },
+      {
+            "id": "Q31",
+            "key": "book",
+            "text": "作品を手元に残したくなる。"
+      },
+      {
+            "id": "Q32",
+            "key": "book",
+            "text": "静かな物語を長く味わいたい。"
+      }
+];
+
+    const state = loadState();
+
+    function defaultState() {
+      return { step: "intro", page: 0, answers: {}, currentKey: null, profile: { name: "", email: "", age: "" }, sentToLead: false };
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) return { ...defaultState(), ...JSON.parse(raw) };
+      } catch (error) {}
+      return defaultState();
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function resetState() {
+      state.step = "intro";
+      state.page = 0;
+      state.answers = {};
+      state.currentKey = null;
+      state.profile = { name: "", email: "", age: "" };
+      state.sentToLead = false;
+      saveState();
+      render();
+    }
+
+    function isRegistered() {
+      return !!(state.profile && state.profile.name && state.profile.email && state.profile.age);
+    }
+
+    function answeredCount() {
+      return Object.keys(state.answers || {}).length;
+    }
+
+    function isCompleted() {
+      return answeredCount() >= QUESTIONS.length;
+    }
+
+    function updateNavActive() {
+      document.getElementById("navDiagnosis").classList.toggle("active", ["intro", "quiz", "gate", "result", "guide"].includes(state.step));
+      document.getElementById("navCharacters").classList.toggle("active", state.step === "characters");
+    }
+
+    function render() {
+      window.scrollTo(0, 0);
+      updateNavActive();
+      if (state.step === "quiz") renderQuiz();
+      else if (state.step === "characters") renderCharacters();
+      else if (state.step === "gate") renderGate();
+      else if (state.step === "result") renderResult();
+      else if (state.step === "guide") renderTypeGuide();
+      else renderIntro();
+    }
+
+    function renderIntro() {
+      const count = answeredCount();
+      app.innerHTML = `
+        <div class="panel fade-in" style="text-align:center;padding:52px 20px;">
+          <p class="kicker">${SITE.introKicker}</p>
+          <h2 class="big">${SITE.introTitle}</h2>
+          <p class="text-body" style="max-width:500px;margin:0 auto 12px;">${SITE.introDescription}</p>
+          <div class="hero-grid">
+            <div class="hero-copy-card">
+              <div class="hero-note">${SITE.heroNote}</div>
+              <p class="text-body" style="margin:0;">${SITE.heroSubcopy}</p>
+            </div>
+            <div class="hero-art"><img src="img/hero.jpg" alt="${SITE.heroAlt}"></div>
+          </div>
+          <button class="primary" id="btnStart" type="button" style="padding:16px 32px;font-size:16px;">${count > 0 ? SITE.labels.resume : SITE.labels.start}</button>
+          ${count > 0 ? `<p style="font-size:12px;color:var(--text-sub);margin-top:16px;">${count}/${QUESTIONS.length} ${SITE.labels.answered}</p>` : ""}
+          <div class="preview-strip" aria-label="preview images">
+            ${SITE.previewKeys.map((key) => `<img src="${CHARACTERS[key].image}" alt="${CHARACTERS[key].name}">`).join("")}
+          </div>
+        </div>`;
+      document.getElementById("btnStart").onclick = () => {
+        state.step = "quiz";
+        if (count > 0 && !isCompleted()) {
+          const idx = QUESTIONS.findIndex((q) => !state.answers[q.id]);
+          state.page = idx >= 0 ? Math.floor(idx / PAGE_SIZE) : 0;
+        }
+        saveState();
+        render();
+      };
+    }
+
+    function renderQuiz() {
+      const start = state.page * PAGE_SIZE;
+      const currentQuestions = QUESTIONS.slice(start, start + PAGE_SIZE);
+      const totalPages = Math.ceil(QUESTIONS.length / PAGE_SIZE);
+      const progress = Math.round((answeredCount() / QUESTIONS.length) * 100);
+      const questionHtml = currentQuestions.map((q, i) => {
+        const selected = state.answers[q.id];
+        return `
+          <div class="qCard fade-in" style="animation-delay:${i * 0.05}s">
+            <div class="kicker" style="color:var(--text-sub);margin-bottom:4px;">Q${start + i + 1}</div>
+            <p class="qText">${q.text}</p>
+            <div class="likert7">
+              <div class="likert-labels"><span class="left">${SITE.labels.strongAgree}</span><span class="right">${SITE.labels.strongDisagree}</span></div>
+              <div class="likert-buttons">
+                ${[1, 2, 3, 4, 5, 6, 7].map((n) => {
+                  const side = n <= 3 ? "left" : (n === 4 ? "mid" : "right");
+                  const sel = selected === n ? "selected" : "";
+                  return `<button type="button" class="likert-btn ${side} ${sel}" data-i="${n}" data-qid="${q.id}" data-val="${n}" aria-label="${n}"></button>`;
+                }).join("")}
+              </div>
+            </div>
+          </div>`;
+      }).join("");
+
+      app.innerHTML = `
+        <div class="panel">
+          <div class="progress-wrap">
+            <div class="progress-meta"><span>${SITE.labels.progress}</span><span>${progress}%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div>
+          </div>
+          <div style="margin-top:30px;">${questionHtml}</div>
+          <div style="display:flex;justify-content:space-between;gap:12px;margin-top:30px;">
+            <button id="btnPrev" type="button" ${state.page === 0 ? "disabled" : ""}>${SITE.labels.prev}</button>
+            <button class="primary" id="btnNext" type="button">${state.page === totalPages - 1 ? SITE.labels.seeResult : SITE.labels.next}</button>
+          </div>
+        </div>`;
+
+      currentQuestions.forEach((q) => {
+        document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach((button) => {
+          button.onclick = () => {
+            state.answers[q.id] = Number(button.dataset.val);
+            document.querySelectorAll(`button.likert-btn[data-qid="${q.id}"]`).forEach((b) => b.classList.remove("selected"));
+            button.classList.add("selected");
+            saveState();
+            const nextProgress = Math.round((answeredCount() / QUESTIONS.length) * 100);
+            document.querySelector(".progress-fill").style.width = nextProgress + "%";
+            document.querySelector(".progress-meta span:last-child").innerText = nextProgress + "%";
+          };
+        });
+      });
+
+      document.getElementById("btnPrev").onclick = () => {
+        if (state.page > 0) state.page -= 1;
+        saveState();
+        render();
+      };
+      document.getElementById("btnNext").onclick = () => {
+        const unanswered = currentQuestions.find((q) => !state.answers[q.id]);
+        if (unanswered) {
+          showToast(SITE.labels.answerAll);
+          return;
+        }
+        if (state.page >= totalPages - 1) {
+          state.currentKey = computeResult().key;
+          state.step = isRegistered() ? "result" : "gate";
+        } else {
+          state.page += 1;
+        }
+        saveState();
+        render();
+      };
+    }
+
+    function computeResult() {
+      const scores = Object.fromEntries(Object.keys(CHARACTERS).map((key) => [key, 0]));
+      QUESTIONS.forEach((question) => {
+        const value = state.answers[question.id];
+        if (!value) return;
+        scores[question.key] += 8 - value;
+      });
+      const key = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+      return { key, scores, char: CHARACTERS[key] };
+    }
+
+    function renderDiagnosisDetails(details) {
+      return `
+        <div class="info-card result-feature">
+          <p class="kicker" style="margin-bottom:10px;">一言コピー</p>
+          <p class="text-body" style="font-size:18px;line-height:1.7;margin:0;font-weight:800;">${details.copy}</p>
+        </div>
+        <div class="card-grid">
+          <div class="info-card"><h3>あなたの雰囲気</h3><p class="text-body" style="margin:0;">${details.atmosphere}</p></div>
+          <div class="info-card"><h3>あなたの中にある物語</h3><p class="text-body" style="margin:0;">${details.story}</p></div>
+        </div>
+        <div class="card-grid">
+          <div class="info-card"><h3>あなたが大切にしている感情</h3><p class="text-body" style="margin:0;">${details.emotion}</p></div>
+          <div class="info-card"><h3>人との関わり方</h3><p class="text-body" style="margin:0;">${details.relationship}</p></div>
+        </div>
+        <div class="info-card" style="margin-top:24px;"><h3>lucaさんの作品を見るなら</h3><p class="text-body" style="margin:0;">${details.viewing}</p></div>
+      `;
+    }
+
+    const MOOD_AXES = [
+      {
+        title: "感情の出方",
+        left: "透明感",
+        center: "余韻",
+        right: "深い情緒",
+        weights: { morning: 12, cafe: 38, flower: 48, letter: 55, book: 58, dream: 66, city: 72, rain: 88 }
+      },
+      {
+        title: "物語の舞台",
+        left: "日常",
+        center: "記憶",
+        right: "幻想",
+        weights: { cafe: 16, city: 34, letter: 45, flower: 50, book: 58, morning: 62, rain: 68, dream: 88 }
+      },
+      {
+        title: "距離感",
+        left: "自分の内側",
+        center: "誰かとの時間",
+        right: "作品の余白",
+        weights: { letter: 18, book: 24, rain: 34, city: 44, cafe: 56, flower: 62, morning: 72, dream: 82 }
+      }
+    ];
+
+    function weightedAxisPosition(scores, weights) {
+      let total = 0;
+      let weighted = 0;
+      Object.entries(weights).forEach(([key, position]) => {
+        const score = scores[key] || 0;
+        total += score;
+        weighted += score * position;
+      });
+      return total ? Math.round(weighted / total) : 50;
+    }
+
+    function renderMoodAxes(result) {
+      const entries = Object.entries(result.scores).sort((a, b) => b[1] - a[1]);
+      const nearTypes = entries.slice(1, 3).map(([key]) => CHARACTERS[key].name).join(" / ");
+      return `
+        <div class="axis-card">
+          <p class="kicker" style="margin-bottom:6px;">あなたの水彩ムード</p>
+          <div class="axis-list">
+            ${MOOD_AXES.map((axis) => {
+              const position = weightedAxisPosition(result.scores, axis.weights);
+              return `
+                <div>
+                  <div class="axis-labels">
+                    <span>${axis.title}：${axis.left}</span>
+                    <span>${axis.center}</span>
+                    <span>${axis.right}</span>
+                  </div>
+                  <div class="axis-track"><span class="axis-marker" style="left:${position}%;"></span></div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+          <div class="axis-note">
+            <h3>場合によっては...</h3>
+            <p class="text-body" style="margin:0;font-weight:800;">近いタイプ：${nearTypes || result.char.name}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderGate() {
+      if (isRegistered()) { state.step = "result"; saveState(); render(); return; }
+      const result = state.currentKey ? { key: state.currentKey, char: CHARACTERS[state.currentKey] } : computeResult();
+      const ageOptions = AGE_OPTIONS.map((age) => `<button type="button" class="age-btn" data-age="${age.value}" style="padding:10px 16px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--text-main);font-size:13px;cursor:pointer;transition:all .2s;">${age.label}</button>`).join("");
+      app.innerHTML = `<div class="panel fade-in">
+        <p class="kicker">あと少しで結果が見れます</p>
+        <h2 class="big">結果を見る前に入力してください</h2>
+        <p class="text-body" style="margin-top:-6px;color:#111;">入力後すぐにあなたの水彩ストーリータイプを表示します。</p>
+        <div style="margin-top:22px;display:grid;gap:12px;max-width:520px;">
+          <div>
+            <div style="font-size:12px;color:var(--text-sub);margin-bottom:6px;">ニックネーム</div>
+            <input id="regName" type="text" placeholder="例）るか" style="width:100%;padding:14px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--text-main);font-size:14px;">
+          </div>
+          <div>
+            <div style="font-size:12px;color:var(--text-sub);margin-bottom:6px;">メールアドレス</div>
+            <input id="regEmail" type="email" placeholder="example@gmail.com" style="width:100%;padding:14px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--text-main);font-size:14px;">
+          </div>
+          <div>
+            <div style="font-size:12px;color:var(--text-sub);margin-bottom:6px;">年齢</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">${ageOptions}</div>
+            <input id="regAge" type="hidden" value="">
+          </div>
+          <label style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--text-sub);line-height:1.7;">
+            <input id="regConsent" type="checkbox" style="margin-top:3px;">
+            <span>入力した情報を連絡・改善のために保存することに同意します。</span>
+          </label>
+          <div id="regErr" style="display:none;color:#d33;font-size:12px;"></div>
+          <div style="display:flex;gap:10px;margin-top:8px;">
+            <button id="btnGateBack" type="button" style="background:transparent;color:var(--text-sub);">戻る</button>
+            <button class="primary" id="btnGateGo" type="button" style="flex:1;padding:14px 18px;">結果を見る</button>
+          </div>
+          <div id="gatePendingMsg" style="display:none;font-size:12px;color:var(--text-sub);text-align:center;">送信を受け付けました。結果を準備しています...</div>
+          <div style="margin-top:10px;font-size:11px;color:var(--text-sub);">送信される内容：ニックネーム、年齢、メール、診断タイプ、回答傾向</div>
+        </div>
+      </div>`;
+
+      const nameEl = document.getElementById("regName");
+      const emailEl = document.getElementById("regEmail");
+      const ageEl = document.getElementById("regAge");
+      nameEl.value = state.profile?.name || "";
+      emailEl.value = state.profile?.email || "";
+      ageEl.value = state.profile?.age || "";
+      const ageButtons = Array.from(document.querySelectorAll(".age-btn"));
+      const refreshAgeButtons = () => {
+        ageButtons.forEach((button) => {
+          const selected = button.dataset.age === ageEl.value;
+          button.style.background = selected ? "var(--accent-soft)" : "#fff";
+          button.style.borderColor = selected ? "var(--accent)" : "var(--line)";
+          button.style.color = selected ? "var(--accent)" : "var(--text-main)";
+        });
+      };
+      ageButtons.forEach((button) => {
+        button.onclick = () => {
+          ageEl.value = button.dataset.age || "";
+          refreshAgeButtons();
+        };
+      });
+      refreshAgeButtons();
+
+      document.getElementById("btnGateBack").onclick = () => { state.step = "quiz"; saveState(); render(); };
+      document.getElementById("btnGateGo").onclick = async () => {
+        const errEl = document.getElementById("regErr");
+        const pendingEl = document.getElementById("gatePendingMsg");
+        const submitEl = document.getElementById("btnGateGo");
+        errEl.style.display = "none";
+        const name = (nameEl.value || "").trim();
+        const email = (emailEl.value || "").trim();
+        const age = (ageEl.value || "").trim();
+        const consent = document.getElementById("regConsent").checked;
+        const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        if (!name) { errEl.textContent = "ニックネームを入力してください"; errEl.style.display = "block"; return; }
+        if (!age) { errEl.textContent = "年齢を選択してください"; errEl.style.display = "block"; return; }
+        if (!email) { errEl.textContent = "メールアドレスを入力してください"; errEl.style.display = "block"; return; }
+        if (!emailOk) { errEl.textContent = "メールアドレスを正しく入力してください"; errEl.style.display = "block"; return; }
+        if (!consent) { errEl.textContent = "同意にチェックしてください"; errEl.style.display = "block"; return; }
+        submitEl.disabled = true;
+        submitEl.textContent = "結果を準備中...";
+        pendingEl.style.display = "block";
+        state.profile = { name, email, age };
+        try {
+          await fetch("/api/lead", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email, age, type: result.char?.code || result.key, diagnosisName: result.char?.name || "", source: "imagen-luca", createdAt: new Date().toISOString() }),
+            keepalive: true
+          });
+          state.sentToLead = true;
+        } catch (error) {}
+        state.step = "result";
+        saveState();
+        render();
+      };
+    }
+
+    function renderResult() {
+      if (!isRegistered()) { state.step = "gate"; saveState(); render(); return; }
+      if (!isCompleted() && !state.currentKey) { state.step = "intro"; saveState(); render(); return; }
+      const computed = computeResult();
+      const result = state.currentKey ? { key: state.currentKey, scores: computed.scores, char: CHARACTERS[state.currentKey] } : computed;
+      const ch = result.char;
+      const details = DIAGNOSIS_DETAILS[result.key];
+      const shareText = encodeURIComponent(SITE.shareResultText.replace("{result}", ch.name));
+      const shareUrl = encodeURIComponent(SITE.publicUrl);
+      app.innerHTML = `
+        <div class="panel fade-in result-panel">
+          <div class="result-hero">
+            <p class="kicker">${SITE.labels.result}</p>
+            <h2 class="big" style="font-size:34px;">${ch.name}</h2>
+            <p class="text-body" style="color:var(--text-main);font-weight:700;font-size:16px;margin-bottom:16px;">${ch.catch}</p>
+            <div class="char-image-placeholder"><img src="${ch.image}" alt="${ch.name}"></div>
+            <div class="type-chip">TYPE: ${ch.code}</div>
+          </div>
+          ${renderMoodAxes(result)}
+          ${details ? renderDiagnosisDetails(details) : ""}
+          <div class="info-card result-feature">
+            <p class="kicker" style="margin-bottom:10px;">lucaさんからの小さな手紙</p>
+            <div class="text-body" style="font-size:15px;line-height:1.9;margin:0;color:var(--text-main);">
+              ${ch.lucaLetter.map((item) => `<p style="margin:0 0 12px;">${item}</p>`).join("")}
+            </div>
+            <div style="margin-top:18px;padding:18px;border:1px solid rgba(158,127,107,.18);border-radius:18px;background:rgba(255,255,255,.62);"><h3>お守りの言葉</h3><p class="text-body" style="margin:0;color:var(--text-main);font-weight:700;">${ch.lucaCharm}</p></div>
+          </div>
+          <section class="result-product-content">
+            <p class="kicker" style="margin-bottom:12px;">${SITE.officialLabel}</p>
+            <h3 style="font-size:20px;margin:0 0 8px;color:var(--text-main);">${SITE.officialTitle}</h3>
+            <p class="text-body" style="margin:0 auto;max-width:520px;">${SITE.officialDescription}</p>
+            <div class="link-row">
+              ${SITE.links.map((link) => `<a class="link-pill" href="${link.url}" target="_blank" rel="noopener">${link.label}</a>`).join("")}
+            </div>
+          </section>
+          <div class="share-panel fade-in">
+            <p class="kicker" style="margin-bottom:12px;">${SITE.labels.shareHeading}</p>
+            <div class="share-buttons">
+              <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" rel="noopener"><span class="share-btn share-x">${SITE.labels.shareX}</span></a>
+              <a href="https://social-plugins.line.me/lineit/share?url=${shareUrl}" target="_blank" rel="noopener"><span class="share-btn share-line">${SITE.labels.shareLine}</span></a>
+              <button class="share-btn" id="btnCopyResult" type="button">${SITE.labels.copy}</button>
+              <button class="share-btn" id="btnAgain" type="button">${SITE.labels.again}</button>
+            </div>
+          </div>
+        </div>`;
+      document.getElementById("btnCopyResult").onclick = () => copyResult(ch);
+      document.getElementById("btnAgain").onclick = resetState;
+    }
+
+    function renderCharacters() {
+      const html = Object.entries(CHARACTERS).map(([key, ch]) => `
+        <div class="char-card fade-in">
+          <div class="char-card-image"><img src="${ch.image}" alt="${ch.name}"></div>
+          <div class="char-card-type">TYPE: ${ch.code}</div>
+          <h3 class="char-card-name">${ch.name}</h3>
+          <p class="char-card-desc">${ch.catch}</p>
+          <button class="primary" style="width:100%;font-size:12px;margin-top:auto;" data-code="${key}" type="button">${SITE.labels.detail}</button>
+        </div>`).join("");
+      app.innerHTML = `
+        <div class="panel fade-in">
+          <p class="kicker">${SITE.labels.allTypes}</p>
+          <h2 class="big">${SITE.labels.charactersTitle}</h2>
+          <p class="text-body" style="margin-bottom:20px;">${SITE.charactersDescription}</p>
+        </div>
+        <div class="char-grid">${html}</div>`;
+      document.querySelectorAll("button[data-code]").forEach((button) => {
+        button.onclick = () => {
+          state.currentKey = button.dataset.code;
+          state.step = "result";
+          saveState();
+          render();
+        };
+      });
+    }
+
+    function renderTypeGuideContent() {
+      const axisData = [
+        { key: "A", name: "感情の出方", left: "と", leftName: "透明感", leftDesc: "淡さ、静けさ、やさしい余韻を大切にする", right: "じ", rightName: "深い情緒", rightDesc: "切なさ、曖昧さ、奥行きのある感情に惹かれる" },
+        { key: "B", name: "物語の舞台", left: "に", leftName: "日常", leftDesc: "窓辺、帰り道、生活の中にある小さな物語", right: "げ", rightName: "幻想", rightDesc: "夢、光、現実と空想のあいだにある世界" },
+        { key: "C", name: "距離感", left: "う", leftName: "内側", leftDesc: "言葉になる前の気持ちや、ひとりで味わう余白", right: "よ", rightName: "余白", rightDesc: "見る人の想像が広がる、余白のある表現" }
+      ];
+      return axisData.map((axis) => `<div style="background:#f7f7f9;border-radius:16px;padding:18px;">
+        <h3 style="color:var(--accent);margin:0 0 12px;font-size:15px;">軸${axis.key}: ${axis.name}</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div style="background:#fff;padding:14px;border-radius:12px;border-left:4px solid #5aa9d6;">
+            <div style="font-size:18px;font-weight:800;color:#256f99;line-height:1.2;">${axis.left}</div>
+            <div style="font-size:13px;font-weight:800;margin:8px 0 4px;">${axis.leftName}</div>
+            <div style="font-size:11px;color:#111;line-height:1.7;">${axis.leftDesc}</div>
+          </div>
+          <div style="background:#fff;padding:14px;border-radius:12px;border-left:4px solid #df6f82;">
+            <div style="font-size:18px;font-weight:800;color:#bf5168;line-height:1.2;">${axis.right}</div>
+            <div style="font-size:13px;font-weight:800;margin:8px 0 4px;">${axis.rightName}</div>
+            <div style="font-size:11px;color:#111;line-height:1.7;">${axis.rightDesc}</div>
+          </div>
+        </div>
+      </div>`).join("") + `<div style="background:#fff;padding:16px;border-radius:12px;border:1px solid var(--line);">
+        <div style="font-size:13px;font-weight:800;color:var(--accent);margin-bottom:8px;">結果画面のバーの読み方</div>
+        <div style="font-size:12px;color:#111;line-height:1.8;">例：<span style="font-family:monospace;background:#f7f7f9;padding:2px 8px;border-radius:6px;font-weight:800;">とにう</span><br>透明感(と) + 日常(に) + 内側(う) のように、3つのひらがなで水彩ムードの傾きを表します。結果画面のバーは、中央に近いほど「場面による」、左右どちらかに寄るほどそのムードが強めです。</div>
+      </div>`;
+    }
+
+    function renderTypeGuide() {
+      state.step = isCompleted() ? (isRegistered() ? "result" : "gate") : "intro";
+      saveState();
+      render();
+      showTypeGuideModal();
+    }
+
+    function showTypeGuideModal() {
+      if (document.getElementById("typeGuideOverlay")) return;
+      const modalHtml = `<div id="typeGuideOverlay" style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.42);display:flex;align-items:center;justify-content:center;padding:18px;">
+        <div style="width:min(700px,100%);max-height:88vh;overflow:auto;background:#fff;border-radius:20px;box-shadow:0 24px 60px rgba(0,0,0,.22);padding:26px;">
+          <button id="typeGuideClose" aria-label="閉じる" style="float:right;width:36px;height:36px;padding:0;border-radius:50%;">×</button>
+          <div style="text-align:center;clear:both;margin-bottom:24px;">
+            <p class="kicker">TYPE GUIDE</p>
+            <h2 class="big" style="font-size:22px;margin-bottom:8px;">水彩ムードの軸解説</h2>
+            <p class="text-body" style="font-size:13px;color:#111;">結果画面に出る3つのバーは、あなたがどんな水彩世界に惹かれやすいかを表しています。</p>
+          </div>
+          <div style="display:grid;gap:16px;">${renderTypeGuideContent()}</div>
+        </div>
+      </div>`;
+      document.body.insertAdjacentHTML("beforeend", modalHtml);
+      const overlay = document.getElementById("typeGuideOverlay");
+      document.getElementById("typeGuideClose").onclick = () => overlay.remove();
+      overlay.onclick = (event) => { if (event.target === overlay) overlay.remove(); };
+    }
+
+    async function copyResult(ch) {
+      const text = SITE.copyResultText.replace("{result}", ch.name);
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast(SITE.labels.resultCopied);
+      } catch (error) {
+        showToast(text);
+      }
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    document.getElementById("navDiagnosis").onclick = (event) => {
+      event.preventDefault();
+      state.step = isCompleted() ? "result" : "intro";
+      if (isCompleted() && !state.currentKey) state.currentKey = computeResult().key;
+      saveState();
+      render();
+    };
+
+    document.getElementById("navCharacters").onclick = (event) => {
+      event.preventDefault();
+      state.step = "characters";
+      saveState();
+      render();
+    };
+
+    document.getElementById("btnReset").onclick = resetState;
+    document.getElementById("btnTypeGuide").onclick = () => {
+      showTypeGuideModal();
+    };
+    document.getElementById("logoHome").onclick = () => { window.location.href = "../index.html?skipSplash=1"; };
+
+    (function initTitleMenu() {
+      const titleHome = document.getElementById("titleHome");
+      const titleMenu = document.getElementById("titleMenu");
+      titleHome.onclick = function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        titleMenu.style.display = titleMenu.style.display === "block" ? "none" : "block";
+      };
+      titleMenu.addEventListener("click", (event) => event.stopPropagation());
+      document.addEventListener("click", () => { titleMenu.style.display = "none"; });
+    })();
+
+    render();
+  </script>
+</body>
+</html>

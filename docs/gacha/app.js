@@ -1,4 +1,4 @@
-(() => {
+﻿(() => {
   const data = window.MOBBY_GACHA_DATA;
   if (!data) return;
 
@@ -1298,7 +1298,7 @@
   }
 
   function buildShareFileName() {
-    return `mobby-drop-${getJstDateKey()}-${Date.now()}.png`;
+    return `mobby-drop-${getJstDateKey()}-${Date.now()}.webp`;
   }
 
   function buildShareText(previewStates) {
