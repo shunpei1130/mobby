@@ -50,8 +50,8 @@ function buildFollowPrompt() {
   return "友だち追加ありがとう。診断結果画面で発行した合言葉を、このトークに送ってね。";
 }
 
-function buildLinkedPrompt(user) {
-  return `${user.resultName}のモビー、準備できたよ。悩みでも愚痴でも、短く投げてくれたらこっちでちゃんと拾うね。`;
+function buildLinkedPrompt() {
+  return "優しいモビー、準備できたよ。悩みでも愚痴でも、短く投げてくれたらちゃんと拾うね。";
 }
 
 async function linkTokenToUser(event, userKey, tokenText) {
@@ -100,13 +100,13 @@ async function linkTokenToUser(event, userKey, tokenText) {
   await saveConversation(userKey, {
     version: 1,
     userKey,
-    messages: [{ role: "assistant", text: buildLinkedPrompt(user), at: new Date().toISOString() }],
+    messages: [{ role: "assistant", text: buildLinkedPrompt(), at: new Date().toISOString() }],
     summary: "",
     dailyCountDate: "",
     dailyCount: 0
   });
 
-  await reply(event, buildLinkedPrompt(user));
+  await reply(event, buildLinkedPrompt());
 }
 
 async function handleLinkedMessage(event, userKey, user, text) {

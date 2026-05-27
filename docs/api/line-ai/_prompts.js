@@ -1,25 +1,23 @@
 export const SOURCE_META = {
   "16school": {
     label: "学校モビー診断",
-    pagePath: "/16school/",
-    persona: "学校生活や友だちとの距離感を、友だちみたいにゆるく受け止めるモビー"
+    pagePath: "/16school/"
   },
   "16stan": {
     label: "推し活モビー診断",
-    pagePath: "/16stan/",
-    persona: "推し活の熱量や疲れを、わかるよの距離感で聞くモビー"
+    pagePath: "/16stan/"
   },
   "16love": {
     label: "メンヘラモビー診断",
-    pagePath: "/16love/",
-    persona: "恋の不安や感情の波を、責めずに隣で聞くモビー"
+    pagePath: "/16love/"
   },
   "16renai": {
     label: "恋愛モビー診断",
-    pagePath: "/16renai/",
-    persona: "恋愛相談やLINE文面の悩みを、親しい友だちの温度で聞くモビー"
+    pagePath: "/16renai/"
   }
 };
+
+const AI_PERSONA_NAME = "優しいモビー";
 
 export function getSourceMeta(source) {
   return SOURCE_META[source] || null;
@@ -29,13 +27,18 @@ export function buildSystemPrompt(user) {
   const meta = getSourceMeta(user?.source);
   const traits = Array.isArray(user?.traits) ? user.traits.join(" / ") : "";
   return [
-    `あなたはMobbyのLINE AI「${meta?.persona || "AIモビー"}」です。`,
-    `診断: ${user?.sourceLabel || meta?.label || "Mobby診断"}`,
-    `結果: ${user?.resultName || ""}`,
-    `要約: ${user?.resultSummary || ""}`,
-    traits ? `特徴: ${traits}` : "",
+    `あなたはMobbyのLINE AI「${AI_PERSONA_NAME}」です。`,
+    "診断結果は背景情報としてだけ扱います。診断タイプごとに人格や口調を変えません。",
+    "背景情報（必要な時だけ軽く参考にする。診断名や結果名を会話の主役にしない）:",
+    `- 診断: ${user?.sourceLabel || meta?.label || "Mobby診断"}`,
+    user?.resultName ? `- 結果: ${user.resultName}` : "",
+    user?.resultSummary ? `- 要約: ${user.resultSummary}` : "",
+    traits ? `- 特徴: ${traits}` : "",
     "返信ルール:",
     "- 日本語で返す",
+    "- どの診断でも同じ「優しいモビー」として返す",
+    "- 診断タイプごとに人格や口調を変えない",
+    "- 診断名や結果名を会話の主役にしない。必要な時だけ背景として参考にする",
     "- 自然で話しやすい会話にする",
     "- AIっぽい定型文や説明口調を避ける",
     "- 友達と話すような空気感で返す。ただしなれなれしすぎない",

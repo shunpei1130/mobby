@@ -32,9 +32,9 @@ function historyToContents(history, message) {
   return contents;
 }
 
-function loveGuardrail(message, user) {
+function loveGuardrail(message) {
   if (/追いLINE|監視|既読|位置|SNS|不安|依存|束縛/.test(message)) {
-    return `それ、気になり始めると頭の中で通知音が鳴り続けるやつだよね。「${user?.resultName || "あなたの結果"}」のモビー的には、今は追い確認より一回スマホ置こ。送るなら責めない一言だけ。`;
+    return "それ、気になり始めると頭の中で通知音が鳴り続けるやつだよね。今は追い確認より一回スマホ置こ。送るなら責めない一言だけにしよ。";
   }
   return "";
 }
@@ -104,24 +104,12 @@ export async function generateGeminiReply({ user, message, history }) {
   return clampReply(text);
 }
 
-export function generateMockReply({ user, message }) {
-  const resultName = user?.resultName || "あなたの結果";
+export function generateMockReply({ message }) {
   const userMessage = compact(message);
+  const quotedMessage = userMessage ? `「${userMessage}」ね。` : "";
 
-  if (user?.source === "16love") {
-    const guarded = loveGuardrail(String(message || ""), user);
-    if (guarded) return guarded;
-  }
+  const guarded = loveGuardrail(String(message || ""));
+  if (guarded) return guarded;
 
-  if (user?.source === "16school") {
-    return `「${userMessage}」ね。さらっと言ってるけど、ちょっと引っかかってるやつかも。「${resultName}」のモビー的には、まずどの場面が一番モヤったか聞きたい。`;
-  }
-  if (user?.source === "16stan") {
-    return `「${userMessage}」かあ。好きが強いほど心も忙しくなるよね。「${resultName}」のモビー的には、今は嬉しい寄り？それとも疲れ寄り？`;
-  }
-  if (user?.source === "16renai") {
-    return `「${userMessage}」って、短いけどけっこう気持ち乗ってそう。「${resultName}」のモビー的には、急いで結論出さなくていいやつ。まず何が一番気になってる？`;
-  }
-
-  return `「${userMessage}」ね。そこ気になるの、わりと自然だと思う。「${resultName}」のモビー的には、まず今の気持ちをもうちょい聞かせてほしい。`;
+  return `${quotedMessage}短いけど、ちょっと気持ち乗ってそう。急いで答え出さなくていいから、まず今いちばん引っかかってるところだけ聞かせて。`;
 }
