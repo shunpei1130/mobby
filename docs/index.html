@@ -6475,6 +6475,10 @@
       margin-top: 14px;
     }
 
+    .hero-collab-diagnosis-menu[hidden] {
+      display: none !important;
+    }
+
     .hero-diagnosis-menu .gift-fan-diagnosis-actions {
       box-sizing: border-box;
       flex-wrap: nowrap !important;
@@ -7904,7 +7908,7 @@
               </div>
             </div>
           </div>
-          <div class="hero-collab-diagnosis-menu">
+          <div class="hero-collab-diagnosis-menu" hidden aria-hidden="true">
             <ul class="hero-collab-diagnosis-list" aria-label="コラボ診断メニュー">
               <li>
                 <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" type="button" data-diagnosis-item="blank-1" aria-label="ビューティー診断"><span class="gift-fan-person-badge">日向葵衣さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-mirror" aria-hidden="true"></span><span>ビューティー<br>診断</span></button>
