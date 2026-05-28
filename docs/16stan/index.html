@@ -1569,7 +1569,11 @@
     ${ageOptionHtml}
     </div>
     <div style="font-size:12px;color:var(--text-sub);margin-bottom:6px;">メールアドレス（必須）</div>
-    <input id="inEmail" type="email" placeholder="example@gmail.com" value="${state.profile.email}" style="width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:15px;margin-bottom:20px;font-family:var(--font-main);box-sizing:border-box;">
+    <input id="inEmail" type="email" placeholder="example@gmail.com" value="${state.profile.email}" style="width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);color:var(--text-main);font-size:15px;margin-bottom:12px;font-family:var(--font-main);box-sizing:border-box;">
+    <label style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--text-sub);margin-bottom:20px;">
+    <input id="inConsent" type="checkbox" style="margin-top:3px;">
+    <span>入力した情報を連絡・改善のために保存することに同意します。</span>
+    </label>
     <button class="primary" id="btnResult" style="width:100%;font-size:16px;padding:14px;">結果を見る ✨</button>
     </div><p id="gateError" style="color:var(--danger);font-size:13px;margin-top:12px;text-align:center;"></p>
     </div>`;
@@ -1615,11 +1619,12 @@ const setGatePending = (pending) => {
 };
 gateSubmitButton.onclick = async () => {
                 if (gateSubmitButton.disabled) return;
-                const name = document.getElementById("inName").value.trim(); const email = document.getElementById("inEmail").value.trim(); const age = document.getElementById("inAge").value; const err = document.getElementById("gateError");
+                const name = document.getElementById("inName").value.trim(); const email = document.getElementById("inEmail").value.trim(); const age = document.getElementById("inAge").value; const consent = document.getElementById("inConsent").checked; const err = document.getElementById("gateError");
                 err.textContent = "";
                 if (!name) { err.textContent = "ニックネームを入力してください"; return; }
                 if (!age) { err.textContent = "年齢を選択してください"; return; }
                 if (!email || !email.includes("@")) { err.textContent = "メールアドレスを入力してください"; return; }
+                if (!consent) { err.textContent = "同意にチェックしてください"; return; }
                 setGatePending(true);
 state.profile = { name, email, age }; const { code, pcts } = computeResult(); const ch = CH[code]; state.step = "result";
                 if (state.sentToSheet) { saveState(); render(); return; }
