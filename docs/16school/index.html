@@ -3850,10 +3850,20 @@ gateSubmitButton.onclick = async () => {
             <p class="kicker" style="margin-bottom:16px;">✨ あなたの長所</p>
             <p class="text-body" style="font-size:15px; line-height:1.8; margin:0;">${char.strength}</p>
           </div>
+
         </div>
 
         <!-- ここから下は常に表示 -->
         <div style="margin-top:24px;">
+          <div class="panel fade-in" style="margin-top:32px; text-align:center; background:linear-gradient(135deg,#fff0f6,#ffe4ef); border:1px solid rgba(255,128,171,0.35);">
+            <span style="display:inline-flex;align-items:center;justify-content:center;gap:8px;">
+              <img src="../carousel/after/mobby_gal_toka.webp" alt="もびち" loading="lazy" decoding="async" style="width:64px;height:64px;object-fit:contain;border:0;">
+              <a href="https://px.a8.net/svt/ejp?a8mat=4B3YV8+F171O2+4GRI+BW8O2&a8ejpredirect=https%3A%2F%2Fstore.fits-japan.com%2Fshop%2Fproduct_categories%2Fpuananala" rel="nofollow" style="color:#d63384;font-family:'M PLUS Rounded 1c','Hiragino Maru Gothic ProN','Yu Gothic',sans-serif;font-weight:800;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px;">あなたにおすすめの香水を見つける</a>
+            </span>
+            <p style="margin:8px 0 0;font-size:11px;color:#000;">このリンクには広告が含まれます</p>
+            <img border="0" width="1" height="1" src="https://www16.a8.net/0.gif?a8mat=4B3YV8+F171O2+4GRI+BW8O2" alt="">
+          </div>
+
           <!-- 限定キーホルダーセクション -->
           <div class="panel fade-in" style="animation-delay:0.12s; background:linear-gradient(145deg, #fff7fb, #fff2e2); border:2px solid rgba(255, 77, 141, 0.2); overflow:hidden; position:relative;">
             <div style="position:absolute; top:18px; right:-44px; transform:rotate(20deg); background:linear-gradient(135deg, #ffb347, #ffd27f); color:#fff; font-size:11px; letter-spacing:0.18em; padding:6px 48px; text-transform:uppercase;">LIMITED</div>
@@ -3899,34 +3909,6 @@ gateSubmitButton.onclick = async () => {
         
         
         </div>
-
-        <div class="panel fade-in" style="text-align:center; margin-top:40px; animation-delay:0.25s; background:linear-gradient(135deg, #fff8e8 0%, #fffbf0 100%); border:2px solid var(--accent);">
-          <p class="kicker" style="color:var(--accent);">このキャラクターに興味がありますか？</p>
-          <h3 style="font-size:20px; margin:12px 0; color:var(--text-main);">
-            ${char.name}のぬいぐるみが欲しい！
-          </h3>
-          <p class="text-body" style="font-size:13px; margin-bottom:20px;">
-            ボタンを押すと、あなたの興味を記録して今後の制作の参考にします。
-          </p>
-          <button id="btnInterest" class="primary" style="padding:16px 32px; font-size:16px; ${state.interested ? 'background:#34c759; border-color:#34c759;' : ''}">
-            ${state.interested ? '✓ 興味を送信しました！' : '🎁 このモビーが欲しい！'}
-          </button>
-       
-          
-          <!-- 興味を示した人にだけ表示される抽選予約ボタン -->
-          <div id="reservationButtonArea" style="display:${state.interested ? 'block' : 'none'}; margin-top:24px; padding-top:24px; border-top:1px solid rgba(0,0,0,0.08);">
-            <p class="text-body" style="font-size:14px; margin-bottom:16px; color:var(--text-main); font-weight:600;">
-              🎉 カメラ型キーホルダーモビーの無料抽選に参加しませんか？
-            </p>
-            <p class="text-body" style="font-size:12px; margin-bottom:20px; color:var(--text-sub);">
-              抽選に当たったら、当選の手紙を送ります。<br>住所を登録して予約してください。
-            </p>
-            <button id="btnReservation" class="primary" style="padding:14px 28px; font-size:15px; background:linear-gradient(135deg, #f6d49c 0%, #f0c87f 100%); border-color:#f0c87f; color:#6b5d3f;">
-              📝 抽選予約ページへ
-            </button>
-          </div>
-        </div>
-        
 
         <div class="panel fade-in share-wrapper" style="margin-top:40px;">
           <div class="share-row">
@@ -3977,31 +3959,6 @@ gateSubmitButton.onclick = async () => {
             </div>
           </div>
 
-          <!-- ママに共有セクション -->
-          <div class="mama-share share-panel" style="text-align:center; animation-delay:0.28s;">
-          <div class="mama-share-content">
-            <p class="kicker" style="color:#e6507a;">👩‍👧 ママにも共有</p>
-            <h3 class="mama-share-title">ママモビー診断を送ってみよう</h3>
-            <p class="text-body" style="font-size:13px; margin:0 0 14px;">
-              ママの学生時代の恋愛観がわかるかも！？
-            </p>
-            <div class="mama-share-steps">
-              <span class="mama-step"><span class="mama-step-num">1</span>あなたの結果を送る</span>
-              <span class="mama-step"><span class="mama-step-num">2</span>ママが診断</span>
-              <span class="mama-step"><span class="mama-step-num">3</span>タイプ比較</span>
-            </div>
-            <div class="mama-share-actions">
-              <button id="btnShareMamaLine" class="mama-line"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
-                LINEでママに送る</button>
-              <button id="btnOpenMama" class="mama-open">👩‍👧 ママモビー診断を開く</button>
-              <button id="btnShareMamaCopy" class="mama-ghost">📋 招待文をコピー</button>
-            </div>
-              <div id="mamaShareSuccess" class="mama-share-success">
-                ✓ コピーしました！ママに貼り付けて送ってね
-              </div>
-            </div>
-          </div>
-          </div>
         </div>
 
         <div class="panel fade-in" style="margin-top:32px; text-align:center;">
@@ -4305,64 +4262,6 @@ gateSubmitButton.onclick = async () => {
         activateResultProductTab(defaultTab);
       }
 
-      // 興味ボタンのイベントリスナー
-      document.getElementById("btnInterest").onclick = async () => {
-        if(state.interested){
-          return; // 既に押されている場合は何もしない
-        }
-        
-        const btn = document.getElementById("btnInterest");
-        const feedback = document.getElementById("interestFeedback");
-        const reservationArea = document.getElementById("reservationButtonArea");
-        
-        btn.disabled = true;
-        btn.textContent = "送信中...";
-        
-        try {
-          await submitInterest();
-          
-          // 成功時の処理
-          state.interested = true;
-          saveState();
-          
-          btn.textContent = "✓ 興味を送信しました！";
-          btn.style.background = "#34c759";
-          btn.style.borderColor = "#34c759";
-          btn.style.boxShadow = "0 4px 12px rgba(52,199,89,0.25)";
-          
-          feedback.style.display = "block";
-          feedback.style.animation = "fadeIn 0.4s ease forwards";
-          
-          // 予約ボタンエリアを表示
-          if(reservationArea){
-            reservationArea.style.display = "block";
-            reservationArea.style.animation = "fadeIn 0.6s ease forwards";
-          }
-          
-          // 3秒後にフィードバックをフェードアウト
-          setTimeout(() => {
-            feedback.style.animation = "fadeOut 0.4s ease forwards";
-            setTimeout(() => {
-              feedback.style.display = "none";
-            }, 400);
-          }, 3000);
-          
-        } catch(e) {
-          alert("送信に失敗しました: " + (e?.message || "不明なエラー"));
-          btn.disabled = false;
-          btn.textContent = "🎁 このモビーが欲しい！";
-        }
-      };
-      
-      // 抽選予約ボタンのイベントリスナー
-      const reservationBtn = document.getElementById("btnReservation");
-      if(reservationBtn){
-        reservationBtn.onclick = () => {
-          // ルートページの抽選予約ポップアップを開くためにパラメータ付きでページ遷移
-          window.location.href = "../index.html?openPricePopup=true#price";
-        };
-      }
-
       const stripeButtons = Array.from(document.querySelectorAll("[data-stripe-product-type]"));
       stripeButtons.forEach((stripeBtn) => {
         stripeBtn.addEventListener("click", () => {
@@ -4377,73 +4276,6 @@ gateSubmitButton.onclick = async () => {
 
       // 共有ボタンのイベントリスナー
       const shareLink = generateShareLink();
-      const mamaLink = generateMamaShareLink();
-      const mamaShareText = "\u30de\u30de\u3078\n\u79c1\u306e\u5b66\u6821\u30e2\u30d3\u30fc\u8a3a\u65ad\u306f\u300c" + char.name + "\u300d\u3060\u3063\u305f\u3088\uff01\n\u30de\u30de\u3082\u30de\u30de\u30e2\u30d3\u30fc\u8a3a\u65ad\u3084\u3063\u3066\u307f\u3066\u306d\ud83d\udc47\n";
-      const mamaShareMessage = `${mamaShareText}${mamaLink}`;
-
-      const mamaLineBtn = document.getElementById("btnShareMamaLine");
-      if (mamaLineBtn) {
-        mamaLineBtn.onclick = async () => {
-          state.shareCount++;
-          saveState();
-
-          submitShareEvent({
-            eventType: "share",
-            userId: state.userId,
-            platform: "mama_line",
-            userName: state.profile?.name || "",
-            userEmail: state.profile?.email || "",
-            userType: res.code,
-            gender: state.gender
-          }).catch(e => console.error("Share event error:", e));
-
-          openLineShare(mamaShareText, mamaLink);
-        };
-      }
-
-      const mamaOpenBtn = document.getElementById("btnOpenMama");
-      if (mamaOpenBtn) {
-        mamaOpenBtn.onclick = () => {
-          window.open(mamaLink, "_blank");
-        };
-      }
-
-      const mamaCopyBtn = document.getElementById("btnShareMamaCopy");
-      if (mamaCopyBtn) {
-        mamaCopyBtn.onclick = async () => {
-          try {
-            await navigator.clipboard.writeText(mamaShareMessage);
-
-            state.shareCount++;
-            saveState();
-
-            submitShareEvent({
-              eventType: "share",
-              userId: state.userId,
-              platform: "mama_copy",
-              userName: state.profile?.name || "",
-              userEmail: state.profile?.email || "",
-              userType: res.code,
-              gender: state.gender
-            }).catch(e => console.error("Share event error:", e));
-
-            const successEl = document.getElementById("mamaShareSuccess");
-            if (successEl) {
-              successEl.style.display = "block";
-              successEl.style.animation = "fadeIn 0.3s ease forwards";
-
-              setTimeout(() => {
-                successEl.style.animation = "fadeOut 0.3s ease forwards";
-                setTimeout(() => {
-                  successEl.style.display = "none";
-                }, 300);
-              }, 2000);
-            }
-          } catch (e) {
-            alert("\u30b3\u30d4\u30fc\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002\u624b\u52d5\u3067\u30b3\u30d4\u30fc\u3057\u3066\u304f\u3060\u3055\u3044: " + mamaShareMessage);
-          }
-        };
-      }
 
       const snsImagePaths = getSnsImagePaths(isFemale, char.name);
       const snsSaveBtn = document.getElementById("btnSaveSnsImage");
