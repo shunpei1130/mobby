@@ -1,3 +1,8 @@
+.line-ai-mobby-cta,
+[data-line-ai-mobby-cta] {
+  display: none !important;
+}
+
 .line-ai-mobby-cta {
   width: min(100%, 620px);
   margin: 24px auto 0;
