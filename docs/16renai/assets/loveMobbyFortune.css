@@ -1,0 +1,155 @@
+.love-diagnosis-tabs {
+  grid-template-rows: repeat(2, 31px) !important;
+}
+
+.love-diagnosis-tabs__item:nth-child(6) {
+  grid-column: 3 !important;
+  grid-row: 2 !important;
+}
+
+.love-fortune-wrap[hidden],
+.love-fortune-card[hidden],
+[data-love-fortune-daily][hidden],
+[data-love-fortune-monthly][hidden] {
+  display: none !important;
+}
+
+.love-fortune-wrap {
+  display: grid;
+  gap: 14px;
+}
+
+.love-fortune-panel,
+.love-fortune-card {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid rgba(255, 238, 246, .82);
+  border-radius: 20px;
+  background: rgba(255, 250, 253, .94);
+  color: #2d2228;
+  box-shadow: 0 18px 44px rgba(63, 32, 48, .14);
+}
+
+.love-fortune-head {
+  display: grid;
+  gap: 7px;
+}
+
+.love-fortune-head h3,
+.love-fortune-card h3 {
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", "YuMincho", serif;
+  font-size: 22px;
+  line-height: 1.35;
+}
+
+.love-fortune-head p:not(.love-diagnosis__eyebrow),
+.love-fortune-card p {
+  color: rgba(45, 34, 40, .76);
+  font-size: 12px;
+  line-height: 1.85;
+}
+
+.love-fortune-switch {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding: 5px;
+  border-radius: 14px;
+  background: rgba(245, 225, 232, .72);
+}
+
+.love-fortune-switch button {
+  min-height: 36px;
+  border-radius: 11px;
+  color: rgba(45, 34, 40, .72);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.love-fortune-switch button.is-active {
+  background: #fff;
+  color: #b64f79;
+  box-shadow: 0 10px 24px rgba(137, 79, 103, .14);
+}
+
+.love-fortune-hero {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 14px;
+  align-items: center;
+}
+
+.love-fortune-hero img {
+  width: 110px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 16px;
+  background: #ffedf5;
+  box-shadow: 0 14px 28px rgba(122, 74, 91, .16);
+}
+
+.love-fortune-hero strong {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  margin-top: 8px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #f472b6, #e23d75);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.love-fortune-card section {
+  display: grid;
+  gap: 7px;
+  padding: 13px;
+  border: 1px solid rgba(220, 185, 202, .48);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .72);
+}
+
+.love-fortune-card h4 {
+  font-size: 12px;
+  color: #8f4267;
+}
+
+.love-fortune-mission {
+  border-color: rgba(226, 61, 117, .26) !important;
+  background: linear-gradient(180deg, rgba(255, 244, 249, .9), rgba(255, 255, 255, .76)) !important;
+}
+
+.love-fortune-keyperson {
+  border-color: rgba(215, 142, 100, .34) !important;
+  background: linear-gradient(180deg, rgba(255, 248, 239, .92), rgba(255, 255, 255, .78)) !important;
+}
+
+.love-fortune-keyperson .button {
+  margin-top: 4px;
+}
+
+.love-fortune-save {
+  border-style: dashed !important;
+}
+
+.love-fortune-gate {
+  text-align: center;
+}
+
+@media (max-width: 420px) {
+  .love-fortune-hero {
+    grid-template-columns: 88px 1fr;
+  }
+
+  .love-fortune-hero img {
+    width: 88px;
+  }
+
+  .love-fortune-panel,
+  .love-fortune-card {
+    padding: 13px;
+  }
+}
