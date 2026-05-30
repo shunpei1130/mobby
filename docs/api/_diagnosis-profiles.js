@@ -12,6 +12,9 @@ const SOURCE_META = {
   "16renai": { label: "恋愛モビー診断", shortLabel: "恋愛", accent: "#f472b6" },
   "16stan": { label: "推し活モビー診断", shortLabel: "推し活", accent: "#66bb6a" },
   "16night": { label: "夜職モビー診断", shortLabel: "夜職", accent: "#42a5f5" },
+  "hinata-aoi": { label: "日向葵衣 あなたは何タイプ？ビューティ診断", shortLabel: "日向葵衣", accent: "#f6a6c9" },
+  "miyake-yuko": { label: "三宅裕子さん beauty mood診断", shortLabel: "三宅裕子", accent: "#d8a15f" },
+  "imagen-luca": { label: "Lucaさん 水彩ストーリー診断", shortLabel: "Luca", accent: "#86b7d9" },
   unknown: { label: "未分類", shortLabel: "未分類", accent: "#9e9e9e" }
 };
 
@@ -32,7 +35,13 @@ const SOURCE_ALIASES = {
   stan: "16stan",
   oshi: "16stan",
   "16night": "16night",
-  night: "16night"
+  night: "16night",
+  "hinata-aoi": "hinata-aoi",
+  hinata: "hinata-aoi",
+  "miyake-yuko": "miyake-yuko",
+  miyake: "miyake-yuko",
+  "imagen-luca": "imagen-luca",
+  luca: "imagen-luca"
 };
 
 function clamp(number, min, max) {
