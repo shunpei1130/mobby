@@ -41,6 +41,9 @@ function loveGuardrail(message) {
 }
 
 export async function generateReply({ user, message, history }) {
+  const knowledgeReply = buildKnowledgeReply({ user, message });
+  if (knowledgeReply) return knowledgeReply;
+
   const provider = String(process.env.AI_PROVIDER || "mock").toLowerCase();
   if (provider === "gemini") {
     try {
@@ -111,9 +114,6 @@ export function generateMockReply({ user, message }) {
 
   const guarded = loveGuardrail(String(message || ""));
   if (guarded) return guarded;
-
-  const knowledgeReply = buildKnowledgeReply({ user, message });
-  if (knowledgeReply) return knowledgeReply;
 
   return `${quotedMessage}短いけど、ちょっと気持ち乗ってそう。急いで答え出さなくていいから、まず今いちばん引っかかってるところだけ聞かせて🙂`;
 }

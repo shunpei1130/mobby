@@ -58,6 +58,8 @@ async function callHealth() {
   assert(res.statusCode === 200, "health should return 200");
   assert(res.body?.ok === true, "health should return ok");
   assert(res.body?.provider === "mock", "health should expose provider");
+  assert(res.body?.features?.diagnosisKnowledge === true, "health should expose diagnosis knowledge feature");
+  assert(res.body?.features?.personalResultLinking === false, "health should expose disabled personal result linking");
   assert(res.body?.configured?.lineAddUrl === true, "health should expose line env status");
 }
 
@@ -416,6 +418,17 @@ async function callGeminiProviderFlow() {
       history: []
     });
     assert(geminiKnowledgeReply.includes("16タイプ"), "Gemini knowledge reply should return model text");
+
+    globalThis.fetch = async () => {
+      throw new Error("diagnosis knowledge questions should not call Gemini");
+    };
+    const deterministicKnowledgeReply = await generateReply({
+      user: { source: "line" },
+      message: "モビー診断って何種類ある？",
+      history: []
+    });
+    assert(deterministicKnowledgeReply.includes("4種類"), "diagnosis knowledge should answer before provider call");
+    assert(deterministicKnowledgeReply.includes("学校モビー診断"), "deterministic knowledge reply should list diagnoses");
 
     globalThis.fetch = async () => ({
       ok: false,

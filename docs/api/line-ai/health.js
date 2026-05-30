@@ -12,6 +12,10 @@ export default async function handler(req, res) {
     service: "line-ai-mobby",
     provider,
     model,
+    features: {
+      diagnosisKnowledge: true,
+      personalResultLinking: false
+    },
     configured: {
       lineAddUrl: Boolean(process.env.LINE_ADD_URL),
       lineChannelSecret: Boolean(process.env.LINE_CHANNEL_SECRET),
