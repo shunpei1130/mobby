@@ -25,6 +25,24 @@
   const LUCKY_ITEMS = ["香りのあるもの", "柔らかいハンカチ", "ブックマーク", "髪", "歩きやすい靴", "月のモチーフ", "温かい飲み物", "薄いピンクのもの", "お気に入りの音楽", "小さな花", "透明な小物", "白い紙", "手紙やメモ", "リボン", "静かなカフェ", "青い小物"];
   const MONTH_NAMES = ["はじまりの恋みくじ", "バレンタイン恋予報", "別れと出会いの恋便り", "新しい距離感診断", "本命力チェック", "雨の日の恋占い", "夏のときめき予報", "夜風の恋占い", "余白を整える恋便り", "秘密の恋ハロウィン", "ぬくもり恋予報", "今年の恋まとめ"];
   const MONTH_THEMES = ["今年の恋の置き場所を決める月", "気持ちを渡す形を選ぶ月", "過去をやさしく畳んで次へ進む月", "初対面と再会の空気を整える月", "自然体の魅力を信じ直す月", "待つ恋と動く恋の境目を選ぶ月", "少し大胆に恋を動かす月", "余白と距離感を味方にする月", "心のスペースを取り戻す月", "見せる顔と隠す本音を楽しむ月", "安心できる関係を育てる月", "記憶を整理し、来年の恋に持っていく月"];
+  const MONTHLY_THEME_OVERRIDES = {
+    HLTO: "ちゃんと見つけてもらう勇気を取り戻す月",
+    HLTC: "誰にも見せなかった気持ちに、小さな出口を作る月",
+    HLAO: "自然体のぬくもりを、ちゃんと特別に扱う月",
+    HLAC: "待つ恋から、自分を守る恋へ進む月",
+    HFTO: "自由なまま、ちゃんと特別を残す月",
+    HFTC: "近づきすぎずに、余韻で心を動かす月",
+    HFAO: "無理をしない明るさが、信頼に変わる月",
+    HFAC: "見えにくい優しさを、少しだけ形にする月",
+    SLTO: "応援するだけでなく、自分も前に出る月",
+    SLTC: "秘めた想いを、重さではなく深さとして扱う月",
+    SLAO: "与える優しさと、受け取る愛のバランスを整える月",
+    SLAC: "守るだけでなく、自分も守られることを許す月",
+    SFTO: "新しい景色に進みながら、気持ちを置いていかない月",
+    SFTC: "近づきすぎない優しさに、少しだけ温度を足す月",
+    SFAO: "整えすぎた本音に、少しだけ隙間を作る月",
+    SFAC: "変わらない安心を、恋の温度として受け取る月"
+  };
 
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
   const image = (meta) => `./image/lovemobby/${encodeURIComponent(`${meta.name}.webp`)}`;
@@ -37,10 +55,33 @@
       return "";
     }
   };
-  const dayIndex = (date = new Date()) => (date.getDate() - 1) % 30;
+  const DAILY_FORTUNES = window.LOVE_MOBBY_DAILY_FORTUNES_31 || {};
+  const dayIndex = (date = new Date()) => (date.getDate() - 1) % 31;
   const dailyFortune = (code, date = new Date()) => {
     const meta = TYPE_META[code] || TYPE_META.HLTO;
     const index = dayIndex(date);
+    const dailyData = DAILY_FORTUNES[code]?.[index];
+    if (dailyData) {
+      const keyCode = dailyData.keyPerson?.code || meta.key[index % meta.key.length];
+      const keyMeta = TYPE_META[keyCode] || { name: dailyData.keyPerson?.name || "" };
+      return {
+        day: dailyData.day || index + 1,
+        typeCode: code,
+        typeName: meta.name,
+        mood: dailyData.mood,
+        score: dailyData.score,
+        theme: dailyData.theme,
+        message: dailyData.message,
+        mission: dailyData.mission,
+        keyPerson: {
+          code: keyCode,
+          name: dailyData.keyPerson?.name || keyMeta.name,
+          role: dailyData.keyPerson?.text || "今日の流れに視点をくれるかも"
+        },
+        luckyItem: dailyData.luckyItem,
+        shareText: dailyData.shareText
+      };
+    }
     const keyCode = meta.key[index % meta.key.length];
     const keyMeta = TYPE_META[keyCode];
     const score = 70 + ((TYPE_CODES.indexOf(code) * 7 + index * 5) % 24);
@@ -70,16 +111,17 @@
     const base = TYPE_CODES.indexOf(code) + 1;
     const moveDays = [((base + monthIndex * 2) % 27) + 1, ((base * 2 + monthIndex + 6) % 27) + 1, ((base * 3 + monthIndex + 13) % 27) + 1].sort((a, b) => a - b);
     const cautionDay = ((base + monthIndex * 4 + 10) % 27) + 1;
+    const monthlyTheme = MONTHLY_THEME_OVERRIDES[code] || MONTH_THEMES[monthIndex];
     return {
       month: monthIndex + 1,
       monthlyTitle: MONTH_NAMES[monthIndex],
-      monthlyTheme: MONTH_THEMES[monthIndex],
+      monthlyTheme,
       monthlyState: `${meta.name}は今月、${meta.tone}を抱えたまま次の一歩を待っています。大きく変えるより、週に一度だけ自分の本音を記録すると流れが整います。`,
       score: 72 + ((base * 5 + monthIndex * 3) % 22),
       moveDays,
       cautionDay,
       cautionText: "考えすぎるより、少し間を置いてから返すほうが気持ちが伝わりやすい日。",
-      monthlyMission: `${MONTH_THEMES[monthIndex]}に合わせて、週に1回だけ「今の自分の本音」を短くメモする。`,
+      monthlyMission: `${monthlyTheme}に合わせて、週に1回だけ「今の自分の本音」を短くメモする。`,
       keyPerson: {
         code: keyCode,
         name: keyMeta.name,
