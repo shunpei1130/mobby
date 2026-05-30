@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>恋愛モビー診断</title>
-  <script type="module" crossorigin src="./assets/loveDiagnosis-PO37z9df.js?v=6"></script>
+  <script type="module" crossorigin src="./assets/loveDiagnosis-PO37z9df.js?v=7"></script>
   <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
-  <link rel="modulepreload" crossorigin href="./assets/loveMobbyDiagnosis-DTWGxZc_.js?v=6">
+  <link rel="modulepreload" crossorigin href="./assets/loveMobbyDiagnosis-DTWGxZc_.js?v=7">
   <link rel="stylesheet" crossorigin href="./assets/magazine-vH_rC7n8.css">
   <link rel="stylesheet" href="./assets/loveMobbyFortune.css?v=1">
   <script defer src="./assets/loveMobbyDailyFortunes31.js?v=2"></script>
@@ -354,6 +354,272 @@
       vertical-align: middle;
     }
 
+    .page--diagnosis.page--result {
+      position: relative;
+      isolation: isolate;
+      background: transparent !important;
+    }
+
+    .page--diagnosis.page--result::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        linear-gradient(180deg, rgba(255, 250, 246, .10), rgba(255, 245, 250, .18)),
+        var(--love-result-bg, linear-gradient(180deg, #fffaf3, #f8efe4)) center top / cover no-repeat;
+      pointer-events: none;
+    }
+
+    .page--diagnosis.page--result > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .page--diagnosis.page--result .love-type-guide {
+      position: fixed;
+      z-index: 1300;
+    }
+
+    .page--diagnosis.page--result .love-type-guide[hidden] {
+      display: none !important;
+    }
+
+    .love-diagnosis--result {
+      position: relative;
+      isolation: isolate;
+      overflow: visible;
+      border-color: transparent !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    .love-diagnosis--result::before {
+      display: none !important;
+    }
+
+    .love-diagnosis--result > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .page--diagnosis.page--result .love-result-hero {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      border-color: rgba(255, 255, 255, .58) !important;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, .08), rgba(255, 246, 250, .16)),
+        var(--love-result-bg, linear-gradient(180deg, #fffaf3, #f8efe4)) center / cover no-repeat !important;
+      box-shadow: 0 18px 42px rgba(89, 55, 70, .22) !important;
+    }
+
+    .page--diagnosis.page--result .love-result-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 72% 18%, rgba(255, 255, 255, .10), transparent 38%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 244, 249, .04));
+      pointer-events: none;
+    }
+
+    .page--diagnosis.page--result .love-result-hero > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .page--diagnosis.page--result .love-result-hero__image {
+      border-color: rgba(255, 255, 255, .72) !important;
+      background: rgba(255, 255, 255, .22) !important;
+      box-shadow: 0 12px 26px rgba(68, 47, 58, .18);
+    }
+
+    .page--diagnosis.page--result .love-result-hero__copy {
+      align-self: stretch;
+      justify-content: center;
+      min-width: 0;
+      padding: 12px 13px;
+      border: 1px solid rgba(255, 255, 255, .82);
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(255, 249, 252, .88));
+      box-shadow: 0 12px 28px rgba(48, 34, 42, .16);
+      -webkit-backdrop-filter: blur(18px) saturate(1.12);
+      backdrop-filter: blur(18px) saturate(1.12);
+    }
+
+    .page--diagnosis.page--result .love-result-hero__copy h3 {
+      color: #3f2d32 !important;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, .72);
+    }
+
+    .page--diagnosis.page--result .love-result-hero__copy p:not(.love-diagnosis__eyebrow) {
+      color: rgba(63, 45, 50, .82) !important;
+      font-weight: 600;
+    }
+
+    .page--diagnosis.page--result .love-diagnosis__eyebrow {
+      color: rgba(112, 70, 82, .72) !important;
+      font-weight: 800;
+    }
+
+    .page--diagnosis.page--result .love-result-code {
+      background: rgba(255, 235, 246, .86);
+      box-shadow: 0 3px 10px rgba(226, 61, 117, .12);
+    }
+
+    .page--diagnosis.page--result .love-result-sections section,
+    .page--diagnosis.page--result .love-axis-bar,
+    .page--diagnosis.page--result .love-diagnosis__notice {
+      border-color: rgba(255, 255, 255, .84) !important;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .91), rgba(255, 250, 252, .88)) !important;
+      box-shadow: 0 14px 32px rgba(48, 34, 42, .18) !important;
+      -webkit-backdrop-filter: blur(18px) saturate(1.12);
+      backdrop-filter: blur(18px) saturate(1.12);
+    }
+
+    .page--diagnosis.page--result .love-result-sections h4,
+    .page--diagnosis.page--result .love-axis-bar__head strong {
+      color: #35282d !important;
+      font-weight: 900;
+    }
+
+    .page--diagnosis.page--result .love-result-sections p,
+    .page--diagnosis.page--result .love-result-sections li,
+    .page--diagnosis.page--result .love-axis-bar p,
+    .page--diagnosis.page--result .love-axis-bar__head span,
+    .page--diagnosis.page--result .love-axis-bar__labels {
+      color: rgba(53, 40, 45, .82) !important;
+      font-weight: 600;
+    }
+
+    .page--diagnosis.page--result .line-ai-mobby-cta {
+      border-color: rgba(255, 255, 255, .88) !important;
+      background: linear-gradient(180deg, rgba(242, 255, 249, .94), rgba(255, 255, 255, .90)) !important;
+      box-shadow: 0 16px 34px rgba(28, 68, 49, .18) !important;
+      -webkit-backdrop-filter: blur(18px) saturate(1.12);
+      backdrop-filter: blur(18px) saturate(1.12);
+    }
+
+    .page--diagnosis.page--result .line-ai-mobby-cta__headline {
+      color: #17392c !important;
+      text-shadow: none !important;
+    }
+
+    .page--diagnosis.page--result .line-ai-mobby-cta__copy,
+    .page--diagnosis.page--result .line-ai-mobby-cta__instruction,
+    .page--diagnosis.page--result .line-ai-mobby-cta__status {
+      color: rgba(31, 57, 49, .78) !important;
+      font-weight: 600;
+    }
+
+    .page--diagnosis.page--result .love-diagnosis-tabs__item {
+      border-color: rgba(255, 255, 255, .86) !important;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(246, 247, 250, .84)) !important;
+      color: rgba(45, 38, 43, .88) !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, .96),
+        inset 0 -1px rgba(155, 145, 154, .12),
+        0 9px 22px rgba(34, 28, 36, .22) !important;
+      -webkit-backdrop-filter: blur(18px) saturate(1.16);
+      backdrop-filter: blur(18px) saturate(1.16);
+      font-weight: 900 !important;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, .76);
+    }
+
+    .page--diagnosis.page--result .love-diagnosis-tabs__item.is-active {
+      border-color: rgba(255, 255, 255, .94) !important;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(255, 246, 251, .90)) !important;
+      color: #2f262b !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, 1),
+        0 10px 24px rgba(34, 28, 36, .26) !important;
+    }
+
+    .page--diagnosis.page--result .love-diagnosis-tabs__item--danger {
+      color: #9b4b67 !important;
+    }
+
+    .page--diagnosis.page--result .love-compatibility {
+      border-color: rgba(255, 255, 255, .32) !important;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, .10), transparent 46%),
+        linear-gradient(180deg, rgba(14, 16, 24, .82), rgba(13, 12, 18, .72)) !important;
+      color: rgba(255, 255, 255, .94) !important;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, .30) !important;
+      -webkit-backdrop-filter: blur(12px) saturate(1.08);
+      backdrop-filter: blur(12px) saturate(1.08);
+    }
+
+    .page--diagnosis.page--result .love-compatibility__head {
+      text-shadow: 0 2px 10px rgba(0, 0, 0, .48);
+    }
+
+    .page--diagnosis.page--result .love-compatibility__head h3,
+    .page--diagnosis.page--result .love-compatibility-result h4,
+    .page--diagnosis.page--result .love-compatibility-result__pair figcaption {
+      color: #ffe7f1 !important;
+      font-weight: 900 !important;
+      text-shadow:
+        0 2px 10px rgba(0, 0, 0, .58),
+        0 0 18px rgba(226, 61, 117, .28);
+    }
+
+    .page--diagnosis.page--result .love-compatibility__head h3 {
+      color: #fff4f9 !important;
+      letter-spacing: 0;
+    }
+
+    .page--diagnosis.page--result .love-compatibility__head p:not(.love-diagnosis__eyebrow),
+    .page--diagnosis.page--result .love-compatibility-select span,
+    .page--diagnosis.page--result .love-compatibility-result li,
+    .page--diagnosis.page--result .love-compatibility-result__head strong span,
+    .page--diagnosis.page--result .love-compatibility-result__pair i {
+      color: rgba(255, 255, 255, .88) !important;
+      font-weight: 600;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, .28);
+    }
+
+    .page--diagnosis.page--result .love-compatibility-select span {
+      display: inline-block;
+      margin-bottom: 7px;
+      color: rgba(255, 255, 255, .90) !important;
+      font-size: 12px;
+      font-weight: 900;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, .42);
+    }
+
+    .page--diagnosis.page--result .love-compatibility-select .field__input {
+      border-color: rgba(255, 255, 255, .56) !important;
+      background:
+        linear-gradient(180deg, rgba(38, 40, 49, .88), rgba(33, 33, 41, .78)) !important;
+      color: #fff !important;
+      box-shadow:
+        inset 0 1px rgba(255, 255, 255, .18),
+        0 12px 26px rgba(0, 0, 0, .24);
+      font-weight: 900;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, .38);
+    }
+
+    .page--diagnosis.page--result .love-compatibility-select .field__input option {
+      color: #1f1b1f;
+      background: #fff;
+    }
+
+    .page--diagnosis.page--result .love-compatibility-result {
+      border-color: rgba(255, 255, 255, .28) !important;
+      background: linear-gradient(180deg, rgba(20, 22, 30, .52), rgba(15, 15, 22, .46)) !important;
+      box-shadow: 0 14px 32px rgba(0, 0, 0, .20);
+    }
+
+    .page--diagnosis.page--result .love-compatibility-result__pair img {
+      border: 1px solid rgba(255, 255, 255, .72);
+      box-shadow: 0 10px 24px rgba(34, 28, 36, .14);
+    }
+
     .love-axis-card,
     .love-question,
     .love-axis-bar,
@@ -390,6 +656,14 @@
       border-color: rgba(226, 61, 117, 0.35);
       color: #fff;
       box-shadow: 0 14px 30px rgba(226, 61, 117, 0.24);
+    }
+
+    .page--diagnosis.page--result .love-compatibility-cta {
+      background: linear-gradient(180deg, rgba(255, 255, 255, .96), rgba(255, 238, 247, .92)) !important;
+      border-color: rgba(255, 255, 255, .86) !important;
+      color: #1f1b1f !important;
+      box-shadow: 0 12px 26px rgba(34, 28, 36, .18) !important;
+      text-shadow: none !important;
     }
 
     .love-diagnosis--gate {
