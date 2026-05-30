@@ -14,14 +14,14 @@ export default async function handler(req, res) {
     return res.status(405).json({ ok: false, error: "Method Not Allowed" });
   }
 
-  const lineAddUrl = String(process.env.LINE_ADD_URL || "").trim();
-  if (!lineAddUrl) {
+  const fallbackLineAddUrl = String(process.env.LINE_ADD_URL || "").trim();
+  if (!fallbackLineAddUrl) {
     return res.status(500).json({ ok: false, error: "LINE_ADD_URL is not configured" });
   }
 
   return res.status(200).json({
     ok: true,
-    lineAddUrl,
+    lineAddUrl: fallbackLineAddUrl,
     firstMessageText: "モビーだよ！なんでも話してね！"
   });
 }

@@ -5,7 +5,7 @@ import issueToken from "../api/line-ai/issue-link-token.js";
 import webhook from "../api/line-ai/webhook.js";
 import { generateGeminiReply, generateReply } from "../api/line-ai/_ai.js";
 import { verifyLineSignature } from "../api/line-ai/_line.js";
-import { loadConversation, loadToken, loadUser, saveConversation, saveToken, saveUser } from "../api/line-ai/_storage.js";
+import { loadConversation, loadUser, saveConversation, saveUser } from "../api/line-ai/_storage.js";
 import { detectSafetyRisk } from "../api/line-ai/_safety.js";
 
 function createRes() {
@@ -61,31 +61,16 @@ async function callHealth() {
   assert(res.body?.configured?.lineAddUrl === true, "health should expose line env status");
 }
 
-async function callIssueToken() {
+async function callLineAddInfo() {
   const res = createRes();
-  await issueToken({
-    method: "POST",
-    headers: {},
-    body: {
-      diagnosis: {
-        source: "16school",
-        sourceLabel: "学校モビー診断",
-        resultId: "TEST",
-        resultName: "テストモビー",
-        resultSummary: "テスト用の診断結果",
-        traits: ["明るい"],
-        pagePath: "/16school/",
-        createdAt: new Date().toISOString()
-      }
-    }
-  }, res);
-  assert(res.statusCode === 200, "valid token request should return 200");
-  assert(res.body?.lineAddUrl === "https://lin.ee/test", "LINE add info should include LINE URL");
+  await issueToken({ method: "GET", headers: {} }, res);
+  assert(res.statusCode === 200, "LINE add info should return 200");
+  assert(res.body?.lineAddUrl === "https://lin.ee/test", "LINE add info should return configured add URL");
+  assert(!res.body?.token, "LINE add info should not issue an extra code token");
   assert(res.body?.firstMessageText === "モビーだよ！なんでも話してね！", "LINE add info should include greeting");
-  assert(!res.body?.token, "LINE add info should not issue a passphrase token");
 }
 
-async function callIssueTokenIgnoresDiagnosis() {
+async function callLineAddInfoIgnoresDiagnosis() {
   const res = createRes();
   await issueToken({
     method: "POST",
@@ -93,7 +78,57 @@ async function callIssueTokenIgnoresDiagnosis() {
     body: { diagnosis: { source: "invalid", resultName: "x", pagePath: "/invalid/" } }
   }, res);
   assert(res.statusCode === 200, "LINE add info should not require diagnosis data");
-  assert(!res.body?.token, "invalid diagnosis should still not issue a passphrase token");
+  assert(res.body?.lineAddUrl === "https://lin.ee/test", "diagnosis payload should be ignored for LINE add info");
+  assert(!res.body?.token, "diagnosis payload should not issue an extra code token");
+}
+
+async function callKnowledgeReplyFlow() {
+  const overviewReply = await generateReply({
+    user: { source: "line" },
+    message: "モビー診断って何種類ある？",
+    history: []
+  });
+  assert(overviewReply.includes("4種類"), "mock reply should answer diagnosis overview");
+  assert(overviewReply.includes("学校モビー診断"), "mock reply should list school diagnosis");
+  assert(overviewReply.includes("恋愛モビー診断"), "mock reply should list renai diagnosis");
+
+  const typeListReply = await generateReply({
+    user: { source: "line" },
+    message: "推し活のタイプ一覧教えて",
+    history: []
+  });
+  assert(typeListReply.includes("推し活モビー診断"), "mock reply should identify stan diagnosis");
+  assert(typeListReply.includes("現場至上主義"), "mock reply should include stan type names");
+  assert(typeListReply.includes("情報整理"), "mock reply should include all stan type names");
+
+  const typeReply = await generateReply({
+    user: { source: "line" },
+    message: "返信こないと死モビーってどんなタイプ？",
+    history: []
+  });
+  assert(typeReply.includes("メンヘラモビー診断"), "mock reply should identify love diagnosis by type");
+  assert(typeReply.includes("返信こないと死モビー"), "mock reply should include matched type name");
+
+  const missingResultReply = await generateReply({
+    user: { source: "line" },
+    message: "私の診断結果覚えてる？",
+    history: []
+  });
+  assert(missingResultReply.includes("個別の診断結果"), "mock reply should explain that personal results are not stored");
+
+  const linkedResultReply = await generateReply({
+    user: {
+      source: "16renai",
+      sourceLabel: "恋愛モビー診断",
+      resultName: "夜風のロマンチスト",
+      resultSummary: "自由な距離感の中で、二人だけのロマンを静かに育てるタイプ。",
+      traits: ["自由もほしい型", "ときめき重視型"]
+    },
+    message: "私の診断結果覚えてる？",
+    history: []
+  });
+  assert(linkedResultReply.includes("個別の診断結果"), "mock reply should not answer from saved personal results");
+  assert(!linkedResultReply.includes("夜風のロマンチスト"), "mock reply should not expose saved personal result names");
 }
 
 async function callWebhookFlow() {
@@ -127,45 +162,13 @@ async function callWebhookFlow() {
       message: { type: "text", id: "1", text: "今日は少し相談したい" }
     }]
   }), replyRes);
-  assert(replyRes.statusCode === 200, "direct message without passphrase should return 200");
+  assert(replyRes.statusCode === 200, "direct message should return 200");
   const linkedUser = await loadUser(userKey);
   assert(linkedUser?.source === "line", "direct message should create a default LINE user");
   assert(JSON.stringify(linkedUser).includes(lineUserId) === false, "raw LINE userId should not be stored");
   let conversation = await loadConversation(userKey);
   assert(!conversation.messages.at(-1).text.includes("テストモビー"), "mock reply should not foreground diagnosis result");
   assert(conversation.messages.at(-1).text.includes("今日は少し相談したい"), "mock reply should respond to user message");
-
-  await saveToken("MB-LINK01", {
-    version: 1,
-    token: "MB-LINK01",
-    status: "pending",
-    diagnosis: {
-      source: "16school",
-      sourceLabel: "学校モビー診断",
-      resultId: "TEST",
-      resultName: "テストモビー",
-      resultSummary: "テスト用の診断結果",
-      traits: ["明るい"]
-    },
-    createdAt: new Date().toISOString(),
-    expiresAt: new Date(Date.now() + 60_000).toISOString()
-  });
-  const legacyUserId = "U_LEGACY_TOKEN_USER";
-  const legacyUserKey = makeUserKey(legacyUserId);
-  const legacyTokenRes = createRes();
-  await webhook(createWebhookReq({
-    events: [{
-      type: "message",
-      replyToken: "reply-legacy-token",
-      source: { type: "user", userId: legacyUserId },
-      message: { type: "text", id: "2", text: "モビー登録 MB-LINK01" }
-    }]
-  }), legacyTokenRes);
-  assert(legacyTokenRes.statusCode === 200, "legacy token webhook should return 200");
-  const legacyUser = await loadUser(legacyUserKey);
-  assert(legacyUser?.resultName === "テストモビー", "legacy token should still store diagnosis result");
-  const legacyConversation = await loadConversation(legacyUserKey);
-  assert(legacyConversation.messages.at(-1).text === "モビーだよ！なんでも話してね！", "legacy token should return greeting");
 
   const crisisText = "\u3082\u3046\u7121\u7406\u3001\u6d88\u3048\u305f\u3044";
   assert(detectSafetyRisk(crisisText).hasRisk, "safety detector should catch crisis text");
@@ -199,41 +202,6 @@ async function callWebhookFlow() {
   conversation = await loadConversation(userKey);
   assert(conversation.messages.at(-1).text.includes("\u4eca\u65e5\u306f\u3053\u3053\u307e\u3067"), "rate limit reply should be used");
 
-  await saveToken("MB-OLD123", {
-    version: 1,
-    token: "MB-OLD123",
-    status: "pending",
-    diagnosis: linkedUser,
-    createdAt: new Date().toISOString(),
-    expiresAt: new Date(Date.now() - 1000).toISOString()
-  });
-  const expiredRes = createRes();
-  await webhook(createWebhookReq({
-    events: [{
-      type: "message",
-      replyToken: "reply-expired",
-      source: { type: "user", userId: "U_EXPIRED_USER" },
-      message: { type: "text", id: "6", text: "MB-OLD123" }
-    }]
-  }), expiredRes);
-  const expiredToken = await loadToken("MB-OLD123");
-  assert(expiredRes.statusCode === 200, "expired token webhook should return 200");
-  assert(expiredToken.status === "expired", "expired token should be marked expired");
-  const expiredUser = await loadUser(makeUserKey("U_EXPIRED_USER"));
-  assert(expiredUser?.source === "line", "expired token should fall back to default LINE user");
-
-  const invalidTokenRes = createRes();
-  await webhook(createWebhookReq({
-    events: [{
-      type: "message",
-      replyToken: "reply-invalid",
-      source: { type: "user", userId: "U_INVALID_TOKEN_USER" },
-      message: { type: "text", id: "7", text: "MB-NOPE11" }
-    }]
-  }), invalidTokenRes);
-  assert(invalidTokenRes.statusCode === 200, "invalid token webhook should return 200");
-  const invalidTokenUser = await loadUser(makeUserKey("U_INVALID_TOKEN_USER"));
-  assert(invalidTokenUser?.source === "line", "invalid token should fall back to default LINE user");
 }
 
 async function callWebhookMarkAsReadFlow() {
@@ -394,27 +362,40 @@ async function callGeminiProviderFlow() {
     process.env.AI_MODEL = "gemini-2.5-flash-lite";
     process.env.GEMINI_API_KEY = "test-gemini-key";
 
+    let geminiCall = 0;
     globalThis.fetch = async (url, options) => {
+      geminiCall += 1;
       assert(String(url).includes("gemini-2.5-flash-lite:generateContent"), "Gemini URL should include selected model");
       assert(options?.headers?.["x-goog-api-key"] === "test-gemini-key", "Gemini request should include API key header");
       const payload = JSON.parse(options.body);
       const systemPrompt = payload.system_instruction.parts[0].text;
-      assert(systemPrompt.includes("MobbyのLINE AI「モビー」"), "Gemini prompt should use unified Mobby persona name");
-      assert(!systemPrompt.includes("優しいモビー"), "Gemini prompt should not rename Mobby as kind Mobby");
-      assert(systemPrompt.includes("テスト恋愛モビー"), "Gemini request should include diagnosis as background context");
-      assert(systemPrompt.includes("診断タイプごとに人格や口調を変えない"), "Gemini prompt should not vary persona by diagnosis");
-      assert(systemPrompt.includes("絵文字を自然に1〜2個使う"), "Gemini prompt should allow a few emoji");
-      assert(systemPrompt.includes("自然で話しやすい会話"), "Gemini prompt should include conversational tone rule");
-      assert(systemPrompt.includes("AIっぽい定型文や説明口調を避ける"), "Gemini prompt should avoid formulaic AI tone");
-      assert(!systemPrompt.includes("共感 → 状況整理 → 小さい提案"), "Gemini prompt should not force a formulaic reply structure");
-      assert(payload.contents.at(-1).parts[0].text === "LINE文面を考えたい", "Gemini request should include user message");
+      if (geminiCall === 1) {
+        assert(systemPrompt.includes("MobbyのLINE AI「モビー」"), "Gemini prompt should use unified Mobby persona name");
+        assert(!systemPrompt.includes("優しいモビー"), "Gemini prompt should not rename Mobby as kind Mobby");
+        assert(!systemPrompt.includes("テスト恋愛モビー"), "Gemini prompt should not include saved personal diagnosis result");
+        assert(systemPrompt.includes("診断タイプごとに人格や口調を変えない"), "Gemini prompt should not vary persona by diagnosis");
+        assert(systemPrompt.includes("絵文字を自然に1〜2個使う"), "Gemini prompt should allow a few emoji");
+        assert(systemPrompt.includes("自然で話しやすい会話"), "Gemini prompt should include conversational tone rule");
+        assert(systemPrompt.includes("AIっぽい定型文や説明口調を避ける"), "Gemini prompt should avoid formulaic AI tone");
+        assert(!systemPrompt.includes("共感 → 状況整理 → 小さい提案"), "Gemini prompt should not force a formulaic reply structure");
+        assert(payload.contents.at(-1).parts[0].text === "LINE文面を考えたい", "Gemini request should include user message");
+      } else {
+        assert(systemPrompt.includes("診断知識"), "Gemini prompt should include diagnosis knowledge for diagnosis questions");
+        assert(systemPrompt.includes("推し活モビー診断"), "Gemini prompt should include matched diagnosis knowledge");
+        assert(systemPrompt.includes("現場至上主義"), "Gemini prompt should include type list knowledge");
+        assert(payload.contents.at(-1).parts[0].text === "推し活のタイプ一覧教えて", "Gemini request should include diagnosis question");
+      }
       return {
         ok: true,
         async json() {
           return {
             candidates: [{
               content: {
-                parts: [{ text: "その文面、やさしさはあるよ。少しだけ軽くして、相手が返しやすい一言にしよう。" }]
+                parts: [{
+                  text: geminiCall === 1
+                    ? "その文面、やさしさはあるよ。少しだけ軽くして、相手が返しやすい一言にしよう。"
+                    : "推し活モビー診断は16タイプあるよ。気になる名前を言ってくれたら詳しく見るね。"
+                }]
               }
             }]
           };
@@ -428,6 +409,13 @@ async function callGeminiProviderFlow() {
       history: [{ role: "user", text: "好きな人に送りたい" }]
     });
     assert(geminiReply.includes("返しやすい"), "Gemini reply should return model text");
+
+    const geminiKnowledgeReply = await generateGeminiReply({
+      user: { source: "line" },
+      message: "推し活のタイプ一覧教えて",
+      history: []
+    });
+    assert(geminiKnowledgeReply.includes("16タイプ"), "Gemini knowledge reply should return model text");
 
     globalThis.fetch = async () => ({
       ok: false,
@@ -461,8 +449,9 @@ delete process.env.LINE_CHANNEL_ACCESS_TOKEN;
 delete process.env.BLOB_READ_WRITE_TOKEN;
 
 await callHealth();
-await callIssueToken();
-await callIssueTokenIgnoresDiagnosis();
+await callLineAddInfo();
+await callLineAddInfoIgnoresDiagnosis();
+await callKnowledgeReplyFlow();
 await callWebhookFlow();
 await callWebhookMarkAsReadFlow();
 await callGeminiProviderFlow();

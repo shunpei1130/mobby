@@ -12,14 +12,10 @@ import { buildSafetyReply, detectSafetyRisk } from "./_safety.js";
 import {
   appendConversationMessage,
   loadConversation,
-  loadToken,
   loadUser,
   saveConversation,
-  saveToken,
   saveUser
 } from "./_storage.js";
-
-const TOKEN_PATTERN = /\bMB-[A-Z0-9]{6}\b/i;
 
 export const config = {
   api: {
@@ -33,21 +29,12 @@ function userKeyFromLineId(lineUserId) {
   return createHash("sha256").update(`${lineUserId}:${secret}`).digest("hex");
 }
 
-function extractToken(text) {
-  const match = String(text || "").match(TOKEN_PATTERN);
-  return match ? match[0].toUpperCase() : "";
-}
-
 async function reply(event, text) {
   return replyLineMessage(event.replyToken, [toLineTextMessage(text)]);
 }
 
 function buildGreetingPrompt() {
   return "モビーだよ！なんでも話してね！";
-}
-
-function buildLinkedPrompt() {
-  return buildGreetingPrompt();
 }
 
 function buildDefaultUser(userKey) {
@@ -82,65 +69,6 @@ async function ensureDefaultUser(userKey) {
     dailyCount: 0
   });
   return user;
-}
-
-async function linkTokenToUser(event, userKey, tokenText) {
-  const token = await loadToken(tokenText);
-  if (!token) {
-    await ensureDefaultUser(userKey);
-    await reply(event, buildGreetingPrompt());
-    return true;
-  }
-
-  const now = Date.now();
-  const expiresAt = new Date(token.expiresAt || 0).getTime();
-  if (!expiresAt || expiresAt <= now) {
-    await saveToken(tokenText, { ...token, status: "expired" });
-    await ensureDefaultUser(userKey);
-    await reply(event, buildGreetingPrompt());
-    return true;
-  }
-
-  if (token.status === "used") {
-    await ensureDefaultUser(userKey);
-    await reply(event, buildGreetingPrompt());
-    return true;
-  }
-
-  const diagnosis = token.diagnosis || {};
-  const user = {
-    version: 1,
-    userKey,
-    source: diagnosis.source,
-    sourceLabel: diagnosis.sourceLabel,
-    resultId: diagnosis.resultId,
-    resultName: diagnosis.resultName,
-    resultSummary: diagnosis.resultSummary,
-    traits: Array.isArray(diagnosis.traits) ? diagnosis.traits : [],
-    registeredAt: new Date().toISOString(),
-    lastMessageAt: "",
-    messageCountDate: "",
-    messageCountToday: 0
-  };
-
-  await saveUser(userKey, user);
-  await saveToken(tokenText, {
-    ...token,
-    status: "used",
-    usedAt: new Date().toISOString(),
-    userKey
-  });
-  await saveConversation(userKey, {
-    version: 1,
-    userKey,
-    messages: [{ role: "assistant", text: buildLinkedPrompt(), at: new Date().toISOString() }],
-    summary: "",
-    dailyCountDate: "",
-    dailyCount: 0
-  });
-
-  await reply(event, buildLinkedPrompt());
-  return true;
 }
 
 async function handleLinkedMessage(event, userKey, user, text) {
@@ -182,12 +110,6 @@ async function handleTextEvent(event) {
   if (!lineUserId || !text) return;
 
   const userKey = userKeyFromLineId(lineUserId);
-  const tokenText = extractToken(text);
-  if (tokenText) {
-    await linkTokenToUser(event, userKey, tokenText);
-    return;
-  }
-
   const user = await ensureDefaultUser(userKey);
 
   await handleLinkedMessage(event, userKey, user, text);

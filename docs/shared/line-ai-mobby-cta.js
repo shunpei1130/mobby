@@ -66,7 +66,7 @@
     setStatus(element, "LINEを開きます。", false);
 
     try {
-      const response = await fetch(API_ENDPOINT);
+      const response = await fetch(API_ENDPOINT, { method: "GET" });
       const data = await response.json().catch(() => ({}));
       if (!response.ok || data.ok !== true) {
         throw new Error(data.error || data.message || "LINEを開けませんでした。");

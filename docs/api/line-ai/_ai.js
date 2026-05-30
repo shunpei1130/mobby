@@ -1,4 +1,5 @@
 import { buildSystemPrompt } from "./_prompts.js";
+import { buildKnowledgeReply } from "./_diagnosis-knowledge.js";
 
 const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash-lite";
 const GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models";
@@ -73,7 +74,7 @@ export async function generateGeminiReply({ user, message, history }) {
     },
     body: JSON.stringify({
       system_instruction: {
-        parts: [{ text: buildSystemPrompt(user) }]
+        parts: [{ text: buildSystemPrompt(user, message) }]
       },
       contents: historyToContents(history, message),
       generationConfig: {
@@ -104,12 +105,15 @@ export async function generateGeminiReply({ user, message, history }) {
   return clampReply(text);
 }
 
-export function generateMockReply({ message }) {
+export function generateMockReply({ user, message }) {
   const userMessage = compact(message);
   const quotedMessage = userMessage ? `「${userMessage}」ね。` : "";
 
   const guarded = loveGuardrail(String(message || ""));
   if (guarded) return guarded;
+
+  const knowledgeReply = buildKnowledgeReply({ user, message });
+  if (knowledgeReply) return knowledgeReply;
 
   return `${quotedMessage}短いけど、ちょっと気持ち乗ってそう。急いで答え出さなくていいから、まず今いちばん引っかかってるところだけ聞かせて🙂`;
 }

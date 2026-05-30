@@ -1,7 +1,6 @@
 import { list, put } from "@vercel/blob";
 
 const PREFIX = "line-ai";
-const TOKEN_PREFIX = `${PREFIX}/tokens/`;
 const USER_PREFIX = `${PREFIX}/users/`;
 const CONVERSATION_PREFIX = `${PREFIX}/conversations/`;
 
@@ -59,24 +58,12 @@ export async function writeJson(pathname, data) {
   return { ok: true, storage: "blob" };
 }
 
-export function tokenPath(token) {
-  return `${TOKEN_PREFIX}${String(token || "").toUpperCase()}.json`;
-}
-
 export function userPath(userKey) {
   return `${USER_PREFIX}${userKey}.json`;
 }
 
 export function conversationPath(userKey) {
   return `${CONVERSATION_PREFIX}${userKey}.json`;
-}
-
-export async function loadToken(token) {
-  return readJson(tokenPath(token));
-}
-
-export async function saveToken(token, data) {
-  return writeJson(tokenPath(token), data);
 }
 
 export async function loadUser(userKey) {
