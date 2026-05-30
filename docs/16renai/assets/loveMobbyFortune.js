@@ -238,10 +238,12 @@
     render();
   };
   const openFortune = () => {
+    const diagnosisPanel = document.querySelector("[data-love-diagnosis-panel]");
     const root = document.querySelector("[data-love-diagnosis-panel] > .love-diagnosis");
     if (!root) return;
-    root.querySelectorAll(".love-diagnosis-tabs__item").forEach((item) => item.classList.toggle("is-active", item.hasAttribute("data-love-fortune")));
-    root.querySelectorAll("[data-love-character-panel], [data-love-compatibility-panel], [data-love-type-guide-panel]").forEach((panel) => { panel.hidden = true; });
+    if (diagnosisPanel) diagnosisPanel.hidden = false;
+    document.querySelectorAll(".love-diagnosis-tabs__item").forEach((item) => item.classList.toggle("is-active", item.hasAttribute("data-love-fortune")));
+    document.querySelectorAll("[data-love-character-panel], [data-love-compatibility-panel], [data-love-type-guide-panel]").forEach((panel) => { panel.hidden = true; });
     root.querySelectorAll(":scope > .love-diagnosis__hero, :scope > .love-diagnosis__intro-grid, :scope > [data-love-diagnosis-start], :scope > .love-progress, :scope > .love-question-list, :scope > .love-diagnosis__nav, :scope > .love-result-hero, :scope > .love-result-sections, :scope > .love-axis-bars, :scope > .love-share-card-inline, :scope > .love-share-card-modal, :scope > #line-ai-mobby-cta, :scope > .couple-magazine__status, :scope > .love-diagnosis__notice").forEach((node) => { node.hidden = true; });
     const panel = root.querySelector("[data-love-fortune-panel]");
     if (panel) {
@@ -255,7 +257,7 @@
     if (!root) return;
     const fortunePanel = root.querySelector("[data-love-fortune-panel]");
     if (fortunePanel) fortunePanel.hidden = true;
-    root.querySelectorAll(".love-diagnosis-tabs__item").forEach((item) => {
+    document.querySelectorAll(".love-diagnosis-tabs__item").forEach((item) => {
       if (item.hasAttribute("data-love-fortune")) item.classList.remove("is-active");
     });
     root.querySelectorAll(":scope > .love-diagnosis__hero, :scope > .love-diagnosis__intro-grid, :scope > [data-love-diagnosis-start], :scope > .love-progress, :scope > .love-question-list, :scope > .love-diagnosis__nav, :scope > .love-result-hero, :scope > .love-result-sections, :scope > .love-axis-bars, :scope > .love-share-card-inline, :scope > .love-share-card-modal, :scope > #line-ai-mobby-cta, :scope > .couple-magazine__status, :scope > .love-diagnosis__notice").forEach((node) => { node.hidden = false; });
