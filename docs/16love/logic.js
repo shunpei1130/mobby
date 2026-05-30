@@ -338,6 +338,14 @@ function renderResult() {
   ${ch.seen ? `<div class="panel fade-in" style="margin-top:24px;background:linear-gradient(135deg,#151a25,var(--surface));border-left:4px solid #4dabf7;"><p class="kicker" style="margin-bottom:16px;color:#4dabf7;">👀 周りからの見え方</p><p class="text-body" style="font-size:15px;line-height:1.8;margin:0;color:var(--text-main);">${ch.seen}</p></div>` : ""}
   <div class="card-grid"><div class="info-card"><h3>✨ 長所</h3><ul>${strengthsHtml}</ul></div><div class="info-card"><h3>⚡ 注意点</h3><ul>${cautionsHtml}</ul></div></div>
   ${adviceHtml ? `<div class="panel fade-in" style="margin-top:24px;background:linear-gradient(135deg,#151f1a,var(--surface));border-left:4px solid #4ade80;"><p class="kicker" style="margin-bottom:16px;color:#4ade80;">💡 アドバイス</p><ul style="margin:0;padding-left:20px;font-size:13px;line-height:1.8;">${adviceHtml}</ul></div>` : ""}
+  <div class="panel fade-in" style="margin-top:32px;text-align:center;background:linear-gradient(135deg,#fff0f6,#ffe4ef);border:1px solid rgba(255,128,171,0.35);">
+    <span style="display:inline-flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="../carousel/after/mobby_gal_toka.webp" alt="もびち" loading="lazy" decoding="async" style="width:64px;height:64px;object-fit:contain;border:0;">
+      <a href="https://px.a8.net/svt/ejp?a8mat=4B3YV8+F171O2+4GRI+BW8O2&a8ejpredirect=https%3A%2F%2Fstore.fits-japan.com%2Fshop%2Fproduct_categories%2Fpuananala" rel="nofollow" style="color:#d63384;font-family:'M PLUS Rounded 1c','Hiragino Maru Gothic ProN','Yu Gothic',sans-serif;font-weight:800;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px;">あなたにおすすめの香水を見つける</a>
+    </span>
+    <p style="margin:8px 0 0;font-size:11px;color:#000;">このリンクには広告が含まれます</p>
+    <img border="0" width="1" height="1" src="https://www16.a8.net/0.gif?a8mat=4B3YV8+F171O2+4GRI+BW8O2" alt="">
+  </div>
   <div class="panel fade-in" style="margin-top:24px;animation-delay:0.12s;background:linear-gradient(145deg,#2a1c2e,#201725);border:2px solid rgba(244,114,182,0.25);overflow:hidden;position:relative;">
     <div style="position:absolute;top:18px;right:-44px;transform:rotate(20deg);background:linear-gradient(135deg,#ff7a18,#ffb347);color:#fff;font-size:11px;letter-spacing:0.18em;padding:6px 48px;text-transform:uppercase;">LIMITED</div>
     <p class="kicker" style="margin-bottom:12px;color:#f472b6;">🎀 限定アクセサリー</p>

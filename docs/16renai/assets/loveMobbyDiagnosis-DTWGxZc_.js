@@ -773,6 +773,7 @@ const _='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800
         <section><h4>恋愛傾向</h4>${r.tendency.map(s=>`<p>${s}</p>`).join("")}</section>
         <section><h4>好きな人に求めやすいこと</h4><ul>${r.needs.map(s=>`<li>${s}</li>`).join("")}</ul></section>
         <section><h4>しんどくなりやすい場面</h4><ul>${r.strain.map(s=>`<li>${s}</li>`).join("")}</ul></section>
+        <section style="text-align:center;background:linear-gradient(135deg,#fff0f6,#ffe4ef);border:1px solid rgba(255,128,171,0.35);"><span style="display:inline-flex;align-items:center;justify-content:center;gap:8px;"><img src="../carousel/after/mobby_gal_toka.webp" alt="もびち" loading="lazy" decoding="async" style="width:64px;height:64px;object-fit:contain;border:0;"><a href="https://px.a8.net/svt/ejp?a8mat=4B3YV8+F171O2+4GRI+BW8O2&a8ejpredirect=https%3A%2F%2Fstore.fits-japan.com%2Fshop%2Fproduct_categories%2Fpuananala" rel="nofollow" style="color:#d63384;font-family:'M PLUS Rounded 1c','Hiragino Maru Gothic ProN','Yu Gothic',sans-serif;font-weight:800;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px;">あなたにおすすめの香水を見つける</a></span><p style="margin:8px 0 0;font-size:11px;color:#000;">このリンクには広告が含まれます</p><img border="0" width="1" height="1" src="https://www16.a8.net/0.gif?a8mat=4B3YV8+F171O2+4GRI+BW8O2" alt=""></section>
         <section><h4>相性がいい相手</h4><p>${r.match}</p></section>
         ${M(r.affirmation)}
       </div>

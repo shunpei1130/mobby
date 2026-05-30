@@ -5726,6 +5726,13 @@
       margin-bottom: -6px;
     }
 
+    @media (min-width: 1024px) {
+      .hero-intro .headline {
+        margin-top: -48px;
+        margin-bottom: 6px;
+      }
+    }
+
     .hero-intro .hero-carousel-shell {
       margin-top: -88px;
     }
@@ -6325,6 +6332,7 @@
           "legal legal";
         align-items: start;
         column-gap: clamp(28px, 4vw, 72px);
+        row-gap: 0;
         max-width: 1180px;
         margin: 0 auto;
         padding: 18px clamp(28px, 5vw, 64px) 42px;
@@ -6338,12 +6346,12 @@
 
       .mobby-title,
       .hero-intro .headline {
-        grid-area: title;
         justify-self: center;
         text-align: center;
       }
 
       .mobby-title {
+        grid-area: title;
         padding-top: 0;
       }
 
@@ -6353,8 +6361,8 @@
       }
 
       .hero-intro .headline {
-        margin-top: 132px;
-        margin-bottom: 0;
+        margin-top: -48px;
+        margin-bottom: 6px;
       }
 
       .hero-intro .hero {
@@ -7853,8 +7861,8 @@
     <div class="hero-intro">
       <div class="mobby-title" aria-label="Mobby">
         <img src="mobby-custom/assets/stickers/Logo.webp" alt="Mobby" fetchpriority="high" decoding="async" />
+        <h1 class="headline reveal delay-200">沈黙に耳を澄ませる</h1>
         </div>
-      <h1 class="headline reveal delay-200">沈黙に耳を澄ませる</h1>
       <section class="hero">
         <div class="container reveal">
 
@@ -7908,10 +7916,10 @@
               </div>
             </div>
           </div>
-          <div class="hero-collab-diagnosis-menu" hidden aria-hidden="true">
+          <div class="hero-collab-diagnosis-menu" aria-hidden="false">
             <ul class="hero-collab-diagnosis-list" aria-label="コラボ診断メニュー">
               <li>
-                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" type="button" data-diagnosis-item="blank-1" aria-label="ビューティー診断"><span class="gift-fan-person-badge">日向葵衣さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-mirror" aria-hidden="true"></span><span>ビューティー<br>診断</span></button>
+                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" href="hinata-aoi/index.html" data-diagnosis-item="blank-1" aria-label="日向葵衣 あなたは何タイプ？ビューティ診断"><span class="gift-fan-person-badge">日向葵衣さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-mirror" aria-hidden="true"></span><span>何タイプ？<br>ビューティ診断</span></a>
               </li>
               <li>
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" href="miyake-yuko/index.html" data-diagnosis-item="blank-2" aria-label="beauty mood 診断"><span class="gift-fan-person-badge">三宅裕子さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-compact" aria-hidden="true"></span><span>beauty mood<br>診断</span></a>
