@@ -2,10 +2,19 @@ import { createHash, createHmac } from "crypto";
 import { Readable } from "stream";
 import health from "../api/line-ai/health.js";
 import issueToken from "../api/line-ai/issue-link-token.js";
+import liffLink from "../api/line-ai/liff-link.js";
+import linkSessions from "../api/line-ai/link-sessions.js";
 import webhook from "../api/line-ai/webhook.js";
 import { generateGeminiReply, generateReply } from "../api/line-ai/_ai.js";
 import { verifyLineSignature } from "../api/line-ai/_line.js";
-import { loadConversation, loadUser, saveConversation, saveUser } from "../api/line-ai/_storage.js";
+import {
+  loadConversation,
+  loadLinkSession,
+  loadUser,
+  saveConversation,
+  saveLinkSession,
+  saveUser
+} from "../api/line-ai/_storage.js";
 import { detectSafetyRisk } from "../api/line-ai/_safety.js";
 
 function createRes() {
@@ -52,6 +61,19 @@ function makeUserKey(lineUserId) {
   return createHash("sha256").update(`${lineUserId}:${process.env.MOBBY_LINE_AI_SECRET}`).digest("hex");
 }
 
+const VALID_DIAGNOSIS = {
+  source: "16love",
+  sourceLabel: "メンヘラモビー診断",
+  resultId: "あつすひ",
+  resultName: "返信こないと死モビー",
+  resultSummary: "好きな人の返信が命綱のように感じやすいタイプ。",
+  traits: ["恋愛メンヘラ度: Lv.6", "恋の依存度: 彼氏ガチ勢"],
+  pagePath: "/16love/",
+  rawLineUserId: "U_SHOULD_NOT_BE_SAVED",
+  email: "should-not-save@example.com",
+  fullAnswers: ["保存しない回答全文"]
+};
+
 async function callHealth() {
   const res = createRes();
   await health({ method: "GET", headers: {} }, res);
@@ -61,10 +83,14 @@ async function callHealth() {
   assert(res.body?.features?.diagnosisKnowledge === true, "health should expose diagnosis knowledge feature");
   assert(res.body?.features?.mobbyKnowledge === true, "health should expose Mobby knowledge feature");
   assert(res.body?.features?.personalResultReference === true, "health should expose personal result reference feature");
-  assert(res.body?.features?.personalResultLinking === false, "health should expose disabled personal result linking");
+  assert(res.body?.features?.personalResultLinking === true, "health should expose enabled personal result linking");
   assert(res.body?.features?.compatibilityReply === true, "health should expose compatibility reply feature");
-  assert(res.body?.features?.liffLinking === false, "health should expose disabled LIFF linking");
+  assert(res.body?.features?.liffLinking === true, "health should expose enabled LIFF linking");
   assert(res.body?.configured?.lineAddUrl === true, "health should expose line env status");
+  assert(res.body?.configured?.liffId === true, "health should expose LIFF ID status");
+  assert(res.body?.configured?.lineLoginChannelId === true, "health should expose LINE Login channel ID status");
+  assert(res.body?.configured?.lineLoginChannelSecret === true, "health should expose LINE Login channel secret status");
+  assert(res.body?.configured?.personalResultLinkingFlag === true, "health should expose personal result linking flag");
 }
 
 async function callLineAddInfo() {
@@ -86,6 +112,179 @@ async function callLineAddInfoIgnoresDiagnosis() {
   assert(res.statusCode === 200, "LINE add info should not require diagnosis data");
   assert(res.body?.lineAddUrl === "https://lin.ee/test", "diagnosis payload should be ignored for LINE add info");
   assert(!res.body?.token, "diagnosis payload should not issue an extra code token");
+}
+
+async function createLinkSessionForTest(diagnosis = VALID_DIAGNOSIS) {
+  const res = createRes();
+  await linkSessions({ method: "POST", headers: {}, body: diagnosis }, res);
+  assert(res.statusCode === 200, "link session should return 200");
+  assert(res.body?.ok === true, "link session should return ok");
+  assert(/^ls_[A-Za-z0-9_-]{24,}$/.test(res.body?.sessionId), "link session should return a random session ID");
+  assert(res.body?.liffUrl?.includes("https://liff.line.me/liff-id-test"), "link session should return LIFF URL");
+  assert(res.body?.lineAddUrl === "https://lin.ee/test", "link session should include LINE add URL");
+  return res.body.sessionId;
+}
+
+async function callLinkSessionFlow() {
+  const sessionId = await createLinkSessionForTest();
+  const session = await loadLinkSession(sessionId);
+  assert(session?.diagnosis?.source === "16love", "link session should save diagnosis source");
+  assert(session?.diagnosis?.resultName === "返信こないと死モビー", "link session should save result name");
+  assert(Array.isArray(session?.diagnosis?.traits), "link session should save sanitized traits");
+  assert(session?.expiresAt && Date.parse(session.expiresAt) > Date.now(), "link session should save a future expiry");
+  assert(JSON.stringify(session).includes("U_SHOULD_NOT_BE_SAVED") === false, "link session should not save raw LINE user ID");
+  assert(JSON.stringify(session).includes("should-not-save@example.com") === false, "link session should not save email");
+  assert(JSON.stringify(session).includes("保存しない回答全文") === false, "link session should not save full answers");
+
+  const unsupportedRes = createRes();
+  await linkSessions({
+    method: "POST",
+    headers: {},
+    body: { ...VALID_DIAGNOSIS, source: "hinata-aoi", pagePath: "/hinata-aoi/" }
+  }, unsupportedRes);
+  assert(unsupportedRes.statusCode === 400, "unsupported diagnosis source should be rejected");
+
+  const optionsRes = createRes();
+  await linkSessions({ method: "OPTIONS", headers: {} }, optionsRes);
+  assert(optionsRes.statusCode === 200, "link session should support OPTIONS");
+
+  const originalVercelEnv = process.env.VERCEL_ENV;
+  const originalBlobToken = process.env.BLOB_READ_WRITE_TOKEN;
+  try {
+    process.env.VERCEL_ENV = "production";
+    delete process.env.BLOB_READ_WRITE_TOKEN;
+    const missingBlobRes = createRes();
+    await linkSessions({ method: "POST", headers: {}, body: VALID_DIAGNOSIS }, missingBlobRes);
+    assert(missingBlobRes.statusCode === 503, "production link session should require Blob config");
+  } finally {
+    process.env.VERCEL_ENV = originalVercelEnv;
+    if (originalBlobToken) process.env.BLOB_READ_WRITE_TOKEN = originalBlobToken;
+    else delete process.env.BLOB_READ_WRITE_TOKEN;
+  }
+}
+
+async function callLiffLinkFlow() {
+  const originalFetch = globalThis.fetch;
+  const channelId = process.env.LINE_LOGIN_CHANNEL_ID;
+
+  try {
+    const configRes = createRes();
+    await liffLink({ method: "GET", headers: {} }, configRes);
+    assert(configRes.statusCode === 200, "LIFF config should return 200");
+    assert(configRes.body?.liffId === "liff-id-test", "LIFF config should expose public LIFF ID");
+
+    const validSessionId = await createLinkSessionForTest();
+    const verifyCalls = [];
+    globalThis.fetch = async (url, options) => {
+      verifyCalls.push({ url: String(url), body: String(options?.body || ""), contentType: options?.headers?.["Content-Type"] });
+      return {
+        ok: true,
+        status: 200,
+        async json() {
+          return { aud: channelId, sub: "U_LIFF_VALIDATE_USER" };
+        }
+      };
+    };
+
+    const linkRes = createRes();
+    await liffLink({
+      method: "POST",
+      headers: {},
+      body: { sessionId: validSessionId, idToken: "valid-id-token" }
+    }, linkRes);
+    assert(linkRes.statusCode === 200, "valid LIFF link should return 200");
+    assert(linkRes.body?.linked === true, "valid LIFF link should return linked");
+    assert(linkRes.body?.resultName === "返信こないと死モビー", "valid LIFF link should return result name");
+    assert(!linkRes.body?.userKey, "LIFF link response should not expose userKey");
+    assert(verifyCalls[0]?.url === "https://api.line.me/oauth2/v2.1/verify", "LIFF link should verify ID token with LINE");
+    assert(verifyCalls[0]?.contentType === "application/x-www-form-urlencoded", "LIFF verify should use form encoding");
+    assert(verifyCalls[0]?.body.includes("client_id=line-login-channel-id-test"), "LIFF verify should include LINE Login channel ID");
+
+    const user = await loadUser(makeUserKey("U_LIFF_VALIDATE_USER"));
+    assert(user?.personalResultLinked === true, "LIFF link should save personal result linked flag");
+    assert(user?.resultName === "返信こないと死モビー", "LIFF link should save result name");
+    assert(user?.diagnosisHistory?.length === 1, "LIFF link should save diagnosis history");
+    assert(JSON.stringify(user).includes("U_LIFF_VALIDATE_USER") === false, "user record should not save raw LINE user ID");
+    assert(JSON.stringify(user).includes("should-not-save@example.com") === false, "user record should not save email");
+
+    const consumedSession = await loadLinkSession(validSessionId);
+    assert(consumedSession?.consumedAt, "LIFF link should mark session consumed");
+
+    const consumedRes = createRes();
+    await liffLink({
+      method: "POST",
+      headers: {},
+      body: { sessionId: validSessionId, idToken: "valid-id-token" }
+    }, consumedRes);
+    assert(consumedRes.statusCode === 409, "consumed LIFF session should be rejected");
+
+    const expiredSessionId = "ls_expiredSessionForValidate0001";
+    await saveLinkSession(expiredSessionId, {
+      version: 1,
+      sessionId: expiredSessionId,
+      diagnosis: VALID_DIAGNOSIS,
+      createdAt: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
+      expiresAt: new Date(Date.now() - 30 * 1000).toISOString(),
+      consumedAt: null
+    });
+    const expiredRes = createRes();
+    await liffLink({
+      method: "POST",
+      headers: {},
+      body: { sessionId: expiredSessionId, idToken: "valid-id-token" }
+    }, expiredRes);
+    assert(expiredRes.statusCode === 410, "expired LIFF session should be rejected");
+
+    const invalidTokenSessionId = await createLinkSessionForTest();
+    globalThis.fetch = async () => ({
+      ok: false,
+      status: 400,
+      async text() {
+        return "bad token";
+      }
+    });
+    const invalidTokenRes = createRes();
+    await liffLink({
+      method: "POST",
+      headers: {},
+      body: { sessionId: invalidTokenSessionId, idToken: "bad-id-token" }
+    }, invalidTokenRes);
+    assert(invalidTokenRes.statusCode === 400, "invalid LINE ID token should be rejected");
+
+    const badAudSessionId = await createLinkSessionForTest();
+    globalThis.fetch = async () => ({
+      ok: true,
+      status: 200,
+      async json() {
+        return { aud: "wrong-channel", sub: "U_BAD_AUD" };
+      }
+    });
+    const badAudRes = createRes();
+    await liffLink({
+      method: "POST",
+      headers: {},
+      body: { sessionId: badAudSessionId, idToken: "bad-aud-token" }
+    }, badAudRes);
+    assert(badAudRes.statusCode === 401, "LINE ID token audience mismatch should be rejected");
+
+    const missingSubSessionId = await createLinkSessionForTest();
+    globalThis.fetch = async () => ({
+      ok: true,
+      status: 200,
+      async json() {
+        return { aud: channelId };
+      }
+    });
+    const missingSubRes = createRes();
+    await liffLink({
+      method: "POST",
+      headers: {},
+      body: { sessionId: missingSubSessionId, idToken: "missing-sub-token" }
+    }, missingSubRes);
+    assert(missingSubRes.statusCode === 401, "LINE ID token without subject should be rejected");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 }
 
 async function callKnowledgeReplyFlow() {
@@ -526,6 +725,11 @@ async function callGeminiProviderFlow() {
 process.env.LINE_ADD_URL = process.env.LINE_ADD_URL || "https://lin.ee/test";
 process.env.LINE_CHANNEL_SECRET = process.env.LINE_CHANNEL_SECRET || "line-secret-test";
 process.env.MOBBY_LINE_AI_SECRET = process.env.MOBBY_LINE_AI_SECRET || "mobby-secret-test";
+process.env.LIFF_ID = process.env.LIFF_ID || "liff-id-test";
+process.env.LINE_LOGIN_CHANNEL_ID = process.env.LINE_LOGIN_CHANNEL_ID || "line-login-channel-id-test";
+process.env.LINE_LOGIN_CHANNEL_SECRET = process.env.LINE_LOGIN_CHANNEL_SECRET || "line-login-channel-secret-test";
+process.env.LINE_AI_PERSONAL_RESULT_LINKING = "true";
+process.env.VERCEL_ENV = process.env.VERCEL_ENV === "production" ? "development" : (process.env.VERCEL_ENV || "development");
 process.env.AI_PROVIDER = "mock";
 delete process.env.LINE_CHANNEL_ACCESS_TOKEN;
 delete process.env.BLOB_READ_WRITE_TOKEN;
@@ -533,6 +737,8 @@ delete process.env.BLOB_READ_WRITE_TOKEN;
 await callHealth();
 await callLineAddInfo();
 await callLineAddInfoIgnoresDiagnosis();
+await callLinkSessionFlow();
+await callLiffLinkFlow();
 await callKnowledgeReplyFlow();
 await callCompatibilityReplyFlow();
 await callWebhookFlow();

@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LINE AIモビー 診断結果連携</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #152033;
+      --muted: #627084;
+      --line: #06c755;
+      --paper: #ffffff;
+      --bg: #f5f7fb;
+      --border: #dce3ee;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(6, 199, 85, 0.08), rgba(245, 247, 251, 0) 34%),
+        var(--bg);
+    }
+
+    main {
+      width: min(100%, 560px);
+      margin: 0 auto;
+      padding: 56px 20px 32px;
+    }
+
+    .link-panel {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--paper);
+      box-shadow: 0 18px 48px rgba(21, 32, 51, 0.08);
+      padding: 28px;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--line);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 25px;
+      line-height: 1.35;
+      letter-spacing: 0;
+    }
+
+    .message {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      border: 0;
+      border-radius: 8px;
+      padding: 0 18px;
+      font: inherit;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .button--line {
+      color: #fff;
+      background: var(--line);
+    }
+
+    .button--subtle {
+      color: var(--ink);
+      background: #eef2f7;
+    }
+
+    .button[hidden] {
+      display: none;
+    }
+
+    .status {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .status[data-state="error"] {
+      color: #b42318;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="link-panel" aria-live="polite">
+      <p class="eyebrow">LINE AI Mobby</p>
+      <h1 data-title>診断結果を連携しています</h1>
+      <p class="message" data-message>LINEログインを確認して、モビーが診断結果を覚えられるようにしています。</p>
+      <div class="actions">
+        <a class="button button--line" data-line-open hidden href="#" target="_blank" rel="noopener">LINEを開く</a>
+        <button class="button button--subtle" data-retry type="button" hidden>もう一度試す</button>
+      </div>
+      <p class="status" data-status data-state="loading">この画面は閉じずに少し待ってね。</p>
+    </section>
+  </main>
+
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script>
+    (function initMobbyLiffLink() {
+      const CONFIG_ENDPOINT = "/api/line-ai/liff-link";
+      const LINK_ENDPOINT = "/api/line-ai/liff-link";
+      const title = document.querySelector("[data-title]");
+      const message = document.querySelector("[data-message]");
+      const status = document.querySelector("[data-status]");
+      const lineOpen = document.querySelector("[data-line-open]");
+      const retry = document.querySelector("[data-retry]");
+
+      function getSessionId() {
+        return new URLSearchParams(window.location.search).get("s") || "";
+      }
+
+      function setView(state, heading, copy, detail) {
+        title.textContent = heading;
+        message.textContent = copy;
+        status.textContent = detail || "";
+        status.dataset.state = state;
+        retry.hidden = state !== "error";
+      }
+
+      async function fetchJson(url, options) {
+        const response = await fetch(url, options);
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || data.ok !== true) {
+          throw new Error(data.error || data.message || "request failed");
+        }
+        return data;
+      }
+
+      async function run() {
+        lineOpen.hidden = true;
+        retry.hidden = true;
+        setView("loading", "診断結果を連携しています", "LINEログインを確認して、モビーが診断結果を覚えられるようにしています。", "この画面は閉じずに少し待ってね。");
+
+        const sessionId = getSessionId();
+        if (!sessionId) {
+          throw new Error("session missing");
+        }
+
+        const config = await fetchJson(CONFIG_ENDPOINT, { method: "GET" });
+        if (!window.liff) {
+          throw new Error("LIFF SDK is not available");
+        }
+
+        await window.liff.init({ liffId: config.liffId });
+        if (!window.liff.isLoggedIn()) {
+          window.liff.login({ redirectUri: window.location.href });
+          return;
+        }
+
+        const idToken = window.liff.getIDToken();
+        if (!idToken) {
+          throw new Error("LINE ID token is missing");
+        }
+
+        const linked = await fetchJson(LINK_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sessionId, idToken })
+        });
+
+        const resultName = linked.resultName ? `「${linked.resultName}」` : "診断結果";
+        const lineAddUrl = linked.lineAddUrl || config.lineAddUrl || "";
+        setView("success", "診断結果を連携しました", `${resultName}をモビーが覚えました。LINEを開いて、そのまま話しかけてね。`, "連携できたので、この画面は閉じても大丈夫です。");
+        if (lineAddUrl) {
+          lineOpen.href = lineAddUrl;
+          lineOpen.hidden = false;
+        }
+      }
+
+      retry.addEventListener("click", () => {
+        run().catch(showError);
+      });
+
+      function showError(error) {
+        console.warn("[LINE AI Mobby LIFF] Link failed.", error);
+        lineOpen.hidden = true;
+        setView("error", "連携できませんでした", "時間を置いて、診断結果ページからもう一度試してください。", "期限切れの場合は診断結果ページのボタンからやり直せます。");
+      }
+
+      run().catch(showError);
+    })();
+  </script>
+</body>
+</html>

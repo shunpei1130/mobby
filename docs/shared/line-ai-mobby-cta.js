@@ -1,5 +1,7 @@
 (function initMobbyLineAiCTA() {
-  const API_ENDPOINT = "/api/line-ai/issue-link-token";
+  const LINE_ADD_ENDPOINT = "/api/line-ai/issue-link-token";
+  const LINK_SESSION_ENDPOINT = "/api/line-ai/link-sessions";
+  const LINKABLE_SOURCES = new Set(["16school", "16stan", "16love", "16renai"]);
   const renderedNodes = new WeakSet();
 
   function escapeHtml(value) {
@@ -17,12 +19,33 @@
     return mount instanceof Element ? mount : null;
   }
 
+  function parseDiagnosis(element) {
+    const raw = element?.getAttribute?.("data-diagnosis");
+    if (!raw) return null;
+
+    try {
+      const decoded = decodeURIComponent(raw);
+      const data = JSON.parse(decoded);
+      if (!LINKABLE_SOURCES.has(String(data?.source || ""))) return null;
+      return data;
+    } catch {
+      try {
+        const data = JSON.parse(raw);
+        if (!LINKABLE_SOURCES.has(String(data?.source || ""))) return null;
+        return data;
+      } catch {
+        return null;
+      }
+    }
+  }
+
   function renderInitial(element) {
+    const diagnosis = parseDiagnosis(element);
     element.innerHTML = `
       <section class="line-ai-mobby-cta" aria-label="LINE AI Mobby">
         <h3 class="line-ai-mobby-cta__headline">モビーと話そう！</h3>
         <p class="line-ai-mobby-cta__copy">
-          LINEで追加したら、そのまま話せます。
+          ${diagnosis ? "LINEで追加すると、診断結果をふまえてモビーと話せます。" : "LINEで追加したら、そのまま話せます。"}
         </p>
         <div class="line-ai-mobby-cta__actions">
           <button class="line-ai-mobby-cta__button" type="button" data-line-ai-mobby-issue>
@@ -57,25 +80,60 @@
     status.classList.toggle("is-error", Boolean(isError));
   }
 
+  async function openLineAddFallback(element, usedDiagnosis) {
+    const response = await fetch(LINE_ADD_ENDPOINT, { method: "GET" });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || data.ok !== true) {
+      throw new Error(data.error || data.message || "LINEを開けませんでした。");
+    }
+    renderResult(element, data);
+    if (usedDiagnosis) {
+      setStatus(element, "今だけ診断結果を連携できませんでした。診断結果なしでもLINEで話せます。", true);
+    }
+    if (data.lineAddUrl) {
+      window.location.href = data.lineAddUrl;
+    }
+  }
+
+  async function createLinkSession(diagnosis) {
+    const response = await fetch(LINK_SESSION_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(diagnosis)
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || data.ok !== true || !data.liffUrl) {
+      throw new Error(data.error || data.message || "診断結果を連携できませんでした。");
+    }
+    return data;
+  }
+
   async function prepareLineAdd(element) {
     const button = element.querySelector("[data-line-ai-mobby-issue]");
     if (button) {
       button.disabled = true;
       button.textContent = "準備中...";
     }
-    setStatus(element, "LINEを開きます。", false);
+    const diagnosis = parseDiagnosis(element);
+    setStatus(element, diagnosis ? "診断結果の連携を準備しています。" : "LINEを開きます。", false);
 
     try {
-      const response = await fetch(API_ENDPOINT, { method: "GET" });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok || data.ok !== true) {
-        throw new Error(data.error || data.message || "LINEを開けませんでした。");
+      if (diagnosis) {
+        const data = await createLinkSession(diagnosis);
+        window.location.href = data.liffUrl;
+        return;
       }
-      renderResult(element, data);
-      if (data.lineAddUrl) {
-        window.location.href = data.lineAddUrl;
-      }
+      await openLineAddFallback(element, false);
     } catch (error) {
+      if (diagnosis) {
+        try {
+          await openLineAddFallback(element, true);
+          console.warn("[LINE AI Mobby CTA] Falling back to LINE add URL.", error);
+          return;
+        } catch (fallbackError) {
+          console.warn("[LINE AI Mobby CTA] Failed to prepare fallback LINE add URL.", fallbackError);
+        }
+      }
       renderInitial(element);
       setStatus(element, "今だけLINEを開けませんでした。時間を置いてもう一度試してね。", true);
       console.warn("[LINE AI Mobby CTA] Failed to prepare LINE add URL.", error);

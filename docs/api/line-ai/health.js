@@ -5,6 +5,16 @@ export default async function handler(req, res) {
 
   const provider = String(process.env.AI_PROVIDER || "mock").toLowerCase();
   const model = String(process.env.AI_MODEL || (provider === "gemini" ? "gemini-2.5-flash-lite" : "")).trim();
+  const personalResultLinkingEnabled = String(process.env.LINE_AI_PERSONAL_RESULT_LINKING || "").toLowerCase() === "true";
+  const liffRuntimeConfigured = Boolean(
+    process.env.LIFF_ID &&
+    process.env.LINE_LOGIN_CHANNEL_ID &&
+    process.env.LINE_LOGIN_CHANNEL_SECRET &&
+    process.env.LINE_ADD_URL &&
+    process.env.MOBBY_LINE_AI_SECRET
+  );
+  const storageReady = process.env.VERCEL_ENV === "production" ? Boolean(process.env.BLOB_READ_WRITE_TOKEN) : true;
+  const liffLinkingReady = personalResultLinkingEnabled && liffRuntimeConfigured && storageReady;
 
   res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
   return res.status(200).json({
@@ -16,9 +26,9 @@ export default async function handler(req, res) {
       diagnosisKnowledge: true,
       mobbyKnowledge: true,
       personalResultReference: true,
-      personalResultLinking: false,
+      personalResultLinking: liffLinkingReady,
       compatibilityReply: true,
-      liffLinking: false
+      liffLinking: liffLinkingReady
     },
     configured: {
       lineAddUrl: Boolean(process.env.LINE_ADD_URL),
@@ -28,7 +38,9 @@ export default async function handler(req, res) {
       geminiApiKey: Boolean(process.env.GEMINI_API_KEY),
       blob: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
       liffId: Boolean(process.env.LIFF_ID),
-      lineLoginChannelId: Boolean(process.env.LINE_LOGIN_CHANNEL_ID)
+      lineLoginChannelId: Boolean(process.env.LINE_LOGIN_CHANNEL_ID),
+      lineLoginChannelSecret: Boolean(process.env.LINE_LOGIN_CHANNEL_SECRET),
+      personalResultLinkingFlag: personalResultLinkingEnabled
     },
     time: new Date().toISOString()
   });
