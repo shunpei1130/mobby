@@ -1,6 +1,7 @@
 import { createHash } from "crypto";
 import { generateReply } from "./_ai.js";
 import {
+  getLineUserProfile,
   markLineMessageAsRead,
   replyLineMessage,
   readRawBody,
@@ -51,6 +52,36 @@ function buildDefaultUser(userKey) {
   };
 }
 
+function replyCountToday(user) {
+  const today = new Date().toISOString().slice(0, 10);
+  return user?.messageCountDate === today ? Number(user?.messageCountToday || 0) : 0;
+}
+
+function shouldOfferDisplayNameCue(user, text) {
+  const provider = String(process.env.AI_PROVIDER || "mock").toLowerCase();
+  if (provider !== "gemini") return false;
+
+  const nextReplyCount = replyCountToday(user) + 1;
+  if (nextReplyCount < 4) return false;
+
+  const message = String(text || "");
+  const supportiveMoment = /ありがとう|助かった|嬉|うれし|不安|つら|辛|しんど|疲れ|相談|迷っ|どうしよう|頑張|がんば/.test(message);
+  return nextReplyCount % 6 === 0 || (supportiveMoment && nextReplyCount % 4 === 0);
+}
+
+async function buildPromptUser(user, event, text) {
+  if (!shouldOfferDisplayNameCue(user, text)) return user;
+
+  const profile = await getLineUserProfile(event?.source?.userId);
+  if (!profile?.displayName) return user;
+
+  return {
+    ...user,
+    lineDisplayName: profile.displayName,
+    lineDisplayNameUseAllowed: true
+  };
+}
+
 async function ensureDefaultUser(userKey) {
   const existing = await loadUser(userKey);
   if (existing) return existing;
@@ -85,8 +116,9 @@ async function handleLinkedMessage(event, userKey, user, text) {
     if (!userLimit.ok || !totalLimit.ok) {
       responseText = buildRateLimitReply();
     } else {
+      const promptUser = await buildPromptUser(user, event, text);
       responseText = await generateReply({
-        user,
+        user: promptUser,
         message: text,
         history: Array.isArray(conversation.messages) ? conversation.messages.slice(-12) : []
       });

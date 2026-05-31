@@ -2,6 +2,7 @@ import { createHmac, timingSafeEqual } from "crypto";
 import { stripEmojiForFallback, truncateText } from "./_text.js";
 
 const MARK_AS_READ_TIMEOUT_MS = 1500;
+const PROFILE_TIMEOUT_MS = 1500;
 
 export async function readRawBody(req) {
   if (Buffer.isBuffer(req.body)) return req.body;
@@ -53,6 +54,36 @@ export async function markLineMessageAsRead(markAsReadToken) {
   } catch (error) {
     console.error("[LINE AI] Mark as read failed:", { message: error?.message });
     return { ok: false, error };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+export async function getLineUserProfile(lineUserId) {
+  const userId = String(lineUserId || "").trim();
+  const accessToken = process.env.LINE_CHANNEL_ACCESS_TOKEN;
+  if (!userId || !accessToken) return null;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), PROFILE_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(`https://api.line.me/v2/bot/profile/${encodeURIComponent(userId)}`, {
+      method: "GET",
+      signal: controller.signal,
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    if (!response.ok || typeof response.json !== "function") return null;
+
+    const data = await response.json();
+    const displayName = truncateText(data?.displayName, 80).replace(/\s+/g, " ").trim();
+    return displayName ? { displayName } : null;
+  } catch (error) {
+    console.warn("[LINE AI] LINE profile lookup skipped:", { message: error?.message });
+    return null;
   } finally {
     clearTimeout(timeout);
   }

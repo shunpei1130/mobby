@@ -7,6 +7,7 @@ import linkSessions from "../api/line-ai/link-sessions.js";
 import webhook from "../api/line-ai/webhook.js";
 import { generateGeminiReply, generateReply } from "../api/line-ai/_ai.js";
 import { toLineTextMessage, verifyLineSignature } from "../api/line-ai/_line.js";
+import { buildSystemPrompt } from "../api/line-ai/_prompts.js";
 import {
   loadConversation,
   loadLinkSession,
@@ -506,6 +507,112 @@ async function callCompatibilityReplyFlow() {
   }
 }
 
+async function callDisplayNameCueFlow() {
+  const promptWithoutCue = buildSystemPrompt({
+    source: "line",
+    lineDisplayName: "しゅん"
+  }, "相談したい");
+  assert(!promptWithoutCue.includes("相手のLINE表示名"), "display name should not be exposed to prompt without occasional cue");
+
+  const promptWithCue = buildSystemPrompt({
+    source: "line",
+    lineDisplayName: "しゅん",
+    lineDisplayNameUseAllowed: true
+  }, "相談したい");
+  assert(promptWithCue.includes("相手のLINE表示名: しゅん"), "display name cue should include the LINE display name");
+  assert(promptWithCue.includes("名前は毎回呼ばない"), "display name cue should keep name use occasional");
+
+  const originalFetch = globalThis.fetch;
+  const originalAccessToken = process.env.LINE_CHANNEL_ACCESS_TOKEN;
+  const originalProvider = process.env.AI_PROVIDER;
+  const originalModel = process.env.AI_MODEL;
+  const originalGeminiKey = process.env.GEMINI_API_KEY;
+  const lineUserId = "U_DISPLAY_NAME_CUE_USER";
+  const userKey = makeUserKey(lineUserId);
+  const today = new Date().toISOString().slice(0, 10);
+
+  await saveUser(userKey, {
+    version: 1,
+    userKey,
+    source: "line",
+    sourceLabel: "LINE直接",
+    registeredAt: new Date().toISOString(),
+    lastMessageAt: "",
+    messageCountDate: today,
+    messageCountToday: 3
+  });
+  await saveConversation(userKey, { version: 1, userKey, messages: [], summary: "", dailyCountDate: "", dailyCount: 0 });
+
+  try {
+    process.env.LINE_CHANNEL_ACCESS_TOKEN = "line-access-token-test";
+    process.env.AI_PROVIDER = "gemini";
+    process.env.AI_MODEL = "gemini-2.5-flash-lite";
+    process.env.GEMINI_API_KEY = "test-gemini-key";
+
+    let geminiPrompt = "";
+    globalThis.fetch = async (url, options) => {
+      const urlText = String(url);
+      if (urlText === `https://api.line.me/v2/bot/profile/${lineUserId}`) {
+        return {
+          ok: true,
+          status: 200,
+          async json() {
+            return { displayName: "しゅん" };
+          }
+        };
+      }
+      if (urlText.includes("generativelanguage.googleapis.com")) {
+        const payload = JSON.parse(options.body);
+        geminiPrompt = payload.system_instruction.parts[0].text;
+        return {
+          ok: true,
+          status: 200,
+          async json() {
+            return {
+              candidates: [{
+                content: { parts: [{ text: "しゅんさん、その相談なら一緒にほどこう。" }] }
+              }]
+            };
+          }
+        };
+      }
+      return {
+        ok: true,
+        status: 200,
+        async text() {
+          return "";
+        }
+      };
+    };
+
+    const res = createRes();
+    await webhook(createWebhookReq({
+      events: [{
+        type: "message",
+        replyToken: "reply-display-name-cue",
+        source: { type: "user", userId: lineUserId },
+        message: { type: "text", id: "name-1", text: "相談したいことがある" }
+      }]
+    }), res);
+
+    assert(res.statusCode === 200, "display name cue webhook should return 200");
+    assert(geminiPrompt.includes("相手のLINE表示名: しゅん"), "display name cue should reach Gemini prompt");
+    const savedUser = await loadUser(userKey);
+    assert(!Object.hasOwn(savedUser, "lineDisplayName"), "LINE display name should not be persisted on user record");
+    assert(!Object.hasOwn(savedUser, "lineDisplayNameUseAllowed"), "display name cue flag should not be persisted on user record");
+  } finally {
+    globalThis.fetch = originalFetch;
+    if (originalAccessToken === undefined) delete process.env.LINE_CHANNEL_ACCESS_TOKEN;
+    else process.env.LINE_CHANNEL_ACCESS_TOKEN = originalAccessToken;
+    if (originalProvider === undefined) delete process.env.AI_PROVIDER;
+    else process.env.AI_PROVIDER = originalProvider;
+    if (originalModel === undefined) delete process.env.AI_MODEL;
+    else process.env.AI_MODEL = originalModel;
+    if (originalGeminiKey === undefined) delete process.env.GEMINI_API_KEY;
+    else process.env.GEMINI_API_KEY = originalGeminiKey;
+  }
+}
+
 async function callWebhookFlow() {
   const raw = JSON.stringify({ events: [] });
   assert(verifyLineSignature(Buffer.from(raw), sign(raw), process.env.LINE_CHANNEL_SECRET), "signature helper should validate");
@@ -965,6 +1072,7 @@ await callLiffLinkFlow();
 await callLiffPageStaticCheck();
 await callKnowledgeReplyFlow();
 await callCompatibilityReplyFlow();
+await callDisplayNameCueFlow();
 await callWebhookFlow();
 await callEmojiTailWebhookFlow();
 await callWebhookMarkAsReadFlow();

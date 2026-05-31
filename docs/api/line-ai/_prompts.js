@@ -1,8 +1,28 @@
 import { buildCompatibilityContext } from "./_compatibility.js";
 import { buildDiagnosisKnowledgeContext } from "./_diagnosis-knowledge.js";
 import { buildMobbyKnowledgeContext } from "./_mobby-knowledge.js";
+import { truncateText } from "./_text.js";
 
 const AI_PERSONA_NAME = "モビー";
+
+function cleanDisplayName(value) {
+  return truncateText(value, 40).replace(/\s+/g, " ").trim();
+}
+
+export function buildDisplayNameContext(user) {
+  if (!user?.lineDisplayNameUseAllowed) return "";
+
+  const displayName = cleanDisplayName(user.lineDisplayName);
+  if (!displayName) return "";
+
+  return [
+    "相手の名前の扱い:",
+    `- 相手のLINE表示名: ${displayName}`,
+    "- 今回は自然なら相手の名前を呼んでもよいタイミング",
+    "- 名前は毎回呼ばない。呼ぶなら1返信につき最大1回、文頭か励ます一言に軽く添える",
+    "- 呼び捨てが不自然なら「さん」を添える。表示名が文脈に合わない時は使わない"
+  ].join("\n");
+}
 
 export function buildPersonalDiagnosisContext(user) {
   if (!user?.personalResultLinked || !user?.resultName) return "";
@@ -27,6 +47,7 @@ export function buildSystemPrompt(user, message = "") {
   const diagnosisKnowledgeContext = buildDiagnosisKnowledgeContext({ user, message });
   const compatibilityContext = buildCompatibilityContext({ user, message });
   const personalDiagnosisContext = buildPersonalDiagnosisContext(user);
+  const displayNameContext = buildDisplayNameContext(user);
   return [
     `あなたはMobbyのLINE AI「${AI_PERSONA_NAME}」です。`,
     "共通人格:",
@@ -37,6 +58,7 @@ export function buildSystemPrompt(user, message = "") {
     diagnosisKnowledgeContext,
     compatibilityContext,
     personalDiagnosisContext,
+    displayNameContext,
     "返信ルール:",
     "- 日本語で返す",
     "- 診断名やタイプ名を会話の主役にしすぎない。聞かれた時だけ自然に答える",
