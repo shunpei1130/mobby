@@ -171,7 +171,7 @@ function normalizeText(text) {
   return String(text || "").toLowerCase().replace(/\s+/g, "");
 }
 
-function findTypeMatches(message) {
+export function findTypeMatches(message) {
   const normalized = normalizeText(message);
   const matches = [];
   Object.entries(DIAGNOSIS_KNOWLEDGE).forEach(([source, item]) => {
@@ -210,6 +210,11 @@ export function isOwnResultQuestion(message) {
   return /(私|自分|俺|おれ|僕|ぼく|わたし)の?(診断)?結果.*(覚えて|わかる|分かる|知って|何|教えて)|(私|自分|俺|おれ|僕|ぼく|わたし)(って|は|の).*(何タイプ|どのタイプ|診断結果|結果)|結果.*覚えて|診断結果.*覚えて/.test(String(message || ""));
 }
 
+export function getDiagnosisTypes(source) {
+  const item = DIAGNOSIS_KNOWLEDGE[source];
+  return item ? allTypes(item) : [];
+}
+
 function wantsDiagnosisOverview(message) {
   return /モビー診断|診断.*(何|どれ|種類|一覧|ある|教えて)|何種類|通常公開|公開.*診断/.test(String(message || ""));
 }
@@ -241,7 +246,7 @@ function formatKnowledgeForSource(source, item, { includeTypes = false } = {}) {
   return lines.join("\n");
 }
 
-export function buildDiagnosisKnowledgeContext({ message } = {}) {
+export function buildDiagnosisKnowledgeContext({ user, message } = {}) {
   const text = String(message || "");
   const matchedTypes = findTypeMatches(text);
   const sources = detectSources(text);
@@ -271,19 +276,27 @@ export function buildDiagnosisKnowledgeContext({ message } = {}) {
   });
 
   if (isOwnResultQuestion(text)) {
-    lines.push("個別ユーザーの診断結果はLINE側では保持・参照しない。結果名をユーザーが送ってくれた場合だけ、そのタイプの一般的な特徴を診断知識から説明する。");
+    if (user?.personalResultLinked && user?.resultName) {
+      lines.push("ユーザーの診断結果が連携済みの場合は、保存済み結果を会話の背景として参照してよい。");
+    } else {
+      lines.push("ユーザーの診断結果が未連携の場合は、診断結果ページからLINE連携すると結果をふまえて話せると案内する。");
+    }
   }
 
   return lines.join("\n");
 }
 
-export function buildKnowledgeReply({ message } = {}) {
+export function buildKnowledgeReply({ user, message } = {}) {
   const text = String(message || "");
   const matchedTypes = findTypeMatches(text);
   const sources = detectSources(text);
 
   if (isOwnResultQuestion(text)) {
-    return "LINEでは個別の診断結果は覚えていないよ。結果名を送ってくれたら、そのタイプの一般的な特徴なら説明できるよ🙂";
+    if (user?.personalResultLinked && user?.resultName) {
+      const summary = user.resultSummary ? `${user.resultSummary} ` : "";
+      return `あなたの診断結果は「${user.resultName}」だよ。${summary}決めつけじゃなく、話す時の背景として見るくらいがちょうどいいよ🙂`;
+    }
+    return "今のLINEでは、まだあなたの診断結果は連携されていないみたい。診断結果ページからLINE連携すると、結果をふまえて話せるよ。";
   }
 
   if (matchedTypes.length) {
