@@ -82,6 +82,7 @@ async function callHealth() {
   assert(res.body?.provider === "mock", "health should expose provider");
   assert(res.body?.features?.diagnosisKnowledge === true, "health should expose diagnosis knowledge feature");
   assert(res.body?.features?.mobbyKnowledge === true, "health should expose Mobby knowledge feature");
+  assert(res.body?.features?.aiGeneratedKnowledgeReplies === true, "health should expose AI-generated knowledge reply feature");
   assert(res.body?.features?.personalResultReference === true, "health should expose personal result reference feature");
   assert(res.body?.features?.personalResultLinking === true, "health should expose enabled personal result linking");
   assert(res.body?.features?.compatibilityReply === true, "health should expose compatibility reply feature");
@@ -288,66 +289,124 @@ async function callLiffLinkFlow() {
 }
 
 async function callKnowledgeReplyFlow() {
-  const mobbyReply = await generateReply({
-    user: { source: "line" },
-    message: "モビーって何？",
-    history: []
-  });
-  assert(mobbyReply.includes("Mobby") || mobbyReply.includes("モビー"), "mock reply should explain Mobby");
-  assert(mobbyReply.includes("診断サービス"), "mock reply should describe Mobby as a diagnosis service");
+  const originalFetch = globalThis.fetch;
+  const originalProvider = process.env.AI_PROVIDER;
+  const originalModel = process.env.AI_MODEL;
+  const originalGeminiKey = process.env.GEMINI_API_KEY;
 
-  const overviewReply = await generateReply({
-    user: { source: "line" },
-    message: "モビー診断って何種類ある？",
-    history: []
-  });
-  assert(overviewReply.includes("4種類"), "mock reply should answer diagnosis overview");
-  assert(overviewReply.includes("学校モビー診断"), "mock reply should list school diagnosis");
-  assert(overviewReply.includes("恋愛モビー診断"), "mock reply should list renai diagnosis");
+  const linkedUser = {
+    source: "16renai",
+    sourceLabel: "恋愛モビー診断",
+    resultId: "SFTC",
+    resultName: "夜風のロマンチスト",
+    resultSummary: "自由な距離感の中で、二人だけのロマンを静かに育てるタイプ。",
+    traits: ["自由もほしい型", "ときめき重視型"],
+    personalResultLinked: true
+  };
 
-  const typeListReply = await generateReply({
-    user: { source: "line" },
-    message: "推し活のタイプ一覧教えて",
-    history: []
-  });
-  assert(typeListReply.includes("推し活モビー診断"), "mock reply should identify stan diagnosis");
-  assert(typeListReply.includes("現場至上主義"), "mock reply should include stan type names");
-  assert(typeListReply.includes("情報整理"), "mock reply should include all stan type names");
-
-  const typeReply = await generateReply({
-    user: { source: "line" },
-    message: "返信こないと死モビーってどんなタイプ？",
-    history: []
-  });
-  assert(typeReply.includes("メンヘラモビー診断"), "mock reply should identify love diagnosis by type");
-  assert(typeReply.includes("返信こないと死モビー"), "mock reply should include matched type name");
-
-  const missingResultReply = await generateReply({
-    user: { source: "line", personalResultLinked: false },
-    message: "私の診断結果覚えてる？",
-    history: []
-  });
-  assert(missingResultReply.includes("まだあなたの診断結果は連携されていない"), "mock reply should explain that personal result is not linked");
-  assert(missingResultReply.includes("診断結果ページからLINE連携"), "mock reply should guide users to link from result page");
-
-  const linkedResultReply = await generateReply({
-    user: {
-      source: "16renai",
-      sourceLabel: "恋愛モビー診断",
-      resultId: "SFTC",
-      resultName: "夜風のロマンチスト",
-      resultSummary: "自由な距離感の中で、二人だけのロマンを静かに育てるタイプ。",
-      traits: ["自由もほしい型", "ときめき重視型"],
-      personalResultLinked: true
+  const cases = [
+    {
+      message: "モビー診断って何種類ある？",
+      user: { source: "line" },
+      reply: "モビー診断は4種類あるよ。気分に合わせて選べる感じだね。",
+      check(systemPrompt) {
+        assert(systemPrompt.includes("Mobby共通ナレッジ"), "overview prompt should include Mobby knowledge");
+        assert(systemPrompt.includes("通常公開のモビー診断は4種類"), "overview prompt should include diagnosis overview");
+        assert(systemPrompt.includes("学校モビー診断"), "overview prompt should include school diagnosis");
+        assert(systemPrompt.includes("恋愛モビー診断"), "overview prompt should include renai diagnosis");
+      }
     },
-    message: "私の診断結果覚えてる？",
-    history: []
-  });
-  assert(linkedResultReply.includes("夜風のロマンチスト"), "mock reply should answer from saved personal result");
-  assert(linkedResultReply.includes("自由な距離感"), "mock reply should include saved personal result summary");
+    {
+      message: "推し活のタイプ一覧教えて",
+      user: { source: "line" },
+      reply: "推し活モビー診断は16タイプあるよ。名前だけでもかなり個性が出てる。",
+      check(systemPrompt) {
+        assert(systemPrompt.includes("推し活モビー診断"), "type list prompt should include stan diagnosis");
+        assert(systemPrompt.includes("現場至上主義"), "type list prompt should include stan type names");
+        assert(systemPrompt.includes("情報整理"), "type list prompt should include all stan type names");
+      }
+    },
+    {
+      message: "返信こないと死モビーってどんなタイプ？",
+      user: { source: "line" },
+      reply: "返信こないと死モビーは、返信待ちで不安が大きくなりやすいタイプだよ。",
+      check(systemPrompt) {
+        assert(systemPrompt.includes("メンヘラモビー診断"), "type prompt should identify love diagnosis by type");
+        assert(systemPrompt.includes("返信こないと死モビー"), "type prompt should include matched type name");
+        assert(systemPrompt.includes("好きな人の返信が命綱"), "type prompt should include matched type summary");
+      }
+    },
+    {
+      message: "私の診断結果覚えてる？",
+      user: { source: "line", personalResultLinked: false },
+      reply: "まだ診断結果は連携されてないみたい。結果ページからLINE連携すると見られるよ。",
+      check(systemPrompt) {
+        assert(systemPrompt.includes("診断結果が未連携"), "missing result prompt should include unlinked result guidance");
+        assert(systemPrompt.includes("診断結果ページからLINE連携"), "missing result prompt should guide result linking");
+      }
+    },
+    {
+      message: "私の診断結果覚えてる？",
+      user: linkedUser,
+      reply: "覚えてるよ。あなたは夜風のロマンチストで、自由な距離感を大事にするタイプだね。",
+      check(systemPrompt) {
+        assert(systemPrompt.includes("ユーザー個別の診断結果背景"), "linked result prompt should include personal diagnosis context");
+        assert(systemPrompt.includes("夜風のロマンチスト"), "linked result prompt should include saved result name");
+        assert(systemPrompt.includes("自由な距離感"), "linked result prompt should include saved result summary");
+      }
+    }
+  ];
+
+  try {
+    process.env.AI_PROVIDER = "gemini";
+    process.env.AI_MODEL = "gemini-2.5-flash-lite";
+    process.env.GEMINI_API_KEY = "test-gemini-key";
+
+    let geminiCall = 0;
+    globalThis.fetch = async (url, options) => {
+      const testCase = cases[geminiCall];
+      geminiCall += 1;
+      assert(testCase, "knowledge questions should call Gemini exactly once per case");
+      assert(String(url).includes("gemini-2.5-flash-lite:generateContent"), "knowledge reply should call Gemini");
+      const payload = JSON.parse(options.body);
+      const systemPrompt = payload.system_instruction.parts[0].text;
+      assert(payload.contents.at(-1).parts[0].text === testCase.message, "Gemini request should include the knowledge question");
+      testCase.check(systemPrompt);
+      return {
+        ok: true,
+        async json() {
+          return {
+            candidates: [{
+              content: { parts: [{ text: testCase.reply }] }
+            }]
+          };
+        }
+      };
+    };
+
+    for (const testCase of cases) {
+      const reply = await generateReply({
+        user: testCase.user,
+        message: testCase.message,
+        history: []
+      });
+      assert(reply === testCase.reply, "knowledge answer should be generated by Gemini, not deterministic code");
+    }
+    assert(geminiCall === cases.length, "all knowledge cases should reach Gemini");
+  } finally {
+    globalThis.fetch = originalFetch;
+    process.env.AI_PROVIDER = originalProvider;
+    process.env.AI_MODEL = originalModel;
+    process.env.GEMINI_API_KEY = originalGeminiKey;
+  }
 }
 
 async function callCompatibilityReplyFlow() {
+  const originalFetch = globalThis.fetch;
+  const originalProvider = process.env.AI_PROVIDER;
+  const originalModel = process.env.AI_MODEL;
+  const originalGeminiKey = process.env.GEMINI_API_KEY;
+
   const linkedUser = {
     source: "16love",
     sourceLabel: "メンヘラモビー診断",
@@ -357,31 +416,82 @@ async function callCompatibilityReplyFlow() {
     personalResultLinked: true
   };
 
-  const compatibilityReply = await generateReply({
-    user: linkedUser,
-    message: "私と相性いいモビーは？",
-    history: []
-  });
-  const candidateCount = (compatibilityReply.match(/\n[1-3]\. /g) || []).length;
-  assert(compatibilityReply.includes("診断上の相性"), "compatibility reply should frame the answer as diagnostic compatibility");
-  assert(candidateCount >= 1 && candidateCount <= 3, "compatibility reply should return 1 to 3 candidates");
-  assert(!/絶対|必ず|相性最悪/.test(compatibilityReply), "compatibility reply should not use deterministic claims");
+  const cases = [
+    {
+      user: linkedUser,
+      message: "私と相性いいモビーは？",
+      reply: "診断上の遊びで見ると、返信こないと死モビーには安心感が近いタイプが合いやすいかも。",
+      check(systemPrompt) {
+        assert(systemPrompt.includes("相性質問コンテキスト"), "linked compatibility prompt should include compatibility context");
+        assert(systemPrompt.includes("返信こないと死モビー"), "linked compatibility prompt should include saved base type");
+        assert(systemPrompt.includes("相性候補"), "linked compatibility prompt should include candidate list");
+        assert(systemPrompt.includes("現実の関係を断定しない"), "linked compatibility prompt should include nondeterministic guardrail");
+      }
+    },
+    {
+      user: { source: "line", personalResultLinked: false },
+      message: "返信こないと死モビーと相性いいタイプは？",
+      reply: "返信こないと死モビー基準なら、近い不安をわかり合える相手が候補に入りやすいよ。",
+      check(systemPrompt) {
+        assert(systemPrompt.includes("相性質問コンテキスト"), "explicit compatibility prompt should include compatibility context");
+        assert(systemPrompt.includes("返信こないと死モビー"), "explicit compatibility prompt should use explicit type names in message");
+        assert(systemPrompt.includes("相性候補"), "explicit compatibility prompt should include candidate list");
+      }
+    },
+    {
+      user: { source: "line", personalResultLinked: false },
+      message: "私と相性いいモビーは？",
+      reply: "あなた基準の相性を見るなら、診断結果ページからLINE連携してくれると出せるよ。",
+      check(systemPrompt) {
+        assert(systemPrompt.includes("相性質問コンテキスト"), "unlinked compatibility prompt should include compatibility context");
+        assert(systemPrompt.includes("未連携"), "unlinked compatibility prompt should explain missing linked result");
+        assert(systemPrompt.includes("診断結果ページからLINE連携"), "unlinked compatibility prompt should guide result linking");
+      }
+    }
+  ];
 
-  const explicitTypeReply = await generateReply({
-    user: { source: "line", personalResultLinked: false },
-    message: "返信こないと死モビーと相性いいタイプは？",
-    history: []
-  });
-  assert(explicitTypeReply.includes("返信こないと死モビー"), "compatibility reply should use explicit type names in message");
-  assert(explicitTypeReply.includes("診断上の相性"), "explicit compatibility reply should still use diagnostic framing");
+  try {
+    process.env.AI_PROVIDER = "gemini";
+    process.env.AI_MODEL = "gemini-2.5-flash-lite";
+    process.env.GEMINI_API_KEY = "test-gemini-key";
 
-  const unlinkedReply = await generateReply({
-    user: { source: "line", personalResultLinked: false },
-    message: "私と相性いいモビーは？",
-    history: []
-  });
-  assert(unlinkedReply.includes("あなたの診断結果がまだ連携されていない"), "unlinked compatibility reply should explain missing linked result");
-  assert(unlinkedReply.includes("診断結果ページからLINE連携"), "unlinked compatibility reply should guide result linking");
+    let geminiCall = 0;
+    globalThis.fetch = async (url, options) => {
+      const testCase = cases[geminiCall];
+      geminiCall += 1;
+      assert(testCase, "compatibility questions should call Gemini exactly once per case");
+      assert(String(url).includes("gemini-2.5-flash-lite:generateContent"), "compatibility reply should call Gemini");
+      const payload = JSON.parse(options.body);
+      const systemPrompt = payload.system_instruction.parts[0].text;
+      assert(payload.contents.at(-1).parts[0].text === testCase.message, "Gemini request should include the compatibility question");
+      testCase.check(systemPrompt);
+      return {
+        ok: true,
+        async json() {
+          return {
+            candidates: [{
+              content: { parts: [{ text: testCase.reply }] }
+            }]
+          };
+        }
+      };
+    };
+
+    for (const testCase of cases) {
+      const reply = await generateReply({
+        user: testCase.user,
+        message: testCase.message,
+        history: []
+      });
+      assert(reply === testCase.reply, "compatibility answer should be generated by Gemini, not deterministic code");
+    }
+    assert(geminiCall === cases.length, "all compatibility cases should reach Gemini");
+  } finally {
+    globalThis.fetch = originalFetch;
+    process.env.AI_PROVIDER = originalProvider;
+    process.env.AI_MODEL = originalModel;
+    process.env.GEMINI_API_KEY = originalGeminiKey;
+  }
 }
 
 async function callWebhookFlow() {
@@ -686,17 +796,6 @@ async function callGeminiProviderFlow() {
       history: []
     });
     assert(geminiKnowledgeReply.includes("16タイプ"), "Gemini knowledge reply should return model text");
-
-    globalThis.fetch = async () => {
-      throw new Error("diagnosis knowledge questions should not call Gemini");
-    };
-    const deterministicKnowledgeReply = await generateReply({
-      user: { source: "line" },
-      message: "モビー診断って何種類ある？",
-      history: []
-    });
-    assert(deterministicKnowledgeReply.includes("4種類"), "diagnosis knowledge should answer before provider call");
-    assert(deterministicKnowledgeReply.includes("学校モビー診断"), "deterministic knowledge reply should list diagnoses");
 
     globalThis.fetch = async () => ({
       ok: false,

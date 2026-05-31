@@ -263,7 +263,8 @@ export function buildDiagnosisKnowledgeContext({ user, message } = {}) {
 
   const lines = [
     "診断知識（診断について聞かれた時だけ使う。ここにない仕様やタイプ名は推測しない）:",
-    "- 通常公開のモビー診断は4種類: 学校モビー診断、推し活モビー診断、メンヘラモビー診断、恋愛モビー診断。"
+    "- 通常公開のモビー診断は4種類: 学校モビー診断、推し活モビー診断、メンヘラモビー診断、恋愛モビー診断。",
+    "- このナレッジをそのまま固定文として返さず、ユーザーの聞き方に合わせて自然に言い換える。"
   ];
 
   selectedSources.forEach((source) => {
@@ -284,47 +285,4 @@ export function buildDiagnosisKnowledgeContext({ user, message } = {}) {
   }
 
   return lines.join("\n");
-}
-
-export function buildKnowledgeReply({ user, message } = {}) {
-  const text = String(message || "");
-  const matchedTypes = findTypeMatches(text);
-  const sources = detectSources(text);
-
-  if (isOwnResultQuestion(text)) {
-    if (user?.personalResultLinked && user?.resultName) {
-      const summary = user.resultSummary ? `${user.resultSummary} ` : "";
-      return `あなたの診断結果は「${user.resultName}」だよ。${summary}決めつけじゃなく、話す時の背景として見るくらいがちょうどいいよ🙂`;
-    }
-    return "今のLINEでは、まだあなたの診断結果は連携されていないみたい。診断結果ページからLINE連携すると、結果をふまえて話せるよ。";
-  }
-
-  if (matchedTypes.length) {
-    const match = matchedTypes[0];
-    return `「${match.type.name}」は${match.diagnosis.label}のタイプだよ。${match.type.summary} 決めつけじゃなく、話す時の背景として見るくらいがちょうどいいよ🙂`;
-  }
-
-  if (wantsTypeList(text) && sources.length) {
-    const source = sources[0];
-    const item = DIAGNOSIS_KNOWLEDGE[source];
-    if (item?.maleTypes || item?.femaleTypes) {
-      return `${item.label}は男女別で16タイプずつあるよ。男子: ${formatTypeList(item.maleTypes || [])}。女子: ${formatTypeList(item.femaleTypes || [])}。`;
-    }
-    if (item?.types) {
-      return `${item.label}の16タイプは、${formatTypeList(item.types)}。気になる名前があれば、そのタイプだけ詳しく言えるよ。`;
-    }
-  }
-
-  if (sources.length) {
-    const item = DIAGNOSIS_KNOWLEDGE[sources[0]];
-    if (item) {
-      return `${item.label}は${item.questionCount}問の${item.answerScale}で、${item.axes.length >= 4 ? "4軸" : "複数軸"}から16タイプを見る診断だよ。${item.description}`;
-    }
-  }
-
-  if (wantsDiagnosisOverview(text)) {
-    return "今の通常公開モビー診断は4種類だよ。学校モビー診断、推し活モビー診断、メンヘラモビー診断、恋愛モビー診断。どれも40問で、16タイプに分かれるよ🙂";
-  }
-
-  return "";
 }

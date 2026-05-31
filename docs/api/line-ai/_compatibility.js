@@ -1,7 +1,5 @@
 import { DIAGNOSIS_KNOWLEDGE, findTypeMatches, getDiagnosisTypes } from "./_diagnosis-knowledge.js";
 
-const LINK_GUIDE = "相性は見られるんだけど、今はあなたの診断結果がまだ連携されていないみたい。診断結果ページからLINE連携すると、あなたのタイプ基準で相性がいいモビーを出せるよ。";
-
 function normalizeText(text) {
   return String(text || "").toLowerCase().replace(/\s+/g, "");
 }
@@ -154,12 +152,20 @@ function formatCandidate(candidate, index, mode) {
   return `${index + 1}. 「${label}」: ${reasonForDiff(candidate.diff, index, mode)}`;
 }
 
-export function buildCompatibilityReply({ user, message } = {}) {
+export function buildCompatibilityContext({ user, message } = {}) {
   if (!isCompatibilityQuestion(message)) return "";
 
   const mode = modeFromMessage(message);
   const reference = findTypeReference({ user, message });
-  if (!reference) return LINK_GUIDE;
+  if (!reference) {
+    return [
+      "相性質問コンテキスト:",
+      "- ユーザーは診断上の相性について聞いている",
+      "- メッセージ内に基準タイプがなく、保存済み診断結果も未連携",
+      "- 診断結果ページからLINE連携すると、ユーザーのタイプを基準に相性候補を出せると自然に案内する",
+      "- 相性は診断上の遊びとして扱い、現実の関係を断定しない"
+    ].join("\n");
+  }
 
   const candidates = getCompatibleTypes({
     source: reference.source,
@@ -167,23 +173,28 @@ export function buildCompatibilityReply({ user, message } = {}) {
     resultName: typeLabel(reference.type),
     mode
   });
-  if (!candidates.length) return LINK_GUIDE;
+  if (!candidates.length) {
+    return [
+      "相性質問コンテキスト:",
+      "- ユーザーは診断上の相性について聞いている",
+      "- 基準タイプは特定できたが、相性候補を算出できなかった",
+      "- 診断結果ページからLINE連携すると、ユーザーのタイプを基準により自然に話せると案内する",
+      "- 相性は診断上の遊びとして扱い、現実の関係を断定しない"
+    ].join("\n");
+  }
 
   const baseLabel = typeLabel(reference.type);
   const sourceLabel = reference.diagnosis?.label || "モビー診断";
   const lines = candidates.map((candidate, index) => formatCandidate(candidate, index, mode));
 
-  if (mode === "bad") {
-    return [
-      `「悪い」というより、${sourceLabel}で「${baseLabel}」から見ると、ぶつかりやすいポイントが出やすいかも、という相手はこのあたりだよ。`,
-      ...lines,
-      "これは遊びとしての相性だから、実際は話した時の空気感が大事だよ🙂"
-    ].join("\n");
-  }
-
   return [
-    `${sourceLabel}の診断上の相性で見ると、「${baseLabel}」に合いやすいのはこのあたりだよ。`,
+    "相性質問コンテキスト:",
+    `- 診断: ${sourceLabel}`,
+    `- 基準タイプ: ${baseLabel}`,
+    `- 質問モード: ${mode === "bad" ? "ぶつかりやすい相手" : mode === "similar" ? "似ている相手" : "合いやすい相手"}`,
+    "- 相性候補:",
     ...lines,
-    "これは遊びとしての相性だから、実際は話した時の空気感が大事だよ🙂"
+    "- 回答では候補を1〜3件に絞って自然に紹介する",
+    "- 相性は診断上の遊びとして扱い、現実の関係を断定しない"
   ].join("\n");
 }

@@ -6,9 +6,9 @@
 
 ## 1. 結論
 
-現行版では、診断結果の個人連携は行わない。LINE上のモビーは、4つの通常公開診断に関する一般ナレッジだけを持ち、ユーザー個人の診断結果は保存・参照しない。
+現行版では、LINE/LIFF連携済みユーザーの保存済み診断結果を参照できる。未連携ユーザーには、4つの通常公開診断に関する一般ナレッジをもとに回答する。
 
-診断結果画面のLINE導線は、`/api/line-ai/issue-link-token` から `LINE_ADD_URL` を取得してLINE公式アカウントを開く。`MB-XXXXXX` などの合言葉コード、診断payload保存、LIFF/LINE Loginによる個人結果連携は現行仕様では不採用。
+診断結果画面のLINE導線は、`/api/line-ai/issue-link-token` でLINE公式アカウント追加情報を取得し、連携が有効な場合は `link-sessions` と `liff-link` で個人診断結果を匿名userKeyに紐づける。
 
 ## 2. 対象診断
 
@@ -26,12 +26,12 @@
 ## 3. LINE応答仕様
 
 - 安全リスクがある文面は `_safety.js` を最優先する。
-- 診断の質問は `buildKnowledgeReply()` が先に deterministic に回答し、Gemini/mock の揺れを避ける。
-- 「モビー診断って何種類ある？」には4診断の概要を短く返す。
-- 「推し活のタイプ一覧教えて」のような質問には該当診断のタイプ一覧を返す。
-- 「返信こないと死モビーってどんなタイプ？」のような既知タイプ名には、該当診断名と短い特徴を返す。
-- 「私の診断結果覚えてる？」には、個人結果はLINEでは覚えていない旨を返す。
-- ユーザーが結果名を送った場合だけ、そのタイプの一般的な特徴を説明できる。
+- レート制限に達した場合は固定文で返す。
+- 診断、Mobby、個別結果、相性の質問は固定回答にせず、関連ナレッジをsystem promptへ入れてGeminiが毎回自然文を生成する。
+- 「モビー診断って何種類ある？」には4診断の概要ナレッジを使って答える。
+- 「推し活のタイプ一覧教えて」のような質問には該当診断のタイプ一覧ナレッジを使って答える。
+- 「返信こないと死モビーってどんなタイプ？」のような既知タイプ名には、該当診断名と短い特徴ナレッジを使って答える。
+- 「私の診断結果覚えてる？」には、連携済みなら保存済み結果、未連携なら診断結果ページからLINE連携できることを自然に案内する。
 
 ## 4. API仕様
 
@@ -43,7 +43,12 @@
 {
   "features": {
     "diagnosisKnowledge": true,
-    "personalResultLinking": false
+    "mobbyKnowledge": true,
+    "aiGeneratedKnowledgeReplies": true,
+    "personalResultReference": true,
+    "personalResultLinking": true,
+    "compatibilityReply": true,
+    "liffLinking": true
   },
   "configured": {
     "lineAddUrl": true,
@@ -84,17 +89,14 @@ LINE Messaging API webhookを受ける。署名検証後、LINE userIdを `MOBBY
 推奨:
 
 - `BLOB_READ_WRITE_TOKEN`: 会話履歴・回数制限状態をVercel Blobに永続化する。
-- `AI_PROVIDER=mock`: 未設定でもmockがデフォルトだが、本番意図を明示できる。
+- `AI_PROVIDER=gemini`: 診断ナレッジ回答もAI生成にする本番設定。
+- `AI_MODEL`: Geminiモデル名。未指定時は `gemini-2.5-flash-lite`。
+- `GEMINI_API_KEY`: Gemini APIキー。
 
-現行では未使用:
+連携を有効にする場合:
 
-- `LINE_OA_ID`
 - `LIFF_ID`
 - `LINE_LOGIN_*`
-- `AI_MODEL`
-- `GEMINI_API_KEY`
-
-ただし、将来Geminiを有効化する場合は `AI_PROVIDER=gemini`、`AI_MODEL`、`GEMINI_API_KEY` を再評価する。
 
 ## 6. 運用確認
 
@@ -108,4 +110,4 @@ LINE Messaging API webhookを受ける。署名検証後、LINE userIdを `MOBBY
    - `返信こないと死モビーってどんなタイプ？`
    - `私の診断結果覚えてる？`
 
-期待結果は、4診断ナレッジには答える、個人結果は覚えていない、`モビー登録 MB-XXXXXX` 導線は出ないこと。
+期待結果は、4診断ナレッジ・個人結果・相性回答が固定文ではなくAI生成の自然文で返り、`モビー登録 MB-XXXXXX` 導線は出ないこと。
