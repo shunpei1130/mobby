@@ -1,18 +1,19 @@
 import { buildSystemPrompt } from "./_prompts.js";
+import { cleanUnicodeText, truncateText, unicodeLength } from "./_text.js";
 
 const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash-lite";
 const GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models";
 const MAX_REPLY_CHARS = 260;
 
 function compact(text, max = 48) {
-  const value = String(text || "").replace(/\s+/g, " ").trim();
-  return value.length > max ? `${value.slice(0, max)}...` : value;
+  const value = cleanUnicodeText(text).replace(/\s+/g, " ").trim();
+  return unicodeLength(value) > max ? `${truncateText(value, max)}...` : value;
 }
 
 function clampReply(text) {
-  const value = String(text || "").replace(/\s+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+  const value = cleanUnicodeText(text).replace(/\s+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
   if (!value) return "";
-  return value.length > MAX_REPLY_CHARS ? `${value.slice(0, MAX_REPLY_CHARS - 1)}…` : value;
+  return unicodeLength(value) > MAX_REPLY_CHARS ? `${truncateText(value, MAX_REPLY_CHARS - 1)}…` : value;
 }
 
 function historyToContents(history, message) {
@@ -21,13 +22,13 @@ function historyToContents(history, message) {
     .filter((item) => item?.role === "user" || item?.role === "assistant")
     .map((item) => ({
       role: item.role === "assistant" ? "model" : "user",
-      parts: [{ text: String(item.text || "").slice(0, 500) }]
+      parts: [{ text: truncateText(item.text, 500) }]
     }))
     .filter((item) => item.parts[0].text);
 
   contents.push({
     role: "user",
-    parts: [{ text: String(message || "").slice(0, 500) }]
+    parts: [{ text: truncateText(message, 500) }]
   });
   return contents;
 }
@@ -108,7 +109,7 @@ export function generateMockReply({ user, message }) {
   const userMessage = compact(message);
   const quotedMessage = userMessage ? `「${userMessage}」ね。` : "";
 
-  const guarded = loveGuardrail(String(message || ""));
+  const guarded = loveGuardrail(cleanUnicodeText(message));
   if (guarded) return guarded;
 
   return `${quotedMessage}短いけど、ちょっと気持ち乗ってそう。急いで答え出さなくていいから、まず今いちばん引っかかってるところだけ聞かせて🙂`;
