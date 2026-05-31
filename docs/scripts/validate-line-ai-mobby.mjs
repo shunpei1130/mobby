@@ -216,12 +216,8 @@ async function callWebhookMarkAsReadFlow() {
   await saveUser(userKey, {
     version: 1,
     userKey,
-    source: "16school",
-    sourceLabel: "学校モビー診断",
-    resultId: "MARK_READ_TEST",
-    resultName: "既読テストモビー",
-    resultSummary: "既読化テスト用の診断結果",
-    traits: ["確認"],
+    source: "line",
+    sourceLabel: "LINE直接",
     registeredAt: new Date().toISOString(),
     lastMessageAt: "",
     messageCountDate: "",
@@ -352,11 +348,8 @@ async function callGeminiProviderFlow() {
   const originalGeminiKey = process.env.GEMINI_API_KEY;
 
   const user = {
-    source: "16renai",
-    sourceLabel: "恋愛モビー診断",
-    resultName: "テスト恋愛モビー",
-    resultSummary: "言葉の温度に敏感",
-    traits: ["慎重", "やさしい"]
+    source: "line",
+    sourceLabel: "LINE直接"
   };
 
   try {
