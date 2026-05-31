@@ -288,6 +288,13 @@ async function callLiffLinkFlow() {
   }
 }
 
+async function callLiffPageStaticCheck() {
+  const page = await import("node:fs/promises")
+    .then((fs) => fs.readFile(new URL("../line-ai/link/index.html", import.meta.url), "utf8"));
+  assert(page.includes('params.get("liff.state")'), "LIFF link page should read session ID from liff.state");
+  assert(page.includes('params.get("s")'), "LIFF link page should keep direct session ID support");
+}
+
 async function callKnowledgeReplyFlow() {
   const originalFetch = globalThis.fetch;
   const originalProvider = process.env.AI_PROVIDER;
@@ -838,6 +845,7 @@ await callLineAddInfo();
 await callLineAddInfoIgnoresDiagnosis();
 await callLinkSessionFlow();
 await callLiffLinkFlow();
+await callLiffPageStaticCheck();
 await callKnowledgeReplyFlow();
 await callCompatibilityReplyFlow();
 await callWebhookFlow();

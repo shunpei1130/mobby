@@ -140,7 +140,28 @@
       const retry = document.querySelector("[data-retry]");
 
       function getSessionId() {
-        return new URLSearchParams(window.location.search).get("s") || "";
+        const params = new URLSearchParams(window.location.search);
+        const directSessionId = params.get("s");
+        if (directSessionId) return directSessionId;
+
+        const liffState = params.get("liff.state");
+        if (!liffState) return "";
+
+        const candidates = [liffState];
+        try {
+          const decoded = decodeURIComponent(liffState);
+          if (decoded !== liffState) candidates.push(decoded);
+        } catch {
+          // URLSearchParams already decodes values in normal LIFF redirects.
+        }
+
+        for (const state of candidates) {
+          const queryStart = state.indexOf("?");
+          const query = queryStart >= 0 ? state.slice(queryStart + 1) : state.replace(/^\?/, "");
+          const sessionId = new URLSearchParams(query).get("s");
+          if (sessionId) return sessionId;
+        }
+        return "";
       }
 
       function setView(state, heading, copy, detail) {
