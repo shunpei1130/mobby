@@ -16,7 +16,7 @@ import {
   saveUser
 } from "../api/line-ai/_storage.js";
 import { detectSafetyRisk } from "../api/line-ai/_safety.js";
-import { cleanUnicodeText, truncateText } from "../api/line-ai/_text.js";
+import { cleanUnicodeText, normalizeLineMessageText, stripEmojiForFallback, truncateText } from "../api/line-ai/_text.js";
 
 function createRes() {
   return {
@@ -627,6 +627,64 @@ async function callEmojiTailWebhookFlow() {
     assert(longLineMessage.text.endsWith("😊"), "LINE text truncation should preserve boundary emoji");
     assert(cleanUnicodeText("ok\ud83d") === "ok", "unicode cleaner should remove dangling high surrogate");
     assert(truncateText(`${"b".repeat(2)}😊`, 3).endsWith("😊"), "unicode truncation should count emoji as one character");
+    assert(stripEmojiForFallback("やっほー😊").includes("😊") === false, "fallback text should remove unicode emoji");
+
+    const lineEmojiMessage = {
+      type: "text",
+      text: "やっほー(love)",
+      emojis: [{ index: 4, length: 6, productId: "test-product", emojiId: "001" }]
+    };
+    assert(normalizeLineMessageText(lineEmojiMessage) === "やっほー絵文字", "LINE emoji metadata should be normalized for AI input");
+
+    const lineEmojiRes = createRes();
+    await webhook(createWebhookReq({
+      events: [{
+        type: "message",
+        replyToken: "reply-line-emoji-tail",
+        source: { type: "user", userId: lineUserId },
+        message: { ...lineEmojiMessage, id: "emoji-2" }
+      }]
+    }), lineEmojiRes);
+    assert(lineEmojiRes.statusCode === 200, "LINE emoji-tail webhook should return 200");
+
+    const retryReplies = [];
+    globalThis.fetch = async (url, options) => {
+      if (String(url) === "https://api.line.me/v2/bot/message/reply") {
+        const payload = JSON.parse(options.body);
+        retryReplies.push(payload);
+        const text = payload.messages?.[0]?.text || "";
+        if (text.includes("😊")) {
+          return {
+            ok: false,
+            status: 400,
+            async text() {
+              return "invalid emoji";
+            }
+          };
+        }
+      }
+      return {
+        ok: true,
+        status: 200,
+        async text() {
+          return "";
+        }
+      };
+    };
+
+    const retryRes = createRes();
+    await webhook(createWebhookReq({
+      events: [{
+        type: "message",
+        replyToken: "reply-emoji-retry",
+        source: { type: "user", userId: "U_EMOJI_RETRY_USER" },
+        message: { type: "text", id: "emoji-3", text: "やっほー😊" }
+      }]
+    }), retryRes);
+    assert(retryRes.statusCode === 200, "emoji retry webhook should return 200");
+    assert(retryReplies.length === 2, "emoji rejected reply should be retried once");
+    assert(retryReplies[0].messages[0].text.includes("😊"), "first emoji retry attempt should include generated emoji text");
+    assert(!retryReplies[1].messages[0].text.includes("😊"), "fallback retry should remove emoji-like characters");
   } finally {
     globalThis.fetch = originalFetch;
     process.env.LINE_CHANNEL_ACCESS_TOKEN = originalAccessToken;

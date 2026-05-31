@@ -1,5 +1,5 @@
 import { createHmac, timingSafeEqual } from "crypto";
-import { truncateText } from "./_text.js";
+import { stripEmojiForFallback, truncateText } from "./_text.js";
 
 const MARK_AS_READ_TIMEOUT_MS = 1500;
 
@@ -72,20 +72,48 @@ export async function replyLineMessage(replyToken, messages) {
       return { ...message, text: truncateText(message.text, 5000) || "うん、聞いてるよ。" };
     });
 
-  const response = await fetch("https://api.line.me/v2/bot/message/reply", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`
-    },
-    body: JSON.stringify({
-      replyToken,
-      messages: lineMessages
-    })
-  });
+  async function send(lineMessages) {
+    return fetch("https://api.line.me/v2/bot/message/reply", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`
+      },
+      body: JSON.stringify({
+        replyToken,
+        messages: lineMessages
+      })
+    });
+  }
+
+  const response = await send(lineMessages);
 
   if (!response.ok) {
     const text = await response.text().catch(() => "");
+    if (response.status === 400 && lineMessages.some((message) => message?.type === "text")) {
+      const fallbackMessages = lineMessages.map((message) => {
+        if (message?.type !== "text") return message;
+        const fallbackText = truncateText(stripEmojiForFallback(message.text), 5000) || "うん、聞いてるよ。";
+        return { ...message, text: fallbackText };
+      });
+      const retryResponse = await send(fallbackMessages);
+      if (retryResponse.ok) {
+        console.warn("[LINE AI] Reply retried without emoji-like characters after LINE rejected the first text.", {
+          status: response.status,
+          body: text.slice(0, 200)
+        });
+        return { ok: true, retried: true };
+      }
+      const retryText = await retryResponse.text().catch(() => "");
+      console.error("[LINE AI] Reply failed after fallback retry:", {
+        status: retryResponse.status,
+        body: retryText.slice(0, 200),
+        originalStatus: response.status,
+        originalBody: text.slice(0, 200)
+      });
+      return { ok: false, status: retryResponse.status };
+    }
+
     console.error("[LINE AI] Reply failed:", { status: response.status, body: text.slice(0, 200) });
     return { ok: false, status: response.status };
   }
