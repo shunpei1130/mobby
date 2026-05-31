@@ -6,7 +6,7 @@ import liffLink from "../api/line-ai/liff-link.js";
 import linkSessions from "../api/line-ai/link-sessions.js";
 import webhook from "../api/line-ai/webhook.js";
 import { generateGeminiReply, generateReply } from "../api/line-ai/_ai.js";
-import { verifyLineSignature } from "../api/line-ai/_line.js";
+import { toLineTextMessage, verifyLineSignature } from "../api/line-ai/_line.js";
 import {
   loadConversation,
   loadLinkSession,
@@ -16,6 +16,7 @@ import {
   saveUser
 } from "../api/line-ai/_storage.js";
 import { detectSafetyRisk } from "../api/line-ai/_safety.js";
+import { cleanUnicodeText, truncateText } from "../api/line-ai/_text.js";
 
 function createRes() {
   return {
@@ -286,6 +287,10 @@ async function callLiffLinkFlow() {
   } finally {
     globalThis.fetch = originalFetch;
   }
+}
+
+function hasUnpairedSurrogate(value) {
+  return /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/.test(String(value || ""));
 }
 
 async function callLiffPageStaticCheck() {
@@ -574,6 +579,60 @@ async function callWebhookFlow() {
 
 }
 
+async function callEmojiTailWebhookFlow() {
+  const originalFetch = globalThis.fetch;
+  const originalAccessToken = process.env.LINE_CHANNEL_ACCESS_TOKEN;
+  const lineUserId = "U_EMOJI_TAIL_USER";
+  const userKey = makeUserKey(lineUserId);
+  const emojiTailText = `${"あ".repeat(47)}😊`;
+  const sentReplies = [];
+
+  try {
+    process.env.LINE_CHANNEL_ACCESS_TOKEN = "line-access-token-test";
+    globalThis.fetch = async (url, options) => {
+      if (String(url) === "https://api.line.me/v2/bot/message/reply") {
+        sentReplies.push(JSON.parse(options.body));
+      }
+      return {
+        ok: true,
+        status: 200,
+        async text() {
+          return "";
+        }
+      };
+    };
+
+    const res = createRes();
+    await webhook(createWebhookReq({
+      events: [{
+        type: "message",
+        replyToken: "reply-emoji-tail",
+        source: { type: "user", userId: lineUserId },
+        message: { type: "text", id: "emoji-1", text: emojiTailText }
+      }]
+    }), res);
+
+    assert(res.statusCode === 200, "emoji-tail webhook should return 200");
+    assert(sentReplies.length === 1, "emoji-tail webhook should send a LINE reply");
+    const replyText = sentReplies[0]?.messages?.[0]?.text || "";
+    assert(!hasUnpairedSurrogate(replyText), "emoji-tail LINE reply should not contain broken surrogate pairs");
+    assert(replyText.includes("😊"), "emoji-tail LINE reply should preserve the user's trailing emoji");
+
+    const conversation = await loadConversation(userKey);
+    assert(!hasUnpairedSurrogate(conversation.messages.at(-2)?.text), "emoji-tail user message should be stored safely");
+    assert(!hasUnpairedSurrogate(conversation.messages.at(-1)?.text), "emoji-tail assistant message should be stored safely");
+
+    const longLineMessage = toLineTextMessage(`${"a".repeat(4999)}😊`);
+    assert(!hasUnpairedSurrogate(longLineMessage.text), "LINE text truncation should not split emoji pairs");
+    assert(longLineMessage.text.endsWith("😊"), "LINE text truncation should preserve boundary emoji");
+    assert(cleanUnicodeText("ok\ud83d") === "ok", "unicode cleaner should remove dangling high surrogate");
+    assert(truncateText(`${"b".repeat(2)}😊`, 3).endsWith("😊"), "unicode truncation should count emoji as one character");
+  } finally {
+    globalThis.fetch = originalFetch;
+    process.env.LINE_CHANNEL_ACCESS_TOKEN = originalAccessToken;
+  }
+}
+
 async function callWebhookMarkAsReadFlow() {
   const originalFetch = globalThis.fetch;
   const originalAccessToken = process.env.LINE_CHANNEL_ACCESS_TOKEN;
@@ -849,6 +908,7 @@ await callLiffPageStaticCheck();
 await callKnowledgeReplyFlow();
 await callCompatibilityReplyFlow();
 await callWebhookFlow();
+await callEmojiTailWebhookFlow();
 await callWebhookMarkAsReadFlow();
 await callGeminiProviderFlow();
 

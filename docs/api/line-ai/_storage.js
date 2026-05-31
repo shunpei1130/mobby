@@ -1,4 +1,5 @@
 import { list, put } from "@vercel/blob";
+import { truncateText } from "./_text.js";
 
 const PREFIX = "line-ai";
 const USER_PREFIX = `${PREFIX}/users/`;
@@ -142,7 +143,7 @@ export function appendConversationMessage(conversation, role, text) {
     ...conversation,
     messages: [
       ...messages,
-      { role, text: String(text || "").slice(0, 500), at: new Date().toISOString() }
+      { role, text: truncateText(text, 500), at: new Date().toISOString() }
     ].slice(-12)
   };
 }

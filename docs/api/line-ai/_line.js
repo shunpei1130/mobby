@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual } from "crypto";
+import { truncateText } from "./_text.js";
 
 const MARK_AS_READ_TIMEOUT_MS = 1500;
 
@@ -65,6 +66,12 @@ export async function replyLineMessage(replyToken, messages) {
     return { ok: false, skipped: "missing_access_token" };
   }
 
+  const lineMessages = (Array.isArray(messages) ? messages : [{ type: "text", text: String(messages || "") }])
+    .map((message) => {
+      if (message?.type !== "text") return message;
+      return { ...message, text: truncateText(message.text, 5000) || "うん、聞いてるよ。" };
+    });
+
   const response = await fetch("https://api.line.me/v2/bot/message/reply", {
     method: "POST",
     headers: {
@@ -73,7 +80,7 @@ export async function replyLineMessage(replyToken, messages) {
     },
     body: JSON.stringify({
       replyToken,
-      messages: Array.isArray(messages) ? messages : [{ type: "text", text: String(messages || "") }]
+      messages: lineMessages
     })
   });
 
@@ -89,6 +96,6 @@ export async function replyLineMessage(replyToken, messages) {
 export function toLineTextMessage(text) {
   return {
     type: "text",
-    text: String(text || "").slice(0, 5000)
+    text: truncateText(text, 5000) || "うん、聞いてるよ。"
   };
 }
