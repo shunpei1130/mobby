@@ -152,6 +152,28 @@
   background: linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(255, 249, 244, .88)) !important;
 }
 
+.love-fortune-keyperson__body {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 14px;
+  align-items: center;
+}
+
+.love-fortune-keyperson__body img {
+  width: 110px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, .78);
+  border-radius: 16px;
+  background: #ffedf5;
+  box-shadow: 0 14px 28px rgba(122, 74, 91, .16);
+}
+
+.love-fortune-keyperson h4 {
+  font-size: 16px;
+  line-height: 1.45;
+}
+
 .love-fortune-keyperson .button {
   margin-top: 4px;
 }
@@ -171,6 +193,19 @@
 
   .love-fortune-hero img {
     width: 88px;
+  }
+
+  .love-fortune-keyperson__body {
+    grid-template-columns: 88px 1fr;
+    gap: 10px;
+  }
+
+  .love-fortune-keyperson__body img {
+    width: 88px;
+  }
+
+  .love-fortune-keyperson h4 {
+    font-size: 15px;
   }
 
   .love-fortune-panel,
