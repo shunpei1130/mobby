@@ -25,6 +25,7 @@ export default async function handler(req, res) {
     features: {
       diagnosisKnowledge: true,
       mobbyKnowledge: true,
+      aiGeneratedKnowledgeReplies: true,
       personalResultReference: true,
       personalResultLinking: liffLinkingReady,
       compatibilityReply: true,

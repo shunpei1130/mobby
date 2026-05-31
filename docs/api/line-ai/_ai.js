@@ -1,7 +1,4 @@
 import { buildSystemPrompt } from "./_prompts.js";
-import { buildCompatibilityReply } from "./_compatibility.js";
-import { buildKnowledgeReply, isOwnResultQuestion } from "./_diagnosis-knowledge.js";
-import { buildMobbyKnowledgeReply } from "./_mobby-knowledge.js";
 
 const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash-lite";
 const GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models";
@@ -43,20 +40,6 @@ function loveGuardrail(message) {
 }
 
 export async function generateReply({ user, message, history }) {
-  if (isOwnResultQuestion(message)) {
-    const ownResultReply = buildKnowledgeReply({ user, message });
-    if (ownResultReply) return ownResultReply;
-  }
-
-  const compatibilityReply = buildCompatibilityReply({ user, message });
-  if (compatibilityReply) return compatibilityReply;
-
-  const mobbyKnowledgeReply = buildMobbyKnowledgeReply({ user, message });
-  if (mobbyKnowledgeReply) return mobbyKnowledgeReply;
-
-  const knowledgeReply = buildKnowledgeReply({ user, message });
-  if (knowledgeReply) return knowledgeReply;
-
   const provider = String(process.env.AI_PROVIDER || "mock").toLowerCase();
   if (provider === "gemini") {
     try {

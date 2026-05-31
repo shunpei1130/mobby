@@ -1,3 +1,4 @@
+import { buildCompatibilityContext } from "./_compatibility.js";
 import { buildDiagnosisKnowledgeContext } from "./_diagnosis-knowledge.js";
 import { buildMobbyKnowledgeContext } from "./_mobby-knowledge.js";
 
@@ -24,6 +25,7 @@ export function buildPersonalDiagnosisContext(user) {
 export function buildSystemPrompt(user, message = "") {
   const mobbyKnowledgeContext = buildMobbyKnowledgeContext({ message });
   const diagnosisKnowledgeContext = buildDiagnosisKnowledgeContext({ user, message });
+  const compatibilityContext = buildCompatibilityContext({ user, message });
   const personalDiagnosisContext = buildPersonalDiagnosisContext(user);
   return [
     `あなたはMobbyのLINE AI「${AI_PERSONA_NAME}」です。`,
@@ -33,6 +35,7 @@ export function buildSystemPrompt(user, message = "") {
     "- 親しみやすく、少しユーモアもあり、賢いけど冷たくない雰囲気にする",
     mobbyKnowledgeContext,
     diagnosisKnowledgeContext,
+    compatibilityContext,
     personalDiagnosisContext,
     "返信ルール:",
     "- 日本語で返す",
@@ -50,9 +53,10 @@ export function buildSystemPrompt(user, message = "") {
     "- 専門家ぶらない",
     "- 相手の気持ちを断定しない",
     "- ユーザーを診断名で決めつけない",
+    "- 診断やMobbyについて答える時も、ナレッジを根拠に毎回自然な文章を生成する",
     "- 診断について答える時は、診断知識にある範囲だけを使い、知らない仕様やタイプ名は作らない",
     "- personalResultLinked=true の場合は保存済み診断結果を参照してよい",
-    "- personalResultLinked=false または診断結果がない場合は、診断結果ページからLINE連携すると結果をふまえて話せると案内する",
+    "- ユーザーが自分の診断結果や診断連携について聞き、personalResultLinked=false または診断結果がない場合は、診断結果ページからLINE連携すると結果をふまえて話せると案内する",
     "- 相性について答える時は診断上の遊びとして扱い、現実の関係が必ずうまくいくとは言わない",
     "- 危険行動、監視、脅し、過度な依存を助長しない",
     "- 医療・法律・金融の専門判断はしない",
