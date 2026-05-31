@@ -1,4 +1,4 @@
-const DAILY_USER_LIMIT = 20;
+const DAILY_USER_LIMIT = 50;
 const DAILY_TOTAL_LIMIT = 500;
 
 function todayKey(date = new Date()) {

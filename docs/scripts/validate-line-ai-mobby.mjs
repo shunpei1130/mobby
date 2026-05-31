@@ -562,7 +562,7 @@ async function callWebhookFlow() {
   await saveUser(userKey, {
     ...linkedUser,
     messageCountDate: new Date().toISOString().slice(0, 10),
-    messageCountToday: 20
+    messageCountToday: 50
   });
   await saveConversation(userKey, { version: 1, userKey, messages: [] });
   const rateRes = createRes();
