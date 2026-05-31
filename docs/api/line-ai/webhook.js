@@ -16,6 +16,7 @@ import {
   saveConversation,
   saveUser
 } from "./_storage.js";
+import { normalizeLineMessageText } from "./_text.js";
 
 export const config = {
   api: {
@@ -102,7 +103,7 @@ async function handleLinkedMessage(event, userKey, user, text) {
 
 async function handleTextEvent(event) {
   const lineUserId = event?.source?.userId;
-  const text = String(event?.message?.text || "").trim();
+  const text = normalizeLineMessageText(event?.message);
   if (!lineUserId || !text) return;
 
   const userKey = userKeyFromLineId(lineUserId);

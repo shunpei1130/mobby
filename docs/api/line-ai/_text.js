@@ -32,3 +32,33 @@ export function truncateText(value, maxLength) {
 export function unicodeLength(value) {
   return Array.from(cleanUnicodeText(value)).length;
 }
+
+export function normalizeLineMessageText(message) {
+  const rawText = cleanUnicodeText(message?.text || "").trim();
+  const emojis = Array.isArray(message?.emojis) ? message.emojis : [];
+  if (!rawText || !emojis.length) return rawText;
+
+  let text = rawText;
+  const sorted = emojis
+    .map((emoji) => ({
+      index: Number(emoji?.index),
+      length: Number(emoji?.length)
+    }))
+    .filter((emoji) => Number.isInteger(emoji.index) && Number.isInteger(emoji.length) && emoji.index >= 0 && emoji.length > 0)
+    .sort((a, b) => b.index - a.index);
+
+  for (const emoji of sorted) {
+    if (emoji.index > text.length) continue;
+    text = `${text.slice(0, emoji.index)}絵文字${text.slice(emoji.index + emoji.length)}`;
+  }
+
+  return cleanUnicodeText(text).replace(/\s+/g, " ").trim();
+}
+
+export function stripEmojiForFallback(value) {
+  return cleanUnicodeText(value)
+    .replace(/[\u200d\ufe0f]/g, "")
+    .replace(/\p{Extended_Pictographic}/gu, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
