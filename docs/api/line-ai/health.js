@@ -14,7 +14,11 @@ export default async function handler(req, res) {
     model,
     features: {
       diagnosisKnowledge: true,
-      personalResultLinking: false
+      mobbyKnowledge: true,
+      personalResultReference: true,
+      personalResultLinking: false,
+      compatibilityReply: true,
+      liffLinking: false
     },
     configured: {
       lineAddUrl: Boolean(process.env.LINE_ADD_URL),
@@ -22,7 +26,9 @@ export default async function handler(req, res) {
       lineChannelAccessToken: Boolean(process.env.LINE_CHANNEL_ACCESS_TOKEN),
       mobbyLineAiSecret: Boolean(process.env.MOBBY_LINE_AI_SECRET),
       geminiApiKey: Boolean(process.env.GEMINI_API_KEY),
-      blob: Boolean(process.env.BLOB_READ_WRITE_TOKEN)
+      blob: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+      liffId: Boolean(process.env.LIFF_ID),
+      lineLoginChannelId: Boolean(process.env.LINE_LOGIN_CHANNEL_ID)
     },
     time: new Date().toISOString()
   });
