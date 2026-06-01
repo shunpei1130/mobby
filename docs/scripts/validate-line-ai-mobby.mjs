@@ -322,6 +322,8 @@ async function callSharedCtaStaticCheck() {
   assert(cta.includes("isTikTokInAppBrowser"), "diagnosis CTA should detect TikTok in-app browser");
   assert(cta.includes("shouldUseLineAppHandoff"), "diagnosis CTA should use explicit LINE app handoff for restricted browsers");
   assert(cta.includes("enhanced.openUrl = liffUrl"), "diagnosis CTA should keep the official LIFF URL as the primary Safari URL");
+  assert(cta.includes("renderTapToOpenResult"), "diagnosis CTA should render a tap-to-open handoff panel for Safari and TikTok");
+  assert(cta.includes("cached?.data"), "diagnosis CTA should show the handoff panel even when the LIFF URL was prepared before the first tap");
   assert(cta.includes("buildLineAppUrl"), "diagnosis CTA should build a LINE app scheme fallback for LIFF URLs");
   assert(cta.includes("buildAndroidIntentUrl"), "diagnosis CTA should build an Android intent fallback for LIFF URLs");
   assert(cta.includes("fallbackOpenUrl"), "diagnosis CTA should keep the normal LIFF URL as fallback");

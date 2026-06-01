@@ -280,6 +280,30 @@
     return cacheOpenTarget(element, createOpenTarget(element, options));
   }
 
+  function renderTapToOpenResult(element, data) {
+    const tiktok = isTikTokInAppBrowser();
+    const safari = isIosSafari();
+    renderResult(element, data, {
+      instruction: data.diagnosisFallback
+        ? "診断結果なしでもLINEでモビーと話せます。次のボタンをタップしてLINEアプリを開いてね。"
+        : tiktok
+          ? "TikTokでは次のボタンをタップして、LINEアプリで診断結果の連携を続けてね。"
+          : safari
+            ? "Safariでは次のボタンをタップして、LINEアプリで診断結果の連携を続けてね。"
+            : "次のボタンをタップすると、LINEアプリで診断結果の連携を続けられます。",
+      buttonLabel: data.usedDiagnosis === false ? "LINEアプリを開く" : "LINEアプリで連携する"
+    });
+    setStatus(
+      element,
+      data.diagnosisFallback
+        ? "今だけ診断結果を連携できませんでした。診断結果なしでもLINEで話せます。"
+        : shouldUseLineAppHandoff()
+          ? "開かない場合は補助リンクも試してください。"
+          : "LINEアプリを開いています。",
+      Boolean(data.diagnosisFallback)
+    );
+  }
+
   async function prepareLineAdd(element) {
     const diagnosis = parseDiagnosis(element);
     setTriggerLoading(element, true);
@@ -294,27 +318,7 @@
 
       applyPreparedOpenTarget(element, data);
       if (shouldWaitForTapToOpen()) {
-        const tiktok = isTikTokInAppBrowser();
-        const safari = isIosSafari();
-        renderResult(element, data, {
-          instruction: data.diagnosisFallback
-            ? "診断結果なしでもLINEでモビーと話せます。次のボタンをタップしてLINEアプリを開いてね。"
-            : tiktok
-              ? "TikTokでは次のボタンをタップして、LINEアプリで診断結果の連携を続けてね。"
-              : safari
-                ? "Safariでは次のボタンをタップして、LINEアプリで診断結果の連携を続けてね。"
-                : "次のボタンをタップすると、LINEアプリで診断結果の連携を続けられます。",
-          buttonLabel: data.usedDiagnosis === false ? "LINEアプリを開く" : "LINEアプリで連携する"
-        });
-        setStatus(
-          element,
-          data.diagnosisFallback
-            ? "今だけ診断結果を連携できませんでした。診断結果なしでもLINEで話せます。"
-            : tiktok
-              ? "確認が出たらLINEで開いてください。"
-              : "SafariではボタンをタップするとLINEアプリが開きます。",
-          Boolean(data.diagnosisFallback)
-        );
+        renderTapToOpenResult(element, data);
         if (data.sourceError) {
           console.warn("[LINE AI Mobby CTA] Falling back to LINE add URL.", data.sourceError);
         }
@@ -345,6 +349,14 @@
       const issueButton = event.target.closest("[data-line-ai-mobby-issue]");
       if (issueButton) {
         if (issueButton.dataset.lineAiMobbyReady === "true" && issueButton.getAttribute("href") !== "#") {
+          if (shouldWaitForTapToOpen()) {
+            const cached = openTargetCache.get(element);
+            if (cached?.data) {
+              event.preventDefault();
+              renderTapToOpenResult(element, cached.data);
+              return;
+            }
+          }
           setStatus(element, shouldUseLineAppHandoff() ? "確認が出たらLINEで開いてください。" : "LINEアプリを開いています。", false);
           return;
         }
