@@ -154,7 +154,7 @@
     try {
       const url = new URL(liffUrl);
       if (url.protocol !== "https:" || url.hostname !== "liff.line.me") return "";
-      const liffPath = url.pathname.replace(/^\/+/, "");
+      const liffPath = url.pathname.replace(/^\/+|\/+$/g, "");
       if (!liffPath) return "";
       return `line://app/${liffPath}${url.search}${url.hash}`;
     } catch {
@@ -180,11 +180,16 @@
       enhanced.lineAppUrl = buildLineAppUrl(liffUrl);
       enhanced.androidIntentUrl = buildAndroidIntentUrl(liffUrl);
     }
-    if (shouldUseLineAppHandoff() && liffUrl) {
+    if (isTikTokInAppBrowser() && liffUrl) {
       enhanced.openUrl = isAndroid() && enhanced.androidIntentUrl
         ? enhanced.androidIntentUrl
         : (enhanced.lineAppUrl || liffUrl);
       enhanced.fallbackOpenUrl = enhanced.openUrl !== liffUrl ? liffUrl : "";
+      return enhanced;
+    }
+    if (isIosSafari() && liffUrl) {
+      enhanced.openUrl = liffUrl;
+      enhanced.fallbackOpenUrl = enhanced.lineAppUrl || "";
       return enhanced;
     }
     enhanced.openUrl = enhanced.openUrl || liffUrl || enhanced.lineAddUrl;

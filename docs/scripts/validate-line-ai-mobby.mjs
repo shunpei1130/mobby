@@ -124,7 +124,7 @@ async function createLinkSessionForTest(diagnosis = VALID_DIAGNOSIS) {
   assert(res.statusCode === 200, "link session should return 200");
   assert(res.body?.ok === true, "link session should return ok");
   assert(/^ls_[A-Za-z0-9_-]{24,}$/.test(res.body?.sessionId), "link session should return a random session ID");
-  assert(res.body?.liffUrl?.includes("https://liff.line.me/liff-id-test"), "link session should return LIFF URL");
+  assert(res.body?.liffUrl?.includes("https://liff.line.me/liff-id-test/?s="), "link session should return LIFF URL with session as additional information");
   assert(res.body?.lineAddUrl === "https://lin.ee/test", "link session should include LINE add URL");
   return res.body.sessionId;
 }
@@ -304,6 +304,7 @@ async function callLiffPageStaticCheck() {
   assert(page.includes("shouldUseManualLineLogin"), "LIFF link page should gate iOS external-browser login behind a user tap");
   assert(page.includes("isTikTokBrowser"), "LIFF link page should detect TikTok in-app browser");
   assert(page.includes("buildTikTokLineOpenUrl"), "LIFF link page should build a TikTok-specific LINE app handoff URL");
+  assert(page.includes("https://liff.line.me/${encodeURIComponent(liffId)}/?s="), "LIFF link page should build official LIFF URLs with session as additional information");
   assert(page.includes("line://app/"), "LIFF link page should include a LINE app scheme fallback for restricted in-app browsers");
   assert(page.includes("intent://"), "LIFF link page should include an Android intent fallback for restricted in-app browsers");
   assert(page.includes("(isTikTokBrowser() || isIosDevice())"), "LIFF link page should use app handoff for Safari as well as TikTok");
@@ -320,6 +321,7 @@ async function callSharedCtaStaticCheck() {
   assert(cta.includes("shouldWaitForTapToOpen"), "diagnosis CTA should avoid post-async auto-open on Safari");
   assert(cta.includes("isTikTokInAppBrowser"), "diagnosis CTA should detect TikTok in-app browser");
   assert(cta.includes("shouldUseLineAppHandoff"), "diagnosis CTA should use explicit LINE app handoff for restricted browsers");
+  assert(cta.includes("enhanced.openUrl = liffUrl"), "diagnosis CTA should keep the official LIFF URL as the primary Safari URL");
   assert(cta.includes("buildLineAppUrl"), "diagnosis CTA should build a LINE app scheme fallback for LIFF URLs");
   assert(cta.includes("buildAndroidIntentUrl"), "diagnosis CTA should build an Android intent fallback for LIFF URLs");
   assert(cta.includes("fallbackOpenUrl"), "diagnosis CTA should keep the normal LIFF URL as fallback");

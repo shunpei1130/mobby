@@ -97,7 +97,7 @@ export default async function handler(req, res) {
   await saveLinkSession(sessionId, session);
 
   const liffId = String(process.env.LIFF_ID || "").trim();
-  const liffUrl = `https://liff.line.me/${encodeURIComponent(liffId)}?s=${encodeURIComponent(sessionId)}`;
+  const liffUrl = `https://liff.line.me/${encodeURIComponent(liffId)}/?s=${encodeURIComponent(sessionId)}`;
   return res.status(200).json({
     ok: true,
     sessionId,
