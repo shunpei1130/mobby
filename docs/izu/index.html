@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <meta name="format-detection" content="telephone=no,address=no,email=no" />
+  <title>Izu💪🏼イズ式ボディメイクタイプ診断 | Mobby</title>
+  <meta name="description" content="筋トレ、食事管理、継続習慣から、あなたに合うIzu💪🏼イズ式ボディメイクタイプを20問で診断します。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Izu💪🏼イズ式ボディメイクタイプ診断 | Mobby" />
+  <meta property="og:description" content="あなたはどんな整え方で身体づくりを続けるタイプ？20問でIzu💪🏼イズ式ボディメイクタイプをチェック。" />
+  <meta property="og:url" content="https://www.mobby.online/izu/" />
+  <meta property="og:site_name" content="Mobby" />
+  <meta property="og:image" content="https://www.mobby.online/izu/img/izu-fitness-hero.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Izu💪🏼イズ式ボディメイクタイプ診断 | Mobby" />
+  <meta name="twitter:description" content="筋トレ、食事管理、継続習慣から、あなたに合うIzu💪🏼イズ式ボディメイクタイプを診断。" />
+  <meta name="twitter:image" content="https://www.mobby.online/izu/img/izu-fitness-hero.png" />
+  <link rel="canonical" href="https://www.mobby.online/izu/" />
+  <meta name="theme-color" content="#f7f8f2" />
+  <link rel="icon" type="image/jpeg" href="../16school/favicon/fav.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&family=Yomogi&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared/line-ai-mobby-cta.css" />
+  <script src="../shared/line-ai-mobby-cta.js"></script>
+  <style>
+    :root {
+      --font-main: "M PLUS Rounded 1c", system-ui, -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
+      --font-display: "Yomogi", "Kiwi Maru", var(--font-main);
+      --bg: #f7f8f2;
+      --surface: rgba(255, 255, 255, 0.92);
+      --surface-strong: #ffffff;
+      --surface-soft: rgba(246, 248, 239, 0.82);
+      --text-main: #1f241f;
+      --text-sub: #586052;
+      --accent: #a8cf22;
+      --accent-dark: #2d3a1f;
+      --accent-hot: #ff654f;
+      --ink: #171a18;
+      --line: rgba(45, 58, 31, 0.16);
+      --shadow: 0 22px 54px rgba(31, 36, 31, 0.14);
+      --shadow-sm: 0 10px 22px rgba(31, 36, 31, 0.08);
+      color-scheme: light;
+    }
+
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-main);
+      color: var(--text-main);
+      background:
+        linear-gradient(120deg, rgba(168, 207, 34, 0.14), transparent 36%),
+        linear-gradient(300deg, rgba(255, 101, 79, 0.12), transparent 42%),
+        var(--bg);
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.22;
+      background-image:
+        linear-gradient(90deg, rgba(45, 58, 31, 0.08) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(45, 58, 31, 0.07) 1px, transparent 1px);
+      background-size: 46px 46px;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button { border: 0; cursor: pointer; }
+    .wrap { position: relative; width: min(100%, 920px); margin: 0 auto; padding: 26px 18px 86px; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+    .brand { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+    .logo { width: 44px; height: 44px; border-radius: 14px; background: url("../16school/logo.jpg") center/cover; box-shadow: 0 10px 20px rgba(168, 207, 34, 0.26); }
+    .title h1 { margin: 0; font-family: var(--font-display); font-size: 18px; color: var(--accent-dark); font-weight: 400; }
+    .title p { margin: 1px 0 0; font-size: 12px; color: var(--text-sub); font-weight: 800; }
+    .nav { display: flex; gap: 8px; align-items: center; margin-left: auto; }
+    .nav a { min-height: 34px; display: inline-flex; align-items: center; padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,0.72); color: var(--text-sub); font-size: 12px; font-weight: 900; box-shadow: var(--shadow-sm); }
+    .nav a.active { background: var(--ink); color: #fff; border-color: transparent; }
+    .panel { background: var(--surface); border: 1px solid rgba(255,255,255,0.76); border-radius: 24px; padding: 28px; box-shadow: var(--shadow); backdrop-filter: blur(16px); }
+    .stack { display: grid; gap: 18px; }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 390px); gap: 24px; align-items: center; }
+    .hero-img, .result-img { width: 100%; border-radius: 22px; display: block; border: 1px solid rgba(255,255,255,0.82); box-shadow: 0 18px 44px rgba(31, 36, 31, 0.16); background: #fff; }
+    .kicker { display: inline-flex; min-height: 30px; align-items: center; padding: 7px 12px; border-radius: 999px; background: rgba(168, 207, 34, 0.18); color: var(--accent-dark); font-size: 12px; font-weight: 900; text-transform: uppercase; margin: 0 0 14px; }
+    .big { margin: 0 0 12px; font-family: var(--font-display); font-size: 42px; line-height: 1.28; font-weight: 400; color: var(--ink); }
+    .section-title { margin: 0 0 10px; font-family: "Kiwi Maru", var(--font-main); font-size: 18px; font-weight: 500; }
+    .text, .helper { margin: 0; line-height: 1.9; color: var(--text-sub); font-size: 14px; font-weight: 700; }
+    .tags, .actions, .share, .status-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+    .tag, .pill { display: inline-flex; align-items: center; justify-content: center; min-height: 36px; padding: 8px 12px; border-radius: 999px; background: rgba(255,255,255,0.78); border: 1px solid var(--line); color: var(--text-sub); font-size: 12px; font-weight: 900; }
+    .note, .qcard, .type-card, .mini, .lead-form, .result-copy { border-radius: 18px; background: var(--surface-soft); border: 1px solid var(--line); }
+    .note { display: flex; gap: 14px; align-items: center; padding: 14px 16px; }
+    .note img { width: 56px; height: 56px; object-fit: cover; border-radius: 16px; background: #fff; flex: 0 0 auto; }
+    .btn, .share a, .share button { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; padding: 10px 16px; border-radius: 999px; font-size: 13px; font-weight: 900; transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease; }
+    .btn:hover, .share a:hover, .share button:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+    .btn:active, .share a:active, .share button:active { transform: scale(0.97); }
+    .btn-primary { background: var(--ink); color: #fff; box-shadow: 0 12px 24px rgba(23, 26, 24, 0.20); }
+    .btn-hot { background: linear-gradient(135deg, var(--accent), var(--accent-hot)); color: #151515; }
+    .btn-secondary, .share a, .share button { background: rgba(255,255,255,0.82); color: var(--text-main); border: 1px solid var(--line); }
+    .btn-ghost { background: transparent; color: var(--text-sub); border: 1px solid var(--line); }
+    .progress-meta { display: flex; justify-content: space-between; gap: 12px; color: var(--text-sub); font-size: 12px; font-weight: 900; margin-bottom: 10px; }
+    .track { height: 10px; border-radius: 999px; background: rgba(45, 58, 31, 0.12); overflow: hidden; margin-bottom: 18px; }
+    .fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--accent), var(--accent-hot)); transition: width 0.2s ease; }
+    .qcard { padding: 20px; }
+    .qindex { margin: 0 0 8px; color: var(--accent-dark); font-size: 12px; font-weight: 900; }
+    .qtext { margin: 0 0 16px; line-height: 1.8; font-size: 17px; font-weight: 800; }
+    .scale-wrap { display: grid; gap: 10px; padding: 12px; border-radius: 16px; background: rgba(255,255,255,0.58); border: 1px solid rgba(45,58,31,0.12); }
+    .scale-labels { display: flex; justify-content: space-between; gap: 12px; color: var(--text-sub); font-size: 11px; font-weight: 900; line-height: 1.35; }
+    .scale-labels span:nth-child(2) { text-align: center; color: rgba(88, 96, 82, 0.74); }
+    .scale-labels span:last-child { text-align: right; }
+    .options { display: grid; grid-template-columns: repeat(7, minmax(34px, 1fr)); gap: 8px; }
+    .option { display: inline-flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 1 / 1; min-height: 38px; max-height: 56px; border-radius: 999px; background: rgba(255,255,255,0.86); border: 1px solid rgba(45,58,31,0.16); color: var(--accent-dark); box-shadow: inset 0 1px 0 rgba(255,255,255,0.92); }
+    .option.selected { background: linear-gradient(135deg, var(--accent), var(--accent-hot)); border-color: transparent; color: #121212; box-shadow: 0 10px 18px rgba(168,207,34,0.22); }
+    .scale-no { font-size: 15px; font-weight: 900; line-height: 1; }
+    .selected-scale { min-height: 18px; text-align: center; color: var(--accent-dark); font-size: 11px; font-weight: 900; }
+    .footer-row { display: flex; justify-content: space-between; gap: 12px; margin-top: 18px; }
+    .result-head { display: flex; gap: 18px; align-items: flex-start; }
+    .type-no { width: 78px; height: 78px; border-radius: 22px; display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(145deg, rgba(168,207,34,0.22), rgba(255,101,79,0.18)); border: 1px solid var(--line); font-family: var(--font-display); font-size: 28px; flex: 0 0 auto; }
+    .result-title h2 { margin: 0; font-family: var(--font-display); font-size: 42px; line-height: 1.24; font-weight: 400; }
+    .result-title p { margin: 8px 0 0; color: var(--text-sub); line-height: 1.8; font-weight: 700; }
+    .result-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 330px); gap: 18px; align-items: start; }
+    .result-copy, .mini, .lead-form { padding: 16px 18px; }
+    .result-copy h3, .mini h3, .lead-form h3 { margin: 0 0 8px; font-family: "Kiwi Maru", var(--font-main); font-size: 16px; font-weight: 500; }
+    .result-copy ul, .mini ul { margin: 0; padding-left: 1.2em; color: var(--text-sub); line-height: 1.9; font-size: 14px; font-weight: 700; }
+    .score-list { display: grid; gap: 8px; }
+    .bar-row { display: grid; gap: 6px; }
+    .bar-meta { display: flex; justify-content: space-between; gap: 10px; color: var(--text-sub); font-size: 12px; font-weight: 900; }
+    .bar { height: 10px; border-radius: 999px; background: rgba(45,58,31,0.12); overflow: hidden; }
+    .bar span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--accent), var(--accent-hot)); }
+    .types { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .type-card { padding: 16px; display: grid; gap: 10px; }
+    .type-card summary { list-style: none; cursor: pointer; }
+    .type-card summary::-webkit-details-marker { display: none; }
+    .type-card h3 { margin: 0; font-family: "Kiwi Maru", var(--font-main); font-size: 17px; font-weight: 500; }
+    .type-card p { margin: 0; line-height: 1.8; color: var(--text-sub); font-size: 14px; font-weight: 700; }
+    .type-head { display: flex; gap: 12px; align-items: flex-start; justify-content: space-between; }
+    .type-chip { min-width: 54px; text-align: center; padding: 6px 9px; border-radius: 999px; background: #fff; border: 1px solid var(--line); color: var(--accent-dark); font-size: 12px; font-weight: 900; }
+    .lead-form form { display: grid; gap: 10px; }
+    .field-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    input { width: 100%; min-height: 42px; border-radius: 12px; border: 1px solid var(--line); background: rgba(255,255,255,0.86); color: var(--text-main); padding: 9px 11px; font-size: 14px; font-weight: 700; }
+    input:focus { outline: 3px solid rgba(168, 207, 34, 0.28); border-color: rgba(45,58,31,0.28); }
+    .toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--ink); color: #fff; padding: 12px 18px; border-radius: 999px; box-shadow: 0 14px 32px rgba(23,26,24,0.28); opacity: 0; pointer-events: none; transition: opacity .18s ease, transform .18s ease; font-size: 13px; font-weight: 900; z-index: 40; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(-6px); }
+    .footer { margin-top: 22px; text-align: center; color: var(--text-sub); font-size: 12px; line-height: 1.8; font-weight: 700; }
+    @media (max-width: 820px) {
+      .hero-grid, .result-grid { grid-template-columns: 1fr; }
+      .hero-visual { order: -1; }
+    }
+    @media (max-width: 640px) {
+      .wrap { padding: 18px 12px 64px; }
+      header { align-items: flex-start; }
+      .panel { padding: 20px 16px; border-radius: 20px; }
+      .big, .result-title h2 { font-size: 34px; }
+      .nav { width: 100%; margin-left: 0; justify-content: flex-end; }
+      .nav a { padding: 7px 10px; }
+      .footer-row, .actions { flex-direction: column-reverse; }
+      .btn, .share a, .share button { width: 100%; }
+      .options { gap: 5px; }
+      .option { min-height: 34px; }
+      .scale-no { font-size: 13px; }
+      .scale-labels { font-size: 10px; }
+      .result-head { flex-direction: column; }
+      .types, .field-row { grid-template-columns: 1fr; }
+      .note { align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand" id="brandHome" role="link" tabindex="0" aria-label="Mobbyトップへ">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="title">
+          <h1>Izu💪🏼イズ式ボディメイクタイプ診断</h1>
+          <p>Mobby Collaboration rough</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="ページ内ナビゲーション">
+        <a href="#" id="navDiagnosis" class="active">診断</a>
+        <a href="#" id="navTypes">全8タイプ</a>
+      </nav>
+    </header>
+    <main id="app" aria-live="polite"></main>
+    <p class="footer">Mobby rough proposal for Izu body-make collaboration.</p>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    const STORAGE_KEY = "mobby_izu_diagnosis_v1";
+    const PAGE_URL = "https://www.mobby.online/izu/";
+    const DIAG = {
+      title: "Izu💪🏼イズ式ボディメイクタイプ診断",
+      subtitle: "筋トレ・食事管理・身体づくり発信から、あなたに合う整え方を見つける20問。",
+      hero: "img/izu-fitness-hero.png",
+      resultImage: "img/izu-result-sample.png",
+      types: [
+        {
+          id: "morning",
+          code: "AM",
+          no: "01",
+          name: "朝トレ始動モビー",
+          catch: "一日の最初にスイッチを入れて、生活ごと整えるタイプ。",
+          lead: "朝の短い行動で体も気持ちも起こせる人。大きな気合いより、着替える、外に出る、5分だけ動く、という最初の一歩に強さがあります。",
+          izu: "朝のルーティン動画、出勤前の時短メニュー、寝起きから整える食事の投稿と相性が良いタイプです。",
+          hook: "今日の自分を先に整える。小さな朝トレが一日を変える。",
+          mission: "明日は起きたら水を飲んで、スクワットかストレッチを5分だけ。"
+        },
+        {
+          id: "meal",
+          code: "ME",
+          no: "02",
+          name: "食事管理コツコツモビー",
+          catch: "派手な制限より、選び方と積み重ねで整えるタイプ。",
+          lead: "毎日の食事を現実的に組み立てるのが得意。外食や忙しい日でも、何を足せば整うかを考えられるので継続力があります。",
+          izu: "コンビニ選び、作り置き、外食時の選び方など、保存されやすい食事管理導線につなげやすいタイプです。",
+          hook: "完璧じゃなくていい。今日の一食を少し整えるだけで前に進める。",
+          mission: "今日の食事にタンパク質を一品足して、選んだ理由をメモする。"
+        },
+        {
+          id: "protein",
+          code: "PR",
+          no: "03",
+          name: "高タンパク研究モビー",
+          catch: "理由が分かると続く、栄養ロジック探究タイプ。",
+          lead: "なんとなく真似するより、なぜ効くのかを知りたい人。栄養、回復、筋肉の材料を理解すると、自分で応用できる強さが出ます。",
+          izu: "高タンパクレシピ、PFC解説、プロテインの飲み方など、知識系投稿への回遊を作りやすいタイプです。",
+          hook: "食べることは、頑張る体への準備。理由が分かると習慣は強くなる。",
+          mission: "いつもの食事のタンパク質源を一つ確認して、次の候補を決める。"
+        },
+        {
+          id: "form",
+          code: "FO",
+          no: "04",
+          name: "フォーム職人モビー",
+          catch: "回数より質。効かせ方を磨いて伸びるタイプ。",
+          lead: "動きの細部を見たり、記録を見返したりするのが得意。無理に量を増やすより、狙った場所に効かせる納得感で続きます。",
+          izu: "フォーム解説、NG例、家トレの効かせ方など、短尺でも価値が伝わる投稿と相性が良いタイプです。",
+          hook: "雑に頑張るより、丁寧に効かせる。小さな修正が体を変える。",
+          mission: "次のトレーニングで一種目だけ、速度と姿勢をゆっくり確認する。"
+        },
+        {
+          id: "rhythm",
+          code: "RY",
+          no: "05",
+          name: "継続リズムモビー",
+          catch: "毎日少しずつ、自分のペースで積み上げるタイプ。",
+          lead: "急に頑張りすぎず、続けられる量に落とし込むのが上手。結果がすぐ見えない時期でも、積み上げている感覚を大切にできます。",
+          izu: "1週間チャレンジ、習慣化チェック、初心者向けメニューなど、参加型企画に最もつなげやすいタイプです。",
+          hook: "続けられる人がいちばん強い。小さなリズムが未来の体を作る。",
+          mission: "今日やることを一つだけ決めて、終わったらチェックを入れる。"
+        },
+        {
+          id: "mental",
+          code: "MT",
+          no: "06",
+          name: "メンタル切替モビー",
+          catch: "気分を責めず、動いて整えるセルフケアタイプ。",
+          lead: "落ち込んだ時や疲れた時に、体を少し動かすことで気分を切り替えられる人。完璧主義になりすぎず、立て直す力があります。",
+          izu: "モチベがない日の過ごし方、リセットルーティン、メンタルと食事の投稿へ自然につなげられます。",
+          hook: "できない日があっても終わりじゃない。戻り方を知っている人は強い。",
+          mission: "今日は深呼吸、散歩、ストレッチのどれか一つだけ選ぶ。"
+        },
+        {
+          id: "switch",
+          code: "SW",
+          no: "07",
+          name: "追い込みスイッチモビー",
+          catch: "決めた日は集中してやり切る、メリハリ突破タイプ。",
+          lead: "普段は無理しすぎなくても、ここぞという時に集中力を出せる人。記録更新やイベント前など、目的が見えると一気に伸びます。",
+          izu: "追い込みトレ、ビフォーアフター、短期集中メニューなど、熱量の高い投稿導線に向いています。",
+          hook: "やる日はやる。決めた瞬間の集中力が、自分の限界を少し押し広げる。",
+          mission: "次のトレーニングで一種目だけ、前回より一回多く挑戦する。"
+        },
+        {
+          id: "balance",
+          code: "BL",
+          no: "08",
+          name: "体調観察バランスモビー",
+          catch: "休むことも整えること。体の声を見ながら続けるタイプ。",
+          lead: "睡眠、疲労、むくみ、気分の変化まで含めて自分を見られる人。無理を重ねるより、長く続く状態を作るのが得意です。",
+          izu: "休息日、むくみ対策、睡眠と食事、女性向け体調管理の投稿と相性が良いタイプです。",
+          hook: "休む日も、前に進む日の一部。整える力が継続を守る。",
+          mission: "今日は睡眠時間、疲労感、食欲を一言でメモしておく。"
+        }
+      ],
+      questions: [
+        { id: "q01", text: "朝のうちに体を動かすと、その日全体の調子が整う。", agree: [["morning", 2], ["rhythm", 1]], disagree: [["balance", 1], ["mental", 1]] },
+        { id: "q02", text: "食事はカロリーだけでなく、タンパク質量も自然と気になる。", agree: [["protein", 2], ["meal", 1]], disagree: [["balance", 1], ["rhythm", 1]] },
+        { id: "q03", text: "新しい種目をやる前に、フォームや効かせ方を確認したい。", agree: [["form", 2], ["protein", 1]], disagree: [["switch", 1], ["morning", 1]] },
+        { id: "q04", text: "疲れている日は強度を落としてでも、できる形で続けたい。", agree: [["balance", 2], ["rhythm", 1]], disagree: [["switch", 1], ["mental", 1]] },
+        { id: "q05", text: "短時間でも毎日続けられるメニューの方が安心する。", agree: [["rhythm", 2], ["morning", 1]], disagree: [["switch", 1], ["form", 1]] },
+        { id: "q06", text: "追い込む日は、限界近くまで集中してやり切りたい。", agree: [["switch", 2], ["form", 1]], disagree: [["balance", 1], ["meal", 1]] },
+        { id: "q07", text: "作り置きや外食の選び方を考える時間がわりと好き。", agree: [["meal", 2], ["protein", 1]], disagree: [["mental", 1], ["morning", 1]] },
+        { id: "q08", text: "数字の変化だけでなく、睡眠・むくみ・気分の変化も見る。", agree: [["balance", 2], ["meal", 1]], disagree: [["switch", 1], ["form", 1]] },
+        { id: "q09", text: "気分が落ちた時こそ、軽く動くと切り替わることがある。", agree: [["mental", 2], ["rhythm", 1]], disagree: [["balance", 1], ["protein", 1]] },
+        { id: "q10", text: "重量や回数の記録を見返すと、次も頑張りやすい。", agree: [["form", 2], ["switch", 1]], disagree: [["meal", 1], ["balance", 1]] },
+        { id: "q11", text: "外食でも選び方を工夫すれば、十分整えられると思う。", agree: [["meal", 2], ["balance", 1]], disagree: [["protein", 1], ["rhythm", 1]] },
+        { id: "q12", text: "新しいメニューを増やすより、定番メニューを磨く方が続く。", agree: [["rhythm", 2], ["form", 1]], disagree: [["switch", 1], ["morning", 1]] },
+        { id: "q13", text: "体づくりは、自分との約束を守れた感覚が大事だと思う。", agree: [["mental", 2], ["rhythm", 1]], disagree: [["meal", 1], ["balance", 1]] },
+        { id: "q14", text: "イベント前や撮影前など、目的があるとスイッチが入りやすい。", agree: [["switch", 2], ["morning", 1]], disagree: [["rhythm", 1], ["balance", 1]] },
+        { id: "q15", text: "栄養バランスの理由まで分かると、納得して続けられる。", agree: [["protein", 2], ["meal", 1]], disagree: [["mental", 1], ["switch", 1]] },
+        { id: "q16", text: "休む日を計画に入れると、逆に継続しやすい。", agree: [["balance", 2], ["rhythm", 1]], disagree: [["switch", 1], ["morning", 1]] },
+        { id: "q17", text: "トレーニング動画は、テンションより説明の分かりやすさを見たい。", agree: [["form", 2], ["protein", 1]], disagree: [["mental", 1], ["switch", 1]] },
+        { id: "q18", text: "何を食べたかだけでなく、なぜそれを選んだかも言語化したい。", agree: [["meal", 2], ["mental", 1]], disagree: [["morning", 1], ["balance", 1]] },
+        { id: "q19", text: "まず着替えて5分だけ動くと、自然に始められることが多い。", agree: [["morning", 2], ["mental", 1]], disagree: [["protein", 1], ["form", 1]] },
+        { id: "q20", text: "結果がすぐ出なくても、積み上げている感覚があれば続けられる。", agree: [["rhythm", 2], ["mental", 1]], disagree: [["switch", 1], ["meal", 1]] }
+      ]
+    };
+
+    const SCALE = [
+      { value: 1, label: "全然違う" },
+      { value: 2, label: "違う" },
+      { value: 3, label: "少し違う" },
+      { value: 4, label: "どちらでも" },
+      { value: 5, label: "少しそう" },
+      { value: 6, label: "そう" },
+      { value: 7, label: "かなりそう" }
+    ];
+    const TIE_ORDER = ["rhythm", "morning", "meal", "protein", "form", "mental", "switch", "balance"];
+
+    const app = document.getElementById("app");
+    const toastNode = document.getElementById("toast");
+    let state = loadState();
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function initialState() {
+      return { step: "intro", index: 0, answers: {}, resultId: "", scores: {}, saved: false };
+    }
+
+    function loadState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+        return { ...initialState(), ...saved, answers: saved.answers || {}, scores: saved.scores || {} };
+      } catch {
+        return initialState();
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function typeById(id) {
+      return DIAG.types.find((type) => type.id === id) || DIAG.types.find((type) => type.id === "rhythm");
+    }
+
+    function answeredCount() {
+      return DIAG.questions.filter((question) => Number.isFinite(state.answers[question.id])).length;
+    }
+
+    function isComplete() {
+      return answeredCount() === DIAG.questions.length;
+    }
+
+    function addScores(scores, entries, strength) {
+      entries.forEach(([id, weight]) => {
+        scores[id] = (scores[id] || 0) + strength * weight;
+      });
+    }
+
+    function computeResult() {
+      const scores = Object.fromEntries(DIAG.types.map((type) => [type.id, 0]));
+      DIAG.questions.forEach((question) => {
+        const value = Number(state.answers[question.id]);
+        if (!Number.isFinite(value)) return;
+        if (value > 4) addScores(scores, question.agree, value - 4);
+        else if (value < 4) addScores(scores, question.disagree, 4 - value);
+        else scores.rhythm += 0.15;
+      });
+      const winnerId = [...DIAG.types]
+        .sort((a, b) => {
+          const diff = (scores[b.id] || 0) - (scores[a.id] || 0);
+          if (diff !== 0) return diff;
+          return TIE_ORDER.indexOf(a.id) - TIE_ORDER.indexOf(b.id);
+        })[0].id;
+      return { id: winnerId, scores };
+    }
+
+    function completeDiagnosis() {
+      const result = computeResult();
+      state.resultId = result.id;
+      state.scores = result.scores;
+      state.step = "result";
+      state.saved = false;
+      saveState();
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function toast(message) {
+      toastNode.textContent = message;
+      toastNode.classList.add("show");
+      window.clearTimeout(toastNode._timer);
+      toastNode._timer = window.setTimeout(() => toastNode.classList.remove("show"), 2200);
+    }
+
+    function setNav() {
+      document.getElementById("navDiagnosis").classList.toggle("active", state.step !== "types");
+      document.getElementById("navTypes").classList.toggle("active", state.step === "types");
+    }
+
+    function goDiagnosis() {
+      state.step = isComplete() ? "result" : (answeredCount() > 0 ? "question" : "intro");
+      saveState();
+      render();
+    }
+
+    function renderIntro() {
+      app.innerHTML = `
+        <section class="panel hero-grid">
+          <div class="stack">
+            <div>
+              <p class="kicker">Body-make diagnosis</p>
+              <h2 class="big">${escapeHtml(DIAG.title)}</h2>
+              <p class="text">${escapeHtml(DIAG.subtitle)}</p>
+            </div>
+            <div class="tags" aria-label="診断キーワード">
+              <span class="tag">筋トレ習慣</span>
+              <span class="tag">食事管理</span>
+              <span class="tag">継続タイプ</span>
+              <span class="tag">SSA準優勝</span>
+              <span class="tag">SNS100万人</span>
+            </div>
+            <div class="note">
+              <img src="../img/Mobby.webp" alt="Mobby" loading="lazy" />
+              <p class="text">MobbyがIzu💪🏼イズさんの筋トレ・食事管理の世界に入って、ファンが自分の続け方をシェアできる診断ラフです。</p>
+            </div>
+            <div class="actions">
+              <button class="btn btn-primary" type="button" id="btnStart">診断をはじめる</button>
+              <button class="btn btn-secondary" type="button" id="btnTypesIntro">全8タイプを見る</button>
+            </div>
+          </div>
+          <div class="hero-visual">
+            <img class="hero-img" src="${DIAG.hero}" alt="Izu💪🏼イズ式ボディメイク診断のMobbyヒーロー画像" />
+          </div>
+        </section>
+      `;
+      document.getElementById("btnStart").addEventListener("click", () => {
+        state.step = "question";
+        state.index = Math.min(state.index || 0, DIAG.questions.length - 1);
+        saveState();
+        render();
+      });
+      document.getElementById("btnTypesIntro").addEventListener("click", () => {
+        state.step = "types";
+        saveState();
+        render();
+      });
+    }
+
+    function renderQuestion() {
+      const index = Math.max(0, Math.min(state.index || 0, DIAG.questions.length - 1));
+      const question = DIAG.questions[index];
+      const selected = Number(state.answers[question.id]);
+      const percent = Math.round((answeredCount() / DIAG.questions.length) * 100);
+      const buttons = SCALE.map((item) => `
+        <button class="option ${selected === item.value ? "selected" : ""}" type="button" data-value="${item.value}" aria-label="${escapeHtml(item.label)}">
+          <span class="scale-no">${item.value}</span>
+        </button>
+      `).join("");
+      app.innerHTML = `
+        <section class="panel">
+          <div class="progress-meta">
+            <span>Q${index + 1} / ${DIAG.questions.length}</span>
+            <span>${answeredCount()}問回答済み</span>
+          </div>
+          <div class="track" aria-hidden="true"><div class="fill" style="width:${percent}%"></div></div>
+          <article class="qcard">
+            <p class="qindex">Izu body-make question</p>
+            <h2 class="qtext">${escapeHtml(question.text)}</h2>
+            <div class="scale-wrap">
+              <div class="scale-labels">
+                <span>全然違う</span>
+                <span>どちらでも</span>
+                <span>かなりそう</span>
+              </div>
+              <div class="options">${buttons}</div>
+              <div class="selected-scale">${Number.isFinite(selected) ? escapeHtml(SCALE.find((item) => item.value === selected).label) : "直感で近い丸を選んでください"}</div>
+            </div>
+          </article>
+          <div class="footer-row">
+            <button class="btn btn-ghost" type="button" id="btnBack">${index === 0 ? "トップへ" : "前の質問"}</button>
+            <button class="btn btn-primary" type="button" id="btnNext" ${Number.isFinite(selected) ? "" : "disabled"}>${index === DIAG.questions.length - 1 ? "結果を見る" : "次へ"}</button>
+          </div>
+        </section>
+      `;
+      app.querySelectorAll("[data-value]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.answers[question.id] = Number(button.dataset.value);
+          saveState();
+          if (index < DIAG.questions.length - 1) {
+            window.setTimeout(() => {
+              state.index = index + 1;
+              saveState();
+              render();
+            }, 120);
+          } else {
+            window.setTimeout(completeDiagnosis, 120);
+          }
+          render();
+        });
+      });
+      document.getElementById("btnBack").addEventListener("click", () => {
+        if (index === 0) state.step = "intro";
+        else state.index = index - 1;
+        saveState();
+        render();
+      });
+      document.getElementById("btnNext").addEventListener("click", () => {
+        if (!Number.isFinite(Number(state.answers[question.id]))) return;
+        if (index === DIAG.questions.length - 1) completeDiagnosis();
+        else {
+          state.index = index + 1;
+          saveState();
+          render();
+        }
+      });
+    }
+
+    function shareText(type) {
+      return `Izu💪🏼イズ式ボディメイクタイプ診断の結果は「${type.name}」でした。${type.catch}`;
+    }
+
+    async function copyShare(type) {
+      const text = `${shareText(type)}\n${PAGE_URL}`;
+      try {
+        await navigator.clipboard.writeText(text);
+        toast("シェア文をコピーしました");
+      } catch {
+        toast("コピーできませんでした");
+      }
+    }
+
+    async function nativeShare(type) {
+      const payload = { title: DIAG.title, text: shareText(type), url: PAGE_URL };
+      if (!navigator.share) {
+        await copyShare(type);
+        return;
+      }
+      try {
+        await navigator.share(payload);
+      } catch {
+      }
+    }
+
+    function scoreBars(scores) {
+      const max = Math.max(1, ...Object.values(scores).map(Number));
+      return [...DIAG.types]
+        .sort((a, b) => (scores[b.id] || 0) - (scores[a.id] || 0))
+        .slice(0, 4)
+        .map((type) => {
+          const score = scores[type.id] || 0;
+          const width = Math.max(8, Math.round((score / max) * 100));
+          return `
+            <div class="bar-row">
+              <div class="bar-meta"><span>${escapeHtml(type.name)}</span><span>${Math.round(score)} pt</span></div>
+              <div class="bar"><span style="width:${width}%"></span></div>
+            </div>
+          `;
+        }).join("");
+    }
+
+    function linePayload(type) {
+      return {
+        source: "izu",
+        diagnosisName: DIAG.title,
+        resultCode: type.code,
+        resultName: type.name,
+        resultSummary: type.lead,
+        pageUrl: PAGE_URL
+      };
+    }
+
+    function renderResult() {
+      if (!state.resultId) {
+        const result = computeResult();
+        state.resultId = result.id;
+        state.scores = result.scores;
+        saveState();
+      }
+      const type = typeById(state.resultId);
+      const share = encodeURIComponent(shareText(type));
+      const url = encodeURIComponent(PAGE_URL);
+      const lineData = encodeURIComponent(JSON.stringify(linePayload(type)));
+      app.innerHTML = `
+        <section class="panel stack">
+          <div class="result-head">
+            <div class="type-no">${escapeHtml(type.no)}</div>
+            <div class="result-title">
+              <p class="kicker">Your body-make type</p>
+              <h2>${escapeHtml(type.name)}</h2>
+              <p>${escapeHtml(type.catch)}</p>
+            </div>
+          </div>
+          <div class="result-grid">
+            <div class="stack">
+              <div class="result-copy">
+                <h3>診断コメント</h3>
+                <p class="text">${escapeHtml(type.lead)}</p>
+              </div>
+              <div class="result-copy">
+                <h3>Izu💪🏼イズさんの投稿導線案</h3>
+                <ul>
+                  <li>${escapeHtml(type.izu)}</li>
+                  <li>結果画面からTikTok、Instagram、おすすめ投稿、食事管理コンテンツへ自然に送客できます。</li>
+                  <li>「今日のミッション」を入れることで、保存と実践報告を作りやすくします。</li>
+                </ul>
+              </div>
+              <div class="result-copy">
+                <h3>結果に入れる一言</h3>
+                <ul>
+                  <li>${escapeHtml(type.hook)}</li>
+                  <li>${escapeHtml(type.mission)}</li>
+                </ul>
+              </div>
+            </div>
+            <aside class="stack">
+              <img class="result-img" src="${DIAG.resultImage}" alt="Izu💪🏼イズ式ボディメイク診断の結果サンプル画像" />
+              <div class="mini">
+                <h3>スコア上位</h3>
+                <div class="score-list">${scoreBars(state.scores || {})}</div>
+              </div>
+            </aside>
+          </div>
+          <div class="share">
+            <a href="https://twitter.com/intent/tweet?text=${share}&url=${url}" target="_blank" rel="noopener">Xでシェア</a>
+            <button type="button" id="btnNativeShare">スマホで共有</button>
+            <button type="button" id="btnCopyShare">コピー</button>
+          </div>
+          <div id="line-ai-mobby-cta" data-line-ai-mobby-cta data-diagnosis="${lineData}"></div>
+          <div class="lead-form">
+            <h3>確認用メモを残す</h3>
+            <p class="helper">ラフ案の確認用に、任意で名前・メール・年齢を保存できます。</p>
+            <form id="leadForm">
+              <div class="field-row">
+                <input name="name" autocomplete="name" placeholder="名前" />
+                <input name="email" autocomplete="email" type="email" placeholder="メール" />
+                <input name="age" inputmode="numeric" placeholder="年齢" />
+              </div>
+              <button class="btn btn-hot" type="submit">結果を保存する</button>
+              <p class="helper" id="saveStatus">${state.saved ? "保存済みです。" : ""}</p>
+            </form>
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary" type="button" id="btnTypesResult">全8タイプを見る</button>
+            <button class="btn btn-secondary" type="button" id="btnRestart">もう一度診断する</button>
+          </div>
+        </section>
+      `;
+      document.getElementById("btnNativeShare").addEventListener("click", () => nativeShare(type));
+      document.getElementById("btnCopyShare").addEventListener("click", () => copyShare(type));
+      document.getElementById("btnTypesResult").addEventListener("click", () => {
+        state.step = "types";
+        saveState();
+        render();
+      });
+      document.getElementById("btnRestart").addEventListener("click", () => {
+        state = initialState();
+        localStorage.removeItem(STORAGE_KEY);
+        render();
+      });
+      document.getElementById("leadForm").addEventListener("submit", saveLead);
+    }
+
+    async function saveLead(event) {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const status = document.getElementById("saveStatus");
+      const type = typeById(state.resultId);
+      const payload = {
+        source: "izu",
+        diagTitle: DIAG.title,
+        diagnosis_type: type.name,
+        type: type.code,
+        name: form.elements.name.value.trim(),
+        email: form.elements.email.value.trim(),
+        age: form.elements.age.value.trim(),
+        axes: state.scores || {},
+        answers: state.answers || {},
+        pageUrl: window.location.href,
+        userAgent: navigator.userAgent,
+        createdAt: new Date().toISOString()
+      };
+      status.textContent = "保存中...";
+      try {
+        const response = await fetch("/api/diagnosis", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        if (!response.ok) throw new Error("save failed");
+        state.saved = true;
+        saveState();
+        status.textContent = "保存しました。";
+      } catch {
+        status.textContent = "今だけ保存できませんでした。診断結果はこの画面で確認できます。";
+      }
+    }
+
+    function renderTypes() {
+      const cards = DIAG.types.map((type) => `
+        <details class="type-card" ${type.id === "rhythm" ? "open" : ""}>
+          <summary>
+            <div class="type-head">
+              <div>
+                <span class="type-chip">${escapeHtml(type.code)}</span>
+                <h3>${escapeHtml(type.name)}</h3>
+              </div>
+              <span class="type-no" aria-hidden="true">${escapeHtml(type.no)}</span>
+            </div>
+            <p>${escapeHtml(type.catch)}</p>
+          </summary>
+          <p>${escapeHtml(type.lead)}</p>
+          <div class="actions">
+            <button class="btn btn-secondary" type="button" data-type="${escapeHtml(type.id)}">このタイプを見る</button>
+          </div>
+        </details>
+      `).join("");
+      app.innerHTML = `
+        <section class="panel stack">
+          <div>
+            <p class="kicker">8 body-make types</p>
+            <h2 class="big">全8タイプ</h2>
+            <p class="text">筋トレ、食事管理、継続、休息、メンタル切替のどこに強みが出るかを、Izu💪🏼イズさんの投稿導線に接続しやすい形で整理しています。</p>
+          </div>
+          <img class="hero-img" src="${DIAG.hero}" alt="Mobbyが登場するIzu💪🏼イズ式ボディメイク診断のサンプル画像" />
+          <div class="types">${cards}</div>
+          <div class="actions">
+            <button class="btn btn-primary" type="button" id="btnBackDiagnosis">${isComplete() ? "結果に戻る" : "診断する"}</button>
+          </div>
+        </section>
+      `;
+      app.querySelectorAll("[data-type]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.resultId = button.dataset.type;
+          if (!Object.keys(state.scores || {}).length) state.scores = Object.fromEntries(DIAG.types.map((type) => [type.id, type.id === state.resultId ? 10 : 2]));
+          state.step = "result";
+          saveState();
+          render();
+        });
+      });
+      document.getElementById("btnBackDiagnosis").addEventListener("click", goDiagnosis);
+    }
+
+    function render() {
+      setNav();
+      if (state.step === "types") renderTypes();
+      else if (state.step === "question") renderQuestion();
+      else if (state.step === "result") renderResult();
+      else renderIntro();
+    }
+
+    document.getElementById("navDiagnosis").addEventListener("click", (event) => {
+      event.preventDefault();
+      goDiagnosis();
+    });
+    document.getElementById("navTypes").addEventListener("click", (event) => {
+      event.preventDefault();
+      state.step = "types";
+      saveState();
+      render();
+    });
+    document.getElementById("brandHome").addEventListener("click", () => { window.location.href = "../index.html"; });
+    document.getElementById("brandHome").addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") window.location.href = "../index.html";
+    });
+
+    render();
+  </script>
+</body>
+</html>
