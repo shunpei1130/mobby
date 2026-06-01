@@ -196,7 +196,7 @@
 
       function shouldUseAppOpenHandoff() {
         const inLineClient = Boolean(window.liff?.isInClient?.());
-        return isTikTokBrowser() && !inLineClient;
+        return (isTikTokBrowser() || isIosDevice()) && !inLineClient;
       }
 
       function buildRedirectUri(sessionId) {
@@ -265,10 +265,10 @@
 
         const config = await fetchJson(CONFIG_ENDPOINT, { method: "GET" });
         if (!window.liff) {
-          if (isTikTokBrowser()) {
+          if (shouldUseAppOpenHandoff()) {
             lineLogin.disabled = false;
             lineLogin.dataset.lineOpenUrl = buildTikTokLineOpenUrl(config.liffId, sessionId);
-            setView("login", "LINEアプリで連携を続けます", "下のボタンをタップしてLINEアプリを開くと、診断結果をモビーに連携できます。", "TikTokでは確認が出たらLINEで開いてください。");
+            setView("login", "LINEアプリで連携を続けます", "下のボタンをタップしてLINEアプリを開くと、診断結果をモビーに連携できます。", isTikTokBrowser() ? "TikTokでは確認が出たらLINEで開いてください。" : "Safariでは確認が出たらLINEで開いてください。");
             return;
           }
           throw new Error("LIFF SDK is not available");
@@ -279,7 +279,7 @@
           if (shouldUseAppOpenHandoff()) {
             lineLogin.disabled = false;
             lineLogin.dataset.lineOpenUrl = buildTikTokLineOpenUrl(config.liffId, sessionId);
-            setView("login", "LINEアプリで連携を続けます", "下のボタンをタップしてLINEアプリを開くと、診断結果をモビーに連携できます。", "TikTokでは確認が出たらLINEで開いてください。");
+            setView("login", "LINEアプリで連携を続けます", "下のボタンをタップしてLINEアプリを開くと、診断結果をモビーに連携できます。", isTikTokBrowser() ? "TikTokでは確認が出たらLINEで開いてください。" : "Safariでは確認が出たらLINEで開いてください。");
             return;
           }
           if (shouldUseManualLineLogin()) {
@@ -318,7 +318,7 @@
       lineLogin.addEventListener("click", () => {
         try {
           const sessionId = getSessionId();
-          if (!sessionId || !window.liff) {
+          if (!sessionId) {
             throw new Error("LINE login is not ready");
           }
           lineLogin.disabled = true;
@@ -326,6 +326,9 @@
           if (lineLogin.dataset.lineOpenUrl) {
             window.location.href = lineLogin.dataset.lineOpenUrl;
             return;
+          }
+          if (!window.liff) {
+            throw new Error("LINE login is not ready");
           }
           window.liff.login({ redirectUri: buildRedirectUri(sessionId) });
         } catch (error) {

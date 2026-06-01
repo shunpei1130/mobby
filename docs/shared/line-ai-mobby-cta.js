@@ -117,8 +117,12 @@
     return TIKTOK_BROWSER_PATTERN.test(userAgent());
   }
 
-  function shouldWaitForTapToOpen() {
+  function shouldUseLineAppHandoff() {
     return isIosSafari() || isTikTokInAppBrowser();
+  }
+
+  function shouldWaitForTapToOpen() {
+    return shouldUseLineAppHandoff();
   }
 
   function setTriggerLoading(element, isLoading) {
@@ -176,7 +180,7 @@
       enhanced.lineAppUrl = buildLineAppUrl(liffUrl);
       enhanced.androidIntentUrl = buildAndroidIntentUrl(liffUrl);
     }
-    if (isTikTokInAppBrowser() && liffUrl) {
+    if (shouldUseLineAppHandoff() && liffUrl) {
       enhanced.openUrl = isAndroid() && enhanced.androidIntentUrl
         ? enhanced.androidIntentUrl
         : (enhanced.lineAppUrl || liffUrl);
@@ -286,12 +290,15 @@
       applyPreparedOpenTarget(element, data);
       if (shouldWaitForTapToOpen()) {
         const tiktok = isTikTokInAppBrowser();
+        const safari = isIosSafari();
         renderResult(element, data, {
           instruction: data.diagnosisFallback
             ? "診断結果なしでもLINEでモビーと話せます。次のボタンをタップしてLINEアプリを開いてね。"
             : tiktok
               ? "TikTokでは次のボタンをタップして、LINEアプリで診断結果の連携を続けてね。"
-              : "次のボタンをタップすると、LINEアプリで診断結果の連携を続けられます。",
+              : safari
+                ? "Safariでは次のボタンをタップして、LINEアプリで診断結果の連携を続けてね。"
+                : "次のボタンをタップすると、LINEアプリで診断結果の連携を続けられます。",
           buttonLabel: data.usedDiagnosis === false ? "LINEアプリを開く" : "LINEアプリで連携する"
         });
         setStatus(
@@ -333,7 +340,7 @@
       const issueButton = event.target.closest("[data-line-ai-mobby-issue]");
       if (issueButton) {
         if (issueButton.dataset.lineAiMobbyReady === "true" && issueButton.getAttribute("href") !== "#") {
-          setStatus(element, isTikTokInAppBrowser() ? "確認が出たらLINEで開いてください。" : "LINEアプリを開いています。", false);
+          setStatus(element, shouldUseLineAppHandoff() ? "確認が出たらLINEで開いてください。" : "LINEアプリを開いています。", false);
           return;
         }
         event.preventDefault();
