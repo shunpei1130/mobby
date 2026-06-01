@@ -12,31 +12,9 @@ const SAFETY_PATTERNS = {
   ],
   violence: [
     /殺したい/i,
-    /殴りたい/i,
     /刺したい/i,
-    /暴力/i,
     /脅す/i,
-    /hurt someone/i,
     /kill (him|her|them)/i
-  ],
-  stalking: [
-    /監視/i,
-    /位置情報/i,
-    /居場所を調べ/i,
-    /尾行/i,
-    /つけ回/i,
-    /パスワード/i,
-    /ログイン/i,
-    /SNS.*監視/i,
-    /stalk/i,
-    /tracking/i
-  ],
-  crisis: [
-    /助けて/i,
-    /限界/i,
-    /もう無理/i,
-    /今すぐ.*危ない/i,
-    /緊急/i
   ]
 };
 
@@ -52,7 +30,7 @@ export function detectSafetyRisk(text) {
     selfHarm: risks.includes("selfHarm"),
     violence: risks.includes("violence"),
     stalking: risks.includes("stalking"),
-    crisis: risks.includes("crisis")
+    crisis: false
   };
 }
 

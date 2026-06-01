@@ -8,7 +8,7 @@ import {
   toLineTextMessage,
   verifyLineSignature
 } from "./_line.js";
-import { buildRateLimitReply, canReply, canReplyGlobally, recordGlobalReply, recordReply } from "./_rate-limit.js";
+import { buildRateLimitReply, canReply, canReplyGlobally, recordGlobalReply, recordReply, todayKey } from "./_rate-limit.js";
 import { buildSafetyReply, detectSafetyRisk } from "./_safety.js";
 import {
   appendConversationMessage,
@@ -53,7 +53,7 @@ function buildDefaultUser(userKey) {
 }
 
 function replyCountToday(user) {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayKey();
   return user?.messageCountDate === today ? Number(user?.messageCountToday || 0) : 0;
 }
 

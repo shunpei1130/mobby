@@ -1,12 +1,19 @@
-const DAILY_USER_LIMIT = 50;
-const DAILY_TOTAL_LIMIT = 500;
+const DAILY_USER_LIMIT = 100;
+const DAILY_TOTAL_LIMIT = 1000;
 
-function todayKey(date = new Date()) {
-  return date.toISOString().slice(0, 10);
+export function todayKey(date = new Date()) {
+  const parts = new Intl.DateTimeFormat("en", {
+    timeZone: "Asia/Tokyo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).formatToParts(date);
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
 }
 
-export function canReply(user) {
-  const today = todayKey();
+export function canReply(user, date = new Date()) {
+  const today = todayKey(date);
   const count = user?.messageCountDate === today ? Number(user?.messageCountToday || 0) : 0;
   return {
     ok: count < DAILY_USER_LIMIT,
@@ -16,8 +23,8 @@ export function canReply(user) {
   };
 }
 
-export function recordReply(user) {
-  const today = todayKey();
+export function recordReply(user, date = new Date()) {
+  const today = todayKey(date);
   const sameDay = user?.messageCountDate === today;
   return {
     ...user,
@@ -27,8 +34,8 @@ export function recordReply(user) {
   };
 }
 
-export function canReplyGlobally(conversation) {
-  const today = todayKey();
+export function canReplyGlobally(conversation, date = new Date()) {
+  const today = todayKey(date);
   const count = conversation?.dailyCountDate === today ? Number(conversation?.dailyCount || 0) : 0;
   return {
     ok: count < DAILY_TOTAL_LIMIT,
@@ -38,8 +45,8 @@ export function canReplyGlobally(conversation) {
   };
 }
 
-export function recordGlobalReply(conversation) {
-  const today = todayKey();
+export function recordGlobalReply(conversation, date = new Date()) {
+  const today = todayKey(date);
   const sameDay = conversation?.dailyCountDate === today;
   return {
     ...conversation,

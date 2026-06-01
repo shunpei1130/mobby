@@ -8,6 +8,7 @@ import webhook from "../api/line-ai/webhook.js";
 import { generateGeminiReply, generateReply } from "../api/line-ai/_ai.js";
 import { toLineTextMessage, verifyLineSignature } from "../api/line-ai/_line.js";
 import { buildSystemPrompt } from "../api/line-ai/_prompts.js";
+import { canReply, canReplyGlobally, todayKey } from "../api/line-ai/_rate-limit.js";
 import {
   loadConversation,
   loadLinkSession,
@@ -541,7 +542,7 @@ async function callDisplayNameCueFlow() {
   const originalGeminiKey = process.env.GEMINI_API_KEY;
   const lineUserId = "U_DISPLAY_NAME_CUE_USER";
   const userKey = makeUserKey(lineUserId);
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayKey();
 
   await saveUser(userKey, {
     version: 1,
@@ -666,6 +667,11 @@ async function callWebhookFlow() {
 
   const crisisText = "\u3082\u3046\u7121\u7406\u3001\u6d88\u3048\u305f\u3044";
   assert(detectSafetyRisk(crisisText).hasRisk, "safety detector should catch crisis text");
+  assert(!detectSafetyRisk("もう無理、助けて").hasRisk, "safety detector should let broad crisis words go to AI");
+  assert(!detectSafetyRisk("SNS監視が不安").hasRisk, "safety detector should let broad stalking words go to AI");
+  assert(!detectSafetyRisk("位置情報が気になる").hasRisk, "safety detector should let location anxiety go to AI");
+  assert(detectSafetyRisk("殺したい").hasRisk, "safety detector should catch explicit violence text");
+  assert(detectSafetyRisk("死にたい").hasRisk, "safety detector should catch explicit self-harm text");
   const safetyRes = createRes();
   await webhook(createWebhookReq({
     events: [{
@@ -680,8 +686,27 @@ async function callWebhookFlow() {
 
   await saveUser(userKey, {
     ...linkedUser,
-    messageCountDate: new Date().toISOString().slice(0, 10),
+    messageCountDate: todayKey(),
     messageCountToday: 50
+  });
+  await saveConversation(userKey, { version: 1, userKey, messages: [] });
+  const recoveredRes = createRes();
+  await webhook(createWebhookReq({
+    events: [{
+      type: "message",
+      replyToken: "reply-recovered",
+      source: { type: "user", userId: lineUserId },
+      message: { type: "text", id: "5", text: "旧上限から戻れるか確認" }
+    }]
+  }), recoveredRes);
+  conversation = await loadConversation(userKey);
+  assert(!conversation.messages.at(-1).text.includes("\u4eca\u65e5\u306f\u3053\u3053\u307e\u3067"), "old user limit should recover under the doubled limit");
+  assert(conversation.messages.at(-1).text.includes("旧上限から戻れるか確認"), "old limit recovery should produce a normal reply");
+
+  await saveUser(userKey, {
+    ...linkedUser,
+    messageCountDate: todayKey(),
+    messageCountToday: 100
   });
   await saveConversation(userKey, { version: 1, userKey, messages: [] });
   const rateRes = createRes();
@@ -690,12 +715,37 @@ async function callWebhookFlow() {
       type: "message",
       replyToken: "reply-rate",
       source: { type: "user", userId: lineUserId },
-      message: { type: "text", id: "5", text: "\u666e\u901a\u306e\u76f8\u8ac7\u3067\u3059" }
+      message: { type: "text", id: "6", text: "\u666e\u901a\u306e\u76f8\u8ac7\u3067\u3059" }
     }]
   }), rateRes);
   conversation = await loadConversation(userKey);
   assert(conversation.messages.at(-1).text.includes("\u4eca\u65e5\u306f\u3053\u3053\u307e\u3067"), "rate limit reply should be used");
 
+  await saveUser(userKey, {
+    ...linkedUser,
+    messageCountDate: todayKey(),
+    messageCountToday: 0
+  });
+  await saveConversation(userKey, { version: 1, userKey, messages: [], dailyCountDate: todayKey(), dailyCount: 1000 });
+  const globalRateRes = createRes();
+  await webhook(createWebhookReq({
+    events: [{
+      type: "message",
+      replyToken: "reply-global-rate",
+      source: { type: "user", userId: lineUserId },
+      message: { type: "text", id: "7", text: "\u5168\u4f53\u4e0a\u9650\u306e\u78ba\u8a8d\u3067\u3059" }
+    }]
+  }), globalRateRes);
+  conversation = await loadConversation(userKey);
+  assert(conversation.messages.at(-1).text.includes("\u4eca\u65e5\u306f\u3053\u3053\u307e\u3067"), "global rate limit reply should be used at doubled limit");
+}
+
+function callRateLimitDateFlow() {
+  const utcDate = new Date("2026-01-01T15:30:00.000Z");
+  assert(todayKey(utcDate) === "2026-01-02", "rate limit day key should use Japan time");
+  assert(canReply({ messageCountDate: "2026-01-01", messageCountToday: 100 }, utcDate).ok, "JST date rollover should reset user count");
+  assert(!canReply({ messageCountDate: "2026-01-02", messageCountToday: 100 }, utcDate).ok, "doubled user limit should block at 100");
+  assert(!canReplyGlobally({ dailyCountDate: "2026-01-02", dailyCount: 1000 }, utcDate).ok, "doubled global limit should block at 1000");
 }
 
 async function callEmojiTailWebhookFlow() {
@@ -1087,6 +1137,7 @@ await callKnowledgeReplyFlow();
 await callCompatibilityReplyFlow();
 await callDisplayNameCueFlow();
 await callWebhookFlow();
+callRateLimitDateFlow();
 await callEmojiTailWebhookFlow();
 await callWebhookMarkAsReadFlow();
 await callGeminiProviderFlow();
