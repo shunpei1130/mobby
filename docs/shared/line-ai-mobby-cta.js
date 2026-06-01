@@ -3,6 +3,7 @@
   const LINK_SESSION_ENDPOINT = "/api/line-ai/link-sessions";
   const LINKABLE_SOURCES = new Set(["16school", "16stan", "16love", "16renai"]);
   const renderedNodes = new WeakSet();
+  const openTargetCache = new WeakMap();
 
   function escapeHtml(value) {
     return String(value || "")
@@ -48,24 +49,33 @@
           ${diagnosis ? "LINEで追加すると、診断結果をふまえてモビーと話せます。" : "LINEで追加したら、そのまま話せます。"}
         </p>
         <div class="line-ai-mobby-cta__actions">
-          <button class="line-ai-mobby-cta__button" type="button" data-line-ai-mobby-issue>
+          <a class="line-ai-mobby-cta__button" href="#" data-line-ai-mobby-issue data-line-ai-mobby-ready="false">
             LINEでモビーを追加する
-          </button>
+          </a>
         </div>
         <p class="line-ai-mobby-cta__status" data-line-ai-mobby-status></p>
       </section>
     `;
   }
 
-  function renderResult(element, data) {
-    const lineAddUrl = escapeHtml(data.lineAddUrl || "#");
+  function renderResult(element, data, options) {
+    const openUrl = escapeHtml(data.openUrl || data.liffUrl || data.lineAddUrl || "#");
+    const hasDiagnosisLink = Boolean(data.openUrl || data.liffUrl) && data.usedDiagnosis !== false;
+    const instruction = escapeHtml(options?.instruction || (
+      hasDiagnosisLink
+        ? "LINEアプリを開いて、診断結果の連携を続けてね。"
+        : "LINEを開いて友だち追加したら、そのまま話しかけてね。"
+    ));
+    const buttonLabel = escapeHtml(options?.buttonLabel || (
+      hasDiagnosisLink ? "LINEアプリで連携を続ける" : "LINEを開く"
+    ));
     element.innerHTML = `
       <section class="line-ai-mobby-cta" aria-label="LINE AI Mobby">
         <h3 class="line-ai-mobby-cta__headline">モビーと話そう！</h3>
         <div class="line-ai-mobby-cta__result">
-          <p class="line-ai-mobby-cta__instruction">LINEを開いて友だち追加したら、そのまま話しかけてね。</p>
-          <a class="line-ai-mobby-cta__line-button" href="${lineAddUrl}" target="_blank" rel="noopener">
-            LINEを開く
+          <p class="line-ai-mobby-cta__instruction">${instruction}</p>
+          <a class="line-ai-mobby-cta__line-button" href="${openUrl}" data-line-ai-mobby-issue data-line-ai-mobby-ready="true">
+            ${buttonLabel}
           </a>
         </div>
         <p class="line-ai-mobby-cta__status" data-line-ai-mobby-status></p>
@@ -80,19 +90,53 @@
     status.classList.toggle("is-error", Boolean(isError));
   }
 
-  async function openLineAddFallback(element, usedDiagnosis) {
+  function isIosSafari() {
+    const ua = navigator.userAgent || "";
+    const isIos = /iP(hone|ad|od)/.test(ua) || (ua.includes("Macintosh") && navigator.maxTouchPoints > 1);
+    const isSafari = /Safari/.test(ua) && !/(CriOS|FxiOS|EdgiOS|OPiOS|Line)\//.test(ua);
+    return isIos && isSafari;
+  }
+
+  function shouldWaitForTapToOpen() {
+    return isIosSafari();
+  }
+
+  function setTriggerLoading(element, isLoading) {
+    const trigger = element.querySelector("[data-line-ai-mobby-issue]");
+    if (!trigger) return;
+    if (isLoading) {
+      trigger.setAttribute("aria-busy", "true");
+      trigger.setAttribute("aria-disabled", "true");
+      trigger.textContent = "準備中...";
+    } else {
+      trigger.removeAttribute("aria-busy");
+      trigger.removeAttribute("aria-disabled");
+      trigger.textContent = "LINEでモビーを追加する";
+    }
+  }
+
+  function applyPreparedOpenTarget(element, data) {
+    const trigger = element.querySelector("[data-line-ai-mobby-issue]");
+    const openUrl = data?.openUrl || data?.liffUrl || data?.lineAddUrl;
+    if (!trigger || !openUrl) return;
+    trigger.href = openUrl;
+    trigger.dataset.lineAiMobbyReady = "true";
+    trigger.removeAttribute("aria-busy");
+    trigger.removeAttribute("aria-disabled");
+    trigger.textContent = data.usedDiagnosis === false ? "LINEでモビーを追加する" : "LINEで診断結果を連携する";
+  }
+
+  async function fetchLineAddInfo() {
     const response = await fetch(LINE_ADD_ENDPOINT, { method: "GET" });
     const data = await response.json().catch(() => ({}));
     if (!response.ok || data.ok !== true) {
       throw new Error(data.error || data.message || "LINEを開けませんでした。");
     }
-    renderResult(element, data);
-    if (usedDiagnosis) {
-      setStatus(element, "今だけ診断結果を連携できませんでした。診断結果なしでもLINEで話せます。", true);
-    }
-    if (data.lineAddUrl) {
-      window.location.href = data.lineAddUrl;
-    }
+    return {
+      ...data,
+      openUrl: data.lineAddUrl,
+      usedDiagnosis: false
+    };
   }
 
   async function createLinkSession(diagnosis) {
@@ -108,32 +152,104 @@
     return data;
   }
 
-  async function prepareLineAdd(element) {
-    const button = element.querySelector("[data-line-ai-mobby-issue]");
-    if (button) {
-      button.disabled = true;
-      button.textContent = "準備中...";
-    }
+  async function createOpenTarget(element, options) {
     const diagnosis = parseDiagnosis(element);
+    if (diagnosis) {
+      try {
+        const data = await createLinkSession(diagnosis);
+        return {
+          ...data,
+          openUrl: data.liffUrl,
+          usedDiagnosis: true
+        };
+      } catch (error) {
+        if (!options?.allowDiagnosisFallback) throw error;
+        const data = await fetchLineAddInfo();
+        return {
+          ...data,
+          diagnosisFallback: true,
+          sourceError: error
+        };
+      }
+    }
+    return fetchLineAddInfo();
+  }
+
+  function cacheOpenTarget(element, promise) {
+    const entry = { promise };
+    openTargetCache.set(element, entry);
+    entry.promise = promise
+      .then((data) => {
+        entry.data = data;
+        applyPreparedOpenTarget(element, data);
+        return data;
+      })
+      .catch((error) => {
+        if (openTargetCache.get(element) === entry) {
+          openTargetCache.delete(element);
+        }
+        throw error;
+      });
+    return entry.promise;
+  }
+
+  function primeOpenTarget(element) {
+    if (openTargetCache.has(element)) return;
+    cacheOpenTarget(element, createOpenTarget(element, { allowDiagnosisFallback: false })).catch(() => {});
+  }
+
+  async function getOpenTarget(element, options) {
+    const cached = openTargetCache.get(element);
+    if (cached) {
+      try {
+        return await cached.promise;
+      } catch (error) {
+        if (!options?.allowDiagnosisFallback) throw error;
+      }
+    }
+    return cacheOpenTarget(element, createOpenTarget(element, options));
+  }
+
+  async function prepareLineAdd(element) {
+    const diagnosis = parseDiagnosis(element);
+    setTriggerLoading(element, true);
     setStatus(element, diagnosis ? "診断結果の連携を準備しています。" : "LINEを開きます。", false);
 
     try {
-      if (diagnosis) {
-        const data = await createLinkSession(diagnosis);
-        window.location.href = data.liffUrl;
+      const data = await getOpenTarget(element, { allowDiagnosisFallback: true });
+      const openUrl = data.openUrl || data.liffUrl || data.lineAddUrl;
+      if (!openUrl) {
+        throw new Error("LINE URL is missing");
+      }
+
+      applyPreparedOpenTarget(element, data);
+      if (shouldWaitForTapToOpen()) {
+        renderResult(element, data, {
+          instruction: data.diagnosisFallback
+            ? "診断結果なしでもLINEでモビーと話せます。次のボタンをタップしてLINEアプリを開いてね。"
+            : "次のボタンをタップすると、LINEアプリで診断結果の連携を続けられます。",
+          buttonLabel: data.usedDiagnosis === false ? "LINEアプリを開く" : "LINEアプリで連携する"
+        });
+        setStatus(
+          element,
+          data.diagnosisFallback
+            ? "今だけ診断結果を連携できませんでした。診断結果なしでもLINEで話せます。"
+            : "SafariではボタンをタップするとLINEアプリが開きます。",
+          Boolean(data.diagnosisFallback)
+        );
+        if (data.sourceError) {
+          console.warn("[LINE AI Mobby CTA] Falling back to LINE add URL.", data.sourceError);
+        }
         return;
       }
-      await openLineAddFallback(element, false);
-    } catch (error) {
-      if (diagnosis) {
-        try {
-          await openLineAddFallback(element, true);
-          console.warn("[LINE AI Mobby CTA] Falling back to LINE add URL.", error);
-          return;
-        } catch (fallbackError) {
-          console.warn("[LINE AI Mobby CTA] Failed to prepare fallback LINE add URL.", fallbackError);
-        }
+
+      renderResult(element, data);
+      if (data.diagnosisFallback) {
+        setStatus(element, "今だけ診断結果を連携できませんでした。診断結果なしでもLINEで話せます。", true);
+        console.warn("[LINE AI Mobby CTA] Falling back to LINE add URL.", data.sourceError);
       }
+      window.location.href = openUrl;
+    } catch (error) {
       renderInitial(element);
       setStatus(element, "今だけLINEを開けませんでした。時間を置いてもう一度試してね。", true);
       console.warn("[LINE AI Mobby CTA] Failed to prepare LINE add URL.", error);
@@ -146,9 +262,15 @@
 
     renderedNodes.add(element);
     renderInitial(element);
+    primeOpenTarget(element);
     element.addEventListener("click", (event) => {
       const issueButton = event.target.closest("[data-line-ai-mobby-issue]");
       if (issueButton) {
+        if (issueButton.dataset.lineAiMobbyReady === "true" && issueButton.getAttribute("href") !== "#") {
+          setStatus(element, "LINEアプリを開いています。", false);
+          return;
+        }
+        event.preventDefault();
         prepareLineAdd(element);
       }
     });

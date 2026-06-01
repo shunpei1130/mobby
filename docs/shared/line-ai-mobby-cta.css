@@ -58,7 +58,8 @@
   box-shadow: 0 12px 24px rgba(6, 199, 85, 0.24);
 }
 
-.line-ai-mobby-cta__button:disabled {
+.line-ai-mobby-cta__button:disabled,
+.line-ai-mobby-cta__button[aria-disabled="true"] {
   opacity: 0.64;
   cursor: wait;
 }

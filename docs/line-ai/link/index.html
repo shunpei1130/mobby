@@ -100,6 +100,11 @@
       display: none;
     }
 
+    .button[disabled] {
+      opacity: 0.64;
+      cursor: wait;
+    }
+
     .status {
       margin-top: 18px;
       padding-top: 18px;
@@ -121,7 +126,8 @@
       <h1 data-title>診断結果を連携しています</h1>
       <p class="message" data-message>LINEログインを確認して、モビーが診断結果を覚えられるようにしています。</p>
       <div class="actions">
-        <a class="button button--line" data-line-open hidden href="#" target="_blank" rel="noopener">LINEを開く</a>
+        <button class="button button--line" data-line-login type="button" hidden>LINEアプリで連携する</button>
+        <a class="button button--line" data-line-open hidden href="#" rel="noopener">LINEを開く</a>
         <button class="button button--subtle" data-retry type="button" hidden>もう一度試す</button>
       </div>
       <p class="status" data-status data-state="loading">この画面は閉じずに少し待ってね。</p>
@@ -136,6 +142,7 @@
       const title = document.querySelector("[data-title]");
       const message = document.querySelector("[data-message]");
       const status = document.querySelector("[data-status]");
+      const lineLogin = document.querySelector("[data-line-login]");
       const lineOpen = document.querySelector("[data-line-open]");
       const retry = document.querySelector("[data-retry]");
 
@@ -164,11 +171,30 @@
         return "";
       }
 
+      function isIosDevice() {
+        const ua = navigator.userAgent || "";
+        return /iP(hone|ad|od)/.test(ua) || (ua.includes("Macintosh") && navigator.maxTouchPoints > 1);
+      }
+
+      function shouldUseManualLineLogin() {
+        const inLineClient = Boolean(window.liff?.isInClient?.());
+        return isIosDevice() && !inLineClient;
+      }
+
+      function buildRedirectUri(sessionId) {
+        const url = new URL(window.location.href);
+        url.search = "";
+        url.hash = "";
+        url.searchParams.set("s", sessionId);
+        return url.toString();
+      }
+
       function setView(state, heading, copy, detail) {
         title.textContent = heading;
         message.textContent = copy;
         status.textContent = detail || "";
         status.dataset.state = state;
+        lineLogin.hidden = state !== "login";
         retry.hidden = state !== "error";
       }
 
@@ -182,6 +208,7 @@
       }
 
       async function run() {
+        lineLogin.hidden = true;
         lineOpen.hidden = true;
         retry.hidden = true;
         setView("loading", "診断結果を連携しています", "LINEログインを確認して、モビーが診断結果を覚えられるようにしています。", "この画面は閉じずに少し待ってね。");
@@ -198,7 +225,12 @@
 
         await window.liff.init({ liffId: config.liffId });
         if (!window.liff.isLoggedIn()) {
-          window.liff.login({ redirectUri: window.location.href });
+          if (shouldUseManualLineLogin()) {
+            lineLogin.disabled = false;
+            setView("login", "LINEアプリで連携を続けます", "下のボタンをタップしてLINEアプリを開くと、診断結果をモビーに連携できます。", "Safariでは確認が出たらLINEで開いてください。");
+            return;
+          }
+          window.liff.login({ redirectUri: buildRedirectUri(sessionId) });
           return;
         }
 
@@ -226,8 +258,23 @@
         run().catch(showError);
       });
 
+      lineLogin.addEventListener("click", () => {
+        try {
+          const sessionId = getSessionId();
+          if (!sessionId || !window.liff) {
+            throw new Error("LINE login is not ready");
+          }
+          lineLogin.disabled = true;
+          setView("loading", "LINEアプリを開いています", "LINEログインを確認して、モビーが診断結果を覚えられるようにしています。", "この画面は閉じずに少し待ってね。");
+          window.liff.login({ redirectUri: buildRedirectUri(sessionId) });
+        } catch (error) {
+          showError(error);
+        }
+      });
+
       function showError(error) {
         console.warn("[LINE AI Mobby LIFF] Link failed.", error);
+        lineLogin.hidden = true;
         lineOpen.hidden = true;
         setView("error", "連携できませんでした", "時間を置いて、診断結果ページからもう一度試してください。", "期限切れの場合は診断結果ページのボタンからやり直せます。");
       }

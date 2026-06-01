@@ -299,6 +299,18 @@ async function callLiffPageStaticCheck() {
     .then((fs) => fs.readFile(new URL("../line-ai/link/index.html", import.meta.url), "utf8"));
   assert(page.includes('params.get("liff.state")'), "LIFF link page should read session ID from liff.state");
   assert(page.includes('params.get("s")'), "LIFF link page should keep direct session ID support");
+  assert(page.includes("data-line-login"), "LIFF link page should provide a user-tap LINE login button");
+  assert(page.includes("shouldUseManualLineLogin"), "LIFF link page should gate iOS external-browser login behind a user tap");
+  assert(page.includes("buildRedirectUri(sessionId)"), "LIFF link page should preserve session ID in login redirects");
+  assert(!page.includes("window.liff.login({ redirectUri: window.location.href })"), "LIFF link page should not auto-login with the raw current URL");
+}
+
+async function callSharedCtaStaticCheck() {
+  const cta = await import("node:fs/promises")
+    .then((fs) => fs.readFile(new URL("../shared/line-ai-mobby-cta.js", import.meta.url), "utf8"));
+  assert(cta.includes("primeOpenTarget(element)"), "diagnosis CTA should prepare the LINE URL before the user's tap");
+  assert(cta.includes("data-line-ai-mobby-ready"), "diagnosis CTA should mark direct-open links as ready");
+  assert(cta.includes("shouldWaitForTapToOpen"), "diagnosis CTA should avoid post-async auto-open on Safari");
 }
 
 async function callKnowledgeReplyFlow() {
@@ -1070,6 +1082,7 @@ await callLineAddInfoIgnoresDiagnosis();
 await callLinkSessionFlow();
 await callLiffLinkFlow();
 await callLiffPageStaticCheck();
+await callSharedCtaStaticCheck();
 await callKnowledgeReplyFlow();
 await callCompatibilityReplyFlow();
 await callDisplayNameCueFlow();
