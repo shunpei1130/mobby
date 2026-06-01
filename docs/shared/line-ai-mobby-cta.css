@@ -77,6 +77,14 @@
   line-height: 1.7;
 }
 
+.line-ai-mobby-cta__fallback-link {
+  color: #1f7a46;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .line-ai-mobby-cta__status {
   min-height: 18px;
   margin: 10px 0 0;

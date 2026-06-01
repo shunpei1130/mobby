@@ -302,6 +302,10 @@ async function callLiffPageStaticCheck() {
   assert(page.includes('params.get("s")'), "LIFF link page should keep direct session ID support");
   assert(page.includes("data-line-login"), "LIFF link page should provide a user-tap LINE login button");
   assert(page.includes("shouldUseManualLineLogin"), "LIFF link page should gate iOS external-browser login behind a user tap");
+  assert(page.includes("isTikTokBrowser"), "LIFF link page should detect TikTok in-app browser");
+  assert(page.includes("buildTikTokLineOpenUrl"), "LIFF link page should build a TikTok-specific LINE app handoff URL");
+  assert(page.includes("line://app/"), "LIFF link page should include a LINE app scheme fallback for restricted in-app browsers");
+  assert(page.includes("intent://"), "LIFF link page should include an Android intent fallback for restricted in-app browsers");
   assert(page.includes("buildRedirectUri(sessionId)"), "LIFF link page should preserve session ID in login redirects");
   assert(!page.includes("window.liff.login({ redirectUri: window.location.href })"), "LIFF link page should not auto-login with the raw current URL");
 }
@@ -312,6 +316,10 @@ async function callSharedCtaStaticCheck() {
   assert(cta.includes("primeOpenTarget(element)"), "diagnosis CTA should prepare the LINE URL before the user's tap");
   assert(cta.includes("data-line-ai-mobby-ready"), "diagnosis CTA should mark direct-open links as ready");
   assert(cta.includes("shouldWaitForTapToOpen"), "diagnosis CTA should avoid post-async auto-open on Safari");
+  assert(cta.includes("isTikTokInAppBrowser"), "diagnosis CTA should detect TikTok in-app browser");
+  assert(cta.includes("buildLineAppUrl"), "diagnosis CTA should build a LINE app scheme fallback for LIFF URLs");
+  assert(cta.includes("buildAndroidIntentUrl"), "diagnosis CTA should build an Android intent fallback for LIFF URLs");
+  assert(cta.includes("fallbackOpenUrl"), "diagnosis CTA should keep the normal LIFF URL as fallback");
 }
 
 async function callKnowledgeReplyFlow() {

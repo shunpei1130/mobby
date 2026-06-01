@@ -139,6 +139,7 @@
     (function initMobbyLiffLink() {
       const CONFIG_ENDPOINT = "/api/line-ai/liff-link";
       const LINK_ENDPOINT = "/api/line-ai/liff-link";
+      const TIKTOK_BROWSER_PATTERN = /(TikTok|musical_ly|Bytedance|ByteLocale|ByteFullLocale|Aweme|Toutiao|TTWebView|trill)/i;
       const title = document.querySelector("[data-title]");
       const message = document.querySelector("[data-message]");
       const status = document.querySelector("[data-status]");
@@ -171,14 +172,31 @@
         return "";
       }
 
+      function userAgent() {
+        return navigator.userAgent || "";
+      }
+
       function isIosDevice() {
-        const ua = navigator.userAgent || "";
+        const ua = userAgent();
         return /iP(hone|ad|od)/.test(ua) || (ua.includes("Macintosh") && navigator.maxTouchPoints > 1);
+      }
+
+      function isAndroidDevice() {
+        return /Android/i.test(userAgent());
+      }
+
+      function isTikTokBrowser() {
+        return TIKTOK_BROWSER_PATTERN.test(userAgent());
       }
 
       function shouldUseManualLineLogin() {
         const inLineClient = Boolean(window.liff?.isInClient?.());
         return isIosDevice() && !inLineClient;
+      }
+
+      function shouldUseAppOpenHandoff() {
+        const inLineClient = Boolean(window.liff?.isInClient?.());
+        return isTikTokBrowser() && !inLineClient;
       }
 
       function buildRedirectUri(sessionId) {
@@ -187,6 +205,32 @@
         url.hash = "";
         url.searchParams.set("s", sessionId);
         return url.toString();
+      }
+
+      function buildLiffUrl(liffId, sessionId) {
+        return `https://liff.line.me/${encodeURIComponent(liffId)}?s=${encodeURIComponent(sessionId)}`;
+      }
+
+      function buildLineAppOpenUrl(liffId, sessionId) {
+        return `line://app/${encodeURIComponent(liffId)}?s=${encodeURIComponent(sessionId)}`;
+      }
+
+      function buildAndroidIntentUrl(liffUrl) {
+        try {
+          const url = new URL(liffUrl);
+          const target = `${url.host}${url.pathname}${url.search}`;
+          return `intent://${target}#Intent;scheme=https;package=jp.naver.line.android;S.browser_fallback_url=${encodeURIComponent(url.toString())};end`;
+        } catch {
+          return "";
+        }
+      }
+
+      function buildTikTokLineOpenUrl(liffId, sessionId) {
+        const liffUrl = buildLiffUrl(liffId, sessionId);
+        if (isAndroidDevice()) {
+          return buildAndroidIntentUrl(liffUrl) || liffUrl;
+        }
+        return buildLineAppOpenUrl(liffId, sessionId) || liffUrl;
       }
 
       function setView(state, heading, copy, detail) {
@@ -208,6 +252,7 @@
       }
 
       async function run() {
+        delete lineLogin.dataset.lineOpenUrl;
         lineLogin.hidden = true;
         lineOpen.hidden = true;
         retry.hidden = true;
@@ -220,11 +265,23 @@
 
         const config = await fetchJson(CONFIG_ENDPOINT, { method: "GET" });
         if (!window.liff) {
+          if (isTikTokBrowser()) {
+            lineLogin.disabled = false;
+            lineLogin.dataset.lineOpenUrl = buildTikTokLineOpenUrl(config.liffId, sessionId);
+            setView("login", "LINEアプリで連携を続けます", "下のボタンをタップしてLINEアプリを開くと、診断結果をモビーに連携できます。", "TikTokでは確認が出たらLINEで開いてください。");
+            return;
+          }
           throw new Error("LIFF SDK is not available");
         }
 
         await window.liff.init({ liffId: config.liffId });
         if (!window.liff.isLoggedIn()) {
+          if (shouldUseAppOpenHandoff()) {
+            lineLogin.disabled = false;
+            lineLogin.dataset.lineOpenUrl = buildTikTokLineOpenUrl(config.liffId, sessionId);
+            setView("login", "LINEアプリで連携を続けます", "下のボタンをタップしてLINEアプリを開くと、診断結果をモビーに連携できます。", "TikTokでは確認が出たらLINEで開いてください。");
+            return;
+          }
           if (shouldUseManualLineLogin()) {
             lineLogin.disabled = false;
             setView("login", "LINEアプリで連携を続けます", "下のボタンをタップしてLINEアプリを開くと、診断結果をモビーに連携できます。", "Safariでは確認が出たらLINEで開いてください。");
@@ -266,6 +323,10 @@
           }
           lineLogin.disabled = true;
           setView("loading", "LINEアプリを開いています", "LINEログインを確認して、モビーが診断結果を覚えられるようにしています。", "この画面は閉じずに少し待ってね。");
+          if (lineLogin.dataset.lineOpenUrl) {
+            window.location.href = lineLogin.dataset.lineOpenUrl;
+            return;
+          }
           window.liff.login({ redirectUri: buildRedirectUri(sessionId) });
         } catch (error) {
           showError(error);
