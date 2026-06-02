@@ -8,9 +8,10 @@
   <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
   <link rel="modulepreload" crossorigin href="./assets/loveMobbyDiagnosis-DTWGxZc_.js?v=7">
   <link rel="stylesheet" crossorigin href="./assets/magazine-vH_rC7n8.css">
-  <link rel="stylesheet" href="./assets/loveMobbyFortune.css?v=4">
+  <link rel="stylesheet" href="./assets/loveMobbyFortune.css?v=9">
   <script defer src="./assets/loveMobbyDailyFortunes31.js?v=2"></script>
-  <script defer src="./assets/loveMobbyFortune.js?v=5"></script>
+  <script defer src="./assets/loveMobbyFortuneData.js?v=1"></script>
+  <script defer src="./assets/loveMobbyFortune.js?v=16"></script>
   <link rel="stylesheet" href="../shared/line-ai-mobby-cta.css">
   <script src="../shared/line-ai-mobby-cta.js"></script>
   <style>
@@ -715,6 +716,7 @@
       padding: 0 14px;
       color: var(--ink);
       font: inherit;
+      font-size: 16px;
       font-weight: 600;
     }
 
@@ -1469,6 +1471,15 @@
       document.addEventListener("click", (event) => {
         const target = event.target.closest("[data-love-diagnosis-start], [data-love-page-prev], [data-love-page-next], [data-love-gate-back]");
         if (!target) return;
+        window.requestAnimationFrame(scrollDiagnosisTop);
+        window.setTimeout(scrollDiagnosisTop, 0);
+      }, true);
+      document.addEventListener("submit", (event) => {
+        const target = event.target.closest("[data-love-gate-form]");
+        if (!target) return;
+        if (document.activeElement && typeof document.activeElement.blur === "function") {
+          document.activeElement.blur();
+        }
         window.requestAnimationFrame(scrollDiagnosisTop);
         window.setTimeout(scrollDiagnosisTop, 0);
       }, true);

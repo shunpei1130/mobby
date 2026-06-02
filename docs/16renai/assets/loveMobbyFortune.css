@@ -10,6 +10,7 @@
 .love-fortune-wrap[hidden],
 .love-fortune-card[hidden],
 [data-love-fortune-daily][hidden],
+[data-love-fortune-weekly][hidden],
 [data-love-fortune-monthly][hidden] {
   display: none !important;
 }
@@ -62,7 +63,7 @@
 
 .love-fortune-switch {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
   padding: 5px;
   border: 1px solid rgba(255, 255, 255, .84);
@@ -180,6 +181,87 @@
 
 .love-fortune-save {
   border-style: dashed !important;
+}
+
+.love-fortune-details {
+  display: grid;
+  gap: 14px;
+}
+
+.love-fortune-detail-list {
+  display: grid;
+  gap: 12px;
+}
+
+.love-fortune-detail-actions {
+  display: grid;
+}
+
+.love-fortune-detail-list[hidden] {
+  display: none !important;
+}
+
+.love-fortune-detail-card {
+  display: grid;
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .84);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .91), rgba(255, 250, 252, .88));
+  box-shadow: 0 14px 32px rgba(48, 34, 42, .18);
+  -webkit-backdrop-filter: blur(18px) saturate(1.12);
+  backdrop-filter: blur(18px) saturate(1.12);
+}
+
+.love-fortune-detail-card__summary {
+  display: grid;
+  gap: 7px;
+  padding: 13px;
+}
+
+.love-fortune-detail-card__summary h4 {
+  color: #35282d;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.45;
+}
+
+.love-fortune-detail-card__summary p:not(.love-diagnosis__eyebrow),
+.love-fortune-detail-card__body p {
+  color: rgba(53, 40, 45, .84);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.85;
+}
+
+.love-fortune-detail-card__body {
+  display: grid;
+  gap: 9px;
+  padding: 0 13px 13px;
+}
+
+.love-fortune-detail-item {
+  display: grid;
+  gap: 5px;
+  padding: 11px;
+  border: 1px solid rgba(229, 206, 216, .62);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .58);
+  box-shadow: inset 0 1px rgba(255, 255, 255, .76);
+}
+
+.love-fortune-detail-item h5 {
+  color: #35282d;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.45;
+}
+
+.love-fortune-detail-card .button,
+.love-fortune-detail-actions .button,
+.love-fortune-detail-list > .button {
+  min-height: 42px;
+  border-radius: 14px;
 }
 
 .love-fortune-gate {
