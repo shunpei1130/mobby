@@ -1,4 +1,9 @@
 {
+  "functions": {
+    "api/line-ai/webhook.js": {
+      "maxDuration": 60
+    }
+  },
   "rewrites": [
     { "source": "/img/fav.jpg", "destination": "/img/favicon/fav.jpg" },
     { "source": "/16school/fav.jpg", "destination": "/16school/favicon/fav.jpg" },

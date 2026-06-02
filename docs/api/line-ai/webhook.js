@@ -20,10 +20,28 @@ import {
 import { normalizeLineMessageText } from "./_text.js";
 
 export const config = {
+  maxDuration: 60,
   api: {
     bodyParser: false
   }
 };
+
+const DEFAULT_REPLY_DELAY_MS = 30 * 1000;
+const MAX_REPLY_DELAY_MS = 45 * 1000;
+
+function getReplyDelayMs() {
+  const raw = process.env.LINE_AI_REPLY_DELAY_MS;
+  if (raw == null || raw === "") return DEFAULT_REPLY_DELAY_MS;
+  const value = Number(raw);
+  if (!Number.isFinite(value)) return DEFAULT_REPLY_DELAY_MS;
+  return Math.min(Math.max(0, Math.round(value)), MAX_REPLY_DELAY_MS);
+}
+
+async function waitUntil(timestamp) {
+  const waitMs = Number(timestamp || 0) - Date.now();
+  if (waitMs <= 0) return;
+  await new Promise((resolve) => setTimeout(resolve, waitMs));
+}
 
 function userKeyFromLineId(lineUserId) {
   const secret = process.env.MOBBY_LINE_AI_SECRET;
@@ -99,7 +117,7 @@ async function ensureDefaultUser(userKey) {
   return user;
 }
 
-async function handleLinkedMessage(event, userKey, user, text) {
+async function handleLinkedMessage(event, userKey, user, text, options = {}) {
   let conversation = await loadConversation(userKey);
   conversation = conversation && typeof conversation === "object" ? conversation : { version: 1, userKey, messages: [] };
 
@@ -107,6 +125,7 @@ async function handleLinkedMessage(event, userKey, user, text) {
   let responseText = "";
   let nextUser = user;
   let nextConversation = appendConversationMessage(conversation, "user", text);
+  let shouldDelayReply = false;
 
   if (safety.hasRisk) {
     responseText = buildSafetyReply(safety);
@@ -124,16 +143,20 @@ async function handleLinkedMessage(event, userKey, user, text) {
       });
       nextUser = recordReply(user);
       nextConversation = recordGlobalReply(nextConversation);
+      shouldDelayReply = true;
     }
   }
 
   nextConversation = appendConversationMessage(nextConversation, "assistant", responseText);
   await saveUser(userKey, nextUser);
   await saveConversation(userKey, nextConversation);
+  if (shouldDelayReply) {
+    await waitUntil(options.replyNotBefore);
+  }
   await reply(event, responseText);
 }
 
-async function handleTextEvent(event) {
+async function handleTextEvent(event, options = {}) {
   const lineUserId = event?.source?.userId;
   const text = normalizeLineMessageText(event?.message);
   if (!lineUserId || !text) return;
@@ -141,7 +164,7 @@ async function handleTextEvent(event) {
   const userKey = userKeyFromLineId(lineUserId);
   const user = await ensureDefaultUser(userKey);
 
-  await handleLinkedMessage(event, userKey, user, text);
+  await handleLinkedMessage(event, userKey, user, text, options);
 }
 
 async function handleEvent(event) {
@@ -155,8 +178,9 @@ async function handleEvent(event) {
   }
 
   if (event?.type === "message" && event?.message?.type === "text") {
+    const replyNotBefore = Date.now() + getReplyDelayMs();
     await markLineMessageAsRead(event.message.markAsReadToken);
-    await handleTextEvent(event);
+    await handleTextEvent(event, { replyNotBefore });
   }
 }
 
