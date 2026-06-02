@@ -1692,6 +1692,15 @@ state.profile = { name, email, age }; const { code, pcts } = computeResult(); co
                 resultName: displayName,
                 resultSummary: ch.hook || ch.catch || "",
                 traits: [ch.title, ch.confidence, ch.priority, ch.core, ch.arena].filter(Boolean).slice(0, 8),
+                detailSections: [
+                    { title: "肩書き", body: ch.title || "" },
+                    { title: "自信のひとこと", body: ch.confidence || "" },
+                    { title: "一番大切にしていること", body: ch.priority || "" },
+                    { title: "コア価値観", body: ch.core || "" },
+                    { title: "強み", body: Array.isArray(ch.strengths) ? ch.strengths.join(" / ") : "" },
+                    { title: "推し活の主戦場", body: ch.arena || "" },
+                    { title: "愛の証明方法", body: ch.proof || "" }
+                ].filter(section => section.body),
                 pagePath: "/16stan/",
                 createdAt: new Date().toISOString()
             };

@@ -36,7 +36,7 @@ async function reply(event, text) {
 }
 
 function buildGreetingPrompt() {
-  return "モビーだよ！なんでも話してね！";
+  return "モビーだよ！「私の診断結果は？」って聞いてみてね！";
 }
 
 function buildDefaultUser(userKey) {

@@ -22,6 +22,6 @@ export default async function handler(req, res) {
   return res.status(200).json({
     ok: true,
     lineAddUrl: fallbackLineAddUrl,
-    firstMessageText: "モビーだよ！なんでも話してね！"
+    firstMessageText: "モビーだよ！「私の診断結果は？」って聞いてみてね！"
   });
 }

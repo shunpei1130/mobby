@@ -24,6 +24,26 @@ export function buildDisplayNameContext(user) {
   ].join("\n");
 }
 
+function buildDetailSectionsContext(user) {
+  if (!Array.isArray(user?.detailSections) || !user.detailSections.length) return "";
+
+  const lines = user.detailSections
+    .map((section) => {
+      const title = truncateText(section?.title, 80).trim();
+      const body = truncateText(section?.body, 500).trim();
+      if (!title || !body) return "";
+      return `- ${title}: ${body}`;
+    })
+    .filter(Boolean);
+
+  if (!lines.length) return "";
+  return [
+    "詳しい結果情報:",
+    ...lines,
+    "- ユーザーが診断結果の詳細を求めている時は、上の詳細から2〜4個を選んで自然に説明する"
+  ].join("\n");
+}
+
 export function buildPersonalDiagnosisContext(user) {
   if (!user?.personalResultLinked || !user?.resultName) return "";
 
@@ -33,12 +53,14 @@ export function buildPersonalDiagnosisContext(user) {
     `- 結果名: ${user.resultName}`,
     user.resultSummary ? `- 要約: ${user.resultSummary}` : "",
     Array.isArray(user.traits) && user.traits.length ? `- 特徴: ${user.traits.join("、")}` : "",
+    buildDetailSectionsContext(user),
     "扱い方:",
     "- この情報は背景としてだけ使う",
     "- ユーザーを診断名で決めつけない",
     "- 聞かれていない限り、診断名を毎回出さない",
     "- 相談の受け止め方や温度感に軽く反映する",
-    "- ユーザーが自分の診断結果を求めていると文脈から判断できる場合は、この保存済み結果を答えてよい"
+    "- ユーザーが自分の診断結果を求めていると文脈から判断できる場合は、この保存済み結果を答えてよい",
+    "- 「私の診断結果は？」のように聞かれたら、結果名だけで終わらず、要約や詳しい結果情報から会話のきっかけになる一言を添える"
   ].filter(Boolean).join("\n");
 }
 

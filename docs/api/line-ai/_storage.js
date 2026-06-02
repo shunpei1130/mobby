@@ -87,6 +87,21 @@ function cleanPath(value) {
   return path.replace(/[?#].*$/, "");
 }
 
+function cleanDetailSections(value) {
+  if (!Array.isArray(value)) return [];
+
+  return value
+    .map((section) => {
+      if (!section || typeof section !== "object" || Array.isArray(section)) return null;
+      const title = cleanString(section.title, 80);
+      const body = cleanString(section.body, 500);
+      if (!title || !body) return null;
+      return { title, body };
+    })
+    .filter(Boolean)
+    .slice(0, 8);
+}
+
 export function isSupportedDiagnosisSource(source) {
   return ALLOWED_DIAGNOSIS_SOURCES.has(String(source || "").trim());
 }
@@ -101,6 +116,7 @@ export function sanitizeDiagnosisPayload(input) {
   const traits = Array.isArray(input.traits)
     ? input.traits.map((trait) => cleanString(trait, 120)).filter(Boolean).slice(0, 8)
     : [];
+  const detailSections = cleanDetailSections(input.detailSections);
 
   return {
     source,
@@ -109,6 +125,7 @@ export function sanitizeDiagnosisPayload(input) {
     resultName,
     resultSummary: cleanString(input.resultSummary, 500),
     traits,
+    detailSections,
     pagePath: cleanPath(input.pagePath)
   };
 }
@@ -180,6 +197,7 @@ export function mergePersonalDiagnosisResult(user, diagnosis, options = {}) {
     resultName: sanitized.resultName,
     resultSummary: sanitized.resultSummary,
     traits: sanitized.traits,
+    detailSections: sanitized.detailSections,
     linkedAt
   };
   const existingHistory = Array.isArray(base.diagnosisHistory) ? base.diagnosisHistory : [];
@@ -202,6 +220,7 @@ export function mergePersonalDiagnosisResult(user, diagnosis, options = {}) {
     resultName: sanitized.resultName,
     resultSummary: sanitized.resultSummary,
     traits: sanitized.traits,
+    detailSections: sanitized.detailSections,
     personalResultLinked: true,
     linkedAt,
     diagnosisHistory
