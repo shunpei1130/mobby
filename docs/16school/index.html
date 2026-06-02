@@ -3752,6 +3752,7 @@ gateSubmitButton.onclick = async () => {
       const descriptionToShow = useMainDesc 
         ? (char.hook || char.description) 
         : (char.midDesc || char.hook || char.description);
+      const lineAiAxisSummary = ["A","B","C","D"].map(k => `${res.axes[k].name}: ${res.hard[k] === "L" ? res.axes[k].left : res.axes[k].right}`).join(" / ");
       const lineAiDiagnosisPayload = {
         source: "16school",
         sourceLabel: "学校モビー診断",
@@ -3762,6 +3763,14 @@ gateSubmitButton.onclick = async () => {
           char.catch || char.summary || "",
           ...["A","B","C","D"].map(k => `${res.axes[k].name}: ${res.hard[k] === "L" ? res.axes[k].left : res.axes[k].right}`)
         ].filter(Boolean).slice(0, 8),
+        detailSections: [
+          { title: "タイプ説明", body: descriptionToShow || char.catch || char.summary || "" },
+          { title: "弱点", body: char.downside || "" },
+          { title: "周りからの見え方", body: char.perception || "" },
+          { title: "強み", body: char.strength || "" },
+          { title: "恋愛傾向・アドバイス", body: `${char.love || ""} ${loveApproach || ""} ${loveStyle || ""} ${lovePriority || ""} ${loveValue || ""} ${loveAdvice || ""}`.trim() },
+          { title: "軸結果", body: lineAiAxisSummary }
+        ].filter(section => section.body),
         pagePath: "/16school/",
         createdAt: new Date().toISOString()
       };

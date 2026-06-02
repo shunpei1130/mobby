@@ -49,14 +49,14 @@
         <h3 class="line-ai-mobby-cta__headline">モビーと話そう！</h3>
         <p class="line-ai-mobby-cta__copy">
           ${tiktok
-            ? "TikTok内ではLINE連携が完了しにくいため、外部ブラウザで開いてから連携してください。"
+            ? "Safari/Chromeで開いてからLINE連携をもう一度タップしてね。"
             : diagnosis
               ? "LINEで追加すると、診断結果をふまえてモビーと話せます。"
               : "LINEで追加したら、そのまま話せます。"}
         </p>
         <div class="line-ai-mobby-cta__actions">
           <a class="line-ai-mobby-cta__button" href="#" data-line-ai-mobby-issue data-line-ai-mobby-ready="false">
-            ${tiktok ? "外部ブラウザで開く手順を見る" : "LINEでモビーを追加する"}
+            ${tiktok ? "右上の「…」から開く手順を見る" : "LINEでモビーを追加する"}
           </a>
         </div>
         <p class="line-ai-mobby-cta__status" data-line-ai-mobby-status></p>
@@ -292,13 +292,10 @@
   function renderTikTokExternalBrowserGuide(element) {
     element.innerHTML = `
       <section class="line-ai-mobby-cta" aria-label="LINE AI Mobby">
-        <h3 class="line-ai-mobby-cta__headline">外部ブラウザで開いてね</h3>
+        <h3 class="line-ai-mobby-cta__headline line-ai-mobby-cta__browser-guide-title">右上の「…」からブラウザで開いてね</h3>
         <div class="line-ai-mobby-cta__result">
           <p class="line-ai-mobby-cta__instruction">
-            TikTok内ブラウザではLINE連携が失敗しやすいため、この診断結果ページをSafariまたはChromeで開いてからもう一度タップしてください。
-          </p>
-          <p class="line-ai-mobby-cta__instruction">
-            右上の「...」から「ブラウザで開く」を選ぶと、連携を続けられます。
+            Safari/Chromeで開いてから、LINE連携をもう一度タップしてください。
           </p>
         </div>
         <p class="line-ai-mobby-cta__status" data-line-ai-mobby-status></p>
@@ -313,7 +310,7 @@
   async function prepareLineAdd(element) {
     if (isTikTokInAppBrowser()) {
       renderTikTokExternalBrowserGuide(element);
-      setStatus(element, "TikTokの右上メニューから外部ブラウザで開いてください。", false);
+      setStatus(element, "TikTokの右上「…」メニューを使ってください。", false);
       return;
     }
 
@@ -363,7 +360,7 @@
         if (isTikTokInAppBrowser()) {
           event.preventDefault();
           renderTikTokExternalBrowserGuide(element);
-          setStatus(element, "TikTokの右上メニューから外部ブラウザで開いてください。", false);
+          setStatus(element, "TikTokの右上「…」メニューを使ってください。", false);
           return;
         }
         if (issueButton.dataset.lineAiMobbyReady === "true" && issueButton.getAttribute("href") !== "#") {

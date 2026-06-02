@@ -64,6 +64,8 @@ function makeUserKey(lineUserId) {
   return createHash("sha256").update(`${lineUserId}:${process.env.MOBBY_LINE_AI_SECRET}`).digest("hex");
 }
 
+const FIRST_MESSAGE_TEXT = "モビーだよ！「私の診断結果は？」って聞いてみてね！";
+
 const VALID_DIAGNOSIS = {
   source: "16love",
   sourceLabel: "メンヘラモビー診断",
@@ -71,6 +73,19 @@ const VALID_DIAGNOSIS = {
   resultName: "返信こないと死モビー",
   resultSummary: "好きな人の返信が命綱のように感じやすいタイプ。",
   traits: ["恋愛メンヘラ度: Lv.6", "恋の依存度: 彼氏ガチ勢"],
+  detailSections: [
+    {
+      title: "しんどい時",
+      body: "返信待ちの時間に不安が強まりやすい。",
+      rawLineUserId: "U_SECTION_SHOULD_NOT_BE_SAVED",
+      email: "section-should-not-save@example.com",
+      fullAnswers: ["保存しない詳細回答"]
+    },
+    {
+      title: "アドバイス",
+      body: "責めない短文と自分を落ち着ける時間をセットにすると楽になりやすい。"
+    }
+  ],
   pagePath: "/16love/",
   rawLineUserId: "U_SHOULD_NOT_BE_SAVED",
   email: "should-not-save@example.com",
@@ -103,7 +118,7 @@ async function callLineAddInfo() {
   assert(res.statusCode === 200, "LINE add info should return 200");
   assert(res.body?.lineAddUrl === "https://lin.ee/test", "LINE add info should return configured add URL");
   assert(!res.body?.token, "LINE add info should not issue an extra code token");
-  assert(res.body?.firstMessageText === "モビーだよ！なんでも話してね！", "LINE add info should include greeting");
+  assert(res.body?.firstMessageText === FIRST_MESSAGE_TEXT, "LINE add info should include result-question greeting");
 }
 
 async function callLineAddInfoIgnoresDiagnosis() {
@@ -135,10 +150,16 @@ async function callLinkSessionFlow() {
   assert(session?.diagnosis?.source === "16love", "link session should save diagnosis source");
   assert(session?.diagnosis?.resultName === "返信こないと死モビー", "link session should save result name");
   assert(Array.isArray(session?.diagnosis?.traits), "link session should save sanitized traits");
+  assert(session?.diagnosis?.detailSections?.length === 2, "link session should save sanitized detail sections");
+  assert(session.diagnosis.detailSections[0].title === "しんどい時", "link session should save detail section titles");
+  assert(session.diagnosis.detailSections[0].body.includes("返信待ち"), "link session should save detail section bodies");
   assert(session?.expiresAt && Date.parse(session.expiresAt) > Date.now(), "link session should save a future expiry");
   assert(JSON.stringify(session).includes("U_SHOULD_NOT_BE_SAVED") === false, "link session should not save raw LINE user ID");
+  assert(JSON.stringify(session).includes("U_SECTION_SHOULD_NOT_BE_SAVED") === false, "link session should not save raw LINE user ID from detail section extras");
   assert(JSON.stringify(session).includes("should-not-save@example.com") === false, "link session should not save email");
+  assert(JSON.stringify(session).includes("section-should-not-save@example.com") === false, "link session should not save email from detail section extras");
   assert(JSON.stringify(session).includes("保存しない回答全文") === false, "link session should not save full answers");
+  assert(JSON.stringify(session).includes("保存しない詳細回答") === false, "link session should not save full answers from detail section extras");
 
   const unsupportedRes = createRes();
   await linkSessions({
@@ -207,9 +228,16 @@ async function callLiffLinkFlow() {
     const user = await loadUser(makeUserKey("U_LIFF_VALIDATE_USER"));
     assert(user?.personalResultLinked === true, "LIFF link should save personal result linked flag");
     assert(user?.resultName === "返信こないと死モビー", "LIFF link should save result name");
+    assert(user?.detailSections?.length === 2, "LIFF link should save detail sections on user record");
+    assert(user.detailSections[1].title === "アドバイス", "LIFF link should save detail section titles on user record");
     assert(user?.diagnosisHistory?.length === 1, "LIFF link should save diagnosis history");
+    assert(user.diagnosisHistory[0]?.detailSections?.[0]?.body.includes("不安が強まりやすい"), "LIFF link should save detail sections in diagnosis history");
     assert(JSON.stringify(user).includes("U_LIFF_VALIDATE_USER") === false, "user record should not save raw LINE user ID");
     assert(JSON.stringify(user).includes("should-not-save@example.com") === false, "user record should not save email");
+    assert(JSON.stringify(user).includes("U_SECTION_SHOULD_NOT_BE_SAVED") === false, "user record should not save raw LINE user ID from detail section extras");
+    assert(JSON.stringify(user).includes("section-should-not-save@example.com") === false, "user record should not save email from detail section extras");
+    assert(JSON.stringify(user).includes("保存しない回答全文") === false, "user record should not save full answers");
+    assert(JSON.stringify(user).includes("保存しない詳細回答") === false, "user record should not save full answers from detail section extras");
 
     const consumedSession = await loadLinkSession(validSessionId);
     assert(consumedSession?.consumedAt, "LIFF link should mark session consumed");
@@ -307,7 +335,15 @@ async function callLiffPageStaticCheck() {
   assert(page.includes("buildLineAppHandoffUrl"), "LIFF link page should build an explicit Safari LINE app handoff URL");
   assert(page.includes("https://liff.line.me/${encodeURIComponent(liffId)}/?s="), "LIFF link page should build official LIFF URLs with session as additional information");
   assert(page.includes("return isIosDevice() && !inLineClient;"), "LIFF link page should restrict app handoff to iOS external browsers");
-  assert(page.includes("TikTok内ブラウザではLINE連携が完了しにくいため"), "LIFF link page should guide TikTok users to open the page in an external browser when needed");
+  assert(page.includes("右上の「…」からブラウザで開いてね"), "LIFF link page should emphasize the TikTok top-right menu");
+  assert(page.includes("Safari/Chromeで開いてから、LINE連携をもう一度タップしてください。"), "LIFF link page should keep TikTok guidance short");
+  assert(page.includes("TikTokの右上「…」メニューを使ってください。"), "LIFF link page should show a short TikTok status message");
+  assert(page.includes("data-countdown"), "LIFF link page should render a countdown placeholder");
+  assert(page.includes("countdownRemaining = 10"), "LIFF link page should start countdown from 10 seconds");
+  assert(page.includes("残り${countdownRemaining}秒"), "LIFF link page should show remaining seconds");
+  assert(page.includes("もう少しだけ待ってね"), "LIFF link page should switch copy after countdown reaches zero");
+  assert(page.includes('setCountdownActive(state === "loading" || state === "login" || state === "handoff")'), "LIFF link page should only show countdown while waiting");
+  assert(page.includes('setView(\n              "handoff"'), "LIFF link page should treat app handoff as a waiting state");
   assert(page.includes("line://app/"), "LIFF link page should keep a LINE app scheme fallback for Safari app handoff");
   assert(!page.includes("(isTikTokBrowser() || isIosDevice())"), "LIFF link page should not try app handoff from TikTok");
   assert(!page.includes("if (!sessionId || !window.liff)"), "LIFF link app-handoff button should work even when the LIFF SDK is unavailable");
@@ -327,7 +363,10 @@ async function callSharedCtaStaticCheck() {
   assert(cta.includes("shouldUseLineAppHandoff"), "diagnosis CTA should use explicit LINE app handoff for Safari");
   assert(cta.includes("enhanced.openUrl = liffUrl"), "diagnosis CTA should keep the official LIFF URL as the primary TikTok/Safari URL");
   assert(cta.includes('enhanced.fallbackOpenUrl = enhanced.lineAddUrl || ""'), "diagnosis CTA should avoid custom-scheme fallback URLs on TikTok");
-  assert(cta.includes("TikTokの右上メニューから外部ブラウザで開いてください。"), "diagnosis CTA should guide TikTok users to open the page in an external browser when needed");
+  assert(cta.includes("line-ai-mobby-cta__browser-guide-title"), "diagnosis CTA should style the main TikTok browser instruction");
+  assert(cta.includes("右上の「…」からブラウザで開いてね"), "diagnosis CTA should emphasize the TikTok top-right menu");
+  assert(cta.includes("Safari/Chromeで開いてから、LINE連携をもう一度タップしてください。"), "diagnosis CTA should keep TikTok guidance short");
+  assert(cta.includes("TikTokの右上「…」メニューを使ってください。"), "diagnosis CTA should guide TikTok users to open the page in an external browser when needed");
   assert(cta.includes("renderTapToOpenResult"), "diagnosis CTA should render a tap-to-open handoff panel for Safari");
   assert(cta.includes('!issueButton.closest(".line-ai-mobby-cta__result")'), "diagnosis CTA should allow the rendered Safari link to open on a normal tap");
   assert(cta.includes("cached?.data"), "diagnosis CTA should show the handoff panel even when the LIFF URL was prepared before the first tap");
@@ -348,6 +387,10 @@ async function callKnowledgeReplyFlow() {
     resultName: "夜風のロマンチスト",
     resultSummary: "自由な距離感の中で、二人だけのロマンを静かに育てるタイプ。",
     traits: ["自由もほしい型", "ときめき重視型"],
+    detailSections: [
+      { title: "恋の傾向", body: "自由もときめきも大事にしながら距離感を整える。" },
+      { title: "満たされること", body: "二人だけの合図や静かなロマンがあると満たされやすい。" }
+    ],
     personalResultLinked: true
   };
 
@@ -400,6 +443,11 @@ async function callKnowledgeReplyFlow() {
         assert(systemPrompt.includes("ユーザー個別の診断結果背景"), "linked result prompt should include personal diagnosis context");
         assert(systemPrompt.includes("夜風のロマンチスト"), "linked result prompt should include saved result name");
         assert(systemPrompt.includes("自由な距離感"), "linked result prompt should include saved result summary");
+        assert(systemPrompt.includes("詳しい結果情報"), "linked result prompt should include detail sections context");
+        assert(systemPrompt.includes("恋の傾向"), "linked result prompt should include detail section titles");
+        assert(systemPrompt.includes("自由もときめきも大事"), "linked result prompt should include detail section bodies");
+        assert(systemPrompt.includes("2〜4個"), "linked result prompt should tell Gemini to answer with several details");
+        assert(systemPrompt.includes("会話のきっかけ"), "linked result prompt should create a follow-up conversation hook");
       }
     },
     {
@@ -677,8 +725,11 @@ async function callWebhookFlow() {
     }]
   }), followRes);
   assert(followRes.statusCode === 200, "follow webhook should return 200");
-  const followUser = await loadUser(makeUserKey("U_FOLLOW_USER"));
+  const followUserKey = makeUserKey("U_FOLLOW_USER");
+  const followUser = await loadUser(followUserKey);
   assert(followUser?.source === "line", "follow should create a default LINE user");
+  const followConversation = await loadConversation(followUserKey);
+  assert(followConversation?.messages?.[0]?.text === FIRST_MESSAGE_TEXT, "follow should save the result-question greeting in conversation history");
 
   const replyRes = createRes();
   await webhook(createWebhookReq({
@@ -1080,6 +1131,10 @@ async function callGeminiProviderFlow() {
     resultName: "返信こないと死モビー",
     resultSummary: "好きな人の返信が命綱のように感じやすいタイプ。",
     traits: ["恋愛メンヘラ度: Lv.6", "恋の依存度: 彼氏ガチ勢"],
+    detailSections: [
+      { title: "しんどい時", body: "返信がない時間に自分責めへ傾きやすい。" },
+      { title: "アドバイス", body: "責めない短文で送って、その後にスマホから少し離れると安定しやすい。" }
+    ],
     personalResultLinked: true
   };
 
@@ -1109,6 +1164,8 @@ async function callGeminiProviderFlow() {
         assert(systemPrompt.includes("返信こないと死モビー"), "Gemini prompt should include linked personal result name");
         assert(systemPrompt.includes("好きな人の返信が命綱"), "Gemini prompt should include linked personal result summary");
         assert(systemPrompt.includes("ユーザー個別の診断結果背景"), "Gemini prompt should separate personal diagnosis context");
+        assert(systemPrompt.includes("しんどい時"), "Gemini prompt should include personal detail section title");
+        assert(systemPrompt.includes("自分責め"), "Gemini prompt should include personal detail section body");
         assert(!systemPrompt.includes("個別結果はLINEでは保持・参照しない"), "Gemini prompt should not use old no-personal-result rule");
         assert(payload.contents.at(-1).parts[0].text === "LINE文面を考えたい", "Gemini request should include personal user message");
       } else {

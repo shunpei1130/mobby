@@ -349,6 +349,7 @@ function renderResult() {
     const keyImageWebpPath = `img/key/${ch.name}.webp`;
     const keyImagePngPath = `img/key/${ch.name}.png`;
     const keyImageBackPath = "img/key/ura.jpg";
+    const lineAiAxisSummary = ["A", "B", "C", "D"].map(k => `${AXES[k].name}: ${res.hard[k] === "L" ? AXES[k].left : AXES[k].right}`).join(" / ");
     const lineAiDiagnosisPayload = {
         source: "16love",
         sourceLabel: "メンヘラモビー診断",
@@ -359,6 +360,15 @@ function renderResult() {
             `恋愛メンヘラ度: Lv.${res.level} ${res.menheraLevel.name}`,
             ...["A", "B", "C", "D"].map(k => `${AXES[k].name}: ${res.hard[k] === "L" ? AXES[k].left : AXES[k].right}`)
         ].filter(Boolean).slice(0, 8),
+        detailSections: [
+            { title: "メンヘラ度", body: `Lv.${res.level} ${res.menheraLevel.name}: ${res.menheraLevel.desc}` },
+            { title: "しんどい時", body: Array.isArray(ch.tough) ? ch.tough.join(" / ") : "" },
+            { title: "周りからの見え方", body: ch.seen || "" },
+            { title: "長所", body: Array.isArray(ch.strengths) ? ch.strengths.join(" / ") : "" },
+            { title: "注意点", body: Array.isArray(ch.cautions) ? ch.cautions.join(" / ") : "" },
+            { title: "アドバイス", body: Array.isArray(ch.advice) ? ch.advice.join(" / ") : "" },
+            { title: "軸結果", body: lineAiAxisSummary }
+        ].filter(section => section.body),
         pagePath: "/16love/",
         createdAt: new Date().toISOString()
     };

@@ -118,6 +118,25 @@
     .status[data-state="error"] {
       color: #b42318;
     }
+
+    .countdown {
+      margin: 12px 0 0;
+      color: var(--line);
+      font-size: 20px;
+      line-height: 1.25;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .countdown[hidden] {
+      display: none;
+    }
+
+    .browser-guide-title {
+      font-size: clamp(28px, 7vw, 40px);
+      line-height: 1.16;
+      overflow-wrap: anywhere;
+    }
   </style>
 </head>
 <body>
@@ -132,6 +151,7 @@
         <button class="button button--subtle" data-retry type="button" hidden>もう一度試す</button>
       </div>
       <p class="status" data-status data-state="loading">この画面は閉じずに少し待ってね。</p>
+      <p class="countdown" data-countdown hidden></p>
     </section>
   </main>
 
@@ -147,6 +167,9 @@
       const lineLogin = document.querySelector("[data-line-login]");
       const lineOpen = document.querySelector("[data-line-open]");
       const retry = document.querySelector("[data-retry]");
+      const countdown = document.querySelector("[data-countdown]");
+      let countdownTimer = 0;
+      let countdownRemaining = 0;
 
       function getSessionId() {
         const params = new URLSearchParams(window.location.search);
@@ -222,12 +245,49 @@
       }
 
       function setView(state, heading, copy, detail) {
+        title.classList.toggle("browser-guide-title", state === "external");
         title.textContent = heading;
         message.textContent = copy;
         status.textContent = detail || "";
         status.dataset.state = state;
         lineLogin.hidden = state !== "login";
         retry.hidden = state !== "error";
+        setCountdownActive(state === "loading" || state === "login" || state === "handoff");
+      }
+
+      function updateCountdownText() {
+        if (!countdown) return;
+        countdown.textContent = countdownRemaining > 0
+          ? `残り${countdownRemaining}秒`
+          : "もう少しだけ待ってね";
+      }
+
+      function stopCountdown() {
+        if (countdownTimer) {
+          clearInterval(countdownTimer);
+          countdownTimer = 0;
+        }
+        if (countdown) countdown.hidden = true;
+      }
+
+      function startCountdown() {
+        stopCountdown();
+        countdownRemaining = 10;
+        if (countdown) countdown.hidden = false;
+        updateCountdownText();
+        countdownTimer = window.setInterval(() => {
+          countdownRemaining = Math.max(0, countdownRemaining - 1);
+          updateCountdownText();
+          if (countdownRemaining === 0) {
+            clearInterval(countdownTimer);
+            countdownTimer = 0;
+          }
+        }, 1000);
+      }
+
+      function setCountdownActive(active) {
+        if (active) startCountdown();
+        else stopCountdown();
       }
 
       function enableLineLogin(handoffUrl) {
@@ -245,9 +305,9 @@
         lineLogin.href = "#";
         setView(
           "external",
-          "外部ブラウザで開いてください",
-          "TikTok内ブラウザではLINE連携が完了しにくいため、このページをSafariまたはChromeで開いてから連携してください。",
-          "右上の「...」から「ブラウザで開く」を選んでください。"
+          "右上の「…」からブラウザで開いてね",
+          "Safari/Chromeで開いてから、LINE連携をもう一度タップしてください。",
+          "TikTokの右上「…」メニューを使ってください。"
         );
       }
 
@@ -343,8 +403,12 @@
           const handoffUrl = lineLogin.dataset.lineOpenUrl || "";
           if (handoffUrl) {
             disableLineLogin();
-            status.textContent = "確認が出たらLINEで開いてください。";
-            status.dataset.state = "loading";
+            setView(
+              "handoff",
+              "LINEアプリを開いています",
+              "確認が出たらLINEで開いてください。",
+              "この画面は閉じずに少し待ってね。"
+            );
             return;
           }
 
