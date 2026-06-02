@@ -1,8 +1,10 @@
 import { createHmac, timingSafeEqual } from "crypto";
-import { stripEmojiForFallback, truncateText } from "./_text.js";
+import { cleanUnicodeText, stripEmojiForFallback, truncateText, unicodeLength } from "./_text.js";
 
 const MARK_AS_READ_TIMEOUT_MS = 1500;
 const PROFILE_TIMEOUT_MS = 1500;
+const LINE_TEXT_LIMIT = 5000;
+const LINE_REPLY_MESSAGE_LIMIT = 5;
 
 export async function readRawBody(req) {
   if (Buffer.isBuffer(req.body)) return req.body;
@@ -98,10 +100,11 @@ export async function replyLineMessage(replyToken, messages) {
   }
 
   const lineMessages = (Array.isArray(messages) ? messages : [{ type: "text", text: String(messages || "") }])
-    .map((message) => {
+    .flatMap((message) => {
       if (message?.type !== "text") return message;
-      return { ...message, text: truncateText(message.text, 5000) || "うん、聞いてるよ。" };
-    });
+      return splitLineText(message.text).map((text) => ({ ...message, text }));
+    })
+    .slice(0, LINE_REPLY_MESSAGE_LIMIT);
 
   async function send(lineMessages) {
     return fetch("https://api.line.me/v2/bot/message/reply", {
@@ -155,6 +158,26 @@ export async function replyLineMessage(replyToken, messages) {
 export function toLineTextMessage(text) {
   return {
     type: "text",
-    text: truncateText(text, 5000) || "うん、聞いてるよ。"
+    text: cleanUnicodeText(text).trim() || "うん、聞いてるよ。"
   };
+}
+
+export function splitLineText(text) {
+  const value = cleanUnicodeText(text).trim() || "うん、聞いてるよ。";
+  if (unicodeLength(value) <= LINE_TEXT_LIMIT) return [value];
+
+  const chunks = [];
+  let rest = value;
+  while (rest && chunks.length < LINE_REPLY_MESSAGE_LIMIT) {
+    if (unicodeLength(rest) <= LINE_TEXT_LIMIT) {
+      chunks.push(rest);
+      break;
+    }
+
+    const chunk = truncateText(rest, LINE_TEXT_LIMIT).trim();
+    chunks.push(chunk);
+    rest = Array.from(rest).slice(Array.from(chunk).length).join("").trim();
+  }
+
+  return chunks.length ? chunks : ["うん、聞いてるよ。"];
 }

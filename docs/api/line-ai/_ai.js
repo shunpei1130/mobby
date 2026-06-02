@@ -3,17 +3,24 @@ import { cleanUnicodeText, truncateText, unicodeLength } from "./_text.js";
 
 const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash-lite";
 const GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models";
-const MAX_REPLY_CHARS = 260;
+const DEFAULT_MAX_OUTPUT_TOKENS = 700;
 
 function compact(text, max = 48) {
   const value = cleanUnicodeText(text).replace(/\s+/g, " ").trim();
-  return unicodeLength(value) > max ? `${truncateText(value, max)}...` : value;
+  return unicodeLength(value) > max ? truncateText(value, max) : value;
 }
 
-function clampReply(text) {
-  const value = cleanUnicodeText(text).replace(/\s+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
-  if (!value) return "";
-  return unicodeLength(value) > MAX_REPLY_CHARS ? `${truncateText(value, MAX_REPLY_CHARS - 1)}…` : value;
+function cleanReply(text) {
+  return cleanUnicodeText(text)
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+function maxOutputTokens() {
+  const value = Number(process.env.LINE_AI_MAX_OUTPUT_TOKENS);
+  if (!Number.isFinite(value) || value <= 0) return DEFAULT_MAX_OUTPUT_TOKENS;
+  return Math.min(Math.max(Math.floor(value), 180), 1400);
 }
 
 function historyToContents(history, message) {
@@ -80,7 +87,7 @@ export async function generateGeminiReply({ user, message, history }) {
       generationConfig: {
         temperature: 0.7,
         topP: 0.9,
-        maxOutputTokens: 180,
+        maxOutputTokens: maxOutputTokens(),
         responseMimeType: "text/plain"
       }
     })
@@ -102,7 +109,7 @@ export async function generateGeminiReply({ user, message, history }) {
   if (!text) {
     throw new Error("Gemini API returned an empty reply");
   }
-  return clampReply(text);
+  return cleanReply(text);
 }
 
 export function generateMockReply({ user, message }) {
