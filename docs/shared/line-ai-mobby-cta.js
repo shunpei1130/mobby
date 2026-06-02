@@ -43,15 +43,20 @@
 
   function renderInitial(element) {
     const diagnosis = parseDiagnosis(element);
+    const tiktok = isTikTokInAppBrowser();
     element.innerHTML = `
       <section class="line-ai-mobby-cta" aria-label="LINE AI Mobby">
         <h3 class="line-ai-mobby-cta__headline">モビーと話そう！</h3>
         <p class="line-ai-mobby-cta__copy">
-          ${diagnosis ? "LINEで追加すると、診断結果をふまえてモビーと話せます。" : "LINEで追加したら、そのまま話せます。"}
+          ${tiktok
+            ? "TikTok内ではLINE連携が完了しにくいため、外部ブラウザで開いてから連携してください。"
+            : diagnosis
+              ? "LINEで追加すると、診断結果をふまえてモビーと話せます。"
+              : "LINEで追加したら、そのまま話せます。"}
         </p>
         <div class="line-ai-mobby-cta__actions">
           <a class="line-ai-mobby-cta__button" href="#" data-line-ai-mobby-issue data-line-ai-mobby-ready="false">
-            LINEでモビーを追加する
+            ${tiktok ? "外部ブラウザで開く手順を見る" : "LINEでモビーを追加する"}
           </a>
         </div>
         <p class="line-ai-mobby-cta__status" data-line-ai-mobby-status></p>
@@ -114,7 +119,7 @@
   }
 
   function shouldUseLineAppHandoff() {
-    return isIosSafari() || isTikTokInAppBrowser();
+    return isIosSafari();
   }
 
   function shouldWaitForTapToOpen() {
@@ -246,6 +251,7 @@
   }
 
   function primeOpenTarget(element) {
+    if (isTikTokInAppBrowser()) return;
     if (openTargetCache.has(element)) return;
     cacheOpenTarget(element, createOpenTarget(element, { allowDiagnosisFallback: false })).catch(() => {});
   }
@@ -263,32 +269,54 @@
   }
 
   function renderTapToOpenResult(element, data) {
-    const tiktok = isTikTokInAppBrowser();
     const safari = isIosSafari();
     renderResult(element, data, {
       instruction: data.diagnosisFallback
         ? "診断結果なしでもLINEでモビーと話せます。次のボタンをタップしてLINEアプリを開いてね。"
-        : tiktok
-          ? "TikTokでは次のボタンをタップして、LINEで診断結果の連携を続けてね。開かない場合は右上の「...」から外部ブラウザで開いてください。"
-          : safari
-            ? "Safariでは次のボタンをタップして、LINEアプリで診断結果の連携を続けてね。"
-            : "次のボタンをタップすると、LINEアプリで診断結果の連携を続けられます。",
+        : safari
+          ? "Safariでは次のボタンをタップして、LINEアプリで診断結果の連携を続けてね。"
+          : "次のボタンをタップすると、LINEアプリで診断結果の連携を続けられます。",
       buttonLabel: data.usedDiagnosis === false ? "LINEアプリを開く" : "LINEアプリで連携する"
     });
     setStatus(
       element,
       data.diagnosisFallback
         ? "今だけ診断結果を連携できませんでした。診断結果なしでもLINEで話せます。"
-        : tiktok
-          ? "開かない場合は右上の「...」から外部ブラウザで開いてください。"
-          : shouldUseLineAppHandoff()
+        : shouldUseLineAppHandoff()
           ? "開かない場合は補助リンクも試してください。"
           : "LINEアプリを開いています。",
       Boolean(data.diagnosisFallback)
     );
   }
 
+  function renderTikTokExternalBrowserGuide(element) {
+    element.innerHTML = `
+      <section class="line-ai-mobby-cta" aria-label="LINE AI Mobby">
+        <h3 class="line-ai-mobby-cta__headline">外部ブラウザで開いてね</h3>
+        <div class="line-ai-mobby-cta__result">
+          <p class="line-ai-mobby-cta__instruction">
+            TikTok内ブラウザではLINE連携が失敗しやすいため、この診断結果ページをSafariまたはChromeで開いてからもう一度タップしてください。
+          </p>
+          <p class="line-ai-mobby-cta__instruction">
+            右上の「...」から「ブラウザで開く」を選ぶと、連携を続けられます。
+          </p>
+        </div>
+        <p class="line-ai-mobby-cta__status" data-line-ai-mobby-status></p>
+      </section>
+    `;
+  }
+
+  function shouldRenderPreparedResult(issueButton) {
+    return shouldWaitForTapToOpen() && !issueButton.closest(".line-ai-mobby-cta__result");
+  }
+
   async function prepareLineAdd(element) {
+    if (isTikTokInAppBrowser()) {
+      renderTikTokExternalBrowserGuide(element);
+      setStatus(element, "TikTokの右上メニューから外部ブラウザで開いてください。", false);
+      return;
+    }
+
     const diagnosis = parseDiagnosis(element);
     setTriggerLoading(element, true);
     setStatus(element, diagnosis ? "診断結果の連携を準備しています。" : "LINEを開きます。", false);
@@ -332,8 +360,14 @@
     element.addEventListener("click", (event) => {
       const issueButton = event.target.closest("[data-line-ai-mobby-issue]");
       if (issueButton) {
+        if (isTikTokInAppBrowser()) {
+          event.preventDefault();
+          renderTikTokExternalBrowserGuide(element);
+          setStatus(element, "TikTokの右上メニューから外部ブラウザで開いてください。", false);
+          return;
+        }
         if (issueButton.dataset.lineAiMobbyReady === "true" && issueButton.getAttribute("href") !== "#") {
-          if (shouldWaitForTapToOpen()) {
+          if (shouldRenderPreparedResult(issueButton)) {
             const cached = openTargetCache.get(element);
             if (cached?.data) {
               event.preventDefault();
@@ -343,11 +377,9 @@
           }
           setStatus(
             element,
-            isTikTokInAppBrowser()
-              ? "TikTokでLINEが開かない場合は右上の「...」から外部ブラウザで開いてください。"
-              : shouldUseLineAppHandoff()
-                ? "確認が出たらLINEで開いてください。"
-                : "LINEアプリを開いています。",
+            shouldUseLineAppHandoff()
+              ? "確認が出たらLINEで開いてください。"
+              : "LINEアプリを開いています。",
             false
           );
           return;

@@ -100,7 +100,8 @@
       display: none;
     }
 
-    .button[disabled] {
+    .button[disabled],
+    .button[aria-disabled="true"] {
       opacity: 0.64;
       cursor: wait;
     }
@@ -126,7 +127,7 @@
       <h1 data-title>診断結果を連携しています</h1>
       <p class="message" data-message>LINEログインを確認して、モビーが診断結果を覚えられるようにしています。</p>
       <div class="actions">
-        <button class="button button--line" data-line-login type="button" hidden>LINEアプリで連携する</button>
+        <a class="button button--line" data-line-login hidden href="#" rel="noopener">LINEアプリで連携する</a>
         <a class="button button--line" data-line-open hidden href="#" rel="noopener">LINEを開く</a>
         <button class="button button--subtle" data-retry type="button" hidden>もう一度試す</button>
       </div>
@@ -192,7 +193,7 @@
 
       function shouldUseAppOpenHandoff() {
         const inLineClient = Boolean(window.liff?.isInClient?.());
-        return (isTikTokBrowser() || isIosDevice()) && !inLineClient;
+        return isIosDevice() && !inLineClient;
       }
 
       function buildRedirectUri(sessionId) {
@@ -211,16 +212,13 @@
         return `line://app/${encodeURIComponent(liffId)}?s=${encodeURIComponent(sessionId)}`;
       }
 
-      function buildRestrictedBrowserOpenUrl(liffId, sessionId) {
+      function buildLineAppHandoffUrl(liffId, sessionId) {
         const liffUrl = buildLiffUrl(liffId, sessionId);
-        if (isTikTokBrowser()) return liffUrl;
         return buildLineAppOpenUrl(liffId, sessionId) || liffUrl;
       }
 
       function appOpenHandoffDetail() {
-        return isTikTokBrowser()
-          ? "TikTokでLINEが開かない場合は、右上の「...」から外部ブラウザで開いてください。"
-          : "Safariでは確認が出たらLINEで開いてください。";
+        return "Safariでは確認が出たらLINEで開いてください。";
       }
 
       function setView(state, heading, copy, detail) {
@@ -230,6 +228,27 @@
         status.dataset.state = state;
         lineLogin.hidden = state !== "login";
         retry.hidden = state !== "error";
+      }
+
+      function enableLineLogin(handoffUrl) {
+        lineLogin.removeAttribute("aria-disabled");
+        lineLogin.dataset.lineOpenUrl = handoffUrl || "";
+        lineLogin.href = handoffUrl || "#";
+      }
+
+      function disableLineLogin() {
+        lineLogin.setAttribute("aria-disabled", "true");
+      }
+
+      function showTikTokExternalBrowserGuide() {
+        delete lineLogin.dataset.lineOpenUrl;
+        lineLogin.href = "#";
+        setView(
+          "external",
+          "外部ブラウザで開いてください",
+          "TikTok内ブラウザではLINE連携が完了しにくいため、このページをSafariまたはChromeで開いてから連携してください。",
+          "右上の「...」から「ブラウザで開く」を選んでください。"
+        );
       }
 
       async function fetchJson(url, options) {
@@ -243,6 +262,8 @@
 
       async function run() {
         delete lineLogin.dataset.lineOpenUrl;
+        lineLogin.href = "#";
+        lineLogin.removeAttribute("aria-disabled");
         lineLogin.hidden = true;
         lineOpen.hidden = true;
         retry.hidden = true;
@@ -253,11 +274,15 @@
           throw new Error("session missing");
         }
 
+        if (isTikTokBrowser()) {
+          showTikTokExternalBrowserGuide();
+          return;
+        }
+
         const config = await fetchJson(CONFIG_ENDPOINT, { method: "GET" });
         if (!window.liff) {
           if (shouldUseAppOpenHandoff()) {
-            lineLogin.disabled = false;
-            lineLogin.dataset.lineOpenUrl = buildRestrictedBrowserOpenUrl(config.liffId, sessionId);
+            enableLineLogin(buildLineAppHandoffUrl(config.liffId, sessionId));
             setView("login", "LINEで連携を続けます", "下のボタンをタップして、診断結果をモビーに連携できます。", appOpenHandoffDetail());
             return;
           }
@@ -267,13 +292,12 @@
         await window.liff.init({ liffId: config.liffId });
         if (!window.liff.isLoggedIn()) {
           if (shouldUseAppOpenHandoff()) {
-            lineLogin.disabled = false;
-            lineLogin.dataset.lineOpenUrl = buildRestrictedBrowserOpenUrl(config.liffId, sessionId);
+            enableLineLogin(buildLineAppHandoffUrl(config.liffId, sessionId));
             setView("login", "LINEで連携を続けます", "下のボタンをタップして、診断結果をモビーに連携できます。", appOpenHandoffDetail());
             return;
           }
           if (shouldUseManualLineLogin()) {
-            lineLogin.disabled = false;
+            enableLineLogin("");
             setView("login", "LINEアプリで連携を続けます", "下のボタンをタップしてLINEアプリを開くと、診断結果をモビーに連携できます。", "Safariでは確認が出たらLINEで開いてください。");
             return;
           }
@@ -305,25 +329,33 @@
         run().catch(showError);
       });
 
-      lineLogin.addEventListener("click", () => {
+      lineLogin.addEventListener("click", (event) => {
         try {
           const sessionId = getSessionId();
           if (!sessionId) {
+            event.preventDefault();
             throw new Error("LINE login is not ready");
           }
-          lineLogin.disabled = true;
-          const handoffUrl = lineLogin.dataset.lineOpenUrl || "";
-          const opensAppDirectly = !handoffUrl || /^(line|intent):/i.test(handoffUrl);
-          setView(
-            "loading",
-            opensAppDirectly ? "LINEアプリを開いています" : "LINEを開いています",
-            "LINEログインを確認して、モビーが診断結果を覚えられるようにしています。",
-            isTikTokBrowser() ? "開かない場合は、右上の「...」から外部ブラウザで開いてください。" : "この画面は閉じずに少し待ってね。"
-          );
-          if (handoffUrl) {
-            window.location.href = handoffUrl;
+          if (lineLogin.getAttribute("aria-disabled") === "true") {
+            event.preventDefault();
             return;
           }
+          const handoffUrl = lineLogin.dataset.lineOpenUrl || "";
+          if (handoffUrl) {
+            disableLineLogin();
+            status.textContent = "確認が出たらLINEで開いてください。";
+            status.dataset.state = "loading";
+            return;
+          }
+
+          event.preventDefault();
+          disableLineLogin();
+          setView(
+            "loading",
+            "LINEアプリを開いています",
+            "LINEログインを確認して、モビーが診断結果を覚えられるようにしています。",
+            "この画面は閉じずに少し待ってね。"
+          );
           if (!window.liff) {
             throw new Error("LINE login is not ready");
           }
