@@ -109,10 +109,6 @@
     return isIos && isSafari;
   }
 
-  function isAndroid() {
-    return /Android/i.test(userAgent());
-  }
-
   function isTikTokInAppBrowser() {
     return TIKTOK_BROWSER_PATTERN.test(userAgent());
   }
@@ -162,29 +158,15 @@
     }
   }
 
-  function buildAndroidIntentUrl(liffUrl) {
-    try {
-      const url = new URL(liffUrl);
-      if (url.protocol !== "https:" || url.hostname !== "liff.line.me") return "";
-      const target = `${url.host}${url.pathname}${url.search}`;
-      return `intent://${target}#Intent;scheme=https;package=jp.naver.line.android;S.browser_fallback_url=${encodeURIComponent(url.toString())};end`;
-    } catch {
-      return "";
-    }
-  }
-
   function enhanceOpenTarget(data) {
     const liffUrl = String(data?.liffUrl || "");
     const enhanced = { ...data };
     if (liffUrl) {
       enhanced.lineAppUrl = buildLineAppUrl(liffUrl);
-      enhanced.androidIntentUrl = buildAndroidIntentUrl(liffUrl);
     }
     if (isTikTokInAppBrowser() && liffUrl) {
-      enhanced.openUrl = isAndroid() && enhanced.androidIntentUrl
-        ? enhanced.androidIntentUrl
-        : (enhanced.lineAppUrl || liffUrl);
-      enhanced.fallbackOpenUrl = enhanced.openUrl !== liffUrl ? liffUrl : "";
+      enhanced.openUrl = liffUrl;
+      enhanced.fallbackOpenUrl = enhanced.lineAddUrl || "";
       return enhanced;
     }
     if (isIosSafari() && liffUrl) {
@@ -287,7 +269,7 @@
       instruction: data.diagnosisFallback
         ? "診断結果なしでもLINEでモビーと話せます。次のボタンをタップしてLINEアプリを開いてね。"
         : tiktok
-          ? "TikTokでは次のボタンをタップして、LINEアプリで診断結果の連携を続けてね。"
+          ? "TikTokでは次のボタンをタップして、LINEで診断結果の連携を続けてね。開かない場合は右上の「...」から外部ブラウザで開いてください。"
           : safari
             ? "Safariでは次のボタンをタップして、LINEアプリで診断結果の連携を続けてね。"
             : "次のボタンをタップすると、LINEアプリで診断結果の連携を続けられます。",
@@ -297,7 +279,9 @@
       element,
       data.diagnosisFallback
         ? "今だけ診断結果を連携できませんでした。診断結果なしでもLINEで話せます。"
-        : shouldUseLineAppHandoff()
+        : tiktok
+          ? "開かない場合は右上の「...」から外部ブラウザで開いてください。"
+          : shouldUseLineAppHandoff()
           ? "開かない場合は補助リンクも試してください。"
           : "LINEアプリを開いています。",
       Boolean(data.diagnosisFallback)
@@ -357,7 +341,15 @@
               return;
             }
           }
-          setStatus(element, shouldUseLineAppHandoff() ? "確認が出たらLINEで開いてください。" : "LINEアプリを開いています。", false);
+          setStatus(
+            element,
+            isTikTokInAppBrowser()
+              ? "TikTokでLINEが開かない場合は右上の「...」から外部ブラウザで開いてください。"
+              : shouldUseLineAppHandoff()
+                ? "確認が出たらLINEで開いてください。"
+                : "LINEアプリを開いています。",
+            false
+          );
           return;
         }
         event.preventDefault();

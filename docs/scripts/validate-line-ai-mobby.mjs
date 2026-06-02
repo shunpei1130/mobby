@@ -303,10 +303,11 @@ async function callLiffPageStaticCheck() {
   assert(page.includes("data-line-login"), "LIFF link page should provide a user-tap LINE login button");
   assert(page.includes("shouldUseManualLineLogin"), "LIFF link page should gate iOS external-browser login behind a user tap");
   assert(page.includes("isTikTokBrowser"), "LIFF link page should detect TikTok in-app browser");
-  assert(page.includes("buildTikTokLineOpenUrl"), "LIFF link page should build a TikTok-specific LINE app handoff URL");
+  assert(page.includes("buildRestrictedBrowserOpenUrl"), "LIFF link page should build a restricted-browser handoff URL");
   assert(page.includes("https://liff.line.me/${encodeURIComponent(liffId)}/?s="), "LIFF link page should build official LIFF URLs with session as additional information");
-  assert(page.includes("line://app/"), "LIFF link page should include a LINE app scheme fallback for restricted in-app browsers");
-  assert(page.includes("intent://"), "LIFF link page should include an Android intent fallback for restricted in-app browsers");
+  assert(page.includes("if (isTikTokBrowser()) return liffUrl;"), "LIFF link page should keep the official LIFF URL as the primary TikTok handoff URL");
+  assert(page.includes("TikTokでLINEが開かない場合"), "LIFF link page should guide TikTok users to open the page in an external browser when needed");
+  assert(page.includes("line://app/"), "LIFF link page should keep a LINE app scheme fallback for non-TikTok app handoff");
   assert(page.includes("(isTikTokBrowser() || isIosDevice())"), "LIFF link page should use app handoff for Safari as well as TikTok");
   assert(!page.includes("if (!sessionId || !window.liff)"), "LIFF link app-handoff button should work even when the LIFF SDK is unavailable");
   assert(page.includes("buildRedirectUri(sessionId)"), "LIFF link page should preserve session ID in login redirects");
@@ -321,12 +322,13 @@ async function callSharedCtaStaticCheck() {
   assert(cta.includes("shouldWaitForTapToOpen"), "diagnosis CTA should avoid post-async auto-open on Safari");
   assert(cta.includes("isTikTokInAppBrowser"), "diagnosis CTA should detect TikTok in-app browser");
   assert(cta.includes("shouldUseLineAppHandoff"), "diagnosis CTA should use explicit LINE app handoff for restricted browsers");
-  assert(cta.includes("enhanced.openUrl = liffUrl"), "diagnosis CTA should keep the official LIFF URL as the primary Safari URL");
+  assert(cta.includes("enhanced.openUrl = liffUrl"), "diagnosis CTA should keep the official LIFF URL as the primary TikTok/Safari URL");
+  assert(cta.includes('enhanced.fallbackOpenUrl = enhanced.lineAddUrl || ""'), "diagnosis CTA should avoid custom-scheme fallback URLs on TikTok");
+  assert(cta.includes("TikTokでLINEが開かない場合"), "diagnosis CTA should guide TikTok users to open the page in an external browser when needed");
   assert(cta.includes("renderTapToOpenResult"), "diagnosis CTA should render a tap-to-open handoff panel for Safari and TikTok");
   assert(cta.includes("cached?.data"), "diagnosis CTA should show the handoff panel even when the LIFF URL was prepared before the first tap");
   assert(cta.includes("buildLineAppUrl"), "diagnosis CTA should build a LINE app scheme fallback for LIFF URLs");
-  assert(cta.includes("buildAndroidIntentUrl"), "diagnosis CTA should build an Android intent fallback for LIFF URLs");
-  assert(cta.includes("fallbackOpenUrl"), "diagnosis CTA should keep the normal LIFF URL as fallback");
+  assert(cta.includes("fallbackOpenUrl"), "diagnosis CTA should keep explicit fallback links");
 }
 
 async function callKnowledgeReplyFlow() {

@@ -181,10 +181,6 @@
         return /iP(hone|ad|od)/.test(ua) || (ua.includes("Macintosh") && navigator.maxTouchPoints > 1);
       }
 
-      function isAndroidDevice() {
-        return /Android/i.test(userAgent());
-      }
-
       function isTikTokBrowser() {
         return TIKTOK_BROWSER_PATTERN.test(userAgent());
       }
@@ -215,22 +211,16 @@
         return `line://app/${encodeURIComponent(liffId)}?s=${encodeURIComponent(sessionId)}`;
       }
 
-      function buildAndroidIntentUrl(liffUrl) {
-        try {
-          const url = new URL(liffUrl);
-          const target = `${url.host}${url.pathname}${url.search}`;
-          return `intent://${target}#Intent;scheme=https;package=jp.naver.line.android;S.browser_fallback_url=${encodeURIComponent(url.toString())};end`;
-        } catch {
-          return "";
-        }
+      function buildRestrictedBrowserOpenUrl(liffId, sessionId) {
+        const liffUrl = buildLiffUrl(liffId, sessionId);
+        if (isTikTokBrowser()) return liffUrl;
+        return buildLineAppOpenUrl(liffId, sessionId) || liffUrl;
       }
 
-      function buildTikTokLineOpenUrl(liffId, sessionId) {
-        const liffUrl = buildLiffUrl(liffId, sessionId);
-        if (isAndroidDevice()) {
-          return buildAndroidIntentUrl(liffUrl) || liffUrl;
-        }
-        return buildLineAppOpenUrl(liffId, sessionId) || liffUrl;
+      function appOpenHandoffDetail() {
+        return isTikTokBrowser()
+          ? "TikTokでLINEが開かない場合は、右上の「...」から外部ブラウザで開いてください。"
+          : "Safariでは確認が出たらLINEで開いてください。";
       }
 
       function setView(state, heading, copy, detail) {
@@ -267,8 +257,8 @@
         if (!window.liff) {
           if (shouldUseAppOpenHandoff()) {
             lineLogin.disabled = false;
-            lineLogin.dataset.lineOpenUrl = buildTikTokLineOpenUrl(config.liffId, sessionId);
-            setView("login", "LINEアプリで連携を続けます", "下のボタンをタップしてLINEアプリを開くと、診断結果をモビーに連携できます。", isTikTokBrowser() ? "TikTokでは確認が出たらLINEで開いてください。" : "Safariでは確認が出たらLINEで開いてください。");
+            lineLogin.dataset.lineOpenUrl = buildRestrictedBrowserOpenUrl(config.liffId, sessionId);
+            setView("login", "LINEで連携を続けます", "下のボタンをタップして、診断結果をモビーに連携できます。", appOpenHandoffDetail());
             return;
           }
           throw new Error("LIFF SDK is not available");
@@ -278,8 +268,8 @@
         if (!window.liff.isLoggedIn()) {
           if (shouldUseAppOpenHandoff()) {
             lineLogin.disabled = false;
-            lineLogin.dataset.lineOpenUrl = buildTikTokLineOpenUrl(config.liffId, sessionId);
-            setView("login", "LINEアプリで連携を続けます", "下のボタンをタップしてLINEアプリを開くと、診断結果をモビーに連携できます。", isTikTokBrowser() ? "TikTokでは確認が出たらLINEで開いてください。" : "Safariでは確認が出たらLINEで開いてください。");
+            lineLogin.dataset.lineOpenUrl = buildRestrictedBrowserOpenUrl(config.liffId, sessionId);
+            setView("login", "LINEで連携を続けます", "下のボタンをタップして、診断結果をモビーに連携できます。", appOpenHandoffDetail());
             return;
           }
           if (shouldUseManualLineLogin()) {
@@ -322,9 +312,16 @@
             throw new Error("LINE login is not ready");
           }
           lineLogin.disabled = true;
-          setView("loading", "LINEアプリを開いています", "LINEログインを確認して、モビーが診断結果を覚えられるようにしています。", "この画面は閉じずに少し待ってね。");
-          if (lineLogin.dataset.lineOpenUrl) {
-            window.location.href = lineLogin.dataset.lineOpenUrl;
+          const handoffUrl = lineLogin.dataset.lineOpenUrl || "";
+          const opensAppDirectly = !handoffUrl || /^(line|intent):/i.test(handoffUrl);
+          setView(
+            "loading",
+            opensAppDirectly ? "LINEアプリを開いています" : "LINEを開いています",
+            "LINEログインを確認して、モビーが診断結果を覚えられるようにしています。",
+            isTikTokBrowser() ? "開かない場合は、右上の「...」から外部ブラウザで開いてください。" : "この画面は閉じずに少し待ってね。"
+          );
+          if (handoffUrl) {
+            window.location.href = handoffUrl;
             return;
           }
           if (!window.liff) {
