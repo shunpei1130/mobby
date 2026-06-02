@@ -20,9 +20,6 @@
     SFAO: { name: "余白を飾る演出家", tone: "自然体のセンス", motif: "飾りリボン", key: ["HFAO", "HFTO", "SLAO", "SFTO", "HLTO", "SFAC"] },
     SFAC: { name: "静かな港の相棒", tone: "穏やかな信頼", motif: "港のチャーム", key: ["HFAC", "HLAO", "SLAC", "SFTC", "HFTC", "HFAO"] }
   };
-  const THEMES = ["素直さを少し外へ出す日", "受け取り上手になる日", "連絡の温度を整える日", "追いすぎず待てる日", "小さく甘える日", "距離感をやわらかくする日", "本音を一行だけ残す日", "空気を変える日", "安心を確認する日", "感謝を渡す日", "自分の時間を整える日", "相手の変化をひとつ褒める日", "ときめきを保存する日", "言葉を軽くする日", "待ち方を変える日", "小さな勇気を使う日", "整えすぎない日", "休ませる日", "思い出を残す日", "相談してみる日", "境界線を引く日", "褒める日", "自分を主語にする日", "未来を少し見る日", "過去をほどく日", "余白を飾る日", "頼る練習の日", "特別扱いをする日", "流れを変える日", "月末の回収日"];
-  const MISSIONS = ["短い本音をひとつだけ言葉にする", "好きな人に送る前提ではなく、自分の気持ちを一行メモする", "返信を急がず、一度だけ深呼吸してから返す", "自分がされて嬉しいことをひとつ思い出す", "無理に追わず、自分の時間を少し整える", "本当は嬉しかったことを一つだけ言葉にする", "気になる人に送るなら、軽い一言だけにする", "寂しさを責めずに、短い言葉へ変える", "相手のよかったところを一つだけ見つける", "今日は返事の速さより、言葉のやわらかさを選ぶ", "自分が安心できる予定を一つ入れる", "写真かメモで今日のかわいい瞬間を残す", "会いたい気持ちを急かさず、別の行動に移す", "ありがとうを短く具体的に伝える", "無理に明るくせず、静かな時間をつくる", "迷ったら送る前に一度だけ読み返す", "好きなものをひとつ選んで自分に戻る", "相手の反応を決めつけず、半歩だけ待つ", "大切にしたい条件を三つ書き出す", "軽い相談をひとつだけ誰かに渡す", "今日は境界線をやさしく守る", "褒め言葉をひとつ具体的にする", "私はどうしたいかを一行で書く", "行きたい場所を三つ保存する", "過去の不安を今日の相手に重ねすぎない", "部屋かスマホ画面を少し整える", "できることを一つだけ人に頼る", "自分にも相手にも小さな特別扱いをする", "いつもと違う返し方を一つ試す", "今月うれしかった恋の気配を三つ拾う"];
-  const LUCKY_ITEMS = ["香りのあるもの", "柔らかいハンカチ", "ブックマーク", "髪", "歩きやすい靴", "月のモチーフ", "温かい飲み物", "薄いピンクのもの", "お気に入りの音楽", "小さな花", "透明な小物", "白い紙", "手紙やメモ", "リボン", "静かなカフェ", "青い小物"];
   const MONTH_NAMES = ["はじまりの恋みくじ", "バレンタイン恋予報", "別れと出会いの恋便り", "新しい距離感診断", "本命力チェック", "雨の日の恋占い", "夏のときめき予報", "夜風の恋占い", "余白を整える恋便り", "秘密の恋ハロウィン", "ぬくもり恋予報", "今年の恋まとめ"];
   const MONTH_THEMES = ["今年の恋の置き場所を決める月", "気持ちを渡す形を選ぶ月", "過去をやさしく畳んで次へ進む月", "初対面と再会の空気を整える月", "自然体の魅力を信じ直す月", "待つ恋と動く恋の境目を選ぶ月", "少し大胆に恋を動かす月", "余白と距離感を味方にする月", "心のスペースを取り戻す月", "見せる顔と隠す本音を楽しむ月", "安心できる関係を育てる月", "記憶を整理し、来年の恋に持っていく月"];
   const MONTHLY_THEME_OVERRIDES = {
@@ -43,7 +40,6 @@
     SFAO: "整えすぎた本音に、少しだけ隙間を作る月",
     SFAC: "変わらない安心を、恋の温度として受け取る月"
   };
-
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
   const image = (meta) => `./image/lovemobby/${encodeURIComponent(`${meta.name}.webp`)}`;
   const resultState = () => {
@@ -56,7 +52,14 @@
     }
   };
   const DAILY_FORTUNES = window.LOVE_MOBBY_DAILY_FORTUNES_31 || {};
+  const DETAIL_FORTUNE_DATA = window.LOVE_MOBBY_FORTUNE_DATA_NEW || {};
   const dayIndex = (date = new Date()) => (date.getDate() - 1) % 31;
+  const weekIndex = (date = new Date()) => {
+    const start = new Date(date.getFullYear(), 0, 1);
+    const diffDays = Math.floor((new Date(date.getFullYear(), date.getMonth(), date.getDate()) - start) / 86400000);
+    return Math.floor(diffDays / 7) % 8;
+  };
+  const monthPatternIndex = (date = new Date()) => ((date.getFullYear() * 12) + date.getMonth()) % 15;
   const dailyFortune = (code, date = new Date()) => {
     const meta = TYPE_META[code] || TYPE_META.HLTO;
     const index = dayIndex(date);
@@ -85,21 +88,22 @@
     const keyCode = meta.key[index % meta.key.length];
     const keyMeta = TYPE_META[keyCode];
     const score = 70 + ((TYPE_CODES.indexOf(code) * 7 + index * 5) % 24);
+    const fallbackTheme = `${meta.name}の恋を整える日`;
     return {
       day: index + 1,
       typeCode: code,
       typeName: meta.name,
       mood: `${meta.name}は、今日は${meta.tone}を少しだけ外へ出せる状態。焦って答えを出すより、今の気持ちを整えるほど恋の流れが見えやすくなります。`,
       score,
-      theme: THEMES[index],
-      message: `${THEMES[index]}です。${meta.name}らしさは、急に強く出すよりも小さな合図で伝えるほうが届きやすい日。相手の反応を決めつけず、あなたの温度をひとつだけ丁寧に置いてみて。`,
-      mission: MISSIONS[index],
+      theme: fallbackTheme,
+      message: `${fallbackTheme}です。${meta.name}らしさは、急に強く出すよりも小さな合図で伝えるほうが届きやすい日。相手の反応を決めつけず、あなたの温度をひとつだけ丁寧に置いてみて。`,
+      mission: "短い本音をひとつだけ言葉にする",
       keyPerson: {
         code: keyCode,
         name: keyMeta.name,
         role: ["背中を押してくれるかも", "気持ちをやわらかく受け止めてくれるかも", "視点を変えてくれるかも", "流れを変えてくれるかもしれない人"][index % 4]
       },
-      luckyItem: LUCKY_ITEMS[(TYPE_CODES.indexOf(code) + index) % LUCKY_ITEMS.length],
+      luckyItem: meta.motif,
       shareText: `今日の私のキーパーソン、「${keyMeta.name}」らしい。あなた何タイプか診断してみて。`
     };
   };
@@ -132,6 +136,45 @@
       shareText: `私の今月のキーパーソン、「${keyMeta.name}」だった。あなた何タイプか診断してみて。`
     };
   };
+  const detailFortunes = (code, date = new Date()) => {
+    const meta = TYPE_META[code] || TYPE_META.HLTO;
+    const daily = DETAIL_FORTUNE_DATA.daily?.[code]?.[dayIndex(date)] || dailyFortune(code, date);
+    const weekly = DETAIL_FORTUNE_DATA.weekly?.[code]?.[weekIndex(date)] || {};
+    const monthly = DETAIL_FORTUNE_DATA.monthly?.[code]?.[monthPatternIndex(date)] || {};
+    const normalizePerson = (person, fallbackCode) => {
+      const codeValue = person?.code || fallbackCode || meta.key[0];
+      const fallback = TYPE_META[codeValue] || TYPE_META[meta.key[0]];
+      return {
+        code: codeValue,
+        name: person?.name || fallback?.name || "",
+        role: person?.text || "恋の流れに別の視点をくれるかも"
+      };
+    };
+    return {
+      daily: {
+        ...daily,
+        typeCode: code,
+        typeName: meta.name,
+        keyPerson: normalizePerson(daily.keyPerson, meta.key[0])
+      },
+      weekly: {
+        ...weekly,
+        typeCode: code,
+        typeName: meta.name,
+        keyPerson: normalizePerson(weekly.keyPerson, meta.key[1])
+      },
+      monthly: {
+        ...monthly,
+        typeCode: code,
+        typeName: meta.name,
+        monthlyTheme: monthly.theme,
+        monthlyState: monthly.mode,
+        luckyItem: monthly.luckyAction,
+        keyPerson: normalizePerson(monthly.compatibleType, meta.key[2]),
+        saveCardText: monthly.closingMessage
+      }
+    };
+  };
   const shareUrl = (fortune, campaign) => `${DIAGNOSIS_URL}?utm_source=fortune_share&utm_medium=social&utm_campaign=${campaign}&fromType=${encodeURIComponent(fortune.typeCode || "")}&keyPerson=${encodeURIComponent(fortune.keyPerson.code)}`;
   const share = async (text, url) => {
     const payload = `${text}\n${url}`;
@@ -144,6 +187,154 @@
     await navigator.clipboard?.writeText(payload);
     alert("共有文と診断リンクをコピーしました。");
   };
+  /**
+   * @typedef {Object} FortuneDetailSection
+   * @property {string} id
+   * @property {string} title
+   * @property {string} description
+   * @property {{ heading: string; body: string; }[]} items
+   */
+  const detailSections = (code, daily, weekly, monthly) => {
+    const meta = TYPE_META[code] || TYPE_META.HLTO;
+    const keyMeta = TYPE_META[daily.keyPerson.code] || TYPE_META[meta.key[0]] || TYPE_META.HLTO;
+    /** @type {FortuneDetailSection[]} */
+    return [
+      {
+        id: "today",
+        title: "今日の恋愛モビー占い",
+        description: "今日の状態、連絡の温度、小さくできる行動を確認できます。",
+        items: [
+          { heading: "今日の恋愛テーマ", body: daily.theme },
+          { heading: "今日のあなたの状態", body: daily.mood },
+          { heading: "今日やるといいこと", body: daily.mission },
+          { heading: "今日のメッセージ", body: daily.message },
+          { heading: "ラッキーアイテム", body: daily.luckyItem },
+          { heading: "キーパーソンになりそうなタイプ", body: `${daily.keyPerson.name}。${daily.keyPerson.role}。` },
+          { heading: "今日の一言", body: daily.shareText }
+        ]
+      },
+      {
+        id: "week",
+        title: "今週の恋愛作戦",
+        description: "一週間の恋の流れと、関係別の動き方をまとめて見られます。",
+        items: [
+          { heading: "今週のテーマ", body: weekly.theme },
+          { heading: "今週のあなたに起きやすいこと", body: weekly.state },
+          { heading: "恋が進みやすいポイント", body: weekly.progressPoint },
+          { heading: "すれ違いやすいポイント", body: weekly.misreadPoint },
+          { heading: "片思いの人へ", body: weekly.singleAdvice },
+          { heading: "恋人がいる人へ", body: weekly.partnerAdvice },
+          { heading: "曖昧な関係の人へ", body: weekly.ambiguousAdvice },
+          { heading: "今週の小さなミッション", body: weekly.mission },
+          { heading: "今週のラッキー行動", body: weekly.luckyAction },
+          { heading: "今週のキーパーソン", body: weekly.keyPerson.name },
+          { heading: "今週の締めメッセージ", body: weekly.closingMessage }
+        ]
+      },
+      {
+        id: "month",
+        title: "今月の恋愛運",
+        description: "月初・月中・月末の流れと、状況別の恋愛運を確認できます。",
+        items: [
+          { heading: "今月の恋愛テーマ", body: monthly.monthlyTheme },
+          { heading: "今月のあなたの恋愛モード", body: monthly.monthlyState },
+          { heading: "月初の流れ", body: monthly.earlyFlow },
+          { heading: "月中の流れ", body: monthly.middleFlow },
+          { heading: "月末の流れ", body: monthly.lateFlow },
+          { heading: "出会い運", body: monthly.encounterLuck },
+          { heading: "片思い運", body: monthly.singleLuck },
+          { heading: "恋人運", body: monthly.partnerLuck },
+          { heading: "曖昧な関係の進展運", body: monthly.ambiguousLuck },
+          { heading: "注意したいこと", body: monthly.caution },
+          { heading: "今月のチャンスアクション", body: monthly.chanceAction },
+          { heading: "今月相性が上がるタイプ", body: monthly.keyPerson.name },
+          { heading: "今月のラッキー行動", body: monthly.luckyItem },
+          { heading: "今月の締めメッセージ", body: monthly.closingMessage || monthly.saveCardText }
+        ]
+      },
+      {
+        id: "compatibility",
+        title: "あの人との相性詳細",
+        description: "今日のキーパーソンを“あの人”として、相性の見方を深掘りします。",
+        items: [
+          { heading: "二人の相性スコア", body: `${74 + ((TYPE_CODES.indexOf(code) + TYPE_CODES.indexOf(daily.keyPerson.code || code)) % 23)}点` },
+          { heading: "相性タイプ", body: `${meta.tone}と${keyMeta.tone}が重なり、違いを理解すると伸びやすい相性。` },
+          { heading: "二人が惹かれ合う理由", body: `${meta.name}の持つ${meta.tone}に、${keyMeta.name}の${keyMeta.tone}が別の角度から光を足してくれます。` },
+          { heading: "二人がすれ違いやすいところ", body: "連絡頻度や愛情表現の見え方が違う時、相手の気持ちまで決めつけやすい点には注意が必要です。" },
+          { heading: "LINE・連絡の相性", body: "短くても温度があるやり取りが合います。遅れる時は、一言だけ安心を置くとズレが小さくなります。" },
+          { heading: "会う頻度の相性", body: "会う頻度そのものより、次に会える見通しがあるかが大切です。ぼんやりでも予定を置くと安心しやすくなります。" },
+          { heading: "愛情表現の違い", body: `${meta.name}は${meta.tone}が出やすく、${keyMeta.name}は${keyMeta.tone}で愛情を見せやすい組み合わせです。` },
+          { heading: "喧嘩した時の戻し方", body: "長い説明より、まずは「責めたいわけじゃなくて、ちゃんと話したい」と入口を作るのが合っています。" },
+          { heading: "あの人が嬉しい接し方", body: `${keyMeta.name}には、してくれたことを具体的に受け取る言葉が響きます。` },
+          { heading: "やりすぎ注意な接し方", body: "反応を試すこと。安心したい気持ちは自然ですが、試す形にすると本音が伝わりにくくなります。" },
+          { heading: "長続きのコツ", body: "違いを直す対象にせず、連絡・会う頻度・愛情表現の最低ラインを二人で少しずつ合わせること。" },
+          { heading: "今日の二人へのアドバイス", body: "今日は確認より共有が合う日です。嬉しかったことを一つだけ渡して、関係の空気をやわらかくして。" }
+        ]
+      },
+      {
+        id: "partner",
+        title: "相手タイプ別攻略",
+        description: "あの人のタイプを想定して、距離の縮め方と言葉選びを確認できます。",
+        items: [
+          { heading: "あの人は恋で何を大切にする？", body: `${keyMeta.name}は、恋の中で${keyMeta.tone}を大切にしやすいタイプです。雑に急がれるより、自分のペースを尊重されると心を開きやすくなります。` },
+          { heading: "距離が縮まりやすい接し方", body: "急に踏み込みすぎず、でも無関心に見せないこと。小さな特別扱いを自然に置くのが合っています。" },
+          { heading: "あの人が嬉しい言葉", body: "「ちゃんと見てるよ」「無理しなくて大丈夫」「また話したい」など、安心と関心が両方伝わる言葉。" },
+          { heading: "避けた方がいいこと", body: "相手の反応を急かすこと、駆け引きで不安にさせること、気持ちを断定して決めつけること。" },
+          { heading: "LINEのコツ", body: "長文で押すより、返しやすい一言を置くこと。最後に小さく温度を残すと距離が縮まりやすいです。" },
+          { heading: "デート・会話のコツ", body: "完璧な予定より、自然に話せる余白を大切に。相手が話したことを一つ覚えていると印象に残ります。" },
+          { heading: "本気サイン", body: "自分の内側の話を少し出す、予定や会話を続けようとする、あなたの変化に気づく。" },
+          { heading: "不安になっている時のサイン", body: "返信はあるのに温度が見えにくくなる、急に距離を取る、平気なふりをする。" },
+          { heading: "関係を進める一言", body: "「急がなくていいけど、あなたとはもう少し話したい」" }
+        ]
+      },
+      {
+        id: "situation",
+        title: "状況別占い",
+        description: "片思い、曖昧な関係、連絡不安など、今の状況に合わせた読み方です。",
+        items: [
+          { heading: "今の状況", body: "相手の反応ひとつで気持ちが上下しやすい時期です。まだ断定できないことを、急いで答えにしない方が現実的です。" },
+          { heading: "今のあなたの心の状態", body: `${meta.name}は今、${meta.tone}を出したい気持ちと、重く見えたくない気持ちの間で揺れやすくなっています。` },
+          { heading: "相手から見えやすいあなた", body: "不安な時ほど、確認したい気持ちが言葉に出やすいです。ただ、本当は責めたいのではなく、安心したいだけかもしれません。" },
+          { heading: "今、恋が動きやすいポイント", body: "相手の気持ちを一気に聞き出すより、話しやすい接点を一つ増やすこと。小さな会話が次の流れを作ります。" },
+          { heading: "今やらない方がいいこと", body: "SNSや既読だけで可能性を決めること。相手を試すために急に冷たくすること。" },
+          { heading: "3日以内の小さなアクション", body: "相手が前に話していたことを一つだけ自然に会話へ出す。" },
+          { heading: "送るならこの一言", body: "「この前話してたの、ちょっと思い出した」" },
+          { heading: "この状況で大切にしてほしいこと", body: "恋で相手を見ることは大切ですが、自分がどう扱われたいかを見失わないことも同じくらい大切です。" }
+        ]
+      }
+    ];
+  };
+  const detailHtml = (sections, lead = "今日・今週・今月・相性・相手タイプ・状況別の恋愛ヒントをまとめて読めます。") => `
+    <section class="love-fortune-details" data-love-fortune-detail-panel aria-label="詳細占いエリア">
+      <div class="love-fortune-head">
+        <p class="love-diagnosis__eyebrow">detail</p>
+        <h3>詳細占いエリア</h3>
+        <p>${esc(lead)}</p>
+      </div>
+      <div class="love-fortune-detail-actions">
+        <button class="button button--primary button--full" type="button" data-love-fortune-detail-all-toggle aria-expanded="false">詳細を見る</button>
+      </div>
+      <div class="love-fortune-detail-list" data-love-fortune-detail-body hidden>
+        ${sections.map((section) => `
+          <article class="love-fortune-detail-card">
+            <div class="love-fortune-detail-card__summary">
+              <p class="love-diagnosis__eyebrow">${esc(section.title)}</p>
+              <h4>${esc(section.title)}</h4>
+              <p>${esc(section.description)}</p>
+            </div>
+            <div class="love-fortune-detail-card__body">
+              ${section.items.map((item) => `
+                <section class="love-fortune-detail-item">
+                  <h5>${esc(item.heading)}</h5>
+                  <p>${esc(item.body)}</p>
+                </section>
+              `).join("")}
+            </div>
+          </article>
+        `).join("")}
+        <button class="button button--ghost button--full" type="button" data-love-fortune-detail-all-toggle aria-expanded="true">閉じる</button>
+      </div>
+    </section>`;
   const gate = () => `
     <section class="love-fortune-panel love-fortune-gate">
       <p class="love-diagnosis__eyebrow">fortune</p>
@@ -169,7 +360,7 @@
         <section><h4>今日のテーマ</h4><p>${esc(fortune.theme)}</p></section>
         <section><h4>メッセージ</h4><p>${esc(fortune.message)}</p></section>
         <section class="love-fortune-mission"><h4>今日のミッション</h4><p>${esc(fortune.mission)}</p></section>
-        <section class="love-fortune-keyperson"><h4>今日のキーパーソン：${esc(fortune.keyPerson.name)}</h4><div class="love-fortune-keyperson__body">${keyMeta ? `<img src="${image(keyMeta)}" alt="${esc(fortune.keyPerson.name)}" loading="lazy" decoding="async">` : ""}<p>${esc(fortune.keyPerson.role)}。近くにこのタイプっぽい人がいたら、軽く話してみるとよさそう。</p></div><button class="button button--primary button--full" type="button" data-love-fortune-share data-share-text="${esc(fortune.shareText)}" data-share-url="${esc(url)}">このタイプかも？と思う人に診断を送る</button></section>
+        <section class="love-fortune-keyperson"><h4>今日のキーパーソン：${esc(fortune.keyPerson.name)}</h4><div class="love-fortune-keyperson__body">${keyMeta ? `<img src="${image(keyMeta)}" alt="${esc(fortune.keyPerson.name)}" loading="lazy" decoding="async">` : ""}<p>${esc(fortune.keyPerson.role)}。近くにこのタイプっぽい人がいたら、軽く話してみるとよさそう。</p></div><button class="button button--primary button--full" type="button" data-love-fortune-share data-share-text="${esc(fortune.shareText)}" data-share-url="${esc(url)}">タイプを知りたい人に診断を送る</button></section>
         <section><h4>ラッキーアイテム</h4><p>${esc(fortune.luckyItem)}</p></section>
       </article>`;
   };
@@ -207,6 +398,11 @@
     }
     const daily = dailyFortune(code);
     const monthly = monthlyFortune(code);
+    const details = detailFortunes(code);
+    const sections = detailSections(code, details.daily, details.weekly, details.monthly);
+    const dailySections = sections.filter((section) => section.id === "today");
+    const weeklySections = sections.filter((section) => section.id === "week");
+    const monthlySections = sections.filter((section) => section.id === "month");
     panel.innerHTML = `
       <section class="love-fortune-panel">
         <div class="love-fortune-head">
@@ -216,28 +412,54 @@
         </div>
         <div class="love-fortune-switch" role="tablist" aria-label="占い表示">
           <button class="is-active" type="button" data-love-fortune-mode="daily">日次占い</button>
+          <button type="button" data-love-fortune-mode="weekly">週次占い</button>
           <button type="button" data-love-fortune-mode="monthly">月間占い</button>
         </div>
-        <div data-love-fortune-daily>${dailyHtml(daily)}</div>
-        <div data-love-fortune-monthly hidden>${monthlyHtml(monthly, code)}</div>
+        <div data-love-fortune-daily>
+          ${dailyHtml(daily)}
+          ${detailHtml(dailySections, "今日の恋愛モビー占いの詳細を読めます。")}
+        </div>
+        <div data-love-fortune-weekly hidden>
+          ${detailHtml(weeklySections, "今週の恋愛作戦の詳細を読めます。")}
+        </div>
+        <div data-love-fortune-monthly hidden>
+          ${monthlyHtml(monthly, code)}
+          ${detailHtml(monthlySections, "今月の恋愛運の詳細をまとめて読めます。")}
+        </div>
       </section>`;
   };
   const ensureFortuneTab = () => {
+    ensureResultFortuneButton();
     const tabs = document.querySelector(".love-diagnosis-tabs");
     const diagnosisPanel = document.querySelector("[data-love-diagnosis-panel] > .love-diagnosis");
-    if (!tabs || !diagnosisPanel || tabs.querySelector("[data-love-fortune]")) return;
+    if (!tabs || !diagnosisPanel) return;
+    if (!tabs.querySelector("[data-love-fortune]")) {
+      const button = document.createElement("button");
+      button.className = "love-diagnosis-tabs__item";
+      button.type = "button";
+      button.textContent = "占い";
+      button.setAttribute("data-love-fortune", "");
+      tabs.appendChild(button);
+      const panel = document.createElement("section");
+      panel.className = "love-fortune-wrap";
+      panel.hidden = true;
+      panel.setAttribute("data-love-fortune-panel", "");
+      diagnosisPanel.appendChild(panel);
+      render();
+    }
+  };
+  const ensureResultFortuneButton = () => {
+    const actions = document.querySelector("[data-love-diagnosis-panel] .love-result-actions");
+    if (!actions || actions.querySelector("[data-love-result-fortune]")) return;
+    const compatibilityButton = actions.querySelector("[data-love-open-compatibility]");
     const button = document.createElement("button");
-    button.className = "love-diagnosis-tabs__item";
+    button.className = "button button--primary button--full love-compatibility-cta";
     button.type = "button";
-    button.textContent = "占い";
+    button.textContent = "占いを見る";
     button.setAttribute("data-love-fortune", "");
-    tabs.appendChild(button);
-    const panel = document.createElement("section");
-    panel.className = "love-fortune-wrap";
-    panel.hidden = true;
-    panel.setAttribute("data-love-fortune-panel", "");
-    diagnosisPanel.appendChild(panel);
-    render();
+    button.setAttribute("data-love-result-fortune", "");
+    if (compatibilityButton) compatibilityButton.insertAdjacentElement("afterend", button);
+    else actions.appendChild(button);
   };
   const openFortune = () => {
     const diagnosisPanel = document.querySelector("[data-love-diagnosis-panel]");
@@ -279,11 +501,26 @@
       const panel = mode.closest(".love-fortune-panel");
       panel.querySelectorAll("[data-love-fortune-mode]").forEach((button) => button.classList.toggle("is-active", button === mode));
       panel.querySelector("[data-love-fortune-daily]").hidden = mode.dataset.loveFortuneMode !== "daily";
+      panel.querySelector("[data-love-fortune-weekly]").hidden = mode.dataset.loveFortuneMode !== "weekly";
       panel.querySelector("[data-love-fortune-monthly]").hidden = mode.dataset.loveFortuneMode !== "monthly";
       return;
     }
     const shareButton = event.target.closest("[data-love-fortune-share]");
     if (shareButton) share(shareButton.dataset.shareText, shareButton.dataset.shareUrl);
+    const detailToggle = event.target.closest("[data-love-fortune-detail-all-toggle]");
+    if (detailToggle) {
+      const panel = detailToggle.closest("[data-love-fortune-detail-panel]");
+      const body = panel?.querySelector("[data-love-fortune-detail-body]");
+      if (!panel || !body) return;
+      const nextOpen = body.hidden;
+      body.hidden = !nextOpen;
+      panel.classList.toggle("is-open", nextOpen);
+      panel.querySelectorAll("[data-love-fortune-detail-all-toggle]").forEach((button) => {
+        button.setAttribute("aria-expanded", String(nextOpen));
+      });
+      const summaryButton = panel.querySelector(".love-fortune-detail-actions [data-love-fortune-detail-all-toggle]");
+      if (summaryButton) summaryButton.textContent = nextOpen ? "閉じる" : "詳細を見る";
+    }
   });
   const observer = new MutationObserver(ensureFortuneTab);
   observer.observe(document.getElementById("loveRoot"), { childList: true, subtree: true });
