@@ -696,6 +696,22 @@ async function callWebhookFlow() {
   let conversation = await loadConversation(userKey);
   assert(!conversation.messages.at(-1).text.includes("テストモビー"), "mock reply should not foreground diagnosis result");
   assert(conversation.messages.at(-1).text.includes("今日は少し相談したい"), "mock reply should respond to user message");
+  const messageCountAfterNormal = (await loadUser(userKey))?.messageCountToday;
+  const messageLengthAfterNormal = conversation.messages.length;
+
+  const duplicateRes = createRes();
+  await webhook(createWebhookReq({
+    events: [{
+      type: "message",
+      replyToken: "reply-duplicate",
+      source: { type: "user", userId: lineUserId },
+      message: { type: "text", id: "1", text: "今日は少し相談したい" }
+    }]
+  }), duplicateRes);
+  assert(duplicateRes.statusCode === 200, "duplicate LINE message should return 200");
+  conversation = await loadConversation(userKey);
+  assert(conversation.messages.length === messageLengthAfterNormal, "duplicate LINE message should not append conversation messages");
+  assert((await loadUser(userKey))?.messageCountToday === messageCountAfterNormal, "duplicate LINE message should not increment reply count");
 
   const crisisText = "\u3082\u3046\u7121\u7406\u3001\u6d88\u3048\u305f\u3044";
   assert(detectSafetyRisk(crisisText).hasRisk, "safety detector should catch crisis text");
@@ -738,16 +754,35 @@ async function callWebhookFlow() {
   await saveUser(userKey, {
     ...linkedUser,
     messageCountDate: todayKey(),
-    messageCountToday: 100
+    messageCountToday: 300
   });
-  await saveConversation(userKey, { version: 1, userKey, messages: [] });
+  await saveConversation(userKey, { version: 1, userKey, messages: [], dailyCountDate: todayKey(), dailyCount: 5 });
+  const staleCounterRes = createRes();
+  await webhook(createWebhookReq({
+    events: [{
+      type: "message",
+      replyToken: "reply-stale-counter",
+      source: { type: "user", userId: lineUserId },
+      message: { type: "text", id: "6", text: "保存カウンタだけで止まらないか確認" }
+    }]
+  }), staleCounterRes);
+  conversation = await loadConversation(userKey);
+  assert(!conversation.messages.at(-1).text.includes("\u4eca\u65e5\u306f\u3053\u3053\u307e\u3067"), "stale user counter should recover when conversation count is low");
+  assert((await loadUser(userKey))?.messageCountToday === 6, "stale user counter should be repaired from conversation count");
+
+  await saveUser(userKey, {
+    ...linkedUser,
+    messageCountDate: todayKey(),
+    messageCountToday: 300
+  });
+  await saveConversation(userKey, { version: 1, userKey, messages: [], dailyCountDate: todayKey(), dailyCount: 300 });
   const rateRes = createRes();
   await webhook(createWebhookReq({
     events: [{
       type: "message",
       replyToken: "reply-rate",
       source: { type: "user", userId: lineUserId },
-      message: { type: "text", id: "6", text: "\u666e\u901a\u306e\u76f8\u8ac7\u3067\u3059" }
+      message: { type: "text", id: "7", text: "\u666e\u901a\u306e\u76f8\u8ac7\u3067\u3059" }
     }]
   }), rateRes);
   conversation = await loadConversation(userKey);
@@ -758,14 +793,14 @@ async function callWebhookFlow() {
     messageCountDate: todayKey(),
     messageCountToday: 0
   });
-  await saveConversation(userKey, { version: 1, userKey, messages: [], dailyCountDate: todayKey(), dailyCount: 1000 });
+  await saveConversation(userKey, { version: 1, userKey, messages: [], dailyCountDate: todayKey(), dailyCount: 5000 });
   const globalRateRes = createRes();
   await webhook(createWebhookReq({
     events: [{
       type: "message",
       replyToken: "reply-global-rate",
       source: { type: "user", userId: lineUserId },
-      message: { type: "text", id: "7", text: "\u5168\u4f53\u4e0a\u9650\u306e\u78ba\u8a8d\u3067\u3059" }
+      message: { type: "text", id: "8", text: "\u5168\u4f53\u4e0a\u9650\u306e\u78ba\u8a8d\u3067\u3059" }
     }]
   }), globalRateRes);
   conversation = await loadConversation(userKey);
@@ -775,9 +810,10 @@ async function callWebhookFlow() {
 function callRateLimitDateFlow() {
   const utcDate = new Date("2026-01-01T15:30:00.000Z");
   assert(todayKey(utcDate) === "2026-01-02", "rate limit day key should use Japan time");
-  assert(canReply({ messageCountDate: "2026-01-01", messageCountToday: 100 }, utcDate).ok, "JST date rollover should reset user count");
-  assert(!canReply({ messageCountDate: "2026-01-02", messageCountToday: 100 }, utcDate).ok, "doubled user limit should block at 100");
-  assert(!canReplyGlobally({ dailyCountDate: "2026-01-02", dailyCount: 1000 }, utcDate).ok, "doubled global limit should block at 1000");
+  assert(canReply({ messageCountDate: "2026-01-01", messageCountToday: 300 }, utcDate).ok, "JST date rollover should reset user count");
+  assert(canReply({ messageCountDate: "2026-01-02", messageCountToday: 100 }, utcDate).ok, "old user limit should not block at 100");
+  assert(!canReply({ messageCountDate: "2026-01-02", messageCountToday: 300 }, utcDate).ok, "default user limit should block at 300");
+  assert(!canReplyGlobally({ dailyCountDate: "2026-01-02", dailyCount: 5000 }, utcDate).ok, "default global limit should block at 5000");
 }
 
 async function callEmojiTailWebhookFlow() {

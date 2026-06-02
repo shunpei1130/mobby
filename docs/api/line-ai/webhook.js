@@ -8,7 +8,7 @@ import {
   toLineTextMessage,
   verifyLineSignature
 } from "./_line.js";
-import { buildRateLimitReply, canReply, canReplyGlobally, recordGlobalReply, recordReply, todayKey } from "./_rate-limit.js";
+import { buildRateLimitReply, canReplyGlobally, canReplyWithConversation, recordGlobalReply, recordReply, todayKey } from "./_rate-limit.js";
 import { buildSafetyReply, detectSafetyRisk } from "./_safety.js";
 import {
   appendConversationMessage,
@@ -57,6 +57,23 @@ function replyCountToday(user) {
   return user?.messageCountDate === today ? Number(user?.messageCountToday || 0) : 0;
 }
 
+function isDuplicateLineMessage(conversation, messageId) {
+  if (!messageId) return false;
+  return Array.isArray(conversation?.processedLineMessageIds)
+    && conversation.processedLineMessageIds.includes(messageId);
+}
+
+function rememberLineMessage(conversation, messageId) {
+  if (!messageId) return conversation;
+  const existing = Array.isArray(conversation?.processedLineMessageIds)
+    ? conversation.processedLineMessageIds
+    : [];
+  return {
+    ...conversation,
+    processedLineMessageIds: [messageId, ...existing.filter((id) => id !== messageId)].slice(0, 80)
+  };
+}
+
 function shouldOfferDisplayNameCue(user, text) {
   const provider = String(process.env.AI_PROVIDER || "mock").toLowerCase();
   if (provider !== "gemini") return false;
@@ -102,6 +119,8 @@ async function ensureDefaultUser(userKey) {
 async function handleLinkedMessage(event, userKey, user, text) {
   let conversation = await loadConversation(userKey);
   conversation = conversation && typeof conversation === "object" ? conversation : { version: 1, userKey, messages: [] };
+  const lineMessageId = String(event?.message?.id || "");
+  if (isDuplicateLineMessage(conversation, lineMessageId)) return;
 
   const safety = detectSafetyRisk(text);
   let responseText = "";
@@ -111,7 +130,7 @@ async function handleLinkedMessage(event, userKey, user, text) {
   if (safety.hasRisk) {
     responseText = buildSafetyReply(safety);
   } else {
-    const userLimit = canReply(user);
+    const userLimit = canReplyWithConversation(user, conversation);
     const totalLimit = canReplyGlobally(conversation);
     if (!userLimit.ok || !totalLimit.ok) {
       responseText = buildRateLimitReply();
@@ -122,12 +141,13 @@ async function handleLinkedMessage(event, userKey, user, text) {
         message: text,
         history: Array.isArray(conversation.messages) ? conversation.messages.slice(-12) : []
       });
-      nextUser = recordReply(user);
+      nextUser = recordReply(user, new Date(), userLimit.count);
       nextConversation = recordGlobalReply(nextConversation);
     }
   }
 
   nextConversation = appendConversationMessage(nextConversation, "assistant", responseText);
+  nextConversation = rememberLineMessage(nextConversation, lineMessageId);
   await saveUser(userKey, nextUser);
   await saveConversation(userKey, nextConversation);
   await reply(event, responseText);
