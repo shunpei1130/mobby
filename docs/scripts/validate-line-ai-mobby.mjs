@@ -401,6 +401,17 @@ async function callKnowledgeReplyFlow() {
         assert(systemPrompt.includes("夜風のロマンチスト"), "linked result prompt should include saved result name");
         assert(systemPrompt.includes("自由な距離感"), "linked result prompt should include saved result summary");
       }
+    },
+    {
+      message: "診断結果教えて",
+      user: linkedUser,
+      reply: "あなたの診断結果は恋愛モビー診断の夜風のロマンチストだよ。",
+      check(systemPrompt) {
+        assert(systemPrompt.includes("ユーザー個別の診断結果背景"), "short result prompt should include personal diagnosis context");
+        assert(systemPrompt.includes("夜風のロマンチスト"), "short result prompt should include saved result name");
+        assert(systemPrompt.includes("最新メッセージと直近の会話文脈からAIが判断"), "short result prompt should let Gemini judge result intent from context");
+        assert(systemPrompt.includes("保存済みの結果名を答え"), "short result prompt should instruct Gemini to answer saved results when intent is clear");
+      }
     }
   ];
 
