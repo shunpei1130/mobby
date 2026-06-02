@@ -716,6 +716,7 @@
       padding: 0 14px;
       color: var(--ink);
       font: inherit;
+      font-size: 16px;
       font-weight: 600;
     }
 
@@ -1470,6 +1471,15 @@
       document.addEventListener("click", (event) => {
         const target = event.target.closest("[data-love-diagnosis-start], [data-love-page-prev], [data-love-page-next], [data-love-gate-back]");
         if (!target) return;
+        window.requestAnimationFrame(scrollDiagnosisTop);
+        window.setTimeout(scrollDiagnosisTop, 0);
+      }, true);
+      document.addEventListener("submit", (event) => {
+        const target = event.target.closest("[data-love-gate-form]");
+        if (!target) return;
+        if (document.activeElement && typeof document.activeElement.blur === "function") {
+          document.activeElement.blur();
+        }
         window.requestAnimationFrame(scrollDiagnosisTop);
         window.setTimeout(scrollDiagnosisTop, 0);
       }, true);
