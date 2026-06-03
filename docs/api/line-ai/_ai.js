@@ -4,6 +4,9 @@ import { cleanUnicodeText, truncateText, unicodeLength } from "./_text.js";
 
 const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash-lite";
 const GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models";
+const DEFAULT_OLLAMA_MODEL = "qwen3.5:9b";
+const DEFAULT_OLLAMA_BASE_URL = "http://127.0.0.1:11434";
+const DEFAULT_OLLAMA_TIMEOUT_MS = 60 * 1000;
 const DEFAULT_MAX_OUTPUT_TOKENS = 700;
 const DEFAULT_TEMPERATURE = 0.7;
 
@@ -62,6 +65,12 @@ function temperature() {
   return value;
 }
 
+function ollamaTimeoutMs() {
+  const value = Number(process.env.OLLAMA_TIMEOUT_MS);
+  if (!Number.isFinite(value) || value <= 0) return DEFAULT_OLLAMA_TIMEOUT_MS;
+  return Math.min(Math.max(Math.floor(value), 5 * 1000), 5 * 60 * 1000);
+}
+
 function historyToContents(history, message) {
   const recent = Array.isArray(history) ? history.slice(-12) : [];
   const contents = recent
@@ -77,6 +86,32 @@ function historyToContents(history, message) {
     parts: [{ text: truncateText(message, 500) }]
   });
   return contents;
+}
+
+function historyToOllamaMessages(history, message, systemPrompt) {
+  const recent = Array.isArray(history) ? history.slice(-12) : [];
+  const messages = [
+    {
+      role: "system",
+      content: systemPrompt
+    }
+  ];
+
+  for (const item of recent) {
+    if (item?.role !== "user" && item?.role !== "assistant") continue;
+    const content = truncateText(item.text, 500);
+    if (!content) continue;
+    messages.push({
+      role: item.role,
+      content
+    });
+  }
+
+  messages.push({
+    role: "user",
+    content: truncateText(message, 500)
+  });
+  return messages;
 }
 
 function loveGuardrail(message) {
@@ -108,6 +143,17 @@ export async function generateReply({ user, message, history }) {
       return await generateGeminiReply({ user, message, history });
     } catch (error) {
       console.error("[LINE AI] Gemini reply failed. Falling back to mock.", {
+        message: error?.message,
+        status: error?.status
+      });
+      return generateMockReply({ user, message, history });
+    }
+  }
+  if (provider === "ollama") {
+    try {
+      return await generateOllamaReply({ user, message, history });
+    } catch (error) {
+      console.error("[LINE AI] Ollama reply failed. Falling back to mock.", {
         message: error?.message,
         status: error?.status
       });
@@ -164,6 +210,55 @@ export async function generateGeminiReply({ user, message, history }) {
     throw new Error("Gemini API returned an empty reply");
   }
   return cleanReply(text);
+}
+
+export async function generateOllamaReply({ user, message, history }) {
+  const model = String(process.env.AI_MODEL || DEFAULT_OLLAMA_MODEL).trim() || DEFAULT_OLLAMA_MODEL;
+  const baseUrl = String(process.env.OLLAMA_BASE_URL || DEFAULT_OLLAMA_BASE_URL).trim().replace(/\/+$/, "");
+  if (!baseUrl) {
+    throw new Error("OLLAMA_BASE_URL is not configured");
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), ollamaTimeoutMs());
+
+  try {
+    const response = await fetch(`${baseUrl}/api/chat`, {
+      method: "POST",
+      signal: controller.signal,
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model,
+        stream: false,
+        think: false,
+        messages: historyToOllamaMessages(history, message, buildSystemPrompt(user, message, history)),
+        options: {
+          temperature: temperature(),
+          top_p: 0.9,
+          num_predict: maxOutputTokens()
+        }
+      })
+    });
+
+    if (!response.ok) {
+      const body = await response.text().catch(() => "");
+      const error = new Error(`Ollama API returned ${response.status}`);
+      error.status = response.status;
+      error.body = body.slice(0, 300);
+      throw error;
+    }
+
+    const data = await response.json();
+    const text = String(data?.message?.content || "").trim();
+    if (!text) {
+      throw new Error("Ollama API returned an empty reply");
+    }
+    return cleanReply(text);
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 export function generateMockReply({ user, message, history }) {

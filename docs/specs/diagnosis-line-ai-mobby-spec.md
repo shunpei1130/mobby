@@ -94,6 +94,10 @@ LINE Messaging API webhookを受ける。署名検証後、LINE userIdを `MOBBY
 - `AI_MODEL`: Geminiモデル名。未指定時は `gemini-2.5-flash-lite`。
 - `LINE_AI_TEMPERATURE`: Geminiのtemperature。未指定時は `0.7`。
 - `GEMINI_API_KEY`: Gemini APIキー。
+- `AI_PROVIDER=ollama`: ローカル開発でOllamaを使う設定。本番Vercelでは使わない。
+- `AI_MODEL=qwen3.5:9b`: Ollama利用時の推奨ローカルモデル名。
+- `OLLAMA_BASE_URL=http://127.0.0.1:11434`: Ollama HTTP APIのURL。
+- `OLLAMA_TIMEOUT_MS`: Ollama応答待ち時間。未指定時は `60000`。
 
 連携を有効にする場合:
 

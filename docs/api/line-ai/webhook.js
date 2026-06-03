@@ -81,7 +81,7 @@ function rememberLineMessage(conversation, messageId) {
 
 function shouldOfferDisplayNameCue(user, text) {
   const provider = String(process.env.AI_PROVIDER || "mock").toLowerCase();
-  if (provider !== "gemini") return false;
+  if (provider !== "gemini" && provider !== "ollama") return false;
 
   const nextReplyCount = replyCountToday(user) + 1;
   if (nextReplyCount < 4) return false;

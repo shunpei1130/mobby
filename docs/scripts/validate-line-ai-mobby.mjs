@@ -7,6 +7,7 @@ import linkSessions from "../api/line-ai/link-sessions.js";
 import webhook from "../api/line-ai/webhook.js";
 import {
   generateGeminiReply,
+  generateOllamaReply,
   generateReply,
   IMAGE_INPUT_UNSUPPORTED_REPLY,
   IMAGE_OUTPUT_UNSUPPORTED_REPLY
@@ -1453,6 +1454,129 @@ async function callGeminiProviderFlow() {
   }
 }
 
+async function callOllamaProviderFlow() {
+  const originalFetch = globalThis.fetch;
+  const originalProvider = process.env.AI_PROVIDER;
+  const originalModel = process.env.AI_MODEL;
+  const originalOllamaBaseUrl = process.env.OLLAMA_BASE_URL;
+
+  const user = {
+    source: "line",
+    sourceLabel: "LINE直接"
+  };
+  const personalUser = {
+    source: "16love",
+    sourceLabel: "メンヘラモビー診断",
+    resultId: "あつすひ",
+    resultName: "返信こないと死モビー",
+    resultSummary: "好きな人の返信が命綱のように感じやすいタイプ。",
+    traits: ["恋愛メンヘラ度: Lv.6", "恋の依存度: 彼氏ガチ勢"],
+    detailSections: [
+      { title: "しんどい時", body: "返信がない時間に自分責めへ傾きやすい。" },
+      { title: "アドバイス", body: "責めない短文で送って、その後にスマホから少し離れると安定しやすい。" }
+    ],
+    personalResultLinked: true
+  };
+
+  try {
+    process.env.AI_PROVIDER = "ollama";
+    process.env.AI_MODEL = "qwen3.5:9b";
+    process.env.OLLAMA_BASE_URL = "http://127.0.0.1:11434/";
+
+    let ollamaCall = 0;
+    globalThis.fetch = async (url, options) => {
+      ollamaCall += 1;
+      assert(String(url) === "http://127.0.0.1:11434/api/chat", "Ollama URL should call local chat endpoint");
+      assert(options?.headers?.["Content-Type"] === "application/json", "Ollama request should send JSON");
+      const payload = JSON.parse(options.body);
+      assert(payload.model === "qwen3.5:9b", "Ollama request should include selected model");
+      assert(payload.stream === false, "Ollama request should disable streaming");
+      assert(payload.think === false, "Ollama request should disable thinking output for LINE replies");
+      assert(payload.options?.temperature === 0.7, "Ollama request should include temperature");
+      assert(payload.options?.top_p === 0.9, "Ollama request should include top_p");
+      assert(payload.options?.num_predict >= 180, "Ollama request should include max prediction count");
+      assert(payload.messages[0].role === "system", "Ollama request should start with a system message");
+      assert(payload.messages.at(-1).role === "user", "Ollama request should end with the current user message");
+
+      const systemPrompt = payload.messages[0].content;
+      if (ollamaCall === 1) {
+        assert(systemPrompt.includes("MobbyのLINE AI「モビー」"), "Ollama prompt should use unified Mobby persona name");
+        assert(!systemPrompt.includes("テスト恋愛モビー"), "Ollama prompt should not include unrelated saved result");
+        assert(payload.messages.some((item) => item.role === "assistant" && item.content === "前の返答"), "Ollama request should include assistant history");
+        assert(payload.messages.at(-1).content === "LINE文面を考えたい", "Ollama request should include user message");
+      } else if (ollamaCall === 2) {
+        assert(systemPrompt.includes("返信こないと死モビー"), "Ollama prompt should include linked personal result name");
+        assert(systemPrompt.includes("好きな人の返信が命綱"), "Ollama prompt should include linked personal result summary");
+        assert(systemPrompt.includes("ユーザー個別の診断結果背景"), "Ollama prompt should separate personal diagnosis context");
+      } else {
+        assert(systemPrompt.includes("診断知識"), "Ollama prompt should include diagnosis knowledge for diagnosis questions");
+        assert(systemPrompt.includes("推し活モビー診断"), "Ollama prompt should include matched diagnosis knowledge");
+      }
+
+      return {
+        ok: true,
+        async json() {
+          return {
+            message: {
+              content: ollamaCall === 1
+                ? "その文面なら、少し軽くして相手が返しやすい一言にしよう。"
+                : ollamaCall === 2
+                  ? "返信待ちで不安になりやすい前提なら、責めない短文がよさそう。"
+                  : "推し活モビー診断は16タイプあるよ。気になる名前を言ってくれたら詳しく見るね。"
+            }
+          };
+        }
+      };
+    };
+
+    const ollamaReply = await generateOllamaReply({
+      user,
+      message: "LINE文面を考えたい",
+      history: [
+        { role: "user", text: "好きな人に送りたい" },
+        { role: "assistant", text: "前の返答" }
+      ]
+    });
+    assert(ollamaReply.includes("返しやすい"), "Ollama reply should return model text");
+
+    const ollamaPersonalReply = await generateOllamaReply({
+      user: personalUser,
+      message: "LINE文面を考えたい",
+      history: []
+    });
+    assert(ollamaPersonalReply.includes("責めない短文"), "Ollama reply should return personal-context model text");
+
+    const ollamaKnowledgeReply = await generateOllamaReply({
+      user: { source: "line" },
+      message: "推し活のタイプ一覧教えて",
+      history: []
+    });
+    assert(ollamaKnowledgeReply.includes("16タイプ"), "Ollama knowledge reply should return model text");
+
+    globalThis.fetch = async () => ({
+      ok: false,
+      status: 500,
+      async text() {
+        return "local model unavailable";
+      }
+    });
+
+    const fallbackReply = await generateReply({
+      user,
+      message: "LINE文面を考えたい",
+      history: []
+    });
+    assert(fallbackReply.includes("LINE文面を考えたい"), "Ollama failure should fall back to mock reply");
+    assert(fallbackReply.includes("🙂"), "Ollama fallback should include a small emoji");
+  } finally {
+    globalThis.fetch = originalFetch;
+    process.env.AI_PROVIDER = originalProvider;
+    process.env.AI_MODEL = originalModel;
+    if (originalOllamaBaseUrl === undefined) delete process.env.OLLAMA_BASE_URL;
+    else process.env.OLLAMA_BASE_URL = originalOllamaBaseUrl;
+  }
+}
+
 process.env.LINE_ADD_URL = process.env.LINE_ADD_URL || "https://lin.ee/test";
 process.env.LINE_CHANNEL_SECRET = process.env.LINE_CHANNEL_SECRET || "line-secret-test";
 process.env.MOBBY_LINE_AI_SECRET = process.env.MOBBY_LINE_AI_SECRET || "mobby-secret-test";
@@ -1483,5 +1607,6 @@ await callEmojiTailWebhookFlow();
 await callImageWebhookUnsupportedFlow();
 await callWebhookMarkAsReadFlow();
 await callGeminiProviderFlow();
+await callOllamaProviderFlow();
 
 console.log("LINE AI Mobby MVP-2 validation passed");

@@ -4,7 +4,13 @@ export default async function handler(req, res) {
   }
 
   const provider = String(process.env.AI_PROVIDER || "mock").toLowerCase();
-  const model = String(process.env.AI_MODEL || (provider === "gemini" ? "gemini-2.5-flash-lite" : "")).trim();
+  const defaultModel = provider === "gemini"
+    ? "gemini-2.5-flash-lite"
+    : provider === "ollama"
+      ? "qwen3.5:9b"
+      : "";
+  const model = String(process.env.AI_MODEL || defaultModel).trim();
+  const ollamaBaseUrl = String(process.env.OLLAMA_BASE_URL || (provider === "ollama" ? "http://127.0.0.1:11434" : "")).trim();
   const personalResultLinkingEnabled = String(process.env.LINE_AI_PERSONAL_RESULT_LINKING || "").toLowerCase() === "true";
   const liffRuntimeConfigured = Boolean(
     process.env.LIFF_ID &&
@@ -22,6 +28,10 @@ export default async function handler(req, res) {
     service: "line-ai-mobby",
     provider,
     model,
+    ollama: {
+      baseUrl: provider === "ollama" ? ollamaBaseUrl : "",
+      configured: provider === "ollama" ? Boolean(ollamaBaseUrl) : false
+    },
     features: {
       diagnosisKnowledge: true,
       mobbyKnowledge: true,
@@ -37,6 +47,7 @@ export default async function handler(req, res) {
       lineChannelAccessToken: Boolean(process.env.LINE_CHANNEL_ACCESS_TOKEN),
       mobbyLineAiSecret: Boolean(process.env.MOBBY_LINE_AI_SECRET),
       geminiApiKey: Boolean(process.env.GEMINI_API_KEY),
+      ollamaBaseUrl: Boolean(ollamaBaseUrl),
       blob: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
       liffId: Boolean(process.env.LIFF_ID),
       lineLoginChannelId: Boolean(process.env.LINE_LOGIN_CHANNEL_ID),
