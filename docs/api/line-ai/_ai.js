@@ -1,4 +1,5 @@
 import { buildSystemPrompt } from "./_prompts.js";
+import { isOwnResultQuestion } from "./_diagnosis-knowledge.js";
 import { cleanUnicodeText, truncateText, unicodeLength } from "./_text.js";
 
 const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash-lite";
@@ -78,6 +79,18 @@ function loveGuardrail(message) {
   return "";
 }
 
+function buildOwnResultFallbackReply({ user, message, history }) {
+  if (!isOwnResultQuestion(message, history)) return "";
+
+  if (user?.personalResultLinked && user?.resultName) {
+    const sourceLabel = user.sourceLabel ? `${user.sourceLabel}の` : "";
+    const summary = user.resultSummary ? `\n${user.resultSummary}` : "";
+    return `あなたの診断結果は${sourceLabel}「${user.resultName}」だよ。${summary}\n気になるところがあれば、そこから一緒に話そ🙂`;
+  }
+
+  return "今のLINEでは、まだあなたの診断結果は連携されていないみたい。診断結果ページからLINE連携すると、結果をふまえて話せるよ🙂";
+}
+
 export async function generateReply({ user, message, history }) {
   const unsupportedImageReply = buildUnsupportedImageIntentReply(message);
   if (unsupportedImageReply) return unsupportedImageReply;
@@ -91,13 +104,13 @@ export async function generateReply({ user, message, history }) {
         message: error?.message,
         status: error?.status
       });
-      return generateMockReply({ user, message });
+      return generateMockReply({ user, message, history });
     }
   }
   if (provider !== "mock") {
     console.warn("[LINE AI] Unknown provider. Falling back to mock.", { provider });
   }
-  return generateMockReply({ user, message });
+  return generateMockReply({ user, message, history });
 }
 
 export async function generateGeminiReply({ user, message, history }) {
@@ -115,7 +128,7 @@ export async function generateGeminiReply({ user, message, history }) {
     },
     body: JSON.stringify({
       system_instruction: {
-        parts: [{ text: buildSystemPrompt(user, message) }]
+        parts: [{ text: buildSystemPrompt(user, message, history) }]
       },
       contents: historyToContents(history, message),
       generationConfig: {
@@ -146,9 +159,12 @@ export async function generateGeminiReply({ user, message, history }) {
   return cleanReply(text);
 }
 
-export function generateMockReply({ user, message }) {
+export function generateMockReply({ user, message, history }) {
   const unsupportedImageReply = buildUnsupportedImageIntentReply(message);
   if (unsupportedImageReply) return unsupportedImageReply;
+
+  const ownResultReply = buildOwnResultFallbackReply({ user, message, history });
+  if (ownResultReply) return ownResultReply;
 
   const userMessage = compact(message);
   const quotedMessage = userMessage ? `「${userMessage}」ね。` : "";

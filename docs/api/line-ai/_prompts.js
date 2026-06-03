@@ -64,9 +64,9 @@ export function buildPersonalDiagnosisContext(user) {
   ].filter(Boolean).join("\n");
 }
 
-export function buildSystemPrompt(user, message = "") {
+export function buildSystemPrompt(user, message = "", history = []) {
   const mobbyKnowledgeContext = buildMobbyKnowledgeContext({ message });
-  const diagnosisKnowledgeContext = buildDiagnosisKnowledgeContext({ user, message });
+  const diagnosisKnowledgeContext = buildDiagnosisKnowledgeContext({ user, message, history });
   const compatibilityContext = buildCompatibilityContext({ user, message });
   const personalDiagnosisContext = buildPersonalDiagnosisContext(user);
   const displayNameContext = buildDisplayNameContext(user);
@@ -89,7 +89,6 @@ export function buildSystemPrompt(user, message = "") {
     "- 友達と話すような空気感で返す。ただしなれなれしすぎない",
     "- 短い言葉から感情や状況を汲み取る",
     "- すぐ解決策を出すより、まず自然な会話を優先する",
-    "- 親しみやすく、少しユーモアもあり、賢いけど冷たくない雰囲気にする",
     "- 通常の雑談では絵文字を自然に1〜2個使う。深刻な相談では無理に使わない",
     "- LINEで読みやすい短文にする",
     "- 1返信は原則1〜3文。説明が必要な時は短い段落に分けて十分に答える",

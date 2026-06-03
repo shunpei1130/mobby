@@ -206,8 +206,51 @@ function detectSources(message) {
   return [...sources];
 }
 
-export function isOwnResultQuestion(message) {
-  return /(私|自分|俺|おれ|僕|ぼく|わたし)の?(診断)?結果.*(覚えて|わかる|分かる|知って|何|教えて)|(私|自分|俺|おれ|僕|ぼく|わたし)(って|は|の).*(何タイプ|どのタイプ|診断結果|結果)|結果.*覚えて|診断結果.*覚えて/.test(String(message || ""));
+function compactIntentText(message) {
+  return normalizeText(message).replace(/[!?？！。,.、]/g, "");
+}
+
+function isBareOwnResultQuestion(message) {
+  const text = compactIntentText(message);
+  return /^(私の|自分の|俺の|おれの|僕の|ぼくの|わたしの)?診断結果(は|って|教えて|知りたい|見たい|みたい|確認したい)?$/.test(text) ||
+    /^(診断)?結果(教えて|知りたい|見たい|みたい|確認したい)$/.test(text);
+}
+
+function isResultShorthand(message) {
+  return /^(結果|結果は|結果って)$/.test(compactIntentText(message));
+}
+
+function isLinkedAffirmation(message) {
+  const text = compactIntentText(message);
+  return /^(もう)?(line)?連携(済み?|した|できてる|できた|してる)(だよ|です|よ)?$/.test(text) ||
+    /^(line)?連携済み?(だよ|です|よ)?$/.test(text);
+}
+
+function recentMessages(history, limit = 5) {
+  return Array.isArray(history)
+    ? history.slice(-limit).filter((item) => item?.role === "user" || item?.role === "assistant")
+    : [];
+}
+
+function hasRecentOwnResultCue(history) {
+  return recentMessages(history).some((item) => {
+    const text = String(item?.text || "");
+    if (item.role === "user") {
+      return isBareOwnResultQuestion(text) ||
+        /(私|自分|俺|おれ|僕|ぼく|わたし)の?(診断)?結果/.test(text);
+    }
+    return /私の診断結果|診断結果ページからLINE連携|診断結果.*連携|LINE連携.*診断結果|結果をふまえて話せる/.test(text);
+  });
+}
+
+export function isOwnResultQuestion(message, history = []) {
+  const text = String(message || "");
+  const explicitOwnResultQuestion =
+    /(私|自分|俺|おれ|僕|ぼく|わたし)の?(診断)?結果.*(覚えて|わかる|分かる|知って|何|教えて)|(私|自分|俺|おれ|僕|ぼく|わたし)(って|は|の).*(何タイプ|どのタイプ|診断結果|結果)|結果.*覚えて|診断結果.*覚えて/.test(text);
+
+  if (explicitOwnResultQuestion || isBareOwnResultQuestion(text)) return true;
+  if ((isResultShorthand(text) || isLinkedAffirmation(text)) && hasRecentOwnResultCue(history)) return true;
+  return false;
 }
 
 export function getDiagnosisTypes(source) {
@@ -246,14 +289,15 @@ function formatKnowledgeForSource(source, item, { includeTypes = false } = {}) {
   return lines.join("\n");
 }
 
-export function buildDiagnosisKnowledgeContext({ user, message } = {}) {
+export function buildDiagnosisKnowledgeContext({ user, message, history } = {}) {
   const text = String(message || "");
   const matchedTypes = findTypeMatches(text);
   const sources = detectSources(text);
   const includeOverview = wantsDiagnosisOverview(text);
   const includeTypes = wantsTypeList(text) || matchedTypes.length > 0;
+  const asksOwnResult = isOwnResultQuestion(text, history);
 
-  if (!includeOverview && !includeTypes && !sources.length && !isOwnResultQuestion(text)) {
+  if (!includeOverview && !includeTypes && !sources.length && !asksOwnResult) {
     return "";
   }
 
@@ -261,22 +305,27 @@ export function buildDiagnosisKnowledgeContext({ user, message } = {}) {
     ? Object.keys(DIAGNOSIS_KNOWLEDGE)
     : sources;
 
-  const lines = [
-    "診断知識（診断について聞かれた時だけ使う。ここにない仕様やタイプ名は推測しない）:",
-    "- 通常公開のモビー診断は4種類: 学校モビー診断、推し活モビー診断、メンヘラモビー診断、恋愛モビー診断。",
-    "- このナレッジをそのまま固定文として返さず、ユーザーの聞き方に合わせて自然に言い換える。"
-  ];
+  const lines = [];
 
-  selectedSources.forEach((source) => {
-    const item = DIAGNOSIS_KNOWLEDGE[source];
-    if (item) lines.push(formatKnowledgeForSource(source, item, { includeTypes }));
-  });
+  if (includeOverview || includeTypes || sources.length) {
+    lines.push(
+      "診断知識（診断について聞かれた時だけ使う。ここにない仕様やタイプ名は推測しない）:",
+      "- 通常公開のモビー診断は4種類: 学校モビー診断、推し活モビー診断、メンヘラモビー診断、恋愛モビー診断。",
+      "- このナレッジをそのまま固定文として返さず、ユーザーの聞き方に合わせて自然に言い換える。"
+    );
 
-  matchedTypes.forEach(({ diagnosis, type }) => {
-    lines.push(`該当タイプ: ${diagnosis.label}の「${type.name}」 (${type.code}) は、${type.summary}`);
-  });
+    selectedSources.forEach((source) => {
+      const item = DIAGNOSIS_KNOWLEDGE[source];
+      if (item) lines.push(formatKnowledgeForSource(source, item, { includeTypes }));
+    });
 
-  if (isOwnResultQuestion(text)) {
+    matchedTypes.forEach(({ diagnosis, type }) => {
+      lines.push(`該当タイプ: ${diagnosis.label}の「${type.name}」 (${type.code}) は、${type.summary}`);
+    });
+  }
+
+  if (asksOwnResult) {
+    lines.push("個別診断結果の質問文脈: 「診断結果」だけの短い聞き方や「連携済み」だけの返事も、直近文脈があれば自分の診断結果確認として扱う。");
     if (user?.personalResultLinked && user?.resultName) {
       lines.push("ユーザーの診断結果が連携済みの場合は、保存済み結果を会話の背景として参照してよい。");
     } else {
