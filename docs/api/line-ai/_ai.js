@@ -5,6 +5,7 @@ import { cleanUnicodeText, truncateText, unicodeLength } from "./_text.js";
 const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash-lite";
 const GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models";
 const DEFAULT_MAX_OUTPUT_TOKENS = 700;
+const DEFAULT_TEMPERATURE = 0.7;
 
 export const IMAGE_OUTPUT_UNSUPPORTED_REPLY = [
   "ごめんね、今は画像の作成や送付には対応していないんだ。",
@@ -53,6 +54,12 @@ function maxOutputTokens() {
   const value = Number(process.env.LINE_AI_MAX_OUTPUT_TOKENS);
   if (!Number.isFinite(value) || value <= 0) return DEFAULT_MAX_OUTPUT_TOKENS;
   return Math.min(Math.max(Math.floor(value), 180), 1400);
+}
+
+function temperature() {
+  const value = Number(process.env.LINE_AI_TEMPERATURE);
+  if (!Number.isFinite(value) || value < 0 || value > 2) return DEFAULT_TEMPERATURE;
+  return value;
 }
 
 function historyToContents(history, message) {
@@ -132,7 +139,7 @@ export async function generateGeminiReply({ user, message, history }) {
       },
       contents: historyToContents(history, message),
       generationConfig: {
-        temperature: 0.7,
+        temperature: temperature(),
         topP: 0.9,
         maxOutputTokens: maxOutputTokens(),
         responseMimeType: "text/plain"

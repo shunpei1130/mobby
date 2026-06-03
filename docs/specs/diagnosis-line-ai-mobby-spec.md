@@ -92,6 +92,7 @@ LINE Messaging API webhookを受ける。署名検証後、LINE userIdを `MOBBY
 - `BLOB_READ_WRITE_TOKEN`: 会話履歴・回数制限状態をVercel Blobに永続化する。
 - `AI_PROVIDER=gemini`: 診断ナレッジ回答もAI生成にする本番設定。
 - `AI_MODEL`: Geminiモデル名。未指定時は `gemini-2.5-flash-lite`。
+- `LINE_AI_TEMPERATURE`: Geminiのtemperature。未指定時は `0.7`。
 - `GEMINI_API_KEY`: Gemini APIキー。
 
 連携を有効にする場合:

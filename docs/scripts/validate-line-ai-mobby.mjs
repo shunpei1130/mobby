@@ -384,6 +384,7 @@ async function callKnowledgeReplyFlow() {
   const originalProvider = process.env.AI_PROVIDER;
   const originalModel = process.env.AI_MODEL;
   const originalGeminiKey = process.env.GEMINI_API_KEY;
+  const originalTemperature = process.env.LINE_AI_TEMPERATURE;
 
   const linkedUser = {
     source: "16renai",
@@ -507,6 +508,7 @@ async function callKnowledgeReplyFlow() {
     process.env.AI_PROVIDER = "gemini";
     process.env.AI_MODEL = "gemini-2.5-flash-lite";
     process.env.GEMINI_API_KEY = "test-gemini-key";
+    delete process.env.LINE_AI_TEMPERATURE;
 
     let geminiCall = 0;
     globalThis.fetch = async (url, options) => {
@@ -515,6 +517,7 @@ async function callKnowledgeReplyFlow() {
       assert(testCase, "knowledge questions should call Gemini exactly once per case");
       assert(String(url).includes("gemini-2.5-flash-lite:generateContent"), "knowledge reply should call Gemini");
       const payload = JSON.parse(options.body);
+      assert(payload.generationConfig.temperature === 0.7, "Gemini request should default temperature to 0.7");
       const systemPrompt = payload.system_instruction.parts[0].text;
       assert(payload.contents.at(-1).parts[0].text === testCase.message, "Gemini request should include the knowledge question");
       testCase.check(systemPrompt);
@@ -544,6 +547,8 @@ async function callKnowledgeReplyFlow() {
     process.env.AI_PROVIDER = originalProvider;
     process.env.AI_MODEL = originalModel;
     process.env.GEMINI_API_KEY = originalGeminiKey;
+    if (originalTemperature === undefined) delete process.env.LINE_AI_TEMPERATURE;
+    else process.env.LINE_AI_TEMPERATURE = originalTemperature;
   }
 }
 
