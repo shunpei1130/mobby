@@ -5,6 +5,37 @@ const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash-lite";
 const GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models";
 const DEFAULT_MAX_OUTPUT_TOKENS = 700;
 
+export const IMAGE_OUTPUT_UNSUPPORTED_REPLY = [
+  "ごめんね、今は画像の作成や送付には対応していないんだ。",
+  "診断結果のまとめは、文章でならわかりやすく伝えられるよ！"
+].join("\n");
+
+export const IMAGE_INPUT_UNSUPPORTED_REPLY = [
+  "ごめんね、画像の内容を確認することはできないんだ。",
+  "文字で内容を教えてくれたら、それに合わせて答えるよ！"
+].join("\n");
+
+const IMAGE_OBJECT_PATTERN = /(画像|写真|スクショ|スクリーンショット|イラスト|アイコン|壁紙|まとめ画像)/;
+const IMAGE_OUTPUT_INTENT_PATTERN = /(画像化|画像にして|画像で|作成|作って|つくって|作れる|作れ|生成|送って|送付|送信|見せて|欲しい|ほしい|ください|ちょうだい|出して|できる|出来る)/;
+
+export function buildUnsupportedImageIntentReply(message) {
+  const text = cleanUnicodeText(message).replace(/\s+/g, "");
+  if (!text || !IMAGE_OBJECT_PATTERN.test(text)) return "";
+
+  const asksAboutImageContent =
+    /(画像|写真|スクショ|スクリーンショット).*(見て|みて|見れる|見られる|確認|読んで|解析|分析|診断|判断|分かる|わかる|内容|送った|添付)/.test(text) ||
+    /(見て|みて|確認|読んで|解析|分析|判断|分かる|わかる|内容).*(画像|写真|スクショ|スクリーンショット)/.test(text);
+  if (asksAboutImageContent) return IMAGE_INPUT_UNSUPPORTED_REPLY;
+
+  const asksForImageOutput =
+    /(画像|写真|イラスト|アイコン|壁紙).*(作成|作って|つくって|作れる|作れ|生成|送って|送付|送信|見せて|欲しい|ほしい|ください|ちょうだい|出して|できる|出来る)/.test(text) ||
+    /(まとめ画像|画像化|画像にして|画像でまとめ|画像のまとめ|まとめみたいな画像)/.test(text) ||
+    IMAGE_OUTPUT_INTENT_PATTERN.test(text) && /画像/.test(text);
+  if (asksForImageOutput) return IMAGE_OUTPUT_UNSUPPORTED_REPLY;
+
+  return "";
+}
+
 function compact(text, max = 48) {
   const value = cleanUnicodeText(text).replace(/\s+/g, " ").trim();
   return unicodeLength(value) > max ? truncateText(value, max) : value;
@@ -48,6 +79,9 @@ function loveGuardrail(message) {
 }
 
 export async function generateReply({ user, message, history }) {
+  const unsupportedImageReply = buildUnsupportedImageIntentReply(message);
+  if (unsupportedImageReply) return unsupportedImageReply;
+
   const provider = String(process.env.AI_PROVIDER || "mock").toLowerCase();
   if (provider === "gemini") {
     try {
@@ -113,6 +147,9 @@ export async function generateGeminiReply({ user, message, history }) {
 }
 
 export function generateMockReply({ user, message }) {
+  const unsupportedImageReply = buildUnsupportedImageIntentReply(message);
+  if (unsupportedImageReply) return unsupportedImageReply;
+
   const userMessage = compact(message);
   const quotedMessage = userMessage ? `「${userMessage}」ね。` : "";
 

@@ -1,5 +1,5 @@
 import { createHash } from "crypto";
-import { generateReply } from "./_ai.js";
+import { generateReply, IMAGE_INPUT_UNSUPPORTED_REPLY } from "./_ai.js";
 import {
   getLineUserProfile,
   markLineMessageAsRead,
@@ -37,6 +37,11 @@ async function reply(event, text) {
 
 function buildGreetingPrompt() {
   return "モビーだよ！「私の診断結果は？」って聞いてみてね！";
+}
+
+function buildUnsupportedMessageStorageText(messageType) {
+  if (messageType === "image") return "画像が送信されました";
+  return "対応していないメッセージが送信されました";
 }
 
 function buildDefaultUser(userKey) {
@@ -164,6 +169,32 @@ async function handleTextEvent(event) {
   await handleLinkedMessage(event, userKey, user, text);
 }
 
+async function handleUnsupportedMessageEvent(event, responseText) {
+  const lineUserId = event?.source?.userId;
+  if (!lineUserId) {
+    await reply(event, responseText);
+    return;
+  }
+
+  const userKey = userKeyFromLineId(lineUserId);
+  await ensureDefaultUser(userKey);
+
+  let conversation = await loadConversation(userKey);
+  conversation = conversation && typeof conversation === "object" ? conversation : { version: 1, userKey, messages: [] };
+  const lineMessageId = String(event?.message?.id || "");
+  if (isDuplicateLineMessage(conversation, lineMessageId)) return;
+
+  let nextConversation = appendConversationMessage(
+    conversation,
+    "user",
+    buildUnsupportedMessageStorageText(event?.message?.type)
+  );
+  nextConversation = appendConversationMessage(nextConversation, "assistant", responseText);
+  nextConversation = rememberLineMessage(nextConversation, lineMessageId);
+  await saveConversation(userKey, nextConversation);
+  await reply(event, responseText);
+}
+
 async function handleEvent(event) {
   if (event?.type === "follow") {
     const lineUserId = event?.source?.userId;
@@ -177,6 +208,11 @@ async function handleEvent(event) {
   if (event?.type === "message" && event?.message?.type === "text") {
     await markLineMessageAsRead(event.message.markAsReadToken);
     await handleTextEvent(event);
+  }
+
+  if (event?.type === "message" && event?.message?.type === "image") {
+    await markLineMessageAsRead(event.message.markAsReadToken);
+    await handleUnsupportedMessageEvent(event, IMAGE_INPUT_UNSUPPORTED_REPLY);
   }
 }
 

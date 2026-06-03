@@ -5,7 +5,12 @@ import issueToken from "../api/line-ai/issue-link-token.js";
 import liffLink from "../api/line-ai/liff-link.js";
 import linkSessions from "../api/line-ai/link-sessions.js";
 import webhook from "../api/line-ai/webhook.js";
-import { generateGeminiReply, generateReply } from "../api/line-ai/_ai.js";
+import {
+  generateGeminiReply,
+  generateReply,
+  IMAGE_INPUT_UNSUPPORTED_REPLY,
+  IMAGE_OUTPUT_UNSUPPORTED_REPLY
+} from "../api/line-ai/_ai.js";
 import { toLineTextMessage, verifyLineSignature } from "../api/line-ai/_line.js";
 import { buildSystemPrompt } from "../api/line-ai/_prompts.js";
 import { canReply, canReplyGlobally, todayKey } from "../api/line-ai/_rate-limit.js";
@@ -600,6 +605,63 @@ async function callCompatibilityReplyFlow() {
   }
 }
 
+async function callUnsupportedImageFlow() {
+  const originalFetch = globalThis.fetch;
+  const originalProvider = process.env.AI_PROVIDER;
+  const originalModel = process.env.AI_MODEL;
+  const originalGeminiKey = process.env.GEMINI_API_KEY;
+
+  try {
+    process.env.AI_PROVIDER = "gemini";
+    process.env.AI_MODEL = "gemini-2.5-flash-lite";
+    process.env.GEMINI_API_KEY = "test-gemini-key";
+
+    let geminiCalled = false;
+    globalThis.fetch = async (url) => {
+      if (String(url).includes("generativelanguage.googleapis.com")) {
+        geminiCalled = true;
+      }
+      return {
+        ok: true,
+        status: 200,
+        async json() {
+          return { candidates: [{ content: { parts: [{ text: "Gemini should not answer image requests" }] } }] };
+        },
+        async text() {
+          return "";
+        }
+      };
+    };
+
+    const outputReply = await generateReply({
+      user: { source: "line" },
+      message: "診断結果のまとめみたいな画像欲しい",
+      history: []
+    });
+    assert(outputReply === IMAGE_OUTPUT_UNSUPPORTED_REPLY, "image creation requests should use the fixed unsupported reply");
+
+    const inputReply = await generateReply({
+      user: { source: "line" },
+      message: "このスクショ見て診断して",
+      history: []
+    });
+    assert(inputReply === IMAGE_INPUT_UNSUPPORTED_REPLY, "image inspection requests should use the fixed unsupported reply");
+    assert(geminiCalled === false, "unsupported image intents should not call Gemini");
+
+    const prompt = buildSystemPrompt({ source: "line" }, "画像作って");
+    assert(prompt.includes("画像の作成、送付、確認、読み取りはできない"), "Gemini prompt should include unsupported image capability rules");
+    assert(prompt.includes("文字で内容を教えてほしい"), "Gemini prompt should guide users to describe images in text");
+  } finally {
+    globalThis.fetch = originalFetch;
+    if (originalProvider === undefined) delete process.env.AI_PROVIDER;
+    else process.env.AI_PROVIDER = originalProvider;
+    if (originalModel === undefined) delete process.env.AI_MODEL;
+    else process.env.AI_MODEL = originalModel;
+    if (originalGeminiKey === undefined) delete process.env.GEMINI_API_KEY;
+    else process.env.GEMINI_API_KEY = originalGeminiKey;
+  }
+}
+
 async function callDisplayNameCueFlow() {
   const promptWithoutCue = buildSystemPrompt({
     source: "line",
@@ -979,6 +1041,74 @@ async function callEmojiTailWebhookFlow() {
   }
 }
 
+async function callImageWebhookUnsupportedFlow() {
+  const originalFetch = globalThis.fetch;
+  const originalAccessToken = process.env.LINE_CHANNEL_ACCESS_TOKEN;
+  const lineUserId = "U_IMAGE_UNSUPPORTED_USER";
+  const userKey = makeUserKey(lineUserId);
+  const calls = [];
+
+  try {
+    process.env.LINE_CHANNEL_ACCESS_TOKEN = "line-access-token-test";
+    globalThis.fetch = async (url, options) => {
+      calls.push({ url: String(url), body: options?.body });
+      return {
+        ok: true,
+        status: 200,
+        async text() {
+          return "";
+        }
+      };
+    };
+
+    const res = createRes();
+    await webhook(createWebhookReq({
+      events: [{
+        type: "message",
+        replyToken: "reply-image-unsupported",
+        source: { type: "user", userId: lineUserId },
+        message: {
+          type: "image",
+          id: "image-1",
+          markAsReadToken: "mark-image-1"
+        }
+      }]
+    }), res);
+
+    assert(res.statusCode === 200, "image webhook should return 200");
+    assert(calls[0]?.url === "https://api.line.me/v2/bot/chat/markAsRead", "image webhook should mark message as read before replying");
+    assert(calls[1]?.url === "https://api.line.me/v2/bot/message/reply", "image webhook should send a LINE reply");
+    assert(JSON.parse(calls[1].body).messages[0].text === IMAGE_INPUT_UNSUPPORTED_REPLY, "image webhook should explain that image content cannot be checked");
+
+    const conversation = await loadConversation(userKey);
+    assert(conversation.messages.at(-2)?.text === "画像が送信されました", "image webhook should store a text placeholder for the user image");
+    assert(conversation.messages.at(-1)?.text === IMAGE_INPUT_UNSUPPORTED_REPLY, "image webhook should store the unsupported-image assistant reply");
+    const messageLengthAfterImage = conversation.messages.length;
+
+    const duplicateRes = createRes();
+    await webhook(createWebhookReq({
+      events: [{
+        type: "message",
+        replyToken: "reply-image-duplicate",
+        source: { type: "user", userId: lineUserId },
+        message: {
+          type: "image",
+          id: "image-1",
+          markAsReadToken: "mark-image-duplicate"
+        }
+      }]
+    }), duplicateRes);
+
+    assert(duplicateRes.statusCode === 200, "duplicate image webhook should return 200");
+    assert((await loadConversation(userKey)).messages.length === messageLengthAfterImage, "duplicate image webhook should not append conversation messages");
+    assert(calls.filter((call) => call.url === "https://api.line.me/v2/bot/message/reply").length === 1, "duplicate image webhook should not send another reply");
+  } finally {
+    globalThis.fetch = originalFetch;
+    if (originalAccessToken === undefined) delete process.env.LINE_CHANNEL_ACCESS_TOKEN;
+    else process.env.LINE_CHANNEL_ACCESS_TOKEN = originalAccessToken;
+  }
+}
+
 async function callWebhookMarkAsReadFlow() {
   const originalFetch = globalThis.fetch;
   const originalAccessToken = process.env.LINE_CHANNEL_ACCESS_TOKEN;
@@ -1260,10 +1390,12 @@ await callLiffPageStaticCheck();
 await callSharedCtaStaticCheck();
 await callKnowledgeReplyFlow();
 await callCompatibilityReplyFlow();
+await callUnsupportedImageFlow();
 await callDisplayNameCueFlow();
 await callWebhookFlow();
 callRateLimitDateFlow();
 await callEmojiTailWebhookFlow();
+await callImageWebhookUnsupportedFlow();
 await callWebhookMarkAsReadFlow();
 await callGeminiProviderFlow();
 
