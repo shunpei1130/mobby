@@ -8,6 +8,7 @@
   const resultImage = document.getElementById("resultImage");
   const resultTitle = document.getElementById("resultTitle");
   const resultText = document.getElementById("resultText");
+  const stickerResults = document.getElementById("stickerResults");
   const imagePreviewModal = document.getElementById("imagePreviewModal");
   const previewImage = document.getElementById("previewImage");
   const closePreviewButton = document.getElementById("closePreviewButton");
@@ -120,6 +121,16 @@
   let coins = 1;
   let currentResult = null;
 
+  const sheetSrc = "../gacha-new/assets/gacha/gachasheet.png";
+  const sheetSlots = [
+    { x: 102, y: 102, width: 386, height: 386 },
+    { x: 537, y: 102, width: 386, height: 386 },
+    { x: 102, y: 539, width: 386, height: 386 },
+    { x: 537, y: 539, width: 386, height: 386 },
+    { x: 102, y: 975, width: 386, height: 386 },
+    { x: 537, y: 975, width: 386, height: 386 }
+  ];
+
   function setBusy(busy) {
     isSpinning = busy;
     spinButton.disabled = busy;
@@ -140,22 +151,104 @@
     return pool[Math.floor(Math.random() * pool.length)];
   }
 
-  function showResult(result) {
-    currentResult = result;
-    resultImage.src = result.src;
-    resultImage.alt = `${result.title} ${result.rarity}`;
+  function pickResults(count) {
+    return Array.from({ length: count }, () => pickResult());
+  }
+
+  function loadImage(src) {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => resolve(image);
+      image.onerror = () => reject(new Error(`Failed to load image: ${src}`));
+      image.src = src;
+    });
+  }
+
+  function drawCoverImage(context, image, slot) {
+    const scale = Math.max(slot.width / image.naturalWidth, slot.height / image.naturalHeight);
+    const width = image.naturalWidth * scale;
+    const height = image.naturalHeight * scale;
+    const x = slot.x + (slot.width - width) / 2;
+    const y = slot.y + (slot.height - height) / 2;
+
+    context.save();
+    context.beginPath();
+    context.rect(slot.x, slot.y, slot.width, slot.height);
+    context.clip();
+    context.drawImage(image, x, y, width, height);
+    context.restore();
+  }
+
+  async function composeSheet(selectedResults) {
+    const [sheetImage, ...stickerImages] = await Promise.all([
+      loadImage(sheetSrc),
+      ...selectedResults.map((result) => loadImage(result.src))
+    ]);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = sheetImage.naturalWidth;
+    canvas.height = sheetImage.naturalHeight;
+
+    const context = canvas.getContext("2d");
+    context.drawImage(sheetImage, 0, 0);
+    stickerImages.forEach((image, index) => {
+      drawCoverImage(context, image, sheetSlots[index]);
+    });
+
+    return canvas.toDataURL("image/png");
+  }
+
+  async function showResult(selectedResults) {
+    const sheetDataUrl = await composeSheet(selectedResults);
+    const raritySummary = selectedResults.map((result) => result.rarity).join(" / ");
+
+    currentResult = {
+      title: "6枚シールシート",
+      rarity: raritySummary,
+      src: sheetDataUrl
+    };
+    resultImage.src = sheetDataUrl;
+    resultImage.alt = "ガチャで出た6枚のシールシート";
     resultImage.hidden = false;
-    resultTitle.textContent = result.title;
-    resultText.textContent = `${result.rarity} シールが出ました。`;
+    resultTitle.textContent = "6枚のシールをゲット！";
+    resultText.textContent = `出たシール: ${raritySummary}`;
+    renderStickerResults(selectedResults);
     resultSheet.hidden = false;
+  }
+
+  function renderStickerResults(selectedResults) {
+    if (!stickerResults) return;
+    stickerResults.textContent = "";
+    selectedResults.forEach((result, index) => {
+      const button = document.createElement("button");
+      button.className = "sticker-result-button";
+      button.type = "button";
+      button.setAttribute("aria-label", `${index + 1}枚目 ${result.title} ${result.rarity} を拡大表示`);
+
+      const image = document.createElement("img");
+      image.src = result.src;
+      image.alt = `${result.title} ${result.rarity}`;
+
+      const badge = document.createElement("span");
+      badge.textContent = result.rarity;
+
+      button.append(image, badge);
+      button.addEventListener("click", () => openImagePreview(result.src, `${result.title} ${result.rarity}`));
+      stickerResults.appendChild(button);
+    });
+  }
+
+  function openImagePreview(src, alt) {
+    if (!imagePreviewModal || !previewImage) return;
+    previewImage.src = src;
+    previewImage.alt = alt;
+    imagePreviewModal.hidden = false;
+    closePreviewButton?.focus();
   }
 
   function openPreview() {
     if (!currentResult || !imagePreviewModal || !previewImage) return;
-    previewImage.src = currentResult.src;
-    previewImage.alt = `${currentResult.title} ${currentResult.rarity}`;
-    imagePreviewModal.hidden = false;
-    closePreviewButton?.focus();
+    openImagePreview(currentResult.src, `${currentResult.title} ${currentResult.rarity}`);
   }
 
   function closePreview() {
@@ -167,6 +260,7 @@
     if (isSpinning) return;
 
     resultSheet.hidden = true;
+    if (stickerResults) stickerResults.textContent = "";
     setBusy(true);
     coins = Math.max(0, coins - 1);
     if (coinCount) coinCount.textContent = String(coins);
@@ -181,13 +275,18 @@
     }, 820);
 
     window.setTimeout(() => {
-      const result = pickResult();
+      const selectedResults = pickResults(6);
       machineWrap.classList.remove("is-spinning", "is-dropping");
-      if (spinLead) spinLead.textContent = "シールをゲットしました！";
-      showResult(result);
-      coins = 1;
-      if (coinCount) coinCount.textContent = String(coins);
-      setBusy(false);
+      if (spinLead) spinLead.textContent = "6枚のシールをゲットしました！";
+      showResult(selectedResults)
+        .catch(() => {
+          if (spinLead) spinLead.textContent = "画像の生成に失敗しました。もう一度試してください。";
+        })
+        .finally(() => {
+          coins = 1;
+          if (coinCount) coinCount.textContent = String(coins);
+          setBusy(false);
+        });
     }, 1900);
   }
 
