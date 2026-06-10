@@ -3,205 +3,104 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MOBBY CAPSULE CLUB</title>
-  <meta name="description" content="MOBBY CAPSULE CLUBのガチャ。毎日1回無料で回せる、SSRをめざせるカプセルガチャです。コレクションを揃えて、毎日遊びやすいガチャ体験を楽しめます。">
+  <title>シールガチャ | Mobby</title>
+  <meta name="description" content="Mobbyのシールガチャ。かわいいシールデザインを集めるガチャページです。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="seal-styles.css">
 </head>
 <body>
-  <div class="page-shell">
-  
+  <main class="seal-page-shell">
+    <header class="seal-header">
+      <button class="seal-back" type="button" onclick="window.location.href='../index.html'" aria-label="ホームに戻る">
+        <span aria-hidden="true"></span>
+      </button>
+      <h1>シールガチャ</h1>
+    </header>
 
-    <main class="experience-grid">
-      <section class="machine-panel card-surface">
-        <div class="panel-head compact-head">
-          <div>
-            <button class="section-kicker home-back-button" type="button" onclick="window.location.href='../index.html'">Homeに戻る</button>
-             <h2>モビーガチャ</h2>
-          </div>
-        </div>
-        <div class="mode-economy-row">
-          <div class="mode-economy card-surface" id="modeEconomy">
-            <div class="mode-economy-head">
-              <p class="section-kicker">購入</p>
-              <p class="mode-economy-stock" id="ticketStock">一番くじチケット: 0枚</p>
-            </div>
-            <div class="mode-economy-actions">
-              <button class="action-button secondary" id="buyFiftyPackButton" type="button">50連（2000円）を購入</button>
-              <button class="action-button secondary" id="buyKujiTicketButton" type="button">チケット1枚（500円）を購入</button>
-            </div>
-            <p class="mode-economy-note" id="modeEconomyNote"></p>
-          </div>
-          <div class="mode-share-launch card-surface">
-            <p class="section-kicker">Share</p>
-            <button class="action-button primary mode-share-open-button" id="openShareModalButton" type="button">シェアを開く</button>
-            <p class="mode-economy-note">コレクション画像が保存できます</p>
-          </div>
-        </div>
-        <div class="machine-stage">
-          <div class="gacha-machine" id="gachaMachine">
-            <div class="gacha-machine-top">
-              <div class="gacha-brand-badge" id="machineBannerLabel">MOBBY CAPSULE</div>
-              <div class="gacha-dome" id="gachaDome" role="button" tabindex="0" aria-label="タップしてラインナップを見る">
-                <div class="gacha-capsule-cloud" aria-hidden="true">
-                  <span class="gacha-mini-capsule capsule-coral"></span>
-                  <span class="gacha-mini-capsule capsule-mint"></span>
-                  <span class="gacha-mini-capsule capsule-lemon"></span>
-                  <span class="gacha-mini-capsule capsule-sky"></span>
-                  <span class="gacha-mini-capsule capsule-rose"></span>
-                  <span class="gacha-mini-capsule capsule-coral"></span>
-                  <span class="gacha-mini-capsule capsule-mint"></span>
-                  <span class="gacha-mini-capsule capsule-lemon"></span>
-                  <span class="gacha-mini-capsule capsule-sky"></span>
-                </div>
+    <section class="seal-hero" aria-labelledby="sealGachaTitle">
+      <div class="seal-sparkles" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
 
-                <div class="gacha-dome-reflection" aria-hidden="true"></div>
-                <div class="gacha-dome-hint" id="gachaDomeHint" aria-hidden="true">
-                  <span class="gacha-dome-hint-main">タップでラインナップ</span>
-                  <span class="gacha-dome-hint-sub">無料/一番くじどちらも見れます</span>
-                </div>
-              </div>
-            <div class="gacha-machine-body">
-              <div class="gacha-control-panel">
-                <div class="gacha-control-row">
-                  <div class="gacha-handle-wrap">
-                     <button class="gacha-handle" id="startGachaButton" type="button" aria-label="ガチャを回す">
-                      <span class="gacha-handle-core"></span>
-                      <span class="gacha-handle-arm"></span>
-                      <span class="gacha-handle-knob"></span>
-                    </button>
-                  </div>
-                  <div class="gacha-chute-window">
-                    <div class="gacha-capsule-drop" id="gachaCapsuleDrop">
-                      <div class="gacha-capsule-shell">
-                        <div class="gacha-capsule-top"></div>
-                        <div class="gacha-capsule-bottom"></div>
-                      </div>
-                    </div>
-                    <div class="gacha-chute-sparkle" aria-hidden="true"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="mode-status" id="modeStatus">読み込み中...</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="result-panel">
-        <div class="result-card card-surface is-idle" id="resultCard">
-          <div class="result-head compact-head">
-
-             <div class="result-progress-pill" id="collectionProgressPill">コレクション 0 / 96</div>
-          </div>
-          <div class="result-empty" id="resultEmpty">
-             <p class="result-empty">まだ結果はありません。ガチャを回してカードを手に入れましょう。</p>
-          </div>
-          <div class="result-filled" id="resultFilled" hidden>
-            <div class="result-art" id="resultArtWrap">
-              <img id="resultImage" src="" alt="MOBBY CAPSULE CLUB">
-              <div class="result-badge-row">
-                <span class="rarity-pill" id="resultRarity">SSR</span>
-                <span class="status-pill" id="resultOwnership">NEW</span>
-              </div>
-            </div>
-             <h3 class="result-title" id="resultTitle">タイトル</h3>
-            <p class="result-line" id="resultLine"></p>
-            <p class="result-detail" id="resultDetail"></p>
-            <div class="result-actions">
-               <button class="action-button primary" id="spinAgainButton" type="button">もう1回回す</button>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-    <div class="share-modal" id="shareModal" hidden>
-      <button class="share-modal-backdrop" id="shareModalBackdrop" type="button" aria-label="シェアを閉じる"></button>
-      <section class="share-modal-sheet card-surface" id="shareSection" role="dialog" aria-modal="true">
-        <div class="share-modal-body share-drawer-body">
-          <div class="share-stage" id="shareStage">
-            <div class="share-stage-head">
-              <div class="share-stage-title-row">
-                <h3 class="share-stage-title" id="shareHeadline">MY MOBBY DROP</h3>
-                <div class="share-stage-count" id="shareOwnedCount">0 / 96</div>
-                <button class="action-button secondary share-modal-close share-stage-close" id="closeShareModalButton" type="button">閉じる</button>
-              </div>
-            </div>
-            <p class="share-stage-subline" id="shareSubline">持っているカードがここに全部並びます。SNSに画像を載せよう。</p>
-            <div class="share-stage-grid share-owned-grid" id="shareStageGrid"></div>
-          </div>
-          <div class="share-actions">
-            <button class="action-button primary" id="downloadShareButton" type="button">コレクション画像を保存</button>
-            <button class="action-button secondary" id="nativeShareButton" type="button">SNSでシェア</button>
-          </div>
-          <p class="share-help" id="shareHelpText">集めたカードを一覧で見せてシェアできます。</p>
-          <div class="share-preview-panel" id="sharePreviewPanel" hidden>
-            <p class="share-preview-hint" id="sharePreviewHint">画像を長押しして保存できます。</p>
-            <img class="share-preview-image" id="sharePreviewImage" src="" alt="保存用のシェア画像プレビュー">
-          </div>
-          <canvas id="shareCanvas" width="1080" height="1350" hidden></canvas>
-        </div>
-      </section>
-    </div>
-  </div>
-  <div class="collection-modal" id="collectionModal" hidden>
-    <button class="collection-modal-backdrop" id="collectionModalBackdrop" type="button" aria-label="コレクションを閉じる"></button>
-    <section class="collection-modal-sheet card-surface" role="dialog" aria-modal="true" aria-labelledby="collectionModalTitle">
-      <div class="collection-modal-head">
-        <div>
-          <p class="drawer-kicker">Collection</p>
-          <h3 id="collectionModalTitle">現在のコレクション</h3>
-        </div>
-        <div class="collection-modal-actions">
-          <span class="collection-summary" id="collectionSummary">0 / 96</span>
-          <button class="action-button secondary collection-modal-close" id="closeCollectionModalButton" type="button">閉じる</button>
+      <div class="seal-hero-copy">
+        <h2 id="sealGachaTitle" class="seal-logo">
+          <span>シール</span>
+          <span>ガチャ</span>
+        </h2>
+        <p>ガチャをまわして<br>かわいいシールデザインを<br>ゲットしよう！</p>
+        <div class="seal-coin-card" aria-label="所持コイン 0枚">
+          <span>所持コイン</span>
+          <strong><span class="coin-icon" aria-hidden="true"></span>0枚</strong>
+          <small>シールガチャに使えます</small>
         </div>
       </div>
-      <div class="collection-modal-body" id="collectionSection">
-        <div class="collection-tabs" id="collectionTabs" role="tablist" aria-label="コレクションカテゴリ"></div>
-        <p class="collection-lead" id="collectionLead">まずは1回引いてみて。集めたカードがここに並びます。</p>
-        <div class="progress-bar" aria-hidden="true">
-          <div class="progress-bar-fill" id="collectionProgressBar"></div>
+
+      <div class="seal-machine" aria-hidden="true">
+        <div class="machine-dome">
+          <span class="capsule c1"></span>
+          <span class="capsule c2"></span>
+          <span class="capsule c3"></span>
+          <span class="capsule c4"></span>
+          <span class="capsule c5"></span>
+          <span class="capsule c6"></span>
+          <span class="capsule c7"></span>
         </div>
-        <div class="collection-grid" id="collectionGrid"></div>
+        <div class="machine-body">
+          <span class="machine-handle"></span>
+          <span class="machine-slot"></span>
+        </div>
       </div>
     </section>
-  </div>
-  <div class="gacha-lineup-modal" id="gachaLineupModal" hidden>
-    <button class="gacha-lineup-backdrop" id="gachaLineupBackdrop" type="button" aria-label="一覧を閉じる"></button>
-    <section class="gacha-lineup-sheet card-surface" role="dialog" aria-modal="true" aria-labelledby="gachaLineupTitle">
-      <div class="gacha-lineup-head">
-        <div>
-          <p class="gacha-lineup-kicker" id="gachaLineupModeLabel">ラインナップ</p>
-          <h3 id="gachaLineupTitle">アイテム一覧</h3>
-        </div>
-        <button class="action-button secondary gacha-lineup-close" id="closeGachaLineupButton" type="button">閉じる</button>
-      </div>
-      <p class="gacha-lineup-note" id="gachaLineupNote">ラインナップを読み込み中...</p>
-      <div class="gacha-lineup-rates" id="gachaLineupRates"></div>
-      <div class="gacha-lineup-grid" id="gachaLineupGrid"></div>
-      <button class="action-button primary gacha-lineup-spin" id="lineupSpinButton" type="button">このまま回す</button>
-    </section>
-  </div>
-  <div class="checkout-overlay" id="checkoutOverlay" hidden>
-    <button class="checkout-overlay-backdrop" id="checkoutOverlayBackdrop" type="button" aria-label="決済パネルを閉じる"></button>
-    <section class="checkout-panel card-surface" role="dialog" aria-modal="true" aria-labelledby="checkoutPanelTitle">
-      <div class="checkout-panel-head">
-        <div>
-          <p class="drawer-kicker">Payment</p>
-          <h3 id="checkoutPanelTitle">50連を購入</h3>
-        </div>
-        <button class="action-button secondary checkout-close-button" id="checkoutCloseButton" type="button">閉じる</button>
-      </div>
-      <div class="checkout-mount" id="checkoutMount"></div>
-      <p class="checkout-panel-note">カード決済はこの画面内で完了します。本人認証や一部の決済手段では外部画面に移動する場合があります。</p>
-    </section>
-  </div>
 
-  <script src="data.js"></script>
-  <script src="app.js"></script>
+    <section class="seal-lineup-panel" aria-labelledby="sealLineupTitle">
+      <h2 id="sealLineupTitle">♡ こんなのが出るかも ♡</h2>
+      <div class="seal-lineup">
+        <article class="seal-item">
+          <span class="rarity normal">ノーマル</span>
+          <div class="seal-placeholder">
+            <img src="../gacha-new/assets/r/%E3%81%B2%E3%81%AA%E3%81%9F%E3%81%AE%E6%84%9B%E3%81%95%E3%82%8C%E4%BA%BA.png" alt="ひなたの愛され人">
+          </div>
+        </article>
+        <article class="seal-item">
+          <span class="rarity rare">レア</span>
+          <div class="seal-placeholder">
+            <img src="../gacha-new/assets/r/%E4%BD%99%E7%99%BD%E3%82%92%E9%A3%BE%E3%82%8B%E6%BC%94%E5%87%BA%E5%AE%B6.png" alt="余白を飾る演出家">
+          </div>
+        </article>
+        <article class="seal-item">
+          <span class="rarity sparkle">きらきら</span>
+          <div class="seal-placeholder">
+            <img src="../gacha-new/assets/sr/%E5%9C%B0%E5%9B%B3%E3%82%92%E5%BA%83%E3%81%92%E3%82%8B%E5%86%92%E9%99%BA%E5%AE%B6-sr.png" alt="地図を広げる冒険家 SR">
+          </div>
+        </article>
+        <article class="seal-item">
+          <span class="rarity special">スペシャル</span>
+          <div class="seal-placeholder">
+            <img src="../gacha-new/assets/sr/%E5%A4%9C%E9%A2%A8%E3%81%AE%E3%83%AD%E3%83%9E%E3%83%B3%E3%83%81%E3%82%B9%E3%83%88-sr.png" alt="夜風のロマンチスト SR">
+          </div>
+        </article>
+        <article class="seal-item">
+          <span class="rarity ultra">ウルトラ</span>
+          <div class="seal-placeholder">
+            <img src="../gacha-new/assets/ur/%E3%81%B2%E3%81%AA%E3%81%9F%E3%81%AE%E6%84%9B%E3%81%95%E3%82%8C%E4%BA%BA-ur.png" alt="ひなたの愛され人 UR">
+          </div>
+        </article>
+      </div>
+      <p>どのシールが出るかはおたのしみ♪</p>
+    </section>
+
+    <section class="seal-spin-panel" aria-labelledby="sealCoinTitle">
+      <div class="ribbon">★ 1回まわすのに必要なコイン ★</div>
+      <h2 id="sealCoinTitle"><span class="coin-icon large" aria-hidden="true"></span>1枚</h2>
+      <a class="spin-button" href="spin.html">
+        1回まわす
+        <span class="spin-capsule" aria-hidden="true"></span>
+      </a>
+      <p class="spin-note"><span aria-hidden="true">ⓘ</span> ガチャから出るシールは重複することがあります</p>
+    </section>
+  </main>
+
 </body>
 </html>

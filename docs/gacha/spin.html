@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>シールガチャをまわす | Mobby</title>
+  <meta name="description" content="Mobbyのシールガチャを回すページです。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="spin-styles.css">
+</head>
+<body>
+  <main class="spin-shell">
+    <header class="spin-header">
+      <button class="spin-back" type="button" onclick="window.location.href='index.html'" aria-label="シールガチャに戻る">
+        <span aria-hidden="true"></span>
+      </button>
+      <h1>シールガチャ</h1>
+      <div class="spin-coin" aria-label="所持コイン 1枚"><span class="coin-icon" aria-hidden="true"></span><strong id="coinCount">1</strong>枚</div>
+    </header>
+
+    <section class="spin-stage" aria-labelledby="spinTitle">
+      <div class="sparkles" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <h2 id="spinTitle">ガチャをまわそう！</h2>
+      <p class="spin-lead" id="spinLead">ハンドルかボタンをタップして、シールをゲットしよう。</p>
+
+      <div class="machine-wrap" id="machineWrap">
+        <div class="spin-machine" aria-hidden="true">
+          <div class="spin-dome">
+            <span class="capsule c1"></span>
+            <span class="capsule c2"></span>
+            <span class="capsule c3"></span>
+            <span class="capsule c4"></span>
+            <span class="capsule c5"></span>
+            <span class="capsule c6"></span>
+            <span class="capsule c7"></span>
+          </div>
+          <div class="spin-body">
+            <button class="spin-handle" id="handleButton" type="button" aria-label="ハンドルをまわす"></button>
+            <span class="spin-slot"></span>
+          </div>
+          <div class="drop-capsule" id="dropCapsule" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <button class="spin-action" id="spinButton" type="button">
+        1回まわす
+        <span class="spin-button-capsule" aria-hidden="true"></span>
+      </button>
+    </section>
+
+    <section class="result-sheet" id="resultSheet" aria-live="polite" hidden>
+      <p class="result-kicker">GET!</p>
+      <button class="result-placeholder" id="openResultPreview" type="button" aria-label="ガチャ結果を拡大表示">
+        <img id="resultImage" src="" alt="" hidden>
+      </button>
+      <h2 id="resultTitle">ノーマルシール</h2>
+      <p id="resultText">仮のシール結果です。後で画像とデータを差し込めます。</p>
+      <div class="result-actions">
+        <button class="result-button" id="againButton" type="button">もう1回まわす</button>
+        <a class="result-link" href="index.html">一覧に戻る</a>
+      </div>
+    </section>
+  </main>
+
+  <div class="image-preview-modal" id="imagePreviewModal" hidden>
+    <button class="image-preview-backdrop" id="closePreviewBackdrop" type="button" aria-label="拡大表示を閉じる"></button>
+    <div class="image-preview-dialog" role="dialog" aria-modal="true" aria-label="シール画像の拡大表示">
+      <button class="image-preview-close" id="closePreviewButton" type="button" aria-label="閉じる">×</button>
+      <img id="previewImage" src="" alt="">
+    </div>
+  </div>
+
+  <script src="spin.js"></script>
+</body>
+</html>
