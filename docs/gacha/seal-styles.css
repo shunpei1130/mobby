@@ -52,26 +52,19 @@ a {
 }
 
 .seal-header {
-  height: 138px;
+  height: 0;
   margin: 0 -32px;
-  padding: 0 50px;
-  display: grid;
-  grid-template-columns: 70px minmax(0, 1fr) 70px;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.74);
-  box-shadow: 0 10px 22px rgba(91, 67, 42, 0.08);
-}
-
-.seal-header h1 {
-  margin: 0;
-  text-align: center;
-  color: #373a3c;
-  font-size: clamp(1.8rem, 5vw, 2.6rem);
-  font-weight: 900;
-  letter-spacing: 0.09em;
+  padding: 0;
+  position: relative;
+  z-index: 10;
+  background: transparent;
+  box-shadow: none;
 }
 
 .seal-back {
+  position: absolute;
+  left: 50px;
+  top: 24px;
   width: 66px;
   height: 66px;
   display: grid;
@@ -95,12 +88,8 @@ a {
 
 .seal-hero {
   position: relative;
-  min-height: 610px;
-  display: grid;
-  grid-template-columns: minmax(0, 0.92fr) minmax(360px, 1.08fr);
-  align-items: center;
-  gap: 8px;
-  padding: 52px 28px 18px;
+  min-height: 545px;
+  padding: 0 28px;
 }
 
 .seal-sparkles span {
@@ -121,9 +110,12 @@ a {
 .seal-sparkles span:nth-child(6) { right: 4%; top: 65%; background: #ff9db7; transform: scale(1.05); }
 
 .seal-hero-copy {
-  position: relative;
+  position: absolute;
+  left: 44px;
+  top: 76px;
   z-index: 3;
-  padding-top: 20px;
+  width: min(440px, 52%);
+  text-align: left;
 }
 
 .seal-logo {
@@ -131,10 +123,9 @@ a {
   display: grid;
   gap: 0;
   width: max-content;
-  transform: rotate(6deg);
-  font-size: clamp(3.8rem, 10vw, 6.1rem);
+  font-size: clamp(4rem, 9.4vw, 6.05rem);
   font-weight: 900;
-  line-height: 0.88;
+  line-height: 0.9;
   letter-spacing: 0;
   text-shadow:
     5px 5px 0 #fff,
@@ -152,81 +143,37 @@ a {
   color: var(--blue);
 }
 
-.seal-logo span:last-child::after {
-  content: "ゃ";
-  color: var(--brown);
-  font-size: 0.62em;
-  margin-left: 0.02em;
-}
-
 .seal-hero-copy p {
+  position: relative;
+  z-index: 4;
+  width: min(390px, 100%);
   margin: 0 0 28px;
   color: #303335;
-  font-size: clamp(1.15rem, 3.2vw, 1.48rem);
+  font-size: clamp(1.14rem, 2.7vw, 1.42rem);
   font-weight: 900;
-  line-height: 1.82;
+  line-height: 1.8;
   letter-spacing: 0.08em;
 }
 
-.seal-coin-card {
-  width: min(365px, 100%);
-  min-height: 108px;
-  padding: 18px 28px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 8px 18px;
-  border: 1.8px dashed var(--dash);
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.62);
-  box-shadow: var(--shadow);
-}
-
-.seal-coin-card span {
-  font-size: 1.18rem;
-  font-weight: 900;
-  letter-spacing: 0.05em;
-}
-
-.seal-coin-card strong {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  color: #303335;
-  font-size: 1.6rem;
-  font-weight: 900;
-}
-
-.seal-coin-card small {
-  grid-column: 1 / -1;
-  color: var(--muted);
-  font-size: 1rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-}
-
-.coin-icon {
-  width: 36px;
-  height: 36px;
-  display: inline-block;
-  border-radius: 999px;
-  background:
-    radial-gradient(circle at 50% 50%, #f6f6f6 0 26%, #bababa 27% 58%, #f2f2f2 59% 100%);
-  box-shadow:
-    inset 0 0 0 2px rgba(110, 91, 76, 0.12),
-    0 5px 10px rgba(91, 67, 42, 0.14);
-}
-
-.coin-icon.large {
-  width: 56px;
-  height: 56px;
-}
-
 .seal-machine {
-  position: relative;
+  position: absolute;
+  left: 320px;
+  right: auto;
+  top: 38px;
   z-index: 2;
-  min-height: 470px;
+  width: min(500px, calc(100% - 320px));
+  min-height: 520px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
   filter: drop-shadow(0 24px 24px rgba(112, 82, 52, 0.18));
+}
+
+.seal-machine-image {
+  width: auto;
+  max-width: 100%;
+  height: clamp(420px, 56vw, 540px);
+  display: block;
 }
 
 .machine-dome {
@@ -384,31 +331,16 @@ a {
 .seal-lineup-panel,
 .seal-spin-panel {
   position: relative;
-  margin-top: 22px;
-  padding: 30px 28px 32px;
+  margin-top: 10px;
+  padding: 30px 38px 32px;
   border: 1.8px dashed var(--dash);
   border-radius: 30px;
   background: rgba(255, 255, 255, 0.56);
   box-shadow: var(--shadow);
 }
 
-.seal-lineup-panel::after {
-  content: "";
-  position: absolute;
-  right: -18px;
-  top: 50%;
-  width: 54px;
-  height: 54px;
-  transform: translateY(-50%);
-  border-radius: 999px;
-  background:
-    linear-gradient(45deg, transparent 48%, #34383a 49% 57%, transparent 58%) center / 16px 16px no-repeat,
-    rgba(255, 255, 255, 0.92);
-  box-shadow: 0 10px 18px rgba(91, 67, 42, 0.14);
-}
-
 .seal-lineup-panel h2 {
-  margin: 0 0 26px;
+  margin: 0 0 24px;
   text-align: center;
   color: #34383a;
   font-size: clamp(1.25rem, 4vw, 1.9rem);
@@ -418,19 +350,21 @@ a {
 
 .seal-lineup {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 28px;
+  align-items: start;
 }
 
 .seal-item {
   display: grid;
-  gap: 12px;
+  gap: 13px;
   justify-items: center;
 }
 
 .rarity {
   max-width: 100%;
   min-height: 30px;
+  min-width: 118px;
   padding: 7px 18px 6px;
   display: inline-flex;
   align-items: center;
@@ -465,7 +399,7 @@ a {
 }
 
 .seal-placeholder {
-  width: 100%;
+  width: min(138px, 100%);
   aspect-ratio: 1;
   overflow: hidden;
   border: 7px solid rgba(255, 255, 255, 0.9);
@@ -487,7 +421,7 @@ a {
 
 .seal-lineup-panel p,
 .spin-note {
-  margin: 24px 0 0;
+  margin: 28px 0 0;
   text-align: center;
   color: var(--muted);
   font-size: 1.05rem;
@@ -497,34 +431,8 @@ a {
 
 .seal-spin-panel {
   margin-top: 50px;
-  padding-top: 70px;
+  padding-top: 32px;
   text-align: center;
-}
-
-.ribbon {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  min-width: min(520px, calc(100% - 72px));
-  padding: 17px 28px;
-  transform: translate(-50%, -50%);
-  border-radius: 16px;
-  background: linear-gradient(180deg, #ff8fab, #f26387);
-  color: #fff;
-  font-size: clamp(1rem, 4vw, 1.55rem);
-  font-weight: 900;
-  box-shadow: 0 14px 20px rgba(242, 99, 135, 0.22);
-}
-
-.seal-spin-panel h2 {
-  margin: 0 0 24px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  color: #34383a;
-  font-size: clamp(2.4rem, 8vw, 3.8rem);
-  font-weight: 900;
 }
 
 .spin-button {
@@ -562,40 +470,71 @@ a {
   }
 
   .seal-header {
-    height: 92px;
+    height: 0;
     margin-inline: -22px;
-    padding-inline: 28px;
-    grid-template-columns: 56px minmax(0, 1fr) 56px;
+    padding-inline: 0;
   }
 
   .seal-back {
+    left: 28px;
+    top: 20px;
     width: 50px;
     height: 50px;
   }
 
   .seal-hero {
-    min-height: 610px;
-    grid-template-columns: 1fr;
-    gap: 0;
-    padding: 34px 0 8px;
+    min-height: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 0.98fr) minmax(118px, 0.78fr);
+    grid-template-areas:
+      "copy machine";
+    align-items: start;
+    column-gap: 6px;
+    row-gap: 0;
+    padding: 82px 0 6px;
+  }
+
+  .seal-hero-copy {
+    grid-area: copy;
+    display: block;
+    position: relative;
+    left: auto;
+    top: auto;
+    width: auto;
+    margin-left: 0;
+    padding-top: 0;
+    padding-inline: 4px;
   }
 
   .seal-logo {
-    font-size: clamp(3.2rem, 16vw, 4.6rem);
+    margin: 0;
+    font-size: clamp(3rem, 15vw, 4.2rem);
   }
 
   .seal-hero-copy p {
-    font-size: 1.08rem;
+    width: 100%;
+    margin: 8px 0 0;
+    padding-inline: 0;
+    font-size: 1.02rem;
     line-height: 1.7;
   }
 
-  .seal-coin-card {
-    width: min(360px, 100%);
+  .seal-machine {
+    position: relative;
+    right: auto;
+    left: auto;
+    top: auto;
+    grid-area: machine;
+    width: 100%;
+    min-height: 0;
+    justify-self: end;
+    align-items: flex-start;
+    justify-content: flex-end;
+    margin-top: -12px;
   }
 
-  .seal-machine {
-    min-height: 350px;
-    margin-top: -18px;
+  .seal-machine-image {
+    height: clamp(230px, 66vw, 315px);
   }
 
   .machine-dome {
@@ -627,29 +566,27 @@ a {
 
   .seal-lineup-panel,
   .seal-spin-panel {
+    margin-top: 8px;
     padding-inline: 14px;
     border-radius: 24px;
   }
 
   .seal-lineup {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 8px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 9px;
   }
 
   .rarity {
     min-height: 23px;
     padding-inline: 7px;
+    min-width: 0;
     font-size: 0.58rem;
   }
 
   .seal-placeholder {
+    width: 100%;
     border-width: 5px;
     border-radius: 17px;
-  }
-
-  .ribbon {
-    min-width: min(430px, calc(100% - 40px));
-    padding: 13px 18px;
   }
 
 }

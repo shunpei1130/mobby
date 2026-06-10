@@ -16,8 +16,6 @@
       <button class="spin-back" type="button" onclick="window.location.href='index.html'" aria-label="シールガチャに戻る">
         <span aria-hidden="true"></span>
       </button>
-      <h1>シールガチャ</h1>
-      <div class="spin-coin" aria-label="所持コイン 1枚"><span class="coin-icon" aria-hidden="true"></span><strong id="coinCount">1</strong>枚</div>
     </header>
 
     <section class="spin-stage" aria-labelledby="spinTitle">
@@ -29,20 +27,9 @@
       <p class="spin-lead" id="spinLead">ハンドルかボタンをタップして、シールをゲットしよう。</p>
 
       <div class="machine-wrap" id="machineWrap">
-        <div class="spin-machine" aria-hidden="true">
-          <div class="spin-dome">
-            <span class="capsule c1"></span>
-            <span class="capsule c2"></span>
-            <span class="capsule c3"></span>
-            <span class="capsule c4"></span>
-            <span class="capsule c5"></span>
-            <span class="capsule c6"></span>
-            <span class="capsule c7"></span>
-          </div>
-          <div class="spin-body">
-            <button class="spin-handle" id="handleButton" type="button" aria-label="ハンドルをまわす"></button>
-            <span class="spin-slot"></span>
-          </div>
+        <div class="spin-machine">
+          <img class="spin-machine-image" src="../gacha-new/assets/gacha/gachagacha-.png" alt="">
+          <button class="spin-handle" id="handleButton" type="button" aria-label="ハンドルをまわす"></button>
           <div class="drop-capsule" id="dropCapsule" aria-hidden="true"></div>
         </div>
       </div>

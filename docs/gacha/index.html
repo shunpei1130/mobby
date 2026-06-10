@@ -16,7 +16,6 @@
       <button class="seal-back" type="button" onclick="window.location.href='../index.html'" aria-label="ホームに戻る">
         <span aria-hidden="true"></span>
       </button>
-      <h1>シールガチャ</h1>
     </header>
 
     <section class="seal-hero" aria-labelledby="sealGachaTitle">
@@ -29,28 +28,11 @@
           <span>シール</span>
           <span>ガチャ</span>
         </h2>
-        <p>ガチャをまわして<br>かわいいシールデザインを<br>ゲットしよう！</p>
-        <div class="seal-coin-card" aria-label="所持コイン 0枚">
-          <span>所持コイン</span>
-          <strong><span class="coin-icon" aria-hidden="true"></span>0枚</strong>
-          <small>シールガチャに使えます</small>
-        </div>
+        <p>三種のレアリティと<br>シークレットレア！？<br>可愛いデザインのシールをゲットしよう！</p>
       </div>
 
       <div class="seal-machine" aria-hidden="true">
-        <div class="machine-dome">
-          <span class="capsule c1"></span>
-          <span class="capsule c2"></span>
-          <span class="capsule c3"></span>
-          <span class="capsule c4"></span>
-          <span class="capsule c5"></span>
-          <span class="capsule c6"></span>
-          <span class="capsule c7"></span>
-        </div>
-        <div class="machine-body">
-          <span class="machine-handle"></span>
-          <span class="machine-slot"></span>
-        </div>
+        <img class="seal-machine-image" src="../gacha-new/assets/gacha/gachagacha.png" alt="">
       </div>
     </section>
 
@@ -58,42 +40,34 @@
       <h2 id="sealLineupTitle">♡ こんなのが出るかも ♡</h2>
       <div class="seal-lineup">
         <article class="seal-item">
-          <span class="rarity normal">ノーマル</span>
+          <span class="rarity normal">R</span>
           <div class="seal-placeholder">
-            <img src="../gacha-new/assets/r/%E3%81%B2%E3%81%AA%E3%81%9F%E3%81%AE%E6%84%9B%E3%81%95%E3%82%8C%E4%BA%BA.png" alt="ひなたの愛され人">
+            <img src="../gacha-new/assets/r/%E7%A7%98%E5%AF%86%E3%81%AE%E6%98%9F.png" alt="秘密の星">
           </div>
         </article>
         <article class="seal-item">
-          <span class="rarity rare">レア</span>
+          <span class="rarity rare">SR</span>
           <div class="seal-placeholder">
-            <img src="../gacha-new/assets/r/%E4%BD%99%E7%99%BD%E3%82%92%E9%A3%BE%E3%82%8B%E6%BC%94%E5%87%BA%E5%AE%B6.png" alt="余白を飾る演出家">
+            <img src="../gacha-new/assets/sr/%E9%9D%99%E3%81%8B%E3%81%AA%E6%B8%AF%E3%81%AE%E7%9B%B8%E6%A3%92-sr.png" alt="静かな港の相棒 SR">
           </div>
         </article>
         <article class="seal-item">
-          <span class="rarity sparkle">きらきら</span>
+          <span class="rarity sparkle">UR</span>
           <div class="seal-placeholder">
-            <img src="../gacha-new/assets/sr/%E5%9C%B0%E5%9B%B3%E3%82%92%E5%BA%83%E3%81%92%E3%82%8B%E5%86%92%E9%99%BA%E5%AE%B6-sr.png" alt="地図を広げる冒険家 SR">
+            <img src="../gacha-new/assets/ur/%E4%BD%99%E7%99%BD%E3%82%92%E9%A3%BE%E3%82%8B%E6%BC%94%E5%87%BA%E5%AE%B6-ur.png" alt="余白を飾る演出家 UR">
           </div>
         </article>
         <article class="seal-item">
-          <span class="rarity special">スペシャル</span>
+          <span class="rarity special">プリ</span>
           <div class="seal-placeholder">
-            <img src="../gacha-new/assets/sr/%E5%A4%9C%E9%A2%A8%E3%81%AE%E3%83%AD%E3%83%9E%E3%83%B3%E3%83%81%E3%82%B9%E3%83%88-sr.png" alt="夜風のロマンチスト SR">
-          </div>
-        </article>
-        <article class="seal-item">
-          <span class="rarity ultra">ウルトラ</span>
-          <div class="seal-placeholder">
-            <img src="../gacha-new/assets/ur/%E3%81%B2%E3%81%AA%E3%81%9F%E3%81%AE%E6%84%9B%E3%81%95%E3%82%8C%E4%BA%BA-ur.png" alt="ひなたの愛され人 UR">
+            <img src="../gacha-new/assets/gal/%E8%8A%B1%E6%9D%9F%E3%81%AE%E4%B8%BB%E4%BA%BA%E5%85%AC-gal.png" alt="花束の主人公 プリ">
           </div>
         </article>
       </div>
       <p>どのシールが出るかはおたのしみ♪</p>
     </section>
 
-    <section class="seal-spin-panel" aria-labelledby="sealCoinTitle">
-      <div class="ribbon">★ 1回まわすのに必要なコイン ★</div>
-      <h2 id="sealCoinTitle"><span class="coin-icon large" aria-hidden="true"></span>1枚</h2>
+    <section class="seal-spin-panel" aria-label="ガチャをまわす">
       <a class="spin-button" href="spin.html">
         1回まわす
         <span class="spin-capsule" aria-hidden="true"></span>

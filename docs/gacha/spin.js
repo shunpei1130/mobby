@@ -74,6 +74,25 @@
     "風まかせの小悪魔"
   ];
 
+  const galNames = [
+    "ひなたの愛され人",
+    "余白を飾る演出家",
+    "地図を広げる冒険家",
+    "夜風のロマンチスト",
+    "恋に旗を振る人",
+    "晴れ間の本命",
+    "月影のミューズ",
+    "毛布を掛ける人",
+    "秘密の星",
+    "胸奥のロマン",
+    "花束の主人公",
+    "陽だまりを分ける人",
+    "雨宿りの待ち人",
+    "静かな港の相棒",
+    "静かな灯り",
+    "風まかせの小悪魔"
+  ];
+
   const results = [
     ...rNames.map((name) => ({
       rarity: "R",
@@ -89,6 +108,11 @@
       rarity: "UR",
       title: name,
       src: `../gacha-new/assets/ur/${encodeURIComponent(name)}-ur.png`
+    })),
+    ...galNames.map((name) => ({
+      rarity: "プリ",
+      title: name,
+      src: `../gacha-new/assets/gal/${encodeURIComponent(name)}-gal.png`
     }))
   ];
 
@@ -111,7 +135,7 @@
 
   function pickResult() {
     const roll = Math.random();
-    const rarity = roll < 0.76 ? "R" : roll < 0.96 ? "SR" : "UR";
+    const rarity = roll < 0.7 ? "R" : roll < 0.9 ? "SR" : roll < 0.98 ? "UR" : "プリ";
     const pool = results.filter((result) => result.rarity === rarity);
     return pool[Math.floor(Math.random() * pool.length)];
   }
