@@ -9,6 +9,12 @@
   const resultTitle = document.getElementById("resultTitle");
   const resultText = document.getElementById("resultText");
   const stickerResults = document.getElementById("stickerResults");
+  const stickerReveal = document.getElementById("stickerReveal");
+  const stickerRevealCount = document.getElementById("stickerRevealCount");
+  const stickerRevealImage = document.getElementById("stickerRevealImage");
+  const stickerRevealTitle = document.getElementById("stickerRevealTitle");
+  const stickerRevealRarity = document.getElementById("stickerRevealRarity");
+  const stickerRevealNext = document.getElementById("stickerRevealNext");
   const imagePreviewModal = document.getElementById("imagePreviewModal");
   const previewImage = document.getElementById("previewImage");
   const closePreviewButton = document.getElementById("closePreviewButton");
@@ -120,6 +126,9 @@
   let isSpinning = false;
   let coins = 1;
   let currentResult = null;
+  let revealResults = [];
+  let revealIndex = 0;
+  const revealRarityClasses = ["rarity-r", "rarity-sr", "rarity-ur", "rarity-pri"];
 
   const sheetSrc = "../gacha-new/assets/gacha/gachasheet.png";
   const sheetSlots = [
@@ -216,6 +225,63 @@
     resultSheet.hidden = false;
   }
 
+  function showReveal(index) {
+    const result = revealResults[index];
+    if (!result || !stickerReveal || !stickerRevealImage || !stickerRevealNext) return;
+
+    revealIndex = index;
+    stickerReveal.classList.remove(...revealRarityClasses, "is-animating");
+    const rarityClass = result.rarity === "プリ" ? "rarity-pri" : `rarity-${result.rarity.toLowerCase()}`;
+    stickerReveal.classList.add(rarityClass);
+    if (stickerRevealCount) stickerRevealCount.textContent = `${index + 1} / ${revealResults.length}`;
+    stickerRevealImage.src = result.src;
+    stickerRevealImage.alt = `${result.title} ${result.rarity}`;
+    if (stickerRevealTitle) stickerRevealTitle.textContent = result.title;
+    if (stickerRevealRarity) stickerRevealRarity.textContent = result.rarity;
+    stickerRevealNext.textContent = index === revealResults.length - 1 ? "結果を見る" : "次へ";
+    stickerReveal.hidden = false;
+
+    const delay = result.rarity === "UR" ? 520 : result.rarity === "プリ" ? 860 : 0;
+    stickerReveal.classList.toggle("is-charging", delay > 0);
+    stickerRevealImage.hidden = delay > 0;
+    stickerRevealNext.disabled = delay > 0;
+
+    window.setTimeout(() => {
+      stickerReveal.classList.remove("is-charging");
+      stickerRevealImage.hidden = false;
+      stickerRevealNext.disabled = false;
+      void stickerReveal.offsetWidth;
+      stickerReveal.classList.add("is-animating");
+      stickerRevealNext.focus();
+    }, delay);
+  }
+
+  function startReveal(selectedResults) {
+    revealResults = selectedResults;
+    revealIndex = 0;
+    showReveal(0);
+  }
+
+  function showNextReveal() {
+    if (!revealResults.length) return;
+    if (revealIndex < revealResults.length - 1) {
+      showReveal(revealIndex + 1);
+      return;
+    }
+
+    if (stickerReveal) stickerReveal.hidden = true;
+    showResult(revealResults)
+      .catch(() => {
+        if (spinLead) spinLead.textContent = "画像の生成に失敗しました。もう一度試してください。";
+      })
+      .finally(() => {
+        revealResults = [];
+        coins = 1;
+        if (coinCount) coinCount.textContent = String(coins);
+        setBusy(false);
+      });
+  }
+
   function renderStickerResults(selectedResults) {
     if (!stickerResults) return;
     stickerResults.textContent = "";
@@ -261,6 +327,7 @@
 
     resultSheet.hidden = true;
     if (stickerResults) stickerResults.textContent = "";
+    if (stickerReveal) stickerReveal.hidden = true;
     setBusy(true);
     coins = Math.max(0, coins - 1);
     if (coinCount) coinCount.textContent = String(coins);
@@ -277,22 +344,15 @@
     window.setTimeout(() => {
       const selectedResults = pickResults(6);
       machineWrap.classList.remove("is-spinning", "is-dropping");
-      if (spinLead) spinLead.textContent = "6枚のシールをゲットしました！";
-      showResult(selectedResults)
-        .catch(() => {
-          if (spinLead) spinLead.textContent = "画像の生成に失敗しました。もう一度試してください。";
-        })
-        .finally(() => {
-          coins = 1;
-          if (coinCount) coinCount.textContent = String(coins);
-          setBusy(false);
-        });
+      if (spinLead) spinLead.textContent = "出たシールを確認しよう！";
+      startReveal(selectedResults);
     }, 1900);
   }
 
   spinButton.addEventListener("click", spin);
   handleButton.addEventListener("click", spin);
   againButton?.addEventListener("click", spin);
+  stickerRevealNext?.addEventListener("click", showNextReveal);
   openResultPreview?.addEventListener("click", openPreview);
   closePreviewButton?.addEventListener("click", closePreview);
   closePreviewBackdrop?.addEventListener("click", closePreview);

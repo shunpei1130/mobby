@@ -24,7 +24,7 @@
       </div>
 
       <h2 id="spinTitle">ガチャをまわそう！</h2>
-      <p class="spin-lead" id="spinLead">ハンドルかボタンをタップして、シールをゲットしよう。</p>
+      <p class="spin-lead" id="spinLead">一回回すと６種のシールがランダムで排出されるよ！</p>
 
       <div class="machine-wrap" id="machineWrap">
         <div class="spin-machine">
@@ -54,6 +54,22 @@
       </div>
     </section>
   </main>
+
+  <section class="sticker-reveal" id="stickerReveal" aria-live="polite" hidden>
+    <div class="sticker-reveal-card">
+      <div class="reveal-burst" aria-hidden="true"></div>
+      <div class="reveal-particles" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <p class="sticker-reveal-count" id="stickerRevealCount">1 / 6</p>
+      <div class="sticker-reveal-image-wrap">
+        <img id="stickerRevealImage" src="" alt="">
+      </div>
+      <h2 id="stickerRevealTitle">シール</h2>
+      <p id="stickerRevealRarity">R</p>
+      <button class="sticker-reveal-next" id="stickerRevealNext" type="button">次へ</button>
+    </div>
+  </section>
 
   <div class="image-preview-modal" id="imagePreviewModal" hidden>
     <button class="image-preview-backdrop" id="closePreviewBackdrop" type="button" aria-label="拡大表示を閉じる"></button>
