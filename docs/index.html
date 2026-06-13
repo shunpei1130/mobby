@@ -7905,27 +7905,9 @@
       display: none !important;
     }
 
-    .footer-gacha-badge {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 3;
-      min-height: 30px;
-      padding: 7px 14px 7px 12px;
-      display: inline-flex;
-      align-items: center;
-      border-radius: 16px 0 14px 0;
-      background: linear-gradient(135deg, #ff75a7, #ff9abb);
-      color: #fff;
-      font-size: 0.78rem;
-      font-weight: 900;
-      line-height: 1;
-      box-shadow: 0 8px 16px rgba(255, 91, 143, 0.2);
-    }
-
     .footer-gacha-slide .burn-card-copy {
       min-height: 165px;
-      padding: 36px 16px 18px 22px;
+      padding: 26px 16px 18px 22px;
       gap: 8px;
       justify-content: center;
     }
@@ -7933,7 +7915,7 @@
     .footer-gacha-slide .burn-card-title {
       margin: 0;
       color: #ff4f91;
-      font-size: clamp(1.6rem, 5vw, 2.55rem);
+      font-size: clamp(1.9rem, 5.8vw, 2.9rem);
       line-height: 0.96;
       text-shadow:
         2px 2px 0 rgba(255, 255, 255, 0.96),
@@ -7945,17 +7927,12 @@
       color: #168be8;
     }
 
-    .footer-gacha-title-brown {
-      color: #5a371d;
-      font-size: 0.72em;
-    }
-
     .footer-gacha-slide .burn-card-text {
       margin: 0;
       color: rgba(38, 34, 30, 0.94) !important;
-      font-size: 0.8rem;
+      font-size: 1.08rem;
       font-weight: 900;
-      line-height: 1.55;
+      line-height: 1.45;
       letter-spacing: 0.04em;
     }
 
@@ -7967,40 +7944,19 @@
     }
 
     .footer-gacha-cta {
-      min-height: 34px;
-      padding: 0 16px;
+      min-height: 39px;
+      padding: 0 18px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       border-radius: 999px;
       background: linear-gradient(180deg, #ff7bac, #f74891);
       color: #fff;
-      font-size: 0.82rem;
+      font-size: 0.92rem;
       font-weight: 900;
       line-height: 1;
       box-shadow: 0 9px 16px rgba(247, 72, 145, 0.22);
       white-space: nowrap;
-    }
-
-    .footer-gacha-coin {
-      min-height: 34px;
-      padding: 0 9px;
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.78);
-      color: #34383a;
-      font-size: 0.62rem;
-      font-weight: 900;
-      line-height: 1.1;
-      box-shadow: 0 7px 14px rgba(97, 73, 45, 0.1);
-      white-space: nowrap;
-    }
-
-    .footer-gacha-coin strong {
-      font-size: 0.82rem;
     }
 
     .footer-seal-gacha {
@@ -8219,44 +8175,12 @@
     }
 
     .footer-gacha-machine {
-      position: relative;
-      width: min(126px, 82%);
-      aspect-ratio: 0.82;
+      width: min(250px, 146%);
+      height: auto;
       display: block;
-    }
-
-    .footer-gacha-machine::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 0;
-      width: 82%;
-      aspect-ratio: 1;
-      transform: translateX(-50%);
-      border: 4px solid rgba(255, 255, 255, 0.84);
-      border-radius: 999px;
-      background:
-        radial-gradient(circle at 34% 38%, #ff9db7 0 11%, transparent 12%),
-        radial-gradient(circle at 62% 34%, #fff0a8 0 12%, transparent 13%),
-        radial-gradient(circle at 52% 63%, #9fd8ff 0 13%, transparent 14%),
-        radial-gradient(circle at 28% 66%, #bda0ff 0 11%, transparent 12%),
-        rgba(255, 255, 255, 0.52);
-      box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.74), 0 10px 20px rgba(97, 73, 45, 0.12);
-    }
-
-    .footer-gacha-machine::after {
-      content: "";
-      position: absolute;
-      left: 14%;
-      right: 14%;
-      bottom: 0;
-      height: 47%;
-      border-radius: 12px 12px 16px 16px;
-      background:
-        radial-gradient(circle at 74% 42%, rgba(126, 86, 53, 0.25) 0 10px, transparent 11px),
-        linear-gradient(90deg, transparent 0 60%, rgba(255, 255, 255, 0.5) 60% 64%, transparent 64%),
-        linear-gradient(180deg, #ffd9be, #ff7f92);
-      box-shadow: inset 0 2px rgba(255, 255, 255, 0.7), 0 10px 18px rgba(97, 73, 45, 0.16);
+      object-fit: contain;
+      transform: translateX(-20px);
+      filter: drop-shadow(0 12px 18px rgba(97, 73, 45, 0.16));
     }
 
     .footer-feature-dots {
@@ -8295,28 +8219,22 @@
     @media (max-width: 520px) {
       .footer-gacha-slide,
       .popup-buttons-bar .footer-feature-column-row .footer-gacha-slide {
-        grid-template-columns: minmax(0, 1fr) 112px !important;
+        grid-template-columns: minmax(0, 1fr) 126px !important;
       }
 
       .footer-gacha-slide .burn-card-copy {
         min-height: 132px;
-        padding: 30px 8px 12px 14px;
-        gap: 5px;
+        padding: 20px 6px 12px 14px;
+        gap: 6px;
       }
 
       .footer-gacha-slide .burn-card-title {
-        font-size: 1.34rem;
+        font-size: 1.58rem;
       }
 
       .footer-gacha-slide .burn-card-text {
-        font-size: 0.61rem;
-        line-height: 1.42;
-      }
-
-      .footer-gacha-badge {
-        min-height: 24px;
-        padding: 5px 10px;
-        font-size: 0.66rem;
+        font-size: 0.82rem;
+        line-height: 1.32;
       }
 
       .footer-gacha-cta-row {
@@ -8324,19 +8242,9 @@
       }
 
       .footer-gacha-cta {
-        min-height: 28px;
-        padding: 0 10px;
-        font-size: 0.66rem;
-      }
-
-      .footer-gacha-coin {
-        min-height: 28px;
-        padding: 0 6px;
-        font-size: 0.48rem;
-      }
-
-      .footer-gacha-coin strong {
-        font-size: 0.68rem;
+        min-height: 32px;
+        padding: 0 12px;
+        font-size: 0.76rem;
       }
 
       .footer-gacha-media {
@@ -8408,7 +8316,8 @@
       }
 
       .footer-gacha-machine {
-        width: min(98px, 82%);
+        width: min(184px, 142%);
+        transform: translateX(-18px);
       }
 
       .footer-seal-spin {
@@ -9152,17 +9061,15 @@
                   </span>
                 </a>
                 <a class="burn-card footer-gacha-slide" href="gacha/index.html" aria-label="モビーガチャ">
-                  <span class="footer-gacha-badge">今日の1枚 ★</span>
                   <span class="burn-card-copy">
-                    <span class="burn-card-title">シール<span class="footer-gacha-title-blue">ガチャ</span><span class="footer-gacha-title-brown">ゃ</span></span>
-                    <span class="burn-card-text">ガチャをまわして<br>かわいいシールデザインを<br>ゲットしよう！</span>
+                    <span class="burn-card-title">シール<span class="footer-gacha-title-blue">ガチャ</span></span>
+                    <span class="burn-card-text">ガチャを回してシールをゲット！</span>
                     <span class="footer-gacha-cta-row">
                       <span class="footer-gacha-cta">ガチャをまわす</span>
-                      <span class="footer-gacha-coin"><strong>0枚</strong>所持コイン</span>
                     </span>
                   </span>
                   <span class="burn-card-media footer-gacha-media" aria-hidden="true">
-                    <span class="footer-gacha-machine"></span>
+                    <img class="footer-gacha-machine" src="gacha-new/ref/gachagacha.png" alt="" loading="lazy" decoding="async">
                   </span>
                 </a>
               </div>
