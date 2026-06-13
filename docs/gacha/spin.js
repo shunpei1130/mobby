@@ -3,6 +3,7 @@
   const spinButton = document.getElementById("spinButton");
   const handleButton = document.getElementById("handleButton");
   const againButton = document.getElementById("againButton");
+  const saveSheetButton = document.getElementById("saveSheetButton");
   const resultSheet = document.getElementById("resultSheet");
   const openResultPreview = document.getElementById("openResultPreview");
   const resultImage = document.getElementById("resultImage");
@@ -322,6 +323,68 @@
     imagePreviewModal.hidden = true;
   }
 
+  async function dataUrlToBlob(dataUrl) {
+    const response = await fetch(dataUrl);
+    return response.blob();
+  }
+
+  function buildSheetFileName() {
+    const now = new Date();
+    const stamp = [
+      now.getFullYear(),
+      String(now.getMonth() + 1).padStart(2, "0"),
+      String(now.getDate()).padStart(2, "0"),
+      String(now.getHours()).padStart(2, "0"),
+      String(now.getMinutes()).padStart(2, "0")
+    ].join("");
+    return `mobby-sticker-sheet-${stamp}.png`;
+  }
+
+  function downloadBlob(blob, fileName) {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  async function saveSheetImage() {
+    if (!currentResult?.src || !saveSheetButton) return;
+
+    const originalLabel = saveSheetButton.textContent;
+    saveSheetButton.disabled = true;
+    saveSheetButton.textContent = "保存中...";
+
+    try {
+      const blob = await dataUrlToBlob(currentResult.src);
+      const fileName = buildSheetFileName();
+      const file = new File([blob], fileName, { type: "image/png" });
+
+      if (navigator.canShare?.({ files: [file] }) && navigator.share) {
+        await navigator.share({
+          files: [file],
+          title: "Mobby sticker sheet"
+        });
+      } else {
+        downloadBlob(blob, fileName);
+      }
+
+      saveSheetButton.textContent = "保存しました";
+      window.setTimeout(() => {
+        if (saveSheetButton) saveSheetButton.textContent = originalLabel;
+      }, 1400);
+    } catch (error) {
+      saveSheetButton.textContent = "もう一度保存";
+    } finally {
+      window.setTimeout(() => {
+        if (saveSheetButton) saveSheetButton.disabled = false;
+      }, 300);
+    }
+  }
+
   function spin() {
     if (isSpinning) return;
 
@@ -352,6 +415,7 @@
   spinButton.addEventListener("click", spin);
   handleButton.addEventListener("click", spin);
   againButton?.addEventListener("click", spin);
+  saveSheetButton?.addEventListener("click", saveSheetImage);
   stickerRevealNext?.addEventListener("click", showNextReveal);
   openResultPreview?.addEventListener("click", openPreview);
   closePreviewButton?.addEventListener("click", closePreview);

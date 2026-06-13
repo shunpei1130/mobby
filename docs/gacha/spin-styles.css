@@ -505,10 +505,11 @@ a {
 .result-actions {
   margin-top: 18px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 10px;
 }
 
+.result-save,
 .result-button,
 .result-link {
   min-height: 44px;
@@ -520,6 +521,17 @@ a {
   text-decoration: none;
   font-weight: 900;
   cursor: pointer;
+}
+
+.result-save {
+  background: linear-gradient(180deg, #66c7ff, #168be8);
+  color: #fff;
+  box-shadow: 0 8px 14px rgba(22, 139, 232, 0.18);
+}
+
+.result-save:disabled {
+  opacity: 0.68;
+  cursor: wait;
 }
 
 .result-button {
