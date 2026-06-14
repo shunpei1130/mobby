@@ -86,6 +86,44 @@ a {
   transform: translateX(4px) rotate(45deg);
 }
 
+.seal-list-open {
+  position: absolute;
+  left: 132px;
+  top: 30px;
+  min-height: 54px;
+  padding: 0 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #34383a;
+  font-size: 0.95rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    0 12px 22px rgba(91, 67, 42, 0.13);
+  cursor: pointer;
+}
+
+.seal-list-icon {
+  width: 18px;
+  height: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3px;
+}
+
+.seal-list-icon {
+  background:
+    linear-gradient(#ff6f9f 0 0) 0 0 / 7px 7px no-repeat,
+    linear-gradient(#168be8 0 0) 11px 0 / 7px 7px no-repeat,
+    linear-gradient(#ffd35a 0 0) 0 11px / 7px 7px no-repeat,
+    linear-gradient(#ff9db7 0 0) 11px 11px / 7px 7px no-repeat;
+}
+
 .seal-hero {
   position: relative;
   min-height: 545px;
@@ -463,6 +501,187 @@ a {
   transform: rotate(28deg);
 }
 
+.is-seal-list-open {
+  overflow: hidden;
+}
+
+.seal-list-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.seal-list-modal[hidden] {
+  display: none;
+}
+
+.seal-list-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(34, 31, 28, 0.58);
+  cursor: pointer;
+}
+
+.seal-list-sheet {
+  position: relative;
+  z-index: 1;
+  width: min(860px, 100%);
+  max-height: min(86vh, 820px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.88), transparent 30%),
+    linear-gradient(180deg, #fffaf0, #fbf0dc);
+  box-shadow: 0 28px 60px rgba(34, 24, 16, 0.28);
+}
+
+.seal-list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 24px 28px 18px;
+  border-bottom: 1px dashed rgba(239, 171, 93, 0.42);
+}
+
+.seal-list-kicker {
+  margin: 0 0 4px;
+  color: var(--pink);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.seal-list-head h2 {
+  margin: 0;
+  font-size: clamp(1.45rem, 3.5vw, 2.25rem);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+.seal-list-close {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #34383a;
+  font-size: 1.75rem;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 10px 18px rgba(91, 67, 42, 0.13);
+  cursor: pointer;
+}
+
+.seal-list-content {
+  overflow: auto;
+  padding: 22px 28px 30px;
+}
+
+.seal-list-group + .seal-list-group {
+  margin-top: 30px;
+}
+
+.seal-list-group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 900;
+}
+
+.seal-list-group-head .rarity {
+  min-width: 88px;
+}
+
+.seal-list-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.seal-list-card {
+  min-width: 0;
+  display: grid;
+  gap: 9px;
+}
+
+.seal-list-image-guard {
+  position: relative;
+  overflow: hidden;
+  border: 6px solid rgba(255, 255, 255, 0.9);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 10px 18px rgba(112, 82, 52, 0.12);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.seal-list-image-guard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: transparent;
+}
+
+.seal-list-group.is-hidden-preview .seal-list-image-guard::after {
+  background:
+    linear-gradient(135deg, rgba(255, 244, 250, 0.48), rgba(255, 155, 190, 0.34)),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 8px, rgba(255, 255, 255, 0.06) 8px 16px);
+}
+
+.seal-list-group.is-hidden-preview .seal-list-card img {
+  filter: blur(1.6px) saturate(0.86) brightness(1.04);
+  transform: scale(1.02);
+}
+
+.seal-list-group.is-soft-preview .seal-list-image-guard::after {
+  background:
+    linear-gradient(135deg, rgba(255, 248, 252, 0.32), rgba(255, 176, 205, 0.2)),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0 8px, rgba(255, 255, 255, 0.03) 8px 16px);
+}
+
+.seal-list-group.is-soft-preview .seal-list-card img {
+  filter: blur(0.8px) saturate(0.94) brightness(1.02);
+  transform: scale(1.01);
+}
+
+.seal-list-card img {
+  width: 100%;
+  aspect-ratio: 1;
+  display: block;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.seal-list-card p {
+  min-height: 2.8em;
+  margin: 0;
+  color: #34383a;
+  font-size: 0.86rem;
+  font-weight: 900;
+  line-height: 1.4;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
 @media (max-width: 720px) {
   .seal-page-shell {
     padding-inline: 22px;
@@ -479,6 +698,22 @@ a {
     top: 20px;
     width: 50px;
     height: 50px;
+  }
+
+  .seal-list-open {
+    left: 86px;
+    top: 22px;
+    min-height: 46px;
+    padding: 0 14px;
+    gap: 8px;
+    font-size: 0.78rem;
+  }
+
+  .seal-list-icon {
+    width: 16px;
+    height: 16px;
+    background-size: 6px 6px, 6px 6px, 6px 6px, 6px 6px;
+    background-position: 0 0, 10px 0, 0 10px, 10px 10px;
   }
 
   .seal-hero {
@@ -588,6 +823,46 @@ a {
     width: 100%;
     border-width: 5px;
     border-radius: 17px;
+  }
+
+  .seal-list-modal {
+    padding: 12px;
+  }
+
+  .seal-list-sheet {
+    max-height: 88vh;
+    border-radius: 24px;
+  }
+
+  .seal-list-head {
+    padding: 20px 18px 14px;
+  }
+
+  .seal-list-close {
+    width: 44px;
+    height: 44px;
+  }
+
+  .seal-list-content {
+    padding: 18px 16px 24px;
+  }
+
+  .seal-list-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .seal-list-card img {
+    border-radius: 0;
+  }
+
+  .seal-list-image-guard {
+    border-width: 4px;
+    border-radius: 15px;
+  }
+
+  .seal-list-card p {
+    font-size: 0.72rem;
   }
 
 }
