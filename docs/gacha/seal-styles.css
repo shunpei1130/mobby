@@ -150,7 +150,7 @@ a {
 .seal-hero-copy {
   position: absolute;
   left: 44px;
-  top: 76px;
+  top: 94px;
   z-index: 3;
   width: min(440px, 52%);
   text-align: left;
@@ -637,17 +637,6 @@ a {
   background: transparent;
 }
 
-.seal-list-group.is-hidden-preview .seal-list-image-guard::after {
-  background:
-    linear-gradient(135deg, rgba(255, 244, 250, 0.48), rgba(255, 155, 190, 0.34)),
-    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 8px, rgba(255, 255, 255, 0.06) 8px 16px);
-}
-
-.seal-list-group.is-hidden-preview .seal-list-card img {
-  filter: blur(1.6px) saturate(0.86) brightness(1.04);
-  transform: scale(1.02);
-}
-
 .seal-list-group.is-soft-preview .seal-list-image-guard::after {
   background:
     linear-gradient(135deg, rgba(255, 248, 252, 0.32), rgba(255, 176, 205, 0.2)),
@@ -736,7 +725,7 @@ a {
     top: auto;
     width: auto;
     margin-left: 0;
-    padding-top: 0;
+    padding-top: 14px;
     padding-inline: 4px;
   }
 
