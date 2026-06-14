@@ -75,7 +75,12 @@
         1回まわす
         <span class="spin-capsule" aria-hidden="true"></span>
       </a>
-      <p class="spin-note"><span aria-hidden="true">ⓘ</span> ガチャから出るシールは重複することがあります</p>
+      <form class="seal-code-form" id="sealCodeForm">
+        <input class="seal-code-input" id="sealCodeInput" type="text" inputmode="text" autocomplete="off" placeholder="コードを入力">
+        <button class="seal-code-button" type="submit">無料で回す</button>
+        <p class="seal-code-error" id="sealCodeError" aria-live="polite" hidden>コードが間違っています</p>
+      </form>
+      <p class="spin-note"><span aria-hidden="true">ⓘ</span> Mobby公式LINEのアンケート回答でコードをゲットしてから！</p>
     </section>
   </main>
 
@@ -100,6 +105,9 @@
       const closeButton = document.getElementById("closeSealList");
       const closeBackdrop = document.getElementById("closeSealListBackdrop");
       const content = document.getElementById("sealListContent");
+      const codeForm = document.getElementById("sealCodeForm");
+      const codeInput = document.getElementById("sealCodeInput");
+      const codeError = document.getElementById("sealCodeError");
       if (!modal || !openButton || !closeButton || !closeBackdrop || !content) return;
 
       const groups = [
@@ -142,6 +150,18 @@
       openButton.addEventListener("click", openModal);
       closeButton.addEventListener("click", closeModal);
       closeBackdrop.addEventListener("click", closeModal);
+      codeForm?.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const code = codeInput?.value.trim() || "";
+        if (code !== "mobby-gacha!") {
+          if (codeError) codeError.hidden = false;
+          codeInput?.focus();
+          return;
+        }
+        if (codeError) codeError.hidden = true;
+        sessionStorage.setItem("mobbySealGachaCode", code);
+        window.location.href = `spin.html?code=${encodeURIComponent(code)}`;
+      });
       content.addEventListener("contextmenu", (event) => event.preventDefault());
       content.addEventListener("dragstart", (event) => event.preventDefault());
       document.addEventListener("keydown", (event) => {
