@@ -10,6 +10,10 @@
   const resultTitle = document.getElementById("resultTitle");
   const resultText = document.getElementById("resultText");
   const stickerResults = document.getElementById("stickerResults");
+  const sheetSlider = document.getElementById("sheetSlider");
+  const sheetSlidePrev = document.getElementById("sheetSlidePrev");
+  const sheetSlideNext = document.getElementById("sheetSlideNext");
+  const sheetSlideCount = document.getElementById("sheetSlideCount");
   const stickerReveal = document.getElementById("stickerReveal");
   const stickerRevealCount = document.getElementById("stickerRevealCount");
   const stickerRevealImage = document.getElementById("stickerRevealImage");
@@ -136,8 +140,11 @@
   let coins = 1;
   let currentResult = null;
   let revealResults = [];
+  let revealFinalResults = [];
   let revealIndex = 0;
   let currentDownloadUrl = "";
+  let sheetSlides = [];
+  let activeSheetSlideIndex = 0;
   const revealRarityClasses = ["rarity-r", "rarity-sr", "rarity-ur", "rarity-pri"];
 
   const sheetSrc = "../gacha-new/assets/gacha/gachasheet.png";
@@ -177,7 +184,7 @@
     const paidSpinConsumed = isPaidMode && hasUsedPaidSpin;
     spinButton.disabled = busy || !paidSpinAvailable || paidSpinConsumed;
     handleButton.disabled = busy || !paidSpinAvailable || paidSpinConsumed;
-    const readyLabel = pullCount === 10 ? "10連まわす" : "1回まわす";
+    const readyLabel = pullCount === 10 ? "60連" : "6連";
     spinButton.textContent = busy ? "まわしています..." : paidSpinConsumed ? "購入してもう一度" : readyLabel;
     if (!busy) {
       const capsule = document.createElement("span");
@@ -259,7 +266,58 @@
     };
   }
 
+  async function composeSheetSlides(selectedResults) {
+    const chunks = [];
+    for (let index = 0; index < selectedResults.length; index += sheetSlots.length) {
+      chunks.push(selectedResults.slice(index, index + sheetSlots.length));
+    }
+    return Promise.all(chunks.map((chunk) => composeSheet(chunk)));
+  }
+
+  function updateSheetSlide(index) {
+    if (!sheetSlides.length) return;
+    activeSheetSlideIndex = Math.max(0, Math.min(sheetSlides.length - 1, index));
+    const slide = sheetSlides[activeSheetSlideIndex];
+
+    currentResult = {
+      title: `${activeSheetSlideIndex + 1}枚目のシール台紙`,
+      rarity: `${activeSheetSlideIndex + 1} / ${sheetSlides.length}`,
+      src: slide.dataUrl,
+      blob: slide.blob
+    };
+
+    resultImage.src = slide.dataUrl;
+    resultImage.alt = `ガチャで出たシール台紙 ${activeSheetSlideIndex + 1}枚目`;
+    resultImage.hidden = false;
+    if (sheetSlideCount) sheetSlideCount.textContent = `${activeSheetSlideIndex + 1} / ${sheetSlides.length}`;
+    if (sheetSlidePrev) sheetSlidePrev.disabled = activeSheetSlideIndex === 0;
+    if (sheetSlideNext) sheetSlideNext.disabled = activeSheetSlideIndex === sheetSlides.length - 1;
+    refreshDownloadLink();
+  }
+
   async function showResult(selectedResults) {
+    const isMultiSheet = selectedResults.length > sheetSlots.length;
+    if (isMultiSheet) {
+      sheetSlides = await composeSheetSlides(selectedResults);
+      activeSheetSlideIndex = 0;
+      resultTitle.textContent = `${sheetSlides.length}枚のシール台紙をゲット！`;
+      resultText.textContent = "左右のボタンで台紙をスライドして確認できます。";
+      if (stickerResults) {
+        stickerResults.textContent = "";
+        stickerResults.hidden = true;
+      }
+      if (sheetSlider) sheetSlider.hidden = sheetSlides.length <= 1;
+      updateSheetSlide(0);
+      if (againButton && isPaidMode) againButton.textContent = "もう一度購入する";
+      resultSheet.hidden = false;
+      return;
+    }
+
+    sheetSlides = [];
+    activeSheetSlideIndex = 0;
+    if (sheetSlider) sheetSlider.hidden = true;
+    if (stickerResults) stickerResults.hidden = false;
+
     const sheetImage = await composeSheet(selectedResults);
     const raritySummary = selectedResults.map((result) => result.rarity).join(" / ");
 
@@ -313,6 +371,27 @@
 
   function startReveal(selectedResults) {
     revealResults = selectedResults;
+    revealFinalResults = selectedResults;
+    revealIndex = 0;
+    showReveal(0);
+  }
+
+  function startRevealThenShow(highlightResults, finalResults) {
+    if (!highlightResults.length) {
+      showResult(finalResults)
+        .catch(() => {
+          if (spinLead) spinLead.textContent = "画像の生成に失敗しました。もう一度試してください。";
+        })
+        .finally(() => {
+          coins = 1;
+          if (coinCount) coinCount.textContent = String(coins);
+          setBusy(false);
+        });
+      return;
+    }
+
+    revealResults = highlightResults;
+    revealFinalResults = finalResults;
     revealIndex = 0;
     showReveal(0);
   }
@@ -325,12 +404,13 @@
     }
 
     if (stickerReveal) stickerReveal.hidden = true;
-    showResult(revealResults)
+    showResult(revealFinalResults.length ? revealFinalResults : revealResults)
       .catch(() => {
         if (spinLead) spinLead.textContent = "画像の生成に失敗しました。もう一度試してください。";
       })
       .finally(() => {
         revealResults = [];
+        revealFinalResults = [];
         coins = 1;
         if (coinCount) coinCount.textContent = String(coins);
         setBusy(false);
@@ -536,13 +616,7 @@
       machineWrap.classList.remove("is-spinning", "is-dropping");
       if (spinLead) spinLead.textContent = "出たシールを確認しよう！";
       if (selectedResults.length > 12) {
-        showResult(selectedResults)
-          .catch(() => {
-            if (spinLead) spinLead.textContent = "画像の生成に失敗しました。もう一度試してください。";
-          })
-          .finally(() => {
-            setBusy(false);
-          });
+        startRevealThenShow(selectedResults.filter((result) => result.rarity !== "R"), selectedResults);
         return;
       }
       startReveal(selectedResults);
@@ -578,8 +652,8 @@
       paidSpinAvailable = true;
       if (spinLead) {
         spinLead.textContent = pullCount === 10
-          ? "10連ガチャをまわせます。"
-          : "有料ガチャを1回まわせます。";
+          ? "60連ガチャをまわせます。"
+          : "6連ガチャをまわせます。";
       }
     } catch (error) {
       paidSpinAvailable = false;
@@ -599,6 +673,8 @@
     spin();
   });
   saveSheetButton?.addEventListener("click", saveSheetImage);
+  sheetSlidePrev?.addEventListener("click", () => updateSheetSlide(activeSheetSlideIndex - 1));
+  sheetSlideNext?.addEventListener("click", () => updateSheetSlide(activeSheetSlideIndex + 1));
   stickerRevealNext?.addEventListener("click", showNextReveal);
   openResultPreview?.addEventListener("click", openPreview);
   closePreviewButton?.addEventListener("click", closePreview);

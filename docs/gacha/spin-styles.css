@@ -443,6 +443,49 @@ a {
   outline-offset: 4px;
 }
 
+.sheet-slider {
+  width: min(360px, 100%);
+  margin: 12px auto 12px;
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) 46px;
+  align-items: center;
+  gap: 10px;
+}
+
+.sheet-slider[hidden] {
+  display: none !important;
+}
+
+.sheet-slider-button {
+  width: 46px;
+  height: 46px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ff7bac, #f74891);
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 900;
+  box-shadow: 0 8px 14px rgba(247, 72, 145, 0.18);
+  cursor: pointer;
+}
+
+.sheet-slider-button:disabled {
+  opacity: 0.42;
+  cursor: default;
+}
+
+.sheet-slider-count {
+  min-height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--ink);
+  font-size: 0.96rem;
+  font-weight: 900;
+  box-shadow: 0 8px 14px rgba(102, 75, 46, 0.08);
+}
+
 .result-sheet h2 {
   margin: 0 0 6px;
   font-size: 1.45rem;

@@ -35,7 +35,7 @@
       </div>
 
       <button class="spin-action" id="spinButton" type="button">
-        1回まわす
+        6連
         <span class="spin-button-capsule" aria-hidden="true"></span>
       </button>
     </section>
@@ -45,12 +45,17 @@
       <button class="result-placeholder" id="openResultPreview" type="button" aria-label="ガチャ結果を拡大表示">
         <img id="resultImage" src="" alt="" hidden>
       </button>
+      <div class="sheet-slider" id="sheetSlider" hidden>
+        <button class="sheet-slider-button" id="sheetSlidePrev" type="button" aria-label="前の台紙">←</button>
+        <p class="sheet-slider-count" id="sheetSlideCount">1 / 1</p>
+        <button class="sheet-slider-button" id="sheetSlideNext" type="button" aria-label="次の台紙">→</button>
+      </div>
       <h2 id="resultTitle">ノーマルシール</h2>
       <p id="resultText">仮のシール結果です。後で画像とデータを差し込めます。</p>
       <div class="sticker-results" id="stickerResults" aria-label="出たシール一覧"></div>
       <div class="result-actions">
         <a class="result-save" id="saveSheetButton" href="#" download>保存する</a>
-        <button class="result-button" id="againButton" type="button">もう1回まわす</button>
+        <button class="result-button" id="againButton" type="button">もう一度まわす</button>
         <a class="result-link" href="index.html">一覧に戻る</a>
       </div>
     </section>
