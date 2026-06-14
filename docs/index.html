@@ -7925,6 +7925,7 @@
       .footer-burn-card-row .burn-card,
       .popup-buttons-bar .footer-burn-card-row .burn-card {
         border-radius: 10px !important;
+        clip-path: inset(0 round 10px);
       }
     }
 
@@ -7932,6 +7933,15 @@
     .popup-buttons-bar .footer-feature-column-row {
       overflow: hidden !important;
       contain: paint;
+      clip-path: inset(0 round 12px);
+      cursor: grab;
+      touch-action: pan-y;
+      user-select: none;
+    }
+
+    .footer-feature-column-row:active,
+    .popup-buttons-bar .footer-feature-column-row:active {
+      cursor: grabbing;
     }
 
     .footer-feature-track {
@@ -7944,42 +7954,81 @@
       transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .footer-feature-column-row.is-slide-2 .footer-feature-track {
-      transform: translateX(-100%);
-    }
-
-    .footer-feature-column-row.is-slide-2 .footer-feature-track .burn-card:first-child {
-      visibility: hidden !important;
-      opacity: 0 !important;
-    }
-
     .footer-feature-track .burn-card,
     .popup-buttons-bar .footer-feature-column-row .footer-feature-track .burn-card {
       width: 100% !important;
       flex: 0 0 100% !important;
       max-width: none !important;
+      min-width: 100% !important;
       margin: 0 !important;
       overflow: hidden !important;
       contain: paint;
+      box-sizing: border-box;
+      clip-path: inset(0 round 12px);
+      -webkit-user-drag: none;
+    }
+
+    .footer-burn-main-slide,
+    .popup-buttons-bar .footer-feature-column-row .footer-burn-main-slide {
+      display: block !important;
+      min-height: 165px;
+      background: #faf1e2 !important;
+    }
+
+    .footer-burn-main-slide::after {
+      display: none !important;
+    }
+
+    .footer-burn-main-image {
+      width: 100%;
+      height: 100%;
+      min-height: 165px;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+      -webkit-user-drag: none;
     }
 
     .footer-gacha-slide,
     .popup-buttons-bar .footer-feature-column-row .footer-gacha-slide {
-      display: grid !important;
-      grid-template-columns: minmax(0, 1fr) minmax(118px, 0.78fr) !important;
-      border-color: rgba(255, 124, 165, 0.38) !important;
-      background:
-        radial-gradient(circle at 5% 36%, #ffd65f 0 4px, transparent 5px),
-        radial-gradient(circle at 12% 70%, #ff9db7 0 3px, transparent 4px),
-        radial-gradient(circle at 56% 38%, #9fd0ff 0 3px, transparent 4px),
-        radial-gradient(circle at 92% 26%, #ffd65f 0 5px, transparent 6px),
-        radial-gradient(circle at 78% 24%, rgba(255, 255, 255, 0.54), transparent 30%),
-        linear-gradient(145deg, rgba(255, 238, 246, 0.96), rgba(255, 248, 215, 0.86)) !important;
-      color: #3c3330 !important;
+      display: block !important;
+      min-height: 165px;
+      background: #faf1e2 !important;
+    }
+
+    .footer-compositing-slide,
+    .popup-buttons-bar .footer-feature-column-row .footer-compositing-slide {
+      display: block !important;
+      min-height: 165px;
+      background: #faf1e2 !important;
+    }
+
+    .footer-compositing-slide::after {
+      display: none !important;
+    }
+
+    .footer-compositing-slide img {
+      width: 100%;
+      height: 100%;
+      min-height: 165px;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+      -webkit-user-drag: none;
     }
 
     .footer-gacha-slide::after {
       display: none !important;
+    }
+
+    .footer-gacha-ticket {
+      width: 100%;
+      height: 100%;
+      min-height: 165px;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+      -webkit-user-drag: none;
     }
 
     .footer-gacha-slide .burn-card-copy {
@@ -8294,9 +8343,19 @@
     }
 
     @media (max-width: 520px) {
+      .footer-burn-main-slide,
+      .popup-buttons-bar .footer-feature-column-row .footer-burn-main-slide,
+      .footer-burn-main-image,
       .footer-gacha-slide,
       .popup-buttons-bar .footer-feature-column-row .footer-gacha-slide {
-        grid-template-columns: minmax(0, 1fr) 126px !important;
+        min-height: 132px;
+      }
+
+      .footer-compositing-slide,
+      .popup-buttons-bar .footer-feature-column-row .footer-compositing-slide,
+      .footer-compositing-slide img,
+      .footer-gacha-ticket {
+        min-height: 132px;
       }
 
       .footer-gacha-slide .burn-card-copy {
@@ -9132,31 +9191,20 @@
             <div class="gift-fan-menu is-open" id="giftFanMenu">
             <div class="burn-card-row footer-burn-card-row footer-feature-column-row" aria-label="おすすめメニュー">
               <div class="footer-feature-track">
-                <a class="burn-card" href="burn/burn-record/index.html" aria-label="BURN">
-                  <span class="burn-card-copy">
-                    <span class="burn-card-text">二人の思い出を<br>雑誌のページのように残す</span>
-                    <span class="burn-card-title">BURN</span>
-                  </span>
-                  <span class="burn-card-media" aria-hidden="true">
-                    <img src="burn/reference/burn_mag_ref.png" alt="" loading="lazy" decoding="async">
-                  </span>
-                </a>
                 <a class="burn-card footer-gacha-slide" href="gacha/index.html" aria-label="モビーガチャ">
-                  <span class="burn-card-copy">
-                    <span class="burn-card-title">シール<span class="footer-gacha-title-blue">ガチャ</span></span>
-                    <span class="burn-card-text">ガチャを回してシールをゲット！</span>
-                    <span class="footer-gacha-cta-row">
-                      <span class="footer-gacha-cta">ガチャをまわす</span>
-                    </span>
-                  </span>
-                  <span class="burn-card-media footer-gacha-media" aria-hidden="true">
-                    <img class="footer-gacha-machine" src="gacha-new/assets/gacha/gachagacha-mobby.png" alt="" loading="lazy" decoding="async">
-                  </span>
+                  <img class="footer-gacha-ticket" src="gacha-new/ref/mobby-gacha-ticket.png" alt="" loading="lazy" decoding="async">
+                </a>
+                <a class="burn-card footer-compositing-slide" href="compositing.html" aria-label="ポスター作成">
+                  <img src="compositing/reference/flier-mobby.png" alt="" loading="lazy" decoding="async">
+                </a>
+                <a class="burn-card footer-burn-main-slide" href="burn/burn-record/index.html" aria-label="BURN">
+                  <img class="footer-burn-main-image" src="burn/reference/burn-main-column.png" alt="" loading="lazy" decoding="async">
                 </a>
               </div>
               <div class="footer-feature-dots" role="tablist" aria-label="おすすめメニュー切り替え">
-                <button class="footer-feature-dot is-active" type="button" data-footer-feature-dot="0" aria-label="BURNを表示" aria-selected="true"></button>
-                <button class="footer-feature-dot" type="button" data-footer-feature-dot="1" aria-label="モビーガチャを表示" aria-selected="false"></button>
+                <button class="footer-feature-dot is-active" type="button" data-footer-feature-dot="0" aria-label="モビーガチャを表示" aria-selected="true"></button>
+                <button class="footer-feature-dot" type="button" data-footer-feature-dot="1" aria-label="ポスター作成を表示" aria-selected="false"></button>
+                <button class="footer-feature-dot" type="button" data-footer-feature-dot="2" aria-label="BURNを表示" aria-selected="false"></button>
               </div>
             </div>
             <div class="gift-fan-actions" aria-hidden="false">
@@ -12509,11 +12557,17 @@
         row.dataset.sliderReady = 'true';
         let index = 0;
         let timer = null;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let isDragging = false;
+        let didSwipe = false;
         const intervalMs = 4200;
+        const swipeThreshold = 42;
 
         const setSlide = (nextIndex) => {
           index = ((nextIndex % slides.length) + slides.length) % slides.length;
-          row.classList.toggle('is-slide-2', index === 1);
+          const track = row.querySelector('.footer-feature-track');
+          if (track) track.style.transform = `translateX(-${index * 100}%)`;
           dots.forEach((dot, dotIndex) => {
             const active = dotIndex === index;
             dot.classList.toggle('is-active', active);
@@ -12541,6 +12595,42 @@
         row.addEventListener('mouseleave', start);
         row.addEventListener('focusin', () => window.clearInterval(timer));
         row.addEventListener('focusout', start);
+        row.addEventListener('pointerdown', (event) => {
+          if (event.button !== undefined && event.button !== 0) return;
+          dragStartX = event.clientX;
+          dragStartY = event.clientY;
+          isDragging = true;
+          didSwipe = false;
+          window.clearInterval(timer);
+        }, { passive: true });
+        row.addEventListener('pointermove', (event) => {
+          if (!isDragging || didSwipe) return;
+          const deltaX = event.clientX - dragStartX;
+          const deltaY = event.clientY - dragStartY;
+          if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 16) {
+            isDragging = false;
+            start();
+            return;
+          }
+          if (Math.abs(deltaX) < swipeThreshold) return;
+          didSwipe = true;
+          setSlide(index + (deltaX < 0 ? 1 : -1));
+        }, { passive: true });
+        row.addEventListener('pointerup', () => {
+          if (!isDragging) return;
+          isDragging = false;
+          start();
+        }, { passive: true });
+        row.addEventListener('pointercancel', () => {
+          isDragging = false;
+          start();
+        }, { passive: true });
+        row.addEventListener('click', (event) => {
+          if (!didSwipe) return;
+          event.preventDefault();
+          event.stopPropagation();
+          didSwipe = false;
+        }, true);
 
         setSlide(0);
         start();
