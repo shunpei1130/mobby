@@ -25,6 +25,14 @@
 
   if (!machineWrap || !spinButton || !handleButton || !resultSheet || !resultImage || !resultTitle || !resultText) return;
 
+  const CHECKOUT_STATUS_ENDPOINT = "/api/gacha-checkout-status";
+  const params = new URLSearchParams(window.location.search);
+  const isPaidMode = params.get("mode") === "paid";
+  const checkoutSessionId = params.get("session_id") || "";
+  let paidSpinAvailable = !isPaidMode;
+  let hasUsedPaidSpin = false;
+  let pullCount = Math.max(1, Math.min(10, Number(params.get("pulls")) || 1));
+
   const rNames = [
     "ひなたの愛され人",
     "余白を飾る演出家",
@@ -166,9 +174,11 @@
 
   function setBusy(busy) {
     isSpinning = busy;
-    spinButton.disabled = busy;
-    handleButton.disabled = busy;
-    spinButton.textContent = busy ? "まわしています..." : "1回まわす";
+    const paidSpinConsumed = isPaidMode && hasUsedPaidSpin;
+    spinButton.disabled = busy || !paidSpinAvailable || paidSpinConsumed;
+    handleButton.disabled = busy || !paidSpinAvailable || paidSpinConsumed;
+    const readyLabel = pullCount === 10 ? "10連まわす" : "1回まわす";
+    spinButton.textContent = busy ? "まわしています..." : paidSpinConsumed ? "購入してもう一度" : readyLabel;
     if (!busy) {
       const capsule = document.createElement("span");
       capsule.className = "spin-button-capsule";
@@ -225,13 +235,21 @@
     ]);
 
     const canvas = document.createElement("canvas");
+    const sheetCount = Math.max(1, Math.ceil(selectedResults.length / sheetSlots.length));
     canvas.width = sheetImage.naturalWidth;
-    canvas.height = sheetImage.naturalHeight;
+    canvas.height = sheetImage.naturalHeight * sheetCount;
 
     const context = canvas.getContext("2d");
-    context.drawImage(sheetImage, 0, 0);
+    for (let index = 0; index < sheetCount; index += 1) {
+      context.drawImage(sheetImage, 0, sheetImage.naturalHeight * index);
+    }
     stickerImages.forEach((image, index) => {
-      drawCoverImage(context, image, sheetSlots[index]);
+      const slot = sheetSlots[index % sheetSlots.length];
+      const pageIndex = Math.floor(index / sheetSlots.length);
+      drawCoverImage(context, image, {
+        ...slot,
+        y: slot.y + sheetImage.naturalHeight * pageIndex
+      });
     });
 
     const dataUrl = canvas.toDataURL("image/png");
@@ -246,18 +264,19 @@
     const raritySummary = selectedResults.map((result) => result.rarity).join(" / ");
 
     currentResult = {
-      title: "6枚シールシート",
+      title: `${selectedResults.length}枚シールシート`,
       rarity: raritySummary,
       src: sheetImage.dataUrl,
       blob: sheetImage.blob
     };
     resultImage.src = sheetImage.dataUrl;
-    resultImage.alt = "ガチャで出た6枚のシールシート";
+    resultImage.alt = `ガチャで出た${selectedResults.length}枚のシールシート`;
     resultImage.hidden = false;
-    resultTitle.textContent = "6枚のシールをゲット！";
+    resultTitle.textContent = `${selectedResults.length}枚のシールをゲット！`;
     resultText.textContent = `出たシール: ${raritySummary}`;
     renderStickerResults(selectedResults);
     refreshDownloadLink();
+    if (againButton && isPaidMode) againButton.textContent = "もう一度購入する";
     resultSheet.hidden = false;
   }
 
@@ -490,11 +509,16 @@
 
   function spin() {
     if (isSpinning) return;
+    if (isPaidMode && (!paidSpinAvailable || hasUsedPaidSpin)) {
+      window.location.href = "index.html";
+      return;
+    }
 
     resultSheet.hidden = true;
     if (stickerResults) stickerResults.textContent = "";
     if (stickerReveal) stickerReveal.hidden = true;
     setBusy(true);
+    if (isPaidMode) hasUsedPaidSpin = true;
     coins = Math.max(0, coins - 1);
     if (coinCount) coinCount.textContent = String(coins);
     if (spinLead) spinLead.textContent = "ハンドルが回っています...";
@@ -508,16 +532,72 @@
     }, 820);
 
     window.setTimeout(() => {
-      const selectedResults = pickResults(6);
+      const selectedResults = pickResults(pullCount * 6);
       machineWrap.classList.remove("is-spinning", "is-dropping");
       if (spinLead) spinLead.textContent = "出たシールを確認しよう！";
+      if (selectedResults.length > 12) {
+        showResult(selectedResults)
+          .catch(() => {
+            if (spinLead) spinLead.textContent = "画像の生成に失敗しました。もう一度試してください。";
+          })
+          .finally(() => {
+            setBusy(false);
+          });
+        return;
+      }
       startReveal(selectedResults);
     }, 1900);
   }
 
+  async function verifyPaidSession() {
+    if (!isPaidMode) {
+      setBusy(false);
+      return;
+    }
+
+    paidSpinAvailable = false;
+    setBusy(false);
+    if (spinLead) spinLead.textContent = "決済を確認しています...";
+
+    if (!checkoutSessionId.startsWith("cs_")) {
+      if (spinLead) spinLead.textContent = "決済確認ができませんでした。有料ガチャから購入してください。";
+      return;
+    }
+
+    try {
+      const response = await fetch(CHECKOUT_STATUS_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId: checkoutSessionId })
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data?.paid) {
+        throw new Error(data?.message || data?.error || "決済が完了していません。");
+      }
+      pullCount = Math.max(1, Math.min(10, Number(data.pulls) || pullCount));
+      paidSpinAvailable = true;
+      if (spinLead) {
+        spinLead.textContent = pullCount === 10
+          ? "10連ガチャをまわせます。"
+          : "有料ガチャを1回まわせます。";
+      }
+    } catch (error) {
+      paidSpinAvailable = false;
+      if (spinLead) spinLead.textContent = error?.message || "決済確認に失敗しました。";
+    } finally {
+      setBusy(false);
+    }
+  }
+
   spinButton.addEventListener("click", spin);
   handleButton.addEventListener("click", spin);
-  againButton?.addEventListener("click", spin);
+  againButton?.addEventListener("click", () => {
+    if (isPaidMode) {
+      window.location.href = "index.html";
+      return;
+    }
+    spin();
+  });
   saveSheetButton?.addEventListener("click", saveSheetImage);
   stickerRevealNext?.addEventListener("click", showNextReveal);
   openResultPreview?.addEventListener("click", openPreview);
@@ -528,4 +608,5 @@
       closePreview();
     }
   });
+  verifyPaidSession();
 })();

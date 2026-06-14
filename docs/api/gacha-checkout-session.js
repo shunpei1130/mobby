@@ -1,7 +1,18 @@
-const GACHA_PRODUCT_TYPE = "gacha_fifty_pack";
-const GACHA_PRODUCT_LABEL = "モビーガチャ 50連（¥2,000）";
-const GACHA_PRODUCT_DESCRIPTION = "MOBBY CAPSULE CLUBで使える50連ガチャ1セット";
-const GACHA_FIFTY_PACK_AMOUNT_JPY = 2000;
+const GACHA_PRODUCT_TYPE = "seal_gacha";
+const PACKAGES = {
+  single: {
+    pulls: 1,
+    amount: 100,
+    label: "シールガチャ 1回（¥100）",
+    description: "Mobby シールガチャ 1回分"
+  },
+  ten: {
+    pulls: 10,
+    amount: 750,
+    label: "シールガチャ 10連（¥750）",
+    description: "Mobby シールガチャ 10連分"
+  }
+};
 
 function setCors(res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -32,7 +43,10 @@ export default async function handler(req, res) {
 
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY || "";
   const stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY || "";
-  const stripeCatalogRef = process.env.STRIPE_PRICE_ID_GACHA_FIFTY_PACK || "";
+  const stripeCatalogRefs = {
+    single: process.env.STRIPE_PRICE_ID_SEAL_GACHA_SINGLE || "",
+    ten: process.env.STRIPE_PRICE_ID_SEAL_GACHA_TEN || ""
+  };
 
   if (!stripeSecretKey || !stripePublishableKey) {
     return res.status(500).json({
@@ -43,8 +57,12 @@ export default async function handler(req, res) {
   try {
     const body = req.body || {};
     const source = safeText(body.source || "gacha", 40);
+    const packageType = safeText(body.packageType || "single", 20);
+    const normalizedPackageType = PACKAGES[packageType] ? packageType : "single";
+    const selectedPackage = PACKAGES[normalizedPackageType];
+    const stripeCatalogRef = stripeCatalogRefs[normalizedPackageType] || "";
     const origin = resolveOrigin(req);
-    const returnUrl = `${origin}/gacha/index.html?session_id={CHECKOUT_SESSION_ID}`;
+    const returnUrl = `${origin}/gacha/spin.html?mode=paid&pulls=${selectedPackage.pulls}&session_id={CHECKOUT_SESSION_ID}`;
 
     const form = new URLSearchParams();
     form.set("mode", "payment");
@@ -58,19 +76,21 @@ export default async function handler(req, res) {
       form.set("line_items[0][price]", stripeCatalogRef);
     } else {
       form.set("line_items[0][price_data][currency]", "jpy");
-      form.set("line_items[0][price_data][unit_amount]", String(GACHA_FIFTY_PACK_AMOUNT_JPY));
+      form.set("line_items[0][price_data][unit_amount]", String(selectedPackage.amount));
       if (stripeCatalogRef.startsWith("prod_")) {
         form.set("line_items[0][price_data][product]", stripeCatalogRef);
       } else {
-        form.set("line_items[0][price_data][product_data][name]", GACHA_PRODUCT_LABEL);
-        form.set("line_items[0][price_data][product_data][description]", GACHA_PRODUCT_DESCRIPTION);
+        form.set("line_items[0][price_data][product_data][name]", selectedPackage.label);
+        form.set("line_items[0][price_data][product_data][description]", selectedPackage.description);
       }
     }
 
     form.set("metadata[source]", source);
     form.set("metadata[product_type]", GACHA_PRODUCT_TYPE);
-    form.set("metadata[product_label]", GACHA_PRODUCT_LABEL);
-    form.set("metadata[grant_count]", "1");
+    form.set("metadata[product_label]", selectedPackage.label);
+    form.set("metadata[package_type]", normalizedPackageType);
+    form.set("metadata[pulls]", String(selectedPackage.pulls));
+    form.set("metadata[grant_count]", String(selectedPackage.pulls));
     if (stripeCatalogRef) {
       form.set("metadata[catalog_ref]", stripeCatalogRef);
     }

@@ -1,4 +1,4 @@
-const GACHA_PRODUCT_TYPE = "gacha_fifty_pack";
+const GACHA_PRODUCT_TYPE = "seal_gacha";
 
 function setCors(res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -57,7 +57,7 @@ export default async function handler(req, res) {
 
     let message = "";
     if (productType !== GACHA_PRODUCT_TYPE) {
-      message = "50連の決済として確認できませんでした。";
+      message = "シールガチャの決済として確認できませんでした。";
     } else if (paymentStatus !== "paid") {
       message = checkoutStatus === "complete"
         ? "決済は完了していますが、入金確認待ちです。時間をおいて再読み込みしてください。"
@@ -72,6 +72,8 @@ export default async function handler(req, res) {
       checkoutStatus,
       amountTotal: Number(stripeData?.amount_total || 0),
       currency: safeText(stripeData?.currency, 12).toLowerCase(),
+      pulls: Number(stripeData?.metadata?.pulls || 1),
+      packageType: safeText(stripeData?.metadata?.package_type, 20),
       message,
     });
   } catch (error) {

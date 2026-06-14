@@ -71,6 +71,20 @@
     </section>
 
     <section class="seal-spin-panel" aria-label="ガチャをまわす">
+      <div class="seal-paid-panel">
+        <button class="seal-paid-main" id="openPaidGacha" type="button">有料ガチャを引く</button>
+        <div class="seal-paid-options" id="paidGachaOptions" hidden>
+          <button class="seal-paid-option" type="button" data-package-type="single">
+            <span>1回</span>
+            <strong>100円</strong>
+          </button>
+          <button class="seal-paid-option is-best" type="button" data-package-type="ten">
+            <span>10連</span>
+            <strong>750円</strong>
+          </button>
+        </div>
+        <p class="seal-paid-status" id="paidGachaStatus" aria-live="polite"></p>
+      </div>
       <a class="spin-button" href="spin.html">
         1回まわす
         <span class="spin-capsule" aria-hidden="true"></span>
@@ -98,8 +112,24 @@
     </div>
   </section>
 
+  <section class="seal-checkout-modal" id="sealCheckoutModal" aria-labelledby="sealCheckoutTitle" aria-modal="true" role="dialog" hidden>
+    <button class="seal-checkout-backdrop" id="closeSealCheckoutBackdrop" type="button" aria-label="決済画面を閉じる"></button>
+    <div class="seal-checkout-sheet">
+      <div class="seal-checkout-head">
+        <h2 id="sealCheckoutTitle">Stripe決済</h2>
+        <button class="seal-checkout-close" id="closeSealCheckout" type="button" aria-label="決済画面を閉じる">×</button>
+      </div>
+      <div class="seal-checkout-mount" id="sealCheckoutMount"></div>
+      <p class="seal-checkout-note">決済完了後、シールガチャ画面へ進みます。</p>
+    </div>
+  </section>
+
   <script>
     (() => {
+      const CHECKOUT_SESSION_ENDPOINT = "/api/gacha-checkout-session";
+      let stripeLoaderPromise = null;
+      let embeddedCheckoutInstance = null;
+
       const modal = document.getElementById("sealListModal");
       const openButton = document.getElementById("openSealList");
       const closeButton = document.getElementById("closeSealList");
@@ -108,6 +138,13 @@
       const codeForm = document.getElementById("sealCodeForm");
       const codeInput = document.getElementById("sealCodeInput");
       const codeError = document.getElementById("sealCodeError");
+      const openPaidGacha = document.getElementById("openPaidGacha");
+      const paidGachaOptions = document.getElementById("paidGachaOptions");
+      const paidGachaStatus = document.getElementById("paidGachaStatus");
+      const checkoutModal = document.getElementById("sealCheckoutModal");
+      const checkoutMount = document.getElementById("sealCheckoutMount");
+      const closeCheckout = document.getElementById("closeSealCheckout");
+      const closeCheckoutBackdrop = document.getElementById("closeSealCheckoutBackdrop");
       if (!modal || !openButton || !closeButton || !closeBackdrop || !content) return;
 
       const groups = [
@@ -147,9 +184,110 @@
         openButton.focus();
       };
 
+      const setPaidStatus = (message) => {
+        if (paidGachaStatus) paidGachaStatus.textContent = message || "";
+      };
+
+      const loadStripeJs = () => {
+        if (window.Stripe) return Promise.resolve(window.Stripe);
+        if (stripeLoaderPromise) return stripeLoaderPromise;
+        stripeLoaderPromise = new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = "https://js.stripe.com/clover/stripe.js";
+          script.async = true;
+          script.onload = () => {
+            if (window.Stripe) resolve(window.Stripe);
+            else reject(new Error("Stripe.jsの読み込みに失敗しました。"));
+          };
+          script.onerror = () => reject(new Error("Stripe.jsの読み込みに失敗しました。"));
+          document.head.appendChild(script);
+        });
+        return stripeLoaderPromise;
+      };
+
+      const teardownCheckout = () => {
+        if (!embeddedCheckoutInstance) return;
+        try {
+          if (typeof embeddedCheckoutInstance.unmount === "function") embeddedCheckoutInstance.unmount();
+          if (typeof embeddedCheckoutInstance.destroy === "function") embeddedCheckoutInstance.destroy();
+        } catch {}
+        embeddedCheckoutInstance = null;
+      };
+
+      const closeCheckoutModal = () => {
+        if (!checkoutModal) return;
+        checkoutModal.hidden = true;
+        document.body.classList.remove("is-seal-checkout-open");
+        teardownCheckout();
+        if (checkoutMount) checkoutMount.innerHTML = "";
+      };
+
+      const openCheckoutModal = () => {
+        if (!checkoutModal) return;
+        checkoutModal.hidden = false;
+        document.body.classList.add("is-seal-checkout-open");
+        closeCheckout?.focus();
+      };
+
+      const createCheckoutSession = async (packageType) => {
+        const response = await fetch(CHECKOUT_SESSION_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ source: "seal-gacha", packageType })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || !data?.clientSecret || !data?.publishableKey || !data?.sessionId) {
+          throw new Error(data?.error || "決済セッションの作成に失敗しました。");
+        }
+        return data;
+      };
+
+      const startPaidCheckout = async (packageType, triggerButton) => {
+        if (!checkoutModal || !checkoutMount) {
+          setPaidStatus("決済画面を表示できませんでした。");
+          return;
+        }
+
+        triggerButton.disabled = true;
+        setPaidStatus("Stripe決済を準備しています...");
+        try {
+          const session = await createCheckoutSession(packageType);
+          const StripeCtor = await loadStripeJs();
+          const stripe = StripeCtor(session.publishableKey);
+          teardownCheckout();
+          checkoutMount.innerHTML = "";
+          embeddedCheckoutInstance = await stripe.initEmbeddedCheckout({
+            fetchClientSecret: async () => session.clientSecret,
+            onComplete: () => {
+              const pulls = packageType === "ten" ? "10" : "1";
+              window.location.href = `spin.html?mode=paid&pulls=${pulls}&session_id=${encodeURIComponent(session.sessionId)}`;
+            }
+          });
+          embeddedCheckoutInstance.mount("#sealCheckoutMount");
+          openCheckoutModal();
+          setPaidStatus("");
+        } catch (error) {
+          setPaidStatus(error?.message || "決済画面の表示に失敗しました。");
+        } finally {
+          triggerButton.disabled = false;
+        }
+      };
+
       openButton.addEventListener("click", openModal);
       closeButton.addEventListener("click", closeModal);
       closeBackdrop.addEventListener("click", closeModal);
+      openPaidGacha?.addEventListener("click", () => {
+        if (!paidGachaOptions) return;
+        paidGachaOptions.hidden = !paidGachaOptions.hidden;
+      });
+      paidGachaOptions?.addEventListener("click", (event) => {
+        const target = event.target;
+        const button = target instanceof Element ? target.closest("[data-package-type]") : null;
+        if (!button) return;
+        startPaidCheckout(button.dataset.packageType || "single", button);
+      });
+      closeCheckout?.addEventListener("click", closeCheckoutModal);
+      closeCheckoutBackdrop?.addEventListener("click", closeCheckoutModal);
       codeForm?.addEventListener("submit", (event) => {
         event.preventDefault();
         const code = codeInput?.value.trim() || "";
@@ -166,6 +304,7 @@
       content.addEventListener("dragstart", (event) => event.preventDefault());
       document.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && !modal.hidden) closeModal();
+        if (event.key === "Escape" && checkoutModal && !checkoutModal.hidden) closeCheckoutModal();
       });
     })();
   </script>

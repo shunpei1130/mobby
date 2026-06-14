@@ -472,6 +472,79 @@ a {
   text-align: center;
 }
 
+.seal-paid-panel {
+  width: min(500px, 100%);
+  margin: 0 auto 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.seal-paid-main {
+  min-height: 70px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ffcf5e, #ff8b4a);
+  color: #fff;
+  font-size: clamp(1.25rem, 4vw, 1.72rem);
+  font-weight: 900;
+  box-shadow:
+    inset 0 4px rgba(255, 255, 255, 0.34),
+    0 16px 26px rgba(255, 139, 74, 0.24);
+  cursor: pointer;
+}
+
+.seal-paid-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
+  border: 2px solid rgba(255, 210, 118, 0.82);
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow:
+    inset 0 2px rgba(255, 255, 255, 0.78),
+    0 12px 22px rgba(112, 82, 52, 0.08);
+}
+
+.seal-paid-options[hidden] {
+  display: none;
+}
+
+.seal-paid-option {
+  min-height: 74px;
+  display: grid;
+  place-items: center;
+  gap: 2px;
+  border: 0;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ink);
+  font-weight: 900;
+  box-shadow: 0 8px 16px rgba(112, 82, 52, 0.1);
+  cursor: pointer;
+}
+
+.seal-paid-option span {
+  font-size: 1rem;
+}
+
+.seal-paid-option strong {
+  color: #f74891;
+  font-size: 1.35rem;
+}
+
+.seal-paid-option.is-best {
+  background: linear-gradient(135deg, rgba(255, 248, 209, 0.96), rgba(255, 225, 239, 0.96));
+}
+
+.seal-paid-status {
+  min-height: 1.2em;
+  margin: 0;
+  color: #885a36;
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
 .spin-button {
   width: min(500px, 100%);
   min-height: 86px;
@@ -570,6 +643,85 @@ a {
 
 .is-seal-list-open {
   overflow: hidden;
+}
+
+.is-seal-checkout-open {
+  overflow: hidden;
+}
+
+.seal-checkout-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+
+.seal-checkout-modal[hidden] {
+  display: none;
+}
+
+.seal-checkout-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(34, 31, 28, 0.58);
+}
+
+.seal-checkout-sheet {
+  position: relative;
+  z-index: 1;
+  width: min(860px, 100%);
+  max-height: 92vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 16px;
+  border-radius: 26px;
+  background: var(--panel);
+  box-shadow: 0 18px 42px rgba(80, 56, 33, 0.22);
+}
+
+.seal-checkout-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.seal-checkout-head h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.3rem;
+}
+
+.seal-checkout-close {
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 2rem;
+  line-height: 1;
+  box-shadow: 0 10px 18px rgba(91, 67, 42, 0.14);
+  cursor: pointer;
+}
+
+.seal-checkout-mount {
+  min-height: 420px;
+  max-height: min(70vh, 720px);
+  overflow: auto;
+  margin-top: 12px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.seal-checkout-note {
+  margin: 12px 0 0;
+  color: #885a36;
+  font-size: 0.82rem;
+  font-weight: 800;
 }
 
 .seal-list-modal {
@@ -861,6 +1013,29 @@ a {
     margin-top: 8px;
     padding-inline: 14px;
     border-radius: 24px;
+  }
+
+  .seal-paid-panel {
+    margin-bottom: 14px;
+  }
+
+  .seal-paid-main {
+    min-height: 58px;
+    font-size: 1.18rem;
+  }
+
+  .seal-paid-options {
+    padding: 10px;
+    border-radius: 22px;
+  }
+
+  .seal-paid-option {
+    min-height: 62px;
+    border-radius: 18px;
+  }
+
+  .seal-paid-option strong {
+    font-size: 1.12rem;
   }
 
   .seal-code-form {
