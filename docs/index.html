@@ -8473,6 +8473,70 @@
         padding-top: 6px;
       }
     }
+
+    /* Keep the normal and collab diagnosis tab panels on the same frame. */
+    .hero-diagnosis-menu,
+    .hero-collab-diagnosis-menu {
+      --hero-panel-body-height: 112px;
+      width: min(760px, calc(100% - 32px)) !important;
+      min-height: calc(24px + var(--hero-panel-body-height) + 14px) !important;
+      margin: 24px auto 4px !important;
+      padding: 24px 18px 14px !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions,
+    .hero-collab-diagnosis-menu .hero-collab-diagnosis-list {
+      width: min(430px, 100%) !important;
+      height: var(--hero-panel-body-height) !important;
+      min-height: var(--hero-panel-body-height) !important;
+      max-height: var(--hero-panel-body-height) !important;
+      margin: 0 auto !important;
+      padding: 22px 0 24px !important;
+      align-items: flex-start !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action,
+    .hero-collab-diagnosis-menu .gift-fan-diagnosis-action {
+      width: 82px !important;
+      height: 66px !important;
+      flex: 0 0 82px !important;
+    }
+
+    .hero-diagnosis-menu .hero-diagnosis-track,
+    .hero-collab-diagnosis-menu .hero-collab-diagnosis-list {
+      gap: 14px !important;
+      justify-content: center !important;
+    }
+
+    @media (max-width: 520px) {
+      .hero-diagnosis-menu,
+      .hero-collab-diagnosis-menu {
+        --hero-panel-body-height: 104px;
+        width: calc(100vw - 32px) !important;
+        max-width: 360px !important;
+        min-height: calc(20px + var(--hero-panel-body-height) + 12px) !important;
+        margin: 20px auto 4px !important;
+        padding: 20px 10px 12px !important;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-actions,
+      .hero-collab-diagnosis-menu .hero-collab-diagnosis-list {
+        width: 100% !important;
+        padding: 22px 0 24px !important;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-action,
+      .hero-collab-diagnosis-menu .gift-fan-diagnosis-action {
+        width: 62px !important;
+        height: 58px !important;
+        flex: 0 0 62px !important;
+      }
+
+      .hero-diagnosis-menu .hero-diagnosis-track,
+      .hero-collab-diagnosis-menu .hero-collab-diagnosis-list {
+        gap: 7px !important;
+      }
+    }
   </style>
 </head>
 
