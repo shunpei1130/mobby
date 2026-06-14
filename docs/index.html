@@ -7061,6 +7061,62 @@
     }
 
     /* Hero diagnosis menu: keep the dotted frame stable, scroll only the buttons. */
+    .hero-diagnosis-tabs {
+      box-sizing: border-box;
+      width: min(760px, calc(100% - 32px));
+      margin: 24px auto -10px;
+      padding: 4px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 4px;
+      position: relative;
+      z-index: 19;
+      border: 1px solid rgba(237, 126, 57, 0.34);
+      border-radius: 999px;
+      background: rgba(250, 241, 226, 0.86);
+      box-shadow: 0 10px 22px rgba(91, 67, 42, 0.1);
+    }
+
+    .hero-diagnosis-tab {
+      appearance: none;
+      min-height: 38px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: rgba(40, 40, 40, 0.68);
+      font: inherit;
+      font-size: 0.92rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition:
+        background 180ms ease,
+        color 180ms ease,
+        box-shadow 180ms ease;
+    }
+
+    .hero-diagnosis-tab:hover,
+    .hero-diagnosis-tab:focus-visible {
+      color: #282828;
+      outline: none;
+    }
+
+    .hero-diagnosis-tab:focus-visible {
+      box-shadow: 0 0 0 3px rgba(237, 126, 57, 0.22);
+    }
+
+    .hero-diagnosis-tab.is-active {
+      background: #fff8ef;
+      color: #282828;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.72),
+        0 8px 16px rgba(91, 67, 42, 0.12);
+    }
+
+    .hero-diagnosis-tab-panel[hidden] {
+      display: none !important;
+    }
+
     .hero-diagnosis-menu,
     .hero-collab-diagnosis-menu {
       --hero-panel-body-height: 94px;
@@ -7440,6 +7496,18 @@
     }
 
     @media (max-width: 520px) {
+      .hero-diagnosis-tabs {
+        width: calc(100vw - 32px);
+        max-width: 360px;
+        margin-top: 20px;
+        margin-bottom: -8px;
+      }
+
+      .hero-diagnosis-tab {
+        min-height: 36px;
+        font-size: 0.82rem;
+      }
+
       .hero-diagnosis-menu,
       .hero-collab-diagnosis-menu {
         --hero-panel-body-height: 104px;
@@ -8411,7 +8479,11 @@
               </div>
             </div>
           </div>
-          <div class="hero-diagnosis-menu">
+          <div class="hero-diagnosis-tabs" role="tablist" aria-label="診断メニュー切り替え">
+            <button class="hero-diagnosis-tab is-active" id="heroDiagnosisTabNormal" type="button" role="tab" aria-selected="true" aria-controls="heroDiagnosisPanelNormal" data-diagnosis-tab="normal">通常</button>
+            <button class="hero-diagnosis-tab" id="heroDiagnosisTabCollab" type="button" role="tab" aria-selected="false" aria-controls="heroDiagnosisPanelCollab" data-diagnosis-tab="collab">コラボ</button>
+          </div>
+          <div class="hero-diagnosis-menu hero-diagnosis-tab-panel" id="heroDiagnosisPanelNormal" role="tabpanel" aria-labelledby="heroDiagnosisTabNormal" data-diagnosis-panel="normal">
             <div class="gift-fan-diagnosis-actions" id="heroDiagnosisActions" aria-hidden="false">
               <div class="hero-diagnosis-track">
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16school/index.html" data-diagnosis-item="school"><span class="footer-btn-icon" data-icon="school" aria-hidden="true"></span><span>学校</span></a>
@@ -8421,7 +8493,7 @@
               </div>
             </div>
           </div>
-          <div class="hero-collab-diagnosis-menu" aria-hidden="false">
+          <div class="hero-collab-diagnosis-menu hero-diagnosis-tab-panel" id="heroDiagnosisPanelCollab" role="tabpanel" aria-labelledby="heroDiagnosisTabCollab" data-diagnosis-panel="collab" aria-hidden="true" hidden>
             <ul class="hero-collab-diagnosis-list" aria-label="コラボ診断メニュー">
               <li>
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" href="hinata-aoi/index.html" data-diagnosis-item="blank-1" aria-label="日向葵衣 あなたは何タイプ？ビューティ診断"><span class="gift-fan-person-badge">日向葵衣さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-mirror" aria-hidden="true"></span><span>何タイプ？<br>ビューティ診断</span></a>
@@ -12351,6 +12423,33 @@
   </script>
   <script>
     (function () {
+      function initHeroDiagnosisTabs() {
+        const tabs = Array.from(document.querySelectorAll('[data-diagnosis-tab]'));
+        const panels = Array.from(document.querySelectorAll('[data-diagnosis-panel]'));
+        if (tabs.length < 2 || panels.length < 2 || tabs.some((tab) => tab.dataset.ready === 'true')) return;
+
+        const activate = (target) => {
+          tabs.forEach((tab) => {
+            const active = tab.dataset.diagnosisTab === target;
+            tab.classList.toggle('is-active', active);
+            tab.setAttribute('aria-selected', active ? 'true' : 'false');
+          });
+
+          panels.forEach((panel) => {
+            const active = panel.dataset.diagnosisPanel === target;
+            panel.hidden = !active;
+            panel.setAttribute('aria-hidden', active ? 'false' : 'true');
+          });
+
+          window.dispatchEvent(new Event('resize'));
+        };
+
+        tabs.forEach((tab) => {
+          tab.dataset.ready = 'true';
+          tab.addEventListener('click', () => activate(tab.dataset.diagnosisTab));
+        });
+      }
+
       function initHeroDiagnosisAllToggle() {
         const menu = document.querySelector('.hero-diagnosis-menu');
         const toggle = document.getElementById('heroDiagnosisAllToggle');
@@ -12449,16 +12548,19 @@
 
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
+          initHeroDiagnosisTabs();
           initHeroDiagnosisAllToggle();
           initHeroDiagnosisAutoAdvance();
           initFooterFeatureSlider();
         }, { once: true });
       } else {
+        initHeroDiagnosisTabs();
         initHeroDiagnosisAllToggle();
         initHeroDiagnosisAutoAdvance();
         initFooterFeatureSlider();
       }
       window.addEventListener('load', () => {
+        initHeroDiagnosisTabs();
         initHeroDiagnosisAllToggle();
         initHeroDiagnosisAutoAdvance();
         initFooterFeatureSlider();
