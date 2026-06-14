@@ -16,10 +16,16 @@
       <button class="seal-back" type="button" onclick="window.location.href='../index.html'" aria-label="ホームに戻る">
         <span aria-hidden="true"></span>
       </button>
-      <button class="seal-list-open" id="openSealList" type="button" aria-haspopup="dialog" aria-controls="sealListModal">
-        <span class="seal-list-icon" aria-hidden="true"></span>
-        <span>シール一覧</span>
-      </button>
+      <div class="seal-header-actions">
+        <button class="seal-list-open" id="openSealList" type="button" aria-haspopup="dialog" aria-controls="sealListModal">
+          <span class="seal-list-icon" aria-hidden="true"></span>
+          <span>シール一覧</span>
+        </button>
+        <button class="seal-rate-open" id="openSealRates" type="button" aria-haspopup="dialog" aria-controls="sealRateModal">
+          <span class="seal-rate-icon" aria-hidden="true">%</span>
+          <span>排出率</span>
+        </button>
+      </div>
     </header>
 
     <section class="seal-hero" aria-labelledby="sealGachaTitle">
@@ -112,6 +118,45 @@
     </div>
   </section>
 
+  <section class="seal-list-modal seal-rate-modal" id="sealRateModal" aria-labelledby="sealRateTitle" aria-modal="true" role="dialog" hidden>
+    <button class="seal-list-backdrop" id="closeSealRateBackdrop" type="button" aria-label="排出率を閉じる"></button>
+    <div class="seal-list-sheet seal-rate-sheet">
+      <div class="seal-list-head">
+        <div>
+          <p class="seal-list-kicker">Drop Rates</p>
+          <h2 id="sealRateTitle">シール排出率</h2>
+        </div>
+        <button class="seal-list-close" id="closeSealRate" type="button" aria-label="排出率を閉じる">×</button>
+      </div>
+      <div class="seal-rate-content">
+        <p class="seal-rate-lead">シール1枚ごとのレアリティ抽選率です。1回のガチャでは6枚のシールがランダムで排出されます。</p>
+        <div class="seal-rate-grid" aria-label="各レアリティの排出率">
+          <article class="seal-rate-card">
+            <span class="rarity normal">R</span>
+            <strong>70%</strong>
+            <small>1回で出る確率<br>約99.9%</small>
+          </article>
+          <article class="seal-rate-card">
+            <span class="rarity rare">SR</span>
+            <strong>20%</strong>
+            <small>1回で出る確率<br>約73.8%</small>
+          </article>
+          <article class="seal-rate-card">
+            <span class="rarity sparkle">UR</span>
+            <strong>8%</strong>
+            <small>1回で出る確率<br>約39.4%</small>
+          </article>
+          <article class="seal-rate-card">
+            <span class="rarity special">プリ</span>
+            <strong>2%</strong>
+            <small>1回で出る確率<br>約11.4%</small>
+          </article>
+        </div>
+        <p class="seal-rate-note">「1回で出る確率」は、6枚の中にそのレアリティが1枚以上含まれる確率です。各レアリティ内のシールは、対象レアリティの中からランダムに選ばれます。</p>
+      </div>
+    </div>
+  </section>
+
   <section class="seal-checkout-modal" id="sealCheckoutModal" aria-labelledby="sealCheckoutTitle" aria-modal="true" role="dialog" hidden>
     <button class="seal-checkout-backdrop" id="closeSealCheckoutBackdrop" type="button" aria-label="決済画面を閉じる"></button>
     <div class="seal-checkout-sheet">
@@ -135,6 +180,10 @@
       const closeButton = document.getElementById("closeSealList");
       const closeBackdrop = document.getElementById("closeSealListBackdrop");
       const content = document.getElementById("sealListContent");
+      const rateModal = document.getElementById("sealRateModal");
+      const openRateButton = document.getElementById("openSealRates");
+      const closeRateButton = document.getElementById("closeSealRate");
+      const closeRateBackdrop = document.getElementById("closeSealRateBackdrop");
       const codeForm = document.getElementById("sealCodeForm");
       const codeInput = document.getElementById("sealCodeInput");
       const codeError = document.getElementById("sealCodeError");
@@ -182,6 +231,20 @@
         modal.hidden = true;
         document.body.classList.remove("is-seal-list-open");
         openButton.focus();
+      };
+
+      const openRateModal = () => {
+        if (!rateModal) return;
+        rateModal.hidden = false;
+        document.body.classList.add("is-seal-rate-open");
+        closeRateButton?.focus();
+      };
+
+      const closeRateModal = () => {
+        if (!rateModal) return;
+        rateModal.hidden = true;
+        document.body.classList.remove("is-seal-rate-open");
+        openRateButton?.focus();
       };
 
       const setPaidStatus = (message) => {
@@ -276,6 +339,9 @@
       openButton.addEventListener("click", openModal);
       closeButton.addEventListener("click", closeModal);
       closeBackdrop.addEventListener("click", closeModal);
+      openRateButton?.addEventListener("click", openRateModal);
+      closeRateButton?.addEventListener("click", closeRateModal);
+      closeRateBackdrop?.addEventListener("click", closeRateModal);
       openPaidGacha?.addEventListener("click", () => {
         if (!paidGachaOptions) return;
         paidGachaOptions.hidden = !paidGachaOptions.hidden;
@@ -304,6 +370,7 @@
       content.addEventListener("dragstart", (event) => event.preventDefault());
       document.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && !modal.hidden) closeModal();
+        if (event.key === "Escape" && rateModal && !rateModal.hidden) closeRateModal();
         if (event.key === "Escape" && checkoutModal && !checkoutModal.hidden) closeCheckoutModal();
       });
     })();
