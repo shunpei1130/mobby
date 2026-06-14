@@ -129,6 +129,7 @@
   let currentResult = null;
   let revealResults = [];
   let revealIndex = 0;
+  let currentDownloadUrl = "";
   const revealRarityClasses = ["rarity-r", "rarity-sr", "rarity-ur", "rarity-pri"];
 
   const sheetSrc = "../gacha-new/assets/gacha/gachasheet.png";
@@ -140,6 +141,28 @@
     { x: 102, y: 975, width: 386, height: 386 },
     { x: 537, y: 975, width: 386, height: 386 }
   ];
+
+  function isMobileShareDevice() {
+    const userAgent = navigator.userAgent || "";
+    const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(userAgent);
+    const isMobileWidth = window.matchMedia?.("(max-width: 767px)").matches === true;
+    const isTouchPointer = window.matchMedia?.("(pointer: coarse)").matches === true;
+    return isMobileDevice && isMobileWidth && isTouchPointer;
+  }
+
+  function disableDesktopNativeShare() {
+    if (isMobileShareDevice()) return;
+    try {
+      Object.defineProperty(navigator, "share", {
+        value: undefined,
+        configurable: true
+      });
+    } catch {
+      navigator.share = undefined;
+    }
+  }
+
+  disableDesktopNativeShare();
 
   function setBusy(busy) {
     isSpinning = busy;
@@ -189,6 +212,12 @@
     context.restore();
   }
 
+  function canvasToBlob(canvas) {
+    return new Promise((resolve) => {
+      canvas.toBlob((blob) => resolve(blob), "image/png");
+    });
+  }
+
   async function composeSheet(selectedResults) {
     const [sheetImage, ...stickerImages] = await Promise.all([
       loadImage(sheetSrc),
@@ -205,24 +234,30 @@
       drawCoverImage(context, image, sheetSlots[index]);
     });
 
-    return canvas.toDataURL("image/png");
+    const dataUrl = canvas.toDataURL("image/png");
+    return {
+      dataUrl,
+      blob: await canvasToBlob(canvas) || await dataUrlToBlob(dataUrl)
+    };
   }
 
   async function showResult(selectedResults) {
-    const sheetDataUrl = await composeSheet(selectedResults);
+    const sheetImage = await composeSheet(selectedResults);
     const raritySummary = selectedResults.map((result) => result.rarity).join(" / ");
 
     currentResult = {
       title: "6枚シールシート",
       rarity: raritySummary,
-      src: sheetDataUrl
+      src: sheetImage.dataUrl,
+      blob: sheetImage.blob
     };
-    resultImage.src = sheetDataUrl;
+    resultImage.src = sheetImage.dataUrl;
     resultImage.alt = "ガチャで出た6枚のシールシート";
     resultImage.hidden = false;
     resultTitle.textContent = "6枚のシールをゲット！";
     resultText.textContent = `出たシール: ${raritySummary}`;
     renderStickerResults(selectedResults);
+    refreshDownloadLink();
     resultSheet.hidden = false;
   }
 
@@ -340,36 +375,100 @@
     return `mobby-sticker-sheet-${stamp}.png`;
   }
 
+  function refreshDownloadLink() {
+    if (!saveSheetButton || saveSheetButton.tagName !== "A") return;
+
+    if (currentDownloadUrl) {
+      URL.revokeObjectURL(currentDownloadUrl);
+      currentDownloadUrl = "";
+    }
+
+    if (currentResult?.blob) {
+      currentDownloadUrl = URL.createObjectURL(currentResult.blob);
+      saveSheetButton.href = currentDownloadUrl;
+      saveSheetButton.download = buildSheetFileName();
+      return;
+    }
+
+    saveSheetButton.href = "#";
+    saveSheetButton.removeAttribute("download");
+  }
+
   function downloadBlob(blob, fileName) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
     link.download = fileName;
+    link.rel = "noopener";
     document.body.appendChild(link);
-    link.click();
+    link.dispatchEvent(new MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+      view: window
+    }));
     link.remove();
     window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
-  async function saveSheetImage() {
+  function downloadDataUrl(dataUrl, fileName) {
+    const link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = fileName;
+    link.rel = "noopener";
+    document.body.appendChild(link);
+    link.dispatchEvent(new MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+      view: window
+    }));
+    link.remove();
+  }
+
+  async function saveBlobWithFilePicker(blob, fileName) {
+    if (!window.showSaveFilePicker) return false;
+
+    const handle = await window.showSaveFilePicker({
+      suggestedName: fileName,
+      types: [{
+        description: "PNG image",
+        accept: { "image/png": [".png"] }
+      }]
+    });
+    const writable = await handle.createWritable();
+    await writable.write(blob);
+    await writable.close();
+    return true;
+  }
+
+  function shouldUseMobileShareSheet() {
+    return isMobileShareDevice();
+  }
+
+  async function saveSheetImage(event) {
     if (!currentResult?.src || !saveSheetButton) return;
+
+    if (saveSheetButton.tagName === "A" && saveSheetButton.getAttribute("href") !== "#") {
+      return;
+    }
+
+    event?.preventDefault();
 
     const originalLabel = saveSheetButton.textContent;
     saveSheetButton.disabled = true;
+    saveSheetButton.setAttribute("aria-disabled", "true");
     saveSheetButton.textContent = "保存中...";
 
     try {
-      const blob = await dataUrlToBlob(currentResult.src);
       const fileName = buildSheetFileName();
-      const file = new File([blob], fileName, { type: "image/png" });
 
-      if (navigator.canShare?.({ files: [file] }) && navigator.share) {
-        await navigator.share({
-          files: [file],
-          title: "Mobby sticker sheet"
-        });
+      if (currentResult.blob) {
+        if (window.showSaveFilePicker) {
+          await saveBlobWithFilePicker(currentResult.blob, fileName);
+        } else {
+          downloadBlob(currentResult.blob, fileName);
+        }
       } else {
-        downloadBlob(blob, fileName);
+        downloadDataUrl(currentResult.src, fileName);
       }
 
       saveSheetButton.textContent = "保存しました";
@@ -377,10 +476,14 @@
         if (saveSheetButton) saveSheetButton.textContent = originalLabel;
       }, 1400);
     } catch (error) {
+      console.error("Failed to save sticker sheet image", error);
       saveSheetButton.textContent = "もう一度保存";
     } finally {
       window.setTimeout(() => {
-        if (saveSheetButton) saveSheetButton.disabled = false;
+        if (saveSheetButton) {
+          saveSheetButton.disabled = false;
+          saveSheetButton.removeAttribute("aria-disabled");
+        }
       }, 300);
     }
   }

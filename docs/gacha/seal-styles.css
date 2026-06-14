@@ -162,7 +162,7 @@ a {
   top: 38px;
   z-index: 2;
   width: min(500px, calc(100% - 320px));
-  min-height: 520px;
+  min-height: 460px;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
@@ -170,9 +170,8 @@ a {
 }
 
 .seal-machine-image {
-  width: auto;
-  max-width: 100%;
-  height: clamp(420px, 56vw, 540px);
+  width: min(500px, 100%);
+  height: auto;
   display: block;
 }
 
@@ -529,12 +528,14 @@ a {
     min-height: 0;
     justify-self: end;
     align-items: flex-start;
-    justify-content: flex-end;
+    justify-content: center;
     margin-top: -12px;
   }
 
   .seal-machine-image {
-    height: clamp(230px, 66vw, 315px);
+    width: min(132%, 218px);
+    height: auto;
+    transform: translateX(-8px);
   }
 
   .machine-dome {

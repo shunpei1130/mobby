@@ -59,6 +59,28 @@
   let stripeLoaderPromise = null;
   let embeddedCheckoutInstance = null;
 
+  function isMobileShareDevice() {
+    const userAgent = navigator.userAgent || '';
+    const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(userAgent);
+    const isMobileWidth = window.matchMedia?.('(max-width: 767px)').matches === true;
+    const isTouchPointer = window.matchMedia?.('(pointer: coarse)').matches === true;
+    return isMobileDevice && isMobileWidth && isTouchPointer;
+  }
+
+  function disableDesktopNativeShare() {
+    if (isMobileShareDevice()) return;
+    try {
+      Object.defineProperty(navigator, 'share', {
+        value: undefined,
+        configurable: true
+      });
+    } catch {
+      navigator.share = undefined;
+    }
+  }
+
+  disableDesktopNativeShare();
+
   ensureStarterExperienceDom();
 
   const els = {
@@ -1314,12 +1336,12 @@
   }
 
   function supportsNativeShare() {
-    return typeof navigator !== 'undefined' && typeof navigator.share === 'function' && typeof File === 'function';
+    return prefersMobileSaveFlow() && typeof navigator !== 'undefined' && typeof navigator.share === 'function' && typeof File === 'function';
   }
 
   function prefersMobileSaveFlow() {
     if (typeof window === 'undefined') return false;
-    return isMobileViewport() || window.matchMedia('(pointer: coarse)').matches;
+    return isMobileShareDevice();
   }
 
   function createShareFile(blob, fileName) {
