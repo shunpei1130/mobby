@@ -159,10 +159,14 @@
 
   function isMobileShareDevice() {
     const userAgent = navigator.userAgent || "";
-    const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(userAgent);
-    const isMobileWidth = window.matchMedia?.("(max-width: 767px)").matches === true;
-    const isTouchPointer = window.matchMedia?.("(pointer: coarse)").matches === true;
-    return isMobileDevice && isMobileWidth && isTouchPointer;
+    const platform = navigator.platform || "";
+    const maxTouchPoints = Number(navigator.maxTouchPoints || 0);
+    const isAndroid = /Android/i.test(userAgent);
+    const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
+    const isIPadDesktopMode = /Macintosh/i.test(userAgent) && maxTouchPoints > 1;
+    const isDesktopPlatform = /Win|Linux x86_64|MacIntel/i.test(platform) && !isIPadDesktopMode;
+    if (isDesktopPlatform) return false;
+    return isAndroid || isIOS || isIPadDesktopMode;
   }
 
   function disableDesktopNativeShare() {
@@ -482,6 +486,12 @@
       currentDownloadUrl = "";
     }
 
+    if (shouldUseMobileShareSheet()) {
+      saveSheetButton.href = "#";
+      saveSheetButton.removeAttribute("download");
+      return;
+    }
+
     if (currentResult?.blob) {
       currentDownloadUrl = URL.createObjectURL(currentResult.blob);
       saveSheetButton.href = currentDownloadUrl;
@@ -500,11 +510,7 @@
     link.download = fileName;
     link.rel = "noopener";
     document.body.appendChild(link);
-    link.dispatchEvent(new MouseEvent("click", {
-      bubbles: true,
-      cancelable: true,
-      view: window
-    }));
+    link.click();
     link.remove();
     window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
@@ -515,11 +521,7 @@
     link.download = fileName;
     link.rel = "noopener";
     document.body.appendChild(link);
-    link.dispatchEvent(new MouseEvent("click", {
-      bubbles: true,
-      cancelable: true,
-      view: window
-    }));
+    link.click();
     link.remove();
   }
 
@@ -543,10 +545,32 @@
     return isMobileShareDevice();
   }
 
+  async function shareSheetImage(blob, fileName) {
+    if (!navigator.share) return false;
+
+    const file = new File([blob], fileName, { type: blob.type || "image/png" });
+    const payload = {
+      files: [file],
+      title: "Mobbyシールガチャ",
+      text: "シールガチャの結果をシェア"
+    };
+
+    if (navigator.canShare && !navigator.canShare({ files: payload.files })) {
+      return false;
+    }
+
+    await navigator.share(payload);
+    return true;
+  }
+
   async function saveSheetImage(event) {
     if (!currentResult?.src || !saveSheetButton) return;
 
-    if (saveSheetButton.tagName === "A" && saveSheetButton.getAttribute("href") !== "#") {
+    if (
+      !shouldUseMobileShareSheet() &&
+      saveSheetButton.tagName === "A" &&
+      saveSheetButton.getAttribute("href") !== "#"
+    ) {
       return;
     }
 
@@ -559,13 +583,18 @@
 
     try {
       const fileName = buildSheetFileName();
+      const blob = currentResult.blob || await dataUrlToBlob(currentResult.src);
 
-      if (currentResult.blob) {
-        if (window.showSaveFilePicker) {
-          await saveBlobWithFilePicker(currentResult.blob, fileName);
-        } else {
-          downloadBlob(currentResult.blob, fileName);
-        }
+      if (shouldUseMobileShareSheet() && await shareSheetImage(blob, fileName)) {
+        saveSheetButton.textContent = "共有しました";
+        window.setTimeout(() => {
+          if (saveSheetButton) saveSheetButton.textContent = originalLabel;
+        }, 1400);
+        return;
+      }
+
+      if (blob) {
+        downloadBlob(blob, fileName);
       } else {
         downloadDataUrl(currentResult.src, fileName);
       }

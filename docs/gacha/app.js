@@ -61,10 +61,14 @@
 
   function isMobileShareDevice() {
     const userAgent = navigator.userAgent || '';
-    const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(userAgent);
-    const isMobileWidth = window.matchMedia?.('(max-width: 767px)').matches === true;
-    const isTouchPointer = window.matchMedia?.('(pointer: coarse)').matches === true;
-    return isMobileDevice && isMobileWidth && isTouchPointer;
+    const platform = navigator.platform || '';
+    const maxTouchPoints = Number(navigator.maxTouchPoints || 0);
+    const isAndroid = /Android/i.test(userAgent);
+    const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
+    const isIPadDesktopMode = /Macintosh/i.test(userAgent) && maxTouchPoints > 1;
+    const isDesktopPlatform = /Win|Linux x86_64|MacIntel/i.test(platform) && !isIPadDesktopMode;
+    if (isDesktopPlatform) return false;
+    return isAndroid || isIOS || isIPadDesktopMode;
   }
 
   function disableDesktopNativeShare() {
@@ -353,6 +357,13 @@
       }
 
       const fileName = buildShareFileName();
+      if (!prefersMobileSaveFlow()) {
+        hideSharePreview();
+        downloadBlob(blob, fileName);
+        setShareFeedback('画像を保存したよ。SNSやストーリーにそのまま使えます。');
+        return;
+      }
+
       const shareText = buildShareText(getShareSelection().previewStates);
       const result = await shareImageOrFallback(blob, fileName, shareText);
       if (result === 'shared') {
