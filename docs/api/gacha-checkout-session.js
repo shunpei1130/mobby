@@ -1,4 +1,5 @@
-const GACHA_PRODUCT_TYPE = "seal_gacha";
+import { GACHA_PRODUCT_TYPE, isValidEmail, normalizeEmail, resolveOrigin, safeText } from "./_gacha-paid-result.js";
+
 const PACKAGES = {
   single: {
     pulls: 1,
@@ -8,8 +9,8 @@ const PACKAGES = {
   },
   ten: {
     pulls: 10,
-    amount: 750,
-    label: "シールガチャ 10連（¥750）",
+    amount: 500,
+    label: "シールガチャ 10連（¥500）",
     description: "Mobby シールガチャ 10連分"
   }
 };
@@ -18,17 +19,6 @@ function setCors(res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-}
-
-function resolveOrigin(req) {
-  const proto = req.headers["x-forwarded-proto"] || "https";
-  const host = req.headers["x-forwarded-host"] || req.headers.host || "";
-  if (!host) return "https://www.mobby.online";
-  return `${proto}://${host}`;
-}
-
-function safeText(value, max = 200) {
-  return String(value || "").trim().slice(0, max);
 }
 
 export default async function handler(req, res) {
@@ -58,6 +48,10 @@ export default async function handler(req, res) {
     const body = req.body || {};
     const source = safeText(body.source || "gacha", 40);
     const packageType = safeText(body.packageType || "single", 20);
+    const recipientEmail = normalizeEmail(body.email);
+    if (!recipientEmail || recipientEmail.length > 200 || !isValidEmail(recipientEmail)) {
+      return res.status(400).json({ error: "メールアドレスを入力してください。" });
+    }
     const normalizedPackageType = PACKAGES[packageType] ? packageType : "single";
     const selectedPackage = PACKAGES[normalizedPackageType];
     const stripeCatalogRef = stripeCatalogRefs[normalizedPackageType] || "";
@@ -91,6 +85,10 @@ export default async function handler(req, res) {
     form.set("metadata[package_type]", normalizedPackageType);
     form.set("metadata[pulls]", String(selectedPackage.pulls));
     form.set("metadata[grant_count]", String(selectedPackage.pulls));
+    form.set("metadata[recipient_email]", recipientEmail);
+    form.set("metadata[result_status]", "pending");
+    form.set("metadata[result_base_url]", origin);
+    form.set("customer_email", recipientEmail);
     if (stripeCatalogRef) {
       form.set("metadata[catalog_ref]", stripeCatalogRef);
     }

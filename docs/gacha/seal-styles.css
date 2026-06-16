@@ -532,6 +532,49 @@ a {
   display: none;
 }
 
+.seal-paid-email {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 7px;
+}
+
+.seal-paid-email label {
+  color: #66401f;
+  font-size: 0.88rem;
+  font-weight: 900;
+}
+
+.seal-paid-email input[type="email"] {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 13px;
+  border: 2px solid rgba(255, 181, 88, 0.72);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 800;
+  outline: none;
+}
+
+.seal-paid-email input[type="email"]:focus {
+  border-color: #f74891;
+  box-shadow: 0 0 0 4px rgba(247, 72, 145, 0.14);
+}
+
+.seal-paid-email p {
+  margin: 0;
+  color: #885a36;
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.seal-paid-email-error {
+  min-height: 1.1em;
+  color: #d9355f !important;
+}
+
 .seal-paid-option {
   min-height: 74px;
   display: grid;
@@ -548,6 +591,20 @@ a {
 
 .seal-paid-option span {
   font-size: 1rem;
+}
+
+.seal-paid-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 20px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: #f74891;
+  color: #fff;
+  font-size: 0.72rem;
+  line-height: 1;
+  box-shadow: 0 4px 10px rgba(247, 72, 145, 0.22);
 }
 
 .seal-paid-option strong {
@@ -1142,6 +1199,12 @@ a {
   .seal-paid-option {
     min-height: 62px;
     border-radius: 18px;
+  }
+
+  .seal-paid-badge {
+    min-height: 18px;
+    padding: 2px 8px;
+    font-size: 0.66rem;
   }
 
   .seal-paid-option strong {

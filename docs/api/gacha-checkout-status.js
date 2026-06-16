@@ -1,13 +1,9 @@
-const GACHA_PRODUCT_TYPE = "seal_gacha";
+import { GACHA_PRODUCT_TYPE, safeText, sendPaidGachaResultEmail } from "./_gacha-paid-result.js";
 
 function setCors(res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-}
-
-function safeText(value, max = 200) {
-  return String(value || "").trim().slice(0, max);
 }
 
 export default async function handler(req, res) {
@@ -56,12 +52,19 @@ export default async function handler(req, res) {
     const paid = productType === GACHA_PRODUCT_TYPE && paymentStatus === "paid";
 
     let message = "";
+    let resultEmail = { sent: false, skipped: false };
     if (productType !== GACHA_PRODUCT_TYPE) {
       message = "シールガチャの決済として確認できませんでした。";
     } else if (paymentStatus !== "paid") {
       message = checkoutStatus === "complete"
         ? "決済は完了していますが、入金確認待ちです。時間をおいて再読み込みしてください。"
         : "決済はまだ完了していません。";
+    } else if (paid) {
+      resultEmail = await sendPaidGachaResultEmail({
+        stripeSecretKey,
+        sessionId,
+        stripeSession: stripeData
+      });
     }
 
     return res.status(200).json({
@@ -74,6 +77,7 @@ export default async function handler(req, res) {
       currency: safeText(stripeData?.currency, 12).toLowerCase(),
       pulls: Number(stripeData?.metadata?.pulls || 1),
       packageType: safeText(stripeData?.metadata?.package_type, 20),
+      resultEmailSent: Boolean(resultEmail.sent || resultEmail.reason === "already_sent"),
       message,
     });
   } catch (error) {

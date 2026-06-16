@@ -80,13 +80,21 @@
       <div class="seal-paid-panel">
         <button class="seal-paid-main" id="openPaidGacha" type="button">有料ガチャを引く</button>
         <div class="seal-paid-options" id="paidGachaOptions" hidden>
+          <form class="seal-paid-email" id="paidGachaEmailForm" novalidate>
+            <label for="paidGachaEmail">メールアドレス</label>
+            <input id="paidGachaEmail" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required>
+            <p>決済完了後、このメールアドレスへガチャ結果を送信します。</p>
+            <p class="seal-paid-email-error" id="paidGachaEmailError" aria-live="polite"></p>
+            <input type="text" id="paidGachaHp" name="hp" tabindex="-1" autocomplete="off" hidden>
+          </form>
           <button class="seal-paid-option" type="button" data-package-type="single">
             <span>1回</span>
             <strong>100円</strong>
           </button>
           <button class="seal-paid-option is-best" type="button" data-package-type="ten">
+            <span class="seal-paid-badge">特別価格</span>
             <span>10連</span>
-            <strong>750円</strong>
+            <strong>500円</strong>
           </button>
         </div>
         <p class="seal-paid-status" id="paidGachaStatus" aria-live="polite"></p>
@@ -140,25 +148,25 @@
           <article class="seal-rate-card">
             <span class="rarity normal">R</span>
             <strong>70%</strong>
-            <small>1回で出る確率<br>約99.9%</small>
+            <small>6連で出る確率<br>約99.9%</small>
           </article>
           <article class="seal-rate-card">
             <span class="rarity rare">SR</span>
             <strong>20%</strong>
-            <small>1回で出る確率<br>約73.8%</small>
+            <small>6連で出る確率<br>約73.8%</small>
           </article>
           <article class="seal-rate-card">
             <span class="rarity sparkle">UR</span>
             <strong>8%</strong>
-            <small>1回で出る確率<br>約39.4%</small>
+            <small>6連で出る確率<br>約39.4%</small>
           </article>
           <article class="seal-rate-card">
             <span class="rarity special">プリ</span>
             <strong>2%</strong>
-            <small>1回で出る確率<br>約11.4%</small>
+            <small>6連で出る確率<br>約11.4%</small>
           </article>
         </div>
-        <p class="seal-rate-note">「1回で出る確率」は、6枚の中にそのレアリティが1枚以上含まれる確率です。各レアリティ内のシールは、対象レアリティの中からランダムに選ばれます。</p>
+        <p class="seal-rate-note">「6連で出る確率」は、6枚の中にそのレアリティが1枚以上含まれる確率です。各レアリティ内のシールは、対象レアリティの中からランダムに選ばれます。</p>
       </div>
     </div>
   </section>
@@ -178,6 +186,7 @@
   <script>
     (() => {
       const CHECKOUT_SESSION_ENDPOINT = "/api/gacha-checkout-session";
+      const CHECKOUT_STATUS_ENDPOINT = "/api/gacha-checkout-status";
       let stripeLoaderPromise = null;
       let embeddedCheckoutInstance = null;
 
@@ -196,6 +205,10 @@
       const openPaidGacha = document.getElementById("openPaidGacha");
       const paidGachaOptions = document.getElementById("paidGachaOptions");
       const paidGachaStatus = document.getElementById("paidGachaStatus");
+      const paidGachaEmailForm = document.getElementById("paidGachaEmailForm");
+      const paidGachaEmail = document.getElementById("paidGachaEmail");
+      const paidGachaEmailError = document.getElementById("paidGachaEmailError");
+      const paidGachaHp = document.getElementById("paidGachaHp");
       const checkoutModal = document.getElementById("sealCheckoutModal");
       const checkoutMount = document.getElementById("sealCheckoutMount");
       const closeCheckout = document.getElementById("closeSealCheckout");
@@ -257,6 +270,30 @@
         if (paidGachaStatus) paidGachaStatus.textContent = message || "";
       };
 
+      const normalizeEmail = (value) => String(value || "").trim();
+
+      const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
+      const setPaidEmailError = (message) => {
+        if (paidGachaEmailError) paidGachaEmailError.textContent = message || "";
+      };
+
+      const validatePaidEmail = () => {
+        const email = normalizeEmail(paidGachaEmail?.value);
+        if (!email) {
+          setPaidEmailError("メールアドレスを入力してください。");
+          paidGachaEmail?.focus();
+          return "";
+        }
+        if (!isValidEmail(email)) {
+          setPaidEmailError("正しいメールアドレスを入力してください。");
+          paidGachaEmail?.focus();
+          return "";
+        }
+        setPaidEmailError("");
+        return email;
+      };
+
       const loadStripeJs = () => {
         if (window.Stripe) return Promise.resolve(window.Stripe);
         if (stripeLoaderPromise) return stripeLoaderPromise;
@@ -298,11 +335,11 @@
         closeCheckout?.focus();
       };
 
-      const createCheckoutSession = async (packageType) => {
+      const createCheckoutSession = async (packageType, email) => {
         const response = await fetch(CHECKOUT_SESSION_ENDPOINT, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ source: "seal-gacha", packageType })
+          body: JSON.stringify({ source: "seal-gacha", packageType, email, hp: paidGachaHp?.value || "" })
         });
         const data = await response.json().catch(() => ({}));
         if (!response.ok || !data?.clientSecret || !data?.publishableKey || !data?.sessionId) {
@@ -312,6 +349,8 @@
       };
 
       const startPaidCheckout = async (packageType, triggerButton) => {
+        const email = validatePaidEmail();
+        if (!email) return;
         if (!checkoutModal || !checkoutMount) {
           setPaidStatus("決済画面を表示できませんでした。");
           return;
@@ -320,16 +359,22 @@
         triggerButton.disabled = true;
         setPaidStatus("Stripe決済を準備しています...");
         try {
-          const session = await createCheckoutSession(packageType);
+          const session = await createCheckoutSession(packageType, email);
           const StripeCtor = await loadStripeJs();
           const stripe = StripeCtor(session.publishableKey);
           teardownCheckout();
           checkoutMount.innerHTML = "";
           embeddedCheckoutInstance = await stripe.initEmbeddedCheckout({
             fetchClientSecret: async () => session.clientSecret,
-            onComplete: () => {
+            onComplete: async () => {
+              setPaidStatus("決済を確認して、ガチャ結果メールを送信しています。");
+              await fetch(CHECKOUT_STATUS_ENDPOINT, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ sessionId: session.sessionId })
+              }).catch(() => null);
               const pulls = packageType === "ten" ? "10" : "1";
-              window.location.href = `spin.html?mode=paid&pulls=${pulls}&session_id=${encodeURIComponent(session.sessionId)}`;
+              window.location.href = `spin.html?mode=paid&pulls=${pulls}&session_id=${encodeURIComponent(session.sessionId)}&sent=1`;
             }
           });
           embeddedCheckoutInstance.mount("#sealCheckoutMount");
@@ -351,6 +396,13 @@
       openPaidGacha?.addEventListener("click", () => {
         if (!paidGachaOptions) return;
         paidGachaOptions.hidden = !paidGachaOptions.hidden;
+        if (!paidGachaOptions.hidden) paidGachaEmail?.focus();
+      });
+      paidGachaEmail?.addEventListener("input", () => {
+        if (paidGachaEmailError?.textContent) setPaidEmailError("");
+      });
+      paidGachaEmailForm?.addEventListener("submit", (event) => {
+        event.preventDefault();
       });
       paidGachaOptions?.addEventListener("click", (event) => {
         const target = event.target;

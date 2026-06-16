@@ -192,6 +192,7 @@
   }
 
   disableDesktopNativeShare();
+  if (isPaidMode && emailGate) emailGate.hidden = true;
 
   function normalizeEmail(value) {
     return String(value || "").trim();
@@ -831,7 +832,7 @@
   }
   function spin() {
     if (isSpinning) return;
-    if (!validateEmailGate()) return;
+    if (!isPaidMode && !validateEmailGate()) return;
     if (isPaidMode && (!paidSpinAvailable || hasUsedPaidSpin)) {
       window.location.href = "index.html";
       return;
@@ -895,12 +896,14 @@
         throw new Error(data?.message || data?.error || "決済が完了していません。");
       }
       pullCount = Math.max(1, Math.min(10, Number(data.pulls) || pullCount));
-      paidSpinAvailable = true;
+      paidSpinAvailable = false;
+      hasUsedPaidSpin = true;
       if (spinLead) {
-        spinLead.textContent = pullCount === 10
-          ? "60連ガチャをまわせます。"
-          : "6連ガチャをまわせます。";
+        spinLead.textContent = data.resultEmailSent
+          ? "決済を確認しました。ガチャ結果をメールで送信しました。"
+          : "決済を確認しました。ガチャ結果メールを送信中です。";
       }
+      if (emailGate) emailGate.hidden = true;
     } catch (error) {
       paidSpinAvailable = false;
       if (spinLead) spinLead.textContent = error?.message || "決済確認に失敗しました。";
