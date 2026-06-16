@@ -25,6 +25,16 @@
 
       <h2 id="spinTitle">ガチャをまわそう！</h2>
       <p class="spin-lead" id="spinLead">一回回すと６種のシールがランダムで排出されるよ！</p>
+      <form class="email-gate" id="emailGate" novalidate>
+        <label class="email-gate-label" for="gachaEmailInput">メールアドレス</label>
+        <div class="email-gate-row">
+          <input class="email-gate-input" id="gachaEmailInput" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required>
+          <span class="email-gate-required">必須</span>
+        </div>
+        <p class="email-gate-note">入力されたメールアドレスは、結果画像の送信だけに使用します。</p>
+        <p class="email-gate-error" id="emailGateError" aria-live="polite"></p>
+        <input type="text" id="emailGateHp" name="hp" tabindex="-1" autocomplete="off" hidden>
+      </form>
 
       <div class="machine-wrap" id="machineWrap">
         <div class="spin-machine">
@@ -52,9 +62,11 @@
       </div>
       <h2 id="resultTitle">ノーマルシール</h2>
       <p id="resultText">仮のシール結果です。後で画像とデータを差し込めます。</p>
+      <p class="email-send-status" id="emailSendStatus" aria-live="polite"></p>
       <div class="sticker-results" id="stickerResults" aria-label="出たシール一覧"></div>
       <div class="result-actions">
-        <a class="result-save" id="saveSheetButton" href="#" download>保存する</a>
+        <a class="result-save" id="saveSheetButton" href="#" download>まとめて保存</a>
+        <button class="result-save result-save-secondary" id="saveCurrentSheetButton" type="button" hidden>このシールを保存する</button>
         <button class="result-button" id="againButton" type="button">もう一度まわす</button>
         <a class="result-link" href="index.html">一覧に戻る</a>
       </div>

@@ -4,6 +4,12 @@
   const handleButton = document.getElementById("handleButton");
   const againButton = document.getElementById("againButton");
   const saveSheetButton = document.getElementById("saveSheetButton");
+  const saveCurrentSheetButton = document.getElementById("saveCurrentSheetButton");
+  const emailGate = document.getElementById("emailGate");
+  const gachaEmailInput = document.getElementById("gachaEmailInput");
+  const emailGateError = document.getElementById("emailGateError");
+  const emailGateHp = document.getElementById("emailGateHp");
+  const emailSendStatus = document.getElementById("emailSendStatus");
   const resultSheet = document.getElementById("resultSheet");
   const openResultPreview = document.getElementById("openResultPreview");
   const resultImage = document.getElementById("resultImage");
@@ -30,6 +36,7 @@
   if (!machineWrap || !spinButton || !handleButton || !resultSheet || !resultImage || !resultTitle || !resultText) return;
 
   const CHECKOUT_STATUS_ENDPOINT = "/api/gacha-checkout-status";
+  const SEND_STICKER_EMAIL_ENDPOINT = "/api/gacha-send-sticker-email";
   const params = new URLSearchParams(window.location.search);
   const isPaidMode = params.get("mode") === "paid";
   const checkoutSessionId = params.get("session_id") || "";
@@ -139,12 +146,15 @@
   let isSpinning = false;
   let coins = 1;
   let currentResult = null;
+  let currentSaveResult = null;
   let revealResults = [];
   let revealFinalResults = [];
   let revealIndex = 0;
   let currentDownloadUrl = "";
   let sheetSlides = [];
+  let sheetResultChunks = [];
   let activeSheetSlideIndex = 0;
+  let recipientEmail = "";
   const revealRarityClasses = ["rarity-r", "rarity-sr", "rarity-ur", "rarity-pri"];
 
   const sheetSrc = "../gacha-new/assets/gacha/gachasheet.png";
@@ -183,11 +193,90 @@
 
   disableDesktopNativeShare();
 
+  function normalizeEmail(value) {
+    return String(value || "").trim();
+  }
+
+  function isValidEmail(value) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  }
+
+  function setEmailGateError(message) {
+    if (emailGateError) emailGateError.textContent = message;
+  }
+
+  function validateEmailGate() {
+    const email = normalizeEmail(gachaEmailInput?.value);
+    if (!email) {
+      setEmailGateError("メールアドレスを入力してください。");
+      gachaEmailInput?.focus();
+      return false;
+    }
+    if (!isValidEmail(email)) {
+      setEmailGateError("正しいメールアドレスを入力してください。");
+      gachaEmailInput?.focus();
+      return false;
+    }
+    setEmailGateError("");
+    recipientEmail = email;
+    return true;
+  }
+
+  function setEmailSendStatus(message, state = "") {
+    if (!emailSendStatus) return;
+    emailSendStatus.textContent = message;
+    emailSendStatus.dataset.state = state;
+  }
+
+  function dataUrlToAttachment(dataUrl, fileName) {
+    const match = String(dataUrl || "").match(/^data:(image\/png);base64,(.+)$/);
+    if (!match) return null;
+    return {
+      fileName,
+      contentType: match[1],
+      content: match[2]
+    };
+  }
+
+  async function sendStickerEmailForCurrentResult() {
+    if (!recipientEmail) return;
+
+    const stamp = buildSheetStamp();
+    const attachments = sheetSlides.length > 1
+      ? sheetSlides.map((slide, index) => dataUrlToAttachment(slide.dataUrl, buildSheetFileName(index, sheetSlides.length, stamp))).filter(Boolean)
+      : [dataUrlToAttachment((currentSaveResult || currentResult)?.src, buildSheetFileName(null, null, stamp))].filter(Boolean);
+
+    if (!attachments.length) return;
+
+    setEmailSendStatus("メール送信中...", "pending");
+    try {
+      const response = await fetch(SEND_STICKER_EMAIL_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: recipientEmail,
+          hp: emailGateHp?.value || "",
+          pullCount,
+          attachments
+        })
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.ok) {
+        throw new Error(result.error || "Failed to send email");
+      }
+      setEmailSendStatus("結果画像をメールで送信しました。", "success");
+    } catch (error) {
+      console.error("Failed to send sticker result email", error);
+      setEmailSendStatus("メール送信に失敗しました。画像はこの画面から保存できます。", "error");
+    }
+  }
+
   function setBusy(busy) {
     isSpinning = busy;
     const paidSpinConsumed = isPaidMode && hasUsedPaidSpin;
     spinButton.disabled = busy || !paidSpinAvailable || paidSpinConsumed;
     handleButton.disabled = busy || !paidSpinAvailable || paidSpinConsumed;
+    if (gachaEmailInput) gachaEmailInput.disabled = busy;
     const readyLabel = pullCount === 10 ? "60連" : "6連";
     spinButton.textContent = busy ? "まわしています..." : paidSpinConsumed ? "購入してもう一度" : readyLabel;
     if (!busy) {
@@ -270,11 +359,16 @@
     };
   }
 
-  async function composeSheetSlides(selectedResults) {
+  function chunkSheetResults(selectedResults) {
     const chunks = [];
     for (let index = 0; index < selectedResults.length; index += sheetSlots.length) {
       chunks.push(selectedResults.slice(index, index + sheetSlots.length));
     }
+    return chunks;
+  }
+
+  async function composeSheetSlides(selectedResults) {
+    const chunks = chunkSheetResults(selectedResults);
     return Promise.all(chunks.map((chunk) => composeSheet(chunk)));
   }
 
@@ -296,6 +390,9 @@
     if (sheetSlideCount) sheetSlideCount.textContent = `${activeSheetSlideIndex + 1} / ${sheetSlides.length}`;
     if (sheetSlidePrev) sheetSlidePrev.disabled = activeSheetSlideIndex === 0;
     if (sheetSlideNext) sheetSlideNext.disabled = activeSheetSlideIndex === sheetSlides.length - 1;
+    if (sheetResultChunks.length) {
+      renderStickerResults(sheetResultChunks[activeSheetSlideIndex] || []);
+    }
     refreshDownloadLink();
   }
 
@@ -303,22 +400,26 @@
     const isMultiSheet = selectedResults.length > sheetSlots.length;
     if (isMultiSheet) {
       sheetSlides = await composeSheetSlides(selectedResults);
+      sheetResultChunks = chunkSheetResults(selectedResults);
+      currentSaveResult = null;
       activeSheetSlideIndex = 0;
       resultTitle.textContent = `${sheetSlides.length}枚のシール台紙をゲット！`;
       resultText.textContent = "左右のボタンで台紙をスライドして確認できます。";
       if (stickerResults) {
-        stickerResults.textContent = "";
-        stickerResults.hidden = true;
+        stickerResults.hidden = false;
       }
       if (sheetSlider) sheetSlider.hidden = sheetSlides.length <= 1;
       updateSheetSlide(0);
       if (againButton && isPaidMode) againButton.textContent = "もう一度購入する";
       resultSheet.hidden = false;
+      sendStickerEmailForCurrentResult();
       return;
     }
 
     sheetSlides = [];
+    sheetResultChunks = [];
     activeSheetSlideIndex = 0;
+    currentSaveResult = null;
     if (sheetSlider) sheetSlider.hidden = true;
     if (stickerResults) stickerResults.hidden = false;
 
@@ -331,6 +432,7 @@
       src: sheetImage.dataUrl,
       blob: sheetImage.blob
     };
+    currentSaveResult = currentResult;
     resultImage.src = sheetImage.dataUrl;
     resultImage.alt = `ガチャで出た${selectedResults.length}枚のシールシート`;
     resultImage.hidden = false;
@@ -340,6 +442,7 @@
     refreshDownloadLink();
     if (againButton && isPaidMode) againButton.textContent = "もう一度購入する";
     resultSheet.hidden = false;
+    sendStickerEmailForCurrentResult();
   }
 
   function showReveal(index) {
@@ -466,24 +569,43 @@
     return response.blob();
   }
 
-  function buildSheetFileName() {
+  function buildSheetStamp() {
     const now = new Date();
-    const stamp = [
+    return [
       now.getFullYear(),
       String(now.getMonth() + 1).padStart(2, "0"),
       String(now.getDate()).padStart(2, "0"),
       String(now.getHours()).padStart(2, "0"),
       String(now.getMinutes()).padStart(2, "0")
     ].join("");
+  }
+
+  function buildSheetFileName(sheetIndex = null, sheetTotal = null, stamp = buildSheetStamp()) {
+    if (sheetIndex !== null && sheetTotal !== null) {
+      const indexText = String(sheetIndex + 1).padStart(2, "0");
+      const totalText = String(sheetTotal).padStart(2, "0");
+      return `mobby-sticker-sheet-${indexText}of${totalText}-${stamp}.png`;
+    }
     return `mobby-sticker-sheet-${stamp}.png`;
   }
 
   function refreshDownloadLink() {
     if (!saveSheetButton || saveSheetButton.tagName !== "A") return;
+    const isMultiSheet = sheetSlides.length > 1;
+    if (saveCurrentSheetButton) {
+      saveCurrentSheetButton.hidden = !isMultiSheet;
+    }
+    saveSheetButton.textContent = isMultiSheet ? "まとめて保存" : "保存する";
 
     if (currentDownloadUrl) {
       URL.revokeObjectURL(currentDownloadUrl);
       currentDownloadUrl = "";
+    }
+
+    if (isMultiSheet) {
+      saveSheetButton.href = "#";
+      saveSheetButton.removeAttribute("download");
+      return;
     }
 
     if (shouldUseMobileShareSheet()) {
@@ -492,8 +614,9 @@
       return;
     }
 
-    if (currentResult?.blob) {
-      currentDownloadUrl = URL.createObjectURL(currentResult.blob);
+    const saveResult = currentSaveResult || currentResult;
+    if (saveResult?.blob) {
+      currentDownloadUrl = URL.createObjectURL(saveResult.blob);
       saveSheetButton.href = currentDownloadUrl;
       saveSheetButton.download = buildSheetFileName();
       return;
@@ -563,10 +686,79 @@
     return true;
   }
 
+  async function shareSheetImages(slides, stamp) {
+    if (!navigator.share || !slides.length) return false;
+
+    const files = slides.map((slide, index) => {
+      const fileName = buildSheetFileName(index, slides.length, stamp);
+      return new File([slide.blob], fileName, { type: slide.blob?.type || "image/png" });
+    });
+    const payload = {
+      files,
+      title: "Mobbyシールガチャ",
+      text: "シールガチャの台紙をまとめてシェア"
+    };
+
+    if (navigator.canShare && !navigator.canShare({ files: payload.files })) {
+      return false;
+    }
+
+    await navigator.share(payload);
+    return true;
+  }
+
+  function setSaveButtonPending(button, pending, label = "") {
+    if (!button) return;
+    if (pending) {
+      button.disabled = true;
+      button.setAttribute("aria-disabled", "true");
+      if (label) button.textContent = label;
+      return;
+    }
+    button.disabled = false;
+    button.removeAttribute("aria-disabled");
+  }
+
+  async function saveCurrentSheetImage(event) {
+    if (!currentResult?.src || !saveCurrentSheetButton) return;
+
+    event?.preventDefault();
+
+    const originalLabel = saveCurrentSheetButton.textContent;
+    setSaveButtonPending(saveCurrentSheetButton, true, "保存中...");
+
+    try {
+      const fileName = buildSheetFileName(activeSheetSlideIndex, sheetSlides.length || 1);
+      const blob = currentResult.blob || await dataUrlToBlob(currentResult.src);
+
+      if (shouldUseMobileShareSheet() && await shareSheetImage(blob, fileName)) {
+        saveCurrentSheetButton.textContent = "共有しました";
+      } else if (blob) {
+        downloadBlob(blob, fileName);
+        saveCurrentSheetButton.textContent = "保存しました";
+      } else {
+        downloadDataUrl(currentResult.src, fileName);
+        saveCurrentSheetButton.textContent = "保存しました";
+      }
+
+      window.setTimeout(() => {
+        if (saveCurrentSheetButton) saveCurrentSheetButton.textContent = originalLabel;
+      }, 1400);
+    } catch (error) {
+      console.error("Failed to save current sticker sheet image", error);
+      saveCurrentSheetButton.textContent = "もう一度保存";
+    } finally {
+      window.setTimeout(() => setSaveButtonPending(saveCurrentSheetButton, false), 300);
+    }
+  }
+
   async function saveSheetImage(event) {
-    if (!currentResult?.src || !saveSheetButton) return;
+    const saveResult = currentSaveResult || currentResult;
+    if ((!saveResult?.src && !sheetSlides.length) || !saveSheetButton) return;
+    const isMultiSheet = sheetSlides.length > 1;
 
     if (
+      !isMultiSheet &&
       !shouldUseMobileShareSheet() &&
       saveSheetButton.tagName === "A" &&
       saveSheetButton.getAttribute("href") !== "#"
@@ -577,13 +769,35 @@
     event?.preventDefault();
 
     const originalLabel = saveSheetButton.textContent;
-    saveSheetButton.disabled = true;
-    saveSheetButton.setAttribute("aria-disabled", "true");
-    saveSheetButton.textContent = "保存中...";
+    setSaveButtonPending(saveSheetButton, true, "保存中...");
+    if (saveCurrentSheetButton && !saveCurrentSheetButton.hidden) {
+      setSaveButtonPending(saveCurrentSheetButton, true);
+    }
 
     try {
+      if (isMultiSheet) {
+        const stamp = buildSheetStamp();
+        if (shouldUseMobileShareSheet() && await shareSheetImages(sheetSlides, stamp)) {
+          saveSheetButton.textContent = "共有しました";
+        } else {
+          sheetSlides.forEach((slide, index) => {
+            const fileName = buildSheetFileName(index, sheetSlides.length, stamp);
+            if (slide.blob) {
+              downloadBlob(slide.blob, fileName);
+            } else {
+              downloadDataUrl(slide.dataUrl, fileName);
+            }
+          });
+          saveSheetButton.textContent = "保存しました";
+        }
+        window.setTimeout(() => {
+          if (saveSheetButton) saveSheetButton.textContent = originalLabel;
+        }, 1400);
+        return;
+      }
+
       const fileName = buildSheetFileName();
-      const blob = currentResult.blob || await dataUrlToBlob(currentResult.src);
+      const blob = saveResult.blob || await dataUrlToBlob(saveResult.src);
 
       if (shouldUseMobileShareSheet() && await shareSheetImage(blob, fileName)) {
         saveSheetButton.textContent = "共有しました";
@@ -596,7 +810,7 @@
       if (blob) {
         downloadBlob(blob, fileName);
       } else {
-        downloadDataUrl(currentResult.src, fileName);
+        downloadDataUrl(saveResult.src, fileName);
       }
 
       saveSheetButton.textContent = "保存しました";
@@ -608,23 +822,26 @@
       saveSheetButton.textContent = "もう一度保存";
     } finally {
       window.setTimeout(() => {
-        if (saveSheetButton) {
-          saveSheetButton.disabled = false;
-          saveSheetButton.removeAttribute("aria-disabled");
+        setSaveButtonPending(saveSheetButton, false);
+        if (saveCurrentSheetButton && !saveCurrentSheetButton.hidden) {
+          setSaveButtonPending(saveCurrentSheetButton, false);
         }
       }, 300);
     }
   }
-
   function spin() {
     if (isSpinning) return;
+    if (!validateEmailGate()) return;
     if (isPaidMode && (!paidSpinAvailable || hasUsedPaidSpin)) {
       window.location.href = "index.html";
       return;
     }
 
     resultSheet.hidden = true;
+    setEmailSendStatus("");
     if (stickerResults) stickerResults.textContent = "";
+    currentSaveResult = null;
+    sheetResultChunks = [];
     if (stickerReveal) stickerReveal.hidden = true;
     setBusy(true);
     if (isPaidMode) hasUsedPaidSpin = true;
@@ -694,6 +911,13 @@
 
   spinButton.addEventListener("click", spin);
   handleButton.addEventListener("click", spin);
+  emailGate?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    spin();
+  });
+  gachaEmailInput?.addEventListener("input", () => {
+    if (emailGateError?.textContent) setEmailGateError("");
+  });
   againButton?.addEventListener("click", () => {
     if (isPaidMode) {
       window.location.href = "index.html";
@@ -702,6 +926,7 @@
     spin();
   });
   saveSheetButton?.addEventListener("click", saveSheetImage);
+  saveCurrentSheetButton?.addEventListener("click", saveCurrentSheetImage);
   sheetSlidePrev?.addEventListener("click", () => updateSheetSlide(activeSheetSlideIndex - 1));
   sheetSlideNext?.addEventListener("click", () => updateSheetSlide(activeSheetSlideIndex + 1));
   stickerRevealNext?.addEventListener("click", showNextReveal);
