@@ -39,6 +39,7 @@
   const SEND_STICKER_EMAIL_ENDPOINT = "/api/gacha-send-sticker-email";
   const params = new URLSearchParams(window.location.search);
   const isPaidMode = params.get("mode") === "paid";
+  const isSecretGuaranteed = params.get("secret") === "1";
   const checkoutSessionId = params.get("session_id") || "";
   let paidSpinAvailable = !isPaidMode;
   let hasUsedPaidSpin = false;
@@ -120,6 +121,17 @@
     "風まかせの小悪魔"
   ];
 
+  const secretStickers = [
+    { title: "もびち", variant: "full", fileName: "もびち-full.png" },
+    { title: "もびやん", variant: "full", fileName: "もびやん-full.png" },
+    { title: "もびりん", variant: "full", fileName: "もびりん-full.png" },
+    { title: "病みモビー", variant: "full", fileName: "病みモビー-full.png" },
+    { title: "もびち", variant: "half", fileName: "もびち-half.png" },
+    { title: "もびやん", variant: "half", fileName: "もびやん-half.png" },
+    { title: "もびりん", variant: "half", fileName: "もびりん-half.png" },
+    { title: "病みモビー", variant: "half", fileName: "病みモビー-half.png" }
+  ];
+
   const results = [
     ...rNames.map((name) => ({
       rarity: "R",
@@ -143,6 +155,13 @@
     }))
   ];
 
+  const secretResults = secretStickers.map((sticker) => ({
+    rarity: "SECRET",
+    title: sticker.title,
+    variant: sticker.variant,
+    src: `../gacha-new/assets/main4/${sticker.variant}/${encodeURIComponent(sticker.fileName)}`
+  }));
+
   let isSpinning = false;
   let coins = 1;
   let currentResult = null;
@@ -150,14 +169,18 @@
   let revealResults = [];
   let revealFinalResults = [];
   let revealIndex = 0;
+  let revealIntroPending = false;
+  let revealOutroPending = false;
   let currentDownloadUrl = "";
   let sheetSlides = [];
   let sheetResultChunks = [];
   let activeSheetSlideIndex = 0;
   let recipientEmail = "";
-  const revealRarityClasses = ["rarity-r", "rarity-sr", "rarity-ur", "rarity-pri"];
+  const revealRarityClasses = ["rarity-r", "rarity-sr", "rarity-ur", "rarity-pri", "rarity-secret"];
+  const SECRET_SHEET_RATE = 1 / 500;
 
   const sheetSrc = "../gacha-new/assets/gacha/gachasheet.png";
+  const secretSheetSrc = "../gacha-new/assets/gacha/gacha-sheet-mobby-4.png";
   const sheetSlots = [
     { x: 102, y: 102, width: 386, height: 386 },
     { x: 537, y: 102, width: 386, height: 386 },
@@ -165,6 +188,12 @@
     { x: 537, y: 539, width: 386, height: 386 },
     { x: 102, y: 975, width: 386, height: 386 },
     { x: 537, y: 975, width: 386, height: 386 }
+  ];
+  const secretSheetSlots = [
+    { x: 102, y: 320, width: 386, height: 386 },
+    { x: 537, y: 320, width: 386, height: 386 },
+    { x: 102, y: 757, width: 386, height: 386 },
+    { x: 537, y: 757, width: 386, height: 386 }
   ];
 
   function isMobileShareDevice() {
@@ -278,7 +307,7 @@
     spinButton.disabled = busy || !paidSpinAvailable || paidSpinConsumed;
     handleButton.disabled = busy || !paidSpinAvailable || paidSpinConsumed;
     if (gachaEmailInput) gachaEmailInput.disabled = busy;
-    const readyLabel = pullCount === 10 ? "60連" : "6連";
+    const readyLabel = isSecretGuaranteed ? "確定ガチャ" : pullCount === 10 ? "60連" : "6連";
     spinButton.textContent = busy ? "まわしています..." : paidSpinConsumed ? "購入してもう一度" : readyLabel;
     if (!busy) {
       const capsule = document.createElement("span");
@@ -295,8 +324,31 @@
     return pool[Math.floor(Math.random() * pool.length)];
   }
 
-  function pickResults(count) {
-    return Array.from({ length: count }, () => pickResult());
+  function appendSecretSheet(selectedResults, variant) {
+    const secretSheet = secretResults.filter((result) => result.variant === variant);
+    selectedResults.push(...secretSheet);
+    while (selectedResults.length % sheetSlots.length !== 0) {
+      selectedResults.push({ rarity: "SECRET", title: "SECRET", isSpacer: true });
+    }
+  }
+
+  function pickResults(count, options = {}) {
+    const sheetCount = Math.max(1, Math.ceil(count / sheetSlots.length));
+    const selectedResults = [];
+    const guaranteedVariant = Math.random() < 0.5 ? "full" : "half";
+    for (let sheetIndex = 0; sheetIndex < sheetCount; sheetIndex += 1) {
+      const remaining = count - selectedResults.length;
+      const sheetLength = Math.min(sheetSlots.length, Math.max(0, remaining));
+      const shouldUseSecretSheet = options.secretGuaranteed || Math.random() < SECRET_SHEET_RATE;
+      if (shouldUseSecretSheet) {
+        appendSecretSheet(selectedResults, guaranteedVariant);
+      } else {
+        for (let index = 0; index < sheetLength; index += 1) {
+          selectedResults.push(pickResult());
+        }
+      }
+    }
+    return selectedResults;
   }
 
   function loadImage(src) {
@@ -323,6 +375,18 @@
     context.restore();
   }
 
+  function drawContainImage(context, image, slot) {
+    const scale = Math.min(slot.width / image.naturalWidth, slot.height / image.naturalHeight, 1);
+    const width = image.naturalWidth * scale;
+    const height = image.naturalHeight * scale;
+    const x = slot.x + (slot.width - width) / 2;
+    const y = slot.y + (slot.height - height) / 2;
+
+    context.save();
+    context.drawImage(image, x, y, width, height);
+    context.restore();
+  }
+
   function canvasToBlob(canvas) {
     return new Promise((resolve) => {
       canvas.toBlob((blob) => resolve(blob), "image/png");
@@ -330,9 +394,11 @@
   }
 
   async function composeSheet(selectedResults) {
+    const drawableResults = selectedResults.filter((result) => !result.isSpacer);
+    const isSecretOnlySheet = drawableResults.length > 0 && drawableResults.every((result) => result.rarity === "SECRET");
     const [sheetImage, ...stickerImages] = await Promise.all([
-      loadImage(sheetSrc),
-      ...selectedResults.map((result) => loadImage(result.src))
+      loadImage(isSecretOnlySheet ? secretSheetSrc : sheetSrc),
+      ...drawableResults.map((result) => loadImage(result.src))
     ]);
 
     const canvas = document.createElement("canvas");
@@ -344,13 +410,22 @@
     for (let index = 0; index < sheetCount; index += 1) {
       context.drawImage(sheetImage, 0, sheetImage.naturalHeight * index);
     }
-    stickerImages.forEach((image, index) => {
-      const slot = sheetSlots[index % sheetSlots.length];
+    let imageIndex = 0;
+    selectedResults.forEach((result, index) => {
+      if (result.isSpacer) return;
+      const image = stickerImages[imageIndex];
+      imageIndex += 1;
+      const slot = isSecretOnlySheet ? secretSheetSlots[(imageIndex - 1) % secretSheetSlots.length] : sheetSlots[index % sheetSlots.length];
       const pageIndex = Math.floor(index / sheetSlots.length);
-      drawCoverImage(context, image, {
+      const targetSlot = {
         ...slot,
         y: slot.y + sheetImage.naturalHeight * pageIndex
-      });
+      };
+      if (isSecretOnlySheet) {
+        drawContainImage(context, image, targetSlot);
+      } else {
+        drawCoverImage(context, image, targetSlot);
+      }
     });
 
     const dataUrl = canvas.toDataURL("image/png");
@@ -398,14 +473,17 @@
   }
 
   async function showResult(selectedResults) {
+    const visibleResultsForState = selectedResults.filter((result) => !result.isSpacer);
+    const isSecretResult = visibleResultsForState.length > 0 && visibleResultsForState.every((result) => result.rarity === "SECRET");
+    resultSheet.classList.toggle("is-secret-result", isSecretResult);
     const isMultiSheet = selectedResults.length > sheetSlots.length;
     if (isMultiSheet) {
       sheetSlides = await composeSheetSlides(selectedResults);
       sheetResultChunks = chunkSheetResults(selectedResults);
       currentSaveResult = null;
       activeSheetSlideIndex = 0;
-      resultTitle.textContent = `${sheetSlides.length}枚のシール台紙をゲット！`;
-      resultText.textContent = "左右のボタンで台紙をスライドして確認できます。";
+      resultTitle.textContent = isSecretResult ? "シークレットシートをゲット！" : `${sheetSlides.length}枚のシール台紙をゲット！`;
+      resultText.textContent = isSecretResult ? "fullまたはhalfの4枚セットがまとまって出ました。" : "左右のボタンで台紙をスライドして確認できます。";
       if (stickerResults) {
         stickerResults.hidden = false;
       }
@@ -425,21 +503,22 @@
     if (stickerResults) stickerResults.hidden = false;
 
     const sheetImage = await composeSheet(selectedResults);
-    const raritySummary = selectedResults.map((result) => result.rarity).join(" / ");
+    const visibleResults = visibleResultsForState;
+    const raritySummary = visibleResults.map((result) => result.rarity).join(" / ");
 
     currentResult = {
-      title: `${selectedResults.length}枚シールシート`,
+      title: `${visibleResults.length}枚シールシート`,
       rarity: raritySummary,
       src: sheetImage.dataUrl,
       blob: sheetImage.blob
     };
     currentSaveResult = currentResult;
     resultImage.src = sheetImage.dataUrl;
-    resultImage.alt = `ガチャで出た${selectedResults.length}枚のシールシート`;
+    resultImage.alt = `ガチャで出た${visibleResults.length}枚のシールシート`;
     resultImage.hidden = false;
-    resultTitle.textContent = `${selectedResults.length}枚のシールをゲット！`;
-    resultText.textContent = `出たシール: ${raritySummary}`;
-    renderStickerResults(selectedResults);
+    resultTitle.textContent = isSecretResult ? "シークレットシートをゲット！" : `${visibleResults.length}枚のシールをゲット！`;
+    resultText.textContent = isSecretResult ? "fullまたはhalfの4枚セットがまとまって出ました。" : `出たシール: ${raritySummary}`;
+    renderStickerResults(visibleResults);
     refreshDownloadLink();
     if (againButton && isPaidMode) againButton.textContent = "もう一度購入する";
     resultSheet.hidden = false;
@@ -450,8 +529,10 @@
     const result = revealResults[index];
     if (!result || !stickerReveal || !stickerRevealImage || !stickerRevealNext) return;
 
+    revealIntroPending = false;
+    revealOutroPending = false;
     revealIndex = index;
-    stickerReveal.classList.remove(...revealRarityClasses, "is-animating");
+    stickerReveal.classList.remove(...revealRarityClasses, "is-animating", "is-secret-intro", "is-secret-outro");
     const rarityClass = result.rarity === "プリ" ? "rarity-pri" : `rarity-${result.rarity.toLowerCase()}`;
     stickerReveal.classList.add(rarityClass);
     if (stickerRevealCount) stickerRevealCount.textContent = `${index + 1} / ${revealResults.length}`;
@@ -462,7 +543,7 @@
     stickerRevealNext.textContent = index === revealResults.length - 1 ? "結果を見る" : "次へ";
     stickerReveal.hidden = false;
 
-    const delay = result.rarity === "UR" ? 520 : result.rarity === "プリ" ? 860 : 0;
+    const delay = result.rarity === "UR" ? 520 : (result.rarity === "プリ" || result.rarity === "SECRET") ? 860 : 0;
     stickerReveal.classList.toggle("is-charging", delay > 0);
     stickerRevealImage.hidden = delay > 0;
     stickerRevealNext.disabled = delay > 0;
@@ -477,10 +558,58 @@
     }, delay);
   }
 
+  function showSecretSheetIntro() {
+    if (!stickerReveal || !stickerRevealImage || !stickerRevealNext) return;
+
+    revealIntroPending = true;
+    revealOutroPending = false;
+    revealIndex = -1;
+    stickerReveal.classList.remove(...revealRarityClasses, "is-animating", "is-charging", "is-secret-outro");
+    stickerReveal.classList.add("rarity-secret", "is-secret-intro");
+    if (stickerRevealCount) stickerRevealCount.textContent = "SECRET SHEET";
+    stickerRevealImage.hidden = true;
+    stickerRevealImage.removeAttribute("src");
+    stickerRevealImage.alt = "";
+    if (stickerRevealTitle) stickerRevealTitle.textContent = "シークレットシート確定";
+    if (stickerRevealRarity) stickerRevealRarity.textContent = "full / half どちらかの4枚セット";
+    stickerRevealNext.textContent = "シールを見る";
+    stickerRevealNext.disabled = false;
+    stickerReveal.hidden = false;
+    void stickerReveal.offsetWidth;
+    stickerReveal.classList.add("is-animating");
+    stickerRevealNext.focus();
+  }
+
+  function showSecretSheetOutro() {
+    if (!stickerReveal || !stickerRevealImage || !stickerRevealNext) return;
+
+    revealIntroPending = false;
+    revealOutroPending = true;
+    stickerReveal.classList.remove(...revealRarityClasses, "is-animating", "is-charging", "is-secret-intro");
+    stickerReveal.classList.add("rarity-secret", "is-secret-outro");
+    if (stickerRevealCount) stickerRevealCount.textContent = "SECRET COMPLETE";
+    stickerRevealImage.hidden = true;
+    stickerRevealImage.removeAttribute("src");
+    stickerRevealImage.alt = "";
+    if (stickerRevealTitle) stickerRevealTitle.textContent = "あなたは500回に一回の確立をひきました！！！";
+    if (stickerRevealRarity) stickerRevealRarity.textContent = "シークレットシートを公開します";
+    stickerRevealNext.textContent = "シートを見る";
+    stickerRevealNext.hidden = false;
+    stickerRevealNext.disabled = false;
+    stickerReveal.hidden = false;
+    void stickerReveal.offsetWidth;
+    stickerReveal.classList.add("is-animating");
+    stickerRevealNext.focus();
+  }
+
   function startReveal(selectedResults) {
     revealResults = selectedResults;
     revealFinalResults = selectedResults;
     revealIndex = 0;
+    if (selectedResults.some((result) => result.rarity === "SECRET")) {
+      showSecretSheetIntro();
+      return;
+    }
     showReveal(0);
   }
 
@@ -501,24 +630,58 @@
     revealResults = highlightResults;
     revealFinalResults = finalResults;
     revealIndex = 0;
+    if (highlightResults.some((result) => result.rarity === "SECRET")) {
+      showSecretSheetIntro();
+      return;
+    }
     showReveal(0);
   }
 
   function showNextReveal() {
     if (!revealResults.length) return;
+    if (revealIntroPending) {
+      showReveal(0);
+      return;
+    }
+    if (revealOutroPending) {
+      revealOutroPending = false;
+      if (stickerReveal) stickerReveal.hidden = true;
+      showResult(revealFinalResults.length ? revealFinalResults : revealResults)
+        .catch(() => {
+          if (spinLead) spinLead.textContent = "画像の生成に失敗しました。もう一度試してください。";
+        })
+        .finally(() => {
+          revealResults = [];
+          revealFinalResults = [];
+          revealIntroPending = false;
+          revealOutroPending = false;
+          coins = 1;
+          if (coinCount) coinCount.textContent = String(coins);
+          setBusy(false);
+        });
+      return;
+    }
     if (revealIndex < revealResults.length - 1) {
       showReveal(revealIndex + 1);
       return;
     }
 
+    const finalResults = revealFinalResults.length ? revealFinalResults : revealResults;
+    if (finalResults.some((result) => result.rarity === "SECRET")) {
+      showSecretSheetOutro();
+      return;
+    }
+
     if (stickerReveal) stickerReveal.hidden = true;
-    showResult(revealFinalResults.length ? revealFinalResults : revealResults)
+    showResult(finalResults)
       .catch(() => {
         if (spinLead) spinLead.textContent = "画像の生成に失敗しました。もう一度試してください。";
       })
       .finally(() => {
         revealResults = [];
         revealFinalResults = [];
+        revealIntroPending = false;
+        revealOutroPending = false;
         coins = 1;
         if (coinCount) coinCount.textContent = String(coins);
         setBusy(false);
@@ -528,7 +691,7 @@
   function renderStickerResults(selectedResults) {
     if (!stickerResults) return;
     stickerResults.textContent = "";
-    selectedResults.forEach((result, index) => {
+    selectedResults.filter((result) => !result.isSpacer).forEach((result, index) => {
       const button = document.createElement("button");
       button.className = "sticker-result-button";
       button.type = "button";
@@ -859,14 +1022,15 @@
     }, 820);
 
     window.setTimeout(() => {
-      const selectedResults = pickResults(pullCount * 6);
+      const selectedResults = pickResults(pullCount * 6, { secretGuaranteed: isSecretGuaranteed });
+      const revealableResults = selectedResults.filter((result) => !result.isSpacer);
       machineWrap.classList.remove("is-spinning", "is-dropping");
       if (spinLead) spinLead.textContent = "出たシールを確認しよう！";
-      if (selectedResults.length > 12) {
-        startRevealThenShow(selectedResults.filter((result) => result.rarity !== "R"), selectedResults);
+      if (revealableResults.length > 12) {
+        startRevealThenShow(revealableResults.filter((result) => result.rarity !== "R"), selectedResults);
         return;
       }
-      startReveal(selectedResults);
+      startRevealThenShow(revealableResults, selectedResults);
     }, 1900);
   }
 

@@ -13,6 +13,10 @@ const RARITY_CONFIG = [
   { key: "プリ", dir: "gal", rate: 0.02 }
 ];
 
+const SECRET_DIRS = ["main4/full", "main4/half"];
+const SHEET_SIZE = 6;
+const SECRET_SHEET_RATE = 1 / 500;
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const assetsRoot = path.resolve(__dirname, "../gacha-new/assets");
 
@@ -62,20 +66,49 @@ function buildPools() {
   return Object.fromEntries(RARITY_CONFIG.map((rarity) => [rarity.dir, listFiles(rarity.dir)]));
 }
 
+function buildSecretPools() {
+  return Object.fromEntries(SECRET_DIRS.map((dir) => [dir, listFiles(dir)]));
+}
+
+function buildSecretSheet(secretPools, indexStart, dir) {
+  const files = secretPools[dir] || [];
+  return files.map((fileName, offset) => ({
+    index: indexStart + offset + 1,
+    rarity: "SECRET",
+    dir,
+    fileName,
+    title: fileName.replace(/\.png$/i, "").replace(/-(full|half)$/i, "")
+  }));
+}
+
 function pickResults(count) {
   const pools = buildPools();
-  return Array.from({ length: count }, (_, index) => {
-    const rarity = pickRarity();
-    const files = pools[rarity.dir] || [];
-    const fileName = files[crypto.randomInt(0, files.length)];
-    return {
-      index: index + 1,
-      rarity: rarity.key,
-      dir: rarity.dir,
-      fileName,
-      title: fileName.replace(/\.png$/i, "").replace(/-(sr|ur|gal)$/i, "")
-    };
-  });
+  const secretPools = buildSecretPools();
+  const sheetCount = Math.max(1, Math.ceil(count / SHEET_SIZE));
+  const results = [];
+  const dir = SECRET_DIRS[crypto.randomInt(0, SECRET_DIRS.length)];
+  for (let sheetIndex = 0; sheetIndex < sheetCount; sheetIndex += 1) {
+    if (crypto.randomInt(0, Math.round(1 / SECRET_SHEET_RATE)) === 0) {
+      results.push(...buildSecretSheet(secretPools, results.length, dir));
+      continue;
+    }
+
+    const remaining = count - results.length;
+    const sheetLength = Math.min(SHEET_SIZE, Math.max(0, remaining));
+    for (let index = 0; index < sheetLength; index += 1) {
+      const rarity = pickRarity();
+      const files = pools[rarity.dir] || [];
+      const fileName = files[crypto.randomInt(0, files.length)];
+      results.push({
+        index: results.length + 1,
+        rarity: rarity.key,
+        dir: rarity.dir,
+        fileName,
+        title: fileName.replace(/\.png$/i, "").replace(/-(sr|ur|gal)$/i, "")
+      });
+    }
+  }
+  return results;
 }
 
 function assetUrl(baseUrl, result) {

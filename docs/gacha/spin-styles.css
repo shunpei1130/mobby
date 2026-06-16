@@ -496,12 +496,30 @@ a {
   text-align: center;
 }
 
+.result-sheet.is-secret-result {
+  border-color: rgba(255, 216, 95, 0.72);
+  background:
+    radial-gradient(circle at 18% 10%, rgba(255, 255, 255, 0.86), transparent 24%),
+    radial-gradient(circle at 82% 18%, rgba(255, 216, 95, 0.32), transparent 28%),
+    linear-gradient(135deg, rgba(138, 92, 255, 0.26), rgba(255, 91, 200, 0.2), rgba(255, 216, 95, 0.18)),
+    rgba(255, 250, 240, 0.98);
+  box-shadow:
+    0 -18px 34px rgba(102, 75, 46, 0.16),
+    0 0 46px rgba(138, 92, 255, 0.24),
+    inset 0 0 42px rgba(255, 255, 255, 0.52);
+}
+
 .result-kicker {
   margin: 0 0 10px;
   color: var(--pink-deep);
   font-size: 1rem;
   font-weight: 900;
   letter-spacing: 0.18em;
+}
+
+.result-sheet.is-secret-result .result-kicker {
+  color: #7b45ff;
+  text-shadow: 0 0 18px rgba(255, 216, 95, 0.45);
 }
 
 .result-placeholder {
@@ -520,6 +538,17 @@ a {
     inset 0 2px 0 rgba(255, 255, 255, 0.58),
     0 12px 20px rgba(112, 82, 52, 0.15);
   cursor: zoom-in;
+}
+
+.result-sheet.is-secret-result .result-placeholder {
+  border-color: rgba(255, 255, 255, 0.96);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.46), transparent 42%),
+    linear-gradient(135deg, rgba(138, 92, 255, 0.28), rgba(255, 91, 200, 0.22), rgba(255, 216, 95, 0.18));
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.68),
+    0 14px 24px rgba(75, 50, 130, 0.18),
+    0 0 34px rgba(255, 216, 95, 0.3);
 }
 
 .result-placeholder img {
@@ -583,11 +612,20 @@ a {
   font-weight: 900;
 }
 
+.result-sheet.is-secret-result h2 {
+  color: #2f2642;
+  text-shadow: 0 3px 16px rgba(255, 216, 95, 0.3);
+}
+
 .result-sheet p {
   margin: 0;
   color: var(--muted);
   font-weight: 800;
   line-height: 1.6;
+}
+
+.result-sheet.is-secret-result p {
+  color: #5f4a72;
 }
 
 .sticker-results {
@@ -612,6 +650,18 @@ a {
   cursor: zoom-in;
 }
 
+.result-sheet.is-secret-result .sticker-result-button {
+  border-color: rgba(255, 255, 255, 0.96);
+  background: linear-gradient(135deg, rgba(138, 92, 255, 0.2), rgba(255, 216, 95, 0.18));
+  box-shadow:
+    0 10px 18px rgba(75, 50, 130, 0.16),
+    0 0 22px rgba(255, 216, 95, 0.24);
+}
+
+.result-sheet.is-secret-result .sticker-result-button img {
+  object-fit: contain;
+}
+
 .sticker-result-button img {
   width: 100%;
   height: 100%;
@@ -631,6 +681,11 @@ a {
   font-size: 0.62rem;
   font-weight: 900;
   line-height: 1;
+}
+
+.result-sheet.is-secret-result .sticker-result-button span {
+  background: linear-gradient(135deg, #8a5cff, #ff5bc8 56%, #ffd85f);
+  color: #fff;
 }
 
 .sticker-result-button:focus-visible {
@@ -746,6 +801,14 @@ a {
   --reveal-particle-size: 22px;
   --reveal-particle-rise: -62px;
   --reveal-glow: rgba(255, 91, 200, 0.62);
+}
+
+.sticker-reveal.rarity-secret {
+  --reveal-image-scale: 1.22;
+  --reveal-burst-scale: 1.44;
+  --reveal-particle-size: 24px;
+  --reveal-particle-rise: -68px;
+  --reveal-glow: rgba(138, 92, 255, 0.64);
 }
 
 .reveal-burst {
@@ -889,11 +952,31 @@ a {
     0 0 104px rgba(101, 199, 255, 0.38);
 }
 
+.sticker-reveal.rarity-secret .sticker-reveal-card {
+  background:
+    radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.8), transparent 24%),
+    linear-gradient(135deg, rgba(138, 92, 255, 0.24), rgba(255, 91, 200, 0.2), rgba(255, 216, 95, 0.18)),
+    rgba(255, 250, 240, 0.96);
+  box-shadow:
+    0 0 0 5px rgba(255, 255, 255, 0.78),
+    0 24px 54px rgba(20, 16, 13, 0.32),
+    0 0 66px rgba(138, 92, 255, 0.56),
+    0 0 90px rgba(255, 91, 200, 0.44),
+    0 0 110px rgba(255, 216, 95, 0.42);
+}
+
 .sticker-reveal.rarity-pri {
   background:
     radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0.18), transparent 28%),
     linear-gradient(135deg, rgba(255, 91, 200, 0.34), rgba(101, 199, 255, 0.3), rgba(255, 216, 95, 0.26)),
     rgba(39, 31, 25, 0.48);
+}
+
+.sticker-reveal.rarity-secret {
+  background:
+    radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0.2), transparent 28%),
+    linear-gradient(135deg, rgba(138, 92, 255, 0.36), rgba(255, 91, 200, 0.32), rgba(255, 216, 95, 0.28)),
+    rgba(39, 31, 25, 0.5);
 }
 
 .sticker-reveal.rarity-pri .sticker-reveal-image-wrap {
@@ -904,9 +987,71 @@ a {
     0 0 58px rgba(101, 199, 255, 0.42);
 }
 
+.sticker-reveal.rarity-secret .sticker-reveal-image-wrap {
+  box-shadow:
+    0 18px 32px rgba(102, 75, 46, 0.22),
+    0 0 36px rgba(138, 92, 255, 0.64),
+    0 0 52px rgba(255, 91, 200, 0.5),
+    0 0 62px rgba(255, 216, 95, 0.44);
+}
+
 .sticker-reveal.rarity-pri .reveal-burst {
   background:
     conic-gradient(from 0deg, #ff5bc8, #ffd85f, #65c7ff, #8a5cff, #ff5bc8);
+}
+
+.sticker-reveal.rarity-secret .reveal-burst {
+  background:
+    conic-gradient(from 0deg, #8a5cff, #ff5bc8, #ffd85f, #65c7ff, #8a5cff);
+}
+
+.sticker-reveal.is-secret-intro .sticker-reveal-card,
+.sticker-reveal.is-secret-outro .sticker-reveal-card {
+  min-height: 360px;
+  justify-content: center;
+}
+
+.sticker-reveal.is-secret-intro .sticker-reveal-image-wrap,
+.sticker-reveal.is-secret-outro .sticker-reveal-image-wrap {
+  display: none;
+}
+
+.sticker-reveal.is-secret-intro .sticker-reveal-count,
+.sticker-reveal.is-secret-outro .sticker-reveal-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #7b45ff;
+  font-size: 0.86rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  box-shadow: 0 10px 22px rgba(75, 50, 130, 0.16);
+}
+
+.sticker-reveal.is-secret-outro .sticker-reveal-count {
+  color: #d34fb1;
+}
+
+.sticker-reveal.is-secret-intro h2,
+.sticker-reveal.is-secret-outro h2 {
+  max-width: 10em;
+  margin-inline: auto;
+  font-size: clamp(2rem, 8vw, 3.4rem);
+  line-height: 1.05;
+  color: #fff;
+  text-shadow:
+    0 4px 18px rgba(60, 38, 120, 0.45),
+    0 0 26px rgba(255, 216, 95, 0.42);
+}
+
+.sticker-reveal.is-secret-intro p,
+.sticker-reveal.is-secret-outro p {
+  color: #fff;
+  text-shadow: 0 3px 12px rgba(60, 38, 120, 0.36);
 }
 
 .sticker-reveal.rarity-ur.is-animating .sticker-reveal-card {
@@ -917,9 +1062,14 @@ a {
   animation: revealPop 620ms cubic-bezier(0.2, 0.8, 0.2, 1), revealFlash 920ms ease-out, revealPrism 1300ms ease-in-out;
 }
 
+.sticker-reveal.rarity-secret.is-animating .sticker-reveal-card {
+  animation: revealPop 620ms cubic-bezier(0.2, 0.8, 0.2, 1), revealPrism 1320ms ease-in-out;
+}
+
 .sticker-reveal.rarity-sr.is-animating .reveal-burst,
 .sticker-reveal.rarity-ur.is-animating .reveal-burst,
-.sticker-reveal.rarity-pri.is-animating .reveal-burst {
+.sticker-reveal.rarity-pri.is-animating .reveal-burst,
+.sticker-reveal.rarity-secret.is-animating .reveal-burst {
   animation-duration: 920ms;
 }
 

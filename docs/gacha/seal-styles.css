@@ -409,7 +409,7 @@ a {
 
 .seal-lineup {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 28px;
   align-items: start;
 }
@@ -499,6 +499,35 @@ a {
   margin: 0 auto 18px;
   display: grid;
   gap: 12px;
+}
+
+.seal-secret-main {
+  width: min(500px, 100%);
+  min-height: 78px;
+  margin: 0 auto 12px;
+  display: grid;
+  place-items: center;
+  gap: 4px;
+  padding: 14px 18px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.86), transparent 26%),
+    linear-gradient(135deg, #8a5cff, #ff5bc8 56%, #ffd85f);
+  color: #fff;
+  font-weight: 900;
+  text-decoration: none;
+  box-shadow:
+    0 16px 28px rgba(138, 92, 255, 0.22),
+    inset 0 4px rgba(255, 255, 255, 0.3);
+}
+
+.seal-secret-main span {
+  font-size: 1.1rem;
+}
+
+.seal-secret-main strong {
+  font-size: 0.86rem;
+  letter-spacing: 0.05em;
 }
 
 .seal-paid-main {
@@ -932,7 +961,7 @@ a {
 .seal-rate-grid {
   margin-top: 18px;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 12px;
 }
 

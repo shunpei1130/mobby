@@ -72,11 +72,21 @@
             <img src="../gacha-new/assets/gal/%E8%8A%B1%E6%9D%9F%E3%81%AE%E4%B8%BB%E4%BA%BA%E5%85%AC-gal.png" alt="花束の主人公 プリ">
           </div>
         </article>
+        <article class="seal-item">
+          <span class="rarity ultra">SECRET</span>
+          <div class="seal-placeholder">
+            <img src="../gacha-new/assets/main4/full/%E3%82%82%E3%81%B3%E3%81%A1-full.png" alt="もびち SECRET">
+          </div>
+        </article>
       </div>
       <p>どのシールが出るかはおたのしみ♪</p>
     </section>
 
     <section class="seal-spin-panel" aria-label="ガチャをまわす">
+      <a class="seal-secret-main" href="spin.html?secret=1">
+        <span>確定ガチャ</span>
+        <strong>SECRETシート確定</strong>
+      </a>
       <div class="seal-paid-panel">
         <button class="seal-paid-main" id="openPaidGacha" type="button">有料ガチャを引く</button>
         <div class="seal-paid-options" id="paidGachaOptions" hidden>
@@ -165,8 +175,13 @@
             <strong>2%</strong>
             <small>6連で出る確率<br>約11.4%</small>
           </article>
+          <article class="seal-rate-card">
+            <span class="rarity ultra">SECRET</span>
+            <strong>1/500</strong>
+            <small>シート単位で<br>抽選</small>
+          </article>
         </div>
-        <p class="seal-rate-note">「6連で出る確率」は、6枚の中にそのレアリティが1枚以上含まれる確率です。各レアリティ内のシールは、対象レアリティの中からランダムに選ばれます。</p>
+        <p class="seal-rate-note">「6連で出る確率」は、6枚の中にそのレアリティが1枚以上含まれる確率です。SECRETは500回に1回の確率で、fullまたはhalfの4枚がまとまったシークレットシートとして出ます。各レアリティ内のシールは、対象レアリティの中からランダムに選ばれます。</p>
       </div>
     </div>
   </section>
@@ -219,10 +234,12 @@
         { label: "R", className: "normal", dir: "r", files: ["ひなたの愛され人.png", "余白を飾る演出家.png", "地図を広げる冒険家.png", "夜風のロマンチスト.png", "恋に旗を振る人.png", "晴れ間の本命.png", "月影のミューズ.png", "毛布を掛ける人.png", "秘密の星.png", "胸奥のロマン.png", "花束の主人公１.png", "陽だまりを分ける人.png", "雨宿りの待ち人.png", "静かな港の相棒.png", "静かな灯.png", "風まかせの小悪魔.png"] },
         { label: "SR", className: "rare", dir: "sr", softPreview: true, files: ["ひなたの愛され人-sr.png", "余白を飾る演出家-sr.png", "地図を広げる冒険家-sr.png", "夜風のロマンチスト-sr.png", "恋に旗を振る人-sr.png", "晴れ間の本命-sr.png", "月影のミューズ-sr.png", "毛布を掛ける人-sr.png", "秘密の星-sr.png", "胸奥のロマン-sr.png", "花束の主人公-sr.png", "陽だまりを分ける人-sr.png", "雨宿りの待ち人-sr.png", "静かな港の相棒-sr.png", "静かな灯-sr.png", "風まかせの小悪魔-sr.png"] },
         { label: "UR", className: "sparkle", dir: "ur", softPreview: true, files: ["ひなたの愛され人-ur.png", "余白を飾る演出家-ur.png", "地図を広げる冒険家-ur.png", "夜風のロマンチスト-ur.png", "恋に旗を振る人-ur.png", "晴れ間の本命-ur.png", "月影のミューズ-ur.png", "毛布を掛ける人-ur.png", "秘密の星-ur.png", "胸奥のロマン-ur.png", "花束の主人公-ur.png", "陽だまりを分ける人-ur.png", "雨宿りの待ち人-ur.png", "静かな港の相棒-ur.png", "静かな灯-ur.png", "風まかせの小悪魔-ur.png"] },
-        { label: "プリ", className: "special", dir: "gal", softPreview: true, files: ["ひなたの愛され人-gal.png", "余白を飾る演出家-gal.png", "地図を広げる冒険家-gal.png", "夜風のロマンチスト-gal.png", "恋に旗を振る人-gal.png", "晴れ間の本命-gal.png", "月影のミューズ-gal.png", "毛布を掛ける人-gal.png", "秘密の星-gal.png", "胸奥のロマン-gal.png", "花束の主人公-gal.png", "陽だまりを分ける人-gal.png", "雨宿りの待ち人-gal.png", "静かな港の相棒-gal.png", "静かな灯り-gal.png", "風まかせの小悪魔-gal.png"] }
+        { label: "プリ", className: "special", dir: "gal", softPreview: true, files: ["ひなたの愛され人-gal.png", "余白を飾る演出家-gal.png", "地図を広げる冒険家-gal.png", "夜風のロマンチスト-gal.png", "恋に旗を振る人-gal.png", "晴れ間の本命-gal.png", "月影のミューズ-gal.png", "毛布を掛ける人-gal.png", "秘密の星-gal.png", "胸奥のロマン-gal.png", "花束の主人公-gal.png", "陽だまりを分ける人-gal.png", "雨宿りの待ち人-gal.png", "静かな港の相棒-gal.png", "静かな灯り-gal.png", "風まかせの小悪魔-gal.png"] },
+        { label: "SECRET full", className: "ultra", dir: "main4/full", softPreview: true, files: ["もびち-full.png", "もびやん-full.png", "もびりん-full.png", "病みモビー-full.png"] },
+        { label: "SECRET half", className: "ultra", dir: "main4/half", softPreview: true, files: ["もびち-half.png", "もびやん-half.png", "もびりん-half.png", "病みモビー-half.png"] }
       ];
 
-      const stripName = (file) => file.replace(/\.png$/u, "").replace(/-(sr|ur|gal)$/u, "").replace(/１$/u, "");
+      const stripName = (file) => file.replace(/\.png$/u, "").replace(/-(sr|ur|gal|full|half)$/u, "").replace(/１$/u, "");
       const assetPath = (dir, file) => `../gacha-new/assets/${dir}/${encodeURIComponent(file)}`;
 
       content.innerHTML = groups.map((group) => `
