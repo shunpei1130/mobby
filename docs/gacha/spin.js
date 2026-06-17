@@ -40,10 +40,13 @@
   const SEND_STICKER_EMAIL_ENDPOINT = "/api/gacha-send-sticker-email";
   const params = new URLSearchParams(window.location.search);
   const isPaidMode = params.get("mode") === "paid";
+  const isFreeMode = params.get("mode") === "free";
+  const isTestMode = params.get("mode") === "test";
+  const isSecretTestMode = params.get("testSecret") === "1";
   const checkoutSessionId = params.get("session_id") || "";
   let paidSpinAvailable = !isPaidMode;
   let hasUsedPaidSpin = false;
-  let pullCount = Math.max(1, Math.min(10, Number(params.get("pulls")) || 1));
+  let pullCount = isSecretTestMode ? 10 : Math.max(1, Math.min(10, Number(params.get("pulls")) || 1));
 
   const rNames = [
     "ひなたの愛され人",
@@ -223,7 +226,7 @@
   }
 
   disableDesktopNativeShare();
-  if (isPaidMode && emailGate) emailGate.hidden = true;
+  if (emailGate) emailGate.hidden = isFreeMode || isTestMode || isSecretTestMode;
 
   function normalizeEmail(value) {
     return String(value || "").trim();
@@ -326,6 +329,12 @@
     return pool[Math.floor(Math.random() * pool.length)];
   }
 
+  function pickFreeResult() {
+    const rarity = Math.random() < (1 / 6) ? "SR" : "R";
+    const pool = results.filter((result) => result.rarity === rarity);
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
   function appendSecretSheet(selectedResults, variant) {
     const secretSheet = secretResults.filter((result) => result.variant === variant);
     selectedResults.push(...secretSheet);
@@ -338,15 +347,16 @@
     const sheetCount = Math.max(1, Math.ceil(count / sheetSlots.length));
     const selectedResults = [];
     const guaranteedVariant = Math.random() < 0.5 ? "full" : "half";
+    const guaranteedSecretSheetIndex = isSecretTestMode ? Math.floor(Math.random() * sheetCount) : -1;
     for (let sheetIndex = 0; sheetIndex < sheetCount; sheetIndex += 1) {
       const remaining = count - selectedResults.length;
       const sheetLength = Math.min(sheetSlots.length, Math.max(0, remaining));
-      const shouldUseSecretSheet = Math.random() < SECRET_SHEET_RATE;
+      const shouldUseSecretSheet = !isFreeMode && (sheetIndex === guaranteedSecretSheetIndex || Math.random() < SECRET_SHEET_RATE);
       if (shouldUseSecretSheet) {
         appendSecretSheet(selectedResults, guaranteedVariant);
       } else {
         for (let index = 0; index < sheetLength; index += 1) {
-          selectedResults.push(pickResult());
+          selectedResults.push(isFreeMode ? pickFreeResult() : pickResult());
         }
       }
     }
@@ -1056,7 +1066,7 @@
   }
   function spin() {
     if (isSpinning) return;
-    if (!isPaidMode && !validateEmailGate()) return;
+    if (!isPaidMode && !isFreeMode && !isTestMode && !isSecretTestMode && !validateEmailGate()) return;
     if (isPaidMode && (!paidSpinAvailable || hasUsedPaidSpin)) {
       window.location.href = "index.html";
       return;

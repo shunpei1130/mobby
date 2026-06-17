@@ -105,15 +105,30 @@
         </div>
         <p class="seal-paid-status" id="paidGachaStatus" aria-live="polite"></p>
       </div>
-      <div class="seal-spin-actions">
-        <a class="spin-button" href="spin.html">
+      <div class="seal-free-panel">
+        <a class="seal-free-main" href="spin.html?mode=free">無料ガチャを引く（6連）</a>
+      </div>
+      <div class="seal-normal-panel">
+        <p class="seal-normal-title">テストガチャ</p>
+        <div class="seal-spin-actions">
+          <a class="spin-button" href="spin.html?mode=test">
           6連
           <span class="spin-capsule" aria-hidden="true"></span>
-        </a>
-        <a class="spin-button spin-button-ten" href="spin.html?pulls=10">
+          </a>
+          <a class="spin-button spin-button-ten" href="spin.html?mode=test&pulls=10">
           60連
           <span class="spin-capsule" aria-hidden="true"></span>
-        </a>
+          </a>
+        </div>
+      </div>
+      <div class="seal-normal-panel seal-guaranteed-panel">
+        <p class="seal-normal-title">確定テストガチャ</p>
+        <div class="seal-spin-actions seal-guaranteed-actions">
+          <a class="spin-button spin-button-secret" href="spin.html?mode=test&pulls=10&testSecret=1">
+          60連
+          <span class="spin-capsule" aria-hidden="true"></span>
+          </a>
+        </div>
       </div>
       <form class="seal-code-form" id="sealCodeForm">
         <input class="seal-code-input" id="sealCodeInput" type="text" inputmode="text" autocomplete="off" placeholder="コードを入力">
@@ -149,35 +164,57 @@
         <button class="seal-list-close" id="closeSealRate" type="button" aria-label="排出率を閉じる">×</button>
       </div>
       <div class="seal-rate-content">
-        <p class="seal-rate-lead">シール1枚ごとのレアリティ抽選率です。1回のガチャでは6枚のシールがランダムで排出されます。</p>
-        <div class="seal-rate-grid" aria-label="各レアリティの排出率">
-          <article class="seal-rate-card">
-            <span class="rarity normal">R</span>
-            <strong>70%</strong>
-            <small>6連で出る確率<br>約99.9%</small>
-          </article>
-          <article class="seal-rate-card">
-            <span class="rarity rare">SR</span>
-            <strong>20%</strong>
-            <small>6連で出る確率<br>約73.8%</small>
-          </article>
-          <article class="seal-rate-card">
-            <span class="rarity sparkle">UR</span>
-            <strong>8%</strong>
-            <small>6連で出る確率<br>約39.4%</small>
-          </article>
-          <article class="seal-rate-card">
-            <span class="rarity special">プリ</span>
-            <strong>2%</strong>
-            <small>6連で出る確率<br>約11.4%</small>
-          </article>
-          <article class="seal-rate-card">
-            <span class="rarity ultra">SECRET</span>
-            <strong>1/500</strong>
-            <small>シート単位で<br>抽選</small>
-          </article>
+        <div class="seal-rate-tabs" role="tablist" aria-label="ガチャ種別">
+          <button class="seal-rate-tab is-active" id="paidRateTab" type="button" role="tab" aria-selected="true" aria-controls="paidRatePanel" data-rate-tab="paid">有料</button>
+          <button class="seal-rate-tab" id="freeRateTab" type="button" role="tab" aria-selected="false" aria-controls="freeRatePanel" data-rate-tab="free">無料</button>
         </div>
-        <p class="seal-rate-note">「6連で出る確率」は、6枚の中にそのレアリティが1枚以上含まれる確率です。SECRETは500回に1回の確率で、fullまたはhalfの4枚がまとまったシークレットシートとして出ます。各レアリティ内のシールは、対象レアリティの中からランダムに選ばれます。</p>
+        <div class="seal-rate-panel" id="paidRatePanel" role="tabpanel" aria-labelledby="paidRateTab" data-rate-panel="paid">
+          <p class="seal-rate-lead">有料ガチャはシール1枚ごとに下記の確率で抽選されます。6連・60連とも同じ排出率です。</p>
+          <div class="seal-rate-grid" aria-label="有料ガチャの各レアリティ排出率">
+            <article class="seal-rate-card">
+              <span class="rarity normal">R</span>
+              <strong>70%</strong>
+              <small>6連で出る確率<br>約99.9%</small>
+            </article>
+            <article class="seal-rate-card">
+              <span class="rarity rare">SR</span>
+              <strong>20%</strong>
+              <small>6連で出る確率<br>約73.8%</small>
+            </article>
+            <article class="seal-rate-card">
+              <span class="rarity sparkle">UR</span>
+              <strong>8%</strong>
+              <small>6連で出る確率<br>約39.4%</small>
+            </article>
+            <article class="seal-rate-card">
+              <span class="rarity special">プリ</span>
+              <strong>2%</strong>
+              <small>6連で出る確率<br>約11.4%</small>
+            </article>
+            <article class="seal-rate-card">
+              <span class="rarity ultra">SECRET</span>
+              <strong>1/500</strong>
+              <small>シート単位で<br>抽選</small>
+            </article>
+          </div>
+          <p class="seal-rate-note">「6連で出る確率」は、6枚の中にそのレアリティが1枚以上含まれる確率です。SECRETは500回に1回の確率で、fullまたはhalfの4枚がまとまったシークレットシートとして出ます。</p>
+        </div>
+        <div class="seal-rate-panel" id="freeRatePanel" role="tabpanel" aria-labelledby="freeRateTab" data-rate-panel="free" hidden>
+          <p class="seal-rate-lead">無料ガチャは6連のみで、RとSRのみ排出されます。</p>
+          <div class="seal-rate-grid is-free" aria-label="無料ガチャの各レアリティ排出率">
+            <article class="seal-rate-card">
+              <span class="rarity normal">R</span>
+              <strong>5/6</strong>
+              <small>約83.3%<br>SR以外で排出</small>
+            </article>
+            <article class="seal-rate-card">
+              <span class="rarity rare">SR</span>
+              <strong>1/6</strong>
+              <small>約16.7%<br>6連で出る確率 約66.5%</small>
+            </article>
+          </div>
+          <p class="seal-rate-note">無料ガチャではUR・プリ・SECRETは排出されません。各レアリティ内のシールは、対象レアリティの中からランダムに選ばれます。</p>
+        </div>
       </div>
     </div>
   </section>
@@ -210,6 +247,8 @@
       const openRateButton = document.getElementById("openSealRates");
       const closeRateButton = document.getElementById("closeSealRate");
       const closeRateBackdrop = document.getElementById("closeSealRateBackdrop");
+      const rateTabButtons = Array.from(document.querySelectorAll("[data-rate-tab]"));
+      const ratePanels = Array.from(document.querySelectorAll("[data-rate-panel]"));
       const codeForm = document.getElementById("sealCodeForm");
       const codeInput = document.getElementById("sealCodeInput");
       const codeError = document.getElementById("sealCodeError");
@@ -267,6 +306,7 @@
 
       const openRateModal = () => {
         if (!rateModal) return;
+        setRateTab("paid");
         rateModal.hidden = false;
         document.body.classList.add("is-seal-rate-open");
         closeRateButton?.focus();
@@ -277,6 +317,17 @@
         rateModal.hidden = true;
         document.body.classList.remove("is-seal-rate-open");
         openRateButton?.focus();
+      };
+
+      const setRateTab = (target) => {
+        rateTabButtons.forEach((button) => {
+          const active = button.dataset.rateTab === target;
+          button.classList.toggle("is-active", active);
+          button.setAttribute("aria-selected", active ? "true" : "false");
+        });
+        ratePanels.forEach((panel) => {
+          panel.hidden = panel.dataset.ratePanel !== target;
+        });
       };
 
       const setPaidStatus = (message) => {
@@ -406,6 +457,9 @@
       openRateButton?.addEventListener("click", openRateModal);
       closeRateButton?.addEventListener("click", closeRateModal);
       closeRateBackdrop?.addEventListener("click", closeRateModal);
+      rateTabButtons.forEach((button) => {
+        button.addEventListener("click", () => setRateTab(button.dataset.rateTab || "paid"));
+      });
       openPaidGacha?.addEventListener("click", () => {
         if (!paidGachaOptions) return;
         paidGachaOptions.hidden = !paidGachaOptions.hidden;
