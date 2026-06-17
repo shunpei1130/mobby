@@ -478,6 +478,31 @@ a {
   object-fit: cover;
 }
 
+.seal-item.is-secret-preview .seal-placeholder img {
+  visibility: hidden;
+}
+
+.seal-item.is-secret-preview .seal-placeholder {
+  position: relative;
+  background: #f5f0ea;
+  box-shadow: 0 10px 18px rgba(112, 82, 52, 0.1);
+}
+
+.seal-item.is-secret-preview .seal-placeholder::before {
+  content: "?";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #8a7665;
+  font-size: clamp(2.8rem, 8vw, 4.8rem);
+  font-weight: 900;
+}
+
+.seal-item.is-secret-preview .seal-placeholder::after {
+  content: none;
+}
+
 .seal-lineup-panel p,
 .spin-note {
   margin: 28px 0 0;
@@ -499,35 +524,6 @@ a {
   margin: 0 auto 18px;
   display: grid;
   gap: 12px;
-}
-
-.seal-secret-main {
-  width: min(500px, 100%);
-  min-height: 78px;
-  margin: 0 auto 12px;
-  display: grid;
-  place-items: center;
-  gap: 4px;
-  padding: 14px 18px;
-  border-radius: 24px;
-  background:
-    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.86), transparent 26%),
-    linear-gradient(135deg, #8a5cff, #ff5bc8 56%, #ffd85f);
-  color: #fff;
-  font-weight: 900;
-  text-decoration: none;
-  box-shadow:
-    0 16px 28px rgba(138, 92, 255, 0.22),
-    inset 0 4px rgba(255, 255, 255, 0.3);
-}
-
-.seal-secret-main span {
-  font-size: 1.1rem;
-}
-
-.seal-secret-main strong {
-  font-size: 0.86rem;
-  letter-spacing: 0.05em;
 }
 
 .seal-paid-main {
@@ -1053,9 +1049,19 @@ a {
     repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0 8px, rgba(255, 255, 255, 0.03) 8px 16px);
 }
 
+.seal-list-group.is-secret-preview .seal-list-image-guard::after {
+  background:
+    linear-gradient(135deg, rgba(34, 26, 48, 0.72), rgba(89, 55, 128, 0.62)),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.16) 0 8px, rgba(255, 255, 255, 0.04) 8px 16px);
+}
+
 .seal-list-group.is-soft-preview .seal-list-card img {
   filter: blur(0.8px) saturate(0.94) brightness(1.02);
   transform: scale(1.01);
+}
+
+.seal-list-group.is-secret-preview .seal-list-card img {
+  filter: blur(2.6px) saturate(0.72) brightness(0.68);
 }
 
 .seal-list-card img {

@@ -1152,6 +1152,14 @@ a {
   justify-content: center;
 }
 
+.sticker-reveal.is-secret-intro .sticker-reveal-card,
+.sticker-reveal.is-secret-outro .sticker-reveal-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .sticker-reveal.is-secret-intro .sticker-reveal-image-wrap,
 .sticker-reveal.is-secret-outro .sticker-reveal-image-wrap {
   display: none;

@@ -72,7 +72,7 @@
             <img src="../gacha-new/assets/gal/%E8%8A%B1%E6%9D%9F%E3%81%AE%E4%B8%BB%E4%BA%BA%E5%85%AC-gal.png" alt="花束の主人公 プリ">
           </div>
         </article>
-        <article class="seal-item">
+        <article class="seal-item is-secret-preview">
           <span class="rarity ultra">SECRET</span>
           <div class="seal-placeholder">
             <img src="../gacha-new/assets/main4/full/%E3%82%82%E3%81%B3%E3%81%A1-full.png" alt="もびち SECRET">
@@ -83,10 +83,6 @@
     </section>
 
     <section class="seal-spin-panel" aria-label="ガチャをまわす">
-      <a class="seal-secret-main" href="spin.html?secret=1">
-        <span>確定ガチャ</span>
-        <strong>SECRETシート確定</strong>
-      </a>
       <div class="seal-paid-panel">
         <button class="seal-paid-main" id="openPaidGacha" type="button">有料ガチャを引く</button>
         <div class="seal-paid-options" id="paidGachaOptions" hidden>
@@ -243,7 +239,7 @@
       const assetPath = (dir, file) => `../gacha-new/assets/${dir}/${encodeURIComponent(file)}`;
 
       content.innerHTML = groups.map((group) => `
-        <section class="seal-list-group ${group.softPreview ? "is-soft-preview" : ""} is-${group.dir}-preview" aria-label="${group.label}のシール">
+        <section class="seal-list-group ${group.softPreview ? "is-soft-preview" : ""} ${group.dir.startsWith("main4/") ? "is-secret-preview" : ""} is-${group.dir.replace(/\//g, "-")}-preview" aria-label="${group.label}のシール">
           <div class="seal-list-group-head">
             <span class="rarity ${group.className}">${group.label}</span>
             <span>${group.files.length}種類</span>

@@ -81,17 +81,14 @@ function buildSecretSheet(secretPools, indexStart, dir) {
   }));
 }
 
-function pickResults(count, options = {}) {
+function pickResults(count) {
   const pools = buildPools();
   const secretPools = buildSecretPools();
   const sheetCount = Math.max(1, Math.ceil(count / SHEET_SIZE));
   const results = [];
   const dir = SECRET_DIRS[crypto.randomInt(0, SECRET_DIRS.length)];
-  const guaranteedSecretSheetIndex = options.guaranteeOneSecretSheet
-    ? crypto.randomInt(0, sheetCount)
-    : -1;
   for (let sheetIndex = 0; sheetIndex < sheetCount; sheetIndex += 1) {
-    if (sheetIndex === guaranteedSecretSheetIndex || crypto.randomInt(0, Math.round(1 / SECRET_SHEET_RATE)) === 0) {
+    if (crypto.randomInt(0, Math.round(1 / SECRET_SHEET_RATE)) === 0) {
       results.push(...buildSecretSheet(secretPools, results.length, dir));
       continue;
     }
@@ -212,7 +209,7 @@ export async function sendPaidGachaResultEmail({ stripeSecretKey, sessionId, str
   }
 
   const pulls = Math.max(1, Math.min(10, Number(metadata.pulls || 1)));
-  const results = pickResults(pulls * 6, { guaranteeOneSecretSheet: pulls === 10 });
+  const results = pickResults(pulls * 6);
   const resultBaseUrl = baseUrl || metadata.result_base_url || "https://www.mobby.online";
 
   const resend = new Resend(resendKey);

@@ -40,7 +40,6 @@
   const SEND_STICKER_EMAIL_ENDPOINT = "/api/gacha-send-sticker-email";
   const params = new URLSearchParams(window.location.search);
   const isPaidMode = params.get("mode") === "paid";
-  const isSecretGuaranteed = params.get("secret") === "1";
   const checkoutSessionId = params.get("session_id") || "";
   let paidSpinAvailable = !isPaidMode;
   let hasUsedPaidSpin = false;
@@ -310,7 +309,7 @@
     spinButton.disabled = busy || !paidSpinAvailable || paidSpinConsumed;
     handleButton.disabled = busy || !paidSpinAvailable || paidSpinConsumed;
     if (gachaEmailInput) gachaEmailInput.disabled = busy;
-    const readyLabel = isSecretGuaranteed ? "確定ガチャ" : pullCount === 10 ? "60連" : "6連";
+    const readyLabel = pullCount === 10 ? "60連" : "6連";
     spinButton.textContent = busy ? "まわしています..." : paidSpinConsumed ? "購入してもう一度" : readyLabel;
     if (!busy) {
       const capsule = document.createElement("span");
@@ -335,19 +334,14 @@
     }
   }
 
-  function pickResults(count, options = {}) {
+  function pickResults(count) {
     const sheetCount = Math.max(1, Math.ceil(count / sheetSlots.length));
     const selectedResults = [];
     const guaranteedVariant = Math.random() < 0.5 ? "full" : "half";
-    const guaranteedSecretSheetIndex = options.secretGuaranteed
-      ? 0
-      : options.guaranteeOneSecretSheet
-        ? Math.floor(Math.random() * sheetCount)
-        : -1;
     for (let sheetIndex = 0; sheetIndex < sheetCount; sheetIndex += 1) {
       const remaining = count - selectedResults.length;
       const sheetLength = Math.min(sheetSlots.length, Math.max(0, remaining));
-      const shouldUseSecretSheet = sheetIndex === guaranteedSecretSheetIndex || Math.random() < SECRET_SHEET_RATE;
+      const shouldUseSecretSheet = Math.random() < SECRET_SHEET_RATE;
       if (shouldUseSecretSheet) {
         appendSecretSheet(selectedResults, guaranteedVariant);
       } else {
@@ -1089,10 +1083,7 @@
     }, 820);
 
     window.setTimeout(() => {
-      const selectedResults = pickResults(pullCount * 6, {
-        secretGuaranteed: isSecretGuaranteed,
-        guaranteeOneSecretSheet: pullCount === 10
-      });
+      const selectedResults = pickResults(pullCount * 6);
       const revealableResults = selectedResults.filter((result) => !result.isSpacer);
       machineWrap.classList.remove("is-spinning", "is-dropping");
       if (spinLead) spinLead.textContent = "出たシールを確認しよう！";
