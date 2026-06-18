@@ -1,7 +1,25 @@
-const GACHA_PRODUCT_TYPE = "gacha_fifty_pack";
-const GACHA_PRODUCT_LABEL = "モビーガチャ 50連（¥2,000）";
-const GACHA_PRODUCT_DESCRIPTION = "MOBBY CAPSULE CLUBで使える50連ガチャ1セット";
-const GACHA_FIFTY_PACK_AMOUNT_JPY = 2000;
+const GACHA_PRODUCTS = {
+  single: {
+    productType: "gacha_single_pull",
+    label: "モビーガチャ 1回（¥100）",
+    description: "MOBBY CAPSULE CLUBで使えるガチャ1回分",
+    amountJpy: 100,
+    grantKind: "single",
+    grantCount: 1,
+    pullCount: 1,
+    catalogEnv: "STRIPE_PRICE_ID_GACHA_SINGLE_PULL",
+  },
+  ten: {
+    productType: "gacha_ten_pull",
+    label: "モビーガチャ 10連（¥500）",
+    description: "MOBBY CAPSULE CLUBで使える10連ガチャ1セット",
+    amountJpy: 500,
+    grantKind: "ten",
+    grantCount: 1,
+    pullCount: 10,
+    catalogEnv: "STRIPE_PRICE_ID_GACHA_TEN_PULL",
+  },
+};
 
 function setCors(res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -20,6 +38,11 @@ function safeText(value, max = 200) {
   return String(value || "").trim().slice(0, max);
 }
 
+function resolveProduct(body) {
+  const plan = safeText(body?.plan || body?.product || body?.productType, 40).toLowerCase();
+  return GACHA_PRODUCTS[plan] || GACHA_PRODUCTS.single;
+}
+
 export default async function handler(req, res) {
   setCors(res);
 
@@ -32,7 +55,6 @@ export default async function handler(req, res) {
 
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY || "";
   const stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY || "";
-  const stripeCatalogRef = process.env.STRIPE_PRICE_ID_GACHA_FIFTY_PACK || "";
 
   if (!stripeSecretKey || !stripePublishableKey) {
     return res.status(500).json({
@@ -42,6 +64,8 @@ export default async function handler(req, res) {
 
   try {
     const body = req.body || {};
+    const product = resolveProduct(body);
+    const stripeCatalogRef = process.env[product.catalogEnv] || "";
     const source = safeText(body.source || "gacha", 40);
     const origin = resolveOrigin(req);
     const returnUrl = `${origin}/gacha/index.html?session_id={CHECKOUT_SESSION_ID}`;
@@ -58,19 +82,21 @@ export default async function handler(req, res) {
       form.set("line_items[0][price]", stripeCatalogRef);
     } else {
       form.set("line_items[0][price_data][currency]", "jpy");
-      form.set("line_items[0][price_data][unit_amount]", String(GACHA_FIFTY_PACK_AMOUNT_JPY));
+      form.set("line_items[0][price_data][unit_amount]", String(product.amountJpy));
       if (stripeCatalogRef.startsWith("prod_")) {
         form.set("line_items[0][price_data][product]", stripeCatalogRef);
       } else {
-        form.set("line_items[0][price_data][product_data][name]", GACHA_PRODUCT_LABEL);
-        form.set("line_items[0][price_data][product_data][description]", GACHA_PRODUCT_DESCRIPTION);
+        form.set("line_items[0][price_data][product_data][name]", product.label);
+        form.set("line_items[0][price_data][product_data][description]", product.description);
       }
     }
 
     form.set("metadata[source]", source);
-    form.set("metadata[product_type]", GACHA_PRODUCT_TYPE);
-    form.set("metadata[product_label]", GACHA_PRODUCT_LABEL);
-    form.set("metadata[grant_count]", "1");
+    form.set("metadata[product_type]", product.productType);
+    form.set("metadata[product_label]", product.label);
+    form.set("metadata[grant_kind]", product.grantKind);
+    form.set("metadata[grant_count]", String(product.grantCount));
+    form.set("metadata[pull_count]", String(product.pullCount));
     if (stripeCatalogRef) {
       form.set("metadata[catalog_ref]", stripeCatalogRef);
     }
@@ -102,6 +128,11 @@ export default async function handler(req, res) {
       clientSecret: stripeData.client_secret,
       publishableKey: stripePublishableKey,
       sessionId: stripeData.id || "",
+      productType: product.productType,
+      productLabel: product.label,
+      grantKind: product.grantKind,
+      grantCount: product.grantCount,
+      pullCount: product.pullCount,
     });
   } catch (error) {
     return res.status(500).json({ error: error?.message || "Internal Error" });
