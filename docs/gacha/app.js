@@ -49,7 +49,23 @@
   let isShareModalOpen = false;
   let handleTouchFeedbackTimer = null;
   let sharePreviewUrl = '';
-  const GACHA_FIFTY_PACK_PRODUCT_TYPE = 'gacha_fifty_pack';
+  const GACHA_CHECKOUT_PRODUCTS = {
+    single: {
+      plan: 'single',
+      productType: 'gacha_single_pull',
+      label: '1回',
+      priceLabel: '100円',
+      stockKey: 'paidSinglePullStock',
+    },
+    ten: {
+      plan: 'ten',
+      productType: 'gacha_ten_pull',
+      label: '10連',
+      priceLabel: '500円',
+      stockKey: 'paidTenPullStock',
+    },
+  };
+  const GACHA_CHECKOUT_PRODUCT_TYPES = new Set(Object.values(GACHA_CHECKOUT_PRODUCTS).map((product) => product.productType));
   const GACHA_CHECKOUT_SESSION_ENDPOINT = '/api/gacha-checkout-session';
   const GACHA_CHECKOUT_STATUS_ENDPOINT = '/api/gacha-checkout-status';
   const GACHA_CHECKOUT_GRANT_STORAGE_KEY = 'mobby-gacha-checkout-grants-v1';
@@ -754,12 +770,15 @@
     els.historyList.innerHTML = state.history.map((entry) => {
       const card = getCardViewModel(cardsById.get(entry.cardId));
       if (!card) return '';
-      const modeLabel = entry.mode === 'free'
+      const historyMode = entry.mode || entry.source || '';
+      const modeLabel = historyMode === 'free'
         ? '無料ガチャ'
-        : entry.mode === 'starter'
+        : historyMode === 'starter'
           ? '初回10連'
-          : entry.mode === 'multi50'
-            ? '50連'
+          : historyMode === 'paid_single'
+            ? '購入1回'
+            : historyMode === 'multi10'
+              ? '購入10連'
             : 'ガチャ';
       const freshness = entry.isNew ? ' / NEW' : '';
       return `
@@ -1554,7 +1573,8 @@
       lastStarterPullCardIds: [],
       lastPullType: 'single',
       ichibanTickets: 0,
-      fiftyPackStock: 0,
+      paidSinglePullStock: 0,
+      paidTenPullStock: 0,
       kujiBoostRemaining: 0,
       kujiPrizeHistory: [],
     };
@@ -1579,6 +1599,9 @@
       ? rawState.kujiPrizeHistory.filter((entry) => entry && typeof entry.name === 'string').slice(0, 30)
       : [];
 
+    const legacyFiftyPackStock = toSafeInt(rawState.fiftyPackStock);
+    const legacyPaidSpinStock = toSafeInt(rawState.paidSpinStock);
+
     return {
       selectedMode: rawState.selectedMode === 'paid' ? 'paid' : 'free',
       ownedCardIds,
@@ -1589,9 +1612,10 @@
       showcaseCharacterIds: unique((rawState.showcaseCharacterIds ?? []).filter((id) => bannerCharacterIdSet.has(id))).slice(0, MAX_SHOWCASE_CHARACTERS),
       starterTenPullClaimed: typeof rawState.starterTenPullClaimed === 'boolean' ? rawState.starterTenPullClaimed : hasExistingProgress,
       lastStarterPullCardIds: (rawState.lastStarterPullCardIds ?? []).filter((id) => cardsById.has(id)).slice(0, 10),
-      lastPullType: rawState.lastPullType === 'starter' || rawState.lastPullType === 'multi50' ? rawState.lastPullType : 'single',
+      lastPullType: rawState.lastPullType === 'starter' || rawState.lastPullType === 'multi10' || rawState.lastPullType === 'paid_single' ? rawState.lastPullType : 'single',
       ichibanTickets: toSafeInt(rawState.ichibanTickets),
-      fiftyPackStock: toSafeInt(rawState.fiftyPackStock),
+      paidSinglePullStock: toSafeInt(rawState.paidSinglePullStock) + legacyPaidSpinStock,
+      paidTenPullStock: toSafeInt(rawState.paidTenPullStock) + legacyFiftyPackStock * 5,
       kujiBoostRemaining: toSafeInt(rawState.kujiBoostRemaining),
       kujiPrizeHistory,
     };
@@ -1604,22 +1628,29 @@
   }
 
   function bindEconomyExtras() {
-    const fiftyButton = document.getElementById('buyFiftyPackButton');
-    if (fiftyButton && !fiftyButton.dataset.boundEconomy) {
-      fiftyButton.dataset.boundEconomy = '1';
-      fiftyButton.addEventListener('click', (event) => {
-        void purchaseFiftyPack(event.currentTarget);
-      });    }
+    const singleButton = document.getElementById('buySinglePullButton');
+    if (singleButton && !singleButton.dataset.boundEconomy) {
+      singleButton.dataset.boundEconomy = '1';
+      singleButton.addEventListener('click', (event) => {
+        void purchaseGachaPack('single', event.currentTarget);
+      });
+    }
 
-    const ticketButton = document.getElementById('buyKujiTicketButton');
-    if (ticketButton && !ticketButton.dataset.boundEconomy) {
-      ticketButton.dataset.boundEconomy = '1';
-      ticketButton.addEventListener('click', purchaseKujiTicket);
+    const tenButton = document.getElementById('buyTenPullButton');
+    if (tenButton && !tenButton.dataset.boundEconomy) {
+      tenButton.dataset.boundEconomy = '1';
+      tenButton.addEventListener('click', (event) => {
+        void purchaseGachaPack('ten', event.currentTarget);
+      });
     }
   }
 
   function getStandardCardRates() {
     return activeBanner.freeRates ?? activeBanner.paidRates ?? { N: 0.79, R: 0.2, SSR: 0.01 };
+  }
+
+  function getPaidCardRates() {
+    return activeBanner.paidRates ?? getStandardCardRates();
   }
 
   function getIchibanPrizes() {
@@ -1647,12 +1678,14 @@
     }
     const isFreeMode = !paidModeReleased || state.selectedMode === 'free';
     const freeAvailable = canUseFreeDaily();
-    const fiftyPackStock = toSafeInt(state.fiftyPackStock);
+    const singlePullStock = toSafeInt(state.paidSinglePullStock);
+    const tenPullStock = toSafeInt(state.paidTenPullStock);
     const freeRemaining = freeAvailable ? 1 : 0;
     const ticketCount = toSafeInt(state.ichibanTickets);
-    const freeModeSummary = `ガチャガチャ: 本日の無料 残り${freeRemaining}回 / 購入済み50連 残り${fiftyPackStock}回`;
+    const freeModeSummary = `ガチャガチャ: 無料 残り${freeRemaining}回 / 購入済み 1回${singlePullStock}・10連${tenPullStock}`;
     const paidModeSummary = `一番くじ: チケット 残り${ticketCount}枚`;
-    state.fiftyPackStock = fiftyPackStock;
+    state.paidSinglePullStock = singlePullStock;
+    state.paidTenPullStock = tenPullStock;
 
     els.freeModeButton?.classList.toggle('is-active', isFreeMode);
     els.paidModeButton?.classList.toggle('is-active', paidModeReleased && !isFreeMode);
@@ -1667,10 +1700,12 @@
     if (els.startGachaButton) {
       ensureStartHandleButtonDom();
       if (isFreeMode) {
-        const canSpinFreeHandle = freeAvailable || fiftyPackStock > 0;
-        const handleActionLabel = fiftyPackStock > 0
-          ? `購入済み50連を開封（残り${fiftyPackStock}）`
-          : '無料ガチャを回す';
+        const canSpinFreeHandle = freeAvailable || singlePullStock > 0 || tenPullStock > 0;
+        const handleActionLabel = tenPullStock > 0
+          ? `購入済み10連を開封（残り${tenPullStock}）`
+          : singlePullStock > 0
+            ? `購入済み1回を回す（残り${singlePullStock}）`
+            : '無料ガチャを回す';
         els.startGachaButton.setAttribute('aria-label', handleActionLabel);
         els.startGachaButton.title = handleActionLabel;
         els.startGachaButton.disabled = isSpinning || !canSpinFreeHandle;
@@ -1707,30 +1742,29 @@
   function renderEconomyPanel() {
     const panel = document.getElementById('modeEconomy');
     const ticketStock = document.getElementById('ticketStock');
-    const buyFiftyButton = document.getElementById('buyFiftyPackButton');
-    const buyKujiTicketButton = document.getElementById('buyKujiTicketButton');
+    const buySingleButton = document.getElementById('buySinglePullButton');
+    const buyTenButton = document.getElementById('buyTenPullButton');
     const note = document.getElementById('modeEconomyNote');
-    if (!panel || !ticketStock || !buyFiftyButton || !buyKujiTicketButton || !note) return;
+    if (!panel || !ticketStock || !buySingleButton || !buyTenButton || !note) return;
 
-    const isFreeMode = state.selectedMode === 'free';
-    const fiftyPackStock = toSafeInt(state.fiftyPackStock);
-    state.fiftyPackStock = fiftyPackStock;
+    const singlePullStock = toSafeInt(state.paidSinglePullStock);
+    const tenPullStock = toSafeInt(state.paidTenPullStock);
+    state.paidSinglePullStock = singlePullStock;
+    state.paidTenPullStock = tenPullStock;
 
     panel.hidden = false;
-    ticketStock.hidden = true;
+    ticketStock.hidden = false;
+    ticketStock.textContent = `購入済みガチャ: 1回 ${singlePullStock} / 10連 ${tenPullStock}`;
     note.hidden = false;
 
-    buyFiftyButton.hidden = !isFreeMode;
-    buyKujiTicketButton.hidden = isFreeMode;
-    buyFiftyButton.disabled = isSpinning || isCheckoutPending;
-    buyKujiTicketButton.disabled = isSpinning;
+    buySingleButton.hidden = false;
+    buyTenButton.hidden = false;
+    buySingleButton.disabled = isSpinning || isCheckoutPending;
+    buyTenButton.disabled = isSpinning || isCheckoutPending;
 
-    if (isFreeMode) {
-      buyFiftyButton.textContent = isCheckoutPending ? '決済ページを準備中...' : '50連（2000円）を購入';
-    } else {
-      buyKujiTicketButton.textContent = 'チケット1枚（500円）を購入';
-    }
-    note.textContent = economyStatusMessage || (isFreeMode ? '決済完了後に50連1セットが追加されます。' : '');
+    buySingleButton.textContent = isCheckoutPending ? '決済ページを準備中...' : '1回（100円）を購入';
+    buyTenButton.textContent = isCheckoutPending ? '決済ページを準備中...' : '10連（500円）を購入';
+    note.textContent = economyStatusMessage || '決済完了後、購入した回数がこの端末に反映されます。';
     note.hidden = !note.textContent;  }
   function renderDomeHint() {
     if (!els.gachaDome || !els.gachaDomeHint) return;
@@ -1797,10 +1831,13 @@
 
       if (els.lineupSpinButton) {
         const freeAvailable = canUseFreeDaily();
-        const fiftyPackStock = toSafeInt(state.fiftyPackStock);
-        const canSpinFromLineup = freeAvailable || fiftyPackStock > 0;
-        els.lineupSpinButton.textContent = fiftyPackStock > 0
-          ? `購入済み50連を開封（残り${fiftyPackStock}）`
+        const singlePullStock = toSafeInt(state.paidSinglePullStock);
+        const tenPullStock = toSafeInt(state.paidTenPullStock);
+        const canSpinFromLineup = freeAvailable || singlePullStock > 0 || tenPullStock > 0;
+        els.lineupSpinButton.textContent = tenPullStock > 0
+          ? `購入済み10連を開封（残り${tenPullStock}）`
+          : singlePullStock > 0
+            ? `購入済み1回を回す（残り${singlePullStock}）`
           : freeAvailable
             ? 'このまま無料で回す'
             : '本日は回し済み';
@@ -1855,8 +1892,24 @@
     }
   }
 
-  function drawCard() {
-    const rates = getStandardCardRates();
+  function drawCard(modeOrOptions = {}) {
+    const options = typeof modeOrOptions === 'object' && modeOrOptions !== null ? modeOrOptions : {};
+    const rates = typeof modeOrOptions === 'string'
+      ? modeOrOptions === 'paid' ? getPaidCardRates() : getStandardCardRates()
+      : options.rates || getStandardCardRates();
+    const guaranteedRPlus = Boolean(options.guaranteedRPlus);
+    if (guaranteedRPlus) {
+      const rPlusRates = {
+        R: rates.R ?? 0,
+        SSR: rates.SSR ?? 0,
+      };
+      const totalRPlus = rPlusRates.R + rPlusRates.SSR;
+      const seed = Math.random() * (totalRPlus || 1);
+      const targetRarity = seed < rPlusRates.SSR ? 'SSR' : 'R';
+      const rPlusPool = bannerPool.filter((card) => card.rarity === targetRarity);
+      return pickRandom(rPlusPool) ?? pickRandom(bannerPool.filter((card) => card.rarity === 'R')) ?? pickRandom(bannerPool);
+    }
+
     const roll = Math.random();
     const ssrCut = rates.SSR ?? 0;
     const rCut = ssrCut + (rates.R ?? 0);
@@ -1878,8 +1931,12 @@
       runIchibanKujiSpin();
       return;
     }
-    if (toSafeInt(state.fiftyPackStock) > 0) {
-      runPurchasedFiftyPack();
+    if (toSafeInt(state.paidTenPullStock) > 0) {
+      runPurchasedTenPull();
+      return;
+    }
+    if (toSafeInt(state.paidSinglePullStock) > 0) {
+      runPurchasedSinglePull();
       return;
     }
     runFreeGachaSpin();
@@ -2010,7 +2067,13 @@
     }, 980);
   }
 
-  async function purchaseFiftyPack(triggerButton = null) {
+  async function purchaseGachaPack(planKey, triggerButton = null) {
+    const product = getCheckoutProduct(planKey);
+    if (!product) {
+      economyStatusMessage = '購入プランが見つかりませんでした。';
+      renderModeState();
+      return;
+    }
     if (isSpinning || isCheckoutPending) return;
     if (!els.checkoutMount || !els.checkoutOverlay) {
       economyStatusMessage = '決済パネルの表示先が見つかりませんでした。';
@@ -2019,12 +2082,12 @@
     }
 
     isCheckoutPending = true;
-    economyStatusMessage = '決済パネルを準備しています。数秒お待ちください。';
+    economyStatusMessage = `${product.label}の決済パネルを準備しています。数秒お待ちください。`;
     renderModeState();
     if (isLineupModalOpen) renderGachaLineupModalContents();
 
     try {
-      const session = await createEmbeddedCheckoutSession();
+      const session = await createEmbeddedCheckoutSession(product.plan);
       const StripeCtor = await loadStripeJs();
       const stripe = StripeCtor(session.publishableKey);
       if (!stripe) {
@@ -2032,6 +2095,8 @@
       }
 
       teardownEmbeddedCheckout();
+      const checkoutTitle = document.getElementById('checkoutPanelTitle');
+      if (checkoutTitle) checkoutTitle.textContent = `${product.label}（${product.priceLabel}）を購入`;
       els.checkoutMount.innerHTML = '';
       embeddedCheckoutInstance = await stripe.initEmbeddedCheckout({
         fetchClientSecret: async () => session.clientSecret,
@@ -2041,7 +2106,7 @@
       });
       embeddedCheckoutInstance.mount('#checkoutMount');
       openCheckoutOverlay();
-      economyStatusMessage = '決済パネルを表示しました。支払い完了後に50連が反映されます。';
+      economyStatusMessage = `決済パネルを表示しました。支払い完了後に${product.label}が反映されます。`;
     } catch (error) {
       economyStatusMessage = error?.message || '決済パネルの表示に失敗しました。';
     } finally {
@@ -2051,16 +2116,24 @@
       if (isLineupModalOpen) renderGachaLineupModalContents();
     }
   }
-  function runPurchasedFiftyPack() {
-    if (isSpinning) return;
 
-    const ssrPool = bannerPool.filter((card) => card.rarity === 'SSR');
-    if (!bannerPool.length) {
-      renderModeState({ statusMessage: 'カードプールが見つかりませんでした。' });
+  function getCheckoutProduct(planKey) {
+    return GACHA_CHECKOUT_PRODUCTS[planKey] || null;
+  }
+
+  function runPurchasedSinglePull() {
+    if (isSpinning) return;
+    if (toSafeInt(state.paidSinglePullStock) <= 0) {
+      renderModeState({ statusMessage: '購入済みの1回ガチャがありません。' });
       return;
     }
 
-    state.fiftyPackStock = Math.max(0, toSafeInt(state.fiftyPackStock) - 1);
+    const card = drawCard({ rates: getPaidCardRates() });
+    if (!card) {
+      renderModeState({ statusMessage: 'カードを引けませんでした。時間をおいて再試行してください。' });
+      return;
+    }
+
     isSpinning = true;
     clearTimers();
     if (els.startGachaButton) els.startGachaButton.disabled = true;
@@ -2068,37 +2141,86 @@
     els.gachaMachine?.classList.remove('is-ticket-jackpot');
     els.resultCard?.classList.remove('is-ticket-jackpot');
 
-    const pulledCards = Array.from({ length: 50 }, () => drawCard()).filter(Boolean);
-    if (!pulledCards.length) {
+    state.paidSinglePullStock = Math.max(0, toSafeInt(state.paidSinglePullStock) - 1);
+    state.lastPullType = 'paid_single';
+    state.lastCardId = card.id;
+    state.lastStarterPullCardIds = [];
+
+    const wasOwned = state.ownedCardIds.includes(card.id);
+    if (!wasOwned) state.ownedCardIds.push(card.id);
+    pushHistoryCard(card.id, 'paid_single', !wasOwned);
+    saveState();
+
+    if (els.gachaMachine) els.gachaMachine.dataset.rarity = card.rarity;
+    applyCapsulePalette(card.rarity);
+    els.gachaMachine?.classList.add('is-spinning');
+
+    schedule(() => {
+      els.gachaMachine?.classList.add('has-capsule');
+    }, 280);
+
+    schedule(() => {
+      els.gachaMachine?.classList.remove('is-spinning');
+      els.gachaMachine?.classList.add('is-revealed');
+      showCard(card, { ownership: wasOwned ? 'owned' : 'new' });
+      hideMultiResult();
+      renderHistory();
+      renderCollection();
+      renderShareStage();
       isSpinning = false;
-      renderModeState({ statusMessage: '50連を実行できませんでした。' });
+      renderModeState({
+        statusMessage: wasOwned ? '購入1回を開封。同じカードでした。' : '購入1回を開封。新しいカードを獲得。',
+      });
+    }, 940);
+  }
+
+  function runPurchasedTenPull() {
+    if (isSpinning) return;
+    if (toSafeInt(state.paidTenPullStock) <= 0) {
+      renderModeState({ statusMessage: '購入済みの10連ガチャがありません。' });
+      return;
+    }
+    if (!bannerPool.length) {
+      renderModeState({ statusMessage: 'カードプールが見つかりませんでした。' });
       return;
     }
 
-    if (ssrPool.length && !pulledCards.some((card) => card.rarity === 'SSR')) {
-      pulledCards[pulledCards.length - 1] = pickRandom(ssrPool);
+    const paidRates = getPaidCardRates();
+    const shouldGuaranteeRPlus = Boolean(activeBanner.guarantees?.tenPullRPlus);
+    const pulledCards = Array.from({ length: 10 }, (_, index) => {
+      return drawCard({ rates: paidRates, guaranteedRPlus: shouldGuaranteeRPlus && index === 9 });
+    }).filter(Boolean);
+
+    if (!pulledCards.length) {
+      renderModeState({ statusMessage: '10連を実行できませんでした。' });
+      return;
     }
 
+    state.paidTenPullStock = Math.max(0, toSafeInt(state.paidTenPullStock) - 1);
+    isSpinning = true;
+    clearTimers();
+    if (els.startGachaButton) els.startGachaButton.disabled = true;
+    resetMachineVisual();
+    els.gachaMachine?.classList.remove('is-ticket-jackpot');
+    els.resultCard?.classList.remove('is-ticket-jackpot');
+
     const ownedSet = new Set(state.ownedCardIds);
-    let ticketGain = 0;
     const results = pulledCards.map((card) => {
       const isNew = !ownedSet.has(card.id);
       if (isNew) {
         ownedSet.add(card.id);
         state.ownedCardIds.push(card.id);
       }
-      if (card.rarity === 'SSR') ticketGain += 1;
       return { card, isNew };
     });
 
-    state.ichibanTickets += ticketGain;
-    state.kujiBoostRemaining += 50;
-    state.lastPullType = 'multi50';
+    state.lastPullType = 'multi10';
+    state.lastStarterPullCardIds = results.map((entry) => entry.card.id);
 
     const featured = pickFeaturedStarterResult(results);
     if (featured?.card?.id) {
       state.lastCardId = featured.card.id;
-      pushHistoryCard(featured.card.id, 'multi50');
+      pushHistoryCard(featured.card.id, 'multi10', featured.isNew);
       if (els.gachaMachine) els.gachaMachine.dataset.rarity = featured.card.rarity;
       applyCapsulePalette(featured.card.rarity);
     } else {
@@ -2127,19 +2249,13 @@
       renderCollection();
       renderShareStage();
       isSpinning = false;
+      const ssrCount = results.filter((entry) => entry.card.rarity === 'SSR').length;
+      const newCount = results.filter((entry) => entry.isNew).length;
       renderModeState({
-        statusMessage: `50連を開封。SSR特典でチケット+${ticketGain}。`,
+        statusMessage: `購入10連を開封。NEW ${newCount} / SSR ${ssrCount}。`,
       });
 
     }, 940);
-  }
-
-  function purchaseKujiTicket() {
-    if (isSpinning) return;
-    state.ichibanTickets += 1;
-    saveState();
-    renderModeState({ statusMessage: `チケット1枚（500円）を仮購入しました。所持 ${state.ichibanTickets}枚。` });
-    if (isLineupModalOpen) renderGachaLineupModalContents();
   }
 
   function loadStripeJs() {
@@ -2190,11 +2306,11 @@
     if (els.checkoutMount) els.checkoutMount.innerHTML = '';
   }
 
-  async function createEmbeddedCheckoutSession() {
+  async function createEmbeddedCheckoutSession(planKey) {
     const response = await fetch(GACHA_CHECKOUT_SESSION_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ source: 'gacha' }),
+      body: JSON.stringify({ source: 'gacha', plan: planKey }),
     });
     const data = await response.json().catch(() => ({}));
     if (!response.ok || !data?.clientSecret || !data?.publishableKey || !data?.sessionId) {
@@ -2240,7 +2356,7 @@
     if (!sessionId) return;
 
     if (hasGrantedCheckoutSession(sessionId)) {
-      economyStatusMessage = 'この50連はすでに反映済みです。';
+      economyStatusMessage = 'この購入分はすでに反映済みです。';
       if (closeOverlay) closeCheckoutOverlay();
       if (clearUrl) clearCheckoutQueryParams();
       renderModeState();
@@ -2261,15 +2377,21 @@
       if (!response.ok) {
         throw new Error(data?.error || '決済結果を確認できませんでした。');
       }
-      if (!data?.ok || data?.productType !== GACHA_FIFTY_PACK_PRODUCT_TYPE) {
-        throw new Error('50連の決済として確認できませんでした。');
+      if (!data?.ok || !GACHA_CHECKOUT_PRODUCT_TYPES.has(data?.productType)) {
+        throw new Error('ガチャ購入の決済として確認できませんでした。');
       }
 
       if (data?.paid) {
-        state.fiftyPackStock = toSafeInt(state.fiftyPackStock) + 1;
+        const grantCount = Math.max(1, toSafeInt(data?.grantCount || 1));
+        if (data.productType === GACHA_CHECKOUT_PRODUCTS.ten.productType) {
+          state.paidTenPullStock = toSafeInt(state.paidTenPullStock) + grantCount;
+        } else {
+          state.paidSinglePullStock = toSafeInt(state.paidSinglePullStock) + grantCount;
+        }
         saveState();
         rememberGrantedCheckoutSession(sessionId);
-        economyStatusMessage = '50連（2000円）の決済が完了しました。取っ手を回すと1セット開封できます。';
+        const productLabel = data.productLabel || (data.productType === GACHA_CHECKOUT_PRODUCTS.ten.productType ? '10連' : '1回');
+        economyStatusMessage = `${productLabel}の決済が完了しました。取っ手を回すと開封できます。`;
         if (closeOverlay) closeCheckoutOverlay();
       } else {
         economyStatusMessage = data?.message || '決済はまだ完了していません。';
@@ -2291,7 +2413,7 @@
     const sessionId = (url.searchParams.get('session_id') || '').trim();
 
     if (checkoutState === 'cancel' && !sessionId) {
-      economyStatusMessage = '50連の決済をキャンセルしました。';
+      economyStatusMessage = 'ガチャ購入の決済をキャンセルしました。';
       clearCheckoutQueryParams();
       renderModeState();
       return;
@@ -2301,8 +2423,8 @@
     await finalizeCheckoutSession(sessionId, { clearUrl: true, closeOverlay: true });
   }
 
-  function pushHistoryCard(cardId, source) {
-    state.history.unshift({ cardId, source, at: Date.now() });
+  function pushHistoryCard(cardId, source, isNew = false) {
+    state.history.unshift({ cardId, mode: source, source, isNew, at: Date.now(), timestamp: Date.now() });
     state.history = state.history.slice(0, MAX_HISTORY);
   }
 
