@@ -25,6 +25,10 @@
           <span class="seal-rate-icon" aria-hidden="true">%</span>
           <span>排出率</span>
         </button>
+        <button class="seal-book-open" id="openSealBook" type="button" aria-haspopup="dialog" aria-controls="sealBookModal">
+          <span class="seal-book-icon" aria-hidden="true">帳</span>
+          <span>シール帳</span>
+        </button>
       </div>
     </header>
 
@@ -106,7 +110,10 @@
         <p class="seal-paid-status" id="paidGachaStatus" aria-live="polite"></p>
       </div>
       <div class="seal-free-panel">
-        <a class="seal-free-main" href="spin.html?mode=free">無料ガチャを引く（6連）</a>
+        <a class="seal-free-main" href="spin.html?mode=free">
+          <span>無料ガチャを引く（6連）</span>
+          <small>R/SRのみ・SR 1/6</small>
+        </a>
       </div>
       <div class="seal-normal-panel">
         <p class="seal-normal-title">テストガチャ</p>
@@ -133,6 +140,7 @@
       <form class="seal-code-form" id="sealCodeForm">
         <input class="seal-code-input" id="sealCodeInput" type="text" inputmode="text" autocomplete="off" placeholder="コードを入力">
         <button class="seal-code-button" type="submit">無料で回す</button>
+        <p class="seal-code-help">公式LINEのアンケートに回答でクーポンコードが発行されるよ</p>
         <p class="seal-code-error" id="sealCodeError" aria-live="polite" hidden>コードが間違っています</p>
       </form>
       <p class="spin-note"><span aria-hidden="true">ⓘ</span> Mobby公式LINEのアンケート回答でコードをゲットしてから！</p>
@@ -219,6 +227,28 @@
     </div>
   </section>
 
+  <section class="seal-list-modal seal-book-modal" id="sealBookModal" aria-labelledby="sealBookTitle" aria-modal="true" role="dialog" hidden>
+    <button class="seal-list-backdrop" id="closeSealBookBackdrop" type="button" aria-label="シール帳を閉じる"></button>
+    <div class="seal-list-sheet seal-book-sheet">
+      <div class="seal-list-head">
+        <div>
+          <p class="seal-list-kicker">Sticker Book</p>
+          <h2 id="sealBookTitle">シール帳</h2>
+        </div>
+        <button class="seal-list-close" id="closeSealBook" type="button" aria-label="シール帳を閉じる">×</button>
+      </div>
+      <div class="seal-book-content" id="sealBookContent"></div>
+    </div>
+  </section>
+
+  <div class="seal-book-preview-modal" id="sealBookPreviewModal" hidden>
+    <button class="seal-book-preview-backdrop" id="closeSealBookPreviewBackdrop" type="button" aria-label="拡大表示を閉じる"></button>
+    <div class="seal-book-preview-dialog" role="dialog" aria-modal="true" aria-label="シール画像の拡大表示">
+      <button class="seal-book-preview-close" id="closeSealBookPreview" type="button" aria-label="拡大表示を閉じる">×</button>
+      <img id="sealBookPreviewImage" src="" alt="">
+    </div>
+  </div>
+
   <section class="seal-checkout-modal" id="sealCheckoutModal" aria-labelledby="sealCheckoutTitle" aria-modal="true" role="dialog" hidden>
     <button class="seal-checkout-backdrop" id="closeSealCheckoutBackdrop" type="button" aria-label="決済画面を閉じる"></button>
     <div class="seal-checkout-sheet">
@@ -247,6 +277,15 @@
       const openRateButton = document.getElementById("openSealRates");
       const closeRateButton = document.getElementById("closeSealRate");
       const closeRateBackdrop = document.getElementById("closeSealRateBackdrop");
+      const bookModal = document.getElementById("sealBookModal");
+      const openBookButton = document.getElementById("openSealBook");
+      const closeBookButton = document.getElementById("closeSealBook");
+      const closeBookBackdrop = document.getElementById("closeSealBookBackdrop");
+      const bookContent = document.getElementById("sealBookContent");
+      const bookPreviewModal = document.getElementById("sealBookPreviewModal");
+      const bookPreviewImage = document.getElementById("sealBookPreviewImage");
+      const closeBookPreviewButton = document.getElementById("closeSealBookPreview");
+      const closeBookPreviewBackdrop = document.getElementById("closeSealBookPreviewBackdrop");
       const rateTabButtons = Array.from(document.querySelectorAll("[data-rate-tab]"));
       const ratePanels = Array.from(document.querySelectorAll("[data-rate-panel]"));
       const codeForm = document.getElementById("sealCodeForm");
@@ -276,6 +315,20 @@
 
       const stripName = (file) => file.replace(/\.png$/u, "").replace(/-(sr|ur|gal|full|half)$/u, "").replace(/１$/u, "");
       const assetPath = (dir, file) => `../gacha-new/assets/${dir}/${encodeURIComponent(file)}`;
+      const STICKER_BOOK_STORAGE_KEY = "mobbySealStickerBook";
+      const bookRarityTabs = [
+        { key: "SR", label: "SR", className: "rare" },
+        { key: "UR", label: "UR", className: "sparkle" },
+        { key: "プリ", label: "プリ", className: "special" },
+        { key: "SECRET", label: "SECRET", className: "ultra" }
+      ];
+      const escapeHtml = (value) => String(value || "").replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        "\"": "&quot;",
+        "'": "&#39;"
+      })[char]);
 
       content.innerHTML = groups.map((group) => `
         <section class="seal-list-group ${group.softPreview ? "is-soft-preview" : ""} ${group.dir.startsWith("main4/") ? "is-secret-preview" : ""} is-${group.dir.replace(/\//g, "-")}-preview" aria-label="${group.label}のシール">
@@ -317,6 +370,123 @@
         rateModal.hidden = true;
         document.body.classList.remove("is-seal-rate-open");
         openRateButton?.focus();
+      };
+
+      const loadStickerBook = () => {
+        try {
+          const parsed = JSON.parse(localStorage.getItem(STICKER_BOOK_STORAGE_KEY) || "[]");
+          return Array.isArray(parsed) ? parsed : [];
+        } catch {
+          return [];
+        }
+      };
+
+      const renderStickerBook = () => {
+        if (!bookContent) return;
+        const savedStickers = loadStickerBook();
+        const stickers = savedStickers.filter((sticker) => (
+          sticker.rarity !== "R" &&
+          String(sticker.src || "").includes("../gacha-new/assets/")
+        ));
+        if (stickers.length !== savedStickers.length) {
+          localStorage.setItem(STICKER_BOOK_STORAGE_KEY, JSON.stringify(stickers));
+        }
+        if (!stickers.length) {
+          bookContent.innerHTML = `
+            <div class="seal-book-empty">
+              <strong>まだシールがありません</strong>
+              <p>ガチャを引くと、出たシールがここに保存されます。</p>
+            </div>
+          `;
+          return;
+        }
+        const firstTab = bookRarityTabs.find((tab) => stickers.some((sticker) => sticker.rarity === tab.key))?.key || bookRarityTabs[0].key;
+        bookContent.innerHTML = `
+          <div class="seal-book-summary">${stickers.length}種類のシール</div>
+          <div class="seal-book-tabs" role="tablist" aria-label="シール帳のレアリティ">
+            ${bookRarityTabs.map((tab) => {
+              const count = stickers.filter((sticker) => sticker.rarity === tab.key).length;
+              const active = tab.key === firstTab;
+              return `<button class="seal-book-tab ${active ? "is-active" : ""}" type="button" role="tab" aria-selected="${active ? "true" : "false"}" data-book-tab="${escapeHtml(tab.key)}"><span class="rarity ${tab.className}">${tab.label}</span><small>${count}</small></button>`;
+            }).join("")}
+          </div>
+          ${bookRarityTabs.map((tab) => {
+            const tabStickers = stickers.filter((sticker) => sticker.rarity === tab.key);
+            const active = tab.key === firstTab;
+            return `
+              <section class="seal-book-panel" data-book-panel="${escapeHtml(tab.key)}" ${active ? "" : "hidden"}>
+                ${tabStickers.length ? `
+                  <div class="seal-book-grid">
+                    ${tabStickers.map((sticker) => `
+                      <article class="seal-book-card">
+                        <button class="seal-list-image-guard seal-book-preview-open" type="button" data-preview-src="${escapeHtml(sticker.src)}" data-preview-alt="${escapeHtml(`${sticker.title || "シール"} ${sticker.rarity || ""}`)}">
+                          <img src="${escapeHtml(sticker.src)}" alt="${escapeHtml(sticker.title || "シール")}" draggable="false">
+                        </button>
+                        <span class="rarity ${escapeHtml(sticker.rarityClass || tab.className)}">${escapeHtml(sticker.rarity || "")}</span>
+                        <p>${escapeHtml(sticker.title || "シール")}</p>
+                        <small>×${Number(sticker.count || 1)}</small>
+                      </article>
+                    `).join("")}
+                  </div>
+                ` : `
+                  <div class="seal-book-empty is-compact">
+                    <strong>${escapeHtml(tab.label)}はまだありません</strong>
+                    <p>このレアリティのシールを引くと表示されます。</p>
+                  </div>
+                `}
+              </section>
+            `;
+          }).join("")}
+        `;
+        bookContent.querySelectorAll("[data-book-tab]").forEach((button) => {
+          button.addEventListener("click", () => {
+            const target = button.dataset.bookTab || firstTab;
+            bookContent.querySelectorAll("[data-book-tab]").forEach((tabButton) => {
+              const active = tabButton.dataset.bookTab === target;
+              tabButton.classList.toggle("is-active", active);
+              tabButton.setAttribute("aria-selected", active ? "true" : "false");
+            });
+            bookContent.querySelectorAll("[data-book-panel]").forEach((panel) => {
+              panel.hidden = panel.dataset.bookPanel !== target;
+            });
+          });
+        });
+        bookContent.querySelectorAll("[data-preview-src]").forEach((button) => {
+          button.addEventListener("click", () => {
+            openBookPreview(button.dataset.previewSrc || "", button.dataset.previewAlt || "シール");
+          });
+        });
+      };
+
+      const openBookPreview = (src, alt) => {
+        if (!bookPreviewModal || !bookPreviewImage || !src) return;
+        bookPreviewImage.src = src;
+        bookPreviewImage.alt = alt;
+        bookPreviewModal.hidden = false;
+        document.body.classList.add("is-seal-book-preview-open");
+        closeBookPreviewButton?.focus();
+      };
+
+      const closeBookPreview = () => {
+        if (!bookPreviewModal || !bookPreviewImage) return;
+        bookPreviewModal.hidden = true;
+        bookPreviewImage.src = "";
+        document.body.classList.remove("is-seal-book-preview-open");
+      };
+
+      const openBookModal = () => {
+        if (!bookModal) return;
+        renderStickerBook();
+        bookModal.hidden = false;
+        document.body.classList.add("is-seal-book-open");
+        closeBookButton?.focus();
+      };
+
+      const closeBookModal = () => {
+        if (!bookModal) return;
+        bookModal.hidden = true;
+        document.body.classList.remove("is-seal-book-open");
+        openBookButton?.focus();
       };
 
       const setRateTab = (target) => {
@@ -457,6 +627,11 @@
       openRateButton?.addEventListener("click", openRateModal);
       closeRateButton?.addEventListener("click", closeRateModal);
       closeRateBackdrop?.addEventListener("click", closeRateModal);
+      openBookButton?.addEventListener("click", openBookModal);
+      closeBookButton?.addEventListener("click", closeBookModal);
+      closeBookBackdrop?.addEventListener("click", closeBookModal);
+      closeBookPreviewButton?.addEventListener("click", closeBookPreview);
+      closeBookPreviewBackdrop?.addEventListener("click", closeBookPreview);
       rateTabButtons.forEach((button) => {
         button.addEventListener("click", () => setRateTab(button.dataset.rateTab || "paid"));
       });
@@ -496,6 +671,8 @@
       document.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && !modal.hidden) closeModal();
         if (event.key === "Escape" && rateModal && !rateModal.hidden) closeRateModal();
+        if (event.key === "Escape" && bookPreviewModal && !bookPreviewModal.hidden) closeBookPreview();
+        if (event.key === "Escape" && bookModal && !bookModal.hidden) closeBookModal();
         if (event.key === "Escape" && checkoutModal && !checkoutModal.hidden) closeCheckoutModal();
       });
     })();

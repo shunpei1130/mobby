@@ -183,6 +183,7 @@
   let recipientEmail = "";
   const revealRarityClasses = ["rarity-r", "rarity-sr", "rarity-ur", "rarity-pri", "rarity-secret"];
   const SECRET_SHEET_RATE = 1 / 500;
+  const STICKER_BOOK_STORAGE_KEY = "mobbySealStickerBook";
 
   const sheetSrc = "../gacha-new/assets/gacha/gachasheet.png";
   const secretSheetSrc = "../gacha-new/assets/gacha/gacha-sheet-mobby-4.png";
@@ -261,6 +262,63 @@
     if (!emailSendStatus) return;
     emailSendStatus.textContent = message;
     emailSendStatus.dataset.state = state;
+  }
+
+  function getStickerBookRarityClass(rarity) {
+    if (rarity === "R") return "normal";
+    if (rarity === "SR") return "rare";
+    if (rarity === "UR") return "sparkle";
+    if (rarity === "SECRET") return "ultra";
+    return "special";
+  }
+
+  function loadStickerBook() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(STICKER_BOOK_STORAGE_KEY) || "[]");
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveStickersToBook(selectedResults) {
+    const visibleResults = selectedResults.filter((result) => (
+      !result.isSpacer &&
+      result.rarity !== "R" &&
+      result.src &&
+      String(result.src).includes("../gacha-new/assets/")
+    ));
+    if (!visibleResults.length) return;
+
+    const saved = loadStickerBook().filter((sticker) => (
+      sticker.rarity !== "R" &&
+      String(sticker.src || "").includes("../gacha-new/assets/")
+    ));
+    const byKey = new Map(saved.map((sticker) => [`${sticker.rarity}|${sticker.src}`, sticker]));
+    const now = new Date().toISOString();
+
+    visibleResults.forEach((result) => {
+      const key = `${result.rarity}|${result.src}`;
+      const existing = byKey.get(key);
+      if (existing) {
+        existing.count = Number(existing.count || 1) + 1;
+        existing.lastPulledAt = now;
+        return;
+      }
+      const sticker = {
+        title: result.title,
+        rarity: result.rarity,
+        rarityClass: getStickerBookRarityClass(result.rarity),
+        src: result.src,
+        count: 1,
+        firstPulledAt: now,
+        lastPulledAt: now
+      };
+      saved.push(sticker);
+      byKey.set(key, sticker);
+    });
+
+    localStorage.setItem(STICKER_BOOK_STORAGE_KEY, JSON.stringify(saved));
   }
 
   function dataUrlToAttachment(dataUrl, fileName) {
@@ -489,6 +547,7 @@
 
   async function showResult(selectedResults) {
     const visibleResultsForState = selectedResults.filter((result) => !result.isSpacer);
+    saveStickersToBook(visibleResultsForState);
     const isSecretResult = visibleResultsForState.length > 0 && visibleResultsForState.every((result) => result.rarity === "SECRET");
     resultSheet.classList.toggle("is-secret-result", isSecretResult);
     const isMultiSheet = selectedResults.length > sheetSlots.length;
