@@ -516,7 +516,7 @@ const _='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800
       <div class="love-type-affirmation__head"><img src="../carousel/after/mobby_fact_man_toka.webp" alt="もびりん" loading="lazy" decoding="async" /><h4>${n}</h4></div>
       ${e.split(/\n{2,}/).map(t=>`<p>${t}</p>`).join("")}
     </section>
-  `:""}function m(e){const n=e!=null&&e.typeName?`${e.typeName}.webp`:"";return n?`./image/lovemobby/${encodeURIComponent(n)}`:""}function xe(e){const n=e!=null&&e.typeName?`${e.typeName.replace("毛布をかける守り人","毛布を掛ける守り人")}_透過.webp`:"";return n?`./image/toka/${encodeURIComponent(n)}`:""}function $(e){const n=e!=null&&e.typeName?`${e.typeName}_sharecard.webp`:"";return n?`./image/lovemobby_sharecard/${encodeURIComponent(n)}`:""}function ae(){return`
+  `:""}function m(e){const n=e!=null&&e.typeName?`${e.typeName}.webp`:"";return n?`./image/lovemobby/${encodeURIComponent(n)}`:""}function xe(e){const n=e!=null&&e.typeName?`${e.typeName.replace("毛布をかける守り人","毛布を掛ける守り人")}_透過.webp`:"";return n?`./image/toka/${encodeURIComponent(n)}`:""}function resultBg(e){const n=e!=null&&e.typeName?`${e.typeName.replace("毛布をかける守り人","毛布を掛ける守り人")}-back.webp`:"";return n?`./image/dia-back/${encodeURIComponent(n)}`:""}function $(e){const n=e!=null&&e.typeName?`${e.typeName}_sharecard.webp`:"";return n?`./image/lovemobby_sharecard/${encodeURIComponent(n)}`:""}function ae(){return`
     <section class="love-diagnosis love-diagnosis--intro">
       <div class="love-diagnosis__hero">
         <p class="love-diagnosis__eyebrow">恋愛モビー診断</p>
@@ -632,7 +632,6 @@ const _='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800
       <div class="love-compatibility__head">
         <p class="love-diagnosis__eyebrow">compatibility</p>
         <h3>ふたりの相性を見る</h3>
-        <p>自分と相手の恋愛モビータイプを選ぶと、136通りの相性表から結果を表示します。</p>
       </div>
       <div class="love-compatibility__form">
         ${y("firstType","あなたのタイプ",n)}
@@ -731,8 +730,8 @@ const _='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800
         </article>
       `).join("")}
     </div>
-  `}function ve(e){const n=e.result||null,t=n!=null&&n.resultCode&&c[n.resultCode]?n:T(h,e.answers||{}),o=t.resultType||c[t.resultCode],r=H(t),a=m(o),i=$(o);return`
-    <section class="love-diagnosis love-diagnosis--result">
+  `}function ve(e){const n=e.result||null,t=n!=null&&n.resultCode&&c[n.resultCode]?n:T(h,e.answers||{}),o=t.resultType||c[t.resultCode],r=H(t),a=m(o),i=$(o),s=resultBg(o);return`
+    <section class="love-diagnosis love-diagnosis--result" style="--love-result-bg: url('${s}')">
       <article class="love-result-hero">
         <div class="love-result-hero__media">
           <div class="love-result-hero__image">
@@ -745,6 +744,7 @@ const _='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800
           <p>${o.shortCopy}</p>
         </div>
       </article>
+      <div id="line-ai-mobby-cta" data-line-ai-mobby-cta data-diagnosis="${encodeURIComponent(JSON.stringify({source:"16renai",sourceLabel:"恋愛モビー診断",resultId:t.resultCode,resultName:o.typeName,resultSummary:o.shortCopy||"",traits:[...r.tendency,...r.needs].filter(Boolean).slice(0,8),detailSections:[{title:"恋の傾向",body:r.tendency.join(" / ")},{title:"満たされること",body:r.needs.join(" / ")}].filter(e=>e.body),pagePath:"/16renai/",createdAt:new Date().toISOString()}))}"></div>
       ${i?`
         <section class="love-share-card-inline" aria-label="共有カード">
           <img src="${i}" alt="${o.typeName} share card" loading="lazy" decoding="async" fetchpriority="low" />
@@ -773,8 +773,8 @@ const _='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800
         <section><h4>恋愛傾向</h4>${r.tendency.map(s=>`<p>${s}</p>`).join("")}</section>
         <section><h4>好きな人に求めやすいこと</h4><ul>${r.needs.map(s=>`<li>${s}</li>`).join("")}</ul></section>
         <section><h4>しんどくなりやすい場面</h4><ul>${r.strain.map(s=>`<li>${s}</li>`).join("")}</ul></section>
+        <section style="text-align:center;background:linear-gradient(135deg,#fff0f6,#ffe4ef);border:1px solid rgba(255,128,171,0.35);"><span style="display:inline-flex;align-items:center;justify-content:center;gap:8px;"><img src="../carousel/after/mobby_gal_toka.webp" alt="もびち" loading="lazy" decoding="async" style="width:64px;height:64px;object-fit:contain;border:0;"><a href="https://px.a8.net/svt/ejp?a8mat=4B3YV8+F171O2+4GRI+BW8O2&a8ejpredirect=https%3A%2F%2Fstore.fits-japan.com%2Fshop%2Fproduct_categories%2Fpuananala" rel="nofollow" style="color:#d63384;font-family:'M PLUS Rounded 1c','Hiragino Maru Gothic ProN','Yu Gothic',sans-serif;font-weight:800;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px;">あなたにおすすめの香水を見つける</a></span><p style="margin:8px 0 0;font-size:11px;color:#000;">このリンクには広告が含まれます</p><img border="0" width="1" height="1" src="https://www16.a8.net/0.gif?a8mat=4B3YV8+F171O2+4GRI+BW8O2" alt=""></section>
         <section><h4>相性がいい相手</h4><p>${r.match}</p></section>
-        <section><h4>BURNでおすすめの残し方</h4><ul>${r.burn.map(s=>`<li>${s}</li>`).join("")}</ul></section>
         ${M(r.affirmation)}
       </div>
       <div class="love-diagnosis__nav love-result-actions">
@@ -783,8 +783,8 @@ const _='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800
       <button class="button button--ghost button--full" type="button" data-love-reset>診断をリセット</button>
       <p class="couple-magazine__status" data-love-status></p>
     </section>
-  `}function ke(){const e=re();return`
-    <section class="page page--magazine page--diagnosis">
+  `}function ke(){const e=re(),n=e.step==="result"?resultBg(e.result?.resultType||c[e.resultCode]||c.HLTO):"";return`
+    <section class="page page--magazine page--diagnosis ${e.step==="result"?"page--result":""}" style="${n?`--love-result-bg: url('${n}')`:""}">
       <header class="page-header page-header--with-back">
         <button class="button button--ghost page-back page-back--icon diagnosis-back-button" type="button" data-home-nav="home" aria-label="メインメニューへ戻る">
           ${B("returnLeft")}

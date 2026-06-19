@@ -16,6 +16,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/line-ai-mobby-cta.css">
+  <script src="../shared/line-ai-mobby-cta.js"></script>
   <style>
     :root {
       --font-main: 'Yomogi', cursive;
@@ -326,16 +328,6 @@
     .hero-copy-card {
       display: grid;
       gap: 12px;
-    }
-
-    .hero-note {
-      background: var(--accent-soft);
-      border: 1px solid rgba(47, 111, 98, 0.20);
-      color: var(--accent);
-      font-size: 12px;
-      font-weight: 800;
-      border-radius: 14px;
-      padding: 12px 14px;
     }
 
     .preview-strip {
@@ -730,7 +722,7 @@
   <div class="wrap">
     <header>
       <div class="brand">
-        <a href="../index.html?skipSplash=1" style="text-decoration:none;">
+        <a href="../index.html" style="text-decoration:none;">
           <button class="home-btn" type="button">Home</button>
         </a>
         <div class="logo" id="logoHome" aria-hidden="true"></div>
@@ -793,7 +785,7 @@
       "introTitle": "Lucaの水彩ストーリー<br>タイプ診断",
       "introDescription": "32問で、水彩の色、日常の感情、物語の余白から、あなたに近いストーリータイプを診断します。",
       "heroNote": "Lucaさん側の提供物は基本不要で、まずはこちらでラフ制作・画像制作・ページ制作まで進める想定です。",
-      "heroSubcopy": "正式公開前に、方向性、公開OK、リンク先だけご確認いただければ調整できます。",
+      "heroSubcopy": "",
       "heroAlt": "imagen_luca dedicated Mobby visual",
       "previewKeys": [
             "morning",
@@ -1410,7 +1402,6 @@
           <p class="text-body" style="max-width:500px;margin:0 auto 12px;">${SITE.introDescription}</p>
           <div class="hero-grid">
             <div class="hero-copy-card">
-              <div class="hero-note">${SITE.heroNote}</div>
               <p class="text-body" style="margin:0;">${SITE.heroSubcopy}</p>
             </div>
             <div class="hero-art"><img src="img/hero.jpg" alt="${SITE.heroAlt}"></div>
@@ -1678,10 +1669,10 @@
         pendingEl.style.display = "block";
         state.profile = { name, email, age };
         try {
-          await fetch("/api/lead", {
+          await fetch("/api/diagnosis", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, email, age, type: result.char?.code || result.key, diagnosisName: result.char?.name || "", source: "imagen-luca", createdAt: new Date().toISOString() }),
+            body: JSON.stringify({ source: "imagen-luca", diagTitle: "Lucaさん 水彩ストーリー診断", diagnosis_type: result.char?.name || "", type: result.char?.code || result.key, name, email, age, axes: result.axes || result.scores || {}, answers: state.answers || {}, pageUrl: window.location.href, userAgent: navigator.userAgent, createdAt: new Date().toISOString() }),
             keepalive: true
           });
           state.sentToLead = true;
@@ -1701,6 +1692,16 @@
       const details = DIAGNOSIS_DETAILS[result.key];
       const shareText = encodeURIComponent(SITE.shareResultText.replace("{result}", ch.name));
       const shareUrl = encodeURIComponent(SITE.publicUrl);
+      const lineAiDiagnosisPayload = {
+        source: "imagen-luca",
+        sourceLabel: "Lucaさん 水彩ストーリー診断",
+        resultId: ch.code || result.key,
+        resultName: ch.name,
+        resultSummary: ch.catch || "",
+        traits: [details?.copy, ...(details?.common || [])].filter(Boolean).slice(0, 8),
+        pagePath: "/imagen-luca/",
+        createdAt: new Date().toISOString()
+      };
       app.innerHTML = `
         <div class="panel fade-in result-panel">
           <div class="result-hero">
@@ -1710,6 +1711,7 @@
             <div class="char-image-placeholder"><img src="${ch.image}" alt="${ch.name}"></div>
             <div class="type-chip">TYPE: ${ch.code}</div>
           </div>
+          <div id="line-ai-mobby-cta" data-line-ai-mobby-cta data-diagnosis="${encodeURIComponent(JSON.stringify(lineAiDiagnosisPayload))}"></div>
           ${renderMoodAxes(result)}
           ${details ? renderDiagnosisDetails(details) : ""}
           <div class="info-card result-feature">
@@ -1855,7 +1857,7 @@
     document.getElementById("btnTypeGuide").onclick = () => {
       showTypeGuideModal();
     };
-    document.getElementById("logoHome").onclick = () => { window.location.href = "../index.html?skipSplash=1"; };
+    document.getElementById("logoHome").onclick = () => { window.location.href = "../index.html"; };
 
     (function initTitleMenu() {
       const titleHome = document.getElementById("titleHome");

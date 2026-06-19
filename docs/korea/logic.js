@@ -71,6 +71,42 @@ function getSnsImagePathByCode(code) {
 }
 function sanitizeDownloadName(name) { return (name || "mobby-result").replace(/[\\/:*?"<>|]/g, "_"); }
 function isIOSLikeDevice() { return /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1); }
+function getImageMimeType(path) {
+    const cleanPath = String(path || "").split(/[?#]/)[0].toLowerCase();
+    if (cleanPath.endsWith(".jpg") || cleanPath.endsWith(".jpeg")) return "image/jpeg";
+    if (cleanPath.endsWith(".png")) return "image/png";
+    if (cleanPath.endsWith(".webp")) return "image/webp";
+    return "image/png";
+}
+function getImageFileExtension(path, type) {
+    const cleanPath = String(path || "").split(/[?#]/)[0].toLowerCase();
+    const match = cleanPath.match(/\.([a-z0-9]+)$/);
+    if (match) return match[1] === "jpeg" ? "jpg" : match[1];
+    if (type === "image/jpeg") return "jpg";
+    if (type === "image/webp") return "webp";
+    return "png";
+}
+async function shareImageFileOnIOS(imagePaths, fileBaseName) {
+    if (typeof navigator.share !== "function" || typeof File !== "function") return false;
+    const paths = (Array.isArray(imagePaths) ? imagePaths : [imagePaths]).filter(Boolean);
+    for (const imagePath of paths) {
+        try {
+            const response = await fetch(imagePath);
+            if (!response.ok) continue;
+            const blob = await response.blob();
+            const type = blob.type || getImageMimeType(imagePath);
+            const extension = getImageFileExtension(imagePath, type);
+            const file = new File([blob], `${sanitizeDownloadName(fileBaseName)}-sns.${extension}`, { type });
+            const shareData = { files: [file], title: `${fileBaseName} SNS 게시용 이미지` };
+            if (typeof navigator.canShare === "function" && !navigator.canShare(shareData)) continue;
+            await navigator.share(shareData);
+            return true;
+        } catch (error) {
+            if (error && error.name === "AbortError") return true;
+        }
+    }
+    return false;
+}
 
 function computeResult() {
     const raw = { A: 0, B: 0, C: 0, D: 0 }, cnt = { A: 0, B: 0, C: 0, D: 0 };
@@ -283,7 +319,7 @@ function renderResult() {
     const snsSavePreview = document.getElementById("snsSavePreview");
     const snsSaveFallback = document.getElementById("snsSaveFallback");
     if (snsSaveBtn && snsSaveBox && snsSaveHint && snsSavePreview && snsSaveFallback) {
-        snsSaveBtn.onclick = () => {
+        snsSaveBtn.onclick = async () => {
             snsSaveBox.style.display = "block";
             snsSavePreview.style.display = "none";
             snsSaveFallback.style.display = "none";
@@ -304,7 +340,13 @@ function renderResult() {
                 document.body.removeChild(dl);
                 return;
             }
-            snsSaveHint.textContent = "iPhone에서는 이미지를 길게 눌러 '사진에 저장'을 선택해주세요.";
+            snsSaveHint.textContent = "공유 시트를 엽니다. '이미지 저장'을 선택하면 사진 앱에 저장됩니다.";
+            const sharedToPhotos = await shareImageFileOnIOS(snsImagePath, ch.name);
+            if (sharedToPhotos) {
+                snsSaveHint.textContent = "공유 시트에서 '이미지 저장'을 선택하면 사진 앱에 저장됩니다.";
+                return;
+            }
+            snsSaveHint.textContent = "공유 시트를 열 수 없으면 이미지를 길게 눌러 '사진에 저장'을 선택해주세요.";
             snsSavePreview.alt = `${ch.name} SNS 게시용 이미지`;
             if (snsSavePreview.src && decodeURIComponent(snsSavePreview.src).endsWith(decodeURIComponent(snsImagePath))) {
                 snsSavePreview.style.display = "block";

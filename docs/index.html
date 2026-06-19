@@ -735,6 +735,18 @@
       color: #827b6a;
     }
 
+    #goAiBuddy {
+      background:
+        linear-gradient(145deg, #3c8c74 0%, #72bd8f 54%, #dff4cf 100%);
+      color: #fffaf2;
+      line-height: 1.15;
+      text-align: center;
+    }
+
+    #goAiBuddy span {
+      display: block;
+    }
+
     .btn-primary {
       background-color: var(--color-accent-red);
       color: var(--color-cream);
@@ -776,14 +788,12 @@
     @media (max-width: 768px) {
 
       #goMobbyDiagnosis,
-      #goGachaPage {
+      #goGachaPage,
+      #goAiBuddy {
         font-size: 12px !important;
         padding: 8px 18px !important;
       }
 
-      #mobbyDiagnosisWrapper {
-        margin-top: 0px !important;
-      }
     }
 
     .tag {
@@ -2765,6 +2775,10 @@
       font-size: 0.95rem;
     }
 
+    #goAiBuddy {
+      display: none !important;
+    }
+
     footer {
       background-color: var(--color-forest);
       padding: 56px 0;
@@ -2824,8 +2838,7 @@
       }
     }
 
-    .gacha-btn-wrap,
-    #mobbyDiagnosisWrapper {
+    .gacha-btn-wrap {
       display: none !important;
     }
 
@@ -4025,23 +4038,23 @@
         }
 
         .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="school"] {
-          transform: translate(0, 2px) scale(0.98);
+          transform: translate(0, 2px) scale(0.96);
         }
 
         .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="love"] {
-          transform: translate(52px, 2px) scale(0.98);
+          transform: translate(52px, 2px) scale(0.96);
         }
 
         .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="oshi"] {
-          transform: translate(104px, 2px) scale(0.98);
+          transform: translate(104px, 2px) scale(0.96);
         }
 
         .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="night"] {
-          transform: translate(156px, 2px) scale(0.98);
+          transform: translate(156px, 2px) scale(0.96);
         }
 
         .gift-fan-menu.is-diagnosis-open .gift-fan-diagnosis-action[data-diagnosis-item="mama"] {
-          transform: translate(208px, 2px) scale(0.98);
+          transform: translate(208px, 2px) scale(0.96);
         }
       }
 
@@ -4880,6 +4893,14 @@
       opacity: 0.74;
     }
 
+    .affiliate-disclosure {
+      max-width: min(620px, calc(100vw - 32px));
+      text-align: center;
+      font-size: 0.72rem;
+      line-height: 1.7;
+      opacity: 0.76;
+    }
+
     .copyright {
       margin-top: 2px;
       letter-spacing: 0.08em;
@@ -4894,6 +4915,12 @@
 
       .legal-links a {
         padding: 3px 6px;
+      }
+
+      .affiliate-disclosure {
+        max-width: min(340px, calc(100vw - 24px));
+        font-size: 0.66rem;
+        line-height: 1.6;
       }
     }
 
@@ -5726,6 +5753,13 @@
       margin-bottom: -6px;
     }
 
+    @media (min-width: 1024px) {
+      .hero-intro .headline {
+        margin-top: -48px;
+        margin-bottom: 6px;
+      }
+    }
+
     .hero-intro .hero-carousel-shell {
       margin-top: -88px;
     }
@@ -6325,6 +6359,7 @@
           "legal legal";
         align-items: start;
         column-gap: clamp(28px, 4vw, 72px);
+        row-gap: 0;
         max-width: 1180px;
         margin: 0 auto;
         padding: 18px clamp(28px, 5vw, 64px) 42px;
@@ -6338,12 +6373,12 @@
 
       .mobby-title,
       .hero-intro .headline {
-        grid-area: title;
         justify-self: center;
         text-align: center;
       }
 
       .mobby-title {
+        grid-area: title;
         padding-top: 0;
       }
 
@@ -6353,8 +6388,8 @@
       }
 
       .hero-intro .headline {
-        margin-top: 132px;
-        margin-bottom: 0;
+        margin-top: -48px;
+        margin-bottom: 6px;
       }
 
       .hero-intro .hero {
@@ -6429,15 +6464,6 @@
         font-size: clamp(1.85rem, 4.3vw, 2.7rem);
       }
 
-      #mobbyDiagnosisWrapper {
-        grid-column: 2;
-        grid-row: 2;
-        align-self: end;
-        justify-content: center !important;
-        margin-top: 0 !important;
-        transform: translateY(calc(100% + 18px));
-      }
-
       .legal-links {
         grid-area: legal;
         justify-self: center;
@@ -6473,6 +6499,10 @@
 
     .hero-collab-diagnosis-menu {
       margin-top: 14px;
+    }
+
+    .hero-collab-diagnosis-menu[hidden] {
+      display: none !important;
     }
 
     .hero-diagnosis-menu .gift-fan-diagnosis-actions {
@@ -7849,8 +7879,8 @@
     <div class="hero-intro">
       <div class="mobby-title" aria-label="Mobby">
         <img src="mobby-custom/assets/stickers/Logo.webp" alt="Mobby" fetchpriority="high" decoding="async" />
+        <h1 class="headline reveal delay-200">沈黙に耳を澄ませる</h1>
         </div>
-      <h1 class="headline reveal delay-200">沈黙に耳を澄ませる</h1>
       <section class="hero">
         <div class="container reveal">
 
@@ -7904,10 +7934,10 @@
               </div>
             </div>
           </div>
-          <div class="hero-collab-diagnosis-menu">
+          <div class="hero-collab-diagnosis-menu" aria-hidden="false">
             <ul class="hero-collab-diagnosis-list" aria-label="コラボ診断メニュー">
               <li>
-                <button class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" type="button" data-diagnosis-item="blank-1" aria-label="ビューティー診断"><span class="gift-fan-person-badge">日向葵衣さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-mirror" aria-hidden="true"></span><span>ビューティー<br>診断</span></button>
+                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" href="hinata-aoi/index.html" data-diagnosis-item="blank-1" aria-label="日向葵衣 あなたは何タイプ？ビューティ診断"><span class="gift-fan-person-badge">日向葵衣さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-mirror" aria-hidden="true"></span><span>何タイプ？<br>ビューティ診断</span></a>
               </li>
               <li>
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" href="miyake-yuko/index.html" data-diagnosis-item="blank-2" aria-label="beauty mood 診断"><span class="gift-fan-person-badge">三宅裕子さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-compact" aria-hidden="true"></span><span>beauty mood<br>診断</span></a>
@@ -8560,16 +8590,10 @@
               <button class="btn btn-secondary action-box-btn gift-fan-action" id="openSnsPopup" data-fan-item="sns"><span class="footer-btn-icon" data-icon="share" aria-hidden="true"></span><span>SNS</span></button>
             </div>
           </div>
+          <button class="btn btn-secondary" id="openVideoPopup">動画</button>
+          <a class="btn btn-secondary" id="goAiBuddy" href="/aibuddy/" aria-label="相棒モビー"><span>相棒<br>モビー</span></a>
         </div>
       </div>
-    </div>
-    <!-- ▼▼▼ ここにモビー診断ボタンを追加 ▼▼▼ -->
-    <div id="mobbyDiagnosisWrapper"
-      style="width:100%;display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:20px;">
-      <button class="btn btn-primary" id="goMobbyDiagnosis" type="button"
-        style="font-size:14px;padding:10px 24px;">モビー診断</button>
-      <a class="btn btn-primary" id="goKoreanVersion" href="korea/index.html"
-        style="font-size:14px;padding:10px 24px;">한국판</a>
     </div>
     <!-- 右下の法的リンク -->
     <div class="legal-links">
@@ -8583,6 +8607,7 @@
         <span aria-hidden="true">|</span>
         <a href="/company">運営者情報</a>
       </div>
+      <div class="affiliate-disclosure">このサイトはアフィリエイト広告（Amazonアソシエイトを含む）を掲載しています。</div>
       <div class="copyright">© Mobby All Rights Reserved.</div>
     </div>
   </div>

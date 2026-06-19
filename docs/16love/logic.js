@@ -79,6 +79,42 @@ function getSnsImagePathByCode(code) {
 }
 function sanitizeDownloadName(name) { return (name || "mobby-result").replace(/[\\/:*?"<>|]/g, "_"); }
 function isIOSLikeDevice() { return /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1); }
+function getImageMimeType(path) {
+    const cleanPath = String(path || "").split(/[?#]/)[0].toLowerCase();
+    if (cleanPath.endsWith(".jpg") || cleanPath.endsWith(".jpeg")) return "image/jpeg";
+    if (cleanPath.endsWith(".png")) return "image/png";
+    if (cleanPath.endsWith(".webp")) return "image/webp";
+    return "image/png";
+}
+function getImageFileExtension(path, type) {
+    const cleanPath = String(path || "").split(/[?#]/)[0].toLowerCase();
+    const match = cleanPath.match(/\.([a-z0-9]+)$/);
+    if (match) return match[1] === "jpeg" ? "jpg" : match[1];
+    if (type === "image/jpeg") return "jpg";
+    if (type === "image/webp") return "webp";
+    return "png";
+}
+async function shareImageFileOnIOS(imagePaths, fileBaseName) {
+    if (typeof navigator.share !== "function" || typeof File !== "function") return false;
+    const paths = (Array.isArray(imagePaths) ? imagePaths : [imagePaths]).filter(Boolean);
+    for (const imagePath of paths) {
+        try {
+            const response = await fetch(imagePath);
+            if (!response.ok) continue;
+            const blob = await response.blob();
+            const type = blob.type || getImageMimeType(imagePath);
+            const extension = getImageFileExtension(imagePath, type);
+            const file = new File([blob], `${sanitizeDownloadName(fileBaseName)}-sns.${extension}`, { type });
+            const shareData = { files: [file], title: `${fileBaseName} SNS投稿用画像` };
+            if (typeof navigator.canShare === "function" && !navigator.canShare(shareData)) continue;
+            await navigator.share(shareData);
+            return true;
+        } catch (error) {
+            if (error && error.name === "AbortError") return true;
+        }
+    }
+    return false;
+}
 function isLineAppShareTarget() { return /Android/i.test(navigator.userAgent || "") || isIOSLikeDevice(); }
 function buildLineAppShareUrl(shareText, shareUrl = "") {
     const safeText = typeof shareText === "string" ? shareText : "";
@@ -313,7 +349,31 @@ function renderResult() {
     const keyImageWebpPath = `img/key/${ch.name}.webp`;
     const keyImagePngPath = `img/key/${ch.name}.png`;
     const keyImageBackPath = "img/key/ura.jpg";
+    const lineAiAxisSummary = ["A", "B", "C", "D"].map(k => `${AXES[k].name}: ${res.hard[k] === "L" ? AXES[k].left : AXES[k].right}`).join(" / ");
+    const lineAiDiagnosisPayload = {
+        source: "16love",
+        sourceLabel: "メンヘラモビー診断",
+        resultId: res.code,
+        resultName: ch.name || res.code,
+        resultSummary: ch.hook || ch.catch || "",
+        traits: [
+            `恋愛メンヘラ度: Lv.${res.level} ${res.menheraLevel.name}`,
+            ...["A", "B", "C", "D"].map(k => `${AXES[k].name}: ${res.hard[k] === "L" ? AXES[k].left : AXES[k].right}`)
+        ].filter(Boolean).slice(0, 8),
+        detailSections: [
+            { title: "メンヘラ度", body: `Lv.${res.level} ${res.menheraLevel.name}: ${res.menheraLevel.desc}` },
+            { title: "しんどい時", body: Array.isArray(ch.tough) ? ch.tough.join(" / ") : "" },
+            { title: "周りからの見え方", body: ch.seen || "" },
+            { title: "長所", body: Array.isArray(ch.strengths) ? ch.strengths.join(" / ") : "" },
+            { title: "注意点", body: Array.isArray(ch.cautions) ? ch.cautions.join(" / ") : "" },
+            { title: "アドバイス", body: Array.isArray(ch.advice) ? ch.advice.join(" / ") : "" },
+            { title: "軸結果", body: lineAiAxisSummary }
+        ].filter(section => section.body),
+        pagePath: "/16love/",
+        createdAt: new Date().toISOString()
+    };
     app.innerHTML = `<div class="panel fade-in"><div class="result-hero"><p class="kicker">診断結果</p><h2 class="big" style="font-size:28px;">${ch.name}</h2><p class="text-body" style="color:var(--text-main);font-weight:600;font-size:16px;margin-bottom:16px;">${ch.catch}</p><div class="char-image-placeholder"><img src="img/${ch.name}.jpg" alt="${ch.name}" onerror="this.parentElement.textContent='画像準備中'"></div><div style="display:inline-block;background:var(--surface2);padding:6px 16px;border-radius:20px;font-size:12px;font-family:monospace;color:var(--text-sub);">TYPE: ${res.code}</div></div>
+  <div id="line-ai-mobby-cta" data-line-ai-mobby-cta data-diagnosis="${encodeURIComponent(JSON.stringify(lineAiDiagnosisPayload))}"></div>
   <div style="margin-top:24px;padding:20px;background:linear-gradient(135deg,rgba(167,139,250,0.15),rgba(244,114,182,0.15));border-radius:16px;border:1px solid var(--accent);text-align:center;"><p style="font-size:11px;font-weight:700;color:var(--accent);margin:0 0 8px;">😈💜 恋愛メンヘラ度</p><p style="font-size:36px;font-weight:700;margin:0 0 4px;color:${gaugeColor};">Lv.${res.level}</p><p style="font-size:18px;font-weight:600;margin:0 0 12px;color:var(--text-main);">${res.menheraLevel.name}</p><p style="font-size:13px;color:var(--text-sub);margin:0 0 16px;">${res.menheraLevel.desc}</p><div class="menhera-gauge-bar"><div class="menhera-gauge-fill" style="width:${res.menheraScore}%;background:linear-gradient(90deg,#4ade80,#facc15,#f472b6);"></div></div><div class="menhera-gauge-labels"><span>メンタル鉄壁</span><span>恋愛ゾンビ</span></div></div>
   <div style="margin-top:40px;"><p class="kicker" style="margin-bottom:16px;">4つの軸の傾向</p>${axisHtml}</div>${adjHtml}</div>
   <div class="panel fade-in" style="margin-top:24px;text-align:center;background:linear-gradient(145deg,#2a1c2e,#201725);border:1px solid rgba(244,114,182,0.28);">
@@ -324,6 +384,14 @@ function renderResult() {
   ${ch.seen ? `<div class="panel fade-in" style="margin-top:24px;background:linear-gradient(135deg,#151a25,var(--surface));border-left:4px solid #4dabf7;"><p class="kicker" style="margin-bottom:16px;color:#4dabf7;">👀 周りからの見え方</p><p class="text-body" style="font-size:15px;line-height:1.8;margin:0;color:var(--text-main);">${ch.seen}</p></div>` : ""}
   <div class="card-grid"><div class="info-card"><h3>✨ 長所</h3><ul>${strengthsHtml}</ul></div><div class="info-card"><h3>⚡ 注意点</h3><ul>${cautionsHtml}</ul></div></div>
   ${adviceHtml ? `<div class="panel fade-in" style="margin-top:24px;background:linear-gradient(135deg,#151f1a,var(--surface));border-left:4px solid #4ade80;"><p class="kicker" style="margin-bottom:16px;color:#4ade80;">💡 アドバイス</p><ul style="margin:0;padding-left:20px;font-size:13px;line-height:1.8;">${adviceHtml}</ul></div>` : ""}
+  <div class="panel fade-in" style="margin-top:32px;text-align:center;background:linear-gradient(135deg,#fff0f6,#ffe4ef);border:1px solid rgba(255,128,171,0.35);">
+    <span style="display:inline-flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="../carousel/after/mobby_gal_toka.webp" alt="もびち" loading="lazy" decoding="async" style="width:64px;height:64px;object-fit:contain;border:0;">
+      <a href="https://px.a8.net/svt/ejp?a8mat=4B3YV8+F171O2+4GRI+BW8O2&a8ejpredirect=https%3A%2F%2Fstore.fits-japan.com%2Fshop%2Fproduct_categories%2Fpuananala" rel="nofollow" style="color:#d63384;font-family:'M PLUS Rounded 1c','Hiragino Maru Gothic ProN','Yu Gothic',sans-serif;font-weight:800;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px;">あなたにおすすめの香水を見つける</a>
+    </span>
+    <p style="margin:8px 0 0;font-size:11px;color:#000;">このリンクには広告が含まれます</p>
+    <img border="0" width="1" height="1" src="https://www16.a8.net/0.gif?a8mat=4B3YV8+F171O2+4GRI+BW8O2" alt="">
+  </div>
   <div class="panel fade-in" style="margin-top:24px;animation-delay:0.12s;background:linear-gradient(145deg,#2a1c2e,#201725);border:2px solid rgba(244,114,182,0.25);overflow:hidden;position:relative;">
     <div style="position:absolute;top:18px;right:-44px;transform:rotate(20deg);background:linear-gradient(135deg,#ff7a18,#ffb347);color:#fff;font-size:11px;letter-spacing:0.18em;padding:6px 48px;text-transform:uppercase;">LIMITED</div>
     <p class="kicker" style="margin-bottom:12px;color:#f472b6;">🎀 限定アクセサリー</p>
@@ -384,7 +452,7 @@ function renderResult() {
     const snsSavePreview = document.getElementById("snsSavePreview");
     const snsSaveFallback = document.getElementById("snsSaveFallback");
     if (snsSaveBtn && snsSaveBox && snsSaveHint && snsSavePreview && snsSaveFallback) {
-        snsSaveBtn.onclick = () => {
+        snsSaveBtn.onclick = async () => {
             snsSaveBox.style.display = "block";
             snsSavePreview.style.display = "none";
             snsSaveFallback.style.display = "none";
@@ -405,7 +473,13 @@ function renderResult() {
                 document.body.removeChild(dl);
                 return;
             }
-            snsSaveHint.textContent = "iPhoneは画像を長押しして「写真に保存」を選んでください。";
+            snsSaveHint.textContent = "共有シートを開きます。「画像を保存」を選ぶと写真アプリに保存されます。";
+            const sharedToPhotos = await shareImageFileOnIOS(snsImagePath, ch.name);
+            if (sharedToPhotos) {
+                snsSaveHint.textContent = "共有シートで「画像を保存」を選ぶと写真アプリに保存されます。";
+                return;
+            }
+            snsSaveHint.textContent = "共有シートを開けない場合は、画像を長押しして「写真に保存」を選んでください。";
             snsSavePreview.alt = `${ch.name} SNS投稿用画像`;
             if (snsSavePreview.src && decodeURIComponent(snsSavePreview.src).endsWith(decodeURIComponent(snsImagePath))) {
                 snsSavePreview.style.display = "block";
