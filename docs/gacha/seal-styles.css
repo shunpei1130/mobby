@@ -875,6 +875,16 @@ a {
   cursor: pointer;
 }
 
+.seal-line-cta,
+.seal-code-form .line-ai-mobby-cta {
+  width: 100%;
+  max-width: 100%;
+}
+
+.seal-code-form .line-ai-mobby-cta {
+  margin: 2px 0 0;
+}
+
 .seal-code-error {
   grid-column: 1 / -1;
   margin: -2px 8px 0;

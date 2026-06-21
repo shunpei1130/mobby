@@ -8,7 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/line-ai-mobby-cta.css">
   <link rel="stylesheet" href="seal-styles.css">
+  <script src="../shared/line-ai-mobby-cta.js" defer></script>
 </head>
 <body>
   <main class="seal-page-shell">
@@ -143,6 +145,7 @@
       <form class="seal-code-form" id="sealCodeForm">
         <input class="seal-code-input" id="sealCodeInput" type="text" inputmode="text" autocomplete="off" placeholder="コードを入力">
         <button class="seal-code-button" type="submit">無料で回す</button>
+        <div class="seal-line-cta" data-line-ai-mobby-cta></div>
         <p class="seal-code-help">公式LINEのアンケートに回答でクーポンコードが発行されるよ</p>
         <p class="seal-code-error" id="sealCodeError" aria-live="polite" hidden>コードが間違っています</p>
       </form>
