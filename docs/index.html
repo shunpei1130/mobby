@@ -8031,6 +8031,83 @@
       -webkit-user-drag: none;
     }
 
+    .seal-gacha-launch-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 10050;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      background: rgba(35, 29, 24, 0.48);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .seal-gacha-launch-modal[hidden] {
+      display: none !important;
+    }
+
+    .seal-gacha-launch-dialog {
+      position: relative;
+      width: min(430px, 100%);
+      padding: 18px 18px 20px;
+      border: 2px solid rgba(255, 111, 159, 0.36);
+      border-radius: 24px;
+      background: rgba(255, 250, 240, 0.98);
+      box-shadow: 0 24px 48px rgba(35, 29, 24, 0.24);
+      text-align: center;
+    }
+
+    .seal-gacha-launch-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 34px;
+      height: 34px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.92);
+      color: #5a3a2a;
+      font-size: 1.25rem;
+      font-weight: 900;
+      line-height: 1;
+      box-shadow: 0 8px 16px rgba(91, 67, 42, 0.12);
+      cursor: pointer;
+    }
+
+    .seal-gacha-launch-image {
+      width: 100%;
+      max-height: 245px;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 18px;
+      background: #faf1e2;
+      -webkit-user-drag: none;
+    }
+
+    .seal-gacha-launch-title {
+      margin: 16px 0 14px;
+      color: #f74891;
+      font-size: clamp(1.35rem, 5vw, 1.8rem);
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    .seal-gacha-launch-button {
+      width: min(260px, 100%);
+      min-height: 50px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ff7bac, #f74891);
+      color: #fff;
+      font-weight: 900;
+      text-decoration: none;
+      box-shadow: 0 12px 22px rgba(247, 72, 145, 0.24);
+    }
+
     .footer-gacha-slide .burn-card-copy {
       min-height: 165px;
       padding: 26px 16px 18px 22px;
@@ -9305,6 +9382,15 @@
 
   <!-- Matter.js -->
   <!-- EmailJS -->
+  <div class="seal-gacha-launch-modal" id="sealGachaLaunchModal" role="dialog" aria-modal="true" aria-labelledby="sealGachaLaunchTitle" hidden>
+    <div class="seal-gacha-launch-dialog">
+      <button class="seal-gacha-launch-close" id="closeSealGachaLaunch" type="button" aria-label="閉じる">×</button>
+      <img class="seal-gacha-launch-image" src="gacha-new/ref/mobby-gacha-ticket.png" alt="" loading="eager" decoding="async">
+      <h2 class="seal-gacha-launch-title" id="sealGachaLaunchTitle">シールガチャ！<br>公開されました！</h2>
+      <a class="seal-gacha-launch-button" id="sealGachaLaunchLink" href="gacha/index.html">シールガチャを見る</a>
+    </div>
+  </div>
+
   <script>
     /* reveal */
     function initScrollObserver() {
@@ -10055,6 +10141,30 @@
       initScrollObserver();
     };
 
+    const showSealGachaLaunchAfterMain = () => {
+      const modal = document.getElementById('sealGachaLaunchModal');
+      const closeButton = document.getElementById('closeSealGachaLaunch');
+      if (!modal) return;
+
+      let finished = false;
+      const finish = () => {
+        if (finished) return;
+        finished = true;
+        modal.hidden = true;
+      };
+
+      modal.hidden = false;
+      closeButton?.addEventListener('click', finish, { once: true });
+      modal.addEventListener('click', (event) => {
+        if (event.target === modal) finish();
+      });
+      document.addEventListener('keydown', function handleSealGachaLaunchKey(event) {
+        if (event.key !== 'Escape' || modal.hidden) return;
+        document.removeEventListener('keydown', handleSealGachaLaunchKey, true);
+        finish();
+      }, true);
+    };
+
     const shouldSkipSplash = false;
 
     if (shouldSkipSplash) {
@@ -10063,6 +10173,7 @@
         splashElement.remove();
       }
       revealMainContent();
+      showSealGachaLaunchAfterMain();
     }
 
     if (!shouldSkipSplash && splashElement) {
@@ -10081,6 +10192,7 @@
         window.setTimeout(() => {
           splashElement.classList.add('hidden');
           revealMainContent();
+          showSealGachaLaunchAfterMain();
         }, 960);
 
         window.setTimeout(() => {
@@ -12750,6 +12862,37 @@
           window.location.href = href;
         }, 500);
       }
+
+      var sealGachaLaunchModal = document.getElementById('sealGachaLaunchModal');
+      var closeSealGachaLaunch = document.getElementById('closeSealGachaLaunch');
+      var sealGachaLaunchLink = document.getElementById('sealGachaLaunchLink');
+      function closeSealGachaLaunchModal() {
+        if (sealGachaLaunchModal) {
+          sealGachaLaunchModal.hidden = true;
+        }
+      }
+      if (closeSealGachaLaunch) {
+        closeSealGachaLaunch.addEventListener('click', closeSealGachaLaunchModal);
+      }
+      if (sealGachaLaunchModal) {
+        sealGachaLaunchModal.addEventListener('click', function (event) {
+          if (event.target === sealGachaLaunchModal) {
+            closeSealGachaLaunchModal();
+          }
+        });
+      }
+      if (sealGachaLaunchLink) {
+        sealGachaLaunchLink.addEventListener('click', function (e) {
+          e.preventDefault();
+          closeSealGachaLaunchModal();
+          fadeNavigate(sealGachaLaunchLink.getAttribute('href'));
+        });
+      }
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && sealGachaLaunchModal && !sealGachaLaunchModal.hidden) {
+          closeSealGachaLaunchModal();
+        }
+      });
 
       // ガチャボタン
       var gachaBtn = document.getElementById('goGachaPage');
