@@ -553,6 +553,14 @@ a {
   cursor: pointer;
 }
 
+.seal-gacha-caption {
+  margin: -4px 0 0;
+  color: #885a36;
+  font-size: 0.9rem;
+  font-weight: 900;
+  line-height: 1.4;
+}
+
 .seal-paid-options {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -614,21 +622,32 @@ a {
 }
 
 .seal-paid-option {
-  min-height: 74px;
+  position: relative;
+  min-height: 104px;
   display: grid;
   place-items: center;
-  gap: 2px;
-  border: 0;
+  gap: 4px;
+  border: 3px solid rgba(255, 181, 88, 0.42);
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.92);
   color: var(--ink);
   font-weight: 900;
-  box-shadow: 0 8px 16px rgba(112, 82, 52, 0.1);
+  box-shadow:
+    inset 0 2px rgba(255, 255, 255, 0.78),
+    0 8px 16px rgba(112, 82, 52, 0.1);
   cursor: pointer;
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
 }
 
 .seal-paid-option span {
-  font-size: 1rem;
+  font-size: clamp(1.35rem, 4vw, 1.78rem);
+  line-height: 1;
+}
+
+.seal-paid-option small {
+  color: #885a36;
+  font-size: 0.78rem;
+  font-weight: 900;
 }
 
 .seal-paid-badge {
@@ -654,6 +673,31 @@ a {
   background: linear-gradient(135deg, rgba(255, 248, 209, 0.96), rgba(255, 225, 239, 0.96));
 }
 
+.seal-paid-option:hover,
+.seal-paid-option:focus-visible,
+.seal-paid-option.is-selected {
+  transform: translateY(-2px);
+  border-color: #f74891;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 225, 239, 0.98));
+  box-shadow:
+    inset 0 2px rgba(255, 255, 255, 0.82),
+    0 14px 24px rgba(247, 72, 145, 0.2);
+}
+
+.seal-paid-option.is-selected::after {
+  content: "選択中";
+  position: absolute;
+  top: -12px;
+  right: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #f74891;
+  color: #fff;
+  font-size: 0.72rem;
+  line-height: 1;
+  box-shadow: 0 6px 12px rgba(247, 72, 145, 0.24);
+}
+
 .seal-paid-status {
   min-height: 1.2em;
   margin: 0;
@@ -671,15 +715,14 @@ a {
 
 .seal-free-main {
   min-height: 70px;
-  display: grid;
-  place-items: center;
-  align-content: center;
-  gap: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 0;
   border-radius: 999px;
   background: linear-gradient(180deg, #66d7a5, #16a67a);
   color: #fff;
-  font-size: clamp(1.2rem, 3.8vw, 1.6rem);
+  font-size: clamp(1.25rem, 4vw, 1.72rem);
   font-weight: 900;
   text-decoration: none;
   box-shadow:
@@ -691,7 +734,7 @@ a {
 .seal-free-main span,
 .seal-free-main small {
   display: block;
-  line-height: 1.15;
+  line-height: 1;
 }
 
 .seal-free-main small {
@@ -705,6 +748,10 @@ a {
   margin: 0 auto 18px;
   display: grid;
   gap: 10px;
+}
+
+.seal-normal-panel[hidden] {
+  display: none !important;
 }
 
 .seal-normal-title {
@@ -773,7 +820,7 @@ a {
   width: min(500px, 100%);
   margin: 8px auto 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: 1fr;
   gap: 10px;
   align-items: center;
   padding: 12px;
@@ -813,13 +860,14 @@ a {
 }
 
 .seal-code-button {
-  min-height: 54px;
-  padding: 0 20px;
+  width: 100%;
+  min-height: 70px;
+  padding: 0 24px;
   border: 0;
   border-radius: 999px;
   background: linear-gradient(180deg, #65c7ff, #168be8);
   color: #fff;
-  font-size: 0.98rem;
+  font-size: clamp(1.25rem, 4vw, 1.72rem);
   font-weight: 900;
   box-shadow:
     inset 0 3px rgba(255, 255, 255, 0.34),
@@ -1220,7 +1268,7 @@ a {
   padding: 0;
   border: 6px solid rgba(255, 255, 255, 0.9);
   background: #fff;
-  cursor: zoom-in;
+  cursor: default;
 }
 
 .seal-book-card .seal-list-image-guard::after {
@@ -1563,14 +1611,27 @@ a {
     font-size: 1.18rem;
   }
 
+  .seal-free-main {
+    min-height: 58px;
+    font-size: 1.18rem;
+  }
+
   .seal-paid-options {
     padding: 10px;
     border-radius: 22px;
   }
 
   .seal-paid-option {
-    min-height: 62px;
+    min-height: 92px;
     border-radius: 18px;
+  }
+
+  .seal-paid-option span {
+    font-size: 1.24rem;
+  }
+
+  .seal-paid-option small {
+    font-size: 0.72rem;
   }
 
   .seal-paid-badge {
@@ -1611,6 +1672,11 @@ a {
   .seal-code-button {
     min-height: 48px;
     font-size: 0.9rem;
+  }
+
+  .seal-code-button {
+    min-height: 58px;
+    font-size: 1.18rem;
   }
 
   .seal-lineup {

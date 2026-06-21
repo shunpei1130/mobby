@@ -31,6 +31,8 @@
   const previewImage = document.getElementById("previewImage");
   const closePreviewButton = document.getElementById("closePreviewButton");
   const closePreviewBackdrop = document.getElementById("closePreviewBackdrop");
+  const saveNoticeModal = document.getElementById("saveNoticeModal");
+  const closeSaveNotice = document.getElementById("closeSaveNotice");
   const coinCount = document.getElementById("coinCount");
   const spinLead = document.getElementById("spinLead");
 
@@ -43,9 +45,12 @@
   const isFreeMode = params.get("mode") === "free";
   const isTestMode = params.get("mode") === "test";
   const isSecretTestMode = params.get("testSecret") === "1";
+  const isCodeMode = params.has("code");
+  const codeValue = params.get("code") || "";
   const checkoutSessionId = params.get("session_id") || "";
   let paidSpinAvailable = !isPaidMode;
   let hasUsedPaidSpin = false;
+  let codeSpinAvailable = true;
   let pullCount = isSecretTestMode ? 10 : Math.max(1, Math.min(10, Number(params.get("pulls")) || 1));
 
   const rNames = [
@@ -184,6 +189,8 @@
   const revealRarityClasses = ["rarity-r", "rarity-sr", "rarity-ur", "rarity-pri", "rarity-secret"];
   const SECRET_SHEET_RATE = 1 / 500;
   const STICKER_BOOK_STORAGE_KEY = "mobbySealStickerBook";
+  const CODE_USAGE_STORAGE_KEY = "mobbySealGachaUsedCodes";
+  const VALID_GACHA_CODES = new Set(["mobby-gacha!", "mobby-gachagacha"]);
 
   const sheetSrc = "../gacha-new/assets/gacha/gachasheet.png";
   const secretSheetSrc = "../gacha-new/assets/gacha/gacha-sheet-mobby-4.png";
@@ -227,10 +234,41 @@
   }
 
   disableDesktopNativeShare();
-  if (emailGate) emailGate.hidden = isFreeMode || isTestMode || isSecretTestMode;
+  if (emailGate) emailGate.hidden = true;
+  if (isCodeMode) {
+    document.body.classList.add("is-code-gacha");
+    if (againButton) againButton.hidden = true;
+    if (!VALID_GACHA_CODES.has(codeValue)) {
+      codeSpinAvailable = false;
+      if (spinLead) spinLead.textContent = "コードが無効です。";
+    } else if (isCodeUsed(codeValue)) {
+      codeSpinAvailable = false;
+      if (spinLead) spinLead.textContent = "このコードは使用済みです。";
+    }
+  }
+  setBusy(false);
 
   function normalizeEmail(value) {
     return String(value || "").trim();
+  }
+
+  function getUsedGachaCodes() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(CODE_USAGE_STORAGE_KEY) || "[]");
+      return Array.isArray(parsed) ? new Set(parsed) : new Set();
+    } catch {
+      return new Set();
+    }
+  }
+
+  function isCodeUsed(code) {
+    return getUsedGachaCodes().has(code);
+  }
+
+  function markCodeUsed(code) {
+    const usedCodes = getUsedGachaCodes();
+    usedCodes.add(code);
+    localStorage.setItem(CODE_USAGE_STORAGE_KEY, JSON.stringify(Array.from(usedCodes)));
   }
 
   function isValidEmail(value) {
@@ -367,12 +405,13 @@
   function setBusy(busy) {
     isSpinning = busy;
     const paidSpinConsumed = isPaidMode && hasUsedPaidSpin;
-    spinButton.disabled = busy || !paidSpinAvailable || paidSpinConsumed;
-    handleButton.disabled = busy || !paidSpinAvailable || paidSpinConsumed;
+    const codeSpinBlocked = isCodeMode && !codeSpinAvailable;
+    spinButton.disabled = busy || !paidSpinAvailable || paidSpinConsumed || codeSpinBlocked;
+    handleButton.disabled = busy || !paidSpinAvailable || paidSpinConsumed || codeSpinBlocked;
     if (gachaEmailInput) gachaEmailInput.disabled = busy;
     const readyLabel = pullCount === 10 ? "60連" : "6連";
     spinButton.textContent = busy ? "まわしています..." : paidSpinConsumed ? "購入してもう一度" : readyLabel;
-    if (!busy) {
+    if (!busy && !spinButton.querySelector(".spin-button-capsule")) {
       const capsule = document.createElement("span");
       capsule.className = "spin-button-capsule";
       capsule.setAttribute("aria-hidden", "true");
@@ -382,7 +421,7 @@
 
   function pickResult() {
     const roll = Math.random();
-    const rarity = roll < 0.7 ? "R" : roll < 0.9 ? "SR" : roll < 0.98 ? "UR" : "プリ";
+    const rarity = roll < (20 / 30) ? "SR" : roll < (28 / 30) ? "UR" : "プリ";
     const pool = results.filter((result) => result.rarity === rarity);
     return pool[Math.floor(Math.random() * pool.length)];
   }
@@ -858,6 +897,10 @@
     imagePreviewModal.hidden = true;
   }
 
+  function closeSaveNoticeModal() {
+    if (saveNoticeModal) saveNoticeModal.hidden = true;
+  }
+
   async function dataUrlToBlob(dataUrl) {
     const response = await fetch(dataUrl);
     return response.blob();
@@ -886,6 +929,11 @@
   function refreshDownloadLink() {
     if (!saveSheetButton || saveSheetButton.tagName !== "A") return;
     const isMultiSheet = sheetSlides.length > 1;
+    if (isCodeMode) {
+      saveSheetButton.hidden = true;
+      if (saveCurrentSheetButton) saveCurrentSheetButton.hidden = false;
+      return;
+    }
     if (saveCurrentSheetButton) {
       saveCurrentSheetButton.hidden = !isMultiSheet;
     }
@@ -1125,7 +1173,16 @@
   }
   function spin() {
     if (isSpinning) return;
-    if (!isPaidMode && !isFreeMode && !isTestMode && !isSecretTestMode && !validateEmailGate()) return;
+    if (isCodeMode) {
+      if (!VALID_GACHA_CODES.has(codeValue) || isCodeUsed(codeValue)) {
+        codeSpinAvailable = false;
+        setBusy(false);
+        if (spinLead) spinLead.textContent = isCodeUsed(codeValue) ? "このコードは使用済みです。" : "コードが無効です。";
+        return;
+      }
+      markCodeUsed(codeValue);
+      codeSpinAvailable = false;
+    }
     if (isPaidMode && (!paidSpinAvailable || hasUsedPaidSpin)) {
       window.location.href = "index.html";
       return;
@@ -1230,7 +1287,12 @@
   openResultPreview?.addEventListener("click", openPreview);
   closePreviewButton?.addEventListener("click", closePreview);
   closePreviewBackdrop?.addEventListener("click", closePreview);
+  closeSaveNotice?.addEventListener("click", closeSaveNoticeModal);
   document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && saveNoticeModal && !saveNoticeModal.hidden) {
+      closeSaveNoticeModal();
+      return;
+    }
     if (event.key === "Escape" && imagePreviewModal && !imagePreviewModal.hidden) {
       closePreview();
     }

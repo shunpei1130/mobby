@@ -772,6 +772,10 @@ a {
   gap: 10px;
 }
 
+.result-actions [hidden] {
+  display: none !important;
+}
+
 .result-save,
 .result-button,
 .result-link {
@@ -806,6 +810,10 @@ a {
 .result-button {
   background: linear-gradient(180deg, #ff7bac, #f74891);
   color: #fff;
+}
+
+.is-code-gacha .result-button {
+  display: none !important;
 }
 
 .result-link {
@@ -1432,6 +1440,59 @@ a {
 
 .image-preview-modal[hidden] {
   display: none !important;
+}
+
+.save-notice-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(39, 31, 25, 0.46);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+}
+
+.save-notice-modal[hidden] {
+  display: none !important;
+}
+
+.save-notice-dialog {
+  width: min(420px, 100%);
+  padding: 26px 22px 22px;
+  border: 2px solid rgba(255, 111, 159, 0.48);
+  border-radius: 24px;
+  background: rgba(255, 250, 240, 0.98);
+  box-shadow: 0 22px 46px rgba(39, 31, 25, 0.24);
+  text-align: center;
+}
+
+.save-notice-dialog h2 {
+  margin: 0 0 14px;
+  color: #f74891;
+  font-size: 1.28rem;
+}
+
+.save-notice-dialog p {
+  margin: 8px 0;
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1.7;
+}
+
+.save-notice-close {
+  width: min(220px, 100%);
+  min-height: 48px;
+  margin-top: 18px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ff7bac, #f74891);
+  color: #fff;
+  font-weight: 900;
+  box-shadow: 0 12px 20px rgba(247, 72, 145, 0.22);
+  cursor: pointer;
 }
 
 .image-preview-backdrop {

@@ -89,6 +89,7 @@
     <section class="seal-spin-panel" aria-label="ガチャをまわす">
       <div class="seal-paid-panel">
         <button class="seal-paid-main" id="openPaidGacha" type="button">有料ガチャを引く</button>
+        <p class="seal-gacha-caption">SR以上のみ排出</p>
         <div class="seal-paid-options" id="paidGachaOptions" hidden>
           <form class="seal-paid-email" id="paidGachaEmailForm" novalidate>
             <label for="paidGachaEmail">メールアドレス</label>
@@ -97,13 +98,15 @@
             <p class="seal-paid-email-error" id="paidGachaEmailError" aria-live="polite"></p>
             <input type="text" id="paidGachaHp" name="hp" tabindex="-1" autocomplete="off" hidden>
           </form>
-          <button class="seal-paid-option" type="button" data-package-type="single">
-            <span>1回</span>
+          <button class="seal-paid-option" type="button" data-package-type="single" aria-pressed="false">
+            <span>6連</span>
+            <small>シール6枚</small>
             <strong>100円</strong>
           </button>
-          <button class="seal-paid-option is-best" type="button" data-package-type="ten">
+          <button class="seal-paid-option is-best" type="button" data-package-type="ten" aria-pressed="false">
             <span class="seal-paid-badge">特別価格</span>
-            <span>10連</span>
+            <span>60連</span>
+            <small>シール60枚</small>
             <strong>500円</strong>
           </button>
         </div>
@@ -112,10 +115,10 @@
       <div class="seal-free-panel">
         <a class="seal-free-main" href="spin.html?mode=free">
           <span>無料ガチャを引く（6連）</span>
-          <small>R/SRのみ・SR 1/6</small>
         </a>
+        <p class="seal-gacha-caption">R/SRのみ</p>
       </div>
-      <div class="seal-normal-panel">
+      <div class="seal-normal-panel" hidden>
         <p class="seal-normal-title">テストガチャ</p>
         <div class="seal-spin-actions">
           <a class="spin-button" href="spin.html?mode=test">
@@ -128,7 +131,7 @@
           </a>
         </div>
       </div>
-      <div class="seal-normal-panel seal-guaranteed-panel">
+      <div class="seal-normal-panel seal-guaranteed-panel" hidden>
         <p class="seal-normal-title">確定テストガチャ</p>
         <div class="seal-spin-actions seal-guaranteed-actions">
           <a class="spin-button spin-button-secret" href="spin.html?mode=test&pulls=10&testSecret=1">
@@ -181,23 +184,23 @@
           <div class="seal-rate-grid" aria-label="有料ガチャの各レアリティ排出率">
             <article class="seal-rate-card">
               <span class="rarity normal">R</span>
-              <strong>70%</strong>
-              <small>6連で出る確率<br>約99.9%</small>
+              <strong>0%</strong>
+              <small>有料ガチャでは<br>排出されません</small>
             </article>
             <article class="seal-rate-card">
               <span class="rarity rare">SR</span>
-              <strong>20%</strong>
-              <small>6連で出る確率<br>約73.8%</small>
+              <strong>66.7%</strong>
+              <small>6連で出る確率<br>約99.9%</small>
             </article>
             <article class="seal-rate-card">
               <span class="rarity sparkle">UR</span>
-              <strong>8%</strong>
-              <small>6連で出る確率<br>約39.4%</small>
+              <strong>26.7%</strong>
+              <small>6連で出る確率<br>約84.4%</small>
             </article>
             <article class="seal-rate-card">
               <span class="rarity special">プリ</span>
-              <strong>2%</strong>
-              <small>6連で出る確率<br>約11.4%</small>
+              <strong>6.7%</strong>
+              <small>6連で出る確率<br>約33.9%</small>
             </article>
             <article class="seal-rate-card">
               <span class="rarity ultra">SECRET</span>
@@ -293,6 +296,7 @@
       const codeError = document.getElementById("sealCodeError");
       const openPaidGacha = document.getElementById("openPaidGacha");
       const paidGachaOptions = document.getElementById("paidGachaOptions");
+      const paidOptionButtons = Array.from(document.querySelectorAll("[data-package-type]"));
       const paidGachaStatus = document.getElementById("paidGachaStatus");
       const paidGachaEmailForm = document.getElementById("paidGachaEmailForm");
       const paidGachaEmail = document.getElementById("paidGachaEmail");
@@ -419,9 +423,9 @@
                   <div class="seal-book-grid">
                     ${tabStickers.map((sticker) => `
                       <article class="seal-book-card">
-                        <button class="seal-list-image-guard seal-book-preview-open" type="button" data-preview-src="${escapeHtml(sticker.src)}" data-preview-alt="${escapeHtml(`${sticker.title || "シール"} ${sticker.rarity || ""}`)}">
+                        <div class="seal-list-image-guard seal-book-image-guard">
                           <img src="${escapeHtml(sticker.src)}" alt="${escapeHtml(sticker.title || "シール")}" draggable="false">
-                        </button>
+                        </div>
                         <span class="rarity ${escapeHtml(sticker.rarityClass || tab.className)}">${escapeHtml(sticker.rarity || "")}</span>
                         <p>${escapeHtml(sticker.title || "シール")}</p>
                         <small>×${Number(sticker.count || 1)}</small>
@@ -449,11 +453,6 @@
             bookContent.querySelectorAll("[data-book-panel]").forEach((panel) => {
               panel.hidden = panel.dataset.bookPanel !== target;
             });
-          });
-        });
-        bookContent.querySelectorAll("[data-preview-src]").forEach((button) => {
-          button.addEventListener("click", () => {
-            openBookPreview(button.dataset.previewSrc || "", button.dataset.previewAlt || "シール");
           });
         });
       };
@@ -502,6 +501,26 @@
 
       const setPaidStatus = (message) => {
         if (paidGachaStatus) paidGachaStatus.textContent = message || "";
+      };
+
+      const CODE_USAGE_STORAGE_KEY = "mobbySealGachaUsedCodes";
+      const validGachaCodes = new Set(["mobby-gacha!", "mobby-gachagacha"]);
+
+      const getUsedGachaCodes = () => {
+        try {
+          const parsed = JSON.parse(localStorage.getItem(CODE_USAGE_STORAGE_KEY) || "[]");
+          return Array.isArray(parsed) ? new Set(parsed) : new Set();
+        } catch {
+          return new Set();
+        }
+      };
+
+      const setSelectedPaidOption = (selectedButton) => {
+        paidOptionButtons.forEach((button) => {
+          const isSelected = button === selectedButton;
+          button.classList.toggle("is-selected", isSelected);
+          button.setAttribute("aria-pressed", isSelected ? "true" : "false");
+        });
       };
 
       const normalizeEmail = (value) => String(value || "").trim();
@@ -650,6 +669,7 @@
         const target = event.target;
         const button = target instanceof Element ? target.closest("[data-package-type]") : null;
         if (!button) return;
+        setSelectedPaidOption(button);
         startPaidCheckout(button.dataset.packageType || "single", button);
       });
       closeCheckout?.addEventListener("click", closeCheckoutModal);
@@ -657,8 +677,19 @@
       codeForm?.addEventListener("submit", (event) => {
         event.preventDefault();
         const code = codeInput?.value.trim() || "";
-        if (code !== "mobby-gacha!") {
-          if (codeError) codeError.hidden = false;
+        if (!validGachaCodes.has(code)) {
+          if (codeError) {
+            codeError.textContent = "コードが間違っています";
+            codeError.hidden = false;
+          }
+          codeInput?.focus();
+          return;
+        }
+        if (getUsedGachaCodes().has(code)) {
+          if (codeError) {
+            codeError.textContent = "このコードは使用済みです";
+            codeError.hidden = false;
+          }
           codeInput?.focus();
           return;
         }
@@ -668,6 +699,10 @@
       });
       content.addEventListener("contextmenu", (event) => event.preventDefault());
       content.addEventListener("dragstart", (event) => event.preventDefault());
+      bookContent?.addEventListener("contextmenu", (event) => event.preventDefault());
+      bookContent?.addEventListener("dragstart", (event) => event.preventDefault());
+      bookPreviewImage?.addEventListener("contextmenu", (event) => event.preventDefault());
+      bookPreviewImage?.addEventListener("dragstart", (event) => event.preventDefault());
       document.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && !modal.hidden) closeModal();
         if (event.key === "Escape" && rateModal && !rateModal.hidden) closeRateModal();
