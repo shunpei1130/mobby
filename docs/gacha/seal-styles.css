@@ -875,6 +875,26 @@ a {
   cursor: pointer;
 }
 
+.seal-print-method-open {
+  width: min(500px, 100%);
+  min-height: 54px;
+  margin: 12px auto 0;
+  padding: 0 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 111, 159, 0.36);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.86);
+  color: #f74891;
+  font-size: 1rem;
+  font-weight: 900;
+  box-shadow:
+    inset 0 2px rgba(255, 255, 255, 0.78),
+    0 12px 20px rgba(112, 82, 52, 0.1);
+  cursor: pointer;
+}
+
 .seal-line-cta,
 .seal-code-form .line-ai-mobby-cta {
   width: 100%;
@@ -1089,6 +1109,10 @@ a {
   width: min(720px, 100%);
 }
 
+.seal-print-method-sheet {
+  width: min(560px, 100%);
+}
+
 .seal-rate-content {
   overflow: auto;
   padding: 24px 28px 30px;
@@ -1097,6 +1121,53 @@ a {
 .seal-book-content {
   overflow: auto;
   padding: 22px 28px 30px;
+}
+
+.seal-print-method-content {
+  overflow: auto;
+  padding: 24px 28px 30px;
+}
+
+.seal-print-method-lead {
+  margin: 0;
+  color: #5a4030;
+  font-size: 0.98rem;
+  font-weight: 900;
+  line-height: 1.75;
+}
+
+.seal-print-method-heading {
+  margin: 20px 0 10px;
+  color: #f74891;
+  font-size: 1.05rem;
+  font-weight: 900;
+}
+
+.seal-print-method-list {
+  margin: 0;
+  padding-left: 1.35em;
+  color: #5a4030;
+  font-size: 0.98rem;
+  font-weight: 900;
+  line-height: 1.85;
+}
+
+.seal-print-method-list li + li {
+  margin-top: 10px;
+}
+
+.seal-print-method-notes {
+  margin-top: 18px;
+  display: grid;
+  gap: 8px;
+  color: #6a625a;
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1.65;
+}
+
+.seal-print-method-notes p {
+  margin: 0;
 }
 
 .seal-rate-tabs {

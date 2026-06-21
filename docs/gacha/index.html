@@ -151,6 +151,7 @@
         <p class="seal-code-help">公式LINEのアンケートに回答でクーポンコードが発行されるよ</p>
         <p class="seal-code-error" id="sealCodeError" aria-live="polite" hidden>コードが間違っています</p>
       </form>
+      <button class="seal-print-method-open" id="openSealPrintMethod" type="button" aria-haspopup="dialog" aria-controls="sealPrintMethodModal">プリント方法</button>
       <p class="spin-note"><span aria-hidden="true">ⓘ</span> Mobby公式LINEのアンケート回答でコードをゲットしてから！</p>
     </section>
   </main>
@@ -249,6 +250,34 @@
     </div>
   </section>
 
+  <section class="seal-list-modal seal-print-method-modal" id="sealPrintMethodModal" aria-labelledby="sealPrintMethodTitle" aria-modal="true" role="dialog" hidden>
+    <button class="seal-list-backdrop" id="closeSealPrintMethodBackdrop" type="button" aria-label="プリント方法を閉じる"></button>
+    <div class="seal-list-sheet seal-print-method-sheet">
+      <div class="seal-list-head">
+        <div>
+          <p class="seal-list-kicker">Print Guide</p>
+          <h2 id="sealPrintMethodTitle">プリント方法</h2>
+        </div>
+        <button class="seal-list-close" id="closeSealPrintMethod" type="button" aria-label="プリント方法を閉じる">×</button>
+      </div>
+      <div class="seal-print-method-content">
+        <p class="seal-print-method-lead">ガチャで出た画像は、スマホに保存して、コンビニのマルチコピー機などでシール紙に印刷できます。</p>
+        <h3 class="seal-print-method-heading">手順</h3>
+        <ol class="seal-print-method-list">
+          <li>ガチャ結果画像をスマホに保存</li>
+          <li>コンビニプリント用のサービスやアプリに画像を登録</li>
+          <li>店舗のマルチコピー機で「シール紙」を選択</li>
+          <li>画面の案内に沿って印刷</li>
+        </ol>
+        <div class="seal-print-method-notes">
+          <p>※利用できる店舗・料金・対応用紙・操作方法は、各コンビニやプリントサービスによって異なります。</p>
+          <p>※印刷前に、利用する店舗のコピー機で「シール紙」が選べるかご確認ください。</p>
+          <p>※当サイトは、各コンビニおよび各プリントサービスと提携・協賛・共同運営しているものではありません。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <div class="seal-book-preview-modal" id="sealBookPreviewModal" hidden>
     <button class="seal-book-preview-backdrop" id="closeSealBookPreviewBackdrop" type="button" aria-label="拡大表示を閉じる"></button>
     <div class="seal-book-preview-dialog" role="dialog" aria-modal="true" aria-label="シール画像の拡大表示">
@@ -290,6 +319,10 @@
       const closeBookButton = document.getElementById("closeSealBook");
       const closeBookBackdrop = document.getElementById("closeSealBookBackdrop");
       const bookContent = document.getElementById("sealBookContent");
+      const printMethodModal = document.getElementById("sealPrintMethodModal");
+      const openPrintMethodButton = document.getElementById("openSealPrintMethod");
+      const closePrintMethodButton = document.getElementById("closeSealPrintMethod");
+      const closePrintMethodBackdrop = document.getElementById("closeSealPrintMethodBackdrop");
       const bookPreviewModal = document.getElementById("sealBookPreviewModal");
       const bookPreviewImage = document.getElementById("sealBookPreviewImage");
       const closeBookPreviewButton = document.getElementById("closeSealBookPreview");
@@ -493,6 +526,18 @@
         openBookButton?.focus();
       };
 
+      const openPrintMethodModal = () => {
+        if (!printMethodModal) return;
+        printMethodModal.hidden = false;
+        closePrintMethodButton?.focus();
+      };
+
+      const closePrintMethodModal = () => {
+        if (!printMethodModal) return;
+        printMethodModal.hidden = true;
+        openPrintMethodButton?.focus();
+      };
+
       const setRateTab = (target) => {
         rateTabButtons.forEach((button) => {
           const active = button.dataset.rateTab === target;
@@ -654,6 +699,9 @@
       openBookButton?.addEventListener("click", openBookModal);
       closeBookButton?.addEventListener("click", closeBookModal);
       closeBookBackdrop?.addEventListener("click", closeBookModal);
+      openPrintMethodButton?.addEventListener("click", openPrintMethodModal);
+      closePrintMethodButton?.addEventListener("click", closePrintMethodModal);
+      closePrintMethodBackdrop?.addEventListener("click", closePrintMethodModal);
       closeBookPreviewButton?.addEventListener("click", closeBookPreview);
       closeBookPreviewBackdrop?.addEventListener("click", closeBookPreview);
       rateTabButtons.forEach((button) => {
@@ -713,6 +761,7 @@
         if (event.key === "Escape" && rateModal && !rateModal.hidden) closeRateModal();
         if (event.key === "Escape" && bookPreviewModal && !bookPreviewModal.hidden) closeBookPreview();
         if (event.key === "Escape" && bookModal && !bookModal.hidden) closeBookModal();
+        if (event.key === "Escape" && printMethodModal && !printMethodModal.hidden) closePrintMethodModal();
         if (event.key === "Escape" && checkoutModal && !checkoutModal.hidden) closeCheckoutModal();
       });
     })();
