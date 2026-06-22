@@ -37,8 +37,8 @@ function assertProductionConstants() {
   const productionSetup = read("gacha/production-setup.md");
   [
     "LINE_LOGIN_CHANNEL_ID=2010241086",
-    "R2_BUCKET_NAME=mobby-gacha-results",
-    "R2_PUBLIC_BASE_URL=https://pub-f89832a5567b46d2818d3109cb2a3965.r2.dev",
+    "BLOB_READ_WRITE_TOKEN=<Vercel Blob read/write token>",
+    "Cloudflare R2 is not required",
     "STRIPE_PRICE_ID_SEAL_GACHA_SINGLE=price_1Tl6KyHycYytLGskW8dxyL2A",
     "STRIPE_PRICE_ID_SEAL_GACHA_TEN=price_1Tl6LYHycYytLGskYEUAfu6r",
     "GACHA_LINE_DELIVERY_DELAY_SECONDS=120",
@@ -47,6 +47,17 @@ function assertProductionConstants() {
     "draw-records/",
     "line-queue/"
   ].forEach((needle) => assert.ok(productionSetup.includes(needle), `missing setup item: ${needle}`));
+
+  const paidResultSource = read("api/_gacha-paid-result.js");
+  assert.ok(
+    paidResultSource.includes("from \"./_gacha-storage.js\""),
+    "paid results must use the gacha storage helper"
+  );
+  assert.ok(!paidResultSource.includes("from \"./_r2.js\""), "paid results must not import R2 storage");
+
+  const cronSource = read("api/gacha-line-delivery-cron.js");
+  assert.ok(cronSource.includes("RETENTION_RULES"), "cron must define Blob retention cleanup rules");
+  assert.ok(cronSource.includes("deleteStorageUrls"), "cron must clean expired Blob objects");
 }
 
 function assertCheckoutPackageConfig() {
@@ -81,8 +92,8 @@ function assertCheckoutSessionSourceContract() {
 
 async function assertLinePushSplitting() {
   const imageItems = Array.from({ length: 10 }, (_, index) => ({
-    url: `https://pub-f89832a5567b46d2818d3109cb2a3965.r2.dev/result-images/sheet-${index + 1}.png`,
-    previewUrl: `https://pub-f89832a5567b46d2818d3109cb2a3965.r2.dev/result-images/sheet-${index + 1}_preview.jpg`
+    url: `https://mobby.public.blob.vercel-storage.com/result-images/sheet-${index + 1}.png`,
+    previewUrl: `https://mobby.public.blob.vercel-storage.com/result-images/sheet-${index + 1}_preview.jpg`
   }));
   const batches = lineModule.buildGachaResultLineMessageBatches(imageItems);
   assert.deepEqual(batches.map((batch) => batch.length), [5, 5, 1]);

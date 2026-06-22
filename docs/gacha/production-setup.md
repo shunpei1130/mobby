@@ -11,11 +11,7 @@ LINE_LOGIN_CHANNEL_ID=2010241086
 LINE_CHANNEL_ACCESS_TOKEN=<LINE Messaging API channel access token>
 GACHA_LINE_LINK_SECRET=<long random secret>
 
-R2_ACCOUNT_ID=<Cloudflare account ID>
-R2_ACCESS_KEY_ID=<R2 API token access key ID>
-R2_SECRET_ACCESS_KEY=<R2 API token secret access key>
-R2_BUCKET_NAME=mobby-gacha-results
-R2_PUBLIC_BASE_URL=https://pub-f89832a5567b46d2818d3109cb2a3965.r2.dev
+BLOB_READ_WRITE_TOKEN=<Vercel Blob read/write token>
 
 STRIPE_SECRET_KEY=<Stripe secret key>
 STRIPE_PUBLISHABLE_KEY=<Stripe publishable key>
@@ -58,39 +54,32 @@ Friend add URL: https://lin.ee/pNFlqJ6
 
 Copy the Messaging API channel access token into `LINE_CHANNEL_ACCESS_TOKEN`.
 
-## Cloudflare R2
+## Vercel Blob
 
-Bucket:
+The paid gacha flow stores fixed draw records, LINE delivery queue entries, and generated result images in Vercel Blob. Cloudflare R2 is not required.
 
-```text
-mobby-gacha-results
-```
-
-Public Development URL:
+Storage prefixes:
 
 ```text
-https://pub-f89832a5567b46d2818d3109cb2a3965.r2.dev
+result-images/
+draw-records/
+line-queue/
 ```
 
-Create an R2 API token with Object Read & Write access scoped to `mobby-gacha-results`, then set `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY` in Vercel.
-
-Recommended lifecycle rules:
+Retention is enforced by `/api/gacha-line-delivery-cron`:
 
 ```text
 Prefix: result-images/
-Action: Expire objects
 Days: 14
 
 Prefix: draw-records/
-Action: Expire objects
 Days: 30
 
 Prefix: line-queue/
-Action: Expire objects
 Days: 30
 ```
 
-For stable production media URLs, switch `R2_PUBLIC_BASE_URL` to `https://cdn.mobby.online` only after the Cloudflare R2 custom domain is configured.
+Confirm `BLOB_READ_WRITE_TOKEN` exists in Vercel Production and Preview environments before testing paid purchases.
 
 ## Stripe
 
@@ -125,7 +114,7 @@ Copy the webhook signing secret into `STRIPE_GACHA_WEBHOOK_SECRET`.
 * * * * *
 ```
 
-After deployment, confirm the Cron Job appears in the Vercel project settings. If the current Vercel plan cannot run this schedule, move the queue processor to Cloudflare Workers Cron.
+After deployment, confirm the Cron Job appears in the Vercel project settings.
 
 ## Production verification
 
@@ -139,7 +128,7 @@ Run the check in this order after production deploy and environment setup:
 5. Confirm the post-payment spin page opens.
 6. Confirm the gacha animation runs.
 7. Confirm the fixed result image is shown.
-8. Confirm R2 receives result-images/, draw-records/, and line-queue/ objects.
+8. Confirm Vercel Blob receives result-images/, draw-records/, and line-queue/ objects.
 9. Confirm LINE receives the image about 2 minutes after payment.
 10. Buy 60連 and confirm 10 result images are delivered across split LINE push requests.
 ```

@@ -1,7 +1,20 @@
 import { sendGachaResultLineMessage } from "./_gacha-line.js";
-import { getR2Json, listR2Keys, putR2Json } from "./_r2.js";
+import {
+  deleteStorageUrls,
+  getStorageJson,
+  listStorageBlobs,
+  listStorageKeys,
+  putStorageJson
+} from "./_gacha-storage.js";
 
-const LINE_QUEUE_PREFIX = process.env.R2_LINE_QUEUE_PREFIX || "line-queue/";
+const RESULT_IMAGE_PREFIX = process.env.GACHA_RESULT_IMAGE_PREFIX || "result-images/";
+const DRAW_RECORD_PREFIX = process.env.GACHA_DRAW_RECORD_PREFIX || "draw-records/";
+const LINE_QUEUE_PREFIX = process.env.GACHA_LINE_QUEUE_PREFIX || "line-queue/";
+const RETENTION_RULES = [
+  { prefix: RESULT_IMAGE_PREFIX, days: 14 },
+  { prefix: DRAW_RECORD_PREFIX, days: 30 },
+  { prefix: LINE_QUEUE_PREFIX, days: 30 }
+];
 
 function assertCronAuth(req) {
   const secret = process.env.CRON_SECRET || "";
@@ -21,12 +34,13 @@ export default async function handler(req, res) {
   const processed = [];
   const skipped = [];
   const failed = [];
+  const cleaned = [];
 
   try {
-    const keys = await listR2Keys(LINE_QUEUE_PREFIX, 1000);
+    const keys = await listStorageKeys(LINE_QUEUE_PREFIX, 1000);
     for (const key of keys) {
       try {
-        const queue = await getR2Json(key);
+        const queue = await getStorageJson(key);
         if (!queue || queue.delivered) {
           skipped.push({ key, reason: "already_delivered" });
           continue;
@@ -36,13 +50,13 @@ export default async function handler(req, res) {
           continue;
         }
 
-        const record = await getR2Json(queue.record_key);
+        const record = await getStorageJson(queue.record_key);
         if (!record || record.status !== "paid_result_fixed") {
           skipped.push({ key, reason: "record_not_ready" });
           continue;
         }
         if (record.line_delivery?.delivered) {
-          await putR2Json(key, { ...queue, delivered: true, delivered_at: record.line_delivery.delivered_at });
+          await putStorageJson(key, { ...queue, delivered: true, delivered_at: record.line_delivery.delivered_at });
           skipped.push({ key, reason: "record_already_delivered" });
           continue;
         }
@@ -64,16 +78,27 @@ export default async function handler(req, res) {
             error: ""
           }
         };
-        await putR2Json(queue.record_key, updatedRecord);
-        await putR2Json(key, { ...queue, delivered: true, delivered_at: deliveredAt });
+        await putStorageJson(queue.record_key, updatedRecord);
+        await putStorageJson(key, { ...queue, delivered: true, delivered_at: deliveredAt });
         processed.push({ key, drawId: record.draw_id, count: imageItems.length });
       } catch (error) {
         failed.push({ key, error: error?.message || "delivery failed" });
       }
     }
 
-    return res.status(200).json({ ok: true, processed, skipped, failed });
+    for (const rule of RETENTION_RULES) {
+      const cutoff = now - rule.days * 24 * 60 * 60 * 1000;
+      const expired = (await listStorageBlobs(rule.prefix, 1000)).filter((blob) => {
+        const uploadedAt = blob.uploadedAt ? new Date(blob.uploadedAt).getTime() : now;
+        return uploadedAt < cutoff;
+      });
+      if (!expired.length) continue;
+      await deleteStorageUrls(expired.map((blob) => blob.url));
+      cleaned.push({ prefix: rule.prefix, count: expired.length });
+    }
+
+    return res.status(200).json({ ok: true, processed, skipped, failed, cleaned });
   } catch (error) {
-    return res.status(500).json({ ok: false, error: error?.message || "Internal Error", processed, skipped, failed });
+    return res.status(500).json({ ok: false, error: error?.message || "Internal Error", processed, skipped, failed, cleaned });
   }
 }

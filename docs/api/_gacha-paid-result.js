@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import sharp from "sharp";
-import { getR2Json, publicR2Url, putR2Json, putR2Object } from "./_r2.js";
+import { getStorageJson, putStorageJson, putStorageObject } from "./_gacha-storage.js";
 
 export const GACHA_PRODUCT_TYPE = "seal_gacha";
 
@@ -16,9 +16,9 @@ const RARITY_CONFIG = [
 const SECRET_DIRS = ["main4/full", "main4/half"];
 const SHEET_SIZE = 6;
 const SECRET_SHEET_RATE = 1 / 500;
-const RESULT_IMAGE_PREFIX = process.env.R2_RESULT_IMAGE_PREFIX || "result-images/";
-const DRAW_RECORD_PREFIX = process.env.R2_DRAW_RECORD_PREFIX || "draw-records/";
-const LINE_QUEUE_PREFIX = process.env.R2_LINE_QUEUE_PREFIX || "line-queue/";
+const RESULT_IMAGE_PREFIX = process.env.GACHA_RESULT_IMAGE_PREFIX || "result-images/";
+const DRAW_RECORD_PREFIX = process.env.GACHA_DRAW_RECORD_PREFIX || "draw-records/";
+const LINE_QUEUE_PREFIX = process.env.GACHA_LINE_QUEUE_PREFIX || "line-queue/";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const assetsRoot = path.resolve(__dirname, "../gacha-new/assets");
@@ -293,14 +293,14 @@ async function uploadResultSheets(drawId, selectedResults) {
     const key = resultImageKey(drawId, index, chunks.length);
     const preview = await composePreviewJpeg(png);
     const previewKey = previewImageKey(drawId, index, chunks.length);
-    await putR2Object(key, png, "image/png");
-    await putR2Object(previewKey, preview, "image/jpeg");
+    const uploaded = await putStorageObject(key, png, "image/png");
+    const uploadedPreview = await putStorageObject(previewKey, preview, "image/jpeg");
     images.push({
       index: index + 1,
       key,
-      url: publicR2Url(key),
+      url: uploaded.url,
       preview_key: previewKey,
-      preview_url: publicR2Url(previewKey),
+      preview_url: uploadedPreview.url,
       size: png.length,
       preview_size: preview.length
     });
@@ -311,7 +311,7 @@ async function uploadResultSheets(drawId, selectedResults) {
 export async function loadGachaDrawRecord(drawId) {
   const id = safeText(drawId, 120);
   if (!id) return null;
-  return getR2Json(drawRecordKey(id));
+  return getStorageJson(drawRecordKey(id));
 }
 
 export async function createPaidGachaDraw({ stripeSession }) {
@@ -339,6 +339,7 @@ export async function createPaidGachaDraw({ stripeSession }) {
   const scheduledAt = new Date(now.getTime() + delaySeconds * 1000).toISOString();
   const record = {
     version: 1,
+    storage_provider: "vercel_blob",
     draw_id: drawId,
     stripe_session_id: session.id || "",
     line_user_id: lineUserId,
@@ -357,8 +358,8 @@ export async function createPaidGachaDraw({ stripeSession }) {
     }
   };
 
-  await putR2Json(drawRecordKey(drawId), record);
-  await putR2Json(lineQueueKey(drawId, scheduledAt), {
+  await putStorageJson(drawRecordKey(drawId), record);
+  await putStorageJson(lineQueueKey(drawId, scheduledAt), {
     draw_id: drawId,
     record_key: drawRecordKey(drawId),
     scheduled_at: scheduledAt,
@@ -366,5 +367,4 @@ export async function createPaidGachaDraw({ stripeSession }) {
   });
   return record;
 }
-
 
