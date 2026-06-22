@@ -1,4 +1,4 @@
-import { GACHA_PRODUCT_TYPE, safeText, sendPaidGachaResultEmail } from "./_gacha-paid-result.js";
+import { createPaidGachaDraw, GACHA_PRODUCT_TYPE, safeText } from "./_gacha-paid-result.js";
 
 function setCors(res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -18,23 +18,18 @@ export default async function handler(req, res) {
 
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY || "";
   if (!stripeSecretKey) {
-    return res.status(500).json({
-      error: "Stripe env is not configured. Set STRIPE_SECRET_KEY.",
-    });
+    return res.status(500).json({ error: "Stripe env is not configured. Set STRIPE_SECRET_KEY." });
   }
 
   try {
-    const body = req.body || {};
-    const sessionId = safeText(body.sessionId, 200);
+    const sessionId = safeText(req.body?.sessionId, 200);
     if (!sessionId || !sessionId.startsWith("cs_")) {
       return res.status(400).json({ error: "sessionId is invalid" });
     }
 
     const stripeRes = await fetch(`https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(sessionId)}`, {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${stripeSecretKey}`,
-      },
+      headers: { Authorization: `Bearer ${stripeSecretKey}` }
     });
 
     const stripeData = await stripeRes.json().catch(() => ({}));
@@ -50,21 +45,10 @@ export default async function handler(req, res) {
     const paymentStatus = safeText(stripeData?.payment_status, 40).toLowerCase();
     const checkoutStatus = safeText(stripeData?.status, 40).toLowerCase();
     const paid = productType === GACHA_PRODUCT_TYPE && paymentStatus === "paid";
+    let draw = null;
 
-    let message = "";
-    let resultEmail = { sent: false, skipped: false };
-    if (productType !== GACHA_PRODUCT_TYPE) {
-      message = "シールガチャの決済として確認できませんでした。";
-    } else if (paymentStatus !== "paid") {
-      message = checkoutStatus === "complete"
-        ? "決済は完了していますが、入金確認待ちです。時間をおいて再読み込みしてください。"
-        : "決済はまだ完了していません。";
-    } else if (paid) {
-      resultEmail = await sendPaidGachaResultEmail({
-        stripeSecretKey,
-        sessionId,
-        stripeSession: stripeData
-      });
+    if (paid) {
+      draw = await createPaidGachaDraw({ stripeSession: stripeData });
     }
 
     return res.status(200).json({
@@ -77,8 +61,9 @@ export default async function handler(req, res) {
       currency: safeText(stripeData?.currency, 12).toLowerCase(),
       pulls: Number(stripeData?.metadata?.pulls || 1),
       packageType: safeText(stripeData?.metadata?.package_type, 20),
-      resultEmailSent: Boolean(resultEmail.sent || resultEmail.reason === "already_sent"),
-      message,
+      drawId: safeText(stripeData?.metadata?.draw_id, 120),
+      resultReady: Boolean(draw?.status === "paid_result_fixed"),
+      message: paid ? "" : "決済がまだ完了していません。"
     });
   } catch (error) {
     return res.status(500).json({ error: error?.message || "Internal Error" });

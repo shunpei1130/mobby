@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { sendPaidGachaResultEmail } from "./_gacha-paid-result.js";
+import { createPaidGachaDraw } from "./_gacha-paid-result.js";
 
 export const config = {
   api: {
@@ -62,12 +62,7 @@ export default async function handler(req, res) {
     const event = JSON.parse(rawBody.toString("utf8"));
     if (event?.type === "checkout.session.completed" || event?.type === "checkout.session.async_payment_succeeded") {
       const session = event.data?.object;
-      await sendPaidGachaResultEmail({
-        stripeSecretKey,
-        sessionId: session?.id,
-        stripeSession: session,
-        baseUrl: session?.metadata?.result_base_url
-      });
+      await createPaidGachaDraw({ stripeSecretKey, sessionId: session?.id, stripeSession: session });
     }
 
     return res.status(200).json({ received: true });

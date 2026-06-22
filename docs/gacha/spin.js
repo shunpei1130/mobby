@@ -39,6 +39,7 @@
   if (!machineWrap || !spinButton || !handleButton || !resultSheet || !resultImage || !resultTitle || !resultText) return;
 
   const CHECKOUT_STATUS_ENDPOINT = "/api/gacha-checkout-status";
+  const DRAW_RESULT_ENDPOINT = "/api/gacha-draw-result";
   const SEND_STICKER_EMAIL_ENDPOINT = "/api/gacha-send-sticker-email";
   const params = new URLSearchParams(window.location.search);
   const isPaidMode = params.get("mode") === "paid";
@@ -48,8 +49,10 @@
   const isCodeMode = params.has("code");
   const codeValue = params.get("code") || "";
   const checkoutSessionId = params.get("session_id") || "";
+  const paidDrawId = params.get("draw_id") || "";
   let paidSpinAvailable = !isPaidMode;
   let hasUsedPaidSpin = false;
+  let paidFixedResults = [];
   let codeSpinAvailable = true;
   let pullCount = isSecretTestMode ? 10 : Math.max(1, Math.min(10, Number(params.get("pulls")) || 1));
 
@@ -604,7 +607,7 @@
       updateSheetSlide(0);
       if (againButton && isPaidMode) againButton.textContent = "もう一度購入する";
       resultSheet.hidden = false;
-      sendStickerEmailForCurrentResult();
+      if (!isPaidMode) sendStickerEmailForCurrentResult();
       return;
     }
 
@@ -635,7 +638,7 @@
     refreshDownloadLink();
     if (againButton && isPaidMode) againButton.textContent = "もう一度購入する";
     resultSheet.hidden = false;
-    sendStickerEmailForCurrentResult();
+    if (!isPaidMode) sendStickerEmailForCurrentResult();
   }
 
   function showReveal(index) {
@@ -1209,7 +1212,7 @@
     }, 820);
 
     window.setTimeout(() => {
-      const selectedResults = pickResults(pullCount * 6);
+      const selectedResults = isPaidMode && paidFixedResults.length ? paidFixedResults : pickResults(pullCount * 6);
       const revealableResults = selectedResults.filter((result) => !result.isSpacer);
       machineWrap.classList.remove("is-spinning", "is-dropping");
       if (spinLead) spinLead.textContent = "出たシールを確認しよう！";
@@ -1263,6 +1266,61 @@
     }
   }
 
+  async function verifyPaidSessionV2() {
+    if (!isPaidMode) {
+      setBusy(false);
+      return;
+    }
+
+    paidSpinAvailable = false;
+    setBusy(false);
+    if (spinLead) spinLead.textContent = "決済結果を確認しています...";
+
+    if (!checkoutSessionId.startsWith("cs_") || !paidDrawId.startsWith("draw_")) {
+      if (spinLead) spinLead.textContent = "決済確認ができませんでした。購入ページからもう一度お試しください。";
+      return;
+    }
+
+    try {
+      const checkoutResponse = await fetch(CHECKOUT_STATUS_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId: checkoutSessionId })
+      });
+      const checkoutData = await checkoutResponse.json().catch(() => ({}));
+      if (!checkoutResponse.ok || !checkoutData?.paid) {
+        throw new Error(checkoutData?.message || checkoutData?.error || "決済が完了していません。");
+      }
+      pullCount = Math.max(1, Math.min(10, Number(checkoutData.pulls) || pullCount));
+
+      let drawData = null;
+      for (let attempt = 0; attempt < 10; attempt += 1) {
+        const drawResponse = await fetch(`${DRAW_RESULT_ENDPOINT}?draw_id=${encodeURIComponent(paidDrawId)}`, {
+          cache: "no-store"
+        });
+        drawData = await drawResponse.json().catch(() => ({}));
+        if (drawResponse.ok && drawData?.resultReady && Array.isArray(drawData?.draw?.results)) break;
+        if (spinLead) spinLead.textContent = "ガチャ結果を準備しています...";
+        await new Promise((resolve) => window.setTimeout(resolve, 1200));
+      }
+
+      if (!drawData?.resultReady || !Array.isArray(drawData?.draw?.results)) {
+        throw new Error("ガチャ結果の準備に時間がかかっています。少し待ってから再読み込みしてください。");
+      }
+
+      paidFixedResults = drawData.draw.results;
+      paidSpinAvailable = true;
+      hasUsedPaidSpin = false;
+      if (spinLead) spinLead.textContent = "決済が完了しました。ガチャを回して結果を確認してください。結果画像は約2分後にLINEにも届きます。";
+      if (emailGate) emailGate.hidden = true;
+    } catch (error) {
+      paidSpinAvailable = false;
+      if (spinLead) spinLead.textContent = error?.message || "決済確認に失敗しました。";
+    } finally {
+      setBusy(false);
+    }
+  }
+
   spinButton.addEventListener("click", spin);
   handleButton.addEventListener("click", spin);
   emailGate?.addEventListener("submit", (event) => {
@@ -1297,5 +1355,5 @@
       closePreview();
     }
   });
-  verifyPaidSession();
+  verifyPaidSessionV2();
 })();

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -93,13 +93,9 @@
         <button class="seal-paid-main" id="openPaidGacha" type="button">有料ガチャを引く</button>
         <p class="seal-gacha-caption">SR以上のみ排出</p>
         <div class="seal-paid-options" id="paidGachaOptions" hidden>
-          <form class="seal-paid-email" id="paidGachaEmailForm" novalidate>
-            <label for="paidGachaEmail">メールアドレス</label>
-            <input id="paidGachaEmail" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required>
-            <p>決済完了後、このメールアドレスへガチャ結果を送信します。</p>
-            <p class="seal-paid-email-error" id="paidGachaEmailError" aria-live="polite"></p>
-            <input type="text" id="paidGachaHp" name="hp" tabindex="-1" autocomplete="off" hidden>
-          </form>
+<div class="seal-paid-email">
+            <p>購入前にLINE連携が必要です。決済後、結果画像をLINEで受け取れます。</p>
+          </div>
           <button class="seal-paid-option" type="button" data-package-type="single" aria-pressed="false">
             <span>6連</span>
             <small>シール6枚</small>
@@ -302,6 +298,7 @@
     (() => {
       const CHECKOUT_SESSION_ENDPOINT = "/api/gacha-checkout-session";
       const CHECKOUT_STATUS_ENDPOINT = "/api/gacha-checkout-status";
+      const LINE_LINK_TOKEN_STORAGE_KEY = "mobbyGachaLineLinkToken";
       let stripeLoaderPromise = null;
       let embeddedCheckoutInstance = null;
 
@@ -336,9 +333,6 @@
       const paidGachaOptions = document.getElementById("paidGachaOptions");
       const paidOptionButtons = Array.from(document.querySelectorAll("[data-package-type]"));
       const paidGachaStatus = document.getElementById("paidGachaStatus");
-      const paidGachaEmailForm = document.getElementById("paidGachaEmailForm");
-      const paidGachaEmail = document.getElementById("paidGachaEmail");
-      const paidGachaEmailError = document.getElementById("paidGachaEmailError");
       const paidGachaHp = document.getElementById("paidGachaHp");
       const checkoutModal = document.getElementById("sealCheckoutModal");
       const checkoutMount = document.getElementById("sealCheckoutMount");
@@ -573,30 +567,6 @@
         });
       };
 
-      const normalizeEmail = (value) => String(value || "").trim();
-
-      const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-
-      const setPaidEmailError = (message) => {
-        if (paidGachaEmailError) paidGachaEmailError.textContent = message || "";
-      };
-
-      const validatePaidEmail = () => {
-        const email = normalizeEmail(paidGachaEmail?.value);
-        if (!email) {
-          setPaidEmailError("メールアドレスを入力してください。");
-          paidGachaEmail?.focus();
-          return "";
-        }
-        if (!isValidEmail(email)) {
-          setPaidEmailError("正しいメールアドレスを入力してください。");
-          paidGachaEmail?.focus();
-          return "";
-        }
-        setPaidEmailError("");
-        return email;
-      };
-
       const loadStripeJs = () => {
         if (window.Stripe) return Promise.resolve(window.Stripe);
         if (stripeLoaderPromise) return stripeLoaderPromise;
@@ -638,11 +608,13 @@
         closeCheckout?.focus();
       };
 
-      const createCheckoutSession = async (packageType, email) => {
+      const getLineLinkToken = () => sessionStorage.getItem(LINE_LINK_TOKEN_STORAGE_KEY) || "";
+
+      const createCheckoutSession = async (packageType, lineLinkToken) => {
         const response = await fetch(CHECKOUT_SESSION_ENDPOINT, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ source: "seal-gacha", packageType, email, hp: paidGachaHp?.value || "" })
+          body: JSON.stringify({ source: "seal-gacha", packageType, lineLinkToken, hp: paidGachaHp?.value || "" })
         });
         const data = await response.json().catch(() => ({}));
         if (!response.ok || !data?.clientSecret || !data?.publishableKey || !data?.sessionId) {
@@ -652,8 +624,11 @@
       };
 
       const startPaidCheckout = async (packageType, triggerButton) => {
-        const email = validatePaidEmail();
-        if (!email) return;
+        const lineLinkToken = getLineLinkToken();
+        if (!lineLinkToken) {
+          window.location.href = "line-link.html";
+          return;
+        }
         if (!checkoutModal || !checkoutMount) {
           setPaidStatus("決済画面を表示できませんでした。");
           return;
@@ -662,7 +637,7 @@
         triggerButton.disabled = true;
         setPaidStatus("Stripe決済を準備しています...");
         try {
-          const session = await createCheckoutSession(packageType, email);
+          const session = await createCheckoutSession(packageType, lineLinkToken);
           const StripeCtor = await loadStripeJs();
           const stripe = StripeCtor(session.publishableKey);
           teardownCheckout();
@@ -677,7 +652,7 @@
                 body: JSON.stringify({ sessionId: session.sessionId })
               }).catch(() => null);
               const pulls = packageType === "ten" ? "10" : "1";
-              window.location.href = `spin.html?mode=paid&pulls=${pulls}&session_id=${encodeURIComponent(session.sessionId)}&sent=1`;
+              window.location.href = `spin.html?mode=paid&draw_id=${encodeURIComponent(session.drawId || "")}&pulls=${pulls}&session_id=${encodeURIComponent(session.sessionId)}`;
             }
           });
           embeddedCheckoutInstance.mount("#sealCheckoutMount");
@@ -710,13 +685,7 @@
       openPaidGacha?.addEventListener("click", () => {
         if (!paidGachaOptions) return;
         paidGachaOptions.hidden = !paidGachaOptions.hidden;
-        if (!paidGachaOptions.hidden) paidGachaEmail?.focus();
-      });
-      paidGachaEmail?.addEventListener("input", () => {
-        if (paidGachaEmailError?.textContent) setPaidEmailError("");
-      });
-      paidGachaEmailForm?.addEventListener("submit", (event) => {
-        event.preventDefault();
+        if (!paidGachaOptions.hidden && !getLineLinkToken()) setPaidStatus("LINE連携後に購入できます。商品を選ぶと連携ページへ進みます。");
       });
       paidGachaOptions?.addEventListener("click", (event) => {
         const target = event.target;
@@ -768,3 +737,4 @@
   </script>
 </body>
 </html>
+
