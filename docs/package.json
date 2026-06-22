@@ -4,7 +4,8 @@
     "type": "module",
     "scripts": {
         "serve": "node serve.mjs",
-        "validate:line-ai": "node scripts/validate-line-ai-mobby.mjs"
+        "validate:line-ai": "node scripts/validate-line-ai-mobby.mjs",
+        "validate:gacha-line-delivery": "node scripts/validate-gacha-line-delivery.mjs"
     },
     "dependencies": {
         "@mediapipe/tasks-vision": "^0.10.14",

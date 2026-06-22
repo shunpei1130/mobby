@@ -1,6 +1,7 @@
 import crypto from "crypto";
 
 const TOKEN_TTL_SECONDS = 60 * 60;
+export const LINE_MESSAGE_LIMIT = 5;
 
 export function safeText(value, max = 300) {
   return String(value || "").trim().slice(0, max);
@@ -109,34 +110,39 @@ function normalizeImageItems(imageUrls, imageItems) {
     .map((url) => ({ url, previewUrl: url }));
 }
 
-export async function sendGachaResultLineMessage({ lineUserId, drawId, imageUrls, imageItems }) {
-  const items = normalizeImageItems(imageUrls, imageItems);
-  if (!lineUserId) throw new Error("lineUserId is missing");
-  if (!items.length) throw new Error("imageUrls is missing");
+function toLineImageMessage(item) {
+  return {
+    type: "image",
+    originalContentUrl: item.url,
+    previewImageUrl: item.previewUrl
+  };
+}
 
+export function buildGachaResultLineMessageBatches(items) {
+  const imageItems = Array.isArray(items) ? items : [];
+  const firstImageCount = LINE_MESSAGE_LIMIT - 1;
   const firstBatch = [
     {
       type: "text",
       text: "Mobbyシールガチャの結果が届きました。\n画像の保存期限は14日間です。"
     },
-    ...items.slice(0, 4).map((item) => ({
-      type: "image",
-      originalContentUrl: item.url,
-      previewImageUrl: item.previewUrl
-    }))
+    ...imageItems.slice(0, firstImageCount).map(toLineImageMessage)
   ];
-  await pushLineMessages(lineUserId, firstBatch, `${drawId}-line-0`);
+  const batches = [firstBatch];
 
-  for (let index = 4; index < items.length; index += 5) {
-    const batchNo = Math.floor(index / 5) + 1;
-    await pushLineMessages(
-      lineUserId,
-      items.slice(index, index + 5).map((item) => ({
-        type: "image",
-        originalContentUrl: item.url,
-        previewImageUrl: item.previewUrl
-      })),
-      `${drawId}-line-${batchNo}`
-    );
+  for (let index = firstImageCount; index < imageItems.length; index += LINE_MESSAGE_LIMIT) {
+    batches.push(imageItems.slice(index, index + LINE_MESSAGE_LIMIT).map(toLineImageMessage));
+  }
+  return batches;
+}
+
+export async function sendGachaResultLineMessage({ lineUserId, drawId, imageUrls, imageItems }) {
+  const items = normalizeImageItems(imageUrls, imageItems);
+  if (!lineUserId) throw new Error("lineUserId is missing");
+  if (!items.length) throw new Error("imageUrls is missing");
+
+  const batches = buildGachaResultLineMessageBatches(items);
+  for (let index = 0; index < batches.length; index += 1) {
+    await pushLineMessages(lineUserId, batches[index], `${drawId}-line-${index}`);
   }
 }

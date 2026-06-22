@@ -1,21 +1,7 @@
 import crypto from "crypto";
+import { GACHA_CHECKOUT_PACKAGES, GACHA_STRIPE_PRICE_ENV } from "./_gacha-checkout-config.js";
 import { GACHA_PRODUCT_TYPE, resolveOrigin, safeText } from "./_gacha-paid-result.js";
 import { verifyLineLinkToken } from "./_gacha-line.js";
-
-const PACKAGES = {
-  single: {
-    pulls: 1,
-    amount: 100,
-    label: "Mobbyシールガチャ 6連",
-    description: "Mobby シールガチャ 6連"
-  },
-  ten: {
-    pulls: 10,
-    amount: 500,
-    label: "Mobbyシールガチャ 60連",
-    description: "Mobby シールガチャ 60連"
-  }
-};
 
 function setCors(res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -36,8 +22,8 @@ export default async function handler(req, res) {
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY || "";
   const stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY || "";
   const stripeCatalogRefs = {
-    single: process.env.STRIPE_PRICE_ID_SEAL_GACHA_SINGLE || "",
-    ten: process.env.STRIPE_PRICE_ID_SEAL_GACHA_TEN || ""
+    single: process.env[GACHA_STRIPE_PRICE_ENV.single] || "",
+    ten: process.env[GACHA_STRIPE_PRICE_ENV.ten] || ""
   };
 
   if (!stripeSecretKey || !stripePublishableKey) {
@@ -55,8 +41,8 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "LINE連携を完了してから購入してください。" });
     }
 
-    const normalizedPackageType = PACKAGES[packageType] ? packageType : "single";
-    const selectedPackage = PACKAGES[normalizedPackageType];
+    const normalizedPackageType = GACHA_CHECKOUT_PACKAGES[packageType] ? packageType : "single";
+    const selectedPackage = GACHA_CHECKOUT_PACKAGES[normalizedPackageType];
     const stripeCatalogRef = stripeCatalogRefs[normalizedPackageType] || "";
     const origin = resolveOrigin(req);
     const drawId = `draw_${crypto.randomUUID().replace(/-/gu, "")}`;
