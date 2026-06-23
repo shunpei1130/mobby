@@ -26,6 +26,23 @@ function assertProductionConstants() {
   assert.match(lineLinkHtml, /const LIFF_ID = "2010241086-zi2RBQek"/);
   assert.match(lineLinkHtml, /const ADD_FRIEND_URL = "https:\/\/lin\.ee\/pNFlqJ6"/);
   assert.match(lineLinkHtml, /const VERIFY_ENDPOINT = "\/api\/gacha-line-verify"/);
+  [
+    "https://liff.line.me/",
+    "line://app/",
+    "IN_APP_BROWSER_PATTERN",
+    "Safari/Chromeで開いてください",
+    "package_type",
+    "mobbyGachaPendingPackageType"
+  ].forEach((needle) => assert.ok(lineLinkHtml.includes(needle), `missing line-link UX item: ${needle}`));
+
+  const gachaIndexHtml = read("gacha/index.html");
+  [
+    "PENDING_PACKAGE_STORAGE_KEY",
+    "line_linked",
+    "resumeCheckoutAfterLineLink",
+    "lineLinkUrl",
+    "LINE連携の有効期限が切れました"
+  ].forEach((needle) => assert.ok(gachaIndexHtml.includes(needle), `missing checkout resume item: ${needle}`));
 
   const vercelJson = JSON.parse(read("vercel.json"));
   assert.ok(Array.isArray(vercelJson.crons), "vercel.json must define crons");

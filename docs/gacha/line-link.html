@@ -5,63 +5,145 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mobby Gacha Result</title>
   <style>
+    :root {
+      color-scheme: light;
+      --line: #06c755;
+      --ink: #2f242b;
+      --muted: #6d5964;
+      --soft: #fff7fb;
+      --panel: rgba(255, 255, 255, 0.92);
+      --border: #ead9e1;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
       display: grid;
       place-items: center;
-      background: #fff7fb;
-      color: #34242d;
+      padding: 24px 18px;
+      background: var(--soft);
+      color: var(--ink);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
+
     main {
-      width: min(360px, calc(100vw - 40px));
+      width: min(420px, 100%);
+      padding: 26px 22px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: var(--panel);
+      box-shadow: 0 18px 36px rgba(88, 58, 73, 0.11);
       text-align: center;
     }
+
     h1 {
-      margin: 0 0 12px;
+      margin: 0 0 10px;
       font-size: 22px;
+      line-height: 1.35;
     }
+
     p {
-      margin: 0 0 18px;
+      margin: 0 0 16px;
       line-height: 1.7;
-      color: #6d5964;
+      color: var(--muted);
     }
-    button, a {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 0 18px;
-      border-radius: 999px;
-      border: 0;
-      background: #06c755;
-      color: #fff;
-      font-weight: 700;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    .secondary {
-      margin-top: 10px;
-      background: transparent;
-      color: #6d5964;
-      border: 1px solid #e8d8df;
-    }
+
     .status {
       min-height: 24px;
       font-size: 14px;
+      font-weight: 700;
+    }
+
+    .status.is-error {
+      color: #d9355f;
+    }
+
+    .actions {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    button,
+    a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 999px;
+      border: 0;
+      background: var(--line);
+      color: #fff;
+      font: inherit;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .secondary {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .guide {
+      margin: 18px 0 0;
+      padding: 14px;
+      border-radius: 16px;
+      background: #fff3d8;
+      text-align: left;
+    }
+
+    .guide h2 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+
+    .guide ol {
+      margin: 0;
+      padding-left: 1.25em;
+      color: #6d4a18;
+      line-height: 1.65;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    [hidden] {
+      display: none !important;
     }
   </style>
 </head>
 <body>
   <main>
-    <h1>Mobby Gacha Result</h1>
-    <p>シールガチャ結果をLINEで受け取るために連携します。</p>
-    <p class="status" id="status">LINEを確認しています...</p>
-    <button id="loginButton" type="button" hidden>LINEで連携する</button>
-    <a id="addFriendButton" href="https://lin.ee/pNFlqJ6" hidden>公式LINEを友だち追加する</a>
-    <br>
-    <a class="secondary" href="index.html">ガチャページへ戻る</a>
+    <h1 id="title">Mobby Gacha Result</h1>
+    <p id="lead">シールガチャ結果をLINEで受け取るために連携します。</p>
+    <p class="status" id="status" aria-live="polite">LINEを確認しています...</p>
+
+    <div class="actions">
+      <a id="openLineButton" href="#" hidden>LINEアプリで連携する</a>
+      <button id="loginButton" type="button" hidden>LINEでログインして連携する</button>
+      <a id="fallbackLineButton" class="secondary" href="#" hidden>開かない場合はこちら</a>
+      <a id="addFriendButton" href="https://lin.ee/pNFlqJ6" hidden>公式LINEを友だち追加する</a>
+      <button id="retryButton" class="secondary" type="button" hidden>連携を再確認する</button>
+      <button id="copyButton" class="secondary" type="button" hidden>このページのURLをコピー</button>
+      <a class="secondary" id="backButton" href="index.html">ガチャページへ戻る</a>
+    </div>
+
+    <section class="guide" id="browserGuide" hidden>
+      <h2>LINEログイン画面になった場合</h2>
+      <ol>
+        <li>TikTokやInstagram内では、右上の「...」を開きます。</li>
+        <li>「ブラウザで開く」または「Safariで開く」を選びます。</li>
+        <li>開いたページで「LINEアプリで連携する」をタップします。</li>
+      </ol>
+    </section>
   </main>
 
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
@@ -72,20 +154,131 @@
       const ADD_FRIEND_URL = "https://lin.ee/pNFlqJ6";
       const TOKEN_STORAGE_KEY = "mobbyGachaLineLinkToken";
       const PROFILE_STORAGE_KEY = "mobbyGachaLineProfile";
-      const status = document.getElementById("status");
-      const loginButton = document.getElementById("loginButton");
-      const addFriendButton = document.getElementById("addFriendButton");
+      const PENDING_PACKAGE_STORAGE_KEY = "mobbyGachaPendingPackageType";
+      const PACKAGE_TYPES = new Set(["single", "ten"]);
+      const IN_APP_BROWSER_PATTERN = /(TikTok|musical_ly|Bytedance|ByteLocale|ByteFullLocale|Aweme|Toutiao|TTWebView|trill|Instagram|FBAN|FBAV|FB_IAB|Twitter|X-|MicroMessenger|KAKAOTALK|Pinterest|Snapchat|Threads)/i;
 
-      const setStatus = (message) => {
-        if (status) status.textContent = message;
+      const title = document.getElementById("title");
+      const lead = document.getElementById("lead");
+      const status = document.getElementById("status");
+      const openLineButton = document.getElementById("openLineButton");
+      const loginButton = document.getElementById("loginButton");
+      const fallbackLineButton = document.getElementById("fallbackLineButton");
+      const addFriendButton = document.getElementById("addFriendButton");
+      const retryButton = document.getElementById("retryButton");
+      const copyButton = document.getElementById("copyButton");
+      const backButton = document.getElementById("backButton");
+      const browserGuide = document.getElementById("browserGuide");
+
+      const userAgent = () => navigator.userAgent || "";
+      const isLineBrowser = () => /\bLine\//i.test(userAgent());
+      const isRestrictedInAppBrowser = () => IN_APP_BROWSER_PATTERN.test(userAgent()) && !isLineBrowser();
+
+      const normalizePackageType = (value) => {
+        const packageType = String(value || "").trim();
+        return PACKAGE_TYPES.has(packageType) ? packageType : "";
+      };
+
+      const packageTypeFromUrl = () => {
+        const params = new URLSearchParams(window.location.search);
+        return normalizePackageType(params.get("package_type"));
+      };
+
+      const packageType = packageTypeFromUrl() || normalizePackageType(sessionStorage.getItem(PENDING_PACKAGE_STORAGE_KEY));
+      if (packageType) sessionStorage.setItem(PENDING_PACKAGE_STORAGE_KEY, packageType);
+
+      const setStatus = (message, isError = false) => {
+        if (!status) return;
+        status.textContent = message;
+        status.classList.toggle("is-error", Boolean(isError));
+      };
+
+      const setVisible = (element, visible) => {
+        if (element) element.hidden = !visible;
+      };
+
+      const withPackageType = (base) => {
+        const url = new URL(base, window.location.href);
+        if (packageType) url.searchParams.set("package_type", packageType);
+        return url.toString();
+      };
+
+      const currentPageUrl = () => withPackageType(window.location.pathname || "line-link.html");
+      const liffUrl = () => withPackageType(`https://liff.line.me/${LIFF_ID}`);
+      const lineAppUrl = () => {
+        const query = packageType ? `?package_type=${encodeURIComponent(packageType)}` : "";
+        return `line://app/${LIFF_ID}${query}`;
+      };
+
+      const indexUrl = () => {
+        const url = new URL("index.html", window.location.href);
+        if (packageType) url.searchParams.set("package_type", packageType);
+        return url.toString();
+      };
+
+      const lineLinkedIndexUrl = () => {
+        const url = new URL("index.html", window.location.href);
+        url.searchParams.set("line_linked", "1");
+        if (packageType) url.searchParams.set("package_type", packageType);
+        return url.toString();
+      };
+
+      const configureLinks = () => {
+        if (openLineButton) openLineButton.href = isRestrictedInAppBrowser() ? lineAppUrl() : liffUrl();
+        if (fallbackLineButton) fallbackLineButton.href = isRestrictedInAppBrowser() ? liffUrl() : lineAppUrl();
+        if (addFriendButton) addFriendButton.href = ADD_FRIEND_URL;
+        if (backButton) backButton.href = indexUrl();
+      };
+
+      const hideActionButtons = () => {
+        [openLineButton, loginButton, fallbackLineButton, addFriendButton, retryButton, copyButton].forEach((element) => {
+          setVisible(element, false);
+        });
+      };
+
+      const showLineAppHandoff = (message) => {
+        hideActionButtons();
+        configureLinks();
+        setVisible(openLineButton, true);
+        setVisible(fallbackLineButton, true);
+        setStatus(message || "LINEアプリで開いて連携を続けてください。");
+      };
+
+      const showExternalBrowserGuide = () => {
+        hideActionButtons();
+        configureLinks();
+        if (title) title.textContent = "Safari/Chromeで開いてください";
+        if (lead) lead.textContent = "アプリ内ブラウザではLINEログイン画面になりやすいため、外部ブラウザからLINEアプリへ進むとスムーズです。";
+        setVisible(browserGuide, true);
+        setVisible(openLineButton, true);
+        setVisible(copyButton, true);
+        setStatus("LINEアプリが開かない場合は、右上の「...」からブラウザで開いてください。");
+      };
+
+      const copyText = async (value) => {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(value);
+          return;
+        }
+        const textarea = document.createElement("textarea");
+        textarea.value = value;
+        textarea.setAttribute("readonly", "readonly");
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
       };
 
       const finish = (data) => {
         sessionStorage.setItem(TOKEN_STORAGE_KEY, data.lineLinkToken);
         sessionStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(data.profile || {}));
+        if (packageType) sessionStorage.setItem(PENDING_PACKAGE_STORAGE_KEY, packageType);
+        hideActionButtons();
         setStatus("LINE連携が完了しました。購入ページへ戻ります。");
         window.setTimeout(() => {
-          window.location.href = "index.html?line_linked=1";
+          window.location.href = lineLinkedIndexUrl();
         }, 700);
       };
 
@@ -93,8 +286,9 @@
         if (typeof liff.getFriendship === "function") {
           const friendship = await liff.getFriendship().catch(() => null);
           if (!friendship?.friendFlag) {
-            addFriendButton.hidden = false;
-            addFriendButton.href = ADD_FRIEND_URL;
+            hideActionButtons();
+            setVisible(addFriendButton, true);
+            setVisible(retryButton, true);
             setStatus("結果画像の配信には公式LINEの友だち追加が必要です。追加後、このページに戻ってください。");
             return;
           }
@@ -114,23 +308,74 @@
       };
 
       const start = async () => {
+        configureLinks();
+        setVisible(browserGuide, false);
+
+        if (isRestrictedInAppBrowser()) {
+          showExternalBrowserGuide();
+          return;
+        }
+
         try {
+          if (!window.liff) throw new Error("LIFF SDKを読み込めませんでした。");
           await liff.init({ liffId: LIFF_ID });
           if (!liff.isLoggedIn()) {
-            loginButton.hidden = false;
-            setStatus("LINEログインをしてください。");
+            if (typeof liff.isInClient === "function" && liff.isInClient()) {
+              hideActionButtons();
+              setVisible(loginButton, true);
+              setStatus("LINEでログインして連携を続けてください。");
+              return;
+            }
+            showLineAppHandoff("LINEアプリで開くと、メール入力なしで連携できます。");
             return;
           }
           await verify();
         } catch (error) {
           console.error(error);
-          loginButton.hidden = false;
-          setStatus(error?.message || "LINE連携に失敗しました。");
+          showLineAppHandoff(error?.message || "LINE連携に失敗しました。");
+          setStatus(error?.message || "LINE連携に失敗しました。", true);
         }
       };
 
       loginButton?.addEventListener("click", () => {
-        liff.login({ redirectUri: window.location.href });
+        if (isRestrictedInAppBrowser()) {
+          showExternalBrowserGuide();
+          return;
+        }
+        liff.login({ redirectUri: currentPageUrl() });
+      });
+
+      openLineButton?.addEventListener("click", () => {
+        setStatus("LINEアプリを開いています。開かない場合は補助リンクを試してください。");
+        window.setTimeout(() => {
+          setVisible(fallbackLineButton, true);
+          setVisible(browserGuide, isRestrictedInAppBrowser());
+        }, 900);
+      });
+
+      fallbackLineButton?.addEventListener("click", () => {
+        setStatus("別の方法でLINEアプリを開いています。");
+      });
+
+      addFriendButton?.addEventListener("click", () => {
+        setStatus("友だち追加後、このページに戻って再確認してください。");
+        setVisible(retryButton, true);
+      });
+
+      retryButton?.addEventListener("click", () => {
+        hideActionButtons();
+        setStatus("LINE連携を再確認しています...");
+        start();
+      });
+
+      copyButton?.addEventListener("click", async () => {
+        try {
+          await copyText(currentPageUrl());
+          setStatus("URLをコピーしました。Safari/Chromeで開いてください。");
+        } catch (error) {
+          console.error(error);
+          setStatus("URLをコピーできませんでした。右上の「...」からブラウザで開いてください。", true);
+        }
       });
 
       start();

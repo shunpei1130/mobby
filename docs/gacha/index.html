@@ -299,6 +299,8 @@
       const CHECKOUT_SESSION_ENDPOINT = "/api/gacha-checkout-session";
       const CHECKOUT_STATUS_ENDPOINT = "/api/gacha-checkout-status";
       const LINE_LINK_TOKEN_STORAGE_KEY = "mobbyGachaLineLinkToken";
+      const PENDING_PACKAGE_STORAGE_KEY = "mobbyGachaPendingPackageType";
+      const PACKAGE_TYPES = new Set(["single", "ten"]);
       let stripeLoaderPromise = null;
       let embeddedCheckoutInstance = null;
 
@@ -610,6 +612,45 @@
 
       const getLineLinkToken = () => sessionStorage.getItem(LINE_LINK_TOKEN_STORAGE_KEY) || "";
 
+      const normalizePackageType = (value) => {
+        const packageType = String(value || "").trim();
+        return PACKAGE_TYPES.has(packageType) ? packageType : "";
+      };
+
+      const selectedPackageFromUrl = () => {
+        const params = new URLSearchParams(window.location.search);
+        return normalizePackageType(params.get("package_type"));
+      };
+
+      const savePendingPackage = (packageType) => {
+        const normalizedPackageType = normalizePackageType(packageType) || "single";
+        sessionStorage.setItem(PENDING_PACKAGE_STORAGE_KEY, normalizedPackageType);
+        return normalizedPackageType;
+      };
+
+      const takePendingPackage = () => {
+        const packageType =
+          selectedPackageFromUrl() ||
+          normalizePackageType(sessionStorage.getItem(PENDING_PACKAGE_STORAGE_KEY));
+        sessionStorage.removeItem(PENDING_PACKAGE_STORAGE_KEY);
+        return packageType;
+      };
+
+      const lineLinkUrl = (packageType) => {
+        const url = new URL("line-link.html", window.location.href);
+        const normalizedPackageType = normalizePackageType(packageType);
+        if (normalizedPackageType) url.searchParams.set("package_type", normalizedPackageType);
+        return url.toString();
+      };
+
+      const clearLineLinkedQuery = () => {
+        const url = new URL(window.location.href);
+        if (!url.searchParams.has("line_linked") && !url.searchParams.has("package_type")) return;
+        url.searchParams.delete("line_linked");
+        url.searchParams.delete("package_type");
+        window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+      };
+
       const createCheckoutSession = async (packageType, lineLinkToken) => {
         const response = await fetch(CHECKOUT_SESSION_ENDPOINT, {
           method: "POST",
@@ -626,7 +667,9 @@
       const startPaidCheckout = async (packageType, triggerButton) => {
         const lineLinkToken = getLineLinkToken();
         if (!lineLinkToken) {
-          window.location.href = "line-link.html";
+          const pendingPackageType = savePendingPackage(packageType);
+          setPaidStatus("LINEアプリで連携してから、選んだガチャの購入を再開します。");
+          window.location.href = lineLinkUrl(pendingPackageType);
           return;
         }
         if (!checkoutModal || !checkoutMount) {
@@ -638,6 +681,7 @@
         setPaidStatus("Stripe決済を準備しています...");
         try {
           const session = await createCheckoutSession(packageType, lineLinkToken);
+          sessionStorage.removeItem(PENDING_PACKAGE_STORAGE_KEY);
           const StripeCtor = await loadStripeJs();
           const stripe = StripeCtor(session.publishableKey);
           teardownCheckout();
@@ -659,10 +703,48 @@
           openCheckoutModal();
           setPaidStatus("");
         } catch (error) {
-          setPaidStatus(error?.message || "決済画面の表示に失敗しました。");
+          const message = error?.message || "決済画面の表示に失敗しました。";
+          if (message.includes("LINE連携")) {
+            sessionStorage.removeItem(LINE_LINK_TOKEN_STORAGE_KEY);
+            const pendingPackageType = savePendingPackage(packageType);
+            setPaidStatus("LINE連携の有効期限が切れました。もう一度連携してください。");
+            window.setTimeout(() => {
+              window.location.href = lineLinkUrl(pendingPackageType);
+            }, 900);
+            return;
+          }
+          setPaidStatus(message);
         } finally {
           triggerButton.disabled = false;
         }
+      };
+
+      const resumeCheckoutAfterLineLink = () => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("line_linked") !== "1") return;
+
+        const packageType = takePendingPackage();
+        clearLineLinkedQuery();
+        if (!paidGachaOptions) return;
+        paidGachaOptions.hidden = false;
+
+        if (!packageType) {
+          setPaidStatus("LINE連携が完了しました。購入するガチャを選んでください。");
+          return;
+        }
+        if (!getLineLinkToken()) {
+          setPaidStatus("LINE連携を確認できませんでした。もう一度LINE連携をしてください。");
+          return;
+        }
+
+        const button = paidOptionButtons.find((item) => item.dataset.packageType === packageType);
+        if (!(button instanceof HTMLButtonElement)) {
+          setPaidStatus("LINE連携が完了しました。購入するガチャを選んでください。");
+          return;
+        }
+        setSelectedPaidOption(button);
+        setPaidStatus("LINE連携が完了しました。決済画面を準備します...");
+        window.setTimeout(() => startPaidCheckout(packageType, button), 250);
       };
 
       openButton.addEventListener("click", openModal);
@@ -733,8 +815,8 @@
         if (event.key === "Escape" && printMethodModal && !printMethodModal.hidden) closePrintMethodModal();
         if (event.key === "Escape" && checkoutModal && !checkoutModal.hidden) closeCheckoutModal();
       });
+      resumeCheckoutAfterLineLink();
     })();
   </script>
 </body>
 </html>
-
