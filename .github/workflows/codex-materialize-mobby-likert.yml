@@ -1,0 +1,25 @@
+name: Codex materialize Mobby Likert diagnosis
+
+on:
+  push:
+    branches:
+      - codex/add-mobby-mbti-diagnosis
+    paths:
+      - .github/workflows/codex-materialize-mobby-likert.yml
+      - scripts/codex-materialize-mobby-likert.py
+      - scripts/codex-materialize-mobby-likert.patch.lzma.b64
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/add-mobby-mbti-diagnosis
+          fetch-depth: 0
+      - name: Apply Codex patch
+        run: python3 scripts/codex-materialize-mobby-likert.py
