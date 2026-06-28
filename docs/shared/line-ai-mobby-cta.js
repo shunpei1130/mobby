@@ -1,7 +1,7 @@
 (function initMobbyLineAiCTA() {
   const LINE_ADD_ENDPOINT = "/api/line-ai/issue-link-token";
   const LINK_SESSION_ENDPOINT = "/api/line-ai/link-sessions";
-  const LINKABLE_SOURCES = new Set(["16school", "16stan", "16love", "16renai"]);
+  const LINKABLE_SOURCES = new Set(["16school", "16stan", "16love", "16renai", "mobby_mbti_shadow"]);
   const TIKTOK_BROWSER_PATTERN = /(TikTok|musical_ly|Bytedance|ByteLocale|ByteFullLocale|Aweme|Toutiao|TTWebView|trill)/i;
   const renderedNodes = new WeakSet();
   const openTargetCache = new WeakMap();

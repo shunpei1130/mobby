@@ -404,10 +404,10 @@ async function callKnowledgeReplyFlow() {
     {
       message: "モビー診断って何種類ある？",
       user: { source: "line" },
-      reply: "モビー診断は4種類あるよ。気分に合わせて選べる感じだね。",
+      reply: "モビー診断は5種類あるよ。気分に合わせて選べる感じだね。",
       check(systemPrompt) {
         assert(systemPrompt.includes("Mobby共通ナレッジ"), "overview prompt should include Mobby knowledge");
-        assert(systemPrompt.includes("通常公開のモビー診断は4種類"), "overview prompt should include diagnosis overview");
+        assert(systemPrompt.includes("通常公開のモビー診断は5種類"), "overview prompt should include diagnosis overview");
         assert(systemPrompt.includes("学校モビー診断"), "overview prompt should include school diagnosis");
         assert(systemPrompt.includes("恋愛モビー診断"), "overview prompt should include renai diagnosis");
       }

@@ -1,4 +1,34 @@
 export const DIAGNOSIS_KNOWLEDGE = {
+  "mobby_mbti_shadow": {
+    label: "モビー診断",
+    pagePath: "/mobby/",
+    description: "ユーザーが選んだMBTIを表の自己像として受け取り、40問のシナリオ設問でよく見せメーター、不都合隠しメーター、闇スイッチを出す診断です。",
+    questionCount: 40,
+    answerScale: "5択",
+    axes: [
+      "よく見せメーター: MBTIで自分をどれだけ都合よく説明しているか",
+      "不都合隠しメーター: 人に見せたくない本音や反応をどれだけ隠しているか",
+      "闇スイッチ: 隠していた反応が出やすい場面"
+    ],
+    types: [
+      { code: "ISTJ", name: "ISTJの皮をかぶったモビー", summary: "不安を予定・ルール・正しさで押さえ込みやすいタイプ。" },
+      { code: "ISFJ", name: "ISFJの皮をかぶったモビー", summary: "嫌われ不安と承認欲求を献身で隠しやすいタイプ。" },
+      { code: "INFJ", name: "INFJの皮をかぶったモビー", summary: "理解されたいのに見抜かれるのは怖いタイプ。" },
+      { code: "INTJ", name: "INTJの皮をかぶったモビー", summary: "弱さを見せたくなさを合理性で守りやすいタイプ。" },
+      { code: "ISTP", name: "ISTPの皮をかぶったモビー", summary: "責任や感情処理が深くなる前に距離を取りやすいタイプ。" },
+      { code: "ISFP", name: "ISFPの皮をかぶったモビー", summary: "衝突を飲み込み、限界で静かにシャッターを下ろしやすいタイプ。" },
+      { code: "INFP", name: "INFPの皮をかぶったモビー", summary: "理解されたい飢えと傷つきやすさを理想で守りやすいタイプ。" },
+      { code: "INTP", name: "INTPの皮をかぶったモビー", summary: "感情で負けないように分析で距離を取りやすいタイプ。" },
+      { code: "ESTP", name: "ESTPの皮をかぶったモビー", summary: "止まると不安が来るので、刺激やノリで上書きしやすいタイプ。" },
+      { code: "ESFP", name: "ESFPの皮をかぶったモビー", summary: "盛り上げている間だけ寂しさを見なくて済むタイプ。" },
+      { code: "ENFP", name: "ENFPの皮をかぶったモビー", summary: "自由さの裏で、選ばれたい欲と反応への敏感さが出やすいタイプ。" },
+      { code: "ENTP", name: "ENTPの皮をかぶったモビー", summary: "重くなる前に冗談や論破で逃げ道を作りやすいタイプ。" },
+      { code: "ESTJ", name: "ESTJの皮をかぶったモビー", summary: "正しさで押すことで、不安や弱さを見せないようにしやすいタイプ。" },
+      { code: "ESFJ", name: "ESFJの皮をかぶったモビー", summary: "空気を読んでいるようで、空気に支配されやすいタイプ。" },
+      { code: "ENFJ", name: "ENFJの皮をかぶったモビー", summary: "必要とされることで自分の価値を確認しやすいタイプ。" },
+      { code: "ENTJ", name: "ENTJの皮をかぶったモビー", summary: "主導権を失うことへの不安を強さで隠しやすいタイプ。" }
+    ]
+  },
   "16school": {
     label: "学校モビー診断",
     pagePath: "/16school/",
@@ -151,6 +181,7 @@ const SOURCE_ALIASES = {
   "16school": ["学校", "スクール", "school", "クラス", "友達", "友だち", "男子", "女子"],
   "16stan": ["推し", "推し活", "stan", "オタク", "現場", "在宅", "布教"],
   "16love": ["メンヘラ", "返信こない", "即レス", "病み", "共依存", "独占欲", "恋愛ゾンビ"],
+  "mobby_mbti_shadow": ["モビー診断", "mbti", "MBTI", "よく見せ", "不都合隠し", "闇スイッチ", "皮をかぶったモビー"],
   "16renai": ["恋愛モビー", "恋愛診断", "恋愛タイプ", "片思い", "好きな人", "相性", "花束", "夜風"]
 };
 
@@ -310,7 +341,7 @@ export function buildDiagnosisKnowledgeContext({ user, message, history } = {}) 
   if (includeOverview || includeTypes || sources.length) {
     lines.push(
       "診断知識（診断について聞かれた時だけ使う。ここにない仕様やタイプ名は推測しない）:",
-      "- 通常公開のモビー診断は4種類: 学校モビー診断、推し活モビー診断、メンヘラモビー診断、恋愛モビー診断。",
+      "- 通常公開のモビー診断は5種類: モビー診断、学校モビー診断、推し活モビー診断、メンヘラモビー診断、恋愛モビー診断。",
       "- このナレッジをそのまま固定文として返さず、ユーザーの聞き方に合わせて自然に言い換える。"
     );
 

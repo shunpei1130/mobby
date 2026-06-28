@@ -11,6 +11,7 @@ const SOURCE_META = {
   "16love": { label: "メンヘラモビー診断", shortLabel: "メンヘラ", accent: "#ef5350" },
   "16renai": { label: "恋愛モビー診断", shortLabel: "恋愛", accent: "#f472b6" },
   "16stan": { label: "推し活モビー診断", shortLabel: "推し活", accent: "#66bb6a" },
+  "mobby_mbti_shadow": { label: "モビー診断", shortLabel: "MBTI", accent: "#a78bfa" },
   "16night": { label: "夜職モビー診断", shortLabel: "夜職", accent: "#42a5f5" },
   "hinata-aoi": { label: "日向葵衣 あなたは何タイプ？ビューティ診断", shortLabel: "日向葵衣", accent: "#f6a6c9" },
   "miyake-yuko": { label: "三宅裕子さん beauty mood診断", shortLabel: "三宅裕子", accent: "#d8a15f" },
@@ -28,6 +29,9 @@ const SOURCE_ALIASES = {
   "16love": "16love",
   love: "16love",
   menhera: "16love",
+  "mobby_mbti_shadow": "mobby_mbti_shadow",
+  mobby_mbti: "mobby_mbti_shadow",
+  mobby: "mobby_mbti_shadow",
   "16renai": "16renai",
   renai: "16renai",
   romance: "16renai",
@@ -95,6 +99,7 @@ function detectSourceFromTitle(payload) {
   const title = `${payload?.diagTitle || ""}${payload?.diagnosis_type || ""}`.toLowerCase();
   if (!title) return "unknown";
   if (title.includes("ママ")) return "16mama";
+  if (title.includes("mbti") || title.includes("皮をかぶったモビー")) return "mobby_mbti_shadow";
   if (title.includes("学校")) return "16school";
   if (title.includes("恋愛モビー")) return "16renai";
   if (title.includes("推し")) return "16stan";
