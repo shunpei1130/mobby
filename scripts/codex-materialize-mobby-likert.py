@@ -14,7 +14,12 @@ def run(*args):
     subprocess.run(args, check=True)
 
 
-payload = Path(PAYLOAD).read_text().strip()
+payload = "".join(Path(PAYLOAD).read_text().split())
+# The first connector-created payload is missing one base64 character. Restore it
+# before decoding so the materializer remains deterministic.
+if len(payload) == 36495 and payload[:20] == "/Td6WFoAAATm1rRGAgAh":
+    payload = payload[:16692] + "L" + payload[16692:]
+
 patch_bytes = lzma.decompress(base64.b64decode(payload))
 Path(PATCH).write_bytes(patch_bytes)
 
