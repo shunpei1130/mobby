@@ -5,6 +5,7 @@
     "scripts": {
         "serve": "node serve.mjs",
         "validate:line-ai": "node scripts/validate-line-ai-mobby.mjs",
+        "validate:mobby-mbti": "node scripts/validate-mobby-mbti-shadow.mjs",
         "validate:gacha-line-delivery": "node scripts/validate-gacha-line-delivery.mjs"
     },
     "dependencies": {

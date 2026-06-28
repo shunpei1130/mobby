@@ -1,9 +1,21 @@
-const STORAGE_KEY = "mobby_mbti_shadow_diag_v1";
-const PAGE_SIZE = 5;
+const STORAGE_KEY = "mobby_mbti_shadow_diag_v2";
+const PAGE_SIZE = 4;
 const SOURCE = "mobby_mbti_shadow";
 const AGE_OPTIONS = ["16歳未満", "16歳", "17歳", "18歳", "19歳", "20歳", "21歳", "22歳", "23歳", "24歳", "25歳", "26歳", "27歳", "28歳", "29歳以上"];
+const DEFAULT_LIKERT_SCALE = [
+  { value: 1, label: "まったく当てはまらない" },
+  { value: 2, label: "ほとんど当てはまらない" },
+  { value: 3, label: "あまり当てはまらない" },
+  { value: 4, label: "どちらともいえない" },
+  { value: 5, label: "少し当てはまる" },
+  { value: 6, label: "かなり当てはまる" },
+  { value: 7, label: "とても当てはまる" }
+];
 
+const BASE_QUESTIONS = window.MOBBY_QUESTIONS || [];
 const QUESTIONS_BY_MBTI = window.MOBBY_QUESTIONS_BY_MBTI || {};
+const LIKERT_SCALE = window.MOBBY_MBTI_LIKERT_SCALE || DEFAULT_LIKERT_SCALE;
+const LIKERT_MAX = Math.max(...LIKERT_SCALE.map((item) => Number(item.value) || 0), 7);
 const MBTI_TYPES = window.MOBBY_MBTI_TYPES || [];
 const TYPE_LENS = window.MOBBY_TYPE_LENS || {};
 const RESULT_COPY = window.MOBBY_RESULT_COPY || {};
@@ -16,6 +28,7 @@ const state = {
   mbti: "",
   page: 0,
   answers: {},
+  missingQuestionId: "",
   questionOrder: null,
   profile: { name: "", email: "", age: "" },
   sentToSheet: false
@@ -26,43 +39,43 @@ const CONTRADICTION_PAIRS = [
     id: "free_but_needs_reaction",
     clean: ["good_face", "claim_independent", "clean_claim"],
     shadow: ["approval_hunger", "reaction_sensitivity", "loneliness_avoidance"],
-    copy: "自由人ぶってるけど、反応が薄いと普通に気にする。"
+    copy: "自由で平気な顔をしていても、反応が薄いとちゃんと気にする。"
   },
   {
     id: "logical_but_suppressed",
     clean: ["claim_rational", "clean_claim", "impression_management"],
     shadow: ["emotional_suppression", "superiority_defense", "pride"],
-    copy: "論理的なんじゃなくて、感情を見せたら負けだと思ってる。"
+    copy: "論理的に見せている時ほど、感情を出したら負けだと思っている。"
   },
   {
     id: "kind_but_disliked_fear",
     clean: ["claim_no_reward", "good_face", "people_pleasing"],
     shadow: ["approval_hunger", "abandonment_fear", "validation_need"],
-    copy: "優しいんじゃなくて、嫌われるのが怖くて先回りしてる時がある。"
+    copy: "優しさの中に、嫌われる前に先回りしたい気持ちが混ざっている。"
   },
   {
     id: "planned_but_control",
     clean: ["claim_responsible", "clean_claim"],
     shadow: ["control_need", "rigidity", "confirmation_need"],
-    copy: "計画的なんじゃなくて、予定外が怖いから支配したいだけ。"
+    copy: "計画的に見える裏で、予定外の不安を管理したがっている。"
   },
   {
     id: "flexible_but_avoidance",
     clean: ["good_face", "claim_independent"],
     shadow: ["responsibility_escape", "avoidance", "fear_of_intimacy"],
-    copy: "柔軟なんじゃなくて、責任が発生する前に逃げ道を残してる。"
+    copy: "柔軟に見せながら、責任が発生する前に逃げ道を残している。"
   },
   {
     id: "calm_but_anger_stack",
     clean: ["claim_no_anger", "impression_management"],
     shadow: ["anger_stack", "emotional_suppression"],
-    copy: "落ち着いてるんじゃなくて、怒りをその場で出さずに貯めてる。"
+    copy: "落ち着いているようで、怒りをその場で出さずに保存している。"
   },
   {
     id: "not_jealous_but_compares",
     clean: ["claim_no_jealousy", "clean_claim"],
     shadow: ["jealousy", "trigger_comparison", "superiority_defense"],
-    copy: "嫉妬してない顔で、比較された事実だけはきっちり保存してる。"
+    copy: "嫉妬していない顔で、比較された事実だけはきっちり保存している。"
   }
 ];
 
@@ -106,6 +119,20 @@ function normalizeProfile(profile) {
   };
 }
 
+function normalizeAnswerValue(value) {
+  const num = Number(value);
+  return Number.isInteger(num) && num >= 1 && num <= LIKERT_MAX ? num : 0;
+}
+
+function isAnsweredValue(value) {
+  return normalizeAnswerValue(value) > 0;
+}
+
+function likertLabel(value) {
+  const normalized = normalizeAnswerValue(value);
+  return LIKERT_SCALE.find((item) => Number(item.value) === normalized)?.label || "";
+}
+
 function loadState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -115,7 +142,11 @@ function loadState() {
   }
   state.profile = normalizeProfile(state.profile);
   state.answers = state.answers && typeof state.answers === "object" ? state.answers : {};
-  if (!QUESTIONS_BY_MBTI[state.mbti]) state.mbti = "";
+  state.answers = Object.fromEntries(Object.entries(state.answers)
+    .map(([id, value]) => [id, normalizeAnswerValue(value)])
+    .filter(([, value]) => value > 0));
+  state.missingQuestionId = "";
+  if (!getQuestionsForMbti(state.mbti).length) state.mbti = "";
   if (!["intro", "mbti", "quiz", "gate", "result"].includes(state.step)) state.step = "intro";
 }
 
@@ -128,6 +159,7 @@ function resetState() {
   state.mbti = "";
   state.page = 0;
   state.answers = {};
+  state.missingQuestionId = "";
   state.questionOrder = null;
   state.profile = { name: "", email: "", age: "" };
   state.sentToSheet = false;
@@ -135,13 +167,17 @@ function resetState() {
   render();
 }
 
+function getQuestionsForMbti(mbti) {
+  return QUESTIONS_BY_MBTI[mbti] || BASE_QUESTIONS || [];
+}
+
 function getQuestions() {
-  return QUESTIONS_BY_MBTI[state.mbti] || [];
+  return getQuestionsForMbti(state.mbti);
 }
 
 function answeredCount() {
   const ids = new Set(getQuestions().map((question) => question.id));
-  return Object.keys(state.answers || {}).filter((id) => ids.has(id)).length;
+  return Object.keys(state.answers || {}).filter((id) => ids.has(id) && isAnsweredValue(state.answers[id])).length;
 }
 
 function isRegistered() {
@@ -150,7 +186,7 @@ function isRegistered() {
 
 function isQuizCompleted() {
   const questions = getQuestions();
-  return questions.length > 0 && questions.every((question) => state.answers[question.id]);
+  return questions.length > 0 && questions.every((question) => isAnsweredValue(state.answers[question.id]));
 }
 
 function trimForCard(value, length = 28) {
@@ -181,7 +217,7 @@ function meterColor(value) {
 
 function meterLabel(value) {
   if (value < 40) return "まだ素直";
-  if (value < 70) return "やや盛ってる";
+  if (value < 70) return "少し整えてる";
   if (value < 90) return "かなり隠してる";
   return "ほぼ演出";
 }
@@ -193,51 +229,55 @@ function addWeights(target, weights) {
   });
 }
 
-function buildMaxScores(questions) {
-  const maxScores = {};
-  const maxTagScores = {};
-  questions.forEach((question) => {
-    const perQuestionMax = {};
-    let tagMax = 0;
-    question.options.forEach((option) => {
-      let optionTotal = 0;
-      Object.entries(option.weights || {}).forEach(([key, value]) => {
-        const num = Number(value);
-        if (!Number.isFinite(num)) return;
-        perQuestionMax[key] = Math.max(perQuestionMax[key] || 0, num);
-        optionTotal += Math.max(0, num);
-      });
-      tagMax = Math.max(tagMax, optionTotal);
-    });
-    addWeights(maxScores, perQuestionMax);
-    if (question.darkSwitchTag && question.darkSwitchTag !== "max") {
-      maxTagScores[question.darkSwitchTag] = (maxTagScores[question.darkSwitchTag] || 0) + tagMax;
-    }
+function addScaledWeights(target, weights, ratio) {
+  Object.entries(weights || {}).forEach(([key, value]) => {
+    const num = Number(value);
+    if (Number.isFinite(num)) target[key] = (target[key] || 0) + (num * ratio);
   });
-  return { maxScores, maxTagScores };
 }
 
-function selectedOption(question) {
-  const selected = state.answers[question.id];
-  return question.options.find((option) => option.label === selected) || null;
+function positiveWeightTotal(weights) {
+  return Object.values(weights || {}).reduce((sum, value) => {
+    const num = Number(value);
+    return Number.isFinite(num) ? sum + Math.max(0, num) : sum;
+  }, 0);
+}
+
+function answerRatio(value) {
+  const normalized = normalizeAnswerValue(value);
+  if (!normalized) return 0;
+  return (normalized - 1) / Math.max(1, LIKERT_MAX - 1);
 }
 
 function scoreQuestions(questions) {
   const raw = {};
   const tagRaw = {};
   questions.forEach((question) => {
-    const option = selectedOption(question);
-    if (!option) return;
-    addWeights(raw, option.weights);
+    const selected = normalizeAnswerValue(state.answers[question.id]);
+    if (!selected) return;
+    const agreement = answerRatio(selected);
+    const shadowRatio = question.reverse ? 1 - agreement : agreement;
+    addScaledWeights(raw, question.weights, shadowRatio);
+    addScaledWeights(raw, question.protectiveWeights, agreement);
     if (question.darkSwitchTag && question.darkSwitchTag !== "max") {
-      const optionTotal = Object.values(option.weights || {}).reduce((sum, value) => {
-        const num = Number(value);
-        return Number.isFinite(num) ? sum + Math.max(0, num) : sum;
-      }, 0);
+      const optionTotal = positiveWeightTotal(question.weights) * shadowRatio;
       tagRaw[question.darkSwitchTag] = (tagRaw[question.darkSwitchTag] || 0) + optionTotal;
     }
   });
   return { raw, tagRaw };
+}
+
+function buildMaxScores(questions) {
+  const maxScores = {};
+  const maxTagScores = {};
+  questions.forEach((question) => {
+    addWeights(maxScores, question.weights);
+    addWeights(maxScores, question.protectiveWeights);
+    if (question.darkSwitchTag && question.darkSwitchTag !== "max") {
+      maxTagScores[question.darkSwitchTag] = (maxTagScores[question.darkSwitchTag] || 0) + positiveWeightTotal(question.weights);
+    }
+  });
+  return { maxScores, maxTagScores };
 }
 
 function buildFinalScores(questions, mbti) {
@@ -261,7 +301,7 @@ function buildFinalScores(questions, mbti) {
     const biasScore = clamp(Math.round((Number(bias[key]) || 0) * 50));
     answerScores[key] = answer;
     biasScores[key] = biasScore;
-    finalScores[key] = biasScore > 0 ? clamp(Math.round(answer * 0.7 + biasScore * 0.3)) : answer;
+    finalScores[key] = biasScore > 0 ? clamp(Math.round(answer * 0.8 + biasScore * 0.2)) : answer;
   });
 
   const tagScores = {};
@@ -298,18 +338,19 @@ function computeDarkSwitch(scores, tagScores) {
       ...item,
       value: clamp(Math.round(value)),
       label: copy?.displayLabel?.replace(/^闇スイッチ：/, "") || item.label,
-      copy: copy?.copy || "ここを押されると、MBTIで説明していた綺麗な自分より先に、隠していた反応が出ます。"
+      copy: copy?.copy || "ここを押されると、整えて見せていた自分より先に、隠していた反応が出ます。"
     };
   });
   return candidates.sort((a, b) => b.value - a.value)[0] || candidates[0];
 }
 
 function computeMainDriver(scores) {
+  const protectiveKeys = new Set(["self_awareness", "directness", "stability"]);
   const candidates = Object.keys(DRIVER_COPY).map((key) => ({
     key,
     value: scores[key] || 0,
     ...DRIVER_COPY[key]
-  }));
+  })).filter((item) => !protectiveKeys.has(item.key));
   return candidates.sort((a, b) => b.value - a.value)[0] || null;
 }
 
@@ -319,17 +360,20 @@ function computeResult() {
   const scores = scored.scores;
   const contradictions = computeContradictions(scores);
   const contradictionScore = clamp(Math.round(avg(contradictions.slice(0, 3).map((item) => item.value))));
+  const recoveryScore = averageScore(["self_awareness", "directness", "stability"], scores);
   const goodFaceMeter = clamp(Math.round(
     0.30 * (scores.good_face || 0) +
     0.25 * (scores.impression_management || 0) +
     0.20 * (scores.clean_claim || 0) +
-    0.25 * contradictionScore
+    0.25 * contradictionScore -
+    0.10 * recoveryScore
   ));
   const hiddenTruthMeter = clamp(Math.round(
     0.35 * (scores.hidden_truth || 0) +
     0.25 * (scores.self_deception || 0) +
     0.25 * contradictionScore +
-    0.15 * Math.max(scores.avoidance || 0, scores.emotional_suppression || 0, scores.people_pleasing || 0)
+    0.15 * Math.max(scores.avoidance || 0, scores.emotional_suppression || 0, scores.people_pleasing || 0) -
+    0.08 * recoveryScore
   ));
   const darkSwitch = computeDarkSwitch(scores, scored.tagScores);
   const copy = RESULT_COPY[state.mbti] || {};
@@ -343,6 +387,7 @@ function computeResult() {
     lens,
     contradictions,
     contradictionScore,
+    recoveryScore: clamp(Math.round(recoveryScore)),
     goodFaceMeter,
     hiddenTruthMeter,
     darkSwitch,
@@ -385,11 +430,10 @@ function renderIntro() {
   app.innerHTML = `
     <section class="panel center">
       <p class="kicker">モビー診断</p>
-      <h2 class="big">MBTIの嘘を暴く診断</h2>
+      <h2 class="big">MBTIの裏モビー診断</h2>
       <div class="intro-copy">
-        <p>MBTIは、あなたが人に見せたい性格。</p>
-        <p>モビーは、あなたが隠している反応。</p>
-        <p>最初にあなたのMBTIを選んでください。そのMBTIで“よく言われる良いこと”が、本質的には何を隠しているのかを診断します。</p>
+        <p>MBTIで説明してきた「自分らしさ」の裏側を、モビーが少し辛口に見ます。</p>
+        <p>28問の7段階回答で、よく見せている自己像・隠しがちな本音・反応が出やすい場面を出します。</p>
       </div>
       <button class="primary" id="btnStart" type="button">${canResume ? "診断を再開する" : "診断をはじめる"}</button>
       ${canResume ? `<p class="text-body" style="margin-top:14px;">${escapeHtml(state.mbti)} / ${count}問 回答済み</p>` : ""}
@@ -401,6 +445,7 @@ function renderIntro() {
       state.mbti = "";
       state.page = 0;
       state.answers = {};
+      state.missingQuestionId = "";
       state.sentToSheet = false;
     }
     saveState();
@@ -423,7 +468,7 @@ function renderMbtiSelect() {
     <section class="panel">
       <p class="kicker">MBTIを選択</p>
       <h2 class="big" style="font-size:28px;">最初にあなたのMBTIを選んでください</h2>
-      <p class="text-body">選んだタイプ専用の40問を表示します。</p>
+      <p class="text-body">MBTIは補正として使います。質問は全タイプ共通の28問です。</p>
       <div class="mbti-grid">${cards}</div>
       <div class="actions">
         <button id="btnBackIntro" type="button">戻る</button>
@@ -438,6 +483,7 @@ function renderMbtiSelect() {
       if (state.mbti !== nextMbti) {
         state.answers = {};
         state.page = 0;
+        state.missingQuestionId = "";
         state.sentToSheet = false;
       }
       state.mbti = nextMbti;
@@ -453,9 +499,34 @@ function renderMbtiSelect() {
   document.getElementById("btnGoQuiz").onclick = () => {
     if (!state.mbti) return;
     state.step = "quiz";
+    state.missingQuestionId = "";
     saveState();
     render();
   };
+}
+
+function likertTone(value) {
+  if (value < 4) return "low";
+  if (value > 4) return "high";
+  return "neutral";
+}
+
+function renderLikertButtons(question, selected) {
+  return LIKERT_SCALE.map((item) => {
+    const value = Number(item.value);
+    const isSelected = selected === value;
+    return `
+      <button
+        class="likert-btn likert-${likertTone(value)} ${isSelected ? "selected" : ""}"
+        type="button"
+        data-qid="${escapeHtml(question.id)}"
+        data-value="${value}"
+        aria-label="${value}: ${escapeHtml(item.label)}"
+        aria-pressed="${isSelected ? "true" : "false"}">
+        <span>${value}</span>
+      </button>
+    `;
+  }).join("");
 }
 
 function renderQuiz() {
@@ -478,18 +549,21 @@ function renderQuiz() {
   const count = answeredCount();
   const progress = Math.round((count / questions.length) * 100);
   const questionHtml = pageQuestions.map((question, index) => {
-    const selected = state.answers[question.id];
-    const options = question.options.map((option) => `
-      <button class="choice-card ${selected === option.label ? "selected" : ""}" type="button" data-qid="${escapeHtml(question.id)}" data-choice="${escapeHtml(option.label)}" aria-pressed="${selected === option.label ? "true" : "false"}">
-        <span class="choice-label">${escapeHtml(option.label)}</span>
-        <span>${escapeHtml(option.text)}</span>
-      </button>
-    `).join("");
+    const selected = normalizeAnswerValue(state.answers[question.id]);
+    const hasError = state.missingQuestionId === question.id;
     return `
-      <article class="q-card">
+      <article class="q-card ${hasError ? "has-error" : ""}">
         <div class="q-meta"><span>Q${start + index + 1} / ${questions.length}</span><span>${escapeHtml(question.phase)}</span></div>
         <p class="q-text">${escapeHtml(question.text)}</p>
-        <div class="choice-list">${options}</div>
+        <div class="likert7" role="radiogroup" aria-label="${escapeHtml(question.text)}">
+          <div class="likert-labels" aria-hidden="true">
+            <span>当てはまらない</span>
+            <span>当てはまる</span>
+          </div>
+          <div class="likert-buttons">${renderLikertButtons(question, selected)}</div>
+          <div class="likert-current">${selected ? `${selected}：${escapeHtml(likertLabel(selected))}` : "未回答"}</div>
+        </div>
+        ${hasError ? `<p class="q-error">この項目を選ぶと次へ進めます。</p>` : ""}
       </article>
     `;
   }).join("");
@@ -497,7 +571,7 @@ function renderQuiz() {
   app.innerHTML = `
     <section class="panel">
       <div class="progress-wrap">
-        <div class="progress-meta"><span>${escapeHtml(state.mbti)} 専用質問</span><span>${count} / ${questions.length}</span></div>
+        <div class="progress-meta"><span>${escapeHtml(state.mbti)} / 7段階回答</span><span>${count} / ${questions.length}</span></div>
         <div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div>
       </div>
       ${questionHtml}
@@ -508,9 +582,10 @@ function renderQuiz() {
     </section>
   `;
 
-  document.querySelectorAll(".choice-card[data-qid][data-choice]").forEach((button) => {
+  document.querySelectorAll(".likert-btn[data-qid][data-value]").forEach((button) => {
     button.onclick = () => {
-      state.answers[button.dataset.qid] = button.dataset.choice;
+      state.answers[button.dataset.qid] = normalizeAnswerValue(button.dataset.value);
+      if (state.missingQuestionId === button.dataset.qid) state.missingQuestionId = "";
       state.sentToSheet = false;
       saveState();
       renderQuiz();
@@ -522,11 +597,14 @@ function renderQuiz() {
     render();
   };
   document.getElementById("btnNext").onclick = () => {
-    const missing = pageQuestions.find((question) => !state.answers[question.id]);
+    const missing = pageQuestions.find((question) => !isAnsweredValue(state.answers[question.id]));
     if (missing) {
-      alert("まだ回答していない項目があります");
+      state.missingQuestionId = missing.id;
+      saveState();
+      renderQuiz();
       return;
     }
+    state.missingQuestionId = "";
     if (state.page < totalPages - 1) {
       state.page += 1;
       saveState();
@@ -555,9 +633,9 @@ function renderGate() {
   const ageOptions = AGE_OPTIONS.map((age) => `<option value="${escapeHtml(age)}">${escapeHtml(age)}</option>`).join("");
   app.innerHTML = `
     <section class="panel">
-      <p class="kicker">あと少しで結果が見れます</p>
+      <p class="kicker">あと少しで結果を見られます</p>
       <h2 class="big" style="font-size:28px;">結果の閲覧には登録が必要です</h2>
-      <p class="text-body">入力後すぐに、MBTIでよく見せている自分と隠している反応を表示します。</p>
+      <p class="text-body">入力後すぐに、よく見せている自己像と隠しがちな反応を表示します。</p>
       <div class="form-grid" style="margin-top:22px;">
         <div class="field">
           <label for="regName">ニックネーム</label>
@@ -626,7 +704,8 @@ function renderGate() {
 function buildQuestionAnswers() {
   const out = {};
   getQuestions().forEach((question) => {
-    if (state.answers[question.id]) out[question.id] = state.answers[question.id];
+    const value = normalizeAnswerValue(state.answers[question.id]);
+    if (value) out[question.id] = { value, label: likertLabel(value) };
   });
   return out;
 }
@@ -649,9 +728,12 @@ function sendResultOnce(result) {
     source: SOURCE,
     mbti: state.mbti,
     diagnosis_type: result.resultName,
+    answerScale: "7段階",
+    questionCount: getQuestions().length,
     goodFaceMeter: result.goodFaceMeter,
     hiddenTruthMeter: result.hiddenTruthMeter,
     darkSwitch: result.darkSwitch.label,
+    recoveryScore: result.recoveryScore,
     scores: result.scores,
     contradictions: result.contradictions.slice(0, 3).map((item) => ({ id: item.id, value: item.value, copy: item.copy })),
     answers: buildQuestionAnswers(),
@@ -704,7 +786,7 @@ function renderResult() {
     </div>
   ` : "";
 
-  const shareTextRaw = `モビー診断の結果は「${result.resultName}」でした。\nMBTIの嘘を暴く診断\nよく見せメーター：${result.goodFaceMeter}%\n不都合隠しメーター：${result.hiddenTruthMeter}%\n闇スイッチ：${result.darkSwitch.label}\n\n${copy.snark || copy.mobbyTranslation || ""}\n\nあなたも診断してみて👇`;
+  const shareTextRaw = `モビー診断の結果は「${result.resultName}」でした。\nMBTIの裏モビー診断\nよく見せメーター：${result.goodFaceMeter}%\n不都合隠しメーター：${result.hiddenTruthMeter}%\n闇スイッチ：${result.darkSwitch.label}\n\n${copy.snark || copy.mobbyTranslation || ""}\n\nあなたも診断してみて`;
   const shareUrlRaw = window.location.href.split("?")[0];
   const lineShareHref = getPreferredLineShareUrl(shareTextRaw, shareUrlRaw);
   const lineShareTarget = isLineAppShareTarget() ? "_self" : "_blank";
@@ -735,7 +817,7 @@ function renderResult() {
     <section class="panel result-hero">
       <p class="kicker">診断結果</p>
       <h2 class="big">${escapeHtml(result.resultName)}</h2>
-      <p class="text-body" style="color:var(--text-main);font-weight:700;">MBTIでは良い感じに説明されてきたあなたを、モビーがもう少し雑に暴きます。</p>
+      <p class="text-body" style="color:var(--text-main);font-weight:700;">MBTIで説明してきた自分の裏側を、モビーが少し辛口に翻訳します。</p>
       <img class="mobby-image" src="../img/mobby/mobby_purple2.jpg" alt="モビー" loading="eager" decoding="async">
       <div id="line-ai-mobby-cta" data-line-ai-mobby-cta data-diagnosis="${encodeURIComponent(JSON.stringify(lineAiDiagnosisPayload))}"></div>
     </section>

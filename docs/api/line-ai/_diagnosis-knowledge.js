@@ -2,9 +2,9 @@ export const DIAGNOSIS_KNOWLEDGE = {
   "mobby_mbti_shadow": {
     label: "モビー診断",
     pagePath: "/mobby/",
-    description: "ユーザーが選んだMBTIを表の自己像として受け取り、40問のシナリオ設問でよく見せメーター、不都合隠しメーター、闇スイッチを出す診断です。",
-    questionCount: 40,
-    answerScale: "5択",
+    description: "ユーザーが選んだMBTIを表の自己像として受け取り、28問の7段階回答でよく見せメーター、不都合隠しメーター、闇スイッチを出す診断です。",
+    questionCount: 28,
+    answerScale: "7段階",
     axes: [
       "よく見せメーター: MBTIで自分をどれだけ都合よく説明しているか",
       "不都合隠しメーター: 人に見せたくない本音や反応をどれだけ隠しているか",
