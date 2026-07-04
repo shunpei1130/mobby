@@ -1,0 +1,857 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+  <title>魔女の空想コスメ タイプ診断 | Mobby</title>
+  <meta name="description" content="『魔女の空想コスメ』の世界観をもとにした、meeco様向けMobby診断の確認用プレビューです。">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="魔女の空想コスメ タイプ診断">
+  <meta property="og:description" content="あなたは魔女コスメの世界ならどのタイプ？">
+  <meta property="og:url" content="https://www.mobby.online/meeco/">
+  <meta property="og:image" content="https://www.mobby.online/meeco/img/ogp.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#f7efe7">
+  <link rel="icon" type="image/jpeg" href="../img/favicon/fav.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/line-ai-mobby-cta.css">
+  <script src="../shared/line-ai-mobby-cta.js"></script>
+  <style>
+    :root {
+      --font-ja: "Yomogi", "Hiragino Sans", "Yu Gothic", sans-serif;
+      --bg: #f7efe7;
+      --surface: #fffaf4;
+      --surface-2: #f0f7f3;
+      --text: #241d27;
+      --muted: #6d6071;
+      --line: rgba(62, 46, 64, 0.16);
+      --rose: #d96a7f;
+      --violet: #6c5a96;
+      --sage: #5f8c73;
+      --blue: #527da0;
+      --gold: #be9152;
+      --shadow: 0 14px 36px rgba(64, 45, 55, 0.13);
+      --radius: 8px;
+    }
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: var(--font-ja);
+      line-height: 1.75;
+      letter-spacing: 0;
+      background:
+        linear-gradient(180deg, #f7efe7 0%, #eef5f3 44%, #f8f0ef 100%);
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(108, 90, 150, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(108, 90, 150, 0.05) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.08));
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input, select { font: inherit; letter-spacing: 0; }
+    button { cursor: pointer; }
+    .wrap { width: min(960px, calc(100% - 28px)); margin: 0 auto; padding: 22px 0 76px; position: relative; }
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0 18px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .home {
+      min-height: 38px;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.72);
+      color: var(--violet);
+      font-weight: 800;
+      box-shadow: 0 6px 18px rgba(73, 56, 78, .08);
+    }
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: url("../mobby_logo2_trimmed.webp") center / contain no-repeat;
+      flex: 0 0 auto;
+    }
+    .brand-copy { min-width: 0; }
+    .brand-copy h1 { margin: 0; font-size: 14px; line-height: 1.35; }
+    .brand-copy p { margin: 0; color: var(--muted); font-size: 11px; }
+    .nav { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .nav a, .nav button {
+      min-height: 36px;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.72);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .nav a.active { background: var(--text); color: #fff; border-color: var(--text); }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(300px, .98fr);
+      gap: 28px;
+      align-items: center;
+      min-height: min(740px, calc(100vh - 90px));
+      padding: 20px 0 36px;
+    }
+    .hero-copy { padding: 20px 0; }
+    .kicker { margin: 0 0 10px; color: var(--violet); font-size: 12px; font-weight: 900; }
+    .hero-title {
+      margin: 0;
+      font-size: clamp(34px, 7vw, 76px);
+      line-height: 1.02;
+      letter-spacing: 0;
+      color: #2c2430;
+    }
+    .hero-lead {
+      max-width: 620px;
+      margin: 20px 0 0;
+      color: #463847;
+      font-size: clamp(15px, 2.2vw, 18px);
+      font-weight: 700;
+    }
+    .hero-actions, .actions, .share-actions, .link-list {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-top: 24px;
+    }
+    .btn, .share-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 10px 18px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--text);
+      font-weight: 900;
+      box-shadow: 0 8px 22px rgba(64, 45, 55, .08);
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+    .btn:hover, .share-btn:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(64, 45, 55, .12); }
+    .btn.primary { background: var(--text); color: #fff; border-color: var(--text); }
+    .btn.rose { background: var(--rose); color: #fff; border-color: var(--rose); }
+    .btn:disabled { opacity: .46; cursor: not-allowed; transform: none; box-shadow: none; }
+    .hero-art {
+      position: relative;
+      min-height: 420px;
+      display: grid;
+      place-items: center;
+    }
+    .hero-art img {
+      width: min(100%, 520px);
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.85);
+    }
+    .hero-label {
+      position: absolute;
+      right: 18px;
+      bottom: 18px;
+      max-width: 260px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: var(--radius);
+      background: rgba(255,250,244,.86);
+      color: #3e3242;
+      font-size: 12px;
+      font-weight: 800;
+      box-shadow: 0 8px 26px rgba(64, 45, 55, .14);
+      backdrop-filter: blur(10px);
+    }
+    .stage {
+      padding: 26px;
+      border: 1px solid rgba(255,255,255,.86);
+      border-radius: var(--radius);
+      background: rgba(255,250,244,.84);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+    .section-title { margin: 0 0 12px; font-size: clamp(25px, 4vw, 40px); line-height: 1.18; }
+    .text { margin: 0; color: var(--muted); font-size: 14px; font-weight: 700; }
+    .progress { margin: 0 0 22px; }
+    .progress-meta { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: 12px; font-weight: 800; margin-bottom: 8px; }
+    .progress-track { height: 9px; border-radius: 999px; background: rgba(36,29,39,.1); overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--rose), var(--sage), var(--blue)); transition: width .24s ease; }
+    .question-list { display: grid; gap: 16px; }
+    .question {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.74);
+    }
+    .question legend { padding: 0; margin: 0 0 16px; font-size: 16px; font-weight: 900; line-height: 1.75; color: var(--text); }
+    .likert-labels { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: 11px; font-weight: 800; margin-bottom: 8px; }
+    .likert { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 7px; align-items: center; }
+    .likert button {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      min-height: 32px;
+      border: 2px solid rgba(108,90,150,.25);
+      border-radius: 50%;
+      background: #fff;
+      color: transparent;
+      box-shadow: none;
+      transition: transform .16s ease, border-color .16s ease, background .16s ease;
+    }
+    .likert button:nth-child(1), .likert button:nth-child(7) { transform: scale(1); }
+    .likert button:nth-child(2), .likert button:nth-child(6) { transform: scale(.84); }
+    .likert button:nth-child(3), .likert button:nth-child(5) { transform: scale(.70); }
+    .likert button:nth-child(4) { transform: scale(.56); border-color: rgba(36,29,39,.2); }
+    .likert button:hover { border-color: var(--violet); }
+    .likert button.selected { background: var(--violet); border-color: var(--violet); }
+    .quiz-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 22px; }
+    .form-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 20px; }
+    .field { display: grid; gap: 6px; }
+    .field label { color: var(--muted); font-size: 12px; font-weight: 900; }
+    .field input, .field select {
+      min-height: 46px;
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      padding: 10px 12px;
+      color: var(--text);
+      outline: none;
+    }
+    .field input:focus, .field select:focus { border-color: var(--violet); box-shadow: 0 0 0 3px rgba(108,90,150,.16); }
+    .result-layout {
+      display: grid;
+      grid-template-columns: minmax(280px, .94fr) minmax(0, 1.06fr);
+      gap: 24px;
+      align-items: start;
+    }
+    .result-img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.9);
+      background: #fff;
+    }
+    .result-name { margin: 6px 0 10px; font-size: clamp(28px, 5vw, 52px); line-height: 1.12; }
+    .catch { margin: 0; color: #443548; font-size: 17px; font-weight: 900; }
+    .result-blocks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 20px; }
+    .info-card, .type-card, .axis-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.7);
+      padding: 16px;
+    }
+    .info-card h3, .type-card h3, .axis-card h3 { margin: 0 0 8px; font-size: 15px; line-height: 1.45; }
+    .info-card p, .type-card p, .axis-card p { margin: 0; color: var(--muted); font-size: 13px; font-weight: 700; }
+    .axis-list { display: grid; gap: 12px; margin-top: 22px; }
+    .axis-meta { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 12px; font-weight: 900; margin-bottom: 7px; }
+    .axis-bar { position: relative; height: 12px; border-radius: 999px; background: linear-gradient(90deg, #e9c8d1 0%, #f7f1e8 50%, #c6d8d0 100%); }
+    .axis-dot { position: absolute; top: 50%; width: 18px; height: 18px; border: 4px solid var(--text); border-radius: 50%; background: #fff; transform: translate(-50%, -50%); }
+    .official-band {
+      margin-top: 28px;
+      padding: 22px;
+      border: 1px solid rgba(95,140,115,.22);
+      border-radius: var(--radius);
+      background: rgba(240,247,243,.78);
+    }
+    .official-band h3 { margin: 0 0 8px; font-size: 20px; }
+    .link-list { margin-top: 14px; }
+    .link-list a { border-color: rgba(95,140,115,.28); color: #315f48; }
+    .share-panel { margin-top: 22px; }
+    .line-mount { margin-top: 20px; }
+    .types-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }
+    .type-card { padding: 0; overflow: hidden; }
+    .type-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+    .type-body { padding: 14px; }
+    .type-code { margin: 0 0 4px; color: var(--violet); font-size: 11px; font-weight: 900; }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      z-index: 40;
+      min-width: min(320px, calc(100% - 32px));
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      background: rgba(36,29,39,.94);
+      color: #fff;
+      text-align: center;
+      transform: translate(-50%, 18px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .18s ease, transform .18s ease;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .footer-note { margin: 30px 0 0; color: var(--muted); font-size: 11px; text-align: center; font-weight: 700; }
+    .fade-in { animation: fadeIn .28s ease both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 780px) {
+      .wrap { width: min(100% - 22px, 960px); padding-top: 12px; }
+      .site-header { align-items: flex-start; }
+      .nav { gap: 6px; }
+      .nav a, .nav button { min-height: 34px; padding: 6px 9px; font-size: 11px; }
+      .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 4px; gap: 10px; }
+      .hero-copy { padding: 8px 0 0; }
+      .hero-art { min-height: 0; }
+      .hero-label { right: 10px; bottom: 10px; max-width: 220px; font-size: 11px; }
+      .stage { padding: 18px 14px; }
+      .form-grid, .result-layout { grid-template-columns: 1fr; }
+      .result-layout > div:first-child { order: 2; }
+      .result-layout > div:nth-child(2) { order: 1; }
+      .result-blocks, .types-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .quiz-nav { flex-direction: column; }
+      .quiz-nav .btn { width: 100%; }
+      .question { padding: 15px 12px; }
+      .likert { gap: 4px; }
+      .share-actions .share-btn, .hero-actions .btn, .actions .btn { width: 100%; }
+    }
+    @media (max-width: 430px) {
+      .brand-mark { width: 32px; height: 32px; }
+      .brand-copy h1 { font-size: 12px; }
+      .brand-copy p { font-size: 10px; }
+      .result-blocks, .types-grid { grid-template-columns: 1fr; }
+      .hero-title { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="site-header">
+      <div class="brand">
+        <a class="home" href="../index.html">Home</a>
+        <span class="brand-mark" aria-hidden="true"></span>
+        <div class="brand-copy">
+          <h1>魔女の空想コスメ診断</h1>
+          <p>meeco x Mobby preview</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="ページ内メニュー">
+        <a href="#" id="navDiagnosis" class="active">診断</a>
+        <a href="#" id="navTypes">タイプ一覧</a>
+        <button id="btnReset" type="button">リセット</button>
+      </nav>
+    </header>
+    <main id="app"></main>
+    <p class="footer-note">関連リンク・コピーライト表記は出版社様指定の正式文言に差し替え予定です。</p>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>
+    const STORAGE_KEY = "meeco_majo_cosme_type_v1";
+    const PAGE_SIZE = 5;
+    const AXIS_KEYS = ["A", "B", "C"];
+    const SITE = {
+      source: "meeco",
+      sourceLabel: "meeco様 魔女の空想コスメ診断",
+      title: "魔女の空想コスメ タイプ診断",
+      publicUrl: "https://www.mobby.online/meeco/",
+      shareText: "魔女の空想コスメ タイプ診断の結果は「{result}」でした。",
+      copyText: "魔女の空想コスメ タイプ診断の結果は「{result}」でした。 https://www.mobby.online/meeco/",
+      links: [
+        { label: "イースト・プレス公式サイト", url: "https://www.eastpress.co.jp/" },
+        { label: "『魔女の空想コスメ』作品ページ", url: "https://www.eastpress.co.jp/goods/detail/9784781622200" }
+      ]
+    };
+    const AGE_OPTIONS = [
+      "13歳", "14歳", "15歳", "16歳", "17歳", "18歳", "19歳", "20歳", "21歳", "22歳", "23〜25歳", "26歳以上"
+    ];
+    const AXES = {
+      A: { name: "ときめきの温度", left: { code: "spark", label: "ひらめき" }, right: { code: "mellow", label: "余韻" } },
+      B: { name: "魔法の置き場所", left: { code: "fantasy", label: "空想" }, right: { code: "ritual", label: "お守り" } },
+      C: { name: "好きの届け方", left: { code: "solo", label: "ひとりで味わう" }, right: { code: "share", label: "誰かに贈る" } }
+    };
+    const CHARACTERS = {
+      "spark-fantasy-solo": {
+        no: "01",
+        name: "海色きらめき魔女",
+        catch: "光を見つけた瞬間、そのまま物語に飛び込める人。",
+        image: "img/p44-shell-mermaid.webp",
+        raw: "img/p44-shell-mermaid-raw.webp",
+        palette: "シェルピンク、泡のブルー、淡いゴールド",
+        charm: "直感でかわいいを拾う感度が高く、まだ名前のないときめきを大事にできます。",
+        letter: "空想の海で見つけた小さな光を、あなたは自分だけの宝物に変えられるタイプです。",
+        item: "透明ラメのリップ、貝殻モチーフ、光るヘアピン",
+        action: "今日は気になった色をひとつだけ身につけて、その理由を自分の言葉で残してみて。"
+      },
+      "spark-fantasy-share": {
+        no: "02",
+        name: "赤ずきんおつかい魔女",
+        catch: "好きなものを抱えて、誰かの今日を明るくできる人。",
+        image: "img/p10-red-hood.webp",
+        raw: "img/p10-red-hood-raw.webp",
+        palette: "フードレッド、ミルクホワイト、キャンディパープル",
+        charm: "わくわくした気持ちを隠さず届けられるので、周りにも自然と物語が広がります。",
+        letter: "あなたのかごには、ときめきの小瓶がたくさん入っています。ひとつ分けるだけで、誰かの景色も変わります。",
+        item: "赤みチーク、甘い香りのハンドクリーム、リボン小物",
+        action: "気に入ったものをひとつ、友達に短い言葉でおすすめしてみて。"
+      },
+      "spark-ritual-solo": {
+        no: "03",
+        name: "月光ドレス魔女",
+        catch: "自分を整える時間を、静かな儀式みたいに楽しめる人。",
+        image: "img/p120-pearl-dress.webp",
+        raw: "img/p120-pearl-dress-raw.webp",
+        palette: "ムーンホワイト、パール、ローズブラウン",
+        charm: "気分を切り替えるのが上手で、身支度の中に自分だけのスイッチを持っています。",
+        letter: "月明かりの下でドレスを選ぶみたいに、あなたは今日の自分を丁寧に選べる人です。",
+        item: "パールアイシャドウ、白いワンピース、細いリング",
+        action: "鏡の前で、今日の自分に似合う小さな光を一箇所だけ足してみて。"
+      },
+      "spark-ritual-share": {
+        no: "04",
+        name: "ローズ社交魔女",
+        catch: "かわいいを場の空気に変えて、みんなで楽しめる人。",
+        image: "img/p90-twin-rose.webp",
+        raw: "img/p90-twin-rose-raw.webp",
+        palette: "ローズレッド、ミント、クラシックベージュ",
+        charm: "人と一緒に楽しむほど魅力が増し、会話のきっかけになる見せ方が得意です。",
+        letter: "あなたの魔法は、ひとりで完結しません。扉を開けた先で、誰かの笑顔と混ざって完成します。",
+        item: "ローズカラーのリップ、クラシックな帽子、香水のミニボトル",
+        action: "お気に入りの世界観を、写真ではなく一文の感想で誰かに届けてみて。"
+      },
+      "mellow-fantasy-solo": {
+        no: "05",
+        name: "夜のレシピ魔女",
+        catch: "深く考えた分だけ、世界を自分の色に染められる人。",
+        image: "img/p06-black-witch.webp",
+        raw: "img/p06-black-witch-raw.webp",
+        palette: "ナイトパープル、古書ブラウン、パンジーイエロー",
+        charm: "すぐに答えを出さず、好きなものの奥行きをゆっくり味わえるところが魅力です。",
+        letter: "黒い帽子の影で、あなたはまだ誰にも見せていないレシピを育てています。",
+        item: "深色アイライナー、アンティーク風ノート、紫の花",
+        action: "好きな世界観について、言葉にできる部分と言葉にしない部分を分けてメモしてみて。"
+      },
+      "mellow-fantasy-share": {
+        no: "06",
+        name: "香りの余韻魔女",
+        catch: "言いすぎないやさしさで、相手の想像をふくらませる人。",
+        image: "img/p35-purple-perfume.webp",
+        raw: "img/p35-purple-perfume-raw.webp",
+        palette: "ラベンダー、夜明けブルー、ミストグリーン",
+        charm: "強く主張しなくても印象に残り、余白のある言葉で世界観を伝えられます。",
+        letter: "あなたが残す香りは、説明よりも先に心に届きます。静かな一言が、長く残る魔法です。",
+        item: "淡い香水、透け感トップス、ラベンダーのネイル",
+        action: "今日の気分を、色か香りにたとえて一言だけ残してみて。"
+      },
+      "mellow-ritual-solo": {
+        no: "07",
+        name: "真夜中の仕立て魔女",
+        catch: "自分の美意識を、時間をかけて仕立てられる人。",
+        image: "img/p73-night-tailor.webp",
+        raw: "img/p73-night-tailor-raw.webp",
+        palette: "ミッドナイトブルー、シルバー、インクブラック",
+        charm: "流行よりも納得感を大事にし、似合うものを自分の中で磨き込めます。",
+        letter: "夜更けのアトリエで布を選ぶように、あなたは心地よい形を自分で決めていけます。",
+        item: "ネイビーのジャケット、シルバーアクセ、整った眉",
+        action: "今の自分に似合うものと、これから似合いそうなものを一つずつ選んでみて。"
+      },
+      "mellow-ritual-share": {
+        no: "08",
+        name: "花冠の癒し魔女",
+        catch: "安心するかわいさを、そっと誰かに渡せる人。",
+        image: "img/p27-green-flower.webp",
+        raw: "img/p27-green-flower-raw.webp",
+        palette: "リーフグリーン、花びらイエロー、クリームホワイト",
+        charm: "やわらかい空気で周りを包み、無理なく人を癒す雰囲気を持っています。",
+        letter: "あなたの魔法は、派手な光ではなく花冠みたいなやさしさ。近くにいる人の表情をほどきます。",
+        item: "グリーンのアイカラー、花モチーフ、保湿バーム",
+        action: "自分がほっとしたものを、押しつけずに一つだけ誰かへ共有してみて。"
+      }
+    };
+    const QUESTIONS = [
+      { id: "q01", axis: "A", pole: "left", text: "かわいいと思ったら、理由を考える前に心が動く。" },
+      { id: "q02", axis: "B", pole: "left", text: "現実っぽさより、少し不思議な世界に惹かれる。" },
+      { id: "q03", axis: "C", pole: "right", text: "好きな作品やアイテムは、誰かにも見せたくなる。" },
+      { id: "q04", axis: "A", pole: "right", text: "派手な一目惚れより、あとからじわじわ好きになることが多い。" },
+      { id: "q05", axis: "B", pole: "right", text: "コスメや服は、毎日の気持ちを整えるお守りに近い。" },
+      { id: "q06", axis: "C", pole: "left", text: "大事な世界観は、まず自分の中でゆっくり味わいたい。" },
+      { id: "q07", axis: "A", pole: "left", text: "色や形の第一印象で、今日の気分が決まることがある。" },
+      { id: "q08", axis: "B", pole: "left", text: "物語の中に出てくる小物や背景まで想像するのが好き。" },
+      { id: "q09", axis: "C", pole: "right", text: "良かったものは、短い言葉でも感想を伝えたい。" },
+      { id: "q10", axis: "A", pole: "right", text: "落ち着いた色や余白のある絵に、長く心を持っていかれる。" },
+      { id: "q11", axis: "B", pole: "right", text: "朝や夜の身支度に、小さなルーティンがあると安心する。" },
+      { id: "q12", axis: "C", pole: "left", text: "好きなものをすぐ投稿するより、保存して何度も見返したい。" },
+      { id: "q13", axis: "A", pole: "left", text: "きらっとした装飾やリボンを見ると、つい目で追ってしまう。" },
+      { id: "q14", axis: "B", pole: "left", text: "魔法、香水、古い本、秘密の部屋のようなモチーフに弱い。" },
+      { id: "q15", axis: "C", pole: "right", text: "友達の雰囲気に合いそうなものを見つけるのが得意だ。" },
+      { id: "q16", axis: "A", pole: "right", text: "明るさよりも、静かに残る品のよさに惹かれる。" },
+      { id: "q17", axis: "B", pole: "right", text: "かわいさは、見るだけでなく自分の日常にも少し取り入れたい。" },
+      { id: "q18", axis: "C", pole: "left", text: "自分だけがわかる好きなポイントを持っていると満たされる。" },
+      { id: "q19", axis: "A", pole: "left", text: "新しい色や組み合わせを試すと、気持ちまで変わる。" },
+      { id: "q20", axis: "B", pole: "right", text: "作品に出てくるアイテムを、実際のコスメや持ち物に置き換えて考える。" }
+    ];
+    const LIKERT = [
+      { value: 1, label: "違う" },
+      { value: 2, label: "かなり違う" },
+      { value: 3, label: "少し違う" },
+      { value: 4, label: "どちらでも" },
+      { value: 5, label: "少し当てはまる" },
+      { value: 6, label: "当てはまる" },
+      { value: 7, label: "とても当てはまる" }
+    ];
+    const app = document.getElementById("app");
+    const state = { step: "intro", page: 0, answers: {}, profile: { name: "", email: "", age: "" }, sentToLead: false };
+
+    function esc(value) {
+      return String(value ?? "").replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
+    }
+    function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) Object.assign(state, JSON.parse(raw));
+      } catch (_) {}
+      state.answers ||= {};
+      state.profile ||= { name: "", email: "", age: "" };
+      if (!["intro", "quiz", "profile", "result", "types"].includes(state.step)) state.step = "intro";
+    }
+    function setStep(step) { state.step = step; saveState(); render(); }
+    function toast(message) {
+      const el = document.getElementById("toast");
+      el.textContent = message;
+      el.classList.add("show");
+      window.clearTimeout(toast.timer);
+      toast.timer = window.setTimeout(() => el.classList.remove("show"), 1700);
+    }
+    function pageQuestions() {
+      const start = state.page * PAGE_SIZE;
+      return QUESTIONS.slice(start, start + PAGE_SIZE);
+    }
+    function isPageComplete() { return pageQuestions().every((q) => Number.isFinite(Number(state.answers[q.id]))); }
+    function isComplete() { return QUESTIONS.every((q) => Number.isFinite(Number(state.answers[q.id]))); }
+    function hasProfile() { return Boolean(state.profile?.name && state.profile?.email && state.profile?.age); }
+    function resetAll() {
+      state.step = "intro";
+      state.page = 0;
+      state.answers = {};
+      state.profile = { name: "", email: "", age: "" };
+      state.sentToLead = false;
+      saveState();
+      render();
+    }
+    function computeResult() {
+      const scores = { A: 0, B: 0, C: 0 };
+      QUESTIONS.forEach((q) => {
+        const value = Number(state.answers[q.id]);
+        if (!Number.isFinite(value)) return;
+        const delta = value - 4;
+        scores[q.axis] += q.pole === "right" ? delta : -delta;
+      });
+      const parts = AXIS_KEYS.map((key) => scores[key] > 0 ? AXES[key].right.code : AXES[key].left.code);
+      const resultKey = parts.join("-");
+      return { key: resultKey, scores, char: CHARACTERS[resultKey] || CHARACTERS["spark-fantasy-share"] };
+    }
+    function axisMax(axisKey) {
+      return QUESTIONS.filter((q) => q.axis === axisKey).length * 3;
+    }
+    function updateNav() {
+      document.getElementById("navDiagnosis").classList.toggle("active", state.step !== "types");
+      document.getElementById("navTypes").classList.toggle("active", state.step === "types");
+    }
+    function renderIntro() {
+      app.innerHTML = `
+        <section class="hero fade-in">
+          <div class="hero-copy">
+            <p class="kicker">MAJO NO KUSO COSME TYPE</p>
+            <h2 class="hero-title">魔女の空想コスメ<br>タイプ診断</h2>
+            <p class="hero-lead">8つのクリエイティブをもとに、あなたの中にある「魔女コスメ」のムードを診断します。</p>
+            <div class="hero-actions">
+              <button class="btn primary" id="btnStart" type="button">診断スタート</button>
+              <button class="btn" id="btnTypeIntro" type="button">タイプを見る</button>
+            </div>
+          </div>
+          <div class="hero-art">
+            <img src="img/hero.webp" alt="魔女の空想コスメ診断のメインビジュアル">
+            <div class="hero-label">『魔女の空想コスメ』作品世界とMobbyの診断体験を組み合わせた確認用プレビュー</div>
+          </div>
+        </section>
+      `;
+      document.getElementById("btnStart").onclick = () => {
+        state.page = 0;
+        state.step = isComplete() ? (hasProfile() ? "result" : "profile") : "quiz";
+        saveState();
+        render();
+      };
+      document.getElementById("btnTypeIntro").onclick = () => setStep("types");
+    }
+    function renderQuiz() {
+      const totalPages = Math.ceil(QUESTIONS.length / PAGE_SIZE);
+      const answered = QUESTIONS.filter((q) => Number.isFinite(Number(state.answers[q.id]))).length;
+      const qs = pageQuestions();
+      app.innerHTML = `
+        <section class="stage fade-in">
+          <div class="progress">
+            <div class="progress-meta"><span>${answered} / ${QUESTIONS.length}</span><span>${state.page + 1} / ${totalPages}</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:${(answered / QUESTIONS.length) * 100}%"></div></div>
+          </div>
+          <div class="question-list">
+            ${qs.map((q, index) => `
+              <fieldset class="question">
+                <legend>Q${state.page * PAGE_SIZE + index + 1}. ${esc(q.text)}</legend>
+                <div class="likert-labels"><span>違う</span><span>どちらでも</span><span>当てはまる</span></div>
+                <div class="likert" role="group" aria-label="${esc(q.text)}">
+                  ${LIKERT.map((item) => `<button type="button" class="${Number(state.answers[q.id]) === item.value ? "selected" : ""}" data-qid="${q.id}" data-value="${item.value}" aria-label="${esc(item.label)}">${item.value}</button>`).join("")}
+                </div>
+              </fieldset>
+            `).join("")}
+          </div>
+          <div class="quiz-nav">
+            <button class="btn" id="btnPrev" type="button" ${state.page === 0 ? "disabled" : ""}>戻る</button>
+            <button class="btn primary" id="btnNext" type="button" ${isPageComplete() ? "" : "disabled"}>${state.page + 1 >= totalPages ? "結果へ" : "次へ"}</button>
+          </div>
+        </section>
+      `;
+      app.querySelectorAll(".likert button").forEach((button) => {
+        button.onclick = () => {
+          state.answers[button.dataset.qid] = Number(button.dataset.value);
+          saveState();
+          renderQuiz();
+        };
+      });
+      document.getElementById("btnPrev").onclick = () => {
+        if (state.page > 0) {
+          state.page -= 1;
+          saveState();
+          render();
+        }
+      };
+      document.getElementById("btnNext").onclick = () => {
+        if (!isPageComplete()) return;
+        if (state.page + 1 < totalPages) {
+          state.page += 1;
+          saveState();
+          render();
+        } else {
+          state.step = hasProfile() ? "result" : "profile";
+          saveState();
+          render();
+        }
+      };
+    }
+    function renderProfile() {
+      const result = computeResult();
+      app.innerHTML = `
+        <section class="stage fade-in">
+          <p class="kicker">RESULT READY</p>
+          <h2 class="section-title">結果は「${esc(result.char.name)}」です</h2>
+          <p class="text">結果ページでは、タイプ別の世界観・コスメムード・おすすめ行動を表示します。</p>
+          <form id="profileForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="profileName">お名前</label>
+                <input id="profileName" name="name" autocomplete="name" required value="${esc(state.profile.name)}">
+              </div>
+              <div class="field">
+                <label for="profileEmail">メール</label>
+                <input id="profileEmail" name="email" type="email" autocomplete="email" required value="${esc(state.profile.email)}">
+              </div>
+              <div class="field">
+                <label for="profileAge">年齢</label>
+                <select id="profileAge" name="age" required>
+                  <option value="">選択</option>
+                  ${AGE_OPTIONS.map((age) => `<option value="${esc(age)}" ${state.profile.age === age ? "selected" : ""}>${esc(age)}</option>`).join("")}
+                </select>
+              </div>
+            </div>
+            <div class="actions">
+              <button class="btn primary" type="submit">結果を見る</button>
+              <button class="btn" id="btnBackQuiz" type="button">回答に戻る</button>
+            </div>
+          </form>
+        </section>
+      `;
+      document.getElementById("btnBackQuiz").onclick = () => {
+        state.step = "quiz";
+        state.page = Math.max(0, Math.ceil(QUESTIONS.length / PAGE_SIZE) - 1);
+        saveState();
+        render();
+      };
+      document.getElementById("profileForm").onsubmit = async (event) => {
+        event.preventDefault();
+        const form = new FormData(event.currentTarget);
+        state.profile = {
+          name: String(form.get("name") || "").trim(),
+          email: String(form.get("email") || "").trim(),
+          age: String(form.get("age") || "").trim()
+        };
+        state.step = "result";
+        saveState();
+        await submitDiagnosis(result);
+        render();
+      };
+    }
+    async function submitDiagnosis(result) {
+      if (state.sentToLead || !hasProfile()) return;
+      try {
+        await fetch("/api/diagnosis", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            source: SITE.source,
+            diagTitle: SITE.sourceLabel,
+            diagnosis_type: result.char.name,
+            type: result.key,
+            name: state.profile.name,
+            email: state.profile.email,
+            age: state.profile.age,
+            axes: result.scores,
+            answers: state.answers,
+            pageUrl: window.location.href,
+            userAgent: navigator.userAgent,
+            createdAt: new Date().toISOString()
+          })
+        });
+        state.sentToLead = true;
+        saveState();
+      } catch (_) {}
+    }
+    function renderAxisCards(result) {
+      return AXIS_KEYS.map((key) => {
+        const axis = AXES[key];
+        const max = axisMax(key);
+        const score = result.scores[key];
+        const pct = Math.max(4, Math.min(96, ((score + max) / (max * 2)) * 100));
+        return `
+          <div class="axis-card">
+            <div class="axis-meta"><span>${esc(axis.left.label)}</span><span>${esc(axis.name)}</span><span>${esc(axis.right.label)}</span></div>
+            <div class="axis-bar"><span class="axis-dot" style="left:${pct}%"></span></div>
+          </div>
+        `;
+      }).join("");
+    }
+    function renderResult() {
+      const result = computeResult();
+      const ch = result.char;
+      const shareText = encodeURIComponent(SITE.shareText.replace("{result}", ch.name));
+      const shareUrl = encodeURIComponent(SITE.publicUrl);
+      const lineData = encodeURIComponent(JSON.stringify({
+        source: SITE.source,
+        sourceLabel: SITE.sourceLabel,
+        type: result.key,
+        diagnosisType: ch.name,
+        pagePath: "/meeco/",
+        axes: result.scores,
+        resultImage: ch.image
+      }));
+      app.innerHTML = `
+        <section class="stage fade-in">
+          <div class="result-layout">
+            <div>
+              <img class="result-img" src="${esc(ch.image)}" alt="${esc(ch.name)}">
+              <div class="share-panel">
+                <div class="share-actions">
+                  <a class="share-btn" href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" rel="noopener">Xでシェア</a>
+                  <a class="share-btn" href="https://social-plugins.line.me/lineit/share?url=${shareUrl}" target="_blank" rel="noopener">LINEで送る</a>
+                  <button class="share-btn" id="btnCopy" type="button">コピー</button>
+                </div>
+                <div class="line-mount" data-line-ai-mobby-cta data-diagnosis="${lineData}"></div>
+              </div>
+            </div>
+            <div>
+              <p class="kicker">TYPE ${esc(ch.no)}</p>
+              <h2 class="result-name">${esc(ch.name)}</h2>
+              <p class="catch">${esc(ch.catch)}</p>
+              <div class="axis-list">${renderAxisCards(result)}</div>
+              <div class="result-blocks">
+                <article class="info-card"><h3>魅力</h3><p>${esc(ch.charm)}</p></article>
+                <article class="info-card"><h3>魔女からの手紙</h3><p>${esc(ch.letter)}</p></article>
+                <article class="info-card"><h3>似合うコスメムード</h3><p>${esc(ch.item)}</p></article>
+                <article class="info-card"><h3>今日の小さな魔法</h3><p>${esc(ch.action)}</p></article>
+              </div>
+              <div class="official-band">
+                <h3>『魔女の空想コスメ』を見るなら</h3>
+                <p class="text">診断で言語化されたムードを持ったまま作品を見ると、好きなカットやキャラクターの見え方も少し変わるかもしれません。</p>
+                <div class="link-list">
+                  ${SITE.links.map((link) => `<a class="btn" href="${esc(link.url)}" target="_blank" rel="noopener">${esc(link.label)}</a>`).join("")}
+                </div>
+              </div>
+              <div class="actions">
+                <button class="btn rose" id="btnAgain" type="button">もう一度診断</button>
+                <button class="btn" id="btnTypesFromResult" type="button">8タイプを見る</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+      document.getElementById("btnCopy").onclick = async () => {
+        try {
+          await navigator.clipboard.writeText(SITE.copyText.replace("{result}", ch.name));
+          toast("シェア文をコピーしました");
+        } catch (_) {
+          toast("コピーできませんでした");
+        }
+      };
+      document.getElementById("btnAgain").onclick = () => resetAll();
+      document.getElementById("btnTypesFromResult").onclick = () => setStep("types");
+      window.MobbyLineAiCTA?.autoRender?.(app);
+    }
+    function renderTypes() {
+      const cards = Object.entries(CHARACTERS).map(([key, ch]) => `
+        <article class="type-card">
+          <img src="${esc(ch.image)}" alt="${esc(ch.name)}">
+          <div class="type-body">
+            <p class="type-code">TYPE ${esc(ch.no)} / ${esc(key)}</p>
+            <h3>${esc(ch.name)}</h3>
+            <p>${esc(ch.catch)}</p>
+          </div>
+        </article>
+      `).join("");
+      app.innerHTML = `
+        <section class="stage fade-in">
+          <p class="kicker">8 TYPES</p>
+          <h2 class="section-title">魔女コスメの8タイプ</h2>
+          <p class="text">許諾済みの8カットを、結果タイプごとのメインビジュアルとして配置しています。</p>
+          <div class="types-grid">${cards}</div>
+          <div class="actions">
+            <button class="btn primary" id="btnBackDiagnosis" type="button">${isComplete() ? "結果に戻る" : "診断する"}</button>
+          </div>
+        </section>
+      `;
+      document.getElementById("btnBackDiagnosis").onclick = () => {
+        state.step = isComplete() ? (hasProfile() ? "result" : "profile") : "intro";
+        saveState();
+        render();
+      };
+    }
+    function render() {
+      updateNav();
+      if (state.step === "quiz") renderQuiz();
+      else if (state.step === "profile") renderProfile();
+      else if (state.step === "result") renderResult();
+      else if (state.step === "types") renderTypes();
+      else renderIntro();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    document.getElementById("navDiagnosis").onclick = (event) => {
+      event.preventDefault();
+      state.step = isComplete() ? (hasProfile() ? "result" : "profile") : "intro";
+      saveState();
+      render();
+    };
+    document.getElementById("navTypes").onclick = (event) => {
+      event.preventDefault();
+      setStep("types");
+    };
+    document.getElementById("btnReset").onclick = resetAll;
+    loadState();
+    render();
+  </script>
+</body>
+</html>

@@ -144,6 +144,28 @@ export const DIAGNOSIS_KNOWLEDGE = {
       { code: "SFAO", name: "余白を飾る演出家", characterName: "余白を飾る演出家モビー", summary: "自由で自然体だけど、関係性の見せ方にもセンスが出るタイプ。" },
       { code: "SFAC", name: "静かな港の相棒", characterName: "静かな港の相棒モビー", summary: "自由と安心、二人だけの信頼を長く育てるタイプ。" }
     ]
+  },
+  meeco: {
+    label: "meeco様 魔女の空想コスメ診断",
+    pagePath: "/meeco/",
+    description: "『魔女の空想コスメ』の世界観をもとに、ときめきの温度、魔法の置き場所、好きの届け方から8タイプに分かれる診断です。20問の7段階回答で、作品カットに合わせたコスメムードを提案します。",
+    questionCount: 20,
+    answerScale: "7段階",
+    axes: [
+      "A: ときめきの温度（ひらめき / 余韻）",
+      "B: 魔法の置き場所（空想 / お守り）",
+      "C: 好きの届け方（ひとりで味わう / 誰かに贈る）"
+    ],
+    types: [
+      { code: "spark-fantasy-solo", name: "海色きらめき魔女", summary: "直感でかわいいを見つけ、まだ名前のないときめきを自分だけの宝物にできるタイプ。" },
+      { code: "spark-fantasy-share", name: "赤ずきんおつかい魔女", summary: "好きなものを明るく届け、周りにも自然と物語を広げられるタイプ。" },
+      { code: "spark-ritual-solo", name: "月光ドレス魔女", summary: "身支度や日々の小さな儀式で、自分の気分を丁寧に整えられるタイプ。" },
+      { code: "spark-ritual-share", name: "ローズ社交魔女", summary: "かわいいを会話や場の空気に変えて、人と一緒に楽しむほど魅力が増すタイプ。" },
+      { code: "mellow-fantasy-solo", name: "夜のレシピ魔女", summary: "好きなものの奥行きをゆっくり味わい、自分だけの世界観を深く育てるタイプ。" },
+      { code: "mellow-fantasy-share", name: "香りの余韻魔女", summary: "強く言い切らず、余白のある言葉や雰囲気で相手の想像をふくらませるタイプ。" },
+      { code: "mellow-ritual-solo", name: "真夜中の仕立て魔女", summary: "流行より納得感を大切にし、自分に似合うものを時間をかけて磨き込むタイプ。" },
+      { code: "mellow-ritual-share", name: "花冠の癒し魔女", summary: "やわらかい空気で人を包み、安心するかわいさをそっと分けられるタイプ。" }
+    ]
   }
 };
 
@@ -151,7 +173,8 @@ const SOURCE_ALIASES = {
   "16school": ["学校", "スクール", "school", "クラス", "友達", "友だち", "男子", "女子"],
   "16stan": ["推し", "推し活", "stan", "オタク", "現場", "在宅", "布教"],
   "16love": ["メンヘラ", "返信こない", "即レス", "病み", "共依存", "独占欲", "恋愛ゾンビ"],
-  "16renai": ["恋愛モビー", "恋愛診断", "恋愛タイプ", "片思い", "好きな人", "相性", "花束", "夜風"]
+  "16renai": ["恋愛モビー", "恋愛診断", "恋愛タイプ", "片思い", "好きな人", "相性", "花束", "夜風"],
+  meeco: ["meeco", "魔女の空想コスメ", "魔女コスメ", "空想コスメ", "魔女", "コスメ", "ローズ社交", "月光ドレス"]
 };
 
 export function getDiagnosisMeta(source) {
