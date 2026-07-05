@@ -730,7 +730,7 @@ const _='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800
         </article>
       `).join("")}
     </div>
-  `}function ve(e){const n=e.result||null,t=n!=null&&n.resultCode&&c[n.resultCode]?n:T(h,e.answers||{}),o=t.resultType||c[t.resultCode],r=H(t),a=m(o),i=$(o),s=resultBg(o);return`
+  `}function ve(e){const n=e.result||null,t=n!=null&&n.resultCode&&c[n.resultCode]?n:T(h,e.answers||{}),o=c[t.resultCode]||t.resultType,r=H(t),a=m(o),i=$(o),s=resultBg(o);return`
     <section class="love-diagnosis love-diagnosis--result" style="--love-result-bg: url('${s}')">
       <article class="love-result-hero">
         <div class="love-result-hero__media">
@@ -819,7 +819,7 @@ const _='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800
       <button class="button button--ghost button--full" type="button" data-love-reset>診断をリセット</button>
       <p class="couple-magazine__status" data-love-status></p>
     </section>
-  `}function ke(){const e=re(),n=e.step==="result"?resultBg(e.result?.resultType||c[e.resultCode]||c.HLTO):"";return`
+  `}function ke(){const e=re(),n=e.step==="result"?resultBg(c[e.result?.resultCode||e.resultCode]||e.result?.resultType||c.HLTO):"";return`
     <section class="page page--magazine page--diagnosis ${e.step==="result"?"page--result":""}" style="${n?`--love-result-bg: url('${n}')`:""}">
       <header class="page-header page-header--with-back">
         <button class="button button--ghost page-back page-back--icon diagnosis-back-button" type="button" data-home-nav="home" aria-label="メインメニューへ戻る">
