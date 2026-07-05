@@ -753,6 +753,42 @@ const _='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800
           </button>
         </section>
       `:""}
+      <section class="love-keyholder-card" aria-label="アクリルキーホルダー販売">
+        <div class="love-keyholder-card__head">
+          <p class="love-diagnosis__eyebrow">limited accessory</p>
+          <h3 class="love-keyholder-card__title">アクリルキーホルダー</h3>
+          <p class="love-keyholder-card__tagline">あなたの恋愛モビーを持ち歩こう</p>
+        </div>
+        <div class="love-keyholder-card__images">
+          <figure class="love-keyholder-card__image">
+            <img src="../16school/key/カップル自撮りモビー.jpg" alt="アクリルキーホルダー 表面サンプル" loading="lazy" decoding="async" />
+            <figcaption>表面サンプル</figcaption>
+          </figure>
+          <figure class="love-keyholder-card__image">
+            <img src="../16school/key/ura.jpg" alt="アクリルキーホルダー 裏面サンプル" loading="lazy" decoding="async" />
+            <figcaption>裏面サンプル</figcaption>
+          </figure>
+        </div>
+        <strong class="love-keyholder-card__price">1,900円</strong>
+        <p class="love-keyholder-card__copy">
+          <strong>診断結果の恋愛モビーを、透明感のあるアクリルキーホルダーに。</strong> 表面はキャラクター、裏面は診断ページを見返せるQRコード付きのイメージです。
+        </p>
+        <ul class="love-keyholder-card__list">
+          <li>恋愛モビー診断の結果を形に残せる限定アイテム</li>
+          <li>学校モビー診断のサンプル画像を使用しています</li>
+        </ul>
+        <a
+          id="stripeBuyButtonLoveAcrylic"
+          class="button button--primary button--full love-keyholder-card__button"
+          data-stripe-product-type="love_acrylic_keyholder"
+          data-stripe-product-label="恋愛モビー アクリルキーホルダー"
+          href="https://buy.stripe.com/bJe14n8lf7Y11yecNNao80a"
+          target="_blank"
+          rel="noopener"
+        >
+          限定アイテムを手に取る
+        </a>
+      </section>
       ${i?`
         <div class="love-share-card-modal" data-love-share-card-modal hidden>
           <button class="love-share-card-modal__backdrop" type="button" data-love-share-card-close aria-label="close"></button>
