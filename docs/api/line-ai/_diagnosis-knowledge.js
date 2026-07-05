@@ -127,22 +127,22 @@ export const DIAGNOSIS_KNOWLEDGE = {
       "D: 恋の見せ方（見せたい恋型 / 内にしまう恋型）"
     ],
     types: [
-      { code: "HLTO", name: "花束の主人公", characterName: "花束の主人公モビー", summary: "恋の主役感、ときめき、見せたくなる幸せを持つタイプ。" },
-      { code: "HLTC", name: "秘密の星", characterName: "秘密の星モビー", summary: "特別に愛されたいけど、その恋は二人だけで大切にしたいタイプ。" },
-      { code: "HLAO", name: "ひなたの愛され人", characterName: "ひなたの愛され人モビー", summary: "離したくない安心と、周りにも伝わる愛され感を求めやすいタイプ。" },
-      { code: "HLAC", name: "雨宿りの待ち人", characterName: "雨宿りの待ち人モビー", summary: "大切にされている実感を、静かに深く受け取りたいタイプ。" },
-      { code: "HFTO", name: "風まかせの小悪魔", characterName: "風まかせの小悪魔モビー", summary: "自由さとときめき、少し見せたくなる魅力を持つタイプ。" },
-      { code: "HFTC", name: "月影のミューズ", characterName: "月影のミューズモビー", summary: "自由でいたいけど、恋の特別感は二人だけで味わいたいタイプ。" },
-      { code: "HFAO", name: "晴れ間の本命", characterName: "晴れ間の本命モビー", summary: "自分の時間も大事にしながら、安心できる本命感を求めるタイプ。" },
-      { code: "HFAC", name: "静かな灯", characterName: "静かな灯モビー", summary: "自由と安心を大事にしながら、二人だけの深い愛情を育てるタイプ。" },
-      { code: "SLTO", name: "恋に旗を振る人", characterName: "恋に旗を振る人モビー", summary: "相手を支えながら、一緒にときめく時間を外にも残したいタイプ。" },
-      { code: "SLTC", name: "胸奥のロマン", characterName: "胸奥のロマンモビー", summary: "相手を支えながら、二人だけのロマンチックな世界を大切にするタイプ。" },
-      { code: "SLAO", name: "陽だまりを分ける人", characterName: "陽だまりを分ける人モビー", summary: "支え合う安心感を、周りにも伝わる形で残したいタイプ。" },
-      { code: "SLAC", name: "毛布をかける守り人", characterName: "毛布をかける守り人モビー", summary: "離したくない気持ちで支えながら、二人だけの安心できる関係を大事にするタイプ。" },
-      { code: "SFTO", name: "地図を広げる冒険家", characterName: "地図を広げる冒険家モビー", summary: "自由さとときめきを大切にしながら、楽しい恋を形に残したいタイプ。" },
-      { code: "SFTC", name: "夜風のロマンチスト", characterName: "夜風のロマンチストモビー", summary: "自由な距離感の中で、二人だけのロマンを静かに育てるタイプ。" },
-      { code: "SFAO", name: "余白を飾る演出家", characterName: "余白を飾る演出家モビー", summary: "自由で自然体だけど、関係性の見せ方にもセンスが出るタイプ。" },
-      { code: "SFAC", name: "静かな港の相棒", characterName: "静かな港の相棒モビー", summary: "自由と安心、二人だけの信頼を長く育てるタイプ。" }
+      { code: "HLTO", name: "花束の主人公モビー", characterName: "花束の主人公モビー", summary: "恋の主役感、ときめき、見せたくなる幸せを持つタイプ。" },
+      { code: "HLTC", name: "秘密の星モビー", characterName: "秘密の星モビー", summary: "特別に愛されたいけど、その恋は二人だけで大切にしたいタイプ。" },
+      { code: "HLAO", name: "ひなたの愛され人モビー", characterName: "ひなたの愛され人モビー", summary: "離したくない安心と、周りにも伝わる愛され感を求めやすいタイプ。" },
+      { code: "HLAC", name: "雨宿りの待ち人モビー", characterName: "雨宿りの待ち人モビー", summary: "大切にされている実感を、静かに深く受け取りたいタイプ。" },
+      { code: "HFTO", name: "風まかせの小悪魔モビー", characterName: "風まかせの小悪魔モビー", summary: "自由さとときめき、少し見せたくなる魅力を持つタイプ。" },
+      { code: "HFTC", name: "月影のミューズモビー", characterName: "月影のミューズモビー", summary: "自由でいたいけど、恋の特別感は二人だけで味わいたいタイプ。" },
+      { code: "HFAO", name: "晴れ間の本命モビー", characterName: "晴れ間の本命モビー", summary: "自分の時間も大事にしながら、安心できる本命感を求めるタイプ。" },
+      { code: "HFAC", name: "静かな灯モビー", characterName: "静かな灯モビー", summary: "自由と安心を大事にしながら、二人だけの深い愛情を育てるタイプ。" },
+      { code: "SLTO", name: "恋に旗を振る人モビー", characterName: "恋に旗を振る人モビー", summary: "相手を支えながら、一緒にときめく時間を外にも残したいタイプ。" },
+      { code: "SLTC", name: "胸奥のロマンモビー", characterName: "胸奥のロマンモビー", summary: "相手を支えながら、二人だけのロマンチックな世界を大切にするタイプ。" },
+      { code: "SLAO", name: "陽だまりを分ける人モビー", characterName: "陽だまりを分ける人モビー", summary: "支え合う安心感を、周りにも伝わる形で残したいタイプ。" },
+      { code: "SLAC", name: "毛布をかける守り人モビー", characterName: "毛布をかける守り人モビー", summary: "離したくない気持ちで支えながら、二人だけの安心できる関係を大事にするタイプ。" },
+      { code: "SFTO", name: "地図を広げる冒険家モビー", characterName: "地図を広げる冒険家モビー", summary: "自由さとときめきを大切にしながら、楽しい恋を形に残したいタイプ。" },
+      { code: "SFTC", name: "夜風のロマンチストモビー", characterName: "夜風のロマンチストモビー", summary: "自由な距離感の中で、二人だけのロマンを静かに育てるタイプ。" },
+      { code: "SFAO", name: "余白を飾る演出家モビー", characterName: "余白を飾る演出家モビー", summary: "自由で自然体だけど、関係性の見せ方にもセンスが出るタイプ。" },
+      { code: "SFAC", name: "静かな港の相棒モビー", characterName: "静かな港の相棒モビー", summary: "自由と安心、二人だけの信頼を長く育てるタイプ。" }
     ]
   }
 };
