@@ -10142,30 +10142,6 @@
       initScrollObserver();
     };
 
-    const showSealGachaLaunchAfterMain = () => {
-      const modal = document.getElementById('sealGachaLaunchModal');
-      const closeButton = document.getElementById('closeSealGachaLaunch');
-      if (!modal) return;
-
-      let finished = false;
-      const finish = () => {
-        if (finished) return;
-        finished = true;
-        modal.hidden = true;
-      };
-
-      modal.hidden = false;
-      closeButton?.addEventListener('click', finish, { once: true });
-      modal.addEventListener('click', (event) => {
-        if (event.target === modal) finish();
-      });
-      document.addEventListener('keydown', function handleSealGachaLaunchKey(event) {
-        if (event.key !== 'Escape' || modal.hidden) return;
-        document.removeEventListener('keydown', handleSealGachaLaunchKey, true);
-        finish();
-      }, true);
-    };
-
     const shouldSkipSplash = false;
 
     if (shouldSkipSplash) {
@@ -10174,7 +10150,6 @@
         splashElement.remove();
       }
       revealMainContent();
-      showSealGachaLaunchAfterMain();
     }
 
     if (!shouldSkipSplash && splashElement) {
@@ -10193,7 +10168,6 @@
         window.setTimeout(() => {
           splashElement.classList.add('hidden');
           revealMainContent();
-          showSealGachaLaunchAfterMain();
         }, 960);
 
         window.setTimeout(() => {
