@@ -1,207 +1,822 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MOBBY CAPSULE CLUB</title>
-  <meta name="description" content="MOBBY CAPSULE CLUBのガチャ。毎日1回無料で回せる、SSRをめざせるカプセルガチャです。コレクションを揃えて、毎日遊びやすいガチャ体験を楽しめます。">
+  <title>シールガチャ | Mobby</title>
+  <meta name="description" content="Mobbyのシールガチャ。かわいいシールデザインを集めるガチャページです。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="../shared/line-ai-mobby-cta.css">
+  <link rel="stylesheet" href="seal-styles.css">
+  <script src="../shared/line-ai-mobby-cta.js" defer></script>
 </head>
 <body>
-  <div class="page-shell">
-  
+  <main class="seal-page-shell">
+    <header class="seal-header">
+      <button class="seal-back" type="button" onclick="window.location.href='../index.html'" aria-label="ホームに戻る">
+        <span aria-hidden="true"></span>
+      </button>
+      <div class="seal-header-actions">
+        <button class="seal-list-open" id="openSealList" type="button" aria-haspopup="dialog" aria-controls="sealListModal">
+          <span class="seal-list-icon" aria-hidden="true"></span>
+          <span>シール一覧</span>
+        </button>
+        <button class="seal-rate-open" id="openSealRates" type="button" aria-haspopup="dialog" aria-controls="sealRateModal">
+          <span class="seal-rate-icon" aria-hidden="true">%</span>
+          <span>排出率</span>
+        </button>
+        <button class="seal-book-open" id="openSealBook" type="button" aria-haspopup="dialog" aria-controls="sealBookModal">
+          <span class="seal-book-icon" aria-hidden="true">帳</span>
+          <span>シール帳</span>
+        </button>
+      </div>
+    </header>
 
-    <main class="experience-grid">
-      <section class="machine-panel card-surface">
-        <div class="panel-head compact-head">
-          <div>
-            <button class="section-kicker home-back-button" type="button" onclick="window.location.href='../index.html'">Homeに戻る</button>
-             <h2>モビーガチャ</h2>
-          </div>
-        </div>
-        <div class="mode-economy-row">
-          <div class="mode-economy card-surface" id="modeEconomy">
-            <div class="mode-economy-head">
-              <p class="section-kicker">購入</p>
-              <p class="mode-economy-stock" id="ticketStock">一番くじチケット: 0枚</p>
-            </div>
-            <div class="mode-economy-actions">
-              <button class="action-button secondary" id="buyFiftyPackButton" type="button">50連（2000円）を購入</button>
-              <button class="action-button secondary" id="buyKujiTicketButton" type="button">チケット1枚（500円）を購入</button>
-            </div>
-            <p class="mode-economy-note" id="modeEconomyNote"></p>
-          </div>
-          <div class="mode-share-launch card-surface">
-            <p class="section-kicker">Share</p>
-            <button class="action-button primary mode-share-open-button" id="openShareModalButton" type="button">シェアを開く</button>
-            <p class="mode-economy-note">コレクション画像が保存できます</p>
-          </div>
-        </div>
-        <div class="machine-stage">
-          <div class="gacha-machine" id="gachaMachine">
-            <div class="gacha-machine-top">
-              <div class="gacha-brand-badge" id="machineBannerLabel">MOBBY CAPSULE</div>
-              <div class="gacha-dome" id="gachaDome" role="button" tabindex="0" aria-label="タップしてラインナップを見る">
-                <div class="gacha-capsule-cloud" aria-hidden="true">
-                  <span class="gacha-mini-capsule capsule-coral"></span>
-                  <span class="gacha-mini-capsule capsule-mint"></span>
-                  <span class="gacha-mini-capsule capsule-lemon"></span>
-                  <span class="gacha-mini-capsule capsule-sky"></span>
-                  <span class="gacha-mini-capsule capsule-rose"></span>
-                  <span class="gacha-mini-capsule capsule-coral"></span>
-                  <span class="gacha-mini-capsule capsule-mint"></span>
-                  <span class="gacha-mini-capsule capsule-lemon"></span>
-                  <span class="gacha-mini-capsule capsule-sky"></span>
-                </div>
+    <section class="seal-hero" aria-labelledby="sealGachaTitle">
+      <div class="seal-sparkles" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
 
-                <div class="gacha-dome-reflection" aria-hidden="true"></div>
-                <div class="gacha-dome-hint" id="gachaDomeHint" aria-hidden="true">
-                  <span class="gacha-dome-hint-main">タップでラインナップ</span>
-                  <span class="gacha-dome-hint-sub">無料/一番くじどちらも見れます</span>
-                </div>
-              </div>
-            <div class="gacha-machine-body">
-              <div class="gacha-control-panel">
-                <div class="gacha-control-row">
-                  <div class="gacha-handle-wrap">
-                     <button class="gacha-handle" id="startGachaButton" type="button" aria-label="ガチャを回す">
-                      <span class="gacha-handle-core"></span>
-                      <span class="gacha-handle-arm"></span>
-                      <span class="gacha-handle-knob"></span>
-                    </button>
-                  </div>
-                  <div class="gacha-chute-window">
-                    <div class="gacha-capsule-drop" id="gachaCapsuleDrop">
-                      <div class="gacha-capsule-shell">
-                        <div class="gacha-capsule-top"></div>
-                        <div class="gacha-capsule-bottom"></div>
-                      </div>
-                    </div>
-                    <div class="gacha-chute-sparkle" aria-hidden="true"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="mode-status" id="modeStatus">読み込み中...</div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <div class="seal-hero-copy">
+        <h2 id="sealGachaTitle" class="seal-logo">
+          <span>シール</span>
+          <span>ガチャ</span>
+        </h2>
+      </div>
 
-      <section class="result-panel">
-        <div class="result-card card-surface is-idle" id="resultCard">
-          <div class="result-head compact-head">
+      <div class="seal-machine" aria-hidden="true">
+        <img class="seal-machine-image" src="../gacha-new/assets/gacha/gachagacha-mobby.png" alt="">
+      </div>
+    </section>
 
-             <div class="result-progress-pill" id="collectionProgressPill">コレクション 0 / 96</div>
+    <section class="seal-lineup-panel" aria-labelledby="sealLineupTitle">
+      <h2 id="sealLineupTitle">♡ こんなのが出るかも ♡</h2>
+      <div class="seal-lineup">
+        <article class="seal-item">
+          <span class="rarity normal">R</span>
+          <div class="seal-placeholder">
+            <img src="../gacha-new/assets/r/%E7%A7%98%E5%AF%86%E3%81%AE%E6%98%9F.png" alt="秘密の星">
           </div>
-          <div class="result-empty" id="resultEmpty">
-             <p class="result-empty">まだ結果はありません。ガチャを回してカードを手に入れましょう。</p>
+        </article>
+        <article class="seal-item">
+          <span class="rarity rare">SR</span>
+          <div class="seal-placeholder">
+            <img src="../gacha-new/assets/sr/%E9%9D%99%E3%81%8B%E3%81%AA%E6%B8%AF%E3%81%AE%E7%9B%B8%E6%A3%92-sr.png" alt="静かな港の相棒 SR">
           </div>
-          <div class="result-filled" id="resultFilled" hidden>
-            <div class="result-art" id="resultArtWrap">
-              <img id="resultImage" src="" alt="MOBBY CAPSULE CLUB">
-              <div class="result-badge-row">
-                <span class="rarity-pill" id="resultRarity">SSR</span>
-                <span class="status-pill" id="resultOwnership">NEW</span>
-              </div>
-            </div>
-             <h3 class="result-title" id="resultTitle">タイトル</h3>
-            <p class="result-line" id="resultLine"></p>
-            <p class="result-detail" id="resultDetail"></p>
-            <div class="result-actions">
-               <button class="action-button primary" id="spinAgainButton" type="button">もう1回回す</button>
-            </div>
+        </article>
+        <article class="seal-item">
+          <span class="rarity sparkle">UR</span>
+          <div class="seal-placeholder">
+            <img src="../gacha-new/assets/ur/%E4%BD%99%E7%99%BD%E3%82%92%E9%A3%BE%E3%82%8B%E6%BC%94%E5%87%BA%E5%AE%B6-ur.png" alt="余白を飾る演出家 UR">
           </div>
+        </article>
+        <article class="seal-item">
+          <span class="rarity special">プリ</span>
+          <div class="seal-placeholder">
+            <img src="../gacha-new/assets/gal/%E8%8A%B1%E6%9D%9F%E3%81%AE%E4%B8%BB%E4%BA%BA%E5%85%AC-gal.png" alt="花束の主人公 プリ">
+          </div>
+        </article>
+        <article class="seal-item is-secret-preview">
+          <span class="rarity ultra">SECRET</span>
+          <div class="seal-placeholder">
+            <img src="../gacha-new/assets/main4/full/%E3%82%82%E3%81%B3%E3%81%A1-full.png" alt="もびち SECRET">
+          </div>
+        </article>
+      </div>
+      <p>どのシールが出るかはおたのしみ♪</p>
+    </section>
+
+    <section class="seal-spin-panel" aria-label="ガチャをまわす">
+      <div class="seal-paid-panel">
+        <button class="seal-paid-main" id="openPaidGacha" type="button">有料ガチャを引く</button>
+        <p class="seal-gacha-caption">SR以上のみ排出</p>
+        <div class="seal-paid-options" id="paidGachaOptions" hidden>
+<div class="seal-paid-email">
+            <p>購入前にLINE連携が必要です。決済後、結果画像をLINEで受け取れます。</p>
+          </div>
+          <button class="seal-paid-option" type="button" data-package-type="single" aria-pressed="false">
+            <span>6連</span>
+            <small>シール6枚</small>
+            <strong>100円</strong>
+          </button>
+          <button class="seal-paid-option is-best" type="button" data-package-type="ten" aria-pressed="false">
+            <span class="seal-paid-badge">特別価格</span>
+            <span>60連</span>
+            <small>シール60枚</small>
+            <strong>500円</strong>
+          </button>
         </div>
-      </section>
-    </main>
-    <div class="share-modal" id="shareModal" hidden>
-      <button class="share-modal-backdrop" id="shareModalBackdrop" type="button" aria-label="シェアを閉じる"></button>
-      <section class="share-modal-sheet card-surface" id="shareSection" role="dialog" aria-modal="true">
-        <div class="share-modal-body share-drawer-body">
-          <div class="share-stage" id="shareStage">
-            <div class="share-stage-head">
-              <div class="share-stage-title-row">
-                <h3 class="share-stage-title" id="shareHeadline">MY MOBBY DROP</h3>
-                <div class="share-stage-count" id="shareOwnedCount">0 / 96</div>
-                <button class="action-button secondary share-modal-close share-stage-close" id="closeShareModalButton" type="button">閉じる</button>
-              </div>
-            </div>
-            <p class="share-stage-subline" id="shareSubline">持っているカードがここに全部並びます。SNSに画像を載せよう。</p>
-            <div class="share-stage-grid share-owned-grid" id="shareStageGrid"></div>
-          </div>
-          <div class="share-actions">
-            <button class="action-button primary" id="downloadShareButton" type="button">コレクション画像を保存</button>
-            <button class="action-button secondary" id="nativeShareButton" type="button">SNSでシェア</button>
-          </div>
-          <p class="share-help" id="shareHelpText">集めたカードを一覧で見せてシェアできます。</p>
-          <div class="share-preview-panel" id="sharePreviewPanel" hidden>
-            <p class="share-preview-hint" id="sharePreviewHint">画像を長押しして保存できます。</p>
-            <img class="share-preview-image" id="sharePreviewImage" src="" alt="保存用のシェア画像プレビュー">
-          </div>
-          <canvas id="shareCanvas" width="1080" height="1350" hidden></canvas>
+        <p class="seal-paid-status" id="paidGachaStatus" aria-live="polite"></p>
+      </div>
+      <div class="seal-free-panel">
+        <a class="seal-free-main" href="spin.html?mode=free">
+          <span>無料ガチャを引く（6連）</span>
+        </a>
+        <p class="seal-gacha-caption">R/SRのみ</p>
+      </div>
+      <div class="seal-normal-panel" hidden>
+        <p class="seal-normal-title">テストガチャ</p>
+        <div class="seal-spin-actions">
+          <a class="spin-button" href="spin.html?mode=test">
+          6連
+          <span class="spin-capsule" aria-hidden="true"></span>
+          </a>
+          <a class="spin-button spin-button-ten" href="spin.html?mode=test&pulls=10">
+          60連
+          <span class="spin-capsule" aria-hidden="true"></span>
+          </a>
         </div>
-      </section>
+      </div>
+      <div class="seal-normal-panel seal-guaranteed-panel" hidden>
+        <p class="seal-normal-title">確定テストガチャ</p>
+        <div class="seal-spin-actions seal-guaranteed-actions">
+          <a class="spin-button spin-button-secret" href="spin.html?mode=test&pulls=10&testSecret=1">
+          60連
+          <span class="spin-capsule" aria-hidden="true"></span>
+          </a>
+        </div>
+      </div>
+      <form class="seal-code-form" id="sealCodeForm">
+        <input class="seal-code-input" id="sealCodeInput" type="text" inputmode="text" autocomplete="off" placeholder="コードを入力">
+        <button class="seal-code-button" type="submit">無料で回す</button>
+        <p class="seal-gacha-caption">SR以上のみ排出</p>
+        <p class="seal-gacha-caption">有料ガチャと内容は同じです</p>
+        <div class="seal-line-cta" data-line-ai-mobby-cta></div>
+        <p class="seal-code-help">公式LINEのアンケートに回答でクーポンコードが発行されるよ</p>
+        <p class="seal-code-error" id="sealCodeError" aria-live="polite" hidden>コードが間違っています</p>
+      </form>
+      <button class="seal-print-method-open" id="openSealPrintMethod" type="button" aria-haspopup="dialog" aria-controls="sealPrintMethodModal">プリント方法</button>
+      <p class="spin-note"><span aria-hidden="true">ⓘ</span> Mobby公式LINEのアンケート回答でコードをゲットしてから！</p>
+    </section>
+  </main>
+
+  <section class="seal-list-modal" id="sealListModal" aria-labelledby="sealListTitle" aria-modal="true" role="dialog" hidden>
+    <button class="seal-list-backdrop" id="closeSealListBackdrop" type="button" aria-label="シール一覧を閉じる"></button>
+    <div class="seal-list-sheet">
+      <div class="seal-list-head">
+        <div>
+          <p class="seal-list-kicker">Sticker Lineup</p>
+          <h2 id="sealListTitle">シール一覧</h2>
+        </div>
+        <button class="seal-list-close" id="closeSealList" type="button" aria-label="シール一覧を閉じる">×</button>
+      </div>
+      <div class="seal-list-content" id="sealListContent"></div>
+    </div>
+  </section>
+
+  <section class="seal-list-modal seal-rate-modal" id="sealRateModal" aria-labelledby="sealRateTitle" aria-modal="true" role="dialog" hidden>
+    <button class="seal-list-backdrop" id="closeSealRateBackdrop" type="button" aria-label="排出率を閉じる"></button>
+    <div class="seal-list-sheet seal-rate-sheet">
+      <div class="seal-list-head">
+        <div>
+          <p class="seal-list-kicker">Drop Rates</p>
+          <h2 id="sealRateTitle">シール排出率</h2>
+        </div>
+        <button class="seal-list-close" id="closeSealRate" type="button" aria-label="排出率を閉じる">×</button>
+      </div>
+      <div class="seal-rate-content">
+        <div class="seal-rate-tabs" role="tablist" aria-label="ガチャ種別">
+          <button class="seal-rate-tab is-active" id="paidRateTab" type="button" role="tab" aria-selected="true" aria-controls="paidRatePanel" data-rate-tab="paid">有料</button>
+          <button class="seal-rate-tab" id="freeRateTab" type="button" role="tab" aria-selected="false" aria-controls="freeRatePanel" data-rate-tab="free">無料</button>
+        </div>
+        <div class="seal-rate-panel" id="paidRatePanel" role="tabpanel" aria-labelledby="paidRateTab" data-rate-panel="paid">
+          <p class="seal-rate-lead">有料ガチャはシール1枚ごとに下記の確率で抽選されます。6連・60連とも同じ排出率です。</p>
+          <div class="seal-rate-grid" aria-label="有料ガチャの各レアリティ排出率">
+            <article class="seal-rate-card">
+              <span class="rarity normal">R</span>
+              <strong>0%</strong>
+              <small>有料ガチャでは<br>排出されません</small>
+            </article>
+            <article class="seal-rate-card">
+              <span class="rarity rare">SR</span>
+              <strong>66.7%</strong>
+              <small>6連で出る確率<br>約99.9%</small>
+            </article>
+            <article class="seal-rate-card">
+              <span class="rarity sparkle">UR</span>
+              <strong>26.7%</strong>
+              <small>6連で出る確率<br>約84.4%</small>
+            </article>
+            <article class="seal-rate-card">
+              <span class="rarity special">プリ</span>
+              <strong>6.7%</strong>
+              <small>6連で出る確率<br>約33.9%</small>
+            </article>
+            <article class="seal-rate-card">
+              <span class="rarity ultra">SECRET</span>
+              <strong>1/500</strong>
+              <small>シート単位で<br>抽選</small>
+            </article>
+          </div>
+          <p class="seal-rate-note">「6連で出る確率」は、6枚の中にそのレアリティが1枚以上含まれる確率です。SECRETは500回に1回の確率で、fullまたはhalfの4枚がまとまったシークレットシートとして出ます。</p>
+        </div>
+        <div class="seal-rate-panel" id="freeRatePanel" role="tabpanel" aria-labelledby="freeRateTab" data-rate-panel="free" hidden>
+          <p class="seal-rate-lead">無料ガチャは6連のみで、RとSRのみ排出されます。</p>
+          <div class="seal-rate-grid is-free" aria-label="無料ガチャの各レアリティ排出率">
+            <article class="seal-rate-card">
+              <span class="rarity normal">R</span>
+              <strong>5/6</strong>
+              <small>約83.3%<br>SR以外で排出</small>
+            </article>
+            <article class="seal-rate-card">
+              <span class="rarity rare">SR</span>
+              <strong>1/6</strong>
+              <small>約16.7%<br>6連で出る確率 約66.5%</small>
+            </article>
+          </div>
+          <p class="seal-rate-note">無料ガチャではUR・プリ・SECRETは排出されません。各レアリティ内のシールは、対象レアリティの中からランダムに選ばれます。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seal-list-modal seal-book-modal" id="sealBookModal" aria-labelledby="sealBookTitle" aria-modal="true" role="dialog" hidden>
+    <button class="seal-list-backdrop" id="closeSealBookBackdrop" type="button" aria-label="シール帳を閉じる"></button>
+    <div class="seal-list-sheet seal-book-sheet">
+      <div class="seal-list-head">
+        <div>
+          <p class="seal-list-kicker">Sticker Book</p>
+          <h2 id="sealBookTitle">シール帳</h2>
+        </div>
+        <button class="seal-list-close" id="closeSealBook" type="button" aria-label="シール帳を閉じる">×</button>
+      </div>
+      <div class="seal-book-content" id="sealBookContent"></div>
+    </div>
+  </section>
+
+  <section class="seal-list-modal seal-print-method-modal" id="sealPrintMethodModal" aria-labelledby="sealPrintMethodTitle" aria-modal="true" role="dialog" hidden>
+    <button class="seal-list-backdrop" id="closeSealPrintMethodBackdrop" type="button" aria-label="プリント方法を閉じる"></button>
+    <div class="seal-list-sheet seal-print-method-sheet">
+      <div class="seal-list-head">
+        <div>
+          <p class="seal-list-kicker">Print Guide</p>
+          <h2 id="sealPrintMethodTitle">プリント方法</h2>
+        </div>
+        <button class="seal-list-close" id="closeSealPrintMethod" type="button" aria-label="プリント方法を閉じる">×</button>
+      </div>
+      <div class="seal-print-method-content">
+        <p class="seal-print-method-lead">ガチャで出た画像は、スマホに保存して、コンビニのマルチコピー機などでシール紙に印刷できます。</p>
+        <h3 class="seal-print-method-heading">手順</h3>
+        <ol class="seal-print-method-list">
+          <li>ガチャ結果画像をスマホに保存</li>
+          <li>コンビニプリント用のサービスやアプリに画像を登録</li>
+          <li>店舗のマルチコピー機で「シール紙」を選択</li>
+          <li>画面の案内に沿って印刷</li>
+        </ol>
+        <div class="seal-print-method-notes">
+          <p>※利用できる店舗・料金・対応用紙・操作方法は、各コンビニやプリントサービスによって異なります。</p>
+          <p>※印刷前に、利用する店舗のコピー機で「シール紙」が選べるかご確認ください。</p>
+          <p>※当サイトは、各コンビニおよび各プリントサービスと提携・協賛・共同運営しているものではありません。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="seal-book-preview-modal" id="sealBookPreviewModal" hidden>
+    <button class="seal-book-preview-backdrop" id="closeSealBookPreviewBackdrop" type="button" aria-label="拡大表示を閉じる"></button>
+    <div class="seal-book-preview-dialog" role="dialog" aria-modal="true" aria-label="シール画像の拡大表示">
+      <button class="seal-book-preview-close" id="closeSealBookPreview" type="button" aria-label="拡大表示を閉じる">×</button>
+      <img id="sealBookPreviewImage" src="" alt="">
     </div>
   </div>
-  <div class="collection-modal" id="collectionModal" hidden>
-    <button class="collection-modal-backdrop" id="collectionModalBackdrop" type="button" aria-label="コレクションを閉じる"></button>
-    <section class="collection-modal-sheet card-surface" role="dialog" aria-modal="true" aria-labelledby="collectionModalTitle">
-      <div class="collection-modal-head">
-        <div>
-          <p class="drawer-kicker">Collection</p>
-          <h3 id="collectionModalTitle">現在のコレクション</h3>
-        </div>
-        <div class="collection-modal-actions">
-          <span class="collection-summary" id="collectionSummary">0 / 96</span>
-          <button class="action-button secondary collection-modal-close" id="closeCollectionModalButton" type="button">閉じる</button>
-        </div>
-      </div>
-      <div class="collection-modal-body" id="collectionSection">
-        <div class="collection-tabs" id="collectionTabs" role="tablist" aria-label="コレクションカテゴリ"></div>
-        <p class="collection-lead" id="collectionLead">まずは1回引いてみて。集めたカードがここに並びます。</p>
-        <div class="progress-bar" aria-hidden="true">
-          <div class="progress-bar-fill" id="collectionProgressBar"></div>
-        </div>
-        <div class="collection-grid" id="collectionGrid"></div>
-      </div>
-    </section>
-  </div>
-  <div class="gacha-lineup-modal" id="gachaLineupModal" hidden>
-    <button class="gacha-lineup-backdrop" id="gachaLineupBackdrop" type="button" aria-label="一覧を閉じる"></button>
-    <section class="gacha-lineup-sheet card-surface" role="dialog" aria-modal="true" aria-labelledby="gachaLineupTitle">
-      <div class="gacha-lineup-head">
-        <div>
-          <p class="gacha-lineup-kicker" id="gachaLineupModeLabel">ラインナップ</p>
-          <h3 id="gachaLineupTitle">アイテム一覧</h3>
-        </div>
-        <button class="action-button secondary gacha-lineup-close" id="closeGachaLineupButton" type="button">閉じる</button>
-      </div>
-      <p class="gacha-lineup-note" id="gachaLineupNote">ラインナップを読み込み中...</p>
-      <div class="gacha-lineup-rates" id="gachaLineupRates"></div>
-      <div class="gacha-lineup-grid" id="gachaLineupGrid"></div>
-      <button class="action-button primary gacha-lineup-spin" id="lineupSpinButton" type="button">このまま回す</button>
-    </section>
-  </div>
-  <div class="checkout-overlay" id="checkoutOverlay" hidden>
-    <button class="checkout-overlay-backdrop" id="checkoutOverlayBackdrop" type="button" aria-label="決済パネルを閉じる"></button>
-    <section class="checkout-panel card-surface" role="dialog" aria-modal="true" aria-labelledby="checkoutPanelTitle">
-      <div class="checkout-panel-head">
-        <div>
-          <p class="drawer-kicker">Payment</p>
-          <h3 id="checkoutPanelTitle">50連を購入</h3>
-        </div>
-        <button class="action-button secondary checkout-close-button" id="checkoutCloseButton" type="button">閉じる</button>
-      </div>
-      <div class="checkout-mount" id="checkoutMount"></div>
-      <p class="checkout-panel-note">カード決済はこの画面内で完了します。本人認証や一部の決済手段では外部画面に移動する場合があります。</p>
-    </section>
-  </div>
 
-  <script src="data.js"></script>
-  <script src="app.js"></script>
+  <section class="seal-checkout-modal" id="sealCheckoutModal" aria-labelledby="sealCheckoutTitle" aria-modal="true" role="dialog" hidden>
+    <button class="seal-checkout-backdrop" id="closeSealCheckoutBackdrop" type="button" aria-label="決済画面を閉じる"></button>
+    <div class="seal-checkout-sheet">
+      <div class="seal-checkout-head">
+        <h2 id="sealCheckoutTitle">Stripe決済</h2>
+        <button class="seal-checkout-close" id="closeSealCheckout" type="button" aria-label="決済画面を閉じる">×</button>
+      </div>
+      <div class="seal-checkout-mount" id="sealCheckoutMount"></div>
+      <p class="seal-checkout-note">決済完了後、シールガチャ画面へ進みます。</p>
+    </div>
+  </section>
+
+  <script>
+    (() => {
+      const CHECKOUT_SESSION_ENDPOINT = "/api/gacha-checkout-session";
+      const CHECKOUT_STATUS_ENDPOINT = "/api/gacha-checkout-status";
+      const LINE_LINK_TOKEN_STORAGE_KEY = "mobbyGachaLineLinkToken";
+      const PENDING_PACKAGE_STORAGE_KEY = "mobbyGachaPendingPackageType";
+      const PACKAGE_TYPES = new Set(["single", "ten"]);
+      let stripeLoaderPromise = null;
+      let embeddedCheckoutInstance = null;
+
+      const modal = document.getElementById("sealListModal");
+      const openButton = document.getElementById("openSealList");
+      const closeButton = document.getElementById("closeSealList");
+      const closeBackdrop = document.getElementById("closeSealListBackdrop");
+      const content = document.getElementById("sealListContent");
+      const rateModal = document.getElementById("sealRateModal");
+      const openRateButton = document.getElementById("openSealRates");
+      const closeRateButton = document.getElementById("closeSealRate");
+      const closeRateBackdrop = document.getElementById("closeSealRateBackdrop");
+      const bookModal = document.getElementById("sealBookModal");
+      const openBookButton = document.getElementById("openSealBook");
+      const closeBookButton = document.getElementById("closeSealBook");
+      const closeBookBackdrop = document.getElementById("closeSealBookBackdrop");
+      const bookContent = document.getElementById("sealBookContent");
+      const printMethodModal = document.getElementById("sealPrintMethodModal");
+      const openPrintMethodButton = document.getElementById("openSealPrintMethod");
+      const closePrintMethodButton = document.getElementById("closeSealPrintMethod");
+      const closePrintMethodBackdrop = document.getElementById("closeSealPrintMethodBackdrop");
+      const bookPreviewModal = document.getElementById("sealBookPreviewModal");
+      const bookPreviewImage = document.getElementById("sealBookPreviewImage");
+      const closeBookPreviewButton = document.getElementById("closeSealBookPreview");
+      const closeBookPreviewBackdrop = document.getElementById("closeSealBookPreviewBackdrop");
+      const rateTabButtons = Array.from(document.querySelectorAll("[data-rate-tab]"));
+      const ratePanels = Array.from(document.querySelectorAll("[data-rate-panel]"));
+      const codeForm = document.getElementById("sealCodeForm");
+      const codeInput = document.getElementById("sealCodeInput");
+      const codeError = document.getElementById("sealCodeError");
+      const openPaidGacha = document.getElementById("openPaidGacha");
+      const paidGachaOptions = document.getElementById("paidGachaOptions");
+      const paidOptionButtons = Array.from(document.querySelectorAll("[data-package-type]"));
+      const paidGachaStatus = document.getElementById("paidGachaStatus");
+      const paidGachaHp = document.getElementById("paidGachaHp");
+      const checkoutModal = document.getElementById("sealCheckoutModal");
+      const checkoutMount = document.getElementById("sealCheckoutMount");
+      const closeCheckout = document.getElementById("closeSealCheckout");
+      const closeCheckoutBackdrop = document.getElementById("closeSealCheckoutBackdrop");
+      if (!modal || !openButton || !closeButton || !closeBackdrop || !content) return;
+
+      const groups = [
+        { label: "R", className: "normal", dir: "r", files: ["ひなたの愛され人.png", "余白を飾る演出家.png", "地図を広げる冒険家.png", "夜風のロマンチスト.png", "恋に旗を振る人.png", "晴れ間の本命.png", "月影のミューズ.png", "毛布を掛ける人.png", "秘密の星.png", "胸奥のロマン.png", "花束の主人公１.png", "陽だまりを分ける人.png", "雨宿りの待ち人.png", "静かな港の相棒.png", "静かな灯.png", "風まかせの小悪魔.png"] },
+        { label: "SR", className: "rare", dir: "sr", softPreview: true, files: ["ひなたの愛され人-sr.png", "余白を飾る演出家-sr.png", "地図を広げる冒険家-sr.png", "夜風のロマンチスト-sr.png", "恋に旗を振る人-sr.png", "晴れ間の本命-sr.png", "月影のミューズ-sr.png", "毛布を掛ける人-sr.png", "秘密の星-sr.png", "胸奥のロマン-sr.png", "花束の主人公-sr.png", "陽だまりを分ける人-sr.png", "雨宿りの待ち人-sr.png", "静かな港の相棒-sr.png", "静かな灯-sr.png", "風まかせの小悪魔-sr.png"] },
+        { label: "UR", className: "sparkle", dir: "ur", softPreview: true, files: ["ひなたの愛され人-ur.png", "余白を飾る演出家-ur.png", "地図を広げる冒険家-ur.png", "夜風のロマンチスト-ur.png", "恋に旗を振る人-ur.png", "晴れ間の本命-ur.png", "月影のミューズ-ur.png", "毛布を掛ける人-ur.png", "秘密の星-ur.png", "胸奥のロマン-ur.png", "花束の主人公-ur.png", "陽だまりを分ける人-ur.png", "雨宿りの待ち人-ur.png", "静かな港の相棒-ur.png", "静かな灯-ur.png", "風まかせの小悪魔-ur.png"] },
+        { label: "プリ", className: "special", dir: "gal", softPreview: true, files: ["ひなたの愛され人-gal.png", "余白を飾る演出家-gal.png", "地図を広げる冒険家-gal.png", "夜風のロマンチスト-gal.png", "恋に旗を振る人-gal.png", "晴れ間の本命-gal.png", "月影のミューズ-gal.png", "毛布を掛ける人-gal.png", "秘密の星-gal.png", "胸奥のロマン-gal.png", "花束の主人公-gal.png", "陽だまりを分ける人-gal.png", "雨宿りの待ち人-gal.png", "静かな港の相棒-gal.png", "静かな灯り-gal.png", "風まかせの小悪魔-gal.png"] },
+        { label: "SECRET full", className: "ultra", dir: "main4/full", softPreview: true, files: ["もびち-full.png", "もびやん-full.png", "もびりん-full.png", "病みモビー-full.png"] },
+        { label: "SECRET half", className: "ultra", dir: "main4/half", softPreview: true, files: ["もびち-half.png", "もびやん-half.png", "もびりん-half.png", "病みモビー-half.png"] }
+      ];
+
+      const stripName = (file) => file.replace(/\.png$/u, "").replace(/-(sr|ur|gal|full|half)$/u, "").replace(/１$/u, "");
+      const assetPath = (dir, file) => `../gacha-new/assets/${dir}/${encodeURIComponent(file)}`;
+      const STICKER_BOOK_STORAGE_KEY = "mobbySealStickerBook";
+      const bookRarityTabs = [
+        { key: "SR", label: "SR", className: "rare" },
+        { key: "UR", label: "UR", className: "sparkle" },
+        { key: "プリ", label: "プリ", className: "special" },
+        { key: "SECRET", label: "SECRET", className: "ultra" }
+      ];
+      const escapeHtml = (value) => String(value || "").replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        "\"": "&quot;",
+        "'": "&#39;"
+      })[char]);
+
+      content.innerHTML = groups.map((group) => `
+        <section class="seal-list-group ${group.softPreview ? "is-soft-preview" : ""} ${group.dir.startsWith("main4/") ? "is-secret-preview" : ""} is-${group.dir.replace(/\//g, "-")}-preview" aria-label="${group.label}のシール">
+          <div class="seal-list-group-head">
+            <span class="rarity ${group.className}">${group.label}</span>
+            <span>${group.files.length}種類</span>
+          </div>
+          <div class="seal-list-grid">
+            ${group.files.map((file) => {
+              const name = stripName(file);
+              return `<article class="seal-list-card"><div class="seal-list-image-guard"><img src="${assetPath(group.dir, file)}" alt="${name}" draggable="false"></div><p>${name}</p></article>`;
+            }).join("")}
+          </div>
+        </section>
+      `).join("");
+
+      const openModal = () => {
+        modal.hidden = false;
+        document.body.classList.add("is-seal-list-open");
+        closeButton.focus();
+      };
+
+      const closeModal = () => {
+        modal.hidden = true;
+        document.body.classList.remove("is-seal-list-open");
+        openButton.focus();
+      };
+
+      const openRateModal = () => {
+        if (!rateModal) return;
+        setRateTab("paid");
+        rateModal.hidden = false;
+        document.body.classList.add("is-seal-rate-open");
+        closeRateButton?.focus();
+      };
+
+      const closeRateModal = () => {
+        if (!rateModal) return;
+        rateModal.hidden = true;
+        document.body.classList.remove("is-seal-rate-open");
+        openRateButton?.focus();
+      };
+
+      const loadStickerBook = () => {
+        try {
+          const parsed = JSON.parse(localStorage.getItem(STICKER_BOOK_STORAGE_KEY) || "[]");
+          return Array.isArray(parsed) ? parsed : [];
+        } catch {
+          return [];
+        }
+      };
+
+      const renderStickerBook = () => {
+        if (!bookContent) return;
+        const savedStickers = loadStickerBook();
+        const stickers = savedStickers.filter((sticker) => (
+          sticker.rarity !== "R" &&
+          String(sticker.src || "").includes("../gacha-new/assets/")
+        ));
+        if (stickers.length !== savedStickers.length) {
+          localStorage.setItem(STICKER_BOOK_STORAGE_KEY, JSON.stringify(stickers));
+        }
+        if (!stickers.length) {
+          bookContent.innerHTML = `
+            <div class="seal-book-empty">
+              <strong>まだシールがありません</strong>
+              <p>ガチャを引くと、出たシールがここに保存されます。</p>
+            </div>
+          `;
+          return;
+        }
+        const firstTab = bookRarityTabs.find((tab) => stickers.some((sticker) => sticker.rarity === tab.key))?.key || bookRarityTabs[0].key;
+        bookContent.innerHTML = `
+          <div class="seal-book-summary">${stickers.length}種類のシール</div>
+          <div class="seal-book-tabs" role="tablist" aria-label="シール帳のレアリティ">
+            ${bookRarityTabs.map((tab) => {
+              const count = stickers.filter((sticker) => sticker.rarity === tab.key).length;
+              const active = tab.key === firstTab;
+              return `<button class="seal-book-tab ${active ? "is-active" : ""}" type="button" role="tab" aria-selected="${active ? "true" : "false"}" data-book-tab="${escapeHtml(tab.key)}"><span class="rarity ${tab.className}">${tab.label}</span><small>${count}</small></button>`;
+            }).join("")}
+          </div>
+          ${bookRarityTabs.map((tab) => {
+            const tabStickers = stickers.filter((sticker) => sticker.rarity === tab.key);
+            const active = tab.key === firstTab;
+            return `
+              <section class="seal-book-panel" data-book-panel="${escapeHtml(tab.key)}" ${active ? "" : "hidden"}>
+                ${tabStickers.length ? `
+                  <div class="seal-book-grid">
+                    ${tabStickers.map((sticker) => `
+                      <article class="seal-book-card">
+                        <div class="seal-list-image-guard seal-book-image-guard">
+                          <img src="${escapeHtml(sticker.src)}" alt="${escapeHtml(sticker.title || "シール")}" draggable="false">
+                        </div>
+                        <span class="rarity ${escapeHtml(sticker.rarityClass || tab.className)}">${escapeHtml(sticker.rarity || "")}</span>
+                        <p>${escapeHtml(sticker.title || "シール")}</p>
+                        <small>×${Number(sticker.count || 1)}</small>
+                      </article>
+                    `).join("")}
+                  </div>
+                ` : `
+                  <div class="seal-book-empty is-compact">
+                    <strong>${escapeHtml(tab.label)}はまだありません</strong>
+                    <p>このレアリティのシールを引くと表示されます。</p>
+                  </div>
+                `}
+              </section>
+            `;
+          }).join("")}
+        `;
+        bookContent.querySelectorAll("[data-book-tab]").forEach((button) => {
+          button.addEventListener("click", () => {
+            const target = button.dataset.bookTab || firstTab;
+            bookContent.querySelectorAll("[data-book-tab]").forEach((tabButton) => {
+              const active = tabButton.dataset.bookTab === target;
+              tabButton.classList.toggle("is-active", active);
+              tabButton.setAttribute("aria-selected", active ? "true" : "false");
+            });
+            bookContent.querySelectorAll("[data-book-panel]").forEach((panel) => {
+              panel.hidden = panel.dataset.bookPanel !== target;
+            });
+          });
+        });
+      };
+
+      const openBookPreview = (src, alt) => {
+        if (!bookPreviewModal || !bookPreviewImage || !src) return;
+        bookPreviewImage.src = src;
+        bookPreviewImage.alt = alt;
+        bookPreviewModal.hidden = false;
+        document.body.classList.add("is-seal-book-preview-open");
+        closeBookPreviewButton?.focus();
+      };
+
+      const closeBookPreview = () => {
+        if (!bookPreviewModal || !bookPreviewImage) return;
+        bookPreviewModal.hidden = true;
+        bookPreviewImage.src = "";
+        document.body.classList.remove("is-seal-book-preview-open");
+      };
+
+      const openBookModal = () => {
+        if (!bookModal) return;
+        renderStickerBook();
+        bookModal.hidden = false;
+        document.body.classList.add("is-seal-book-open");
+        closeBookButton?.focus();
+      };
+
+      const closeBookModal = () => {
+        if (!bookModal) return;
+        bookModal.hidden = true;
+        document.body.classList.remove("is-seal-book-open");
+        openBookButton?.focus();
+      };
+
+      const openPrintMethodModal = () => {
+        if (!printMethodModal) return;
+        printMethodModal.hidden = false;
+        closePrintMethodButton?.focus();
+      };
+
+      const closePrintMethodModal = () => {
+        if (!printMethodModal) return;
+        printMethodModal.hidden = true;
+        openPrintMethodButton?.focus();
+      };
+
+      const setRateTab = (target) => {
+        rateTabButtons.forEach((button) => {
+          const active = button.dataset.rateTab === target;
+          button.classList.toggle("is-active", active);
+          button.setAttribute("aria-selected", active ? "true" : "false");
+        });
+        ratePanels.forEach((panel) => {
+          panel.hidden = panel.dataset.ratePanel !== target;
+        });
+      };
+
+      const setPaidStatus = (message) => {
+        if (paidGachaStatus) paidGachaStatus.textContent = message || "";
+      };
+
+      const CODE_USAGE_STORAGE_KEY = "mobbySealGachaUsedCodes";
+      const validGachaCodes = new Set(["mobby-gacha!", "mobby-gachagacha"]);
+
+      const getUsedGachaCodes = () => {
+        try {
+          const parsed = JSON.parse(localStorage.getItem(CODE_USAGE_STORAGE_KEY) || "[]");
+          return Array.isArray(parsed) ? new Set(parsed) : new Set();
+        } catch {
+          return new Set();
+        }
+      };
+
+      const setSelectedPaidOption = (selectedButton) => {
+        paidOptionButtons.forEach((button) => {
+          const isSelected = button === selectedButton;
+          button.classList.toggle("is-selected", isSelected);
+          button.setAttribute("aria-pressed", isSelected ? "true" : "false");
+        });
+      };
+
+      const loadStripeJs = () => {
+        if (window.Stripe) return Promise.resolve(window.Stripe);
+        if (stripeLoaderPromise) return stripeLoaderPromise;
+        stripeLoaderPromise = new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = "https://js.stripe.com/clover/stripe.js";
+          script.async = true;
+          script.onload = () => {
+            if (window.Stripe) resolve(window.Stripe);
+            else reject(new Error("Stripe.jsの読み込みに失敗しました。"));
+          };
+          script.onerror = () => reject(new Error("Stripe.jsの読み込みに失敗しました。"));
+          document.head.appendChild(script);
+        });
+        return stripeLoaderPromise;
+      };
+
+      const teardownCheckout = () => {
+        if (!embeddedCheckoutInstance) return;
+        try {
+          if (typeof embeddedCheckoutInstance.unmount === "function") embeddedCheckoutInstance.unmount();
+          if (typeof embeddedCheckoutInstance.destroy === "function") embeddedCheckoutInstance.destroy();
+        } catch {}
+        embeddedCheckoutInstance = null;
+      };
+
+      const closeCheckoutModal = () => {
+        if (!checkoutModal) return;
+        checkoutModal.hidden = true;
+        document.body.classList.remove("is-seal-checkout-open");
+        teardownCheckout();
+        if (checkoutMount) checkoutMount.innerHTML = "";
+      };
+
+      const openCheckoutModal = () => {
+        if (!checkoutModal) return;
+        checkoutModal.hidden = false;
+        document.body.classList.add("is-seal-checkout-open");
+        closeCheckout?.focus();
+      };
+
+      const getLineLinkToken = () => sessionStorage.getItem(LINE_LINK_TOKEN_STORAGE_KEY) || "";
+
+      const normalizePackageType = (value) => {
+        const packageType = String(value || "").trim();
+        return PACKAGE_TYPES.has(packageType) ? packageType : "";
+      };
+
+      const selectedPackageFromUrl = () => {
+        const params = new URLSearchParams(window.location.search);
+        return normalizePackageType(params.get("package_type"));
+      };
+
+      const savePendingPackage = (packageType) => {
+        const normalizedPackageType = normalizePackageType(packageType) || "single";
+        sessionStorage.setItem(PENDING_PACKAGE_STORAGE_KEY, normalizedPackageType);
+        return normalizedPackageType;
+      };
+
+      const takePendingPackage = () => {
+        const packageType =
+          selectedPackageFromUrl() ||
+          normalizePackageType(sessionStorage.getItem(PENDING_PACKAGE_STORAGE_KEY));
+        sessionStorage.removeItem(PENDING_PACKAGE_STORAGE_KEY);
+        return packageType;
+      };
+
+      const lineLinkUrl = (packageType) => {
+        const url = new URL("line-link.html", window.location.href);
+        const normalizedPackageType = normalizePackageType(packageType);
+        if (normalizedPackageType) url.searchParams.set("package_type", normalizedPackageType);
+        return url.toString();
+      };
+
+      const clearLineLinkedQuery = () => {
+        const url = new URL(window.location.href);
+        if (!url.searchParams.has("line_linked") && !url.searchParams.has("package_type")) return;
+        url.searchParams.delete("line_linked");
+        url.searchParams.delete("package_type");
+        window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+      };
+
+      const createCheckoutSession = async (packageType, lineLinkToken) => {
+        const response = await fetch(CHECKOUT_SESSION_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ source: "seal-gacha", packageType, lineLinkToken, hp: paidGachaHp?.value || "" })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || !data?.clientSecret || !data?.publishableKey || !data?.sessionId) {
+          throw new Error(data?.error || "決済セッションの作成に失敗しました。");
+        }
+        return data;
+      };
+
+      const startPaidCheckout = async (packageType, triggerButton) => {
+        const lineLinkToken = getLineLinkToken();
+        if (!lineLinkToken) {
+          const pendingPackageType = savePendingPackage(packageType);
+          setPaidStatus("LINEアプリで連携してから、選んだガチャの購入を再開します。");
+          window.location.href = lineLinkUrl(pendingPackageType);
+          return;
+        }
+        if (!checkoutModal || !checkoutMount) {
+          setPaidStatus("決済画面を表示できませんでした。");
+          return;
+        }
+
+        triggerButton.disabled = true;
+        setPaidStatus("Stripe決済を準備しています...");
+        try {
+          const session = await createCheckoutSession(packageType, lineLinkToken);
+          sessionStorage.removeItem(PENDING_PACKAGE_STORAGE_KEY);
+          const StripeCtor = await loadStripeJs();
+          const stripe = StripeCtor(session.publishableKey);
+          teardownCheckout();
+          checkoutMount.innerHTML = "";
+          embeddedCheckoutInstance = await stripe.initEmbeddedCheckout({
+            fetchClientSecret: async () => session.clientSecret,
+            onComplete: async () => {
+              setPaidStatus("決済を確認して、ガチャ結果メールを送信しています。");
+              await fetch(CHECKOUT_STATUS_ENDPOINT, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ sessionId: session.sessionId })
+              }).catch(() => null);
+              const pulls = packageType === "ten" ? "10" : "1";
+              window.location.href = `spin.html?mode=paid&draw_id=${encodeURIComponent(session.drawId || "")}&pulls=${pulls}&session_id=${encodeURIComponent(session.sessionId)}`;
+            }
+          });
+          embeddedCheckoutInstance.mount("#sealCheckoutMount");
+          openCheckoutModal();
+          setPaidStatus("");
+        } catch (error) {
+          const message = error?.message || "決済画面の表示に失敗しました。";
+          if (message.includes("LINE連携")) {
+            sessionStorage.removeItem(LINE_LINK_TOKEN_STORAGE_KEY);
+            const pendingPackageType = savePendingPackage(packageType);
+            setPaidStatus("LINE連携の有効期限が切れました。もう一度連携してください。");
+            window.setTimeout(() => {
+              window.location.href = lineLinkUrl(pendingPackageType);
+            }, 900);
+            return;
+          }
+          setPaidStatus(message);
+        } finally {
+          triggerButton.disabled = false;
+        }
+      };
+
+      const resumeCheckoutAfterLineLink = () => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("line_linked") !== "1") return;
+
+        const packageType = takePendingPackage();
+        clearLineLinkedQuery();
+        if (!paidGachaOptions) return;
+        paidGachaOptions.hidden = false;
+
+        if (!packageType) {
+          setPaidStatus("LINE連携が完了しました。購入するガチャを選んでください。");
+          return;
+        }
+        if (!getLineLinkToken()) {
+          setPaidStatus("LINE連携を確認できませんでした。もう一度LINE連携をしてください。");
+          return;
+        }
+
+        const button = paidOptionButtons.find((item) => item.dataset.packageType === packageType);
+        if (!(button instanceof HTMLButtonElement)) {
+          setPaidStatus("LINE連携が完了しました。購入するガチャを選んでください。");
+          return;
+        }
+        setSelectedPaidOption(button);
+        setPaidStatus("LINE連携が完了しました。決済画面を準備します...");
+        window.setTimeout(() => startPaidCheckout(packageType, button), 250);
+      };
+
+      openButton.addEventListener("click", openModal);
+      closeButton.addEventListener("click", closeModal);
+      closeBackdrop.addEventListener("click", closeModal);
+      openRateButton?.addEventListener("click", openRateModal);
+      closeRateButton?.addEventListener("click", closeRateModal);
+      closeRateBackdrop?.addEventListener("click", closeRateModal);
+      openBookButton?.addEventListener("click", openBookModal);
+      closeBookButton?.addEventListener("click", closeBookModal);
+      closeBookBackdrop?.addEventListener("click", closeBookModal);
+      openPrintMethodButton?.addEventListener("click", openPrintMethodModal);
+      closePrintMethodButton?.addEventListener("click", closePrintMethodModal);
+      closePrintMethodBackdrop?.addEventListener("click", closePrintMethodModal);
+      closeBookPreviewButton?.addEventListener("click", closeBookPreview);
+      closeBookPreviewBackdrop?.addEventListener("click", closeBookPreview);
+      rateTabButtons.forEach((button) => {
+        button.addEventListener("click", () => setRateTab(button.dataset.rateTab || "paid"));
+      });
+      openPaidGacha?.addEventListener("click", () => {
+        if (!paidGachaOptions) return;
+        paidGachaOptions.hidden = !paidGachaOptions.hidden;
+        if (!paidGachaOptions.hidden && !getLineLinkToken()) setPaidStatus("LINE連携後に購入できます。商品を選ぶと連携ページへ進みます。");
+      });
+      paidGachaOptions?.addEventListener("click", (event) => {
+        const target = event.target;
+        const button = target instanceof Element ? target.closest("[data-package-type]") : null;
+        if (!button) return;
+        setSelectedPaidOption(button);
+        startPaidCheckout(button.dataset.packageType || "single", button);
+      });
+      closeCheckout?.addEventListener("click", closeCheckoutModal);
+      closeCheckoutBackdrop?.addEventListener("click", closeCheckoutModal);
+      codeForm?.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const code = codeInput?.value.trim() || "";
+        if (!validGachaCodes.has(code)) {
+          if (codeError) {
+            codeError.textContent = "コードが間違っています";
+            codeError.hidden = false;
+          }
+          codeInput?.focus();
+          return;
+        }
+        if (getUsedGachaCodes().has(code)) {
+          if (codeError) {
+            codeError.textContent = "このコードは使用済みです";
+            codeError.hidden = false;
+          }
+          codeInput?.focus();
+          return;
+        }
+        if (codeError) codeError.hidden = true;
+        sessionStorage.setItem("mobbySealGachaCode", code);
+        window.location.href = `spin.html?code=${encodeURIComponent(code)}`;
+      });
+      content.addEventListener("contextmenu", (event) => event.preventDefault());
+      content.addEventListener("dragstart", (event) => event.preventDefault());
+      bookContent?.addEventListener("contextmenu", (event) => event.preventDefault());
+      bookContent?.addEventListener("dragstart", (event) => event.preventDefault());
+      bookPreviewImage?.addEventListener("contextmenu", (event) => event.preventDefault());
+      bookPreviewImage?.addEventListener("dragstart", (event) => event.preventDefault());
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !modal.hidden) closeModal();
+        if (event.key === "Escape" && rateModal && !rateModal.hidden) closeRateModal();
+        if (event.key === "Escape" && bookPreviewModal && !bookPreviewModal.hidden) closeBookPreview();
+        if (event.key === "Escape" && bookModal && !bookModal.hidden) closeBookModal();
+        if (event.key === "Escape" && printMethodModal && !printMethodModal.hidden) closePrintMethodModal();
+        if (event.key === "Escape" && checkoutModal && !checkoutModal.hidden) closeCheckoutModal();
+      });
+      resumeCheckoutAfterLineLink();
+    })();
+  </script>
 </body>
 </html>

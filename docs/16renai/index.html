@@ -4,9 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>恋愛モビー診断</title>
-  <script type="module" crossorigin src="./assets/loveDiagnosis-PO37z9df.js?v=8"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&family=Yomogi&display=swap" rel="stylesheet">
+  <script type="module" crossorigin src="./assets/loveDiagnosis-PO37z9df.js?v=9"></script>
   <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
-  <link rel="modulepreload" crossorigin href="./assets/loveMobbyDiagnosis-DTWGxZc_.js?v=8">
+  <link rel="modulepreload" crossorigin href="./assets/loveMobbyDiagnosis-DTWGxZc_.js?v=9">
   <link rel="stylesheet" crossorigin href="./assets/magazine-vH_rC7n8.css">
   <link rel="stylesheet" href="./assets/loveMobbyFortune.css?v=9">
   <script defer src="./assets/loveMobbyDailyFortunes31.js?v=2"></script>
@@ -15,6 +18,12 @@
   <link rel="stylesheet" href="../shared/line-ai-mobby-cta.css">
   <script src="../shared/line-ai-mobby-cta.js"></script>
   <style>
+    :root {
+      --love-font-main: "M PLUS Rounded 1c", "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Hiragino Sans", "Yu Gothic", sans-serif;
+      --love-font-display: "Yomogi", "Kiwi Maru", "M PLUS Rounded 1c", cursive;
+      --love-font-soft: "Kiwi Maru", "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", sans-serif;
+    }
+
     html {
       height: auto;
       min-height: 100%;
@@ -35,6 +44,7 @@
       overscroll-behavior-y: auto;
       touch-action: pan-y;
       background: linear-gradient(180deg, #fffaf3 0%, #f8efe4 100%);
+      font-family: var(--love-font-main);
     }
 
     #loveRoot {
@@ -43,6 +53,7 @@
       height: auto;
       overflow: visible;
       background: linear-gradient(180deg, #fffaf3 0%, #f8efe4 100%);
+      font-family: var(--love-font-main);
     }
 
     .screen-area--magazine {
@@ -66,6 +77,33 @@
       align-content: start;
       grid-auto-rows: max-content;
       background: transparent;
+      font-family: var(--love-font-main);
+    }
+
+    .page--diagnosis .love-diagnosis,
+    .page--diagnosis .love-character-list,
+    .page--diagnosis .love-character-detail,
+    .page--diagnosis .love-fortune {
+      font-family: var(--love-font-main);
+    }
+
+    .love-diagnosis__hero h3,
+    .love-result-hero h3,
+    .love-character-list__head h3,
+    .love-character-detail__head h4,
+    .love-fortune-head h3,
+    .love-fortune-card h3,
+    .love-keyholder-card__title {
+      font-family: var(--love-font-display) !important;
+      letter-spacing: 0;
+    }
+
+    .love-diagnosis__eyebrow,
+    .love-result-code,
+    .love-character-card__copy span,
+    .love-diagnosis-tabs__item,
+    .button {
+      font-family: var(--love-font-main);
     }
 
     .page--diagnosis .page-header--with-back {
@@ -234,7 +272,6 @@
 
     .love-keyholder-card__title {
       color: #35282d;
-      font-family: "Zen Old Mincho", serif;
       font-size: 21px;
       line-height: 1.35;
     }
@@ -1309,7 +1346,7 @@
 
     .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__hero h3 {
       color: #1f2428;
-      font-family: "Noto Sans JP", sans-serif;
+      font-family: var(--love-font-display);
       font-size: 25px;
       font-weight: 800;
       line-height: 1.6;
@@ -1508,7 +1545,7 @@
 
     .page--diagnosis:has([data-love-diagnosis-start]) .love-diagnosis__hero h3 {
       color: #624148 !important;
-      font-family: "Yu Mincho", "Hiragino Mincho ProN", "YuMincho", serif !important;
+      font-family: var(--love-font-display) !important;
       font-size: clamp(24px, 6vw, 34px) !important;
       font-weight: 800 !important;
       line-height: 1.48 !important;
@@ -1524,7 +1561,7 @@
       max-width: 300px;
       margin: 0 auto !important;
       color: #76585d !important;
-      font-family: "Yu Mincho", "Hiragino Mincho ProN", "YuMincho", serif !important;
+      font-family: var(--love-font-soft) !important;
       font-size: 13px !important;
       font-weight: 700 !important;
       line-height: 1.7 !important;

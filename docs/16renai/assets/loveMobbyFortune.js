@@ -3,22 +3,22 @@
   const DIAGNOSIS_URL = "https://www.mobby.online/16renai/";
   const TYPE_CODES = ["HLTO", "HLTC", "HLAO", "HLAC", "HFTO", "HFTC", "HFAO", "HFAC", "SLTO", "SLTC", "SLAO", "SLAC", "SFTO", "SFTC", "SFAO", "SFAC"];
   const TYPE_META = {
-    HLTO: { name: "花束の主人公", tone: "素直な主役感", motif: "花束", key: ["SLTO", "HLAO", "SFAO", "HLTC", "SFTO", "SLAC"] },
-    HLTC: { name: "秘密の星", tone: "静かな特別感", motif: "星のチャーム", key: ["SLTC", "HLAC", "HFTC", "HFAC", "SFAC", "HLAO"] },
-    HLAO: { name: "ひなたの愛され人", tone: "やわらかな安心", motif: "ハートチャーム", key: ["SLAO", "HLTO", "HFAO", "SLAC", "SFAC", "HFTO"] },
-    HLAC: { name: "雨宿りの待ち人", tone: "待つ強さ", motif: "折りたたみ傘", key: ["SLAC", "HFAC", "SFAC", "HLAO", "SLTC", "HFTO"] },
-    HFTO: { name: "風まかせの小悪魔", tone: "軽やかな自由", motif: "リボン", key: ["SFTO", "SFAO", "SLTO", "HFAO", "HFTC", "HLTO"] },
-    HFTC: { name: "月影のミューズ", tone: "余白の色気", motif: "三日月チャーム", key: ["SFTC", "HLTC", "SFAC", "HFAO", "HLTO", "SLTC"] },
-    HFAO: { name: "晴れ間の本命", tone: "自然体の本命感", motif: "青い花", key: ["SFAO", "SFTO", "HLAO", "HLTC", "SFAC", "HFTO"] },
-    HFAC: { name: "静かな灯", tone: "落ち着いた灯り", motif: "小さな灯り", key: ["SFAC", "SLAC", "HLAC", "HFAO", "SFTC", "SLTC"] },
-    SLTO: { name: "恋に旗を振る人", tone: "前向きな応援", motif: "ハートの旗", key: ["HLTO", "HFTO", "SFTO", "SLAO", "HLAO", "SFAO"] },
-    SLTC: { name: "胸奥のロマン", tone: "深いロマン", motif: "封をした手紙", key: ["HLTC", "HFTC", "SLAC", "SFAC", "HLAC", "SLAO"] },
-    SLAO: { name: "陽だまりを分ける人", tone: "分け合うぬくもり", motif: "花かご", key: ["HLAO", "HLTO", "SFAO", "SLAC", "HFAO", "SFAC"] },
-    SLAC: { name: "毛布をかける守り人", tone: "守るやさしさ", motif: "毛布", key: ["HLAC", "HFAC", "SLAO", "SFAC", "SLTC", "HLAO"] },
-    SFTO: { name: "地図を広げる冒険家", tone: "動き出す勇気", motif: "地図", key: ["HFTO", "HFAO", "SLTO", "SFAO", "SFTC", "HLTO"] },
-    SFTC: { name: "夜風のロマンチスト", tone: "距離感のロマン", motif: "夜のしおり", key: ["HFTC", "SFAC", "HLTC", "SFTO", "HFAC", "SLTC"] },
-    SFAO: { name: "余白を飾る演出家", tone: "自然体のセンス", motif: "飾りリボン", key: ["HFAO", "HFTO", "SLAO", "SFTO", "HLTO", "SFAC"] },
-    SFAC: { name: "静かな港の相棒", tone: "穏やかな信頼", motif: "港のチャーム", key: ["HFAC", "HLAO", "SLAC", "SFTC", "HFTC", "HFAO"] }
+    HLTO: { name: "花束の主人公モビー", tone: "素直な主役感", motif: "花束", key: ["SLTO", "HLAO", "SFAO", "HLTC", "SFTO", "SLAC"] },
+    HLTC: { name: "秘密の星モビー", tone: "静かな特別感", motif: "星のチャーム", key: ["SLTC", "HLAC", "HFTC", "HFAC", "SFAC", "HLAO"] },
+    HLAO: { name: "ひなたの愛され人モビー", tone: "やわらかな安心", motif: "ハートチャーム", key: ["SLAO", "HLTO", "HFAO", "SLAC", "SFAC", "HFTO"] },
+    HLAC: { name: "雨宿りの待ち人モビー", tone: "待つ強さ", motif: "折りたたみ傘", key: ["SLAC", "HFAC", "SFAC", "HLAO", "SLTC", "HFTO"] },
+    HFTO: { name: "風まかせの小悪魔モビー", tone: "軽やかな自由", motif: "リボン", key: ["SFTO", "SFAO", "SLTO", "HFAO", "HFTC", "HLTO"] },
+    HFTC: { name: "月影のミューズモビー", tone: "余白の色気", motif: "三日月チャーム", key: ["SFTC", "HLTC", "SFAC", "HFAO", "HLTO", "SLTC"] },
+    HFAO: { name: "晴れ間の本命モビー", tone: "自然体の本命感", motif: "青い花", key: ["SFAO", "SFTO", "HLAO", "HLTC", "SFAC", "HFTO"] },
+    HFAC: { name: "静かな灯モビー", tone: "落ち着いた灯り", motif: "小さな灯り", key: ["SFAC", "SLAC", "HLAC", "HFAO", "SFTC", "SLTC"] },
+    SLTO: { name: "恋に旗を振る人モビー", tone: "前向きな応援", motif: "ハートの旗", key: ["HLTO", "HFTO", "SFTO", "SLAO", "HLAO", "SFAO"] },
+    SLTC: { name: "胸奥のロマンモビー", tone: "深いロマン", motif: "封をした手紙", key: ["HLTC", "HFTC", "SLAC", "SFAC", "HLAC", "SLAO"] },
+    SLAO: { name: "陽だまりを分ける人モビー", tone: "分け合うぬくもり", motif: "花かご", key: ["HLAO", "HLTO", "SFAO", "SLAC", "HFAO", "SFAC"] },
+    SLAC: { name: "毛布をかける守り人モビー", tone: "守るやさしさ", motif: "毛布", key: ["HLAC", "HFAC", "SLAO", "SFAC", "SLTC", "HLAO"] },
+    SFTO: { name: "地図を広げる冒険家モビー", tone: "動き出す勇気", motif: "地図", key: ["HFTO", "HFAO", "SLTO", "SFAO", "SFTC", "HLTO"] },
+    SFTC: { name: "夜風のロマンチストモビー", tone: "距離感のロマン", motif: "夜のしおり", key: ["HFTC", "SFAC", "HLTC", "SFTO", "HFAC", "SLTC"] },
+    SFAO: { name: "余白を飾る演出家モビー", tone: "自然体のセンス", motif: "飾りリボン", key: ["HFAO", "HFTO", "SLAO", "SFTO", "HLTO", "SFAC"] },
+    SFAC: { name: "静かな港の相棒モビー", tone: "穏やかな信頼", motif: "港のチャーム", key: ["HFAC", "HLAO", "SLAC", "SFTC", "HFTC", "HFAO"] }
   };
   const MONTH_NAMES = ["はじまりの恋みくじ", "バレンタイン恋予報", "別れと出会いの恋便り", "新しい距離感診断", "本命力チェック", "雨の日の恋占い", "夏のときめき予報", "夜風の恋占い", "余白を整える恋便り", "秘密の恋ハロウィン", "ぬくもり恋予報", "今年の恋まとめ"];
   const MONTH_THEMES = ["今年の恋の置き場所を決める月", "気持ちを渡す形を選ぶ月", "過去をやさしく畳んで次へ進む月", "初対面と再会の空気を整える月", "自然体の魅力を信じ直す月", "待つ恋と動く恋の境目を選ぶ月", "少し大胆に恋を動かす月", "余白と距離感を味方にする月", "心のスペースを取り戻す月", "見せる顔と隠す本音を楽しむ月", "安心できる関係を育てる月", "記憶を整理し、来年の恋に持っていく月"];

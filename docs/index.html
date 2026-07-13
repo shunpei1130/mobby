@@ -4893,6 +4893,14 @@
       opacity: 0.74;
     }
 
+    .affiliate-disclosure {
+      max-width: min(620px, calc(100vw - 32px));
+      text-align: center;
+      font-size: 0.72rem;
+      line-height: 1.7;
+      opacity: 0.76;
+    }
+
     .copyright {
       margin-top: 2px;
       letter-spacing: 0.08em;
@@ -4907,6 +4915,12 @@
 
       .legal-links a {
         padding: 3px 6px;
+      }
+
+      .affiliate-disclosure {
+        max-width: min(340px, calc(100vw - 24px));
+        font-size: 0.66rem;
+        line-height: 1.6;
       }
     }
 
@@ -7047,6 +7061,62 @@
     }
 
     /* Hero diagnosis menu: keep the dotted frame stable, scroll only the buttons. */
+    .hero-diagnosis-tabs {
+      box-sizing: border-box;
+      width: min(760px, calc(100% - 32px));
+      margin: 24px auto -10px;
+      padding: 4px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 4px;
+      position: relative;
+      z-index: 19;
+      border: 1px solid rgba(237, 126, 57, 0.34);
+      border-radius: 999px;
+      background: rgba(250, 241, 226, 0.86);
+      box-shadow: 0 10px 22px rgba(91, 67, 42, 0.1);
+    }
+
+    .hero-diagnosis-tab {
+      appearance: none;
+      min-height: 38px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: rgba(40, 40, 40, 0.68);
+      font: inherit;
+      font-size: 0.92rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition:
+        background 180ms ease,
+        color 180ms ease,
+        box-shadow 180ms ease;
+    }
+
+    .hero-diagnosis-tab:hover,
+    .hero-diagnosis-tab:focus-visible {
+      color: #282828;
+      outline: none;
+    }
+
+    .hero-diagnosis-tab:focus-visible {
+      box-shadow: 0 0 0 3px rgba(237, 126, 57, 0.22);
+    }
+
+    .hero-diagnosis-tab.is-active {
+      background: #fff8ef;
+      color: #282828;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.72),
+        0 8px 16px rgba(91, 67, 42, 0.12);
+    }
+
+    .hero-diagnosis-tab-panel[hidden] {
+      display: none !important;
+    }
+
     .hero-diagnosis-menu,
     .hero-collab-diagnosis-menu {
       --hero-panel-body-height: 94px;
@@ -7310,10 +7380,12 @@
       box-shadow: none !important;
     }
 
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item^="blank"],
     .hero-collab-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item^="blank"] {
       overflow: visible !important;
     }
 
+    .hero-diagnosis-menu .gift-fan-diagnosis-action.beauty-collab,
     .hero-collab-diagnosis-menu .gift-fan-diagnosis-action.beauty-collab {
       overflow: visible !important;
     }
@@ -7347,6 +7419,7 @@
         0 12px 26px rgba(255, 117, 178, 0.2) !important;
     }
 
+    .hero-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="blank-2"].beauty-collab,
     .hero-collab-diagnosis-menu .gift-fan-diagnosis-action[data-diagnosis-item="blank-2"] {
       border-color: rgba(73, 184, 124, 0.5) !important;
       background:
@@ -7436,6 +7509,18 @@
     }
 
     @media (max-width: 520px) {
+      .hero-diagnosis-tabs {
+        width: calc(100vw - 32px);
+        max-width: 360px;
+        margin-top: 20px;
+        margin-bottom: -8px;
+      }
+
+      .hero-diagnosis-tab {
+        min-height: 36px;
+        font-size: 0.82rem;
+      }
+
       .hero-diagnosis-menu,
       .hero-collab-diagnosis-menu {
         --hero-panel-body-height: 104px;
@@ -7853,6 +7938,693 @@
       .footer-burn-card-row .burn-card,
       .popup-buttons-bar .footer-burn-card-row .burn-card {
         border-radius: 10px !important;
+        clip-path: inset(0 round 10px);
+      }
+    }
+
+    .footer-feature-column-row,
+    .popup-buttons-bar .footer-feature-column-row {
+      overflow: hidden !important;
+      contain: paint;
+      clip-path: inset(0 round 12px);
+      cursor: grab;
+      touch-action: pan-y;
+      user-select: none;
+    }
+
+    .footer-feature-column-row:active,
+    .popup-buttons-bar .footer-feature-column-row:active {
+      cursor: grabbing;
+    }
+
+    .footer-feature-track {
+      width: 100%;
+      display: flex;
+      gap: 0;
+      overflow: visible;
+      will-change: transform;
+      transform: translateX(0);
+      transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .footer-feature-track .burn-card,
+    .popup-buttons-bar .footer-feature-column-row .footer-feature-track .burn-card {
+      width: 100% !important;
+      flex: 0 0 100% !important;
+      max-width: none !important;
+      min-width: 100% !important;
+      margin: 0 !important;
+      overflow: hidden !important;
+      contain: paint;
+      box-sizing: border-box;
+      clip-path: inset(0 round 12px);
+      -webkit-user-drag: none;
+    }
+
+    .footer-burn-main-slide,
+    .popup-buttons-bar .footer-feature-column-row .footer-burn-main-slide {
+      display: block !important;
+      min-height: 165px;
+      background: #faf1e2 !important;
+    }
+
+    .footer-burn-main-slide::after {
+      display: none !important;
+    }
+
+    .footer-burn-main-image {
+      width: 100%;
+      height: 100%;
+      min-height: 165px;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+      -webkit-user-drag: none;
+    }
+
+    .footer-gacha-slide,
+    .popup-buttons-bar .footer-feature-column-row .footer-gacha-slide {
+      display: block !important;
+      min-height: 165px;
+      background: #faf1e2 !important;
+    }
+
+    .footer-compositing-slide,
+    .popup-buttons-bar .footer-feature-column-row .footer-compositing-slide {
+      display: block !important;
+      min-height: 165px;
+      background: #faf1e2 !important;
+    }
+
+    .footer-compositing-slide::after {
+      display: none !important;
+    }
+
+    .footer-compositing-slide img {
+      width: 100%;
+      height: 100%;
+      min-height: 165px;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+      -webkit-user-drag: none;
+    }
+
+    .footer-gacha-slide::after {
+      display: none !important;
+    }
+
+    .footer-gacha-ticket {
+      width: 100%;
+      height: 100%;
+      min-height: 165px;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+      -webkit-user-drag: none;
+    }
+
+    .seal-gacha-launch-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 10050;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      background: rgba(35, 29, 24, 0.48);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .seal-gacha-launch-modal[hidden] {
+      display: none !important;
+    }
+
+    .seal-gacha-launch-dialog {
+      position: relative;
+      width: min(430px, 100%);
+      padding: 18px 18px 20px;
+      border: 2px solid rgba(255, 111, 159, 0.36);
+      border-radius: 24px;
+      background: rgba(255, 250, 240, 0.98);
+      box-shadow: 0 24px 48px rgba(35, 29, 24, 0.24);
+      text-align: center;
+    }
+
+    .seal-gacha-launch-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 34px;
+      height: 34px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.92);
+      color: #5a3a2a;
+      font-size: 1.25rem;
+      font-weight: 900;
+      line-height: 1;
+      box-shadow: 0 8px 16px rgba(91, 67, 42, 0.12);
+      cursor: pointer;
+    }
+
+    .seal-gacha-launch-image {
+      width: 100%;
+      max-height: 245px;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 18px;
+      background: #faf1e2;
+      -webkit-user-drag: none;
+    }
+
+    .seal-gacha-launch-title {
+      margin: 16px 0 14px;
+      color: #f74891;
+      font-size: clamp(1.35rem, 5vw, 1.8rem);
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    .seal-gacha-launch-button {
+      width: min(260px, 100%);
+      min-height: 50px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ff7bac, #f74891);
+      color: #fff;
+      font-weight: 900;
+      text-decoration: none;
+      box-shadow: 0 12px 22px rgba(247, 72, 145, 0.24);
+    }
+
+    .footer-gacha-slide .burn-card-copy {
+      min-height: 165px;
+      padding: 26px 16px 18px 22px;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .footer-gacha-slide .burn-card-title {
+      margin: 0;
+      color: #ff4f91;
+      font-size: clamp(1.9rem, 5.8vw, 2.9rem);
+      line-height: 0.96;
+      text-shadow:
+        2px 2px 0 rgba(255, 255, 255, 0.96),
+        -2px 2px 0 rgba(255, 255, 255, 0.9),
+        0 8px 18px rgba(255, 86, 145, 0.16);
+    }
+
+    .footer-gacha-title-blue {
+      color: #168be8;
+    }
+
+    .footer-gacha-slide .burn-card-text {
+      margin: 0;
+      color: rgba(38, 34, 30, 0.94) !important;
+      font-size: 1.08rem;
+      font-weight: 900;
+      line-height: 1.45;
+      letter-spacing: 0.04em;
+    }
+
+    .footer-gacha-cta-row {
+      margin-top: 3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .footer-gacha-cta {
+      min-height: 39px;
+      padding: 0 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ff7bac, #f74891);
+      color: #fff;
+      font-size: 0.92rem;
+      font-weight: 900;
+      line-height: 1;
+      box-shadow: 0 9px 16px rgba(247, 72, 145, 0.22);
+      white-space: nowrap;
+    }
+
+    .footer-seal-gacha {
+      position: relative;
+      min-height: 165px;
+      height: 100%;
+      display: grid;
+      grid-template-rows: 34px minmax(0, 1fr);
+      overflow: hidden;
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at 9% 38%, #ffd65f 0 3px, transparent 4px),
+        radial-gradient(circle at 18% 20%, #ff9db7 0 3px, transparent 4px),
+        radial-gradient(circle at 76% 21%, #9fd8ff 0 3px, transparent 4px),
+        radial-gradient(circle at 88% 58%, #ffd65f 0 4px, transparent 5px);
+    }
+
+    .footer-seal-head {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid rgba(126, 86, 53, 0.1);
+      background: rgba(255, 255, 255, 0.62);
+      color: #34383a;
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+    }
+
+    .footer-seal-body {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 0.92fr) minmax(112px, 1.08fr);
+      gap: 10px;
+      align-items: center;
+      padding: 10px 12px 12px;
+    }
+
+    .footer-seal-copy {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .footer-seal-logo {
+      display: block;
+      font-size: clamp(1.25rem, 4.8vw, 2rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.02em;
+      color: #ff4f91;
+      text-shadow:
+        2px 2px 0 rgba(255, 255, 255, 0.92),
+        0 7px 15px rgba(255, 86, 145, 0.16);
+    }
+
+    .footer-seal-logo-blue {
+      color: #1586e5;
+    }
+
+    .footer-seal-logo-brown {
+      color: #5d3b20;
+    }
+
+    .footer-seal-desc {
+      display: block;
+      color: rgba(38, 34, 30, 0.88);
+      font-size: 0.74rem;
+      font-weight: 850;
+      line-height: 1.55;
+      letter-spacing: 0.04em;
+    }
+
+    .footer-seal-coin {
+      width: max-content;
+      max-width: 100%;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 10px;
+      border: 1px dashed rgba(237, 126, 57, 0.36);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.66);
+      color: #34383a;
+      font-size: 0.72rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .footer-seal-coin-icon {
+      width: 18px;
+      height: 18px;
+      display: inline-block;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 50% 50%, #f7f7f7 0 30%, #c8c8c8 31% 58%, #f1f1f1 59% 100%);
+      box-shadow: inset 0 0 0 1px rgba(126, 86, 53, 0.16);
+    }
+
+    .footer-seal-preview {
+      min-width: 0;
+      padding: 10px 8px 8px;
+      border: 1px dashed rgba(237, 126, 57, 0.36);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 8px 18px rgba(97, 73, 45, 0.08);
+    }
+
+    .footer-seal-preview-title {
+      display: block;
+      margin-bottom: 8px;
+      color: #34383a;
+      font-size: 0.74rem;
+      font-weight: 900;
+      text-align: center;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    .footer-seal-items {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 7px;
+    }
+
+    .footer-seal-item {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .footer-seal-rarity {
+      max-width: 100%;
+      min-height: 17px;
+      padding: 4px 7px 3px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.86);
+      color: #5b4737;
+      font-size: 0.56rem;
+      font-weight: 900;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      box-shadow: 0 3px 8px rgba(97, 73, 45, 0.08);
+    }
+
+    .footer-seal-rarity.rare {
+      background: #ffe5ad;
+    }
+
+    .footer-seal-rarity.sparkle {
+      background: #ff6fa4;
+      color: #fff;
+    }
+
+    .footer-seal-rarity.special {
+      background: linear-gradient(135deg, #ffad62, #ff6fa4 54%, #65c7ff);
+      color: #fff;
+    }
+
+    .footer-seal-placeholder {
+      width: 100%;
+      aspect-ratio: 1;
+      display: block;
+      border: 4px solid rgba(255, 255, 255, 0.88);
+      border-radius: 13px;
+      background: linear-gradient(135deg, #d9d9d9, #bfbfbf);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.62),
+        0 6px 12px rgba(97, 73, 45, 0.12);
+    }
+
+    .footer-seal-spin {
+      position: absolute;
+      right: 12px;
+      bottom: 10px;
+      z-index: 2;
+      min-height: 28px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 13px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ff7bac, #f74891);
+      color: #fff;
+      font-size: 0.74rem;
+      font-weight: 900;
+      box-shadow: 0 8px 16px rgba(247, 72, 145, 0.22);
+    }
+
+    .footer-seal-capsule {
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      border: 2px solid rgba(255, 255, 255, 0.82);
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ff6f9f 0 50%, #82d4ff 50% 100%);
+      transform: rotate(26deg);
+    }
+
+    .footer-gacha-media {
+      min-height: 165px;
+      display: grid !important;
+      place-items: center;
+      overflow: visible !important;
+      background: transparent !important;
+    }
+
+    .footer-gacha-media::before {
+      display: none !important;
+    }
+
+    .footer-gacha-machine {
+      width: min(242px, 124%);
+      height: auto;
+      display: block;
+      object-fit: contain;
+      transform: translateX(-12px);
+      filter: drop-shadow(0 12px 18px rgba(97, 73, 45, 0.16));
+    }
+
+    .footer-feature-dots {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0 0;
+    }
+
+    .footer-feature-dot {
+      width: 8px;
+      height: 8px;
+      padding: 0;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(126, 86, 53, 0.28);
+      box-shadow: none;
+      cursor: pointer;
+      transition: width 180ms ease, background-color 180ms ease, transform 180ms ease;
+    }
+
+    .footer-feature-dot.is-active {
+      width: 20px;
+      background: #ff6f9f;
+      transform: translateY(-1px);
+    }
+
+    .footer-feature-dot:focus-visible {
+      outline: 2px solid rgba(255, 111, 159, 0.42);
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 520px) {
+      .footer-burn-main-slide,
+      .popup-buttons-bar .footer-feature-column-row .footer-burn-main-slide,
+      .footer-burn-main-image,
+      .footer-gacha-slide,
+      .popup-buttons-bar .footer-feature-column-row .footer-gacha-slide {
+        min-height: 132px;
+      }
+
+      .footer-compositing-slide,
+      .popup-buttons-bar .footer-feature-column-row .footer-compositing-slide,
+      .footer-compositing-slide img,
+      .footer-gacha-ticket {
+        min-height: 132px;
+      }
+
+      .footer-gacha-slide .burn-card-copy {
+        min-height: 132px;
+        padding: 20px 6px 12px 14px;
+        gap: 6px;
+      }
+
+      .footer-gacha-slide .burn-card-title {
+        font-size: 1.58rem;
+      }
+
+      .footer-gacha-slide .burn-card-text {
+        font-size: 0.82rem;
+        line-height: 1.32;
+      }
+
+      .footer-gacha-cta-row {
+        gap: 5px;
+      }
+
+      .footer-gacha-cta {
+        min-height: 32px;
+        padding: 0 12px;
+        font-size: 0.76rem;
+      }
+
+      .footer-gacha-media {
+        min-height: 132px;
+      }
+
+      .footer-seal-gacha {
+        min-height: 132px;
+        grid-template-rows: 28px minmax(0, 1fr);
+      }
+
+      .footer-seal-head {
+        font-size: 0.86rem;
+      }
+
+      .footer-seal-body {
+        grid-template-columns: minmax(0, 0.78fr) minmax(118px, 1.22fr);
+        gap: 7px;
+        padding: 7px 8px 10px;
+      }
+
+      .footer-seal-copy {
+        gap: 5px;
+      }
+
+      .footer-seal-logo {
+        font-size: 1.12rem;
+      }
+
+      .footer-seal-desc {
+        font-size: 0.58rem;
+        line-height: 1.42;
+      }
+
+      .footer-seal-coin {
+        gap: 5px;
+        padding: 4px 7px;
+        font-size: 0.58rem;
+      }
+
+      .footer-seal-coin-icon {
+        width: 14px;
+        height: 14px;
+      }
+
+      .footer-seal-preview {
+        padding: 7px 6px 6px;
+        border-radius: 13px;
+      }
+
+      .footer-seal-preview-title {
+        margin-bottom: 6px;
+        font-size: 0.58rem;
+      }
+
+      .footer-seal-items {
+        gap: 4px;
+      }
+
+      .footer-seal-rarity {
+        min-height: 14px;
+        padding: 3px 4px 2px;
+        font-size: 0.46rem;
+      }
+
+      .footer-seal-placeholder {
+        border-width: 3px;
+        border-radius: 10px;
+      }
+
+      .footer-gacha-machine {
+        width: min(168px, 128%);
+        transform: translateX(-10px);
+      }
+
+      .footer-seal-spin {
+        right: 8px;
+        bottom: 6px;
+        min-height: 23px;
+        padding: 0 10px;
+        font-size: 0.62rem;
+      }
+
+      .footer-seal-capsule {
+        width: 16px;
+        height: 16px;
+      }
+
+      .footer-feature-dots {
+        padding-top: 6px;
+      }
+    }
+
+    /* Keep the normal and collab diagnosis tab panels on the same frame. */
+    .hero-diagnosis-menu,
+    .hero-collab-diagnosis-menu {
+      --hero-panel-body-height: 112px;
+      width: min(760px, calc(100% - 32px)) !important;
+      min-height: calc(24px + var(--hero-panel-body-height) + 14px) !important;
+      margin: 24px auto 4px !important;
+      padding: 24px 18px 14px !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-actions,
+    .hero-collab-diagnosis-menu .hero-collab-diagnosis-list {
+      width: min(430px, 100%) !important;
+      height: var(--hero-panel-body-height) !important;
+      min-height: var(--hero-panel-body-height) !important;
+      max-height: var(--hero-panel-body-height) !important;
+      margin: 0 auto !important;
+      padding: 22px 0 24px !important;
+      align-items: flex-start !important;
+    }
+
+    .hero-diagnosis-menu .gift-fan-diagnosis-action,
+    .hero-collab-diagnosis-menu .gift-fan-diagnosis-action {
+      width: 82px !important;
+      height: 66px !important;
+      flex: 0 0 82px !important;
+    }
+
+    .hero-diagnosis-menu .hero-diagnosis-track,
+    .hero-collab-diagnosis-menu .hero-collab-diagnosis-list {
+      gap: 14px !important;
+      justify-content: center !important;
+    }
+
+    @media (max-width: 520px) {
+      .hero-diagnosis-menu,
+      .hero-collab-diagnosis-menu {
+        --hero-panel-body-height: 104px;
+        width: calc(100vw - 32px) !important;
+        max-width: 360px !important;
+        min-height: calc(20px + var(--hero-panel-body-height) + 12px) !important;
+        margin: 20px auto 4px !important;
+        padding: 20px 10px 12px !important;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-actions,
+      .hero-collab-diagnosis-menu .hero-collab-diagnosis-list {
+        width: 100% !important;
+        padding: 22px 0 24px !important;
+      }
+
+      .hero-diagnosis-menu .gift-fan-diagnosis-action,
+      .hero-collab-diagnosis-menu .gift-fan-diagnosis-action {
+        width: 62px !important;
+        height: 58px !important;
+        flex: 0 0 62px !important;
+      }
+
+      .hero-diagnosis-menu .hero-diagnosis-track,
+      .hero-collab-diagnosis-menu .hero-collab-diagnosis-list {
+        gap: 7px !important;
       }
     }
   </style>
@@ -7920,23 +8692,25 @@
               </div>
             </div>
           </div>
-          <div class="hero-diagnosis-menu">
+          <div class="hero-diagnosis-tabs" role="tablist" aria-label="診断メニュー切り替え">
+            <button class="hero-diagnosis-tab is-active" id="heroDiagnosisTabNormal" type="button" role="tab" aria-selected="true" aria-controls="heroDiagnosisPanelNormal" data-diagnosis-tab="normal">通常</button>
+            <button class="hero-diagnosis-tab" id="heroDiagnosisTabCollab" type="button" role="tab" aria-selected="false" aria-controls="heroDiagnosisPanelCollab" data-diagnosis-tab="collab">コラボ</button>
+          </div>
+          <div class="hero-diagnosis-menu hero-diagnosis-tab-panel" id="heroDiagnosisPanelNormal" role="tabpanel" aria-labelledby="heroDiagnosisTabNormal" data-diagnosis-panel="normal">
             <div class="gift-fan-diagnosis-actions" id="heroDiagnosisActions" aria-hidden="false">
               <div class="hero-diagnosis-track">
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16school/index.html" data-diagnosis-item="school"><span class="footer-btn-icon" data-icon="school" aria-hidden="true"></span><span>学校</span></a>
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16love/index.html" data-diagnosis-item="love"><span class="footer-btn-icon" data-icon="cloud" aria-hidden="true"></span><span>メンヘラ</span></a>
+                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" href="miyake-yuko/index.html" data-diagnosis-item="blank-2" aria-label="beauty mood 診断"><span class="gift-fan-person-badge">三宅裕子さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-compact" aria-hidden="true"></span><span>beauty mood<br>診断</span></a>
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16stan/index.html" data-diagnosis-item="oshi"><span class="footer-btn-icon" data-icon="star" aria-hidden="true"></span><span>推し</span></a>
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16renai/index.html" data-diagnosis-item="romance"><span class="footer-btn-icon" data-icon="heart" aria-hidden="true"></span><span>恋愛</span></a>
               </div>
             </div>
           </div>
-          <div class="hero-collab-diagnosis-menu" aria-hidden="false">
+          <div class="hero-collab-diagnosis-menu hero-diagnosis-tab-panel" id="heroDiagnosisPanelCollab" role="tabpanel" aria-labelledby="heroDiagnosisTabCollab" data-diagnosis-panel="collab" aria-hidden="true" hidden>
             <ul class="hero-collab-diagnosis-list" aria-label="コラボ診断メニュー">
               <li>
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" href="hinata-aoi/index.html" data-diagnosis-item="blank-1" aria-label="日向葵衣 あなたは何タイプ？ビューティ診断"><span class="gift-fan-person-badge">日向葵衣さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-mirror" aria-hidden="true"></span><span>何タイプ？<br>ビューティ診断</span></a>
-              </li>
-              <li>
-                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" href="miyake-yuko/index.html" data-diagnosis-item="blank-2" aria-label="beauty mood 診断"><span class="gift-fan-person-badge">三宅裕子さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-compact" aria-hidden="true"></span><span>beauty mood<br>診断</span></a>
               </li>
               <li>
                 <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" href="imagen-luca/index.html" data-diagnosis-item="blank-3" aria-label="水彩ストーリー診断"><span class="gift-fan-person-badge">Lucaさん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="watercolor-story" aria-hidden="true"></span><span>水彩ストーリー<br>診断</span></a>
@@ -8570,16 +9344,23 @@
       <div class="container">
         <div class="popup-buttons">
             <div class="gift-fan-menu is-open" id="giftFanMenu">
-            <div class="burn-card-row footer-burn-card-row">
-              <a class="burn-card" href="burn/burn-record/index.html" aria-label="BURN">
-                <span class="burn-card-copy">
-                  <span class="burn-card-text">二人の思い出を<br>雑誌のページのように残す</span>
-                  <span class="burn-card-title">BURN</span>
-                </span>
-                <span class="burn-card-media" aria-hidden="true">
-                  <img src="burn/reference/burn_mag_ref.png" alt="" loading="lazy" decoding="async">
-                </span>
-              </a>
+            <div class="burn-card-row footer-burn-card-row footer-feature-column-row" aria-label="おすすめメニュー">
+              <div class="footer-feature-track">
+                <a class="burn-card footer-gacha-slide" href="gacha/index.html" aria-label="モビーガチャ">
+                  <img class="footer-gacha-ticket" src="gacha-new/ref/mobby-gacha-ticket.png" alt="" loading="lazy" decoding="async">
+                </a>
+                <a class="burn-card footer-compositing-slide" href="compositing.html" aria-label="ポスター作成">
+                  <img src="compositing/reference/flier-mobby.png" alt="" loading="lazy" decoding="async">
+                </a>
+                <a class="burn-card footer-burn-main-slide" href="burn/burn-record/index.html" aria-label="BURN">
+                  <img class="footer-burn-main-image" src="burn/reference/burn-main-column.png" alt="" loading="lazy" decoding="async">
+                </a>
+              </div>
+              <div class="footer-feature-dots" role="tablist" aria-label="おすすめメニュー切り替え">
+                <button class="footer-feature-dot is-active" type="button" data-footer-feature-dot="0" aria-label="モビーガチャを表示" aria-selected="true"></button>
+                <button class="footer-feature-dot" type="button" data-footer-feature-dot="1" aria-label="ポスター作成を表示" aria-selected="false"></button>
+                <button class="footer-feature-dot" type="button" data-footer-feature-dot="2" aria-label="BURNを表示" aria-selected="false"></button>
+              </div>
             </div>
             <div class="gift-fan-actions" aria-hidden="false">
               <a class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openCompositingPopup" data-fan-item="compositing" href="compositing.html"><span class="footer-btn-icon" data-icon="image" aria-hidden="true"></span><span>ポスター<br>作成</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></a>
@@ -8606,6 +9387,7 @@
         <span aria-hidden="true">|</span>
         <a href="/company">運営者情報</a>
       </div>
+      <div class="affiliate-disclosure">このサイトはアフィリエイト広告（Amazonアソシエイトを含む）を掲載しています。</div>
       <div class="copyright">© Mobby All Rights Reserved.</div>
     </div>
   </div>
@@ -8614,6 +9396,15 @@
 
   <!-- Matter.js -->
   <!-- EmailJS -->
+  <div class="seal-gacha-launch-modal" id="sealGachaLaunchModal" role="dialog" aria-modal="true" aria-labelledby="sealGachaLaunchTitle" hidden>
+    <div class="seal-gacha-launch-dialog">
+      <button class="seal-gacha-launch-close" id="closeSealGachaLaunch" type="button" aria-label="閉じる">×</button>
+      <img class="seal-gacha-launch-image" src="gacha-new/ref/mobby-gacha-ticket.png" alt="" loading="eager" decoding="async">
+      <h2 class="seal-gacha-launch-title" id="sealGachaLaunchTitle">シールガチャ！<br>公開されました！</h2>
+      <a class="seal-gacha-launch-button" id="sealGachaLaunchLink" href="gacha/index.html">シールガチャを見る</a>
+    </div>
+  </div>
+
   <script>
     /* reveal */
     function initScrollObserver() {
@@ -11844,6 +12635,33 @@
   </script>
   <script>
     (function () {
+      function initHeroDiagnosisTabs() {
+        const tabs = Array.from(document.querySelectorAll('[data-diagnosis-tab]'));
+        const panels = Array.from(document.querySelectorAll('[data-diagnosis-panel]'));
+        if (tabs.length < 2 || panels.length < 2 || tabs.some((tab) => tab.dataset.ready === 'true')) return;
+
+        const activate = (target) => {
+          tabs.forEach((tab) => {
+            const active = tab.dataset.diagnosisTab === target;
+            tab.classList.toggle('is-active', active);
+            tab.setAttribute('aria-selected', active ? 'true' : 'false');
+          });
+
+          panels.forEach((panel) => {
+            const active = panel.dataset.diagnosisPanel === target;
+            panel.hidden = !active;
+            panel.setAttribute('aria-hidden', active ? 'false' : 'true');
+          });
+
+          window.dispatchEvent(new Event('resize'));
+        };
+
+        tabs.forEach((tab) => {
+          tab.dataset.ready = 'true';
+          tab.addEventListener('click', () => activate(tab.dataset.diagnosisTab));
+        });
+      }
+
       function initHeroDiagnosisAllToggle() {
         const menu = document.querySelector('.hero-diagnosis-menu');
         const toggle = document.getElementById('heroDiagnosisAllToggle');
@@ -11892,18 +12710,114 @@
         window.setTimeout(updateAnimation, 500);
       }
 
+      function initFooterFeatureSlider() {
+        const row = document.querySelector('.footer-feature-column-row');
+        if (!row || row.dataset.sliderReady === 'true') return;
+
+        const dots = Array.from(row.querySelectorAll('.footer-feature-dot'));
+        const slides = Array.from(row.querySelectorAll('.footer-feature-track .burn-card'));
+        if (slides.length < 2 || dots.length < 2) return;
+
+        row.dataset.sliderReady = 'true';
+        let index = 0;
+        let timer = null;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let isDragging = false;
+        let didSwipe = false;
+        const intervalMs = 4200;
+        const swipeThreshold = 42;
+
+        const setSlide = (nextIndex) => {
+          index = ((nextIndex % slides.length) + slides.length) % slides.length;
+          const track = row.querySelector('.footer-feature-track');
+          if (track) track.style.transform = `translateX(-${index * 100}%)`;
+          dots.forEach((dot, dotIndex) => {
+            const active = dotIndex === index;
+            dot.classList.toggle('is-active', active);
+            dot.setAttribute('aria-selected', active ? 'true' : 'false');
+          });
+        };
+
+        const start = () => {
+          window.clearInterval(timer);
+          timer = window.setInterval(() => {
+            if (document.hidden) return;
+            setSlide(index + 1);
+          }, intervalMs);
+        };
+
+        dots.forEach((dot) => {
+          dot.addEventListener('click', () => {
+            const nextIndex = Number(dot.dataset.footerFeatureDot || 0);
+            setSlide(nextIndex);
+            start();
+          });
+        });
+
+        row.addEventListener('mouseenter', () => window.clearInterval(timer));
+        row.addEventListener('mouseleave', start);
+        row.addEventListener('focusin', () => window.clearInterval(timer));
+        row.addEventListener('focusout', start);
+        row.addEventListener('pointerdown', (event) => {
+          if (event.button !== undefined && event.button !== 0) return;
+          dragStartX = event.clientX;
+          dragStartY = event.clientY;
+          isDragging = true;
+          didSwipe = false;
+          window.clearInterval(timer);
+        }, { passive: true });
+        row.addEventListener('pointermove', (event) => {
+          if (!isDragging || didSwipe) return;
+          const deltaX = event.clientX - dragStartX;
+          const deltaY = event.clientY - dragStartY;
+          if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 16) {
+            isDragging = false;
+            start();
+            return;
+          }
+          if (Math.abs(deltaX) < swipeThreshold) return;
+          didSwipe = true;
+          setSlide(index + (deltaX < 0 ? 1 : -1));
+        }, { passive: true });
+        row.addEventListener('pointerup', () => {
+          if (!isDragging) return;
+          isDragging = false;
+          start();
+        }, { passive: true });
+        row.addEventListener('pointercancel', () => {
+          isDragging = false;
+          start();
+        }, { passive: true });
+        row.addEventListener('click', (event) => {
+          if (!didSwipe) return;
+          event.preventDefault();
+          event.stopPropagation();
+          didSwipe = false;
+        }, true);
+
+        setSlide(0);
+        start();
+      }
+
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
+          initHeroDiagnosisTabs();
           initHeroDiagnosisAllToggle();
           initHeroDiagnosisAutoAdvance();
+          initFooterFeatureSlider();
         }, { once: true });
       } else {
+        initHeroDiagnosisTabs();
         initHeroDiagnosisAllToggle();
         initHeroDiagnosisAutoAdvance();
+        initFooterFeatureSlider();
       }
       window.addEventListener('load', () => {
+        initHeroDiagnosisTabs();
         initHeroDiagnosisAllToggle();
         initHeroDiagnosisAutoAdvance();
+        initFooterFeatureSlider();
       }, { once: true });
     })();
   </script>
@@ -11937,12 +12851,51 @@
         }, 500);
       }
 
+      var sealGachaLaunchModal = document.getElementById('sealGachaLaunchModal');
+      var closeSealGachaLaunch = document.getElementById('closeSealGachaLaunch');
+      var sealGachaLaunchLink = document.getElementById('sealGachaLaunchLink');
+      function closeSealGachaLaunchModal() {
+        if (sealGachaLaunchModal) {
+          sealGachaLaunchModal.hidden = true;
+        }
+      }
+      if (closeSealGachaLaunch) {
+        closeSealGachaLaunch.addEventListener('click', closeSealGachaLaunchModal);
+      }
+      if (sealGachaLaunchModal) {
+        sealGachaLaunchModal.addEventListener('click', function (event) {
+          if (event.target === sealGachaLaunchModal) {
+            closeSealGachaLaunchModal();
+          }
+        });
+      }
+      if (sealGachaLaunchLink) {
+        sealGachaLaunchLink.addEventListener('click', function (e) {
+          e.preventDefault();
+          closeSealGachaLaunchModal();
+          fadeNavigate(sealGachaLaunchLink.getAttribute('href'));
+        });
+      }
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && sealGachaLaunchModal && !sealGachaLaunchModal.hidden) {
+          closeSealGachaLaunchModal();
+        }
+      });
+
       // ガチャボタン
       var gachaBtn = document.getElementById('goGachaPage');
       if (gachaBtn) {
         gachaBtn.addEventListener('click', function (e) {
           e.preventDefault();
           fadeNavigate(gachaBtn.getAttribute('href'));
+        });
+      }
+
+      var footerGachaCard = document.querySelector('.footer-gacha-slide');
+      if (footerGachaCard) {
+        footerGachaCard.addEventListener('click', function (e) {
+          e.preventDefault();
+          fadeNavigate(footerGachaCard.getAttribute('href'));
         });
       }
 

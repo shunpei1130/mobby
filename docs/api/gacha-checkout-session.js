@@ -1,23 +1,12 @@
-const GACHA_PRODUCT_TYPE = "gacha_fifty_pack";
-const GACHA_PRODUCT_LABEL = "モビーガチャ 50連（¥2,000）";
-const GACHA_PRODUCT_DESCRIPTION = "MOBBY CAPSULE CLUBで使える50連ガチャ1セット";
-const GACHA_FIFTY_PACK_AMOUNT_JPY = 2000;
+import crypto from "crypto";
+import { GACHA_CHECKOUT_PACKAGES, GACHA_STRIPE_PRICE_ENV } from "./_gacha-checkout-config.js";
+import { GACHA_PRODUCT_TYPE, resolveOrigin, safeText } from "./_gacha-paid-result.js";
+import { verifyLineLinkToken } from "./_gacha-line.js";
 
 function setCors(res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-}
-
-function resolveOrigin(req) {
-  const proto = req.headers["x-forwarded-proto"] || "https";
-  const host = req.headers["x-forwarded-host"] || req.headers.host || "";
-  if (!host) return "https://www.mobby.online";
-  return `${proto}://${host}`;
-}
-
-function safeText(value, max = 200) {
-  return String(value || "").trim().slice(0, max);
 }
 
 export default async function handler(req, res) {
@@ -32,19 +21,32 @@ export default async function handler(req, res) {
 
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY || "";
   const stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY || "";
-  const stripeCatalogRef = process.env.STRIPE_PRICE_ID_GACHA_FIFTY_PACK || "";
+  const stripeCatalogRefs = {
+    single: process.env[GACHA_STRIPE_PRICE_ENV.single] || "",
+    ten: process.env[GACHA_STRIPE_PRICE_ENV.ten] || ""
+  };
 
   if (!stripeSecretKey || !stripePublishableKey) {
     return res.status(500).json({
-      error: "Stripe env is not configured. Set STRIPE_SECRET_KEY and STRIPE_PUBLISHABLE_KEY.",
+      error: "Stripe env is not configured. Set STRIPE_SECRET_KEY and STRIPE_PUBLISHABLE_KEY."
     });
   }
 
   try {
     const body = req.body || {};
     const source = safeText(body.source || "gacha", 40);
+    const packageType = safeText(body.packageType || "single", 20);
+    const linkedLine = verifyLineLinkToken(body.lineLinkToken);
+    if (!linkedLine?.lineUserId) {
+      return res.status(400).json({ error: "LINE連携を完了してから購入してください。" });
+    }
+
+    const normalizedPackageType = GACHA_CHECKOUT_PACKAGES[packageType] ? packageType : "single";
+    const selectedPackage = GACHA_CHECKOUT_PACKAGES[normalizedPackageType];
+    const stripeCatalogRef = stripeCatalogRefs[normalizedPackageType] || "";
     const origin = resolveOrigin(req);
-    const returnUrl = `${origin}/gacha/index.html?session_id={CHECKOUT_SESSION_ID}`;
+    const drawId = `draw_${crypto.randomUUID().replace(/-/gu, "")}`;
+    const returnUrl = `${origin}/gacha/spin.html?mode=paid&draw_id=${encodeURIComponent(drawId)}&pulls=${selectedPackage.pulls}&session_id={CHECKOUT_SESSION_ID}`;
 
     const form = new URLSearchParams();
     form.set("mode", "payment");
@@ -58,19 +60,21 @@ export default async function handler(req, res) {
       form.set("line_items[0][price]", stripeCatalogRef);
     } else {
       form.set("line_items[0][price_data][currency]", "jpy");
-      form.set("line_items[0][price_data][unit_amount]", String(GACHA_FIFTY_PACK_AMOUNT_JPY));
-      if (stripeCatalogRef.startsWith("prod_")) {
-        form.set("line_items[0][price_data][product]", stripeCatalogRef);
-      } else {
-        form.set("line_items[0][price_data][product_data][name]", GACHA_PRODUCT_LABEL);
-        form.set("line_items[0][price_data][product_data][description]", GACHA_PRODUCT_DESCRIPTION);
-      }
+      form.set("line_items[0][price_data][unit_amount]", String(selectedPackage.amount));
+      form.set("line_items[0][price_data][product_data][name]", selectedPackage.label);
+      form.set("line_items[0][price_data][product_data][description]", selectedPackage.description);
     }
 
     form.set("metadata[source]", source);
     form.set("metadata[product_type]", GACHA_PRODUCT_TYPE);
-    form.set("metadata[product_label]", GACHA_PRODUCT_LABEL);
-    form.set("metadata[grant_count]", "1");
+    form.set("metadata[product_label]", selectedPackage.label);
+    form.set("metadata[package_type]", normalizedPackageType);
+    form.set("metadata[pulls]", String(selectedPackage.pulls));
+    form.set("metadata[grant_count]", String(selectedPackage.pulls));
+    form.set("metadata[draw_id]", drawId);
+    form.set("metadata[line_user_id]", linkedLine.lineUserId);
+    form.set("metadata[result_status]", "pending");
+    form.set("metadata[result_base_url]", origin);
     if (stripeCatalogRef) {
       form.set("metadata[catalog_ref]", stripeCatalogRef);
     }
@@ -79,9 +83,9 @@ export default async function handler(req, res) {
       method: "POST",
       headers: {
         Authorization: `Bearer ${stripeSecretKey}`,
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type": "application/x-www-form-urlencoded"
       },
-      body: form.toString(),
+      body: form.toString()
     });
 
     const stripeData = await stripeRes.json().catch(() => ({}));
@@ -102,6 +106,7 @@ export default async function handler(req, res) {
       clientSecret: stripeData.client_secret,
       publishableKey: stripePublishableKey,
       sessionId: stripeData.id || "",
+      drawId
     });
   } catch (error) {
     return res.status(500).json({ error: error?.message || "Internal Error" });

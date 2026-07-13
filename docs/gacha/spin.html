@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>シールガチャをまわす | Mobby</title>
+  <meta name="description" content="Mobbyのシールガチャを回すページです。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="spin-styles.css">
+</head>
+<body>
+  <main class="spin-shell">
+    <header class="spin-header">
+      <button class="spin-back" type="button" onclick="window.location.href='index.html'" aria-label="シールガチャに戻る">
+        <span aria-hidden="true"></span>
+      </button>
+    </header>
+
+    <section class="spin-stage" aria-labelledby="spinTitle">
+      <div class="sparkles" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <h2 id="spinTitle">ガチャをまわそう！</h2>
+      <p class="spin-lead" id="spinLead">一回回すと６種のシールがランダムで排出されるよ！</p>
+      <form class="email-gate" id="emailGate" novalidate hidden>
+        <label class="email-gate-label" for="gachaEmailInput">メールアドレス</label>
+        <div class="email-gate-row">
+          <input class="email-gate-input" id="gachaEmailInput" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required>
+          <span class="email-gate-required">必須</span>
+        </div>
+        <p class="email-gate-note">入力されたメールアドレスは、結果画像の送信だけに使用します。</p>
+        <p class="email-gate-error" id="emailGateError" aria-live="polite"></p>
+        <input type="text" id="emailGateHp" name="hp" tabindex="-1" autocomplete="off" hidden>
+      </form>
+
+      <div class="machine-wrap" id="machineWrap">
+        <div class="spin-machine">
+          <img class="spin-machine-image" src="../gacha-new/assets/gacha/gachagacha-mobby.png" alt="">
+          <button class="spin-handle" id="handleButton" type="button" aria-label="ハンドルをまわす"></button>
+          <div class="drop-capsule" id="dropCapsule" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <button class="spin-action" id="spinButton" type="button">
+        6連
+        <span class="spin-button-capsule" aria-hidden="true"></span>
+      </button>
+    </section>
+
+    <section class="result-sheet" id="resultSheet" aria-live="polite" hidden>
+      <p class="result-kicker">GET!</p>
+      <button class="result-placeholder" id="openResultPreview" type="button" aria-label="ガチャ結果を拡大表示">
+        <img id="resultImage" src="" alt="" hidden>
+      </button>
+      <div class="sheet-slider" id="sheetSlider" hidden>
+        <button class="sheet-slider-button" id="sheetSlidePrev" type="button" aria-label="前の台紙">←</button>
+        <p class="sheet-slider-count" id="sheetSlideCount">1 / 1</p>
+        <button class="sheet-slider-button" id="sheetSlideNext" type="button" aria-label="次の台紙">→</button>
+      </div>
+      <h2 id="resultTitle">ノーマルシール</h2>
+      <p id="resultText">仮のシール結果です。後で画像とデータを差し込めます。</p>
+      <p class="email-send-status" id="emailSendStatus" aria-live="polite"></p>
+      <div class="sticker-results" id="stickerResults" aria-label="出たシール一覧"></div>
+      <div class="result-actions">
+        <a class="result-save" id="saveSheetButton" href="#" download>まとめて保存</a>
+        <button class="result-save result-save-secondary" id="saveCurrentSheetButton" type="button" hidden>このシールを保存する</button>
+        <button class="result-button" id="againButton" type="button">もう一度まわす</button>
+        <a class="result-link" href="index.html">一覧に戻る</a>
+      </div>
+    </section>
+  </main>
+
+  <section class="sticker-reveal" id="stickerReveal" aria-live="polite" hidden>
+    <div class="secret-corner-cast" id="secretCornerCast" aria-hidden="true">
+      <img src="../gacha-new/assets/main4/toka/%E3%82%82%E3%81%B3%E3%81%A1-toka.png" alt="">
+      <img src="../gacha-new/assets/main4/toka/%E3%82%82%E3%81%B3%E3%82%84%E3%82%93-toka.png" alt="">
+      <img src="../gacha-new/assets/main4/toka/%E3%82%82%E3%81%B3%E3%82%8A%E3%82%93-toka.png" alt="">
+      <img src="../gacha-new/assets/main4/toka/%E7%97%85%E3%81%BF%E3%83%A2%E3%83%93%E3%83%BC-toka.png" alt="">
+    </div>
+    <div class="sticker-reveal-card">
+      <div class="reveal-burst" aria-hidden="true"></div>
+      <div class="reveal-particles" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <p class="sticker-reveal-count" id="stickerRevealCount">1 / 6</p>
+      <div class="sticker-reveal-image-wrap">
+        <img id="stickerRevealImage" src="" alt="">
+      </div>
+      <h2 id="stickerRevealTitle">シール</h2>
+      <p id="stickerRevealRarity">R</p>
+      <button class="sticker-reveal-next" id="stickerRevealNext" type="button">次へ</button>
+    </div>
+  </section>
+
+  <div class="image-preview-modal" id="imagePreviewModal" hidden>
+    <button class="image-preview-backdrop" id="closePreviewBackdrop" type="button" aria-label="拡大表示を閉じる"></button>
+    <div class="image-preview-dialog" role="dialog" aria-modal="true" aria-label="シール画像の拡大表示">
+      <button class="image-preview-close" id="closePreviewButton" type="button" aria-label="閉じる">×</button>
+      <img id="previewImage" src="" alt="">
+    </div>
+  </div>
+
+  <div class="save-notice-modal" id="saveNoticeModal" role="dialog" aria-modal="true" aria-labelledby="saveNoticeTitle">
+    <div class="save-notice-dialog">
+      <h2 id="saveNoticeTitle">保存について</h2>
+      <p>ひいたシールは必ず保存することをお勧めしています</p>
+      <p>サイト内に情報は残りません</p>
+      <button class="save-notice-close" id="closeSaveNotice" type="button">OK</button>
+    </div>
+  </div>
+
+  <script src="spin.js?v=paid-stripe-20260614"></script>
+</body>
+</html>

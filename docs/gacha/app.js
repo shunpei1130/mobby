@@ -59,6 +59,32 @@
   let stripeLoaderPromise = null;
   let embeddedCheckoutInstance = null;
 
+  function isMobileShareDevice() {
+    const userAgent = navigator.userAgent || '';
+    const platform = navigator.platform || '';
+    const maxTouchPoints = Number(navigator.maxTouchPoints || 0);
+    const isAndroid = /Android/i.test(userAgent);
+    const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
+    const isIPadDesktopMode = /Macintosh/i.test(userAgent) && maxTouchPoints > 1;
+    const isDesktopPlatform = /Win|Linux x86_64|MacIntel/i.test(platform) && !isIPadDesktopMode;
+    if (isDesktopPlatform) return false;
+    return isAndroid || isIOS || isIPadDesktopMode;
+  }
+
+  function disableDesktopNativeShare() {
+    if (isMobileShareDevice()) return;
+    try {
+      Object.defineProperty(navigator, 'share', {
+        value: undefined,
+        configurable: true
+      });
+    } catch {
+      navigator.share = undefined;
+    }
+  }
+
+  disableDesktopNativeShare();
+
   ensureStarterExperienceDom();
 
   const els = {
@@ -331,6 +357,13 @@
       }
 
       const fileName = buildShareFileName();
+      if (!prefersMobileSaveFlow()) {
+        hideSharePreview();
+        downloadBlob(blob, fileName);
+        setShareFeedback('画像を保存したよ。SNSやストーリーにそのまま使えます。');
+        return;
+      }
+
       const shareText = buildShareText(getShareSelection().previewStates);
       const result = await shareImageOrFallback(blob, fileName, shareText);
       if (result === 'shared') {
@@ -1314,12 +1347,12 @@
   }
 
   function supportsNativeShare() {
-    return typeof navigator !== 'undefined' && typeof navigator.share === 'function' && typeof File === 'function';
+    return prefersMobileSaveFlow() && typeof navigator !== 'undefined' && typeof navigator.share === 'function' && typeof File === 'function';
   }
 
   function prefersMobileSaveFlow() {
     if (typeof window === 'undefined') return false;
-    return isMobileViewport() || window.matchMedia('(pointer: coarse)').matches;
+    return isMobileShareDevice();
   }
 
   function createShareFile(blob, fileName) {

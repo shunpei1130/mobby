@@ -23,6 +23,12 @@
     { "source": "/16school/((?!api|.*\\..*).*)", "destination": "/16school/index.html" },
     { "source": "/((?!api|.*\\..*).*)", "destination": "/index.html" }
   ],
+  "crons": [
+    {
+      "path": "/api/gacha-line-delivery-cron",
+      "schedule": "* * * * *"
+    }
+  ],
   "headers": [
     {
       "source": "/robots.txt",
