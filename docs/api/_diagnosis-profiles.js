@@ -15,7 +15,7 @@ const SOURCE_META = {
   "hinata-aoi": { label: "日向葵衣 あなたは何タイプ？ビューティ診断", shortLabel: "日向葵衣", accent: "#f6a6c9" },
   "miyake-yuko": { label: "三宅裕子さん beauty mood診断", shortLabel: "三宅裕子", accent: "#d8a15f" },
   "imagen-luca": { label: "Lucaさん 水彩ストーリー診断", shortLabel: "Luca", accent: "#86b7d9" },
-  meeco: { label: "meeco様 魔女の空想コスメ診断", shortLabel: "meeco", accent: "#d96a7f" },
+  meeco: { label: "meeco様 『魔女の空想コスメ』キャラタイプ診断", shortLabel: "meeco", accent: "#d96a7f" },
   unknown: { label: "未分類", shortLabel: "未分類", accent: "#9e9e9e" }
 };
 

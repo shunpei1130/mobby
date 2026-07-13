@@ -4,13 +4,22 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
   <title>『魔女の空想コスメ』キャラタイプ診断 | Mobby</title>
-  <meta name="description" content="『魔女の空想コスメ』の世界観をもとにした、meeco様向けMobby診断の確認用プレビューです。">
+  <meta name="description" content="20問で、あなたに重なる『魔女の空想コスメ』のキャラタイプを8タイプから診断します。">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <link rel="canonical" href="https://www.mobby.online/meeco/">
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Mobby">
   <meta property="og:title" content="『魔女の空想コスメ』キャラタイプ診断">
   <meta property="og:description" content="あなたは『魔女の空想コスメ』の世界ならどのキャラタイプ？">
   <meta property="og:url" content="https://www.mobby.online/meeco/">
   <meta property="og:image" content="https://www.mobby.online/meeco/img/ogp.webp">
+  <meta property="og:image:type" content="image/webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="『魔女の空想コスメ』キャラタイプ診断">
+  <meta name="twitter:description" content="あなたは『魔女の空想コスメ』の世界ならどのキャラタイプ？">
+  <meta name="twitter:image" content="https://www.mobby.online/meeco/img/ogp.webp">
   <meta name="theme-color" content="#f7efe7">
   <link rel="icon" type="image/jpeg" href="../img/favicon/fav.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -300,7 +309,15 @@
       transition: opacity .18s ease, transform .18s ease;
     }
     .toast.show { opacity: 1; transform: translate(-50%, 0); }
-    .footer-note { margin: 30px 0 0; color: var(--muted); font-size: 11px; text-align: center; font-weight: 700; }
+    .site-footer {
+      margin-top: 30px;
+      padding: 22px 16px 0;
+      border-top: 1px solid var(--line);
+      text-align: center;
+    }
+    .site-footer .link-list { justify-content: center; margin: 0 0 14px; }
+    .site-footer .link-list a { min-height: 40px; padding: 7px 14px; font-size: 12px; }
+    .footer-note { margin: 5px 0 0; color: var(--muted); font-size: 11px; text-align: center; font-weight: 700; }
     .fade-in { animation: fadeIn .28s ease both; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     @media (max-width: 780px) {
@@ -314,8 +331,6 @@
       .hero-label { right: 10px; bottom: 10px; max-width: 220px; font-size: 11px; }
       .stage { padding: 18px 14px; }
       .form-grid, .result-layout { grid-template-columns: 1fr; }
-      .result-layout > div:first-child { order: 2; }
-      .result-layout > div:nth-child(2) { order: 1; }
       .result-blocks, .types-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .quiz-nav { flex-direction: column; }
       .quiz-nav .btn { width: 100%; }
@@ -340,7 +355,7 @@
         <span class="brand-mark" aria-hidden="true"></span>
         <div class="brand-copy">
           <h1>『魔女の空想コスメ』キャラタイプ診断</h1>
-          <p>meeco x Mobby preview</p>
+          <p>meeco x Mobby</p>
         </div>
       </div>
       <nav class="nav" aria-label="ページ内メニュー">
@@ -350,7 +365,14 @@
       </nav>
     </header>
     <main id="app"></main>
-    <p class="footer-note">関連リンク・コピーライト表記は出版社様指定の正式文言に差し替え予定です。</p>
+    <footer class="site-footer">
+      <nav class="link-list" aria-label="作品関連リンク">
+        <a class="btn" href="https://www.eastpress.co.jp/" target="_blank" rel="noopener noreferrer">イースト・プレス公式サイト</a>
+        <a class="btn" href="https://www.eastpress.co.jp/goods/detail/9784781622200" target="_blank" rel="noopener noreferrer">『魔女の空想コスメ』作品ページ</a>
+      </nav>
+      <p class="footer-note" id="publisherCopyright">出版社指定のコピーライト正式文言を確認中です。</p>
+      <p class="footer-note">© Mobby All Rights Reserved.</p>
+    </footer>
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script>
@@ -579,7 +601,7 @@
           </div>
           <div class="hero-art">
             <img src="img/hero.webp" alt="魔女の空想コスメ診断のメインビジュアル">
-            <div class="hero-label">『魔女の空想コスメ』作品世界とMobbyの診断体験を組み合わせた確認用プレビュー</div>
+            <div class="hero-label">『魔女の空想コスメ』作品世界とMobbyの診断体験を組み合わせたコラボ診断</div>
           </div>
         </section>
       `;
@@ -716,7 +738,8 @@
             pageUrl: window.location.href,
             userAgent: navigator.userAgent,
             createdAt: new Date().toISOString()
-          })
+          }),
+          keepalive: true
         });
         state.sentToLead = true;
         saveState();
@@ -757,8 +780,8 @@
               <img class="result-img" src="${esc(ch.image)}" alt="${esc(ch.name)}">
               <div class="share-panel">
                 <div class="share-actions">
-                  <a class="share-btn" href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" rel="noopener">Xでシェア</a>
-                  <a class="share-btn" href="https://social-plugins.line.me/lineit/share?url=${shareUrl}" target="_blank" rel="noopener">LINEで送る</a>
+                  <a class="share-btn" href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" rel="noopener noreferrer">Xでシェア</a>
+                  <a class="share-btn" href="https://social-plugins.line.me/lineit/share?url=${shareUrl}" target="_blank" rel="noopener noreferrer">LINEで送る</a>
                   <button class="share-btn" id="btnCopy" type="button">コピー</button>
                 </div>
                 <div class="line-mount" data-line-ai-mobby-cta data-diagnosis="${lineData}"></div>
@@ -779,7 +802,7 @@
                 <h3>『魔女の空想コスメ』を見るなら</h3>
                 <p class="text">診断で言語化されたムードを持ったまま作品を見ると、好きなカットやキャラクターの見え方も少し変わるかもしれません。</p>
                 <div class="link-list">
-                  ${SITE.links.map((link) => `<a class="btn" href="${esc(link.url)}" target="_blank" rel="noopener">${esc(link.label)}</a>`).join("")}
+                  ${SITE.links.map((link) => `<a class="btn" href="${esc(link.url)}" target="_blank" rel="noopener noreferrer">${esc(link.label)}</a>`).join("")}
                 </div>
               </div>
               <div class="actions">
@@ -817,7 +840,6 @@
         <section class="stage fade-in">
           <p class="kicker">8 TYPES</p>
           <h2 class="section-title">魔女の空想コスメの8キャラタイプ</h2>
-          <p class="text">許諾済みの8カットを、結果タイプごとのメインビジュアルとして配置しています。</p>
           <div class="types-grid">${cards}</div>
           <div class="actions">
             <button class="btn primary" id="btnBackDiagnosis" type="button">${isComplete() ? "結果に戻る" : "診断する"}</button>

@@ -146,7 +146,7 @@ export const DIAGNOSIS_KNOWLEDGE = {
     ]
   },
   meeco: {
-    label: "meeco様 魔女の空想コスメ診断",
+    label: "meeco様 『魔女の空想コスメ』キャラタイプ診断",
     pagePath: "/meeco/",
     description: "『魔女の空想コスメ』の世界観をもとに、ときめきの温度、魔法の置き場所、好きの届け方から8タイプに分かれる診断です。20問の7段階回答で、作品カットに合わせたコスメムードを提案します。",
     questionCount: 20,
@@ -157,14 +157,14 @@ export const DIAGNOSIS_KNOWLEDGE = {
       "C: 好きの届け方（ひとりで味わう / 誰かに贈る）"
     ],
     types: [
-      { code: "spark-fantasy-solo", name: "海色きらめき魔女", summary: "直感でかわいいを見つけ、まだ名前のないときめきを自分だけの宝物にできるタイプ。" },
-      { code: "spark-fantasy-share", name: "赤ずきんおつかい魔女", summary: "好きなものを明るく届け、周りにも自然と物語を広げられるタイプ。" },
-      { code: "spark-ritual-solo", name: "月光ドレス魔女", summary: "身支度や日々の小さな儀式で、自分の気分を丁寧に整えられるタイプ。" },
-      { code: "spark-ritual-share", name: "ローズ社交魔女", summary: "かわいいを会話や場の空気に変えて、人と一緒に楽しむほど魅力が増すタイプ。" },
-      { code: "mellow-fantasy-solo", name: "夜のレシピ魔女", summary: "好きなものの奥行きをゆっくり味わい、自分だけの世界観を深く育てるタイプ。" },
-      { code: "mellow-fantasy-share", name: "香りの余韻魔女", summary: "強く言い切らず、余白のある言葉や雰囲気で相手の想像をふくらませるタイプ。" },
-      { code: "mellow-ritual-solo", name: "真夜中の仕立て魔女", summary: "流行より納得感を大切にし、自分に似合うものを時間をかけて磨き込むタイプ。" },
-      { code: "mellow-ritual-share", name: "花冠の癒し魔女", summary: "やわらかい空気で人を包み、安心するかわいさをそっと分けられるタイプ。" }
+      { code: "spark-fantasy-solo", name: "海色きらめき人魚", summary: "直感でかわいいを見つけ、まだ名前のないときめきを自分だけの宝物にできるタイプ。" },
+      { code: "spark-fantasy-share", name: "恋する赤ずきん", summary: "好きなものを明るく届け、周りにも自然と物語を広げられるタイプ。" },
+      { code: "spark-ritual-solo", name: "夢見る花嫁", summary: "身支度や日々の小さな儀式で、自分の気分を丁寧に整えられるタイプ。" },
+      { code: "spark-ritual-share", name: "双子の薔薇の精", summary: "かわいいを会話や場の空気に変えて、人と一緒に楽しむほど魅力が増すタイプ。" },
+      { code: "mellow-fantasy-solo", name: "空想の魔女", summary: "好きなものの奥行きをゆっくり味わい、自分だけの世界観を深く育てるタイプ。" },
+      { code: "mellow-fantasy-share", name: "穏やかな妖精", summary: "強く言い切らず、余白のある言葉や雰囲気で相手の想像をふくらませるタイプ。" },
+      { code: "mellow-ritual-solo", name: "月の女王", summary: "流行より納得感を大切にし、自分に似合うものを時間をかけて磨き込むタイプ。" },
+      { code: "mellow-ritual-share", name: "元気いっぱいな妖精", summary: "やわらかい空気で人を包み、安心するかわいさをそっと分けられるタイプ。" }
     ]
   }
 };
@@ -174,7 +174,7 @@ const SOURCE_ALIASES = {
   "16stan": ["推し", "推し活", "stan", "オタク", "現場", "在宅", "布教"],
   "16love": ["メンヘラ", "返信こない", "即レス", "病み", "共依存", "独占欲", "恋愛ゾンビ"],
   "16renai": ["恋愛モビー", "恋愛診断", "恋愛タイプ", "片思い", "好きな人", "相性", "花束", "夜風"],
-  meeco: ["meeco", "魔女の空想コスメ", "魔女コスメ", "空想コスメ", "魔女", "コスメ", "ローズ社交", "月光ドレス"]
+  meeco: ["meeco", "魔女の空想コスメ", "魔女コスメ", "空想コスメ", "海色きらめき人魚", "恋する赤ずきん", "夢見る花嫁", "双子の薔薇の精", "空想の魔女", "穏やかな妖精", "月の女王", "元気いっぱいな妖精", "海色きらめき魔女", "赤ずきんおつかい魔女", "月光ドレス魔女", "ローズ社交魔女", "夜のレシピ魔女", "香りの余韻魔女", "真夜中の仕立て魔女", "花冠の癒し魔女"]
 };
 
 export function getDiagnosisMeta(source) {
