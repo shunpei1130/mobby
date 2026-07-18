@@ -5,7 +5,7 @@ const PREFIX = "line-ai";
 const USER_PREFIX = `${PREFIX}/users/`;
 const CONVERSATION_PREFIX = `${PREFIX}/conversations/`;
 const LINK_SESSION_PREFIX = `${PREFIX}/link-sessions/`;
-const ALLOWED_DIAGNOSIS_SOURCES = new Set(["16school", "16stan", "16love", "16renai"]);
+const ALLOWED_DIAGNOSIS_SOURCES = new Set(["16school", "16stan", "16love", "16renai", "meeco"]);
 const MAX_DIAGNOSIS_HISTORY = 5;
 
 const memoryStore = globalThis.__mobbyLineAiMemoryStore || new Map();
