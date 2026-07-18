@@ -8123,6 +8123,341 @@
       }
     }
 
+    /* main-renew: footer action hover/tap previews */
+    #main-content .popup-buttons-bar,
+    #main-content .popup-buttons-bar > .container,
+    #main-content .popup-buttons-bar .popup-buttons,
+    #main-content .popup-buttons-bar #giftFanMenu,
+    #main-content .popup-buttons-bar #giftFanMenu .gift-fan-actions {
+      overflow: visible !important;
+    }
+
+    #main-content .popup-buttons-bar .popup-buttons {
+      position: relative;
+      isolation: isolate;
+    }
+
+    #main-content .popup-buttons-bar #giftFanMenu {
+      position: relative;
+      z-index: 20;
+    }
+
+    #main-content .popup-buttons-bar #giftFanMenu .gift-fan-actions .gift-fan-action {
+      overflow: visible !important;
+    }
+
+    .footer-action-preview {
+      position: absolute !important;
+      bottom: calc(100% + 13px);
+      z-index: 120 !important;
+      width: min(238px, calc(100vw - 24px));
+      min-height: 142px;
+      box-sizing: border-box;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border: 1px solid rgba(237, 126, 57, 0.28);
+      border-radius: 20px;
+      background: rgba(255, 251, 246, 0.98);
+      color: #5d3b20;
+      box-shadow:
+        0 18px 42px rgba(91, 67, 42, 0.22),
+        0 5px 13px rgba(214, 105, 27, 0.12);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(15px) scale(0.9);
+      transform-origin: center bottom;
+      transition:
+        opacity 170ms ease,
+        visibility 170ms ease,
+        transform 250ms cubic-bezier(0.2, 0.9, 0.25, 1.22);
+    }
+
+    .footer-action-preview::after {
+      content: "";
+      position: absolute;
+      bottom: -7px;
+      width: 14px;
+      height: 14px;
+      border-right: 1px solid rgba(237, 126, 57, 0.28);
+      border-bottom: 1px solid rgba(237, 126, 57, 0.28);
+      background: #fffbf6;
+      transform: rotate(45deg);
+    }
+
+    .gift-fan-action[data-fan-item="compositing"] .footer-action-preview,
+    .gift-fan-action[data-fan-item="encyclopedia"] .footer-action-preview {
+      left: 0;
+    }
+
+    .gift-fan-action[data-fan-item="compositing"] .footer-action-preview::after,
+    .gift-fan-action[data-fan-item="encyclopedia"] .footer-action-preview::after {
+      left: 22px;
+    }
+
+    .gift-fan-action[data-fan-item="vote"] .footer-action-preview {
+      left: 50%;
+      transform: translate(-50%, 15px) scale(0.9);
+    }
+
+    .gift-fan-action[data-fan-item="vote"] .footer-action-preview::after {
+      left: calc(50% - 7px);
+    }
+
+    .gift-fan-action[data-fan-item="faq"] .footer-action-preview,
+    .gift-fan-action[data-fan-item="sns"] .footer-action-preview {
+      right: 0;
+    }
+
+    .gift-fan-action[data-fan-item="faq"] .footer-action-preview::after,
+    .gift-fan-action[data-fan-item="sns"] .footer-action-preview::after {
+      right: 22px;
+    }
+
+    .footer-action-preview-title {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 900;
+      line-height: 1.2;
+      letter-spacing: 0.04em;
+      text-align: left;
+    }
+
+    .footer-action-preview-copy {
+      display: block;
+      color: rgba(93, 59, 32, 0.68);
+      font-size: 0.64rem;
+      font-weight: 700;
+      line-height: 1.45;
+      text-align: left;
+    }
+
+    .footer-action-preview-poster {
+      width: 100%;
+      height: 104px;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 12px;
+    }
+
+    .footer-preview-type-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    .footer-preview-type {
+      min-height: 64px;
+      padding: 8px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #fff4e8, #f8edf4);
+      font-size: 0.58rem;
+      font-weight: 800;
+    }
+
+    .footer-preview-type b {
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    .footer-preview-vote-row {
+      display: grid;
+      grid-template-columns: 42px 1fr 25px;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.58rem;
+      font-weight: 800;
+    }
+
+    .footer-preview-vote-bar {
+      height: 7px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(214, 105, 27, 0.12);
+    }
+
+    .footer-preview-vote-bar::before {
+      content: "";
+      display: block;
+      width: var(--preview-vote-width, 70%);
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #f2a36d, #e779a3);
+    }
+
+    .footer-preview-form-line {
+      height: 30px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      border: 1px solid rgba(93, 59, 32, 0.14);
+      border-radius: 10px;
+      background: #fff;
+      color: rgba(93, 59, 32, 0.46);
+      font-size: 0.58rem;
+      font-weight: 700;
+    }
+
+    .footer-preview-sns {
+      min-height: 42px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 0.66rem;
+      font-weight: 900;
+    }
+
+    .footer-preview-sns.instagram {
+      background: linear-gradient(120deg, #8a3ab9, #e95950, #fccc63);
+    }
+
+    .footer-preview-sns.tiktok {
+      background: linear-gradient(120deg, #161616, #333);
+    }
+
+    /* main-renew: manga preview follows the selected carousel character. */
+    #main-content .hero-carousel-shell,
+    #main-content .hero-character-row,
+    #main-content #openManga {
+      overflow: visible !important;
+    }
+
+    #main-content .hero-character-row {
+      position: relative;
+      z-index: 270;
+    }
+
+    #main-content #openManga {
+      position: relative;
+    }
+
+    .hero-action-preview.footer-action-preview {
+      min-height: 150px;
+      z-index: 240 !important;
+    }
+
+    #openManga .manga-action-preview {
+      left: 0;
+      width: min(244px, calc(100vw - 24px));
+      min-height: 184px;
+      color: #5d3b20;
+      text-shadow: none;
+    }
+
+    #openManga .manga-action-preview::after {
+      left: 18px;
+    }
+
+    .manga-action-preview-layout {
+      display: grid;
+      grid-template-columns: 86px minmax(0, 1fr);
+      align-items: stretch;
+      gap: 10px;
+    }
+
+    .manga-action-preview-image {
+      width: 86px;
+      height: 118px;
+      display: block;
+      object-fit: contain;
+      border: 1px solid rgba(93, 59, 32, 0.12);
+      border-radius: 11px;
+      background: #fff;
+    }
+
+    .manga-action-preview-meta {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 7px;
+      text-align: left;
+    }
+
+    .manga-action-preview-chip {
+      padding: 7px 8px;
+      display: block;
+      border-radius: 9px;
+      background: linear-gradient(145deg, #fff3e5, #f7e2ea);
+      color: #6d4931;
+      font-size: 0.61rem;
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      #main-content .popup-buttons-bar #giftFanMenu .gift-fan-action:hover {
+        z-index: 80;
+      }
+
+      #main-content .popup-buttons-bar #giftFanMenu .gift-fan-action:hover .footer-action-preview {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0) scale(1);
+      }
+
+      #main-content .popup-buttons-bar #giftFanMenu .gift-fan-action[data-fan-item="vote"]:hover .footer-action-preview {
+        transform: translate(-50%, 0) scale(1);
+      }
+
+      #main-content .hero-character-row:has(#openManga:hover),
+      #main-content #openManga:hover {
+        z-index: 300;
+      }
+
+      #main-content #openManga:hover .manga-action-preview {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @media (hover: none), (pointer: coarse) {
+      #main-content :is(#openManga, #giftFanMenu .gift-fan-action).is-mobile-preview-open {
+        z-index: 320 !important;
+        transform: translateY(-3px) scale(1.025) !important;
+        filter: brightness(1.025) saturate(1.04) !important;
+      }
+
+      #main-content :is(#openManga, #giftFanMenu .gift-fan-action).is-mobile-preview-open > .footer-action-preview {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0) scale(1);
+      }
+
+      #main-content #giftFanMenu .gift-fan-action[data-fan-item="vote"].is-mobile-preview-open > .footer-action-preview {
+        transform: translate(-50%, 0) scale(1);
+      }
+
+      #main-content #openManga > .footer-action-preview {
+        top: calc(100% + 12px);
+        bottom: auto;
+        transform: translateY(-12px) scale(0.9);
+        transform-origin: center top;
+      }
+
+      #main-content #openManga > .footer-action-preview::after {
+        top: -7px;
+        bottom: auto;
+        transform: rotate(225deg);
+      }
+
+      #main-content #openManga.is-mobile-preview-open > .footer-action-preview {
+        transform: translateY(0) scale(1);
+      }
+    }
+
     .footer-feature-column-row,
     .popup-buttons-bar .footer-feature-column-row {
       overflow: hidden !important;
@@ -8901,6 +9236,17 @@
                   </svg>
                 </span>
                 <span class="manga-launch-label">漫画</span>
+                <span class="footer-action-preview hero-action-preview manga-action-preview" aria-hidden="true">
+                  <span class="footer-action-preview-title" id="mangaPreviewTitle">もびりんの漫画</span>
+                  <span class="manga-action-preview-layout">
+                    <img class="manga-action-preview-image" id="mangaPreviewImage" src="manga/mobirin/1-1.webp" alt="">
+                    <span class="manga-action-preview-meta">
+                      <span class="manga-action-preview-chip" id="mangaPreviewEpisode">第1話から</span>
+                      <span class="manga-action-preview-chip" id="mangaPreviewPages">全2話・6ページ</span>
+                      <span class="footer-action-preview-copy">クリックして漫画を読む</span>
+                    </span>
+                  </span>
+                </span>
               </button>
               <div class="hero-character-name" id="heroCharacterName">もびりん</div>
             </div>
@@ -9569,7 +9915,7 @@
             <div class="burn-card-row footer-burn-card-row footer-feature-column-row" aria-label="おすすめメニュー">
               <div class="footer-feature-track">
                 <a class="burn-card footer-ehon-slide" href="ehon/index.html" aria-label="モビーの絵本">
-                  <img class="footer-ehon-image" src="ehon/r-ehon/ehon1.webp" alt="" loading="lazy" decoding="async">
+                  <img class="footer-ehon-image" src="ehon/column/ehon-column-pattern-2.png" alt="" loading="lazy" decoding="async">
                   <span class="footer-ehon-overlay"><b>モビーの絵本</b><small>全32ページを読む</small></span>
                 </a>
                 <a class="burn-card footer-compositing-slide" href="compositing.html" aria-label="ポスター作成">
@@ -9586,11 +9932,11 @@
               </div>
             </div>
             <div class="gift-fan-actions" aria-hidden="false">
-              <a class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openCompositingPopup" data-fan-item="compositing" href="compositing.html"><span class="footer-btn-icon" data-icon="image" aria-hidden="true"></span><span>ポスター<br>作成</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></a>
-              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openEncyclopediaPopup" data-fan-item="encyclopedia"><span class="footer-btn-icon" data-icon="book" aria-hidden="true"></span><span>図鑑</span></button>
-              <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openVotePopup" data-fan-item="vote"><span class="footer-btn-icon" data-icon="vote" aria-hidden="true"></span><span>投票</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></button>
-              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openFaqPopup" data-fan-item="faq"><span class="footer-btn-icon" data-icon="mail" aria-hidden="true"></span><span>お問い合わせ</span></button>
-              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openSnsPopup" data-fan-item="sns"><span class="footer-btn-icon" data-icon="share" aria-hidden="true"></span><span>SNS</span></button>
+              <a class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openCompositingPopup" data-fan-item="compositing" href="compositing.html"><span class="footer-btn-icon" data-icon="image" aria-hidden="true"></span><span>ポスター<br>作成</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">ポスター作成</span><img class="footer-action-preview-poster" src="compositing/reference/flier-mobby.png" alt=""><span class="footer-action-preview-copy">写真を選んで、モビーのポスターを作れます</span></span></a>
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openEncyclopediaPopup" data-fan-item="encyclopedia"><span class="footer-btn-icon" data-icon="book" aria-hidden="true"></span><span>図鑑</span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー図鑑</span><span class="footer-preview-type-grid"><span class="footer-preview-type"><b>📖</b>全112タイプ</span><span class="footer-preview-type"><b>💛</b>キャラ紹介</span><span class="footer-preview-type"><b>✨</b>詳細を見る</span></span><span class="footer-action-preview-copy">気になるモビーを選んでプロフィールをチェック</span></span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openVotePopup" data-fan-item="vote"><span class="footer-btn-icon" data-icon="vote" aria-hidden="true"></span><span>投票</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー人気投票</span><span class="footer-preview-vote-row"><span>もびりん</span><span class="footer-preview-vote-bar" style="--preview-vote-width:86%"></span><span>1位</span></span><span class="footer-preview-vote-row"><span>ギャル</span><span class="footer-preview-vote-bar" style="--preview-vote-width:68%"></span><span>2位</span></span><span class="footer-preview-vote-row"><span>ヤンキー</span><span class="footer-preview-vote-bar" style="--preview-vote-width:48%"></span><span>3位</span></span><span class="footer-action-preview-copy">好きなキャラを選んで投票できます</span></span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openFaqPopup" data-fan-item="faq"><span class="footer-btn-icon" data-icon="mail" aria-hidden="true"></span><span>お問い合わせ</span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">お問い合わせ</span><span class="footer-preview-form-line">メールアドレス</span><span class="footer-preview-form-line">お問い合わせ内容</span><span class="footer-action-preview-copy">フォームからメッセージを送れます</span></span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openSnsPopup" data-fan-item="sns"><span class="footer-btn-icon" data-icon="share" aria-hidden="true"></span><span>SNS</span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">Mobby公式SNS</span><span class="footer-preview-sns instagram"><span>Instagram</span><span>@mobby.official</span></span><span class="footer-preview-sns tiktok"><span>TikTok</span><span>@mobbyofficial</span></span></span></button>
             </div>
           </div>
           <button class="btn btn-secondary" id="openVideoPopup">動画</button>
@@ -11798,6 +12144,10 @@
       const mangaPages = document.getElementById('mangaPages');
       const mangaButton = document.getElementById('openManga');
       const mangaCloseButton = document.getElementById('closeManga');
+      const mangaPreviewTitle = document.getElementById('mangaPreviewTitle');
+      const mangaPreviewImage = document.getElementById('mangaPreviewImage');
+      const mangaPreviewEpisode = document.getElementById('mangaPreviewEpisode');
+      const mangaPreviewPages = document.getElementById('mangaPreviewPages');
       if (!mangaInline || !mangaTitle || !mangaEpisodeTabs || !mangaPages || !mangaButton) return;
 
       const createMangaEpisodes = (slug, pageCounts) => pageCounts.map((pageCount, episodeIndex) => ({
@@ -11832,6 +12182,19 @@
           || '';
         const filename = activeImage.split('/').pop();
         return filename ? MANGA_LIBRARY[filename] : null;
+      };
+
+      const renderMangaPreview = () => {
+        const manga = getActiveManga();
+        if (!manga) return;
+        const firstEpisode = manga.episodes[0];
+        const firstPage = firstEpisode?.pages?.[0];
+        const totalPages = manga.episodes.reduce((sum, episode) => sum + episode.pages.length, 0);
+
+        if (mangaPreviewTitle) mangaPreviewTitle.textContent = `${manga.character}の漫画`;
+        if (mangaPreviewImage && firstPage) mangaPreviewImage.src = firstPage;
+        if (mangaPreviewEpisode) mangaPreviewEpisode.textContent = `${firstEpisode?.label || '第1話'}から`;
+        if (mangaPreviewPages) mangaPreviewPages.textContent = `全${manga.episodes.length}話・${totalPages}ページ`;
       };
 
       const renderManga = (episodeIndex = 0) => {
@@ -11881,11 +12244,13 @@
       });
       mangaCloseButton?.addEventListener('click', closeManga);
       window.addEventListener('hero-slide-change', () => {
+        renderMangaPreview();
         if (!mangaInline.hidden) renderManga(0);
       });
       document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape' && !mangaInline.hidden) closeManga();
       });
+      renderMangaPreview();
     })();
 
     giftFanActions.forEach((action) => {
@@ -13175,7 +13540,7 @@
         let dragStartY = 0;
         let isDragging = false;
         let didSwipe = false;
-        const intervalMs = 4200;
+        const intervalMs = 8400;
         const swipeThreshold = 42;
 
         const setSlide = (nextIndex) => {
@@ -13269,6 +13634,57 @@
         initHeroDiagnosisAutoAdvance();
         initFooterFeatureSlider();
       }, { once: true });
+    })();
+  </script>
+
+  <script>
+    (() => {
+      const touchPreviewQuery = window.matchMedia('(hover: none), (pointer: coarse)');
+      const previewControlSelector = '#openManga, #giftFanMenu .gift-fan-action';
+
+      const closePreview = (owner) => {
+        if (!owner) return;
+        owner.classList.remove('is-mobile-preview-open');
+        owner.querySelector(':scope > .footer-action-preview')?.setAttribute('aria-hidden', 'true');
+      };
+
+      const closeAllPreviews = (except = null) => {
+        document.querySelectorAll('#openManga.is-mobile-preview-open, #giftFanMenu .gift-fan-action.is-mobile-preview-open').forEach((owner) => {
+          if (owner !== except) closePreview(owner);
+        });
+      };
+
+      const openPreview = (owner) => {
+        closeAllPreviews(owner);
+        owner.classList.add('is-mobile-preview-open');
+        owner.querySelector(':scope > .footer-action-preview')?.setAttribute('aria-hidden', 'false');
+      };
+
+      document.addEventListener('click', (event) => {
+        if (!touchPreviewQuery.matches || !(event.target instanceof Element)) return;
+
+        const tappedPreview = event.target.closest('.footer-action-preview');
+        if (tappedPreview) {
+          closePreview(tappedPreview.closest(previewControlSelector));
+          return;
+        }
+
+        const control = event.target.closest(previewControlSelector);
+        if (control && control.querySelector(':scope > .footer-action-preview')) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          if (control.classList.contains('is-mobile-preview-open')) {
+            closePreview(control);
+          } else {
+            openPreview(control);
+          }
+          return;
+        }
+
+        closeAllPreviews();
+      }, true);
+
+      touchPreviewQuery.addEventListener('change', () => closeAllPreviews());
     })();
   </script>
 
