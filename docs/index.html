@@ -235,6 +235,15 @@
       display: none;
     }
 
+    #splash-screen canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
 
     .instruction {
       position: absolute;
@@ -3509,17 +3518,199 @@
       letter-spacing: 0.02em;
     }
 
-    .peek-heart-wrap {
-      display: flex;
-      justify-content: center;
-      margin: -8px 0 18px;
+    .manga-viewer-wrap {
+      width: min(760px, calc(100vw - 24px));
+      min-width: 0;
+      max-width: calc(100vw - 24px);
+      display: block;
+      margin: -8px auto 18px;
     }
 
-    .peek-heart-btn {
+    .hero-character-action.manga-launch-btn {
       z-index: 14;
+      flex-direction: column;
+      gap: 3px;
+      border-color: rgba(126, 86, 53, 0.22);
+      border-radius: 17px 13px 18px 14px / 14px 18px 13px 17px;
+      color: #674a38;
+      background: linear-gradient(145deg, #fffaf1, #f3e3cf);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.86), 0 7px 15px rgba(97, 73, 45, 0.1);
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      line-height: 1;
+    }
+
+    .manga-launch-icon,
+    .manga-launch-label {
+      position: relative;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .manga-launch-icon {
+      width: 22px;
+      height: 17px;
+      display: block;
+      line-height: 1;
+    }
+
+    .manga-launch-icon svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .manga-launch-label {
+      white-space: nowrap;
+    }
+
+    .hero-character-action.manga-launch-btn[aria-expanded="true"] {
+      background: linear-gradient(145deg, #f9ead8, #ead2b7);
+    }
+
+    .manga-inline {
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      padding: 10px 0 4px;
+      display: block;
+      overflow: hidden;
+    }
+
+    .manga-inline[hidden] {
+      display: none !important;
+    }
+
+    .manga-panel {
+      position: relative;
+      width: min(100%, 760px);
+      min-width: 0;
+      max-width: 100%;
+      margin: 0 auto;
+      max-height: min(82vh, 920px);
+      overflow: hidden;
+      border: 1px solid rgba(152, 128, 104, 0.18);
+      border-radius: 22px;
+      background: #fffaf2;
+      box-shadow: 0 18px 38px rgba(75, 58, 45, 0.12);
+    }
+
+    .manga-panel-header {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      padding: 16px 56px 12px 18px;
+      border-bottom: 1px solid rgba(152, 128, 104, 0.14);
+      background: rgba(255, 250, 242, 0.96);
+      backdrop-filter: blur(10px);
+    }
+
+    .manga-panel-kicker {
+      margin: 0 0 2px;
+      color: rgba(95, 73, 58, 0.62);
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .manga-panel-title {
+      margin: 0;
+      color: #3f2f24;
+      font-size: 1.08rem;
+      font-weight: 900;
+      line-height: 1.4;
+    }
+
+    .manga-panel-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 4;
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(93, 59, 32, 0.2);
+      border-radius: 999px;
+      color: #5d3b20;
+      background: #fff;
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .manga-episode-tabs {
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      overscroll-behavior-x: contain;
+      scrollbar-width: thin;
+      background: #f8efe2;
+    }
+
+    .manga-episode-button {
+      flex: 0 0 auto;
+      min-width: 54px;
+      min-height: 38px;
+      padding: 7px 13px;
+      border: 1px solid rgba(93, 59, 32, 0.18);
+      border-radius: 999px;
+      color: #6a4c39;
+      background: rgba(255, 255, 255, 0.8);
+      font: inherit;
+      font-size: 0.82rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .manga-episode-button.is-active {
+      color: #fff;
+      border-color: #8b5e3c;
+      background: #8b5e3c;
+    }
+
+    .manga-pages {
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      max-height: calc(min(82vh, 920px) - 126px);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-gutter: stable;
+      background: #fff;
+    }
+
+    .manga-pages img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      background: #fff;
     }
 
     @media (max-width: 768px) {
+      .manga-panel {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .manga-panel-header {
+        padding: 13px 50px 10px 14px;
+      }
+
+      .manga-panel-title {
+        font-size: 0.98rem;
+      }
+
+      .manga-episode-tabs {
+        padding: 10px 12px;
+      }
+
       .hero-character-row {
         width: min(320px, calc(100% - 16px));
         margin-top: -32px;
@@ -7932,6 +8123,341 @@
       }
     }
 
+    /* main-renew: footer action hover/tap previews */
+    #main-content .popup-buttons-bar,
+    #main-content .popup-buttons-bar > .container,
+    #main-content .popup-buttons-bar .popup-buttons,
+    #main-content .popup-buttons-bar #giftFanMenu,
+    #main-content .popup-buttons-bar #giftFanMenu .gift-fan-actions {
+      overflow: visible !important;
+    }
+
+    #main-content .popup-buttons-bar .popup-buttons {
+      position: relative;
+      isolation: isolate;
+    }
+
+    #main-content .popup-buttons-bar #giftFanMenu {
+      position: relative;
+      z-index: 20;
+    }
+
+    #main-content .popup-buttons-bar #giftFanMenu .gift-fan-actions .gift-fan-action {
+      overflow: visible !important;
+    }
+
+    .footer-action-preview {
+      position: absolute !important;
+      bottom: calc(100% + 13px);
+      z-index: 120 !important;
+      width: min(238px, calc(100vw - 24px));
+      min-height: 142px;
+      box-sizing: border-box;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border: 1px solid rgba(237, 126, 57, 0.28);
+      border-radius: 20px;
+      background: rgba(255, 251, 246, 0.98);
+      color: #5d3b20;
+      box-shadow:
+        0 18px 42px rgba(91, 67, 42, 0.22),
+        0 5px 13px rgba(214, 105, 27, 0.12);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(15px) scale(0.9);
+      transform-origin: center bottom;
+      transition:
+        opacity 170ms ease,
+        visibility 170ms ease,
+        transform 250ms cubic-bezier(0.2, 0.9, 0.25, 1.22);
+    }
+
+    .footer-action-preview::after {
+      content: "";
+      position: absolute;
+      bottom: -7px;
+      width: 14px;
+      height: 14px;
+      border-right: 1px solid rgba(237, 126, 57, 0.28);
+      border-bottom: 1px solid rgba(237, 126, 57, 0.28);
+      background: #fffbf6;
+      transform: rotate(45deg);
+    }
+
+    .gift-fan-action[data-fan-item="compositing"] .footer-action-preview,
+    .gift-fan-action[data-fan-item="encyclopedia"] .footer-action-preview {
+      left: 0;
+    }
+
+    .gift-fan-action[data-fan-item="compositing"] .footer-action-preview::after,
+    .gift-fan-action[data-fan-item="encyclopedia"] .footer-action-preview::after {
+      left: 22px;
+    }
+
+    .gift-fan-action[data-fan-item="vote"] .footer-action-preview {
+      left: 50%;
+      transform: translate(-50%, 15px) scale(0.9);
+    }
+
+    .gift-fan-action[data-fan-item="vote"] .footer-action-preview::after {
+      left: calc(50% - 7px);
+    }
+
+    .gift-fan-action[data-fan-item="faq"] .footer-action-preview,
+    .gift-fan-action[data-fan-item="sns"] .footer-action-preview {
+      right: 0;
+    }
+
+    .gift-fan-action[data-fan-item="faq"] .footer-action-preview::after,
+    .gift-fan-action[data-fan-item="sns"] .footer-action-preview::after {
+      right: 22px;
+    }
+
+    .footer-action-preview-title {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 900;
+      line-height: 1.2;
+      letter-spacing: 0.04em;
+      text-align: left;
+    }
+
+    .footer-action-preview-copy {
+      display: block;
+      color: rgba(93, 59, 32, 0.68);
+      font-size: 0.64rem;
+      font-weight: 700;
+      line-height: 1.45;
+      text-align: left;
+    }
+
+    .footer-action-preview-poster {
+      width: 100%;
+      height: 104px;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 12px;
+    }
+
+    .footer-preview-type-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    .footer-preview-type {
+      min-height: 64px;
+      padding: 8px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #fff4e8, #f8edf4);
+      font-size: 0.58rem;
+      font-weight: 800;
+    }
+
+    .footer-preview-type b {
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    .footer-preview-vote-row {
+      display: grid;
+      grid-template-columns: 42px 1fr 25px;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.58rem;
+      font-weight: 800;
+    }
+
+    .footer-preview-vote-bar {
+      height: 7px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(214, 105, 27, 0.12);
+    }
+
+    .footer-preview-vote-bar::before {
+      content: "";
+      display: block;
+      width: var(--preview-vote-width, 70%);
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #f2a36d, #e779a3);
+    }
+
+    .footer-preview-form-line {
+      height: 30px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      border: 1px solid rgba(93, 59, 32, 0.14);
+      border-radius: 10px;
+      background: #fff;
+      color: rgba(93, 59, 32, 0.46);
+      font-size: 0.58rem;
+      font-weight: 700;
+    }
+
+    .footer-preview-sns {
+      min-height: 42px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 0.66rem;
+      font-weight: 900;
+    }
+
+    .footer-preview-sns.instagram {
+      background: linear-gradient(120deg, #8a3ab9, #e95950, #fccc63);
+    }
+
+    .footer-preview-sns.tiktok {
+      background: linear-gradient(120deg, #161616, #333);
+    }
+
+    /* main-renew: manga preview follows the selected carousel character. */
+    #main-content .hero-carousel-shell,
+    #main-content .hero-character-row,
+    #main-content #openManga {
+      overflow: visible !important;
+    }
+
+    #main-content .hero-character-row {
+      position: relative;
+      z-index: 270;
+    }
+
+    #main-content #openManga {
+      position: relative;
+    }
+
+    .hero-action-preview.footer-action-preview {
+      min-height: 150px;
+      z-index: 240 !important;
+    }
+
+    #openManga .manga-action-preview {
+      left: 0;
+      width: min(244px, calc(100vw - 24px));
+      min-height: 184px;
+      color: #5d3b20;
+      text-shadow: none;
+    }
+
+    #openManga .manga-action-preview::after {
+      left: 18px;
+    }
+
+    .manga-action-preview-layout {
+      display: grid;
+      grid-template-columns: 86px minmax(0, 1fr);
+      align-items: stretch;
+      gap: 10px;
+    }
+
+    .manga-action-preview-image {
+      width: 86px;
+      height: 118px;
+      display: block;
+      object-fit: contain;
+      border: 1px solid rgba(93, 59, 32, 0.12);
+      border-radius: 11px;
+      background: #fff;
+    }
+
+    .manga-action-preview-meta {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 7px;
+      text-align: left;
+    }
+
+    .manga-action-preview-chip {
+      padding: 7px 8px;
+      display: block;
+      border-radius: 9px;
+      background: linear-gradient(145deg, #fff3e5, #f7e2ea);
+      color: #6d4931;
+      font-size: 0.61rem;
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      #main-content .popup-buttons-bar #giftFanMenu .gift-fan-action:hover {
+        z-index: 80;
+      }
+
+      #main-content .popup-buttons-bar #giftFanMenu .gift-fan-action:hover .footer-action-preview {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0) scale(1);
+      }
+
+      #main-content .popup-buttons-bar #giftFanMenu .gift-fan-action[data-fan-item="vote"]:hover .footer-action-preview {
+        transform: translate(-50%, 0) scale(1);
+      }
+
+      #main-content .hero-character-row:has(#openManga:hover),
+      #main-content #openManga:hover {
+        z-index: 300;
+      }
+
+      #main-content #openManga:hover .manga-action-preview {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @media (hover: none), (pointer: coarse) {
+      #main-content :is(#openManga, #giftFanMenu .gift-fan-action).is-mobile-preview-open {
+        z-index: 320 !important;
+        transform: translateY(-3px) scale(1.025) !important;
+        filter: brightness(1.025) saturate(1.04) !important;
+      }
+
+      #main-content :is(#openManga, #giftFanMenu .gift-fan-action).is-mobile-preview-open > .footer-action-preview {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0) scale(1);
+      }
+
+      #main-content #giftFanMenu .gift-fan-action[data-fan-item="vote"].is-mobile-preview-open > .footer-action-preview {
+        transform: translate(-50%, 0) scale(1);
+      }
+
+      #main-content #openManga > .footer-action-preview {
+        top: calc(100% + 12px);
+        bottom: auto;
+        transform: translateY(-12px) scale(0.9);
+        transform-origin: center top;
+      }
+
+      #main-content #openManga > .footer-action-preview::after {
+        top: -7px;
+        bottom: auto;
+        transform: rotate(225deg);
+      }
+
+      #main-content #openManga.is-mobile-preview-open > .footer-action-preview {
+        transform: translateY(0) scale(1);
+      }
+    }
+
     .footer-feature-column-row,
     .popup-buttons-bar .footer-feature-column-row {
       overflow: hidden !important;
@@ -7949,6 +8475,7 @@
 
     .footer-feature-track {
       width: 100%;
+      height: 165px;
       display: flex;
       gap: 0;
       overflow: visible;
@@ -7963,32 +8490,13 @@
       flex: 0 0 100% !important;
       max-width: none !important;
       min-width: 100% !important;
+      height: 165px !important;
+      max-height: 165px !important;
       margin: 0 !important;
       overflow: hidden !important;
       contain: paint;
       box-sizing: border-box;
       clip-path: inset(0 round 12px);
-      -webkit-user-drag: none;
-    }
-
-    .footer-burn-main-slide,
-    .popup-buttons-bar .footer-feature-column-row .footer-burn-main-slide {
-      display: block !important;
-      min-height: 165px;
-      background: #faf1e2 !important;
-    }
-
-    .footer-burn-main-slide::after {
-      display: none !important;
-    }
-
-    .footer-burn-main-image {
-      width: 100%;
-      height: 100%;
-      min-height: 165px;
-      display: block;
-      object-fit: cover;
-      object-position: center;
       -webkit-user-drag: none;
     }
 
@@ -8032,6 +8540,51 @@
       object-fit: cover;
       object-position: center;
       -webkit-user-drag: none;
+    }
+
+    .footer-ehon-slide,
+    .popup-buttons-bar .footer-feature-column-row .footer-ehon-slide {
+      position: relative;
+      display: block !important;
+      min-height: 165px;
+      background: #eef5e8 !important;
+    }
+
+    .footer-ehon-slide::after {
+      display: none !important;
+    }
+
+    .footer-ehon-image {
+      width: 100%;
+      height: 100%;
+      min-height: 165px;
+      display: block;
+      object-fit: cover;
+      object-position: center 18%;
+      -webkit-user-drag: none;
+    }
+
+    .footer-ehon-overlay {
+      position: absolute;
+      inset: auto 0 0;
+      z-index: 2;
+      display: grid;
+      gap: 2px;
+      padding: 22px 16px 12px;
+      color: #fff;
+      background: linear-gradient(180deg, transparent, rgba(48, 63, 38, 0.88));
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.34);
+    }
+
+    .footer-ehon-overlay b {
+      font-size: 1.08rem;
+      line-height: 1.25;
+    }
+
+    .footer-ehon-overlay small {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.72rem;
+      font-weight: 700;
     }
 
     .seal-gacha-launch-modal {
@@ -8423,9 +8976,16 @@
     }
 
     @media (max-width: 520px) {
-      .footer-burn-main-slide,
-      .popup-buttons-bar .footer-feature-column-row .footer-burn-main-slide,
-      .footer-burn-main-image,
+      .footer-feature-track {
+        height: 132px;
+      }
+
+      .footer-feature-track .burn-card,
+      .popup-buttons-bar .footer-feature-column-row .footer-feature-track .burn-card {
+        height: 132px !important;
+        max-height: 132px !important;
+      }
+
       .footer-gacha-slide,
       .popup-buttons-bar .footer-feature-column-row .footer-gacha-slide {
         min-height: 132px;
@@ -8434,8 +8994,19 @@
       .footer-compositing-slide,
       .popup-buttons-bar .footer-feature-column-row .footer-compositing-slide,
       .footer-compositing-slide img,
-      .footer-gacha-ticket {
+      .footer-gacha-ticket,
+      .footer-ehon-slide,
+      .popup-buttons-bar .footer-feature-column-row .footer-ehon-slide,
+      .footer-ehon-image {
         min-height: 132px;
+      }
+
+      .footer-ehon-overlay {
+        padding: 18px 12px 9px;
+      }
+
+      .footer-ehon-overlay b {
+        font-size: 0.94rem;
       }
 
       .footer-gacha-slide .burn-card-copy {
@@ -8622,7 +9193,7 @@
 
 <body>
   <!-- Splash -->
-  <div id="splash-screen">
+  <div id="splash-screen" role="button" tabindex="0" aria-label="タップして開始">
     <div class="splash-logo-shell" aria-hidden="true">
       <div class="splash-logo-frame">
         <img class="splash-logo-img" src="mobby-custom/assets/stickers/Logo.webp" alt="Mobby logo" fetchpriority="high" decoding="async" />
@@ -8631,6 +9202,7 @@
         <div class="splash-logo-mask splash-logo-trace"></div>
       </div>
     </div>
+    <div class="instruction" aria-hidden="true">TAP！！</div>
   </div>
 
   <div id="main-content">
@@ -8656,30 +9228,40 @@
               <div class="hero-model-carousel" id="heroModelCarousel" aria-live="polite"></div>
             </div>
             <div class="hero-character-row">
-              <button class="hero-character-action peek-heart-btn" id="openHeartNote" type="button" aria-label="心を覗く">&#128269;&#65038;</button>
+              <button class="hero-character-action manga-launch-btn" id="openManga" type="button" aria-label="選択中のモビーの漫画を読む" aria-controls="mangaInline" aria-expanded="false">
+                <span class="manga-launch-icon" aria-hidden="true">
+                  <svg viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 3.5C7.9 2.4 12.2 3.4 16 6.3V21C12.2 18.1 7.9 17.1 3 18.2V3.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M29 3.5C24.1 2.4 19.8 3.4 16 6.3V21C19.8 18.1 24.1 17.1 29 18.2V3.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                <span class="manga-launch-label">漫画</span>
+                <span class="footer-action-preview hero-action-preview manga-action-preview" aria-hidden="true">
+                  <span class="footer-action-preview-title" id="mangaPreviewTitle">もびりんの漫画</span>
+                  <span class="manga-action-preview-layout">
+                    <img class="manga-action-preview-image" id="mangaPreviewImage" src="manga/mobirin/1-1.webp" alt="">
+                    <span class="manga-action-preview-meta">
+                      <span class="manga-action-preview-chip" id="mangaPreviewEpisode">第1話から</span>
+                      <span class="manga-action-preview-chip" id="mangaPreviewPages">全2話・6ページ</span>
+                      <span class="footer-action-preview-copy">クリックして漫画を読む</span>
+                    </span>
+                  </span>
+                </span>
+              </button>
               <div class="hero-character-name" id="heroCharacterName">もびりん</div>
-              <button class="hero-character-action mode" id="heroCarouselModeButton" type="button" aria-label="カルーセル表示を切り替える">通常</button>
             </div>
           </div>
-          <div class="peek-heart-wrap">
-            <div class="heart-note-inline" id="heartNoteInline" hidden>
-              <div class="note-popup">
-                <button class="popup-close" id="closeHeartNoteInline" aria-label="Close note">×</button>
-                <div class="note-popup-inner">
-                  <div class="note-tabs" id="heartNoteTabs" hidden></div>
-                  <div class="note-popup-kicker">Private Note</div>
-                  <h2 id="heartNoteTitle">心を覗く</h2>
-                  <p id="heartNoteBody" class="note-body">ここに差し込みたい文章を置けるようにしてあります。
-ノートをそっと開いて、内側を読むような見え方です。
-
-あとでこの本文をそのまま差し替えれば使えます。</p>
-                  <div class="quote-page-controls" id="heartNoteQuotePager" hidden>
-                    <button type="button" class="quote-page-btn" id="heartNoteQuotePrev">←</button>
-                    <div class="quote-page-indicator" id="heartNoteQuoteIndicator">1 / 1</div>
-                    <button type="button" class="quote-page-btn" id="heartNoteQuoteNext">→</button>
-                  </div>
-                </div>
-              </div>
+          <div class="manga-viewer-wrap">
+            <div class="manga-inline" id="mangaInline" hidden>
+              <section class="manga-panel" aria-labelledby="mangaTitle">
+                <button class="manga-panel-close" id="closeManga" type="button" aria-label="漫画を閉じる">×</button>
+                <header class="manga-panel-header">
+                  <p class="manga-panel-kicker">Mobby Manga</p>
+                  <h2 class="manga-panel-title" id="mangaTitle">もびりんの漫画</h2>
+                </header>
+                <div class="manga-episode-tabs" id="mangaEpisodeTabs" role="tablist" aria-label="漫画の話数"></div>
+                <div class="manga-pages" id="mangaPages" aria-live="polite"></div>
+              </section>
             </div>
           </div>
           <div class="hero-diagnosis-tabs" role="tablist" aria-label="診断メニュー切り替え">
@@ -9332,28 +9914,29 @@
             <div class="gift-fan-menu is-open" id="giftFanMenu">
             <div class="burn-card-row footer-burn-card-row footer-feature-column-row" aria-label="おすすめメニュー">
               <div class="footer-feature-track">
-                <a class="burn-card footer-gacha-slide" href="gacha/index.html" aria-label="モビーガチャ">
-                  <img class="footer-gacha-ticket" src="gacha-new/ref/mobby-gacha-ticket.png" alt="" loading="lazy" decoding="async">
+                <a class="burn-card footer-ehon-slide" href="ehon/index.html" aria-label="モビーの絵本">
+                  <img class="footer-ehon-image" src="ehon/column/ehon-column-pattern-2.png" alt="" loading="lazy" decoding="async">
+                  <span class="footer-ehon-overlay"><b>モビーの絵本</b><small>全32ページを読む</small></span>
                 </a>
                 <a class="burn-card footer-compositing-slide" href="compositing.html" aria-label="ポスター作成">
                   <img src="compositing/reference/flier-mobby.png" alt="" loading="lazy" decoding="async">
                 </a>
-                <a class="burn-card footer-burn-main-slide" href="burn/burn-record/index.html" aria-label="BURN">
-                  <img class="footer-burn-main-image" src="burn/reference/burn-main-column.png" alt="" loading="lazy" decoding="async">
+                <a class="burn-card footer-gacha-slide" href="gacha/index.html" aria-label="シールガチャ">
+                  <img class="footer-gacha-ticket" src="gacha-new/ref/mobby-gacha-ticket.png" alt="" loading="lazy" decoding="async">
                 </a>
               </div>
               <div class="footer-feature-dots" role="tablist" aria-label="おすすめメニュー切り替え">
-                <button class="footer-feature-dot is-active" type="button" data-footer-feature-dot="0" aria-label="モビーガチャを表示" aria-selected="true"></button>
+                <button class="footer-feature-dot is-active" type="button" data-footer-feature-dot="0" aria-label="絵本を表示" aria-selected="true"></button>
                 <button class="footer-feature-dot" type="button" data-footer-feature-dot="1" aria-label="ポスター作成を表示" aria-selected="false"></button>
-                <button class="footer-feature-dot" type="button" data-footer-feature-dot="2" aria-label="BURNを表示" aria-selected="false"></button>
+                <button class="footer-feature-dot" type="button" data-footer-feature-dot="2" aria-label="シールガチャを表示" aria-selected="false"></button>
               </div>
             </div>
             <div class="gift-fan-actions" aria-hidden="false">
-              <a class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openCompositingPopup" data-fan-item="compositing" href="compositing.html"><span class="footer-btn-icon" data-icon="image" aria-hidden="true"></span><span>ポスター<br>作成</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></a>
-              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openEncyclopediaPopup" data-fan-item="encyclopedia"><span class="footer-btn-icon" data-icon="book" aria-hidden="true"></span><span>図鑑</span></button>
-              <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openVotePopup" data-fan-item="vote"><span class="footer-btn-icon" data-icon="vote" aria-hidden="true"></span><span>投票</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span></button>
-              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openFaqPopup" data-fan-item="faq"><span class="footer-btn-icon" data-icon="mail" aria-hidden="true"></span><span>お問い合わせ</span></button>
-              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openSnsPopup" data-fan-item="sns"><span class="footer-btn-icon" data-icon="share" aria-hidden="true"></span><span>SNS</span></button>
+              <a class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openCompositingPopup" data-fan-item="compositing" href="compositing.html"><span class="footer-btn-icon" data-icon="image" aria-hidden="true"></span><span>ポスター<br>作成</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">ポスター作成</span><img class="footer-action-preview-poster" src="compositing/reference/flier-mobby.png" alt=""><span class="footer-action-preview-copy">写真を選んで、モビーのポスターを作れます</span></span></a>
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openEncyclopediaPopup" data-fan-item="encyclopedia"><span class="footer-btn-icon" data-icon="book" aria-hidden="true"></span><span>図鑑</span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー図鑑</span><span class="footer-preview-type-grid"><span class="footer-preview-type"><b>📖</b>全112タイプ</span><span class="footer-preview-type"><b>💛</b>キャラ紹介</span><span class="footer-preview-type"><b>✨</b>詳細を見る</span></span><span class="footer-action-preview-copy">気になるモビーを選んでプロフィールをチェック</span></span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openVotePopup" data-fan-item="vote"><span class="footer-btn-icon" data-icon="vote" aria-hidden="true"></span><span>投票</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー人気投票</span><span class="footer-preview-vote-row"><span>もびりん</span><span class="footer-preview-vote-bar" style="--preview-vote-width:86%"></span><span>1位</span></span><span class="footer-preview-vote-row"><span>ギャル</span><span class="footer-preview-vote-bar" style="--preview-vote-width:68%"></span><span>2位</span></span><span class="footer-preview-vote-row"><span>ヤンキー</span><span class="footer-preview-vote-bar" style="--preview-vote-width:48%"></span><span>3位</span></span><span class="footer-action-preview-copy">好きなキャラを選んで投票できます</span></span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openFaqPopup" data-fan-item="faq"><span class="footer-btn-icon" data-icon="mail" aria-hidden="true"></span><span>お問い合わせ</span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">お問い合わせ</span><span class="footer-preview-form-line">メールアドレス</span><span class="footer-preview-form-line">お問い合わせ内容</span><span class="footer-action-preview-copy">フォームからメッセージを送れます</span></span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openSnsPopup" data-fan-item="sns"><span class="footer-btn-icon" data-icon="share" aria-hidden="true"></span><span>SNS</span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">Mobby公式SNS</span><span class="footer-preview-sns instagram"><span>Instagram</span><span>@mobby.official</span></span><span class="footer-preview-sns tiktok"><span>TikTok</span><span>@mobbyofficial</span></span></span></button>
             </div>
           </div>
           <button class="btn btn-secondary" id="openVideoPopup">動画</button>
@@ -9381,6 +9964,7 @@
 
 
   <!-- Matter.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <!-- EmailJS -->
   <div class="seal-gacha-launch-modal" id="sealGachaLaunchModal" role="dialog" aria-modal="true" aria-labelledby="sealGachaLaunchTitle" hidden>
     <div class="seal-gacha-launch-dialog">
@@ -9475,8 +10059,7 @@
       const carousel = document.getElementById("heroModelCarousel");
       const stage = carousel?.closest(".hero-model-stage");
       const heroCharacterName = document.getElementById("heroCharacterName");
-      const modeButton = document.getElementById("heroCarouselModeButton");
-      if (!carousel || !stage || !heroCharacterName || !modeButton) return;
+      if (!carousel || !stage || !heroCharacterName) return;
 
       const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
       const HERO_CAROUSEL_SETS = [
@@ -9563,7 +10146,6 @@
             slide.style.setProperty("--hero-image", `url("${imageUrl}")`);
           }
         });
-        modeButton.textContent = currentSet.buttonLabel;
       }
 
       function getCircularDelta(index, currentIndex) {
@@ -9714,16 +10296,6 @@
           return;
         }
         startAutoRotate();
-      });
-
-      modeButton.addEventListener("click", () => {
-        modeButton.classList.remove("is-switching");
-        void modeButton.offsetWidth;
-        modeButton.classList.add("is-switching");
-        window.setTimeout(() => {
-          modeButton.classList.remove("is-switching");
-        }, 380);
-        switchCarouselSet(currentSetIndex + 1);
       });
 
       buildSlides();
@@ -10127,8 +10699,19 @@
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
-    /* Splash */
-
+    /* Splash (Matter.js) */
+    const SPLASH_ICON_URLS = [
+      "img/mobby/mobby_pink.jpg",
+      "img/mobby/mobby_purple.jpg",
+      "img/mobby/mobby_blue.jpg",
+      "img/mobby/mobby_orange.jpg",
+      "img/mobby/mobby_pink2.jpg",
+      "img/mobby/mobby_yellow.jpg",
+      "img/mobby/mobby_purple2.jpg",
+      "img/mobby/mobby_blue2.jpg"
+    ];
+    const SPLASH_SPAWN_RATE = 100;
+    const SPLASH_TOTAL_ICONS = 50;
     const splashElement = document.getElementById('splash-screen');
     const mainContent = document.getElementById('main-content');
     const stickyCta = document.querySelector('.sticky-cta');
@@ -10141,7 +10724,7 @@
       initScrollObserver();
     };
 
-    const shouldSkipSplash = false;
+    const shouldSkipSplash = new URLSearchParams(window.location.search).get('skipSplash') === '1';
 
     if (shouldSkipSplash) {
       if (splashElement) {
@@ -10153,15 +10736,13 @@
 
     if (!shouldSkipSplash && splashElement) {
       let splashDone = false;
-      let splashAutoTimer = null;
+      let burstIcons = () => {};
+      let disposeSplashEffect = () => {};
 
       const exitSplash = () => {
         if (splashDone) return;
         splashDone = true;
-        if (splashAutoTimer) {
-          window.clearTimeout(splashAutoTimer);
-          splashAutoTimer = null;
-        }
+        burstIcons();
         splashElement.classList.add('is-bursting');
 
         window.setTimeout(() => {
@@ -10170,14 +10751,145 @@
         }, 960);
 
         window.setTimeout(() => {
+          disposeSplashEffect();
           splashElement.remove();
         }, 1380);
       };
 
       splashElement.addEventListener('click', exitSplash, { once: true });
       splashElement.addEventListener('pointerdown', exitSplash, { once: true });
-      splashElement.addEventListener('touchstart', exitSplash, { once: true, passive: true });
-      splashAutoTimer = window.setTimeout(exitSplash, 2400);
+      splashElement.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        exitSplash();
+      });
+
+      if (window.Matter) {
+        const { Engine, Render, Runner, Bodies, Composite, Body } = window.Matter;
+        const engine = Engine.create();
+        engine.world.gravity.y = 1.5;
+        const world = engine.world;
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        let dropTimer = null;
+        let iconCount = 0;
+        let availableIconUrls = [];
+
+        const render = Render.create({
+          element: splashElement,
+          engine,
+          options: {
+            width,
+            height,
+            background: 'transparent',
+            wireframes: false
+          }
+        });
+        render.canvas.setAttribute('aria-hidden', 'true');
+
+        const wallOptions = { isStatic: true, render: { visible: false } };
+        const floor = Bodies.rectangle(width / 2, height + 50, width + 200, 100, wallOptions);
+        const leftWall = Bodies.rectangle(-60, height / 2, 120, height + 200, wallOptions);
+        const rightWall = Bodies.rectangle(width + 60, height / 2, 120, height + 200, wallOptions);
+        Composite.add(world, [floor, leftWall, rightWall]);
+
+        const preloadImages = (urls) => Promise.all(urls.map(url => new Promise(resolve => {
+          const image = new Image();
+          image.onload = () => resolve({ url, ok: true });
+          image.onerror = () => resolve({ url, ok: false });
+          image.src = url;
+        })));
+
+        const startDropping = () => {
+          dropTimer = window.setInterval(() => {
+            if (splashDone || iconCount >= SPLASH_TOTAL_ICONS) {
+              window.clearInterval(dropTimer);
+              dropTimer = null;
+              return;
+            }
+
+            const iconSize = width <= 768 ? 75 : 150;
+            const xPos = Math.random() * Math.max(width - 120, 1) + Math.min(60, width / 2);
+            const hasSprite = availableIconUrls.length > 0;
+            const texture = hasSprite
+              ? availableIconUrls[Math.floor(Math.random() * availableIconUrls.length)]
+              : null;
+            const options = {
+              restitution: 0.55,
+              friction: 0.08,
+              frictionAir: 0.03,
+              render: {}
+            };
+
+            if (hasSprite) {
+              options.render.sprite = {
+                texture,
+                xScale: iconSize / 512,
+                yScale: iconSize / 512
+              };
+            } else {
+              const fallbackColors = ['#8FD7FF', '#F7A7C6', '#FFA24A', '#9C7BFF'];
+              options.render.fillStyle = fallbackColors[Math.floor(Math.random() * fallbackColors.length)];
+              options.render.strokeStyle = 'rgba(255,255,255,0.35)';
+              options.render.lineWidth = 2;
+            }
+
+            Composite.add(world, Bodies.circle(xPos, -60, iconSize / 2, options));
+            iconCount += 1;
+          }, SPLASH_SPAWN_RATE);
+        };
+
+        const resizeSplash = () => {
+          width = window.innerWidth;
+          height = window.innerHeight;
+          render.canvas.width = width;
+          render.canvas.height = height;
+          render.options.width = width;
+          render.options.height = height;
+          Body.setPosition(floor, { x: width / 2, y: height + 50 });
+          Body.setPosition(leftWall, { x: -60, y: height / 2 });
+          Body.setPosition(rightWall, { x: width + 60, y: height / 2 });
+        };
+
+        Render.run(render);
+        const runner = Runner.create();
+        Runner.run(runner, engine);
+        window.addEventListener('resize', resizeSplash, { passive: true });
+
+        preloadImages(SPLASH_ICON_URLS).then(results => {
+          if (splashDone) return;
+          availableIconUrls = results.filter(result => result.ok).map(result => result.url);
+          startDropping();
+        });
+
+        burstIcons = () => {
+          if (dropTimer) {
+            window.clearInterval(dropTimer);
+            dropTimer = null;
+          }
+          Composite.allBodies(world).forEach(body => {
+            if (body.isStatic) return;
+            const force = 0.5 * body.mass;
+            Body.applyForce(body, body.position, {
+              x: (Math.random() - 0.5) * force,
+              y: (Math.random() - 1.5) * force
+            });
+          });
+        };
+
+        disposeSplashEffect = () => {
+          if (dropTimer) window.clearInterval(dropTimer);
+          window.removeEventListener('resize', resizeSplash);
+          Render.stop(render);
+          Runner.stop(runner);
+          Composite.clear(world, false);
+          Engine.clear(engine);
+          render.canvas.remove();
+          render.textures = {};
+        };
+      } else {
+        console.warn('Matter.js could not be loaded; the splash remains tappable.');
+      }
     }
 
     window.addEventListener('resize', () => {
@@ -11424,6 +12136,123 @@
       heartNoteQuoteIndex += 1;
       renderHeartNotePage();
     });
+
+    (() => {
+      const mangaInline = document.getElementById('mangaInline');
+      const mangaTitle = document.getElementById('mangaTitle');
+      const mangaEpisodeTabs = document.getElementById('mangaEpisodeTabs');
+      const mangaPages = document.getElementById('mangaPages');
+      const mangaButton = document.getElementById('openManga');
+      const mangaCloseButton = document.getElementById('closeManga');
+      const mangaPreviewTitle = document.getElementById('mangaPreviewTitle');
+      const mangaPreviewImage = document.getElementById('mangaPreviewImage');
+      const mangaPreviewEpisode = document.getElementById('mangaPreviewEpisode');
+      const mangaPreviewPages = document.getElementById('mangaPreviewPages');
+      if (!mangaInline || !mangaTitle || !mangaEpisodeTabs || !mangaPages || !mangaButton) return;
+
+      const createMangaEpisodes = (slug, pageCounts) => pageCounts.map((pageCount, episodeIndex) => ({
+        label: `第${episodeIndex + 1}話`,
+        pages: Array.from({ length: pageCount }, (_, pageIndex) =>
+          `manga/${slug}/${episodeIndex + 1}-${pageIndex + 1}.webp`
+        )
+      }));
+
+      const MANGA_LIBRARY = {
+        'mobby_fact_man_toka.webp': {
+          character: 'もびりん',
+          episodes: createMangaEpisodes('mobirin', [3, 3])
+        },
+        'mobby_gal_toka.webp': {
+          character: 'もびち',
+          episodes: createMangaEpisodes('mobichi', [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 4])
+        },
+        'mobby_yami_toka.webp': {
+          character: '病みモビー',
+          episodes: createMangaEpisodes('yami', [3])
+        },
+        'mobby_yanki_toak.webp': {
+          character: 'もびやん',
+          episodes: createMangaEpisodes('mobiyan', [3, 3, 3, 3])
+        }
+      };
+
+      const getActiveManga = () => {
+        const activeImage = window.__activeHeroSlide?.image
+          || document.querySelector('.hero-model-slide.is-active .hero-model-viewer')?.getAttribute('src')
+          || '';
+        const filename = activeImage.split('/').pop();
+        return filename ? MANGA_LIBRARY[filename] : null;
+      };
+
+      const renderMangaPreview = () => {
+        const manga = getActiveManga();
+        if (!manga) return;
+        const firstEpisode = manga.episodes[0];
+        const firstPage = firstEpisode?.pages?.[0];
+        const totalPages = manga.episodes.reduce((sum, episode) => sum + episode.pages.length, 0);
+
+        if (mangaPreviewTitle) mangaPreviewTitle.textContent = `${manga.character}の漫画`;
+        if (mangaPreviewImage && firstPage) mangaPreviewImage.src = firstPage;
+        if (mangaPreviewEpisode) mangaPreviewEpisode.textContent = `${firstEpisode?.label || '第1話'}から`;
+        if (mangaPreviewPages) mangaPreviewPages.textContent = `全${manga.episodes.length}話・${totalPages}ページ`;
+      };
+
+      const renderManga = (episodeIndex = 0) => {
+        const manga = getActiveManga();
+        if (!manga) return false;
+        const safeIndex = Math.min(Math.max(episodeIndex, 0), manga.episodes.length - 1);
+        const episode = manga.episodes[safeIndex];
+
+        mangaTitle.textContent = `${manga.character}の漫画`;
+        mangaEpisodeTabs.innerHTML = manga.episodes.map((item, index) => `
+          <button class="manga-episode-button${index === safeIndex ? ' is-active' : ''}" type="button" role="tab" aria-selected="${index === safeIndex ? 'true' : 'false'}" data-manga-episode="${index}">${item.label}</button>
+        `).join('');
+        mangaPages.innerHTML = episode.pages.map((src, pageIndex) =>
+          `<img src="${src}" alt="${manga.character} ${episode.label} ${pageIndex + 1}ページ" loading="${pageIndex === 0 ? 'eager' : 'lazy'}" decoding="async">`
+        ).join('');
+        mangaPages.scrollTop = 0;
+
+        mangaEpisodeTabs.querySelectorAll('[data-manga-episode]').forEach((button) => {
+          button.addEventListener('click', () => renderManga(Number(button.dataset.mangaEpisode || 0)));
+        });
+        return true;
+      };
+
+      const closeManga = () => {
+        mangaInline.hidden = true;
+        mangaButton.setAttribute('aria-expanded', 'false');
+      };
+
+      const openManga = () => {
+        if (!renderManga(0)) return;
+        mangaInline.hidden = false;
+        mangaButton.setAttribute('aria-expanded', 'true');
+        requestAnimationFrame(() => {
+          mangaInline.scrollIntoView({
+            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+            block: 'nearest'
+          });
+        });
+      };
+
+      mangaButton.addEventListener('click', () => {
+        if (mangaInline.hidden) {
+          openManga();
+        } else {
+          closeManga();
+        }
+      });
+      mangaCloseButton?.addEventListener('click', closeManga);
+      window.addEventListener('hero-slide-change', () => {
+        renderMangaPreview();
+        if (!mangaInline.hidden) renderManga(0);
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !mangaInline.hidden) closeManga();
+      });
+      renderMangaPreview();
+    })();
+
     giftFanActions.forEach((action) => {
       action.addEventListener('click', () => {
         if (action.id === 'openPricePopup') return;
@@ -12711,7 +13540,7 @@
         let dragStartY = 0;
         let isDragging = false;
         let didSwipe = false;
-        const intervalMs = 4200;
+        const intervalMs = 8400;
         const swipeThreshold = 42;
 
         const setSlide = (nextIndex) => {
@@ -12805,6 +13634,57 @@
         initHeroDiagnosisAutoAdvance();
         initFooterFeatureSlider();
       }, { once: true });
+    })();
+  </script>
+
+  <script>
+    (() => {
+      const touchPreviewQuery = window.matchMedia('(hover: none), (pointer: coarse)');
+      const previewControlSelector = '#openManga, #giftFanMenu .gift-fan-action';
+
+      const closePreview = (owner) => {
+        if (!owner) return;
+        owner.classList.remove('is-mobile-preview-open');
+        owner.querySelector(':scope > .footer-action-preview')?.setAttribute('aria-hidden', 'true');
+      };
+
+      const closeAllPreviews = (except = null) => {
+        document.querySelectorAll('#openManga.is-mobile-preview-open, #giftFanMenu .gift-fan-action.is-mobile-preview-open').forEach((owner) => {
+          if (owner !== except) closePreview(owner);
+        });
+      };
+
+      const openPreview = (owner) => {
+        closeAllPreviews(owner);
+        owner.classList.add('is-mobile-preview-open');
+        owner.querySelector(':scope > .footer-action-preview')?.setAttribute('aria-hidden', 'false');
+      };
+
+      document.addEventListener('click', (event) => {
+        if (!touchPreviewQuery.matches || !(event.target instanceof Element)) return;
+
+        const tappedPreview = event.target.closest('.footer-action-preview');
+        if (tappedPreview) {
+          closePreview(tappedPreview.closest(previewControlSelector));
+          return;
+        }
+
+        const control = event.target.closest(previewControlSelector);
+        if (control && control.querySelector(':scope > .footer-action-preview')) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          if (control.classList.contains('is-mobile-preview-open')) {
+            closePreview(control);
+          } else {
+            openPreview(control);
+          }
+          return;
+        }
+
+        closeAllPreviews();
+      }, true);
+
+      touchPreviewQuery.addEventListener('change', () => closeAllPreviews());
     })();
   </script>
 
