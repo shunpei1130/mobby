@@ -844,7 +844,7 @@
 
     .reveal.active {
       opacity: 1;
-      transform: translateY(0);
+      transform: none;
     }
 
     .delay-200 {
@@ -8149,7 +8149,7 @@
     .footer-action-preview {
       position: absolute !important;
       bottom: calc(100% + 13px);
-      z-index: 120 !important;
+      z-index: 100005 !important;
       width: min(238px, calc(100vw - 24px));
       min-height: 142px;
       box-sizing: border-box;
@@ -8344,7 +8344,7 @@
 
     .hero-action-preview.footer-action-preview {
       min-height: 150px;
-      z-index: 240 !important;
+      z-index: 100005 !important;
     }
 
     #openManga .manga-action-preview {
@@ -9187,6 +9187,37 @@
       .hero-collab-diagnosis-menu .hero-collab-diagnosis-list {
         gap: 7px !important;
       }
+    }
+
+    /* Fix: preview cards hidden behind other elements on top page.
+       The glassmorphism rules set overflow:hidden and isolation:isolate
+       on .hero-character-action / .gift-fan-action which clips the
+       absolutely-positioned preview tooltips. Override those here
+       with high-specificity selectors placed last to win the cascade. */
+    #main-content #openManga.hero-character-action.manga-launch-btn {
+      overflow: visible !important;
+      isolation: auto !important;
+    }
+
+    #main-content .popup-buttons-bar #giftFanMenu .gift-fan-actions .gift-fan-action.action-box-btn {
+      overflow: visible !important;
+      isolation: auto !important;
+    }
+
+    #main-content .hero-carousel-shell,
+    #main-content .hero-character-row,
+    #main-content .hero-model-stage {
+      overflow: visible !important;
+    }
+
+    #main-content .hero .container {
+      overflow: visible !important;
+    }
+
+    .footer-action-preview,
+    .hero-action-preview,
+    .manga-action-preview {
+      z-index: 100005 !important;
     }
   </style>
 </head>
