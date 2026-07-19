@@ -8617,6 +8617,27 @@
         gap: 7px !important;
       }
     }
+
+    /* Fix preview elements layer overlapping on top page */
+    .footer-action-preview,
+    .hero-action-preview,
+    .manga-action-preview {
+      position: relative !important;
+      z-index: 100002 !important;
+      isolation: isolate;
+    }
+
+    .gift-fan-menu.is-open .manga-action-preview,
+    .gift-fan-actions .manga-action-preview,
+    .footer-feature-column-row .manga-action-preview,
+    .hero-diagnosis-menu .hero-action-preview,
+    .hero-collab-diagnosis-menu .hero-action-preview,
+    .popup-buttons-bar .footer-action-preview {
+      z-index: 100003 !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+    }
   </style>
 </head>
 
