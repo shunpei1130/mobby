@@ -245,6 +245,26 @@
       outline: none;
     }
     .field input:focus, .field select:focus { border-color: var(--violet); box-shadow: 0 0 0 3px rgba(108,90,150,.16); }
+    .consent-field {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.65;
+      cursor: pointer;
+    }
+    .consent-field input {
+      flex: 0 0 auto;
+      width: 18px;
+      height: 18px;
+      margin: 2px 0 0;
+      accent-color: var(--violet);
+    }
+    .form-error { margin: 10px 0 0; color: #b42318; font-size: 12px; font-weight: 800; }
+    .form-error[hidden] { display: none; }
     .result-layout {
       display: grid;
       grid-template-columns: minmax(280px, .94fr) minmax(0, 1.06fr);
@@ -692,6 +712,11 @@
                 </select>
               </div>
             </div>
+            <label class="consent-field" for="profileConsent">
+              <input id="profileConsent" name="consent" type="checkbox">
+              <span>入力した情報を連絡・改善のために保存することに同意します。</span>
+            </label>
+            <p class="form-error" id="profileError" role="alert" hidden></p>
             <div class="actions">
               <button class="btn primary" type="submit">結果を見る</button>
               <button class="btn" id="btnBackQuiz" type="button">回答に戻る</button>
@@ -707,6 +732,15 @@
       };
       document.getElementById("profileForm").onsubmit = async (event) => {
         event.preventDefault();
+        const consentEl = document.getElementById("profileConsent");
+        const errorEl = document.getElementById("profileError");
+        if (!consentEl.checked) {
+          errorEl.textContent = "同意にチェックしてください";
+          errorEl.hidden = false;
+          consentEl.focus();
+          return;
+        }
+        errorEl.hidden = true;
         const form = new FormData(event.currentTarget);
         state.profile = {
           name: String(form.get("name") || "").trim(),
