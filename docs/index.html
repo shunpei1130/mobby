@@ -9464,6 +9464,49 @@
     .home-main-action:nth-of-type(4) .home-main-action__icon { background: linear-gradient(145deg, #f2edff, #e5dcff); color: #8061c7; }
     .home-main-action:nth-of-type(5) .home-main-action__icon { background: linear-gradient(145deg, #effaf1, #dff3e3); color: #4f9870; }
 
+    .home-main-actions > .home-diagnosis-card > summary,
+    .home-main-actions > .home-main-action {
+      background-image: none;
+    }
+
+    .home-character-peek {
+      position: absolute;
+      right: 26px;
+      bottom: -8px;
+      z-index: 1;
+      width: 82px;
+      height: 108px;
+      pointer-events: none;
+      overflow: hidden;
+      mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
+    }
+
+    .home-character-peek img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center bottom;
+      filter: drop-shadow(0 6px 5px rgba(75, 48, 36, 0.16));
+      transform: translateY(10px);
+      transition: transform 0.22s ease;
+    }
+
+    .home-main-action:hover .home-character-peek img,
+    .home-main-action:focus-visible .home-character-peek img,
+    .home-diagnosis-card > summary:hover .home-character-peek img,
+    .home-diagnosis-card > summary:focus-visible .home-character-peek img {
+      transform: translateY(0) scale(1.05);
+    }
+
+    .home-main-action__icon,
+    .home-main-action__copy,
+    .home-diagnosis-card > summary > .home-main-action__icon,
+    .home-diagnosis-card > summary > .home-main-action__copy {
+      position: relative;
+      z-index: 2;
+    }
+
     .home-main-action .footer-action-preview,
     .home-diagnosis-card > summary .footer-action-preview {
       left: 50% !important;
@@ -9562,6 +9605,40 @@
       border-radius: 12px;
     }
 
+    .encyclopedia-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 7px;
+    }
+
+    .encyclopedia-preview-card {
+      overflow: hidden;
+      border-radius: 11px;
+      background: #fff;
+      box-shadow: inset 0 0 0 1px rgba(93, 59, 32, 0.1);
+    }
+
+    .encyclopedia-preview-card img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
+
+    .encyclopedia-preview-card span {
+      display: block;
+      padding: 5px 3px 6px;
+      color: #6d4931;
+      font-size: 0.54rem;
+      font-weight: 900;
+      line-height: 1.3;
+      text-align: center;
+    }
+
+    .popup-buttons-bar[hidden] {
+      display: none !important;
+    }
+
     @media (max-width: 520px) {
       .home-manga-feature {
         width: calc(100% - 20px);
@@ -9610,6 +9687,12 @@
       }
 
       .home-main-action__copy small { display: none; }
+
+      .home-character-peek {
+        right: 22px;
+        width: 62px;
+        height: 82px;
+      }
 
       .home-main-action::after {
         flex-basis: 26px;
@@ -9671,6 +9754,7 @@
               <summary data-preview="学校・メンヘラ・推し活・恋愛&#10;コラボ診断もこちら">
                 <span class="home-main-action__icon" aria-hidden="true">♡</span>
                 <span class="home-main-action__copy"><strong>診断</strong><small>あなたにぴったりのモビーを見つけよう</small></span>
+                <span class="home-character-peek" aria-hidden="true"><img src="carousel/after/mobby_fact_man_toka.webp" alt=""></span>
                 <span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー診断</span><span class="home-preview-image-grid"><img src="carousel/after/mobby_fact_man_toka.webp" alt=""><img src="carousel/after/mobby_gal_toka.webp" alt=""><img src="carousel/after/mobby_yami_toka.webp" alt=""><img src="carousel/after/mobby_yanki_toak.webp" alt=""></span><span class="footer-action-preview-copy">学校・メンヘラ・推し活・恋愛などから選べます</span></span>
               </summary>
               <div class="home-diagnosis-card__body">
@@ -9694,10 +9778,10 @@
                 </div>
               </div>
             </details>
-            <a class="home-main-action" id="homePosterAction" href="compositing.html" data-preview="写真を選んで&#10;オリジナルのモビーポスターを作れます"><span class="home-main-action__icon" aria-hidden="true">▧</span><span class="home-main-action__copy"><strong>ポスター</strong><small>写真でオリジナルポスターを作る</small></span></a>
-            <button class="home-main-action" id="homeOpenEncyclopedia" type="button" data-preview="全タイプのモビーを収録&#10;プロフィールや特徴をチェック"><span class="home-main-action__icon" aria-hidden="true">▤</span><span class="home-main-action__copy"><strong>図鑑</strong><small>モビーのプロフィールを見る</small></span></button>
-            <button class="home-main-action" id="homeOpenFaq" type="button" data-preview="質問やご相談はこちら&#10;フォームからメッセージを送れます"><span class="home-main-action__icon" aria-hidden="true">✉</span><span class="home-main-action__copy"><strong>お問い合わせ</strong><small>フォームからメッセージを送る</small></span></button>
-            <button class="home-main-action" id="homeOpenSns" type="button" data-preview="Instagram・TikTokで&#10;Mobbyの最新情報をチェック"><span class="home-main-action__icon" aria-hidden="true">♧</span><span class="home-main-action__copy"><strong>SNS</strong><small>Mobby公式アカウントを見る</small></span></button>
+            <a class="home-main-action" id="homePosterAction" href="compositing.html" data-preview="写真を選んで&#10;オリジナルのモビーポスターを作れます"><span class="home-main-action__icon" aria-hidden="true">▧</span><span class="home-main-action__copy"><strong>ポスター</strong><small>写真でオリジナルポスターを作る</small></span><span class="home-character-peek" aria-hidden="true"><img src="carousel/after/mobby_yami_toka.webp" alt=""></span></a>
+            <button class="home-main-action" id="homeOpenEncyclopedia" type="button" data-preview="全タイプのモビーを収録&#10;プロフィールや特徴をチェック"><span class="home-main-action__icon" aria-hidden="true">▤</span><span class="home-main-action__copy"><strong>図鑑</strong><small>モビーのプロフィールを見る</small></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー図鑑・代表キャラクター</span><span class="encyclopedia-preview-grid"><span class="encyclopedia-preview-card"><img src="16school/cha/ortp.jpg" alt=""><span>文化祭センター<br>ステージモビー</span></span><span class="encyclopedia-preview-card"><img src="16school/cha/ojtp2.jpg" alt=""><span>カップル自撮り<br>モビー</span></span><span class="encyclopedia-preview-card"><img src="16renai/image/lovemobby/花束の主人公モビー.webp" alt=""><span>恋愛モビー<br>花束の主人公</span></span><span class="encyclopedia-preview-card"><img src="16renai/image/lovemobby/胸奥のロマンモビー.webp" alt=""><span>恋愛モビー<br>胸奥のロマン</span></span></span><span class="footer-action-preview-copy">学校モビーと恋愛モビーから代表4タイプを紹介</span></span></button>
+            <button class="home-main-action" id="homeOpenFaq" type="button" data-preview="質問やご相談はこちら&#10;フォームからメッセージを送れます"><span class="home-main-action__icon" aria-hidden="true">✉</span><span class="home-main-action__copy"><strong>お問い合わせ</strong><small>フォームからメッセージを送る</small></span><span class="home-character-peek" aria-hidden="true"><img src="carousel/after/mobby_gal_toka.webp" alt=""></span></button>
+            <button class="home-main-action" id="homeOpenSns" type="button" data-preview="Instagram・TikTokで&#10;Mobbyの最新情報をチェック"><span class="home-main-action__icon" aria-hidden="true">♧</span><span class="home-main-action__copy"><strong>SNS</strong><small>Mobby公式アカウントを見る</small></span><span class="home-character-peek" aria-hidden="true"><img src="carousel/after/mobby_yami_toka.webp" alt=""></span></button>
             <a class="home-main-action" href="ehon/index.html" data-preview="モビーたちの物語を&#10;全32ページで楽しめます"><span class="home-main-action__icon" aria-hidden="true">▢</span><span class="home-main-action__copy"><strong>絵本</strong><small>モビーの物語を読む</small></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビーの絵本</span><img class="home-preview-cover" src="ehon/column/ehon-column-pattern-2.png" alt=""><span class="footer-action-preview-copy">モビーたちの物語を全32ページで楽しめます</span></span></a>
           </nav>
 
@@ -10370,7 +10454,7 @@
       </div>
     </div>
     <!-- ポップアップボタン（最下部） -->
-    <div class="popup-buttons-bar">
+    <div class="popup-buttons-bar" hidden aria-hidden="true">
       <div class="container">
         <div class="popup-buttons">
             <div class="gift-fan-menu is-open" id="giftFanMenu">
@@ -12721,6 +12805,15 @@
         closeGiftFanMenu();
       });
     });
+    const homeMangaFeature = document.querySelector('.home-manga-feature');
+    const homeCarouselArea = [
+      document.querySelector('.gacha-btn-wrap'),
+      document.querySelector('.hero-carousel-shell'),
+      document.querySelector('.manga-viewer-wrap')
+    ].filter(Boolean);
+    if (homeMangaFeature) {
+      homeCarouselArea.forEach((element) => homeMangaFeature.before(element));
+    }
     giftFanDiagnosisActions.forEach((action) => {
       action.addEventListener('click', () => {
         closeGiftFanMenu();
@@ -12748,6 +12841,27 @@
       const preview = document.querySelector(`#${sourceId} .footer-action-preview`);
       if (!target || !preview || target.querySelector('.footer-action-preview')) return;
       target.appendChild(preview.cloneNode(true));
+    });
+    [
+      ['.home-diagnosis-card > summary', 'carousel/after/mobby_fact_man_toka.webp'],
+      ['#homePosterAction', 'carousel/after/mobby_yanki_toak.webp'],
+      ['#homeOpenEncyclopedia', 'carousel/after/mobby_yami_toka.webp'],
+      ['#homeOpenFaq', 'carousel/after/mobby_gal_toka.webp'],
+      ['#homeOpenSns', 'carousel/after/mobby_yanki_toak.webp'],
+      ['.home-main-actions > a[href="ehon/index.html"]', 'carousel/after/mobby_fact_man_toka.webp']
+    ].forEach(([selector, imagePath]) => {
+      const target = document.querySelector(selector);
+      if (!target) return;
+      const existingPeek = target.querySelector(':scope > .home-character-peek');
+      if (existingPeek) {
+        existingPeek.querySelector('img')?.setAttribute('src', imagePath);
+        return;
+      }
+      const peek = document.createElement('span');
+      peek.className = 'home-character-peek';
+      peek.setAttribute('aria-hidden', 'true');
+      peek.innerHTML = `<img src="${imagePath}" alt="">`;
+      target.appendChild(peek);
     });
     document.getElementById('openVotePopup')?.addEventListener('click', async () => {
       renderVotePopup();
