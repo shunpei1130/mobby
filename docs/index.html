@@ -9219,6 +9219,410 @@
     .manga-action-preview {
       z-index: 100005 !important;
     }
+
+    /* Featured manga: the first clear action on the home screen. */
+    .home-manga-feature {
+      width: min(760px, calc(100% - 24px));
+      margin: 14px auto 30px;
+      padding: 18px;
+      border: 1px solid rgba(92, 68, 48, 0.1);
+      border-radius: 28px;
+      background: linear-gradient(145deg, rgba(255, 253, 246, 0.98), rgba(255, 247, 235, 0.96));
+      box-shadow: 0 18px 46px rgba(92, 68, 48, 0.13);
+      color: #49372d;
+      text-align: left;
+    }
+
+    .home-manga-feature__head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .home-manga-feature__ribbon {
+      flex: 0 0 auto;
+      padding: 8px 16px;
+      border-radius: 8px 18px 8px 18px;
+      background: #f24483;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      transform: rotate(-2deg);
+    }
+
+    .home-manga-feature__title {
+      margin: 0;
+      font-size: clamp(1rem, 3.2vw, 1.3rem);
+      line-height: 1.4;
+    }
+
+    .home-manga-feature__image-link {
+      display: block;
+      overflow: hidden;
+      border: 3px solid #3a2720;
+      border-radius: 18px;
+      background: #f8ead8;
+    }
+
+    .home-manga-feature__image {
+      display: block;
+      width: 100%;
+      height: auto;
+      transition: transform 0.35s ease;
+    }
+
+    .home-manga-feature__image-link:hover .home-manga-feature__image {
+      transform: scale(1.015);
+    }
+
+    .home-manga-feature__cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      min-height: 62px;
+      margin-top: 16px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #f53f7f, #ed4c82);
+      box-shadow: 0 10px 24px rgba(242, 68, 131, 0.28);
+      color: #fff;
+      font-size: clamp(1rem, 4vw, 1.25rem);
+      font-weight: 900;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .home-manga-feature__cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(242, 68, 131, 0.34);
+    }
+
+    .home-manga-feature__cta-icon {
+      font-size: 1.35em;
+      line-height: 1;
+    }
+
+    .home-main-actions {
+      width: min(760px, calc(100% - 24px));
+      margin: 0 auto 32px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      padding: 4px;
+    }
+
+    .home-main-action,
+    .home-diagnosis-card > summary {
+      min-height: 116px;
+      border: 1px solid rgba(255, 255, 255, 0.88);
+      border-radius: 24px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(255, 247, 242, 0.82));
+      box-shadow: 0 12px 30px rgba(104, 76, 60, 0.1), inset 0 1px 0 #fff;
+      backdrop-filter: blur(14px);
+      color: #49372d;
+      text-decoration: none;
+    }
+
+    .home-main-action {
+      display: flex;
+      position: relative;
+      align-items: center;
+      gap: 16px;
+      padding: 20px;
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .home-main-action::after {
+      content: "›";
+      display: grid;
+      flex: 0 0 32px;
+      width: 32px;
+      height: 32px;
+      margin-left: auto;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(245, 63, 127, 0.12);
+      color: #ed4c82;
+      font-size: 1.45rem;
+      font-weight: 800;
+    }
+
+    .home-main-action::before,
+    .home-diagnosis-card > summary::before {
+      content: attr(data-preview);
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 12px);
+      z-index: 40;
+      width: min(260px, calc(100vw - 44px));
+      padding: 14px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.92);
+      border-radius: 18px;
+      background: rgba(255, 252, 248, 0.98);
+      box-shadow: 0 16px 38px rgba(78, 55, 43, 0.18);
+      color: #5b4438;
+      font-size: 0.82rem;
+      font-weight: 700;
+      line-height: 1.65;
+      text-align: center;
+      white-space: pre-line;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 8px) scale(0.96);
+      transform-origin: center bottom;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+
+    .home-main-action:hover::before,
+    .home-main-action:focus-visible::before,
+    .home-diagnosis-card > summary:hover::before,
+    .home-diagnosis-card > summary:focus-visible::before {
+      opacity: 1;
+      transform: translate(-50%, 0) scale(1);
+    }
+
+    .home-main-action:hover,
+    .home-diagnosis-card > summary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 34px rgba(80, 55, 42, 0.14);
+    }
+
+    .home-main-action__icon {
+      display: grid;
+      flex: 0 0 54px;
+      width: 54px;
+      height: 54px;
+      place-items: center;
+      border-radius: 18px;
+      border: 1px solid rgba(245, 63, 127, 0.1);
+      background: linear-gradient(145deg, #fff0f5, #ffe4ee);
+      color: #df4779;
+      font-size: 28px;
+    }
+
+    .home-main-action__copy {
+      display: grid;
+      gap: 4px;
+    }
+
+    .home-main-action__copy strong {
+      font-size: clamp(1.05rem, 3.4vw, 1.3rem);
+    }
+
+    .home-main-action__copy small {
+      color: #816d62;
+      font-size: 0.78rem;
+      line-height: 1.45;
+    }
+
+    .home-diagnosis-card {
+      min-width: 0;
+    }
+
+    .home-diagnosis-card[open] { grid-column: 1 / -1; }
+
+    .home-diagnosis-card > summary {
+      display: flex;
+      position: relative;
+      align-items: center;
+      gap: 16px;
+      padding: 20px;
+      cursor: pointer;
+      list-style: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .home-diagnosis-card > summary::-webkit-details-marker { display: none; }
+
+    .home-diagnosis-card > summary::after {
+      content: "＋";
+      margin-left: auto;
+      color: #f53f7f;
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .home-diagnosis-card[open] > summary::after { content: "−"; }
+
+    .home-diagnosis-card__body {
+      margin-top: 12px;
+      padding: 18px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 12px 30px rgba(80, 55, 42, 0.08);
+    }
+
+    .home-main-action:nth-of-type(1) .home-main-action__icon { background: linear-gradient(145deg, #fff5dd, #ffeab8); color: #c68821; }
+    .home-main-action:nth-of-type(2) .home-main-action__icon { background: linear-gradient(145deg, #eef8ff, #dcefff); color: #3e91c9; }
+    .home-main-action:nth-of-type(3) .home-main-action__icon { background: linear-gradient(145deg, #fff0f5, #ffe1eb); color: #df4779; }
+    .home-main-action:nth-of-type(4) .home-main-action__icon { background: linear-gradient(145deg, #f2edff, #e5dcff); color: #8061c7; }
+    .home-main-action:nth-of-type(5) .home-main-action__icon { background: linear-gradient(145deg, #effaf1, #dff3e3); color: #4f9870; }
+
+    .home-main-action .footer-action-preview,
+    .home-diagnosis-card > summary .footer-action-preview {
+      left: 50% !important;
+      right: auto !important;
+      bottom: calc(100% + 13px);
+      width: min(260px, calc(100vw - 28px));
+      transform: translate(-50%, 15px) scale(0.9) !important;
+    }
+
+    .home-main-action .footer-action-preview::after,
+    .home-diagnosis-card > summary .footer-action-preview::after {
+      left: calc(50% - 7px) !important;
+      right: auto !important;
+    }
+
+    .home-main-action:has(.footer-action-preview)::before,
+    .home-diagnosis-card > summary:has(.footer-action-preview)::before { display: none; }
+
+    .home-main-action:hover .footer-action-preview,
+    .home-main-action:focus-visible .footer-action-preview,
+    .home-diagnosis-card > summary:hover .footer-action-preview,
+    .home-diagnosis-card > summary:focus-visible .footer-action-preview {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, 0) scale(1) !important;
+    }
+
+    /* Keep previews inside the viewport at both edges of the two-column grid. */
+    .home-main-actions > :nth-child(odd) .footer-action-preview {
+      left: 0 !important;
+      right: auto !important;
+      transform: translate(0, 15px) scale(0.9) !important;
+      transform-origin: left bottom;
+    }
+
+    .home-main-actions > :nth-child(even) .footer-action-preview {
+      left: auto !important;
+      right: 0 !important;
+      transform: translate(0, 15px) scale(0.9) !important;
+      transform-origin: right bottom;
+    }
+
+    .home-main-actions > :nth-child(odd):hover .footer-action-preview,
+    .home-main-actions > :nth-child(odd):focus-visible .footer-action-preview,
+    .home-main-actions > :nth-child(even):hover .footer-action-preview,
+    .home-main-actions > :nth-child(even):focus-visible .footer-action-preview {
+      transform: translate(0, 0) scale(1) !important;
+    }
+
+    .home-main-actions > :nth-child(odd) .footer-action-preview::after {
+      left: 28px !important;
+      right: auto !important;
+    }
+
+    .home-main-actions > :nth-child(even) .footer-action-preview::after {
+      left: auto !important;
+      right: 28px !important;
+    }
+
+    .home-diagnosis-card[open] > summary .footer-action-preview {
+      left: 50% !important;
+      right: auto !important;
+      transform: translate(-50%, 15px) scale(0.9) !important;
+      transform-origin: center bottom;
+    }
+
+    .home-diagnosis-card[open] > summary:hover .footer-action-preview,
+    .home-diagnosis-card[open] > summary:focus-visible .footer-action-preview {
+      transform: translate(-50%, 0) scale(1) !important;
+    }
+
+    .home-diagnosis-card[open] > summary .footer-action-preview::after {
+      left: calc(50% - 7px) !important;
+      right: auto !important;
+    }
+
+    .home-preview-image-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .home-preview-image-grid img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: contain;
+      border-radius: 10px;
+      background: linear-gradient(145deg, #fff5eb, #f7e9ef);
+    }
+
+    .home-preview-cover {
+      display: block;
+      width: 100%;
+      height: 112px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+
+    @media (max-width: 520px) {
+      .home-manga-feature {
+        width: calc(100% - 20px);
+        margin-top: 6px;
+        padding: 12px;
+        border-radius: 22px;
+      }
+
+      .home-manga-feature__head {
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+
+      .home-manga-feature__ribbon {
+        padding: 7px 11px;
+        font-size: 0.78rem;
+      }
+
+      .home-manga-feature__image-link {
+        border-width: 2px;
+        border-radius: 14px;
+      }
+
+      .home-manga-feature__cta {
+        min-height: 56px;
+        margin-top: 12px;
+      }
+
+      .home-main-actions {
+        width: calc(100% - 20px);
+        gap: 10px;
+      }
+
+      .home-main-action {
+        min-height: 100px;
+        padding: 14px 12px;
+        gap: 10px;
+      }
+
+      .home-main-action__icon {
+        flex-basis: 44px;
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        font-size: 23px;
+      }
+
+      .home-main-action__copy small { display: none; }
+
+      .home-main-action::after {
+        flex-basis: 26px;
+        width: 26px;
+        height: 26px;
+        font-size: 1.15rem;
+      }
+
+      @media (hover: none) {
+        .home-main-action::before,
+        .home-diagnosis-card > summary::before { display: none; }
+      }
+    }
   </style>
 </head>
 
@@ -9245,6 +9649,57 @@
       <section class="hero">
         <div class="container reveal">
 
+
+
+          <article class="home-manga-feature" aria-labelledby="homeMangaFeatureTitle">
+            <div class="home-manga-feature__head">
+              <span class="home-manga-feature__ribbon">今日の4コマ</span>
+              <h2 class="home-manga-feature__title" id="homeMangaFeatureTitle">「あれ見て」</h2>
+            </div>
+            <a class="home-manga-feature__image-link" href="img/home/4-com.png" target="_blank" rel="noopener" aria-label="今日の4コマを大きく表示">
+              <img class="home-manga-feature__image" src="img/home/4-com.png" alt="黒いモビーが、よそ見をして人にぶつかりそうな白いモビーを止める4コマ漫画" fetchpriority="high" decoding="async">
+            </a>
+            <a class="home-manga-feature__cta" href="manga-flow.html?character=mobirin">
+              <span class="home-manga-feature__cta-icon" aria-hidden="true">▣</span>
+              <span>ほかの4コマ漫画を見る</span>
+              <span aria-hidden="true">›</span>
+            </a>
+          </article>
+
+          <nav class="home-main-actions" aria-label="メインメニュー">
+            <details class="home-diagnosis-card">
+              <summary data-preview="学校・メンヘラ・推し活・恋愛&#10;コラボ診断もこちら">
+                <span class="home-main-action__icon" aria-hidden="true">♡</span>
+                <span class="home-main-action__copy"><strong>診断</strong><small>あなたにぴったりのモビーを見つけよう</small></span>
+                <span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー診断</span><span class="home-preview-image-grid"><img src="carousel/after/mobby_fact_man_toka.webp" alt=""><img src="carousel/after/mobby_gal_toka.webp" alt=""><img src="carousel/after/mobby_yami_toka.webp" alt=""><img src="carousel/after/mobby_yanki_toak.webp" alt=""></span><span class="footer-action-preview-copy">学校・メンヘラ・推し活・恋愛などから選べます</span></span>
+              </summary>
+              <div class="home-diagnosis-card__body">
+                <div class="hero-diagnosis-tabs" role="tablist" aria-label="診断メニュー切り替え">
+                  <button class="hero-diagnosis-tab is-active" id="heroDiagnosisTabNormal" type="button" role="tab" aria-selected="true" aria-controls="heroDiagnosisPanelNormal" data-diagnosis-tab="normal">通常</button>
+                  <button class="hero-diagnosis-tab" id="heroDiagnosisTabCollab" type="button" role="tab" aria-selected="false" aria-controls="heroDiagnosisPanelCollab" data-diagnosis-tab="collab">コラボ</button>
+                </div>
+                <div class="hero-diagnosis-menu hero-diagnosis-tab-panel" id="heroDiagnosisPanelNormal" role="tabpanel" aria-labelledby="heroDiagnosisTabNormal" data-diagnosis-panel="normal">
+                  <div class="gift-fan-diagnosis-actions" id="heroDiagnosisActions" aria-hidden="false"><div class="hero-diagnosis-track">
+                    <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16school/index.html" data-diagnosis-item="school"><span class="footer-btn-icon" data-icon="school" aria-hidden="true"></span><span>学校</span></a>
+                    <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16love/index.html" data-diagnosis-item="love"><span class="footer-btn-icon" data-icon="cloud" aria-hidden="true"></span><span>メンヘラ</span></a>
+                    <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16stan/index.html" data-diagnosis-item="oshi"><span class="footer-btn-icon" data-icon="star" aria-hidden="true"></span><span>推し</span></a>
+                    <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16renai/index.html" data-diagnosis-item="romance"><span class="footer-btn-icon" data-icon="heart" aria-hidden="true"></span><span>恋愛</span></a>
+                  </div></div>
+                </div>
+                <div class="hero-collab-diagnosis-menu hero-diagnosis-tab-panel" id="heroDiagnosisPanelCollab" role="tabpanel" aria-labelledby="heroDiagnosisTabCollab" data-diagnosis-panel="collab" aria-hidden="true" hidden>
+                  <ul class="hero-collab-diagnosis-list" aria-label="コラボ診断メニュー">
+                    <li><a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" href="meeco/index.html" data-diagnosis-item="blank-4"><span class="gift-fan-person-badge">meeco様</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-compact" aria-hidden="true"></span><span>空想コスメ<br>キャラ診断</span></a></li>
+                    <li><a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" href="miyake-yuko/index.html" data-diagnosis-item="blank-2"><span class="gift-fan-person-badge">三宅裕子さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-compact" aria-hidden="true"></span><span>beauty mood<br>診断</span></a></li>
+                  </ul>
+                </div>
+              </div>
+            </details>
+            <a class="home-main-action" id="homePosterAction" href="compositing.html" data-preview="写真を選んで&#10;オリジナルのモビーポスターを作れます"><span class="home-main-action__icon" aria-hidden="true">▧</span><span class="home-main-action__copy"><strong>ポスター</strong><small>写真でオリジナルポスターを作る</small></span></a>
+            <button class="home-main-action" id="homeOpenEncyclopedia" type="button" data-preview="全タイプのモビーを収録&#10;プロフィールや特徴をチェック"><span class="home-main-action__icon" aria-hidden="true">▤</span><span class="home-main-action__copy"><strong>図鑑</strong><small>モビーのプロフィールを見る</small></span></button>
+            <button class="home-main-action" id="homeOpenFaq" type="button" data-preview="質問やご相談はこちら&#10;フォームからメッセージを送れます"><span class="home-main-action__icon" aria-hidden="true">✉</span><span class="home-main-action__copy"><strong>お問い合わせ</strong><small>フォームからメッセージを送る</small></span></button>
+            <button class="home-main-action" id="homeOpenSns" type="button" data-preview="Instagram・TikTokで&#10;Mobbyの最新情報をチェック"><span class="home-main-action__icon" aria-hidden="true">♧</span><span class="home-main-action__copy"><strong>SNS</strong><small>Mobby公式アカウントを見る</small></span></button>
+            <a class="home-main-action" href="ehon/index.html" data-preview="モビーたちの物語を&#10;全32ページで楽しめます"><span class="home-main-action__icon" aria-hidden="true">▢</span><span class="home-main-action__copy"><strong>絵本</strong><small>モビーの物語を読む</small></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビーの絵本</span><img class="home-preview-cover" src="ehon/column/ehon-column-pattern-2.png" alt=""><span class="footer-action-preview-copy">モビーたちの物語を全32ページで楽しめます</span></span></a>
+          </nav>
 
 
           <!-- 4色カルーセル -->
@@ -9294,30 +9749,6 @@
                 <div class="manga-pages" id="mangaPages" aria-live="polite"></div>
               </section>
             </div>
-          </div>
-          <div class="hero-diagnosis-tabs" role="tablist" aria-label="診断メニュー切り替え">
-            <button class="hero-diagnosis-tab is-active" id="heroDiagnosisTabNormal" type="button" role="tab" aria-selected="true" aria-controls="heroDiagnosisPanelNormal" data-diagnosis-tab="normal">通常</button>
-            <button class="hero-diagnosis-tab" id="heroDiagnosisTabCollab" type="button" role="tab" aria-selected="false" aria-controls="heroDiagnosisPanelCollab" data-diagnosis-tab="collab">コラボ</button>
-          </div>
-          <div class="hero-diagnosis-menu hero-diagnosis-tab-panel" id="heroDiagnosisPanelNormal" role="tabpanel" aria-labelledby="heroDiagnosisTabNormal" data-diagnosis-panel="normal">
-            <div class="gift-fan-diagnosis-actions" id="heroDiagnosisActions" aria-hidden="false">
-              <div class="hero-diagnosis-track">
-                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16school/index.html" data-diagnosis-item="school"><span class="footer-btn-icon" data-icon="school" aria-hidden="true"></span><span>学校</span></a>
-                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16love/index.html" data-diagnosis-item="love"><span class="footer-btn-icon" data-icon="cloud" aria-hidden="true"></span><span>メンヘラ</span></a>
-                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16stan/index.html" data-diagnosis-item="oshi"><span class="footer-btn-icon" data-icon="star" aria-hidden="true"></span><span>推し</span></a>
-                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16renai/index.html" data-diagnosis-item="romance"><span class="footer-btn-icon" data-icon="heart" aria-hidden="true"></span><span>恋愛</span></a>
-              </div>
-            </div>
-          </div>
-          <div class="hero-collab-diagnosis-menu hero-diagnosis-tab-panel" id="heroDiagnosisPanelCollab" role="tabpanel" aria-labelledby="heroDiagnosisTabCollab" data-diagnosis-panel="collab" aria-hidden="true" hidden>
-            <ul class="hero-collab-diagnosis-list" aria-label="コラボ診断メニュー">
-              <li>
-                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" href="meeco/index.html" data-diagnosis-item="blank-4" aria-label="『魔女の空想コスメ』キャラタイプ診断" title="『魔女の空想コスメ』キャラタイプ診断"><span class="gift-fan-person-badge">meeco様</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-compact" aria-hidden="true"></span><span>空想コスメ<br>キャラ診断</span></a>
-              </li>
-              <li>
-                <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" href="miyake-yuko/index.html" data-diagnosis-item="blank-2" aria-label="beauty mood 診断"><span class="gift-fan-person-badge">三宅裕子さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-compact" aria-hidden="true"></span><span>beauty mood<br>診断</span></a>
-              </li>
-            </ul>
           </div>
         </div>
       </section>
@@ -12304,6 +12735,20 @@
     document.getElementById('openFaqPopup')?.addEventListener('click', () => openPopup('faqPopup'));
     document.getElementById('openSnsPopup')?.addEventListener('click', () => openPopup('snsPopup'));
     document.getElementById('openEncyclopediaPopup')?.addEventListener('click', () => openPopup('encyclopediaPopup'));
+    document.getElementById('homeOpenFaq')?.addEventListener('click', () => openPopup('faqPopup'));
+    document.getElementById('homeOpenSns')?.addEventListener('click', () => openPopup('snsPopup'));
+    document.getElementById('homeOpenEncyclopedia')?.addEventListener('click', () => openPopup('encyclopediaPopup'));
+    [
+      ['homePosterAction', 'openCompositingPopup'],
+      ['homeOpenEncyclopedia', 'openEncyclopediaPopup'],
+      ['homeOpenFaq', 'openFaqPopup'],
+      ['homeOpenSns', 'openSnsPopup']
+    ].forEach(([targetId, sourceId]) => {
+      const target = document.getElementById(targetId);
+      const preview = document.querySelector(`#${sourceId} .footer-action-preview`);
+      if (!target || !preview || target.querySelector('.footer-action-preview')) return;
+      target.appendChild(preview.cloneNode(true));
+    });
     document.getElementById('openVotePopup')?.addEventListener('click', async () => {
       renderVotePopup();
       openPopup('votePopup');
