@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>モビーの4コマ漫画 | Mobby</title>
+  <meta name="description" content="選んだモビーの4コマ漫画を楽しめます。">
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#fff7fb,#f4f0ff);color:#3d2d36;font-family:"Zen Maru Gothic","Noto Sans JP",sans-serif}.shell{width:min(760px,100%);margin:auto;padding:24px 16px 64px}.back{display:inline-block;margin-bottom:18px;color:#765f6d;font-weight:800;text-decoration:none}.hero{text-align:center}.hero p{margin:0 0 6px;color:#f05f9b;font-size:13px;font-weight:900;letter-spacing:.12em}.hero h1{margin:0 0 24px;font-size:clamp(26px,7vw,40px)}.episode{margin:0 0 28px;padding:16px;border-radius:24px;background:#fff;box-shadow:0 12px 35px rgba(92,55,75,.1)}.episode h2{margin:2px 0 14px;text-align:center;font-size:19px}.episode img{display:block;width:100%;margin:0 0 10px;border-radius:14px;background:#f7f5f6}.end{padding:30px 20px;border-radius:26px;background:#fff;text-align:center;box-shadow:0 12px 35px rgba(92,55,75,.1)}.end h2{margin:0 0 8px}.end p{margin:0 0 20px;color:#765f6d}.button{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:12px 26px;border-radius:999px;background:#f05f9b;color:#fff;font-weight:900;text-decoration:none;box-shadow:0 8px 20px rgba(240,95,155,.25)}
+  </style>
+</head>
+<body><main class="shell"><a class="back" href="javascript:history.back()">← 診断結果へ戻る</a><header class="hero"><p>選んだモビーの物語</p><h1 id="title">4コマ漫画</h1></header><div id="episodes"></div><section class="end"><h2>最後まで読んでくれてありがとう！</h2><p>ほかのモビーの漫画も見つけにいこう。</p><a class="button" href="index.html">ほかの漫画も見てみる</a></section></main>
+<script>
+  const library={mobirin:{name:"もびりん",counts:[3,3]},mobichi:{name:"もびち",counts:[4,4,4,4,4,4,4,4,4,4,6,4]},yami:{name:"病みモビー",counts:[3]},mobiyan:{name:"もびやん",counts:[3,3,3,3]}};
+  const key=new URLSearchParams(location.search).get("character");const selected=library[key]||library.mobirin;document.getElementById("title").textContent=`${selected.name}の4コマ漫画`;
+  document.getElementById("episodes").innerHTML=selected.counts.map((count,episode)=>`<section class="episode"><h2>第${episode+1}話</h2>${Array.from({length:count},(_,page)=>`<img src="manga/${key in library?key:"mobirin"}/${episode+1}-${page+1}.webp" alt="${selected.name} 第${episode+1}話 ${page+1}ページ目" loading="${episode?"lazy":"eager"}">`).join("")}</section>`).join("");
+</script></body></html>
