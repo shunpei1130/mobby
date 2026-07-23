@@ -9471,14 +9471,14 @@
 
     .home-character-peek {
       position: absolute;
-      right: 26px;
+      right: 6px;
       bottom: -8px;
-      z-index: 1;
-      width: 82px;
-      height: 108px;
+      z-index: 30;
+      width: 108px;
+      height: 142px;
       pointer-events: none;
-      overflow: hidden;
-      mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
+      overflow: visible;
+      mask-image: none;
     }
 
     .home-character-peek img {
@@ -9487,6 +9487,10 @@
       height: 100%;
       object-fit: contain;
       object-position: center bottom;
+      max-width: none;
+      overflow: visible;
+      clip-path: none;
+      transform-origin: right bottom;
       filter: drop-shadow(0 6px 5px rgba(75, 48, 36, 0.16));
       transform: translateY(10px);
       transition: transform 0.22s ease;
@@ -9496,7 +9500,14 @@
     .home-main-action:focus-visible .home-character-peek img,
     .home-diagnosis-card > summary:hover .home-character-peek img,
     .home-diagnosis-card > summary:focus-visible .home-character-peek img {
-      transform: translateY(0) scale(1.05);
+      transform: translateY(-4px) scale(1.34);
+    }
+
+    .home-main-action:hover,
+    .home-main-action:focus-visible,
+    .home-diagnosis-card:has(> summary:hover),
+    .home-diagnosis-card:has(> summary:focus-visible) {
+      z-index: 25;
     }
 
     .home-main-action__icon,
@@ -9689,9 +9700,9 @@
       .home-main-action__copy small { display: none; }
 
       .home-character-peek {
-        right: 22px;
-        width: 62px;
-        height: 82px;
+        right: 4px;
+        width: 88px;
+        height: 118px;
       }
 
       .home-main-action::after {
@@ -9705,6 +9716,71 @@
         .home-main-action::before,
         .home-diagnosis-card > summary::before { display: none; }
       }
+    }
+
+    @media (max-width: 420px) {
+      .home-main-actions { gap: 8px; }
+
+      .home-main-action,
+      .home-diagnosis-card > summary {
+        min-height: 96px;
+        padding: 11px 9px;
+        gap: 7px;
+        border-radius: 19px;
+      }
+
+      .home-main-action__icon {
+        flex-basis: 38px;
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        font-size: 19px;
+      }
+
+      .home-main-action__copy strong { font-size: 0.92rem; }
+      .home-main-action__copy small { display: none; }
+
+      .home-character-peek {
+        right: 3px;
+        width: 68px;
+        height: 92px;
+      }
+
+      .home-character-peek img { transform: translateY(8px); }
+      .home-main-action:hover .home-character-peek img,
+      .home-main-action:focus-visible .home-character-peek img,
+      .home-diagnosis-card > summary:hover .home-character-peek img,
+      .home-diagnosis-card > summary:focus-visible .home-character-peek img { transform: translateY(0) scale(1.18); }
+
+      .home-main-action::after {
+        flex-basis: 22px;
+        width: 22px;
+        height: 22px;
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .home-main-actions { gap: 6px; }
+
+      .home-main-action,
+      .home-diagnosis-card > summary {
+        min-height: 84px;
+        padding: 8px 7px;
+        gap: 5px;
+        border-radius: 16px;
+      }
+
+      .home-main-action__icon {
+        flex-basis: 32px;
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        font-size: 16px;
+      }
+
+      .home-main-action__copy strong { font-size: 0.82rem; }
+      .home-character-peek { right: 2px; width: 56px; height: 76px; }
     }
   </style>
 </head>
