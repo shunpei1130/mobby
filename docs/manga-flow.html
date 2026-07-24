@@ -6,12 +6,40 @@
   <title>モビーの4コマ漫画 | Mobby</title>
   <meta name="description" content="選んだモビーの4コマ漫画を楽しめます。">
   <style>
-    *{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#fff7fb,#f4f0ff);color:#3d2d36;font-family:"Zen Maru Gothic","Noto Sans JP",sans-serif}.shell{width:min(760px,100%);margin:auto;padding:24px 16px 64px}.back{display:inline-block;margin-bottom:18px;color:#765f6d;font-weight:800;text-decoration:none}.hero{text-align:center}.hero p{margin:0 0 6px;color:#f05f9b;font-size:13px;font-weight:900;letter-spacing:.12em}.hero h1{margin:0 0 24px;font-size:clamp(26px,7vw,40px)}.episode{margin:0 0 28px;padding:16px;border-radius:24px;background:#fff;box-shadow:0 12px 35px rgba(92,55,75,.1)}.episode h2{margin:2px 0 14px;text-align:center;font-size:19px}.episode img{display:block;width:100%;margin:0 0 10px;border-radius:14px;background:#f7f5f6}.end{padding:30px 20px;border-radius:26px;background:#fff;text-align:center;box-shadow:0 12px 35px rgba(92,55,75,.1)}.end h2{margin:0 0 8px}.end p{margin:0 0 20px;color:#765f6d}.button{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:12px 26px;border-radius:999px;background:#f05f9b;color:#fff;font-weight:900;text-decoration:none;box-shadow:0 8px 20px rgba(240,95,155,.25)}
+    *{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#fff7fb,#f4f0ff);color:#3d2d36;font-family:"Zen Maru Gothic","Noto Sans JP",sans-serif}.shell{width:min(760px,100%);margin:auto;padding:24px 16px 64px}.back{display:inline-block;margin-bottom:18px;color:#765f6d;font-weight:800;text-decoration:none}.hero{text-align:center}.hero p{margin:0 0 6px;color:#f05f9b;font-size:13px;font-weight:900;letter-spacing:.12em}.hero h1{margin:0 0 24px;font-size:clamp(26px,7vw,40px)}.episode-tabs{display:flex;width:100%;max-width:100%;gap:8px;overflow-x:auto;overflow-y:hidden;margin:0 0 18px;padding:4px 2px 8px;scrollbar-width:auto;touch-action:pan-x;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scroll-snap-type:x proximity}.episode-tabs::-webkit-scrollbar{height:6px}.episode-tabs::-webkit-scrollbar-thumb{border-radius:999px;background:rgba(240,95,155,.38)}.episode-tab{flex:0 0 clamp(74px,21vw,92px);scroll-snap-align:start;min-height:44px;padding:8px 10px;border:1px solid rgba(240,95,155,.2);border-radius:999px;background:rgba(255,255,255,.78);color:#765f6d;font:inherit;font-size:14px;font-weight:900;cursor:pointer;box-shadow:0 5px 14px rgba(92,55,75,.08)}.episode-tab.is-active{background:#f05f9b;border-color:#f05f9b;color:#fff;box-shadow:0 8px 18px rgba(240,95,155,.25)}.episode{margin:0 0 28px;padding:16px;border-radius:24px;background:#fff;box-shadow:0 12px 35px rgba(92,55,75,.1)}.episode h2{display:flex;flex-direction:column;align-items:center;gap:4px;margin:2px 0 14px;text-align:center;font-size:19px}.episode-title{color:#f05f9b;font-size:.9em;line-height:1.25}.episode img{display:block;width:100%;margin:0 0 10px;border-radius:14px;background:#f7f5f6}
   </style>
 </head>
-<body><main class="shell"><a class="back" href="javascript:history.back()">← 診断結果へ戻る</a><header class="hero"><p>選んだモビーの物語</p><h1 id="title">4コマ漫画</h1></header><div id="episodes"></div><section class="end"><h2>最後まで読んでくれてありがとう！</h2><p>ほかのモビーの漫画も見つけにいこう。</p><a class="button" href="index.html">ほかの漫画も見てみる</a></section></main>
+<body><main class="shell"><a class="back" href="javascript:history.back()">← 戻る</a><header class="hero"><p>選んだモビーの物語</p><h1 id="title">4コマ漫画</h1></header><div class="episode-tabs" id="episodeTabs" role="tablist" aria-label="4コマ漫画の話数"></div><div id="episodes"></div></main>
 <script>
-  const library={mobirin:{name:"もびりん",counts:[3,3]},mobichi:{name:"もびち",counts:[4,4,4,4,4,4,4,4,4,4,6,4]},yami:{name:"病みモビー",counts:[3]},mobiyan:{name:"もびやん",counts:[3,3,3,3]}};
-  const key=new URLSearchParams(location.search).get("character");const selected=library[key]||library.mobirin;document.getElementById("title").textContent=`${selected.name}の4コマ漫画`;
-  document.getElementById("episodes").innerHTML=selected.counts.map((count,episode)=>`<section class="episode"><h2>第${episode+1}話</h2>${Array.from({length:count},(_,page)=>`<img src="manga/${key in library?key:"mobirin"}/${episode+1}-${page+1}.webp" alt="${selected.name} 第${episode+1}話 ${page+1}ページ目" loading="${episode?"lazy":"eager"}">`).join("")}</section>`).join("");
+  // 4コマ漫画は、manga/com にある6本だけを表示します。
+  const comics = [
+    ['むにむに', 'むにむに.png'],
+    ['不注意', '不注意.png'],
+    ['蚊', '蚊.png'],
+    ['マンジャロ', 'マンジャロ.png'],
+    ['みみず', 'みみず.png'],
+    ['おじいちゃん', 'おじいちゃん.png']
+  ].map(([title, filename], index) => ({
+    label: `第${index + 1}話`,
+    title,
+    src: `manga/com/${filename}`
+  }));
+  const title = document.getElementById("title");
+  const episodeTabs = document.getElementById("episodeTabs");
+  const episodes = document.getElementById("episodes");
+  title.textContent = "モビーの4コマ漫画";
+
+  const renderEpisode = (activeIndex) => {
+    const safeIndex = Math.min(Math.max(activeIndex, 0), comics.length - 1);
+    episodeTabs.innerHTML = comics.map((comic, index) =>
+      `<button class="episode-tab${index === safeIndex ? " is-active" : ""}" type="button" role="tab" aria-selected="${index === safeIndex}" aria-controls="comicEpisode" data-episode-index="${index}">${comic.label}</button>`
+    ).join("");
+    const comic = comics[safeIndex];
+    episodes.innerHTML = `<section class="episode" id="comicEpisode"><h2><span>${comic.label}</span><span class="episode-title">${comic.title}</span></h2><img src="${comic.src}" alt="${comic.label} ${comic.title} モビーの4コマ漫画" loading="eager"></section>`;
+    episodeTabs.querySelectorAll("[data-episode-index]").forEach((button) => {
+      button.addEventListener("click", () => renderEpisode(Number(button.dataset.episodeIndex)));
+    });
+  };
+
+  renderEpisode(0);
 </script></body></html>

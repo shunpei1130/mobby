@@ -1175,6 +1175,7 @@
       margin: -36px auto 0;
       display: grid;
       grid-template-columns: 56px minmax(0, 1fr) 56px;
+      min-height: 56px;
       align-items: center;
       gap: 12px;
       position: relative;
@@ -1188,6 +1189,7 @@
     }
 
     .hero-character-name {
+      grid-column: 2;
       text-align: center;
       font-size: 1rem;
       font-weight: 700;
@@ -3775,6 +3777,7 @@
         width: min(320px, calc(100% - 16px));
         margin-top: -32px;
         grid-template-columns: 50px minmax(0, 1fr) 50px;
+        min-height: 50px;
         gap: 10px;
       }
 
@@ -10101,10 +10104,10 @@
           <article class="home-manga-feature" aria-labelledby="homeMangaFeatureTitle">
             <div class="home-manga-feature__head">
               <span class="home-manga-feature__ribbon">今日の4コマ</span>
-              <h2 class="home-manga-feature__title" id="homeMangaFeatureTitle">「あれ見て」</h2>
+              <h2 class="home-manga-feature__title" id="homeMangaFeatureTitle">「むにむに」</h2>
             </div>
-            <a class="home-manga-feature__image-link" href="img/home/4-com.png" target="_blank" rel="noopener" aria-label="今日の4コマを大きく表示">
-              <img class="home-manga-feature__image" src="img/home/4-com.png" alt="黒いモビーが、よそ見をして人にぶつかりそうな白いモビーを止める4コマ漫画" fetchpriority="high" decoding="async">
+            <a class="home-manga-feature__image-link" href="manga/com/むにむに.png" target="_blank" rel="noopener" aria-label="今日の4コマを大きく表示">
+              <img class="home-manga-feature__image" src="manga/com/むにむに.png" alt="白いモビーと黒いモビーが、むにむに遊ぶ4コマ漫画" fetchpriority="high" decoding="async">
             </a>
             <a class="home-manga-feature__cta" href="manga-flow.html?character=mobirin">
               <span class="home-manga-feature__cta-icon" aria-hidden="true">▣</span>
@@ -10124,7 +10127,6 @@
             <button class="home-main-action" id="homeOpenEncyclopedia" type="button" data-preview="全タイプのモビーを収録&#10;プロフィールや特徴をチェック"><span class="home-main-action__icon" aria-hidden="true">▤</span><span class="home-main-action__copy"><strong>図鑑</strong><small>モビーのプロフィールを見る</small></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー図鑑・代表キャラクター</span><span class="encyclopedia-preview-grid"><span class="encyclopedia-preview-card"><img src="16school/cha/ortp.jpg" alt=""><span>文化祭センター<br>ステージモビー</span></span><span class="encyclopedia-preview-card"><img src="16school/cha/ojtp2.jpg" alt=""><span>カップル自撮り<br>モビー</span></span><span class="encyclopedia-preview-card"><img src="16renai/image/lovemobby/花束の主人公モビー.webp" alt=""><span>恋愛モビー<br>花束の主人公</span></span><span class="encyclopedia-preview-card"><img src="16renai/image/lovemobby/胸奥のロマンモビー.webp" alt=""><span>恋愛モビー<br>胸奥のロマン</span></span></span><span class="footer-action-preview-copy">学校モビーと恋愛モビーから代表4タイプを紹介</span></span></button>
             <button class="home-main-action" id="homeOpenFaq" type="button" data-preview="質問やご相談はこちら&#10;フォームからメッセージを送れます"><span class="home-main-action__icon" aria-hidden="true">✉</span><span class="home-main-action__copy"><strong>お問い合わせ</strong><small>フォームからメッセージを送る</small></span><span class="home-character-peek" aria-hidden="true"><img src="carousel/after/mobby_gal_toka.webp" alt=""></span></button>
             <button class="home-main-action" id="homeOpenSns" type="button" data-preview="Instagram・TikTokで&#10;Mobbyの最新情報をチェック"><span class="home-main-action__icon" aria-hidden="true">♧</span><span class="home-main-action__copy"><strong>SNS</strong><small>Mobby公式アカウントを見る</small></span><span class="home-character-peek" aria-hidden="true"><img src="carousel/after/mobby_yami_toka.webp" alt=""></span></button>
-            <button class="home-main-action home-touch-action" id="homeOpenTouch" type="button" data-preview="モビーを指で飛ばして&#10;ぷにっと遊べます"><span class="home-main-action__icon" aria-hidden="true">➜</span><span class="home-main-action__copy"><strong>モビーをとばす</strong><small>指で飛ばして遊ぶ</small></span><span class="home-character-peek" aria-hidden="true"><img src="mobby-touch/mobby-yanki.webp" alt=""></span></button>
             <a class="home-main-action" href="ehon/index.html" data-preview="モビーたちの物語を&#10;全32ページで楽しめます"><span class="home-main-action__icon" aria-hidden="true">▢</span><span class="home-main-action__copy"><strong>絵本</strong><small>モビーの物語を読む</small></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビーの絵本</span><img class="home-preview-cover" src="ehon/column/ehon-column-pattern-2.png" alt=""><span class="footer-action-preview-copy">モビーたちの物語を全32ページで楽しめます</span></span></a>
           </nav>
 
@@ -10141,26 +10143,6 @@
               <div class="hero-model-carousel" id="heroModelCarousel" aria-live="polite"></div>
             </div>
             <div class="hero-character-row">
-              <button class="hero-character-action manga-launch-btn" id="openManga" type="button" aria-label="選択中のモビーの漫画を読む" aria-controls="mangaInline" aria-expanded="false">
-                <span class="manga-launch-icon" aria-hidden="true">
-                  <svg viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 3.5C7.9 2.4 12.2 3.4 16 6.3V21C12.2 18.1 7.9 17.1 3 18.2V3.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                    <path d="M29 3.5C24.1 2.4 19.8 3.4 16 6.3V21C19.8 18.1 24.1 17.1 29 18.2V3.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                  </svg>
-                </span>
-                <span class="manga-launch-label">漫画</span>
-                <span class="footer-action-preview hero-action-preview manga-action-preview" aria-hidden="true">
-                  <span class="footer-action-preview-title" id="mangaPreviewTitle">もびりんの漫画</span>
-                  <span class="manga-action-preview-layout">
-                    <img class="manga-action-preview-image" id="mangaPreviewImage" src="manga/mobirin/1-1.webp" alt="">
-                    <span class="manga-action-preview-meta">
-                      <span class="manga-action-preview-chip" id="mangaPreviewEpisode">第1話から</span>
-                      <span class="manga-action-preview-chip" id="mangaPreviewPages">全2話・6ページ</span>
-                      <span class="footer-action-preview-copy">クリックして漫画を読む</span>
-                    </span>
-                  </span>
-                </span>
-              </button>
               <div class="hero-character-name" id="heroCharacterName">もびりん</div>
             </div>
           </div>
@@ -13415,30 +13397,28 @@
       const mangaPreviewPages = document.getElementById('mangaPreviewPages');
       if (!mangaInline || !mangaTitle || !mangaEpisodeTabs || !mangaPages || !mangaButton) return;
 
-      const createMangaEpisodes = (slug, pageCounts) => pageCounts.map((pageCount, episodeIndex) => ({
-        label: `第${episodeIndex + 1}話`,
-        pages: Array.from({ length: pageCount }, (_, pageIndex) =>
-          `manga/${slug}/${episodeIndex + 1}-${pageIndex + 1}.webp`
-        )
+      const sharedComicEpisodes = [
+        ['むにむに', 'むにむに.png'],
+        ['不注意', '不注意.png'],
+        ['蚊', '蚊.png'],
+        ['マンジャロ', 'マンジャロ.png'],
+        ['みみず', 'みみず.png'],
+        ['おじいちゃん', 'おじいちゃん.png']
+      ].map(([title, filename], index) => ({
+        label: `第${index + 1}話`,
+        title,
+        pages: [`manga/com/${filename}`]
       }));
-
+      const sharedComic = {
+        character: 'モビー',
+        episodes: sharedComicEpisodes
+      };
+      // 4コマ漫画は添付の manga/com フォルダにある6本だけを使用します。
       const MANGA_LIBRARY = {
-        'mobby_fact_man_toka.webp': {
-          character: 'もびりん',
-          episodes: createMangaEpisodes('mobirin', [3, 3])
-        },
-        'mobby_gal_toka.webp': {
-          character: 'もびち',
-          episodes: createMangaEpisodes('mobichi', [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 4])
-        },
-        'mobby_yami_toka.webp': {
-          character: '病みモビー',
-          episodes: createMangaEpisodes('yami', [3])
-        },
-        'mobby_yanki_toak.webp': {
-          character: 'もびやん',
-          episodes: createMangaEpisodes('mobiyan', [3, 3, 3, 3])
-        }
+        'mobby_fact_man_toka.webp': sharedComic,
+        'mobby_gal_toka.webp': sharedComic,
+        'mobby_yami_toka.webp': sharedComic,
+        'mobby_yanki_toak.webp': sharedComic
       };
 
       const getActiveManga = () => {
