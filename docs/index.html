@@ -1093,14 +1093,29 @@
 
     /* Only the picked-up character leaves the carousel. The neighboring
        slides remain visible in the original carousel footprint. */
-    .hero-model-carousel.is-hero-throwing .hero-model-slide.is-active {
+    .hero-model-slide.is-hero-throw-proxy {
       position: fixed;
-      top: 0;
-      left: 50%;
-      width: 74vw;
-      height: 100vh;
+      top: calc(50% + var(--hero-throw-y, 0px));
+      left: calc(50% + var(--hero-throw-x, 0px));
+      width: var(--hero-throw-slide-width, 37.5vw);
+      height: var(--hero-throw-slide-height, 37.5vw);
       z-index: 100006;
       pointer-events: auto;
+      transform: translate(-50%, -50%) rotate(var(--hero-throw-rotation, 0deg)) scaleX(var(--hero-throw-stretch-x, 1)) scaleY(var(--hero-throw-stretch-y, 1));
+    }
+
+    .hero-model-slide.is-hero-throw-proxy .hero-model-viewer {
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transform: none;
+    }
+
+    .hero-model-slide.is-hero-source-hidden {
+      opacity: 0 !important;
+      pointer-events: none !important;
+      transition: none !important;
     }
 
     .hero-model-slide {
@@ -11020,6 +11035,7 @@
       let dragProgress = 0;
       const throwDrag = {
         slide: null,
+        sourceSlide: null,
         pointerId: null,
         active: false,
         moved: false,
@@ -11060,9 +11076,26 @@
         slide.style.removeProperty("--hero-throw-y");
         slide.style.removeProperty("--hero-throw-rotation");
         slide.style.removeProperty("--hero-throw-scale");
+        slide.style.removeProperty("--hero-throw-slide-width");
+        slide.style.removeProperty("--hero-throw-slide-height");
+        slide.style.removeProperty("--hero-throw-image-width");
+        slide.style.removeProperty("--hero-throw-image-height");
         slide.style.removeProperty("--hero-throw-stretch-x");
         slide.style.removeProperty("--hero-throw-stretch-y");
         slide.classList.remove("is-hero-dragging", "is-hero-flying");
+      }
+
+      function cleanupThrowSlide() {
+        if (throwDrag.slide?.classList.contains("is-hero-throw-proxy")) {
+          throwDrag.slide.remove();
+        }
+        if (throwDrag.sourceSlide) {
+          resetThrowTransform(throwDrag.sourceSlide);
+          throwDrag.sourceSlide.classList.remove("is-hero-source-hidden");
+          throwDrag.sourceSlide.classList.add("is-active");
+        }
+        throwDrag.slide = null;
+        throwDrag.sourceSlide = null;
       }
 
       function stopThrowAnimation(reset = false) {
@@ -11087,6 +11120,7 @@
         stage.classList.remove("is-hero-throwing");
         stage.style.removeProperty("--hero-carousel-placeholder-height");
         if (slide) resetThrowTransform(slide);
+        cleanupThrowSlide();
         throwDrag.baseRect = null;
         throwDrag.spriteWidth = 0;
         throwDrag.spriteHeight = 0;
@@ -11107,12 +11141,15 @@
           const angle = (throwDrag.rotation * Math.PI) / 180;
           const absCos = Math.abs(Math.cos(angle));
           const absSin = Math.abs(Math.sin(angle));
-          const halfWidth = (throwDrag.spriteWidth * absCos + throwDrag.spriteHeight * absSin) / 2;
-          const halfHeight = (throwDrag.spriteWidth * absSin + throwDrag.spriteHeight * absCos) / 2;
-          // The CSS transform rotates around the fixed slide's center. Track
-          // that pivot so a tilted sprite cannot sneak past an edge.
-          const centerX = arenaRect.width / 2 - Math.sin(angle) * throwDrag.spriteOffsetY;
-          const centerY = throwDrag.spritePivotY + Math.cos(angle) * throwDrag.spriteOffsetY;
+          const stretch = getThrowStretch();
+          const stretchedWidth = throwDrag.spriteWidth * stretch.x;
+          const stretchedHeight = throwDrag.spriteHeight * stretch.y;
+          const halfWidth = (stretchedWidth * absCos + stretchedHeight * absSin) / 2;
+          const halfHeight = (stretchedWidth * absSin + stretchedHeight * absCos) / 2;
+          // The throw layer is sized to the sprite itself, so its transform
+          // center maps directly to the viewport center plus x/y translation.
+          const centerX = arenaRect.width / 2;
+          const centerY = arenaRect.height / 2;
           return {
             minX: arenaRect.left + 8 - (centerX - halfWidth),
             maxX: arenaRect.right - 8 - (centerX + halfWidth),
@@ -11163,12 +11200,21 @@
           stage.style.setProperty("--hero-carousel-placeholder-height", `${carousel.getBoundingClientRect().height}px`);
           stage.classList.add("is-hero-throwing");
           carousel.classList.add("is-hero-throwing");
-          // Match the throw experience's roughly 37.5vw character footprint.
-          slide.style.setProperty("--hero-throw-scale", "0.5");
         }
-        const image = slide.querySelector(".hero-model-viewer");
+        const sourceSlide = slide;
+        const floatingSlide = slide.cloneNode(true);
+        floatingSlide.classList.remove("is-hero-source-hidden");
+        floatingSlide.classList.add("is-hero-throw-proxy");
+        floatingSlide.style.removeProperty("--slide-offset");
+        floatingSlide.style.setProperty("--slide-opacity", "1");
+        floatingSlide.style.setProperty("--slide-scale", "1");
+        floatingSlide.style.setProperty("--slide-saturate", "1");
+        floatingSlide.style.setProperty("--slide-z", "100006");
+        document.body.appendChild(floatingSlide);
+        sourceSlide.classList.remove("is-active");
+        sourceSlide.classList.add("is-hero-source-hidden");
+        const image = floatingSlide.querySelector(".hero-model-viewer");
         const aspect = image?.naturalWidth && image?.naturalHeight ? image.naturalWidth / image.naturalHeight : 1;
-        const throwScale = Number.parseFloat(slide.style.getPropertyValue("--hero-throw-scale")) || 0.5;
         let spriteWidth = Math.min(window.innerWidth * 0.375, 590);
         let spriteHeight = spriteWidth / aspect;
         const maxSpriteHeight = window.innerHeight * 0.39;
@@ -11179,15 +11225,16 @@
         throwDrag.spriteWidth = spriteWidth;
         throwDrag.spriteHeight = spriteHeight;
         throwDrag.spritePivotY = window.innerHeight / 2;
-        throwDrag.spriteOffsetY = throwScale * window.innerHeight / 2 - spriteHeight / 2;
-        slide.classList.remove("is-hero-flying");
-        slide.classList.add("is-hero-dragging");
-        const floatingRect = slide.getBoundingClientRect();
-        const alignedX = originalRect.left + originalRect.width / 2 - (floatingRect.left + floatingRect.width / 2);
-        // The character artwork is bottom-aligned inside the transparent image
-        // canvas, so preserve its bottom edge while switching to the viewport.
-        const alignedY = originalRect.bottom - floatingRect.bottom;
-        throwDrag.slide = slide;
+        throwDrag.spriteOffsetY = 0;
+        floatingSlide.style.setProperty("--hero-throw-slide-width", `${spriteWidth}px`);
+        floatingSlide.style.setProperty("--hero-throw-slide-height", `${spriteHeight}px`);
+        floatingSlide.classList.remove("is-hero-flying");
+        floatingSlide.classList.add("is-hero-dragging");
+        const floatingRect = floatingSlide.getBoundingClientRect();
+        const alignedX = originalRect.left + originalRect.width / 2 - (window.innerWidth / 2);
+        const alignedY = originalRect.top + originalRect.height / 2 - (window.innerHeight / 2);
+        throwDrag.slide = floatingSlide;
+        throwDrag.sourceSlide = sourceSlide;
         throwDrag.pointerId = event.pointerId;
         throwDrag.active = true;
         throwDrag.moved = false;
@@ -11259,13 +11306,13 @@
           if (!throwDrag.slide || throwDrag.slide !== slide) return;
           const dt = Math.min(0.032, Math.max(0.008, (now - lastAt) / 1000));
           lastAt = now;
-          const bounds = getThrowBounds();
           throwDrag.velocityY += 1160 * dt;
           throwDrag.velocityX *= Math.exp(-dt * 0.12);
           throwDrag.rotationVelocity *= Math.exp(-dt * 0.64);
           throwDrag.x += throwDrag.velocityX * dt;
           throwDrag.y += throwDrag.velocityY * dt;
           throwDrag.rotation += throwDrag.rotationVelocity * dt;
+          const bounds = getThrowBounds();
 
           if (throwDrag.x <= bounds.minX || throwDrag.x >= bounds.maxX) {
             throwDrag.x = Math.max(bounds.minX, Math.min(bounds.maxX, throwDrag.x));
@@ -11306,10 +11353,10 @@
 
       function buildSlides() {
         stopThrowAnimation(true);
+        cleanupThrowSlide();
         carousel.classList.remove("is-hero-throwing");
         stage.classList.remove("is-hero-throwing");
         stage.style.removeProperty("--hero-carousel-placeholder-height");
-        throwDrag.slide = null;
         const currentSet = getCurrentSet();
         carousel.innerHTML = currentSet.items.map((item, index) => `
           <div class="hero-model-slide${index === 0 ? " is-active" : ""}" data-index="${index}" data-image="${item.image}"${item.smokeSource ? ' data-smoke-source="true"' : ""}>
