@@ -4104,6 +4104,203 @@
       pointer-events: none;
     }
 
+    /* Main diagnosis button opens this compact, centered picker instead of expanding inline. */
+    .diagnosis-popup-tabs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      width: min(100%, 620px);
+      margin: 0 auto 18px;
+      padding: 5px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.58);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+
+    .diagnosis-popup-tab {
+      min-height: 42px;
+      border: 0;
+      border-radius: 13px;
+      background: transparent;
+      color: #8a7566;
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+
+    .diagnosis-popup-tab:hover,
+    .diagnosis-popup-tab:focus-visible {
+      color: #633f30;
+      transform: translateY(-1px);
+    }
+
+    .diagnosis-popup-tab.is-active {
+      background: linear-gradient(135deg, #ff79aa, #f04683);
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(240, 70, 131, 0.24);
+    }
+
+    .diagnosis-popup-panel[hidden] {
+      display: none !important;
+    }
+
+    .diagnosis-popup-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      width: min(100%, 620px);
+      margin: 0 auto;
+    }
+
+    .diagnosis-popup-option {
+      position: relative;
+      overflow: visible !important;
+      min-height: 96px;
+      display: flex !important;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 7px;
+      padding: 16px 78px 13px 14px !important;
+      border: 1px solid rgba(255, 255, 255, 0.88) !important;
+      border-radius: 22px !important;
+      color: #4a382d !important;
+      font-size: 0.92rem !important;
+      font-weight: 800 !important;
+      line-height: 1.35 !important;
+      text-align: left;
+      text-decoration: none;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        0 10px 22px rgba(89, 70, 52, 0.12) !important;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .diagnosis-popup-option:hover,
+    .diagnosis-popup-option:focus-visible {
+      transform: translateY(-3px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.98),
+        0 15px 28px rgba(89, 70, 52, 0.18) !important;
+    }
+
+    .diagnosis-popup-option:nth-child(1) {
+      background: linear-gradient(145deg, #fff4d9, #ffe3a6) !important;
+    }
+
+    .diagnosis-popup-option:nth-child(2) {
+      background: linear-gradient(145deg, #e9e0ff, #cdb8ff) !important;
+    }
+
+    .diagnosis-popup-option:nth-child(3) {
+      background: linear-gradient(145deg, #fff4c9, #ffd86a) !important;
+    }
+
+    .diagnosis-popup-option:nth-child(4) {
+      background: linear-gradient(145deg, #ffe1ed, #ffafd0) !important;
+    }
+
+    .diagnosis-popup-option:nth-child(5) {
+      background: linear-gradient(145deg, #e9f5ff, #c0e2ff) !important;
+    }
+
+    .diagnosis-popup-option > span:not(.diagnosis-popup-option-peek) {
+      position: relative;
+      z-index: 2;
+    }
+
+    .diagnosis-popup-option-peek {
+      position: absolute;
+      right: 2px;
+      bottom: -12px;
+      z-index: 3;
+      width: 82px;
+      height: 112px;
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    .diagnosis-popup-option-peek img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center bottom;
+      filter: drop-shadow(0 7px 5px rgba(75, 48, 35, 0.2));
+      transform: translateY(10px);
+      transform-origin: center bottom;
+      transition: transform 0.2s ease;
+    }
+
+    .diagnosis-popup-option:hover .diagnosis-popup-option-peek img,
+    .diagnosis-popup-option:focus-visible .diagnosis-popup-option-peek img {
+      transform: translateY(0) scale(1.05);
+    }
+
+    .diagnosis-popup-option-badge {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: max-content;
+      max-width: calc(100% - 16px);
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.78);
+      color: #8a2555;
+      font-size: 0.62rem;
+      line-height: 1.15;
+      white-space: nowrap;
+    }
+
+    .diagnosis-popup-grid--collab .diagnosis-popup-option {
+      min-height: 128px;
+      padding: 36px 14px 14px !important;
+      background: linear-gradient(145deg, #ffe5f0, #ffc3d9) !important;
+    }
+
+    .diagnosis-popup-grid--collab .diagnosis-popup-option > span.diagnosis-popup-option-label {
+      position: absolute;
+      left: 14px;
+      right: auto;
+      top: 50%;
+      bottom: auto;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: flex-end;
+      width: 106px;
+      min-height: 2.7em;
+      line-height: 1.3;
+      justify-content: flex-start;
+      text-align: left;
+    }
+
+    .diagnosis-popup-grid--collab .diagnosis-popup-option:nth-child(1) .diagnosis-popup-option-peek {
+      width: 90px;
+      height: 116px;
+      right: 0;
+    }
+
+    .diagnosis-popup-grid--collab .diagnosis-popup-option:nth-child(2) .diagnosis-popup-option-peek {
+      width: 86px;
+      height: 116px;
+      right: 0;
+    }
+
+    .diagnosis-popup-grid--collab .diagnosis-popup-option > span.diagnosis-popup-option-badge {
+      position: absolute;
+      top: 10px;
+      left: 14px;
+      right: auto;
+      transform: none;
+      width: max-content;
+      max-width: calc(100% - 28px);
+      white-space: normal;
+      text-align: left;
+    }
+
     @media (max-width: 768px) {
       .popup-content {
         padding: 30px 20px;
@@ -9826,34 +10023,12 @@
           </article>
 
           <nav class="home-main-actions" aria-label="メインメニュー">
-            <details class="home-diagnosis-card">
-              <summary data-preview="学校・メンヘラ・推し活・恋愛&#10;コラボ診断もこちら">
+            <button class="home-main-action home-diagnosis-card" id="homeOpenDiagnosis" type="button" data-preview="学校・メンヘラ・推し活・恋愛&#10;コラボ診断もこちら" aria-haspopup="dialog" aria-controls="diagnosisPopup">
                 <span class="home-main-action__icon" aria-hidden="true">♡</span>
                 <span class="home-main-action__copy"><strong>診断</strong><small>あなたにぴったりのモビーを見つけよう</small></span>
                 <span class="home-character-peek" aria-hidden="true"><img src="carousel/after/mobby_fact_man_toka.webp" alt=""></span>
-                <span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー診断</span><span class="home-preview-image-grid"><img src="carousel/after/mobby_fact_man_toka.webp" alt=""><img src="carousel/after/mobby_gal_toka.webp" alt=""><img src="carousel/after/mobby_yami_toka.webp" alt=""><img src="carousel/after/mobby_yanki_toak.webp" alt=""></span><span class="footer-action-preview-copy">学校・メンヘラ・推し活・恋愛などから選べます</span></span>
-              </summary>
-              <div class="home-diagnosis-card__body">
-                <div class="hero-diagnosis-tabs" role="tablist" aria-label="診断メニュー切り替え">
-                  <button class="hero-diagnosis-tab is-active" id="heroDiagnosisTabNormal" type="button" role="tab" aria-selected="true" aria-controls="heroDiagnosisPanelNormal" data-diagnosis-tab="normal">通常</button>
-                  <button class="hero-diagnosis-tab" id="heroDiagnosisTabCollab" type="button" role="tab" aria-selected="false" aria-controls="heroDiagnosisPanelCollab" data-diagnosis-tab="collab">コラボ</button>
-                </div>
-                <div class="hero-diagnosis-menu hero-diagnosis-tab-panel" id="heroDiagnosisPanelNormal" role="tabpanel" aria-labelledby="heroDiagnosisTabNormal" data-diagnosis-panel="normal">
-                  <div class="gift-fan-diagnosis-actions" id="heroDiagnosisActions" aria-hidden="false"><div class="hero-diagnosis-track">
-                    <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16school/index.html" data-diagnosis-item="school"><span class="footer-btn-icon" data-icon="school" aria-hidden="true"></span><span>学校</span></a>
-                    <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16love/index.html" data-diagnosis-item="love"><span class="footer-btn-icon" data-icon="cloud" aria-hidden="true"></span><span>メンヘラ</span></a>
-                    <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16stan/index.html" data-diagnosis-item="oshi"><span class="footer-btn-icon" data-icon="star" aria-hidden="true"></span><span>推し</span></a>
-                    <a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action" href="16renai/index.html" data-diagnosis-item="romance"><span class="footer-btn-icon" data-icon="heart" aria-hidden="true"></span><span>恋愛</span></a>
-                  </div></div>
-                </div>
-                <div class="hero-collab-diagnosis-menu hero-diagnosis-tab-panel" id="heroDiagnosisPanelCollab" role="tabpanel" aria-labelledby="heroDiagnosisTabCollab" data-diagnosis-panel="collab" aria-hidden="true" hidden>
-                  <ul class="hero-collab-diagnosis-list" aria-label="コラボ診断メニュー">
-                    <li><a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" href="meeco/index.html" data-diagnosis-item="blank-4"><span class="gift-fan-person-badge">meeco様</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-compact" aria-hidden="true"></span><span>空想コスメ<br>キャラ診断</span></a></li>
-                    <li><a class="btn btn-secondary action-box-btn gift-fan-diagnosis-action beauty-collab" href="miyake-yuko/index.html" data-diagnosis-item="blank-2"><span class="gift-fan-person-badge">三宅裕子さん</span><span class="gift-fan-collab-badge">コラボ!</span><span class="footer-btn-icon" data-icon="beauty-compact" aria-hidden="true"></span><span>beauty mood<br>診断</span></a></li>
-                  </ul>
-                </div>
-              </div>
-            </details>
+                <span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー診断</span><span class="home-preview-image-grid"><img src="carousel/diagnosis-peeks/school-stage.png" alt=""><img src="carousel/diagnosis-peeks/menhera-dependent.png" alt=""><img src="carousel/diagnosis-peeks/oshi-live.png" alt=""><img src="carousel/diagnosis-peeks/renai-bouquet.png" alt=""></span><span class="footer-action-preview-copy">学校・メンヘラ・推し活・恋愛などから選べます</span></span>
+            </button>
             <a class="home-main-action" id="homePosterAction" href="compositing.html" data-preview="写真を選んで&#10;オリジナルのモビーポスターを作れます"><span class="home-main-action__icon" aria-hidden="true">▧</span><span class="home-main-action__copy"><strong>ポスター</strong><small>写真でオリジナルポスターを作る</small></span><span class="home-character-peek" aria-hidden="true"><img src="carousel/after/mobby_yami_toka.webp" alt=""></span></a>
             <button class="home-main-action" id="homeOpenEncyclopedia" type="button" data-preview="全タイプのモビーを収録&#10;プロフィールや特徴をチェック"><span class="home-main-action__icon" aria-hidden="true">▤</span><span class="home-main-action__copy"><strong>図鑑</strong><small>モビーのプロフィールを見る</small></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー図鑑・代表キャラクター</span><span class="encyclopedia-preview-grid"><span class="encyclopedia-preview-card"><img src="16school/cha/ortp.jpg" alt=""><span>文化祭センター<br>ステージモビー</span></span><span class="encyclopedia-preview-card"><img src="16school/cha/ojtp2.jpg" alt=""><span>カップル自撮り<br>モビー</span></span><span class="encyclopedia-preview-card"><img src="16renai/image/lovemobby/花束の主人公モビー.webp" alt=""><span>恋愛モビー<br>花束の主人公</span></span><span class="encyclopedia-preview-card"><img src="16renai/image/lovemobby/胸奥のロマンモビー.webp" alt=""><span>恋愛モビー<br>胸奥のロマン</span></span></span><span class="footer-action-preview-copy">学校モビーと恋愛モビーから代表4タイプを紹介</span></span></button>
             <button class="home-main-action" id="homeOpenFaq" type="button" data-preview="質問やご相談はこちら&#10;フォームからメッセージを送れます"><span class="home-main-action__icon" aria-hidden="true">✉</span><span class="home-main-action__copy"><strong>お問い合わせ</strong><small>フォームからメッセージを送る</small></span><span class="home-character-peek" aria-hidden="true"><img src="carousel/after/mobby_gal_toka.webp" alt=""></span></button>
@@ -10485,17 +10660,27 @@
     </div>
 
     <div id="diagnosisPopup" class="popup-overlay" aria-hidden="true">
-      <div class="popup-content">
+      <div class="popup-content" role="dialog" aria-modal="true" aria-labelledby="diagnosisPopupTitle">
         <button class="popup-close" id="closeDiagnosisPopup" aria-label="閉じる">×</button>
-        <div class="diagnosis-popup-title">モビー診断</div>
+        <div class="diagnosis-popup-title" id="diagnosisPopupTitle">モビー診断</div>
         <div class="diagnosis-popup-subtitle">診断タイプを選んでください</div>
-        <div class="diagnosis-options">
-          <div class="diagnosis-fan-core" aria-hidden="true">診断</div>
-          <a class="btn btn-primary" href="16school/index.html">学校モビー診断</a>
-          <a class="btn btn-primary" href="16love/index.html">メンヘラモビー診断</a>
-          <a class="btn btn-primary" href="16stan/index.html">推し活モビー診断</a>
-          <a class="btn btn-primary" href="16renai/index.html">恋愛モビー診断</a>
-          <a class="btn btn-primary" href="/mypage-register.html">診断まとめマイページ作成</a>
+        <div class="diagnosis-popup-tabs" role="tablist" aria-label="診断メニュー切り替え">
+          <button class="diagnosis-popup-tab is-active" id="diagnosisPopupTabNormal" type="button" role="tab" aria-selected="true" aria-controls="diagnosisPopupPanelNormal">通常診断</button>
+          <button class="diagnosis-popup-tab" id="diagnosisPopupTabCollab" type="button" role="tab" aria-selected="false" aria-controls="diagnosisPopupPanelCollab">コラボ診断</button>
+        </div>
+        <div class="diagnosis-popup-panel" id="diagnosisPopupPanelNormal" role="tabpanel" aria-labelledby="diagnosisPopupTabNormal">
+          <div class="diagnosis-popup-grid">
+            <a class="btn btn-primary diagnosis-popup-option" href="16school/index.html"><span>学校モビー診断</span><span class="diagnosis-popup-option-peek" aria-hidden="true"><img src="carousel/diagnosis-peeks/school-stage.png" alt="文化祭センターステージモビー"></span></a>
+            <a class="btn btn-primary diagnosis-popup-option" href="16love/index.html"><span>メンヘラモビー診断</span><span class="diagnosis-popup-option-peek" aria-hidden="true"><img src="carousel/diagnosis-peeks/menhera-dependent.png" alt="共依存沼モビー"></span></a>
+            <a class="btn btn-primary diagnosis-popup-option" href="16stan/index.html"><span>推し活モビー診断</span><span class="diagnosis-popup-option-peek" aria-hidden="true"><img src="carousel/diagnosis-peeks/oshi-live.png" alt="現場至上主義モビー"></span></a>
+            <a class="btn btn-primary diagnosis-popup-option" href="16renai/index.html"><span>恋愛モビー診断</span><span class="diagnosis-popup-option-peek" aria-hidden="true"><img src="carousel/diagnosis-peeks/renai-bouquet.png" alt="花束の主人公モビー"></span></a>
+          </div>
+        </div>
+        <div class="diagnosis-popup-panel" id="diagnosisPopupPanelCollab" role="tabpanel" aria-labelledby="diagnosisPopupTabCollab" aria-hidden="true" hidden>
+          <div class="diagnosis-popup-grid diagnosis-popup-grid--collab">
+            <a class="btn btn-primary diagnosis-popup-option" href="meeco/index.html"><span class="diagnosis-popup-option-badge">meeco様<br>コラボ!</span><span class="diagnosis-popup-option-label">空想コスメ<br>キャラ診断</span><span class="diagnosis-popup-option-peek" aria-hidden="true"><img src="carousel/diagnosis-peeks/meeco-witch.png" alt="空想の魔女"></span></a>
+            <a class="btn btn-primary diagnosis-popup-option" href="miyake-yuko/index.html"><span class="diagnosis-popup-option-badge">三宅裕子さん<br>コラボ!</span><span class="diagnosis-popup-option-label">beauty mood<br>診断</span><span class="diagnosis-popup-option-peek" aria-hidden="true"><img src="carousel/diagnosis-peeks/miyake-beauty.png" alt="韓国コスメコンシェルジュモビー"></span></a>
+          </div>
         </div>
       </div>
     </div>
@@ -12901,12 +13086,35 @@
       e.stopPropagation();
       openPopup('diagnosisPopup');
     });
+    document.getElementById('homeOpenDiagnosis')?.addEventListener('click', () => openPopup('diagnosisPopup'));
     document.getElementById('openFaqPopup')?.addEventListener('click', () => openPopup('faqPopup'));
     document.getElementById('openSnsPopup')?.addEventListener('click', () => openPopup('snsPopup'));
     document.getElementById('openEncyclopediaPopup')?.addEventListener('click', () => openPopup('encyclopediaPopup'));
     document.getElementById('homeOpenFaq')?.addEventListener('click', () => openPopup('faqPopup'));
     document.getElementById('homeOpenSns')?.addEventListener('click', () => openPopup('snsPopup'));
     document.getElementById('homeOpenEncyclopedia')?.addEventListener('click', () => openPopup('encyclopediaPopup'));
+    (() => {
+      const tabs = Array.from(document.querySelectorAll('[id^="diagnosisPopupTab"]'));
+      const panels = Array.from(document.querySelectorAll('[id^="diagnosisPopupPanel"]'));
+      if (tabs.length < 2 || panels.length < 2) return;
+
+      const activate = (target) => {
+        tabs.forEach((tab) => {
+          const active = tab.id === `diagnosisPopupTab${target}`;
+          tab.classList.toggle('is-active', active);
+          tab.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        panels.forEach((panel) => {
+          const active = panel.id === `diagnosisPopupPanel${target}`;
+          panel.hidden = !active;
+          panel.setAttribute('aria-hidden', active ? 'false' : 'true');
+        });
+      };
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => activate(tab.id.replace('diagnosisPopupTab', '')));
+      });
+    })();
     [
       ['homePosterAction', 'openCompositingPopup'],
       ['homeOpenEncyclopedia', 'openEncyclopediaPopup'],
@@ -12919,7 +13127,7 @@
       target.appendChild(preview.cloneNode(true));
     });
     [
-      ['.home-diagnosis-card > summary', 'carousel/after/mobby_fact_man_toka.webp'],
+      ['#homeOpenDiagnosis', 'carousel/after/mobby_fact_man_toka.webp'],
       ['#homePosterAction', 'carousel/after/mobby_yanki_toak.webp'],
       ['#homeOpenEncyclopedia', 'carousel/after/mobby_yami_toka.webp'],
       ['#homeOpenFaq', 'carousel/after/mobby_gal_toka.webp'],
@@ -14431,8 +14639,8 @@
         });
       }
 
-      // 診断オプション（5つの診断リンク）
-      document.querySelectorAll('.diagnosis-options a').forEach(function (link) {
+      // ポップアップ内の診断リンク
+      document.querySelectorAll('.diagnosis-popup-option, .diagnosis-options a').forEach(function (link) {
         link.addEventListener('click', function (e) {
           e.preventDefault();
           fadeNavigate(link.getAttribute('href'));
