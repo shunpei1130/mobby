@@ -10003,10 +10003,6 @@
         font-size: 1.15rem;
       }
 
-      @media (hover: none) {
-        .home-main-action::before,
-        .home-diagnosis-card > summary::before { display: none; }
-      }
     }
 
     @media (max-width: 420px) {
@@ -10072,6 +10068,42 @@
 
       .home-main-action__copy strong { font-size: 0.82rem; }
       .home-character-peek { right: 2px; width: 56px; height: 76px; }
+    }
+
+    /* Keep the desktop-style hover feedback available in compact browser
+       windows too.  The pointer class is added from JS as a fallback for
+       browsers that report a coarse primary pointer while a mouse is used. */
+    .home-main-action.is-hovered,
+    .home-diagnosis-card > summary.is-hovered {
+      z-index: 25;
+      transform: translateY(-3px);
+      box-shadow: 0 16px 34px rgba(80, 55, 42, 0.14);
+    }
+
+    .home-main-action.is-hovered::before,
+    .home-diagnosis-card > summary.is-hovered::before {
+      opacity: 1;
+      transform: translate(-50%, 0) scale(1);
+    }
+
+    .home-main-action.is-hovered .home-character-peek img,
+    .home-diagnosis-card > summary.is-hovered .home-character-peek img {
+      transform: translateY(-4px) scale(1.34);
+    }
+
+    .home-main-action.is-hovered .footer-action-preview,
+    .home-diagnosis-card > summary.is-hovered .footer-action-preview {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, 0) scale(1) !important;
+    }
+
+    .home-main-actions > :nth-child(odd).is-hovered .footer-action-preview {
+      transform: translate(0, 0) scale(1) !important;
+    }
+
+    .home-main-actions > :nth-child(even).is-hovered .footer-action-preview {
+      transform: translate(0, 0) scale(1) !important;
     }
   </style>
 </head>
@@ -13585,6 +13617,12 @@
       peek.setAttribute('aria-hidden', 'true');
       peek.innerHTML = `<img src="${imagePath}" alt="">`;
       target.appendChild(peek);
+    });
+    document.querySelectorAll('.home-main-action, .home-diagnosis-card > summary').forEach((target) => {
+      target.addEventListener('pointerenter', () => target.classList.add('is-hovered'));
+      target.addEventListener('pointerleave', () => target.classList.remove('is-hovered'));
+      target.addEventListener('focusin', () => target.classList.add('is-hovered'));
+      target.addEventListener('focusout', () => target.classList.remove('is-hovered'));
     });
     document.getElementById('openVotePopup')?.addEventListener('click', async () => {
       renderVotePopup();
