@@ -1071,6 +1071,38 @@
       mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, 0.9) 5%, #000 11%, #000 89%, rgba(0, 0, 0, 0.9) 95%, transparent 100%);
     }
 
+    .hero-model-carousel.is-hero-throwing {
+      position: relative;
+      width: 100%;
+      height: 360px;
+      z-index: 1;
+      overflow: visible;
+      clip-path: none;
+      -webkit-mask-image: none;
+      mask-image: none;
+      pointer-events: auto;
+      background: transparent;
+    }
+
+    .hero-model-stage.is-hero-throwing {
+      /* Escape the hero section's isolated stacking context while the
+         character is in flight so it never slips behind the manga card. */
+      position: relative;
+      z-index: 100005;
+    }
+
+    /* Only the picked-up character leaves the carousel. The neighboring
+       slides remain visible in the original carousel footprint. */
+    .hero-model-carousel.is-hero-throwing .hero-model-slide.is-active {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      width: 74vw;
+      height: 100vh;
+      z-index: 100006;
+      pointer-events: auto;
+    }
+
     .hero-model-slide {
       position: absolute;
       top: 0;
@@ -1078,11 +1110,12 @@
       width: 74%;
       height: 100%;
       opacity: var(--slide-opacity, 0);
-      transform: translateX(calc(-50% + var(--slide-offset, 0%))) scale(var(--slide-scale, 0.9));
+      transform: translateX(calc(-50% + var(--slide-offset, 0%) + var(--hero-throw-x, 0px))) translateY(var(--hero-throw-y, 0px)) rotate(var(--hero-throw-rotation, 0deg)) scaleX(calc(var(--slide-scale, 0.9) * var(--hero-throw-scale, 1) * var(--hero-throw-stretch-x, 1))) scaleY(calc(var(--slide-scale, 0.9) * var(--hero-throw-scale, 1) * var(--hero-throw-stretch-y, 1)));
       transition: opacity 0.55s ease, transform 0.55s ease, filter 0.55s ease;
       filter: saturate(var(--slide-saturate, 0.82));
       pointer-events: none;
       z-index: var(--slide-z, 1);
+      cursor: default;
     }
 
     .hero-model-slide::after {
@@ -1091,6 +1124,18 @@
 
     .hero-model-slide.is-active {
       pointer-events: auto;
+      touch-action: none;
+      cursor: grab;
+    }
+
+    .hero-model-slide.is-hero-dragging,
+    .hero-model-slide.is-hero-flying {
+      transition: none;
+      z-index: 20;
+    }
+
+    .hero-model-slide.is-hero-dragging {
+      cursor: grabbing;
     }
 
     .hero-model-stage::before {
@@ -9511,6 +9556,37 @@
       padding: 4px;
     }
 
+    .home-touch-action .home-main-action__icon {
+      background: linear-gradient(145deg, #fff4d8, #ffe4ac);
+      color: #c47722;
+    }
+
+    .touch-popup-content {
+      width: min(1100px, 96vw);
+      max-width: 1100px;
+      height: min(92svh, 860px);
+      max-height: none;
+      padding: 0;
+      overflow: hidden;
+      background: #f5dfca;
+    }
+
+    .touch-popup-frame {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      border: 0;
+      border-radius: inherit;
+      background: #f5dfca;
+    }
+
+    .touch-popup-content > .popup-close {
+      z-index: 20;
+      top: 12px;
+      right: 12px;
+    }
+
     .home-main-action,
     .home-diagnosis-card > summary {
       min-height: 116px;
@@ -10033,6 +10109,7 @@
             <button class="home-main-action" id="homeOpenEncyclopedia" type="button" data-preview="全タイプのモビーを収録&#10;プロフィールや特徴をチェック"><span class="home-main-action__icon" aria-hidden="true">▤</span><span class="home-main-action__copy"><strong>図鑑</strong><small>モビーのプロフィールを見る</small></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー図鑑・代表キャラクター</span><span class="encyclopedia-preview-grid"><span class="encyclopedia-preview-card"><img src="16school/cha/ortp.jpg" alt=""><span>文化祭センター<br>ステージモビー</span></span><span class="encyclopedia-preview-card"><img src="16school/cha/ojtp2.jpg" alt=""><span>カップル自撮り<br>モビー</span></span><span class="encyclopedia-preview-card"><img src="16renai/image/lovemobby/花束の主人公モビー.webp" alt=""><span>恋愛モビー<br>花束の主人公</span></span><span class="encyclopedia-preview-card"><img src="16renai/image/lovemobby/胸奥のロマンモビー.webp" alt=""><span>恋愛モビー<br>胸奥のロマン</span></span></span><span class="footer-action-preview-copy">学校モビーと恋愛モビーから代表4タイプを紹介</span></span></button>
             <button class="home-main-action" id="homeOpenFaq" type="button" data-preview="質問やご相談はこちら&#10;フォームからメッセージを送れます"><span class="home-main-action__icon" aria-hidden="true">✉</span><span class="home-main-action__copy"><strong>お問い合わせ</strong><small>フォームからメッセージを送る</small></span><span class="home-character-peek" aria-hidden="true"><img src="carousel/after/mobby_gal_toka.webp" alt=""></span></button>
             <button class="home-main-action" id="homeOpenSns" type="button" data-preview="Instagram・TikTokで&#10;Mobbyの最新情報をチェック"><span class="home-main-action__icon" aria-hidden="true">♧</span><span class="home-main-action__copy"><strong>SNS</strong><small>Mobby公式アカウントを見る</small></span><span class="home-character-peek" aria-hidden="true"><img src="carousel/after/mobby_yami_toka.webp" alt=""></span></button>
+            <button class="home-main-action home-touch-action" id="homeOpenTouch" type="button" data-preview="モビーを指で飛ばして&#10;ぷにっと遊べます"><span class="home-main-action__icon" aria-hidden="true">➜</span><span class="home-main-action__copy"><strong>モビーをとばす</strong><small>指で飛ばして遊ぶ</small></span><span class="home-character-peek" aria-hidden="true"><img src="mobby-touch/mobby-yanki.webp" alt=""></span></button>
             <a class="home-main-action" href="ehon/index.html" data-preview="モビーたちの物語を&#10;全32ページで楽しめます"><span class="home-main-action__icon" aria-hidden="true">▢</span><span class="home-main-action__copy"><strong>絵本</strong><small>モビーの物語を読む</small></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビーの絵本</span><img class="home-preview-cover" src="ehon/column/ehon-column-pattern-2.png" alt=""><span class="footer-action-preview-copy">モビーたちの物語を全32ページで楽しめます</span></span></a>
           </nav>
 
@@ -10685,6 +10762,13 @@
       </div>
     </div>
 
+    <div id="touchPopup" class="popup-overlay" aria-hidden="true">
+      <div class="popup-content touch-popup-content" role="dialog" aria-modal="true" aria-label="モビーをとばす">
+        <button class="popup-close" id="closeTouchPopup" aria-label="閉じる">×</button>
+        <iframe class="touch-popup-frame" src="mobby-touch/index.html?v=throw-only" title="モビーをとばす体験" loading="lazy"></iframe>
+      </div>
+    </div>
+
     <div id="collabRequestPopup" class="popup-overlay" aria-hidden="true">
       <div class="popup-content">
         <button class="popup-close" id="closeCollabRequestPopup" aria-label="閉じる">×</button>
@@ -10874,10 +10958,10 @@
           id: "default",
           buttonLabel: "通常",
           items: [
-            { id: "fact-yellow", name: "もびりん", image: "carousel/after/mobby_fact_man_toka.webp", alt: "Mobby Fact Yellow", smokeSource: true },
-            { id: "gal", name: "もびち", image: "carousel/after/mobby_gal_toka.webp", alt: "Mobby Gal" },
-            { id: "yami-purple", name: "病みモビー", image: "carousel/after/mobby_yami_toka.webp", alt: "Mobby Yami Purple" },
-            { id: "yanki", name: "もびやん", image: "carousel/after/mobby_yanki_toak.webp", alt: "Mobby Yanki" }
+            { id: "fact-yellow", name: "もびりん", image: "mobby-touch/mobby-fact-man.webp", alt: "もびりん", smokeSource: true },
+            { id: "gal", name: "もびち", image: "mobby-touch/mobby-gal.webp", alt: "もびち" },
+            { id: "yami-purple", name: "病みモビー", image: "mobby-touch/mobby-yami.webp", alt: "病みモビー" },
+            { id: "yanki", name: "もびやん", image: "mobby-touch/mobby-yanki.webp", alt: "もびやん" }
           ]
         },
         {
@@ -10934,12 +11018,298 @@
       let gestureTracking = false;
       let gestureMoved = false;
       let dragProgress = 0;
+      const throwDrag = {
+        slide: null,
+        pointerId: null,
+        active: false,
+        moved: false,
+        startX: 0,
+        startY: 0,
+        originX: 0,
+        originY: 0,
+        x: 0,
+        y: 0,
+        velocityX: 0,
+        velocityY: 0,
+        rotation: 0,
+        rotationVelocity: 0,
+        lastX: 0,
+        lastY: 0,
+        lastAt: 0,
+        baseRect: null,
+        spriteWidth: 0,
+        spriteHeight: 0,
+        spritePivotY: 0,
+        spriteOffsetY: 0,
+        frame: 0,
+        returnTimer: 0
+      };
+
+      function setThrowTransform(slide, x, y, rotation = throwDrag.rotation, stretchX = 1, stretchY = 1) {
+        if (!slide) return;
+        slide.style.setProperty("--hero-throw-x", `${x}px`);
+        slide.style.setProperty("--hero-throw-y", `${y}px`);
+        slide.style.setProperty("--hero-throw-rotation", `${rotation}deg`);
+        slide.style.setProperty("--hero-throw-stretch-x", `${stretchX}`);
+        slide.style.setProperty("--hero-throw-stretch-y", `${stretchY}`);
+      }
+
+      function resetThrowTransform(slide) {
+        if (!slide) return;
+        slide.style.removeProperty("--hero-throw-x");
+        slide.style.removeProperty("--hero-throw-y");
+        slide.style.removeProperty("--hero-throw-rotation");
+        slide.style.removeProperty("--hero-throw-scale");
+        slide.style.removeProperty("--hero-throw-stretch-x");
+        slide.style.removeProperty("--hero-throw-stretch-y");
+        slide.classList.remove("is-hero-dragging", "is-hero-flying");
+      }
+
+      function stopThrowAnimation(reset = false) {
+        if (throwDrag.frame) {
+          cancelAnimationFrame(throwDrag.frame);
+          throwDrag.frame = 0;
+        }
+        if (throwDrag.returnTimer) {
+          clearTimeout(throwDrag.returnTimer);
+          throwDrag.returnTimer = 0;
+        }
+        if (reset && throwDrag.slide) resetThrowTransform(throwDrag.slide);
+      }
+
+      function restoreHeroThrow() {
+        if (throwDrag.returnTimer) {
+          clearTimeout(throwDrag.returnTimer);
+          throwDrag.returnTimer = 0;
+        }
+        const slide = throwDrag.slide;
+        carousel.classList.remove("is-hero-throwing");
+        stage.classList.remove("is-hero-throwing");
+        stage.style.removeProperty("--hero-carousel-placeholder-height");
+        if (slide) resetThrowTransform(slide);
+        throwDrag.baseRect = null;
+        throwDrag.spriteWidth = 0;
+        throwDrag.spriteHeight = 0;
+        throwDrag.spritePivotY = 0;
+        throwDrag.spriteOffsetY = 0;
+        throwDrag.x = 0;
+        throwDrag.y = 0;
+        throwDrag.rotation = 0;
+      }
+
+      function getThrowBounds() {
+        if (!throwDrag.baseRect) return { minX: -Infinity, maxX: Infinity, minY: -Infinity, maxY: Infinity };
+        const carouselRect = carousel.getBoundingClientRect();
+        const arenaRect = carousel.classList.contains("is-hero-throwing")
+          ? { left: 0, top: 0, right: window.innerWidth, bottom: window.innerHeight, width: window.innerWidth, height: window.innerHeight }
+          : carouselRect;
+        if (carousel.classList.contains("is-hero-throwing") && throwDrag.spriteWidth && throwDrag.spriteHeight) {
+          const angle = (throwDrag.rotation * Math.PI) / 180;
+          const absCos = Math.abs(Math.cos(angle));
+          const absSin = Math.abs(Math.sin(angle));
+          const halfWidth = (throwDrag.spriteWidth * absCos + throwDrag.spriteHeight * absSin) / 2;
+          const halfHeight = (throwDrag.spriteWidth * absSin + throwDrag.spriteHeight * absCos) / 2;
+          // The CSS transform rotates around the fixed slide's center. Track
+          // that pivot so a tilted sprite cannot sneak past an edge.
+          const centerX = arenaRect.width / 2 - Math.sin(angle) * throwDrag.spriteOffsetY;
+          const centerY = throwDrag.spritePivotY + Math.cos(angle) * throwDrag.spriteOffsetY;
+          return {
+            minX: arenaRect.left + 8 - (centerX - halfWidth),
+            maxX: arenaRect.right - 8 - (centerX + halfWidth),
+            minY: arenaRect.top + 8 - (centerY - halfHeight),
+            maxY: arenaRect.bottom - 8 - (centerY + halfHeight)
+          };
+        }
+        // The slide fills the carousel for layout purposes, while the visible
+        // character occupies only its lower portion. Use that visual footprint
+        // so the character can travel vertically without the transparent area
+        // of the image locking the drag to y=0.
+        const visualWidth = Math.min(arenaRect.width * 0.375, 260);
+        // Touch Lab sprites are square and bottom-aligned inside the canvas.
+        // Keep the same footprint here, expanding it for the current rotation
+        // so the visible corners also rebound before reaching the viewport edge.
+        const visualHeight = visualWidth;
+        const angle = Math.abs((throwDrag.rotation * Math.PI) / 180) % (Math.PI / 2);
+        const rotatedWidth = visualWidth * Math.cos(angle) + visualHeight * Math.sin(angle);
+        const rotatedHeight = visualWidth * Math.sin(angle) + visualHeight * Math.cos(angle);
+        const visualCenterX = (throwDrag.baseRect.left + throwDrag.baseRect.right) / 2;
+        const visualCenterY = throwDrag.baseRect.bottom - visualHeight / 2;
+        const visualLeft = visualCenterX - rotatedWidth / 2;
+        const visualTop = visualCenterY - rotatedHeight / 2;
+        return {
+          minX: arenaRect.left + 8 - visualLeft,
+          maxX: arenaRect.right - 8 - (visualLeft + rotatedWidth),
+          minY: arenaRect.top + 8 - visualTop,
+          maxY: arenaRect.bottom - 8 - (visualTop + rotatedHeight)
+        };
+      }
+
+      function getThrowStretch() {
+        const flightX = Math.max(0, Math.min(Math.abs(throwDrag.velocityX) / 1450, 0.38));
+        const flightY = Math.max(0, Math.min(Math.abs(throwDrag.velocityY) / 1550, 0.34));
+        return {
+          x: 1 + flightX * 0.72 - flightY * 0.2,
+          y: 1 + flightY * 0.68 - flightX * 0.2
+        };
+      }
+
+      function beginThrowDrag(event, slide) {
+        stopThrowAnimation();
+        const previousX = Number.parseFloat(slide.style.getPropertyValue("--hero-throw-x")) || 0;
+        const previousY = Number.parseFloat(slide.style.getPropertyValue("--hero-throw-y")) || 0;
+        const wasFullScreen = carousel.classList.contains("is-hero-throwing");
+        const originalRect = slide.getBoundingClientRect();
+        if (!wasFullScreen) {
+          stage.style.setProperty("--hero-carousel-placeholder-height", `${carousel.getBoundingClientRect().height}px`);
+          stage.classList.add("is-hero-throwing");
+          carousel.classList.add("is-hero-throwing");
+          // Match the throw experience's roughly 37.5vw character footprint.
+          slide.style.setProperty("--hero-throw-scale", "0.5");
+        }
+        const image = slide.querySelector(".hero-model-viewer");
+        const aspect = image?.naturalWidth && image?.naturalHeight ? image.naturalWidth / image.naturalHeight : 1;
+        const throwScale = Number.parseFloat(slide.style.getPropertyValue("--hero-throw-scale")) || 0.5;
+        let spriteWidth = Math.min(window.innerWidth * 0.375, 590);
+        let spriteHeight = spriteWidth / aspect;
+        const maxSpriteHeight = window.innerHeight * 0.39;
+        if (spriteHeight > maxSpriteHeight) {
+          spriteHeight = maxSpriteHeight;
+          spriteWidth = spriteHeight * aspect;
+        }
+        throwDrag.spriteWidth = spriteWidth;
+        throwDrag.spriteHeight = spriteHeight;
+        throwDrag.spritePivotY = window.innerHeight / 2;
+        throwDrag.spriteOffsetY = throwScale * window.innerHeight / 2 - spriteHeight / 2;
+        slide.classList.remove("is-hero-flying");
+        slide.classList.add("is-hero-dragging");
+        const floatingRect = slide.getBoundingClientRect();
+        const alignedX = originalRect.left + originalRect.width / 2 - (floatingRect.left + floatingRect.width / 2);
+        // The character artwork is bottom-aligned inside the transparent image
+        // canvas, so preserve its bottom edge while switching to the viewport.
+        const alignedY = originalRect.bottom - floatingRect.bottom;
+        throwDrag.slide = slide;
+        throwDrag.pointerId = event.pointerId;
+        throwDrag.active = true;
+        throwDrag.moved = false;
+        throwDrag.startX = event.clientX;
+        throwDrag.startY = event.clientY;
+        throwDrag.originX = wasFullScreen ? previousX : alignedX;
+        throwDrag.originY = wasFullScreen ? previousY : alignedY;
+        throwDrag.x = throwDrag.originX;
+        throwDrag.y = throwDrag.originY;
+        throwDrag.velocityX = 0;
+        throwDrag.velocityY = 0;
+        throwDrag.rotationVelocity = 0;
+        throwDrag.lastX = event.clientX;
+        throwDrag.lastY = event.clientY;
+        throwDrag.lastAt = performance.now();
+        const currentRect = floatingRect;
+        const baseOffsetX = wasFullScreen ? previousX : 0;
+        const baseOffsetY = wasFullScreen ? previousY : 0;
+        throwDrag.baseRect = {
+          left: currentRect.left - baseOffsetX,
+          right: currentRect.right - baseOffsetX,
+          top: currentRect.top - baseOffsetY,
+          bottom: currentRect.bottom - baseOffsetY
+        };
+        if (carousel.setPointerCapture) carousel.setPointerCapture(event.pointerId);
+        stopAutoRotate();
+        event.preventDefault();
+      }
+
+      function updateThrowDrag(event) {
+        if (!throwDrag.active) return;
+        const now = performance.now();
+        const dt = Math.max(0.008, Math.min(0.08, (now - throwDrag.lastAt) / 1000));
+        const bounds = getThrowBounds();
+        const nextX = Math.max(bounds.minX, Math.min(bounds.maxX, throwDrag.originX + event.clientX - throwDrag.startX));
+        const nextY = Math.max(bounds.minY, Math.min(bounds.maxY, throwDrag.originY + event.clientY - throwDrag.startY));
+        throwDrag.velocityX = (nextX - throwDrag.x) / dt;
+        throwDrag.velocityY = (nextY - throwDrag.y) / dt;
+        throwDrag.x = nextX;
+        throwDrag.y = nextY;
+        throwDrag.moved = throwDrag.moved || Math.hypot(event.clientX - throwDrag.startX, event.clientY - throwDrag.startY) > 7;
+        throwDrag.lastX = event.clientX;
+        throwDrag.lastY = event.clientY;
+        throwDrag.lastAt = now;
+        const stretch = getThrowStretch();
+        setThrowTransform(throwDrag.slide, throwDrag.x, throwDrag.y, throwDrag.rotation, stretch.x, stretch.y);
+        event.preventDefault();
+      }
+
+      function finishThrowDrag(event) {
+        if (!throwDrag.active) return false;
+        const slide = throwDrag.slide;
+        const moved = throwDrag.moved;
+        throwDrag.active = false;
+        throwDrag.pointerId = null;
+        if (carousel.releasePointerCapture && carousel.hasPointerCapture?.(event.pointerId)) carousel.releasePointerCapture(event.pointerId);
+        if (!moved) {
+          restoreHeroThrow();
+          return true;
+        }
+
+        slide?.classList.remove("is-hero-dragging");
+        slide?.classList.add("is-hero-flying");
+        throwDrag.velocityX = Math.max(-1900, Math.min(1900, throwDrag.velocityX));
+        throwDrag.velocityY = Math.max(-1950, Math.min(1450, throwDrag.velocityY));
+        throwDrag.rotationVelocity = Math.max(-258, Math.min(258, throwDrag.velocityX * 0.0018 * 180 / Math.PI));
+        let lastAt = performance.now();
+        const animate = (now) => {
+          if (!throwDrag.slide || throwDrag.slide !== slide) return;
+          const dt = Math.min(0.032, Math.max(0.008, (now - lastAt) / 1000));
+          lastAt = now;
+          const bounds = getThrowBounds();
+          throwDrag.velocityY += 1160 * dt;
+          throwDrag.velocityX *= Math.exp(-dt * 0.12);
+          throwDrag.rotationVelocity *= Math.exp(-dt * 0.64);
+          throwDrag.x += throwDrag.velocityX * dt;
+          throwDrag.y += throwDrag.velocityY * dt;
+          throwDrag.rotation += throwDrag.rotationVelocity * dt;
+
+          if (throwDrag.x <= bounds.minX || throwDrag.x >= bounds.maxX) {
+            throwDrag.x = Math.max(bounds.minX, Math.min(bounds.maxX, throwDrag.x));
+            throwDrag.velocityX *= -0.79;
+          }
+          if (throwDrag.y <= bounds.minY || throwDrag.y >= bounds.maxY) {
+            throwDrag.y = Math.max(bounds.minY, Math.min(bounds.maxY, throwDrag.y));
+            throwDrag.velocityY *= -0.76;
+          }
+          const stretch = getThrowStretch();
+          setThrowTransform(slide, throwDrag.x, throwDrag.y, throwDrag.rotation, stretch.x, stretch.y);
+
+          const settled = Math.abs(throwDrag.velocityX) < 16 && Math.abs(throwDrag.velocityY) < 34 && throwDrag.y >= bounds.maxY - 1;
+          if (settled) {
+            throwDrag.frame = 0;
+            slide.classList.remove("is-hero-flying");
+            throwDrag.returnTimer = setTimeout(restoreHeroThrow, 360);
+            return;
+          }
+          throwDrag.frame = requestAnimationFrame(animate);
+        };
+        throwDrag.frame = requestAnimationFrame(animate);
+        return true;
+      }
+
+      function cancelThrowDrag(event) {
+        if (!throwDrag.active) return false;
+        throwDrag.active = false;
+        throwDrag.pointerId = null;
+        restoreHeroThrow();
+        if (event?.pointerId != null && carousel.releasePointerCapture && carousel.hasPointerCapture?.(event.pointerId)) carousel.releasePointerCapture(event.pointerId);
+        return true;
+      }
 
       function getCurrentSet() {
         return HERO_CAROUSEL_SETS[currentSetIndex] || HERO_CAROUSEL_SETS[0];
       }
 
       function buildSlides() {
+        stopThrowAnimation(true);
+        carousel.classList.remove("is-hero-throwing");
+        stage.classList.remove("is-hero-throwing");
+        stage.style.removeProperty("--hero-carousel-placeholder-height");
+        throwDrag.slide = null;
         const currentSet = getCurrentSet();
         carousel.innerHTML = currentSet.items.map((item, index) => `
           <div class="hero-model-slide${index === 0 ? " is-active" : ""}" data-index="${index}" data-image="${item.image}"${item.smokeSource ? ' data-smoke-source="true"' : ""}>
@@ -10964,6 +11334,12 @@
       }
 
       function renderSlides(centerIndex, progress = 0) {
+        // A carousel rerender can happen after a pointer release or a set
+        // switch. Never let a stale throw transform keep a character floating
+        // behind the manga when the throw layer has already closed.
+        if (!carousel.classList.contains("is-hero-throwing")) {
+          slides.forEach((slide) => resetThrowTransform(slide));
+        }
         slides.forEach((slide, slideIndex) => {
           const delta = getCircularDelta(slideIndex, centerIndex) + progress;
           const absDelta = Math.abs(delta);
@@ -11015,6 +11391,7 @@
       }
 
       function setActiveSlide(index) {
+        if (throwDrag.slide && !throwDrag.active) restoreHeroThrow();
         activeIndex = (index + slides.length) % slides.length;
         dragProgress = 0;
         renderSlides(activeIndex, 0);
@@ -11042,6 +11419,12 @@
       }
 
       carousel.addEventListener("pointerdown", (event) => {
+        const targetSlide = event.target?.closest?.(".hero-model-slide");
+        if (targetSlide?.classList.contains("is-active")) {
+          beginThrowDrag(event, targetSlide);
+          gestureTracking = false;
+          return;
+        }
         gestureStartX = event.clientX;
         gestureStartY = event.clientY;
         gestureTracking = true;
@@ -11050,6 +11433,10 @@
       });
 
       carousel.addEventListener("pointermove", (event) => {
+        if (throwDrag.active) {
+          updateThrowDrag(event);
+          return;
+        }
         if (!gestureTracking) return;
         const dx = event.clientX - gestureStartX;
         const dy = event.clientY - gestureStartY;
@@ -11064,6 +11451,11 @@
       });
 
       carousel.addEventListener("pointerup", (event) => {
+        if (throwDrag.active) {
+          finishThrowDrag(event);
+          startAutoRotate();
+          return;
+        }
         if (!gestureTracking) return;
         gestureTracking = false;
         const dx = event.clientX - gestureStartX;
@@ -11088,9 +11480,28 @@
         startAutoRotate();
       });
 
-      carousel.addEventListener("pointercancel", () => {
+      carousel.addEventListener("pointercancel", (event) => {
+        if (throwDrag.active) {
+          cancelThrowDrag(event);
+          startAutoRotate();
+          return;
+        }
         gestureTracking = false;
         renderSlides(activeIndex, 0);
+        startAutoRotate();
+      });
+
+      // Pointer capture can hand the release event to the document instead of
+      // the carousel, especially on touch browsers. Keep a document-level
+      // fallback so a throw always settles cleanly.
+      document.addEventListener("pointerup", (event) => {
+        if (!throwDrag.active) return;
+        finishThrowDrag(event);
+        startAutoRotate();
+      });
+      document.addEventListener("pointercancel", (event) => {
+        if (!throwDrag.active) return;
+        cancelThrowDrag(event);
         startAutoRotate();
       });
 
@@ -13093,6 +13504,7 @@
     document.getElementById('homeOpenFaq')?.addEventListener('click', () => openPopup('faqPopup'));
     document.getElementById('homeOpenSns')?.addEventListener('click', () => openPopup('snsPopup'));
     document.getElementById('homeOpenEncyclopedia')?.addEventListener('click', () => openPopup('encyclopediaPopup'));
+    document.getElementById('homeOpenTouch')?.addEventListener('click', () => openPopup('touchPopup'));
     (() => {
       const tabs = Array.from(document.querySelectorAll('[id^="diagnosisPopupTab"]'));
       const panels = Array.from(document.querySelectorAll('[id^="diagnosisPopupPanel"]'));
@@ -13172,6 +13584,7 @@
     document.getElementById('closeSnsPopup')?.addEventListener('click', () => closePopup('snsPopup'));
     document.getElementById('closeEncyclopediaPopup')?.addEventListener('click', () => closePopup('encyclopediaPopup'));
     document.getElementById('closeDiagnosisPopup')?.addEventListener('click', () => closePopup('diagnosisPopup'));
+    document.getElementById('closeTouchPopup')?.addEventListener('click', () => closePopup('touchPopup'));
     document.getElementById('closeCollabRequestPopup')?.addEventListener('click', () => closePopup('collabRequestPopup'));
     document.getElementById('closeVotePopup')?.addEventListener('click', () => closePopup('votePopup'));
     document.getElementById('closeCompositingPopup')?.addEventListener('click', () => closePopup('compositingPopup'));
@@ -13198,6 +13611,9 @@
     document.getElementById('diagnosisPopup')?.addEventListener('click', (e) => {
       if (e.target.id === 'diagnosisPopup') closePopup('diagnosisPopup');
     });
+    document.getElementById('touchPopup')?.addEventListener('click', (e) => {
+      if (e.target.id === 'touchPopup') closePopup('touchPopup');
+    });
     document.getElementById('collabRequestPopup')?.addEventListener('click', (e) => {
       if (e.target.id === 'collabRequestPopup') closePopup('collabRequestPopup');
     });
@@ -13218,6 +13634,7 @@
         if (document.getElementById('snsPopup')?.classList.contains('is-open')) closePopup('snsPopup');
         if (document.getElementById('encyclopediaPopup')?.classList.contains('is-open')) closePopup('encyclopediaPopup');
         if (document.getElementById('diagnosisPopup')?.classList.contains('is-open')) closePopup('diagnosisPopup');
+        if (document.getElementById('touchPopup')?.classList.contains('is-open')) closePopup('touchPopup');
         if (document.getElementById('collabRequestPopup')?.classList.contains('is-open')) closePopup('collabRequestPopup');
         if (document.getElementById('votePopup')?.classList.contains('is-open')) closePopup('votePopup');
         if (document.getElementById('compositingPopup')?.classList.contains('is-open')) closePopup('compositingPopup');

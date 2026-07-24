@@ -91,12 +91,14 @@ ${templateThumbs}
       title: "画像を調整しよう",
       text: "合成した画像の位置や見え方を調整。<br>人物サイズや角度を整えて、自然な仕上がりにできます。",
       visual: `
-        <div class="compositing-splash__poster"><img src="${splashPosterSrc}" alt=""></div>
-        <div class="compositing-splash__sliders">
-          <div class="compositing-splash__slider-label">人物サイズ</div>
-          <div class="compositing-splash__slider"></div>
-          <div class="compositing-splash__slider-label">角度調整</div>
-          <div class="compositing-splash__slider"></div>
+        <div class="compositing-splash__step3-visual">
+          <div class="compositing-splash__poster"><img src="${splashPosterSrc}" alt=""></div>
+          <div class="compositing-splash__sliders">
+            <div class="compositing-splash__slider-label">人物サイズ</div>
+            <div class="compositing-splash__slider"></div>
+            <div class="compositing-splash__slider-label">角度調整</div>
+            <div class="compositing-splash__slider"></div>
+          </div>
         </div>`
     },
     {
