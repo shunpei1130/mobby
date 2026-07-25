@@ -8683,13 +8683,13 @@
     }
 
     @media (hover: none), (pointer: coarse) {
-      #main-content :is(#openManga, #giftFanMenu .gift-fan-action).is-mobile-preview-open {
+      #main-content :is(#openManga, #giftFanMenu .gift-fan-action, .home-main-action).is-mobile-preview-open {
         z-index: 320 !important;
         transform: translateY(-3px) scale(1.025) !important;
         filter: brightness(1.025) saturate(1.04) !important;
       }
 
-      #main-content :is(#openManga, #giftFanMenu .gift-fan-action).is-mobile-preview-open > .footer-action-preview {
+      #main-content :is(#openManga, #giftFanMenu .gift-fan-action, .home-main-action).is-mobile-preview-open > .footer-action-preview {
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
@@ -14996,7 +14996,11 @@
   <script>
     (() => {
       const touchPreviewQuery = window.matchMedia('(hover: none), (pointer: coarse)');
-      const previewControlSelector = '#openManga, #giftFanMenu .gift-fan-action';
+      // Touch devices get the same two-step interaction as the desktop hover UI:
+      // the first tap opens a preview, and a second tap performs the control's
+      // normal action. Include both the footer fan controls and the larger home
+      // action cards so FAQ/SNS cannot fall through to an immediate navigation.
+      const previewControlSelector = '#openManga, #giftFanMenu .gift-fan-action, .home-main-action';
 
       const closePreview = (owner) => {
         if (!owner) return;
@@ -15005,7 +15009,7 @@
       };
 
       const closeAllPreviews = (except = null) => {
-        document.querySelectorAll('#openManga.is-mobile-preview-open, #giftFanMenu .gift-fan-action.is-mobile-preview-open').forEach((owner) => {
+        document.querySelectorAll('#openManga.is-mobile-preview-open, #giftFanMenu .gift-fan-action.is-mobile-preview-open, .home-main-action.is-mobile-preview-open').forEach((owner) => {
           if (owner !== except) closePreview(owner);
         });
       };
@@ -15027,14 +15031,16 @@
 
         const control = event.target.closest(previewControlSelector);
         if (control && control.querySelector(':scope > .footer-action-preview')) {
-          event.preventDefault();
-          event.stopImmediatePropagation();
-          if (control.classList.contains('is-mobile-preview-open')) {
-            closePreview(control);
-          } else {
+          // Keep the first tap on the preview layer. Once it is already open,
+          // let the event continue to the native link/button handler so the
+          // second tap opens the FAQ/SNS popup or follows the selected link.
+          if (!control.classList.contains('is-mobile-preview-open')) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
             openPreview(control);
+            return;
           }
-          return;
+          closePreview(control);
         }
 
         closeAllPreviews();
