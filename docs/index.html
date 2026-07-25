@@ -8692,7 +8692,10 @@
       #main-content :is(#openManga, #giftFanMenu .gift-fan-action, .home-main-action).is-mobile-preview-open > .footer-action-preview {
         opacity: 1;
         visibility: visible;
-        pointer-events: auto;
+        /* Keep the preview informational so it cannot block a neighbouring
+           bottom button on touch devices. The owning button still receives
+           the next tap and can run its normal action. */
+        pointer-events: none;
         transform: translateY(0) scale(1);
       }
 
@@ -15009,7 +15012,7 @@
       };
 
       const closeAllPreviews = (except = null) => {
-        document.querySelectorAll('#openManga.is-mobile-preview-open, #giftFanMenu .gift-fan-action.is-mobile-preview-open, .home-main-action.is-mobile-preview-open').forEach((owner) => {
+        document.querySelectorAll('.is-mobile-preview-open').forEach((owner) => {
           if (owner !== except) closePreview(owner);
         });
       };
