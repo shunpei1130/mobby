@@ -60,7 +60,9 @@
     <style>
       /* Main-page embed can keep the throw-only variant when requested. */
       .throw-only .mode-picker,
-      .throw-only .control-heading {
+      .throw-only .control-heading,
+      .pull-only .mode-picker,
+      .pull-only .control-heading {
         display: none !important;
       }
 
@@ -139,6 +141,27 @@
         });
         observer.observe(document.getElementById('root'), { childList: true, subtree: true });
         applyThrowOnly();
+      })();
+    </script>
+    <script>
+      (() => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('mode') !== 'pull-only' && params.get('v') !== 'pull-only') return;
+        document.documentElement.classList.add('pull-only');
+        const applyPullOnly = () => {
+          const pullButton = [...document.querySelectorAll('.mode')].find((button) => {
+            const text = button.textContent || '';
+            return text.includes('PULL') || text.includes('ひっぱ') || text.includes('引っ張');
+          });
+          if (!pullButton) return false;
+          if (!pullButton.classList.contains('active')) pullButton.click();
+          return true;
+        };
+        const observer = new MutationObserver(() => {
+          if (applyPullOnly()) observer.disconnect();
+        });
+        observer.observe(document.getElementById('root'), { childList: true, subtree: true });
+        applyPullOnly();
       })();
     </script>
     <script>

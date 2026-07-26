@@ -519,6 +519,50 @@
       margin: 0 auto -2%;
     }
 
+    /* Keep the carousel mode control beside the logo instead of over the
+       carousel.  The title row stays compact at every viewport width. */
+    .mobby-title-row {
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .mobby-title .mobby-title-row img {
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+
+    .mobby-title-row .hero-carousel-mode-picker {
+      position: absolute;
+      top: 0;
+      --mode-picker-gap: clamp(8px, 2vw, 18px);
+      --mode-picker-width: min(74px, calc(50vw - min(17vw, 110px) - var(--mode-picker-gap)));
+      left: auto;
+      right: calc(50% + min(17vw, 110px) + var(--mode-picker-gap));
+      transform: none;
+      flex-direction: column;
+      align-items: stretch;
+      flex: none;
+      margin: 0;
+      gap: 2px;
+      padding: 3px;
+      border-radius: 14px;
+      box-sizing: border-box;
+      width: var(--mode-picker-width);
+      min-width: 0;
+    }
+
+    .mobby-title-row .hero-carousel-mode-button {
+      width: 100%;
+      min-width: 0;
+      min-height: 30px;
+      padding: 4px 8px;
+      font-size: 0.68rem;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
     @media (max-width: 768px) {
       .mobby-title {
         padding-top: 14px;
@@ -528,6 +572,26 @@
       .mobby-title img {
         width: min(44vw, 180px);
         margin: 0 auto -4%;
+      }
+
+      .mobby-title-row {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .mobby-title-row .hero-carousel-mode-picker {
+        --mode-picker-gap: clamp(6px, 2vw, 12px);
+        --mode-picker-width: min(74px, calc(50% - min(22vw, 90px) - var(--mode-picker-gap)));
+        left: max(0px, calc(50% - min(22vw, 90px) - var(--mode-picker-gap) - var(--mode-picker-width)));
+        right: auto;
+        width: var(--mode-picker-width);
+      }
+
+      .mobby-title-row .hero-carousel-mode-button {
+        width: 100%;
+        min-width: 0;
+        padding-inline: 7px;
+        font-size: 0.64rem;
       }
     }
 
@@ -1059,6 +1123,52 @@
       isolation: isolate;
     }
 
+    .hero-carousel-mode-picker {
+      position: relative;
+      top: auto;
+      left: auto;
+      align-self: center;
+      flex: 0 0 auto;
+      margin: 0 auto 8px;
+      z-index: 12;
+      display: inline-flex;
+      gap: 5px;
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.58);
+      border-radius: 999px;
+      background: rgba(255, 249, 240, 0.78);
+      box-shadow: 0 7px 18px rgba(78, 57, 39, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px) saturate(1.2);
+      -webkit-backdrop-filter: blur(12px) saturate(1.2);
+    }
+
+    .hero-carousel-mode-button {
+      min-width: 58px;
+      min-height: 28px;
+      padding: 4px 9px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: rgba(91, 68, 50, 0.72);
+      font: inherit;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+    }
+
+    .hero-carousel-mode-button:hover {
+      transform: translateY(-1px);
+      color: #5d3b20;
+    }
+
+    .hero-carousel-mode-button.is-active {
+      background: #5d3b20;
+      color: #fffaf3;
+      box-shadow: 0 3px 8px rgba(93, 59, 32, 0.2);
+    }
+
     .hero-model-carousel {
       position: relative;
       width: 100%;
@@ -1125,7 +1235,7 @@
       width: 74%;
       height: 100%;
       opacity: var(--slide-opacity, 0);
-      transform: translateX(calc(-50% + var(--slide-offset, 0%) + var(--hero-throw-x, 0px))) translateY(var(--hero-throw-y, 0px)) rotate(var(--hero-throw-rotation, 0deg)) scaleX(calc(var(--slide-scale, 0.9) * var(--hero-throw-scale, 1) * var(--hero-throw-stretch-x, 1))) scaleY(calc(var(--slide-scale, 0.9) * var(--hero-throw-scale, 1) * var(--hero-throw-stretch-y, 1)));
+      transform: translateX(calc(-50% + var(--slide-offset, 0%) + var(--hero-throw-x, 0px) + var(--hero-pull-x, 0px))) translateY(calc(var(--hero-throw-y, 0px) + var(--hero-pull-y, 0px))) rotate(calc(var(--hero-throw-rotation, 0deg) + var(--hero-pull-rotation, 0deg))) scaleX(calc(var(--slide-scale, 0.9) * var(--hero-throw-scale, 1) * var(--hero-throw-stretch-x, 1) * var(--hero-pull-scale-x, 1))) scaleY(calc(var(--slide-scale, 0.9) * var(--hero-throw-scale, 1) * var(--hero-throw-stretch-y, 1) * var(--hero-pull-scale-y, 1)));
       transition: opacity 0.55s ease, transform 0.55s ease, filter 0.55s ease;
       filter: saturate(var(--slide-saturate, 0.82));
       pointer-events: none;
@@ -1144,12 +1254,17 @@
     }
 
     .hero-model-slide.is-hero-dragging,
-    .hero-model-slide.is-hero-flying {
+    .hero-model-slide.is-hero-flying,
+    .hero-model-slide.is-hero-pulling {
       transition: none;
       z-index: 20;
     }
 
     .hero-model-slide.is-hero-dragging {
+      cursor: grabbing;
+    }
+
+    .hero-model-slide.is-hero-pulling {
       cursor: grabbing;
     }
 
@@ -4165,6 +4280,46 @@
         0 0 0 1px rgba(133, 101, 85, 0.1),
         0 12px 24px rgba(89, 70, 52, 0.16);
       pointer-events: none;
+    }
+
+    /* Pull mode uses the eye-free body plus the same expression layers as
+       the in-page "いじめる" experience.  Keep these layers inert while
+       the carousel is in its normal throw mode. */
+    .hero-model-pull-canvas,
+    .hero-model-pull-body,
+    .hero-model-pull-eye {
+      position: absolute;
+      display: none;
+      pointer-events: none;
+      object-fit: fill;
+      z-index: 2;
+    }
+
+    .hero-model-pull-canvas {
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+
+    .hero-model-pull-body {
+      filter: drop-shadow(0 10px 20px rgba(73, 54, 37, 0.12));
+    }
+
+    .hero-model-pull-eye {
+      z-index: 3;
+    }
+
+    .hero-model-slide.is-pull-ready .hero-model-pull-canvas,
+    .hero-model-slide.is-pull-ready .hero-model-pull-eye {
+      display: block;
+    }
+
+    .hero-model-slide.is-pull-ready .hero-model-viewer {
+      display: none;
+    }
+
+    .hero-model-slide.is-pull-reaction .hero-model-pull-eye {
+      display: block;
     }
 
     /* Main diagnosis button opens this compact, centered picker instead of expanding inline. */
@@ -9571,6 +9726,19 @@
       overflow: visible !important;
     }
 
+    /* Keep the carousel below the title row.  The legacy hero layout used a
+       negative carousel margin, which pulled controls into the logo area. */
+    #main-content .hero-intro .hero-carousel-shell {
+      margin-top: clamp(18px, 3vw, 36px) !important;
+    }
+
+    @media (max-width: 768px) {
+      #main-content .hero-intro .hero-carousel-shell {
+        /* Restore the original compact mobile spacing below the headline. */
+        margin-top: -16px !important;
+      }
+    }
+
     .footer-action-preview,
     .hero-action-preview,
     .manga-action-preview {
@@ -10259,7 +10427,13 @@
   <div id="main-content">
     <div class="hero-intro">
       <div class="mobby-title" aria-label="Mobby">
-        <img src="mobby-custom/assets/stickers/Logo.webp" alt="Mobby" fetchpriority="high" decoding="async" />
+        <div class="mobby-title-row">
+          <div class="hero-carousel-mode-picker title-mode-picker" role="group" aria-label="カルーセルの操作方法">
+            <button class="hero-carousel-mode-button is-active" type="button" data-carousel-mode="throw" aria-pressed="true">飛ばす</button>
+            <button class="hero-carousel-mode-button" type="button" data-carousel-mode="pull" aria-pressed="false">引っ張る</button>
+          </div>
+          <img src="mobby-custom/assets/stickers/Logo.webp" alt="Mobby" fetchpriority="high" decoding="async" />
+        </div>
         <h1 class="headline reveal delay-200">沈黙に耳を澄ませる</h1>
         </div>
       <section class="hero">
@@ -10929,7 +11103,7 @@
     <div id="touchPopup" class="popup-overlay" aria-hidden="true">
       <div class="popup-content touch-popup-content" role="dialog" aria-modal="true" aria-label="モビーにちょっかい">
         <button class="popup-close" id="closeTouchPopup" aria-label="閉じる">×</button>
-        <iframe class="touch-popup-frame" src="mobby-touch/index.html?mode=full&v=touch-character-eyes-v17" title="モビーにちょっかいする体験" loading="lazy"></iframe>
+        <iframe class="touch-popup-frame" src="mobby-touch/index.html?mode=full&v=touch-carousel-mode-v18" title="モビーにちょっかいする体験" loading="lazy"></iframe>
       </div>
     </div>
 
@@ -11210,6 +11384,587 @@
         frame: 0,
         returnTimer: 0
       };
+      const pullDrag = {
+        slide: null,
+        config: null,
+        renderer: null,
+        pointerId: null,
+        active: false,
+        moved: false,
+        startX: 0,
+        startY: 0,
+        origin: { x: 0, y: 0 },
+        lastAt: 0,
+        eyeIndex: -1,
+        eyeSector: 0,
+        eyeStrong: false,
+        frame: 0,
+        returnTimer: 0
+      };
+
+      const PULL_EYE_DIRECTION_PAIRS = [
+        [1, 5],
+        [2, 6],
+        [3, 7],
+        [4, 8],
+        [0, 1],
+      ];
+      const PULL_CHARACTER_CONFIG = {
+        "fact-yellow": {
+          body: "mobby-touch/mobirin-noneye.png",
+          eyes: Array.from({ length: 9 }, (_, index) => `mobby-touch/assets/mobirin-eye-${index + 1}.png`),
+          sourceSize: 1254,
+          frame: { x: 295, y: 280, width: 300, height: 270 },
+          defaultEye: 0,
+          eyePairs: PULL_EYE_DIRECTION_PAIRS,
+        },
+        gal: {
+          body: "mobby-touch/mobichi-noneye.png",
+          eyes: Array.from({ length: 9 }, (_, index) => `mobby-touch/assets/mobichi-eye-${index + 1}.png`),
+          sourceSize: 1254,
+          frame: { x: 295, y: 270, width: 300, height: 270 },
+          defaultEye: 0,
+          eyePairs: PULL_EYE_DIRECTION_PAIRS,
+        },
+        "yami-purple": {
+          body: "mobby-touch/yami-noneye.png",
+          eyes: Array.from({ length: 9 }, (_, index) => `mobby-touch/assets/yami-eye-${index + 1}.png`),
+          sourceSize: 1254,
+          frame: { x: 250, y: 380, width: 270, height: 180 },
+          defaultEye: 0,
+          eyePairs: PULL_EYE_DIRECTION_PAIRS,
+        },
+        yanki: {
+          body: "mobby-touch/mobiyan-noneye.png",
+          eyes: Array.from({ length: 9 }, (_, index) => `mobby-touch/assets/mobiyan-eye-${index + 1}.png`),
+          sourceSize: 1254,
+          frame: { x: 393, y: 499, width: 171, height: 100 },
+          defaultFrame: { x: 366, y: 465, width: 227, height: 166 },
+          defaultEye: "mobby-touch/assets/mobiyan-eye-default.png",
+          reactionAlphaBox: [64, 22, 271, 124],
+          eyePairs: [
+            [1, 5],
+            [6, 8],
+            [2, 7],
+            [0, 4],
+            [5, 3],
+          ],
+        },
+      };
+
+      const clampPull = (value, min, max) => Math.max(min, Math.min(max, value));
+
+      function getPullParts(slide) {
+        return slide?._pullParts || null;
+      }
+
+      function getPullGeometry(slide, config) {
+        const width = Math.max(slide?.clientWidth || 1, 1);
+        const height = Math.max(slide?.clientHeight || 1, 1);
+        let spriteWidth = Math.min(width * 0.82, 590);
+        let spriteHeight = spriteWidth;
+        if (spriteHeight > height * 0.74) {
+          spriteHeight = height * 0.74;
+          spriteWidth = spriteHeight;
+        }
+        const spriteSize = spriteWidth;
+        const imageLeft = (width - spriteSize) / 2;
+        const imageTop = height * 0.89 - spriteSize * 0.99;
+        const scale = spriteSize / config.sourceSize;
+        const floorY = height * 0.89;
+        const centerX = width / 2;
+        const centerY = floorY - spriteSize * 0.49;
+        return { width, height, spriteSize, imageLeft, imageTop, scale, floorY, centerX, centerY };
+      }
+
+      const smoothPull = (value) => {
+        const t = clampPull(value, 0, 1);
+        return t * t * (3 - 2 * t);
+      };
+
+      function pullCheekInfluence(u, v) {
+        const regions = [
+          { x: 0.35, y: 0.27, rx: 0.115, ry: 0.125 },
+          { x: 0.68, y: 0.27, rx: 0.14, ry: 0.145 },
+          { x: 0.6, y: 0.56, rx: 0.068, ry: 0.07 },
+          { x: 0.7, y: 0.5, rx: 0.068, ry: 0.07 },
+        ];
+        let influence = 1;
+        for (const region of regions) {
+          const distance = Math.sqrt(((u - region.x) / region.rx) ** 2 + ((v - region.y) / region.ry) ** 2);
+          influence = Math.min(influence, smoothPull((distance - 0.82) / 0.42));
+        }
+        const cheekX = Math.abs(u - 0.36) / 0.12;
+        const cheekY = Math.abs(v - 0.56) / 0.115;
+        return Math.min(influence, smoothPull((Math.max(cheekX, cheekY) - 0.82) / 0.42));
+      }
+
+      function isPullBodyPoint(u, v) {
+        return ((u - 0.5) / 0.47) ** 6 + ((v - 0.48) / 0.49) ** 6 <= 1.14
+          && u >= 0.02 && u <= 0.98 && v >= 0.01 && v <= 0.99;
+      }
+
+      function createPullRenderer(slide, config, body) {
+        const canvas = document.createElement('canvas');
+        canvas.className = 'hero-model-pull-canvas';
+        canvas.setAttribute('aria-hidden', 'true');
+        slide.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
+        const renderer = {
+          slide,
+          config,
+          body,
+          canvas,
+          ctx,
+          columns: 17,
+          rows: 17,
+          vertices: [],
+          geometry: null,
+          dpr: 1,
+          frame: 0,
+          lastAt: 0,
+        };
+        resizePullRenderer(renderer);
+        body.addEventListener('load', () => {
+          resizePullRenderer(renderer);
+          renderPullMesh(renderer);
+        });
+        return renderer;
+      }
+
+      function resizePullRenderer(renderer) {
+        if (!renderer?.canvas || !renderer.ctx) return;
+        const geometry = getPullGeometry(renderer.slide, renderer.config);
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        renderer.geometry = geometry;
+        renderer.dpr = dpr;
+        renderer.canvas.width = Math.max(1, Math.round(geometry.width * dpr));
+        renderer.canvas.height = Math.max(1, Math.round(geometry.height * dpr));
+        renderer.canvas.style.width = `${geometry.width}px`;
+        renderer.canvas.style.height = `${geometry.height}px`;
+        renderer.vertices = [];
+        for (let row = 0; row <= renderer.rows; row += 1) {
+          for (let column = 0; column <= renderer.columns; column += 1) {
+            const u = column / renderer.columns;
+            const v = row / renderer.rows;
+            renderer.vertices.push({
+              u,
+              v,
+              baseX: u * geometry.spriteSize,
+              baseY: v * geometry.spriteSize,
+              offsetX: 0,
+              offsetY: 0,
+              velocityX: 0,
+              velocityY: 0,
+              targetX: 0,
+              targetY: 0,
+            });
+          }
+        }
+      }
+
+      function drawPullTriangle(ctx, image, source, destination) {
+        const [s0, s1, s2] = source;
+        const [d0, d1, d2] = destination;
+        const denominator = s0.x * (s1.y - s2.y) + s1.x * (s2.y - s0.y) + s2.x * (s0.y - s1.y);
+        if (Math.abs(denominator) < 0.0001) return;
+        const a = (d0.x * (s1.y - s2.y) + d1.x * (s2.y - s0.y) + d2.x * (s0.y - s1.y)) / denominator;
+        const c = (d0.x * (s2.x - s1.x) + d1.x * (s0.x - s2.x) + d2.x * (s1.x - s0.x)) / denominator;
+        const e = (d0.x * (s1.x * s2.y - s2.x * s1.y) + d1.x * (s2.x * s0.y - s0.x * s2.y) + d2.x * (s0.x * s1.y - s1.x * s0.y)) / denominator;
+        const b = (d0.y * (s1.y - s2.y) + d1.y * (s2.y - s0.y) + d2.y * (s0.y - s1.y)) / denominator;
+        const d = (d0.y * (s2.x - s1.x) + d1.y * (s0.x - s2.x) + d2.y * (s1.x - s0.x)) / denominator;
+        const f = (d0.y * (s1.x * s2.y - s2.x * s1.y) + d1.y * (s2.x * s0.y - s0.x * s2.y) + d2.y * (s0.x * s1.y - s1.x * s0.y)) / denominator;
+        const center = {
+          x: (d0.x + d1.x + d2.x) / 3,
+          y: (d0.y + d1.y + d2.y) / 3,
+        };
+        const expanded = [d0, d1, d2].map((point) => {
+          const dx = point.x - center.x;
+          const dy = point.y - center.y;
+          const distance = Math.hypot(dx, dy) || 1;
+          // Same 0.62px triangle expansion used by the touch canvas. It
+          // closes antialiasing seams between neighboring mesh triangles.
+          return {
+            x: point.x + dx / distance * 0.62,
+            y: point.y + dy / distance * 0.62,
+          };
+        });
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(expanded[0].x, expanded[0].y);
+        ctx.lineTo(expanded[1].x, expanded[1].y);
+        ctx.lineTo(expanded[2].x, expanded[2].y);
+        ctx.closePath();
+        ctx.clip();
+        ctx.transform(a, b, c, d, e, f);
+        ctx.drawImage(image, 0, 0);
+        ctx.restore();
+      }
+
+      function renderPullMesh(renderer) {
+        if (!renderer?.ctx || !renderer.geometry) return;
+        const { ctx, geometry, dpr } = renderer;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, geometry.width, geometry.height);
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        if (!renderer.body.complete || !renderer.body.naturalWidth) return;
+        const sourcePoint = (vertex) => ({
+          x: vertex.u * renderer.body.naturalWidth,
+          y: vertex.v * renderer.body.naturalHeight,
+        });
+        const destinationPoint = (vertex) => ({
+          x: geometry.imageLeft + vertex.baseX + vertex.offsetX,
+          y: geometry.imageTop + vertex.baseY + vertex.offsetY,
+        });
+        for (let row = 0; row < renderer.rows; row += 1) {
+          for (let column = 0; column < renderer.columns; column += 1) {
+            const index = row * (renderer.columns + 1) + column;
+            const topLeft = renderer.vertices[index];
+            const topRight = renderer.vertices[index + 1];
+            const bottomLeft = renderer.vertices[index + renderer.columns + 1];
+            const bottomRight = renderer.vertices[index + renderer.columns + 2];
+            drawPullTriangle(ctx, renderer.body,
+              [sourcePoint(topLeft), sourcePoint(topRight), sourcePoint(bottomLeft)],
+              [destinationPoint(topLeft), destinationPoint(topRight), destinationPoint(bottomLeft)]);
+            drawPullTriangle(ctx, renderer.body,
+              [sourcePoint(topRight), sourcePoint(bottomRight), sourcePoint(bottomLeft)],
+              [destinationPoint(topRight), destinationPoint(bottomRight), destinationPoint(bottomLeft)]);
+          }
+        }
+      }
+
+      function setPullMeshTarget(renderer, deltaX, deltaY) {
+        if (!renderer?.geometry) return;
+        const radius = renderer.geometry.spriteSize * 0.245;
+        const maxDistance = renderer.geometry.spriteSize * 0.36;
+        const magnitude = Math.hypot(deltaX, deltaY);
+        const scale = magnitude > maxDistance ? maxDistance / magnitude : 1;
+        const offsetX = deltaX * scale;
+        const offsetY = deltaY * scale;
+        for (const vertex of renderer.vertices) {
+          const near = smoothPull(1 - Math.hypot(vertex.baseX - pullDrag.origin.x, vertex.baseY - pullDrag.origin.y) / radius);
+          const cheek = isPullBodyPoint(vertex.u, vertex.v) ? pullCheekInfluence(vertex.u, vertex.v) : 0;
+          vertex.targetX = offsetX * near * cheek;
+          vertex.targetY = offsetY * near * cheek;
+        }
+      }
+
+      function resetPullMesh(renderer) {
+        if (!renderer) return;
+        for (const vertex of renderer.vertices) {
+          vertex.targetX = 0;
+          vertex.targetY = 0;
+        }
+      }
+
+      function startPullMeshAnimation(renderer) {
+        if (!renderer || renderer.frame) return;
+        renderer.lastAt = performance.now();
+        const tick = (now) => {
+          const delta = Math.min((now - renderer.lastAt) / 1000, 0.034);
+          renderer.lastAt = now;
+          const subSteps = Math.max(1, Math.ceil(delta / (1 / 120)));
+          const step = delta / subSteps;
+          let settling = false;
+          for (let sub = 0; sub < subSteps; sub += 1) {
+            const damping = Math.exp(-step * 10.2);
+            for (const vertex of renderer.vertices) {
+              vertex.velocityX += (vertex.targetX - vertex.offsetX) * 118 * step;
+              vertex.velocityY += (vertex.targetY - vertex.offsetY) * 118 * step;
+              vertex.velocityX *= damping;
+              vertex.velocityY *= damping;
+              vertex.offsetX += vertex.velocityX * step;
+              vertex.offsetY += vertex.velocityY * step;
+              if (Math.abs(vertex.offsetX - vertex.targetX) > 0.06 || Math.abs(vertex.offsetY - vertex.targetY) > 0.06) settling = true;
+            }
+          }
+          renderPullMesh(renderer);
+          if (settling || pullDrag.active && pullDrag.renderer === renderer) {
+            renderer.frame = requestAnimationFrame(tick);
+          } else {
+            renderer.frame = 0;
+          }
+        };
+        renderer.frame = requestAnimationFrame(tick);
+      }
+
+      function layoutPullParts(slide) {
+        const parts = getPullParts(slide);
+        if (!parts) return;
+        const geometry = getPullGeometry(slide, parts.config);
+        const frame = parts.isDefault
+          ? (parts.config.defaultFrame || parts.config.frame)
+          : parts.config.frame;
+        const body = parts.body;
+        const eye = parts.eye;
+        body.style.width = `${geometry.spriteSize}px`;
+        body.style.height = `${geometry.spriteSize}px`;
+        body.style.left = `${geometry.imageLeft}px`;
+        body.style.top = `${geometry.imageTop}px`;
+        if (!parts.isDefault && parts.config.reactionAlphaBox) {
+          const [boxX, boxY, boxWidth, boxHeight] = parts.config.reactionAlphaBox;
+          const targetWidth = frame.width * geometry.scale;
+          const targetHeight = frame.height * geometry.scale;
+          const outerWidth = targetWidth * 400 / boxWidth;
+          const outerHeight = targetHeight * 170 / boxHeight;
+          eye.style.width = `${outerWidth}px`;
+          eye.style.height = `${outerHeight}px`;
+          eye.style.left = `${geometry.imageLeft + frame.x * geometry.scale - outerWidth * boxX / 400}px`;
+          eye.style.top = `${geometry.imageTop + frame.y * geometry.scale - outerHeight * boxY / 170}px`;
+        } else {
+          eye.style.width = `${frame.width * geometry.scale}px`;
+          eye.style.height = `${frame.height * geometry.scale}px`;
+          eye.style.left = `${geometry.imageLeft + frame.x * geometry.scale}px`;
+          eye.style.top = `${geometry.imageTop + frame.y * geometry.scale}px`;
+        }
+      }
+
+      function setPullPartsMode(slide, enabled) {
+        const parts = getPullParts(slide);
+        if (!parts) return;
+        parts.enabled = enabled;
+        if (enabled) parts.isDefault = true;
+        slide.classList.toggle('is-pull-ready', enabled);
+        slide.classList.remove('is-pull-reaction');
+        if (!enabled && parts.renderer) {
+          if (parts.renderer.frame) cancelAnimationFrame(parts.renderer.frame);
+          parts.renderer.frame = 0;
+          resetPullMesh(parts.renderer);
+          renderPullMesh(parts.renderer);
+        }
+        if (enabled) {
+          layoutPullParts(slide);
+          parts.eye.src = parts.config.defaultEye || parts.config.eyes[parts.config.defaultEye || 0];
+        }
+      }
+
+      function syncPullVisualState(slide = slides[activeIndex]) {
+        const enabled = carousel.dataset.interactionMode === 'pull';
+        slides.forEach((candidate) => setPullPartsMode(candidate, enabled && candidate === slide));
+      }
+
+      function isPullCheekPoint(event, slide, config) {
+        if (!slide || !config) return false;
+        const rect = slide.getBoundingClientRect();
+        const geometry = getPullGeometry(slide, config);
+        const u = (event.clientX - rect.left - geometry.imageLeft) / geometry.spriteSize;
+        const v = (event.clientY - rect.top - geometry.imageTop) / geometry.spriteSize;
+        const body = ((u - 0.5) / 0.47) ** 6 + ((v - 0.48) / 0.49) ** 6 <= 1.14
+          && u >= 0.02 && u <= 0.98 && v >= 0.01 && v <= 0.99;
+        const leftCheek = ((u - 0.18) / 0.11) ** 2 + ((v - 0.5) / 0.19) ** 2 <= 1;
+        const rightCheek = ((u - 0.86) / 0.1) ** 2 + ((v - 0.5) / 0.19) ** 2 <= 1;
+        return body && (leftCheek || rightCheek);
+      }
+
+      function getPullSpritePoint(event, slide, config) {
+        const rect = slide.getBoundingClientRect();
+        const geometry = getPullGeometry(slide, config);
+        return {
+          x: event.clientX - rect.left - geometry.imageLeft,
+          y: event.clientY - rect.top - geometry.imageTop,
+        };
+      }
+
+      function selectPullEye(deltaX, deltaY, width) {
+        const magnitude = Math.hypot(deltaX, deltaY);
+        const angle = Math.atan2(deltaY, deltaX);
+        const fullTurn = Math.PI * 2;
+        const pairs = pullDrag.config?.eyePairs || PULL_EYE_DIRECTION_PAIRS;
+        const sectorSize = fullTurn / pairs.length;
+        const normalized = (angle + fullTurn + sectorSize / 2) % fullTurn;
+        const candidateSector = Math.floor(normalized / sectorSize) % pairs.length;
+        const currentCenter = pullDrag.eyeSector * sectorSize;
+        const distanceFromCurrent = Math.abs(Math.atan2(
+          Math.sin(angle - currentCenter),
+          Math.cos(angle - currentCenter),
+        ));
+        if (magnitude >= 12 && distanceFromCurrent > sectorSize / 2 + Math.PI / 18) {
+          pullDrag.eyeSector = candidateSector;
+        }
+        const strongOn = Math.max(70, width * 0.16);
+        const strongOff = Math.max(52, width * 0.12);
+        if (!pullDrag.eyeStrong && magnitude >= strongOn) pullDrag.eyeStrong = true;
+        if (pullDrag.eyeStrong && magnitude <= strongOff) pullDrag.eyeStrong = false;
+        return pairs[pullDrag.eyeSector][pullDrag.eyeStrong ? 1 : 0];
+      }
+
+      function setPullTransform(slide, x, y, scaleX = 1, scaleY = 1, rotation = 0) {
+        if (!slide) return;
+        slide.style.setProperty('--hero-pull-x', `${x}px`);
+        slide.style.setProperty('--hero-pull-y', `${y}px`);
+        slide.style.setProperty('--hero-pull-scale-x', `${scaleX}`);
+        slide.style.setProperty('--hero-pull-scale-y', `${scaleY}`);
+        slide.style.setProperty('--hero-pull-rotation', `${rotation}deg`);
+      }
+
+      function resetPullTransform(slide) {
+        if (!slide) return;
+        slide.style.removeProperty('--hero-pull-x');
+        slide.style.removeProperty('--hero-pull-y');
+        slide.style.removeProperty('--hero-pull-scale-x');
+        slide.style.removeProperty('--hero-pull-scale-y');
+        slide.style.removeProperty('--hero-pull-rotation');
+        slide.classList.remove('is-hero-pulling', 'is-pull-reaction');
+      }
+
+      function stopPullAnimation() {
+        if (pullDrag.frame) {
+          cancelAnimationFrame(pullDrag.frame);
+          pullDrag.frame = 0;
+        }
+        if (pullDrag.renderer?.frame) {
+          cancelAnimationFrame(pullDrag.renderer.frame);
+          pullDrag.renderer.frame = 0;
+        }
+        if (pullDrag.returnTimer) {
+          clearTimeout(pullDrag.returnTimer);
+          pullDrag.returnTimer = 0;
+        }
+      }
+
+      function restorePullDrag() {
+        stopPullAnimation();
+        const slide = pullDrag.slide;
+        if (slide) resetPullTransform(slide);
+        const renderer = pullDrag.renderer || getPullParts(slide)?.renderer;
+        if (renderer) {
+          resetPullMesh(renderer);
+          renderPullMesh(renderer);
+        }
+        pullDrag.slide = null;
+        pullDrag.config = null;
+        pullDrag.renderer = null;
+        pullDrag.pointerId = null;
+        pullDrag.active = false;
+        pullDrag.moved = false;
+        pullDrag.eyeIndex = -1;
+        pullDrag.eyeSector = 0;
+        pullDrag.eyeStrong = false;
+      }
+
+      function beginPullDrag(event, slide) {
+        stopPullAnimation();
+        if (throwDrag.active) cancelThrowDrag(event);
+        const parts = getPullParts(slide);
+        const config = parts?.config || null;
+        if (config && !isPullCheekPoint(event, slide, config)) return false;
+        const renderer = parts?.renderer || null;
+        pullDrag.slide = slide;
+        pullDrag.config = config;
+        pullDrag.renderer = renderer;
+        pullDrag.pointerId = event.pointerId;
+        pullDrag.active = true;
+        pullDrag.moved = false;
+        pullDrag.startX = event.clientX;
+        pullDrag.startY = event.clientY;
+        pullDrag.eyeIndex = -1;
+        pullDrag.eyeSector = 0;
+        pullDrag.eyeStrong = false;
+        pullDrag.lastAt = performance.now();
+        if (renderer) {
+          resizePullRenderer(renderer);
+          pullDrag.origin = getPullSpritePoint(event, slide, config);
+          resetPullMesh(renderer);
+          renderPullMesh(renderer);
+        }
+        if (parts) {
+          parts.isDefault = true;
+          slide.classList.add('is-pull-ready');
+          parts.eye.src = config.defaultEye || config.eyes[config.defaultEye || 0];
+          layoutPullParts(slide);
+        }
+        setPullTransform(slide, 0, 0, 1, 1, 0);
+        slide.classList.add('is-hero-pulling');
+        if (carousel.setPointerCapture) carousel.setPointerCapture(event.pointerId);
+        stopAutoRotate();
+        event.preventDefault();
+        return true;
+      }
+
+      function updatePullDrag(event) {
+        if (!pullDrag.active || pullDrag.pointerId !== event.pointerId) return;
+        const dx = event.clientX - pullDrag.startX;
+        const dy = event.clientY - pullDrag.startY;
+        const distance = Math.hypot(dx, dy);
+        pullDrag.moved = pullDrag.moved || distance >= 4;
+        const parts = getPullParts(pullDrag.slide);
+        if (pullDrag.renderer) {
+          setPullMeshTarget(pullDrag.renderer, dx, dy);
+          startPullMeshAnimation(pullDrag.renderer);
+        }
+        if (parts && pullDrag.moved) {
+          const nextEyeIndex = selectPullEye(dx, dy, Math.max(pullDrag.slide.clientWidth, 1));
+          if (nextEyeIndex !== pullDrag.eyeIndex) {
+            pullDrag.eyeIndex = nextEyeIndex;
+            parts.isDefault = false;
+            parts.eye.src = pullDrag.config.eyes[nextEyeIndex];
+            pullDrag.slide.classList.add('is-pull-reaction');
+            layoutPullParts(pullDrag.slide);
+          }
+        }
+        // The touch canvas keeps its centre in place and stretches around the
+        // grabbed cheek.  The carousel uses a restrained equivalent so the
+        // character does not fly away while still visibly following the pull.
+        const pullX = pullDrag.renderer ? 0 : (parts ? clampPull(dx * 0.28, -72, 72) : clampPull(dx * 0.82, -150, 150));
+        const pullY = pullDrag.renderer ? 0 : (parts ? clampPull(dy * 0.22, -52, 52) : clampPull(dy * 0.62, -105, 105));
+        const horizontalStretch = pullDrag.renderer ? 0 : Math.min(parts ? 0.18 : 0.3, Math.abs(dx) / (parts ? 820 : 520));
+        const verticalStretch = pullDrag.renderer ? 0 : Math.min(parts ? 0.14 : 0.24, Math.abs(dy) / (parts ? 860 : 560));
+        const scaleX = 1 + horizontalStretch - verticalStretch * 0.22;
+        const scaleY = 1 + verticalStretch - horizontalStretch * 0.18;
+        const rotation = pullDrag.renderer ? 0 : clampPull(dx * (parts ? 0.022 : 0.055), parts ? -4 : -9, parts ? 4 : 9);
+        setPullTransform(pullDrag.slide, pullX, pullY, scaleX, scaleY, rotation);
+        event.preventDefault();
+      }
+
+      function finishPullDrag(event) {
+        if (!pullDrag.active) return false;
+        const slide = pullDrag.slide;
+        const moved = pullDrag.moved;
+        const parts = getPullParts(slide);
+        pullDrag.active = false;
+        pullDrag.pointerId = null;
+        if (event?.pointerId != null && carousel.releasePointerCapture && carousel.hasPointerCapture?.(event.pointerId)) {
+          carousel.releasePointerCapture(event.pointerId);
+        }
+        if (!slide || !moved) {
+          restorePullDrag();
+          startAutoRotate();
+          return true;
+        }
+        setPullTransform(slide, 0, 0, 1, 1, 0);
+        if (pullDrag.renderer) {
+          resetPullMesh(pullDrag.renderer);
+          startPullMeshAnimation(pullDrag.renderer);
+        }
+        slide.classList.remove('is-hero-pulling');
+        if (parts) {
+          slide.classList.add('is-pull-reaction');
+          parts.isDefault = false;
+          layoutPullParts(slide);
+        }
+        pullDrag.returnTimer = setTimeout(() => {
+          if (parts) {
+            parts.isDefault = true;
+            parts.eye.src = parts.config.defaultEye || parts.config.eyes[parts.config.defaultEye || 0];
+            slide.classList.remove('is-pull-reaction');
+            layoutPullParts(slide);
+          }
+          restorePullDrag();
+          startAutoRotate();
+        }, 550);
+        return true;
+      }
+
+      function cancelPullDrag(event) {
+        if (!pullDrag.active) return false;
+        if (event?.pointerId != null && carousel.releasePointerCapture && carousel.hasPointerCapture?.(event.pointerId)) {
+          carousel.releasePointerCapture(event.pointerId);
+        }
+        restorePullDrag();
+        startAutoRotate();
+        return true;
+      }
 
       function setThrowTransform(slide, x, y, rotation = throwDrag.rotation, stretchX = 1, stretchY = 1) {
         if (!slide) return;
@@ -11232,6 +11987,7 @@
         slide.style.removeProperty("--hero-throw-image-height");
         slide.style.removeProperty("--hero-throw-stretch-x");
         slide.style.removeProperty("--hero-throw-stretch-y");
+        resetPullTransform(slide);
         slide.classList.remove("is-hero-dragging", "is-hero-flying");
       }
 
@@ -11503,6 +12259,7 @@
 
       function buildSlides() {
         stopThrowAnimation(true);
+        restorePullDrag();
         cleanupThrowSlide();
         carousel.classList.remove("is-hero-throwing");
         stage.classList.remove("is-hero-throwing");
@@ -11514,12 +12271,34 @@
           </div>
         `).join("");
         slides = Array.from(carousel.querySelectorAll(".hero-model-slide"));
-        slides.forEach((slide) => {
+        slides.forEach((slide, index) => {
           const imageUrl = slide.dataset.image;
           if (imageUrl) {
             slide.style.setProperty("--hero-image", `url("${imageUrl}")`);
           }
+          const item = currentSet.items[index];
+          const pullConfig = PULL_CHARACTER_CONFIG[item?.id];
+          if (!pullConfig) return;
+          const body = document.createElement('img');
+          body.className = 'hero-model-pull-body';
+          body.alt = '';
+          body.src = pullConfig.body;
+          const eye = document.createElement('img');
+          eye.className = 'hero-model-pull-eye';
+          eye.alt = '';
+          eye.src = pullConfig.defaultEye || pullConfig.eyes[pullConfig.defaultEye || 0];
+          slide.append(body, eye);
+          const renderer = createPullRenderer(slide, pullConfig, body);
+          slide._pullParts = { config: pullConfig, body, eye, renderer, isDefault: true, enabled: false };
+          body.addEventListener('load', () => layoutPullParts(slide), { once: false });
+          eye.addEventListener('load', () => layoutPullParts(slide), { once: false });
+          window.addEventListener('resize', () => {
+            layoutPullParts(slide);
+            resizePullRenderer(renderer);
+            renderPullMesh(renderer);
+          }, { passive: true });
         });
+        syncPullVisualState(slides[activeIndex]);
       }
 
       function getCircularDelta(index, currentIndex) {
@@ -11588,10 +12367,12 @@
       }
 
       function setActiveSlide(index) {
+        if (pullDrag.active) restorePullDrag();
         if (throwDrag.slide && !throwDrag.active) restoreHeroThrow();
         activeIndex = (index + slides.length) % slides.length;
         dragProgress = 0;
         renderSlides(activeIndex, 0);
+        syncPullVisualState(slides[activeIndex]);
         syncActiveState();
       }
 
@@ -11611,6 +12392,7 @@
         dragProgress = 0;
         buildSlides();
         renderSlides(activeIndex, 0);
+        syncPullVisualState(slides[activeIndex]);
         syncActiveState();
         startAutoRotate();
       }
@@ -11618,9 +12400,16 @@
       carousel.addEventListener("pointerdown", (event) => {
         const targetSlide = event.target?.closest?.(".hero-model-slide");
         if (targetSlide?.classList.contains("is-active")) {
-          beginThrowDrag(event, targetSlide);
-          gestureTracking = false;
-          return;
+          if (carousel.dataset.interactionMode === 'pull') {
+            if (beginPullDrag(event, targetSlide)) {
+              gestureTracking = false;
+              return;
+            }
+          } else {
+            beginThrowDrag(event, targetSlide);
+            gestureTracking = false;
+            return;
+          }
         }
         gestureStartX = event.clientX;
         gestureStartY = event.clientY;
@@ -11630,6 +12419,10 @@
       });
 
       carousel.addEventListener("pointermove", (event) => {
+        if (pullDrag.active) {
+          updatePullDrag(event);
+          return;
+        }
         if (throwDrag.active) {
           updateThrowDrag(event);
           return;
@@ -11648,6 +12441,10 @@
       });
 
       carousel.addEventListener("pointerup", (event) => {
+        if (pullDrag.active) {
+          finishPullDrag(event);
+          return;
+        }
         if (throwDrag.active) {
           finishThrowDrag(event);
           startAutoRotate();
@@ -11678,6 +12475,10 @@
       });
 
       carousel.addEventListener("pointercancel", (event) => {
+        if (pullDrag.active) {
+          cancelPullDrag(event);
+          return;
+        }
         if (throwDrag.active) {
           cancelThrowDrag(event);
           startAutoRotate();
@@ -11692,14 +12493,34 @@
       // the carousel, especially on touch browsers. Keep a document-level
       // fallback so a throw always settles cleanly.
       document.addEventListener("pointerup", (event) => {
+        if (pullDrag.active) {
+          finishPullDrag(event);
+          return;
+        }
         if (!throwDrag.active) return;
         finishThrowDrag(event);
         startAutoRotate();
       });
       document.addEventListener("pointercancel", (event) => {
+        if (pullDrag.active) {
+          cancelPullDrag(event);
+          return;
+        }
         if (!throwDrag.active) return;
         cancelThrowDrag(event);
         startAutoRotate();
+      });
+
+      window.addEventListener('hero-carousel-mode-change', (event) => {
+        const mode = event.detail?.mode || 'throw';
+        if (mode === 'pull') {
+          if (throwDrag.active) cancelThrowDrag();
+          syncPullVisualState(slides[activeIndex]);
+          return;
+        }
+        if (pullDrag.active) cancelPullDrag();
+        if (throwDrag.active) cancelThrowDrag();
+        syncPullVisualState(slides[activeIndex]);
       });
 
       carousel.addEventListener("pointerenter", stopAutoRotate);
@@ -15287,6 +16108,41 @@
     </div>
   </div>
   <script>
+    (() => {
+      const stage = document.querySelector('.hero-model-stage');
+      const carousel = document.getElementById('heroModelCarousel');
+      const touchPopup = document.getElementById('touchPopup');
+      const touchFrame = touchPopup?.querySelector('.touch-popup-frame');
+      const modeButtons = [...document.querySelectorAll('[data-carousel-mode]')];
+      if (!stage || !carousel || !modeButtons.length) return;
+
+      const touchVersion = 'touch-carousel-mode-v18';
+      const setMode = (mode) => {
+        carousel.dataset.interactionMode = mode;
+        modeButtons.forEach((button) => {
+          const active = button.dataset.carouselMode === mode;
+          button.classList.toggle('is-active', active);
+          button.setAttribute('aria-pressed', String(active));
+        });
+
+        if (touchFrame) {
+          touchFrame.src = `mobby-touch/index.html?mode=full&v=${touchVersion}`;
+        }
+        if (touchPopup?.classList.contains('is-open') && typeof closePopup === 'function') {
+          closePopup('touchPopup');
+        }
+        window.dispatchEvent(new CustomEvent('hero-carousel-mode-change', { detail: { mode } }));
+      };
+
+      modeButtons.forEach((button) => {
+        button.addEventListener('click', (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          setMode(button.dataset.carouselMode || 'throw');
+        });
+      });
+      setMode('throw');
+    })();
     initPlushStripeButton();
   </script>
 </body>
