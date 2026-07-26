@@ -132,8 +132,7 @@
     </script>
     <script>
       (() => {
-        // Keep the currently approved single-eye reaction.
-        const eyeFiles = ['./assets/mobiyan-eye-5.png'];
+        const eyeFiles = Array.from({ length: 9 }, (_, index) => `./assets/mobiyan-eye-${index + 1}.png`);
         const mouthFiles = Array.from({ length: 10 }, (_, index) => `./assets/mobiyan-mouth-${index + 1}.png`);
         const defaultEyeFile = './assets/mobiyan-eye-default.png';
         const defaultMouthFile = mouthFiles[0];
@@ -148,22 +147,60 @@
         let defaultMouth = null;
         let canvas = null;
         let startX = 0;
+        let startY = 0;
         let activePointerId = null;
         let pointerDown = false;
         let isPulling = false;
         let reactionVisible = false;
         let reactionHideTimer = null;
-        // eye-5 corresponds to the fifth source crop in eyeAlphaBoxes.
-        let eyeIndex = 4;
+        let eyeIndex = -1;
+        let eyeSector = 0;
+        let eyeStrong = false;
         const eyeAlphaBoxes = [
           [58, 24, 283, 121], [58, 29, 283, 112], [57, 40, 286, 89], [62, 43, 276, 82], [64, 22, 271, 124],
-          [89, 17, 222, 136], [62, 19, 274, 125], [49, 23, 302, 122], [63, 33, 273, 102], [93, 18, 213, 136],
+          [89, 17, 222, 136], [62, 19, 274, 125], [49, 23, 302, 122], [63, 33, 273, 102],
         ];
         // Coordinates mapped from the canonical 1024px Mobiyan eye crop to
         // the supplied 1254px eye-free asset.
         const eyeFreeSourceSize = 1254;
         const defaultEyeCrop = { x: 366, y: 465, width: 227, height: 166 };
         const reactionEyeBox = { x: 393, y: 499, width: 171, height: 100 };
+        const eyeDirectionPairs = [
+          [1, 5], // right: looking / surprised
+          [6, 8], // down-right: blushing / teary
+          [2, 7], // down-left: narrowed / angry
+          [0, 4], // left: open / suspicious
+          [5, 3], // up: surprised / squinting
+        ];
+
+        eyeFiles.forEach((source) => {
+          const image = new Image();
+          image.decoding = 'async';
+          image.src = source;
+        });
+
+        const selectEyeIndex = (deltaX, deltaY, canvasWidth) => {
+          const magnitude = Math.hypot(deltaX, deltaY);
+          const angle = Math.atan2(deltaY, deltaX);
+          const fullTurn = Math.PI * 2;
+          const sectorSize = fullTurn / 5;
+          const normalized = (angle + fullTurn + sectorSize / 2) % fullTurn;
+          const candidateSector = Math.floor(normalized / sectorSize) % 5;
+          const currentCenter = eyeSector * sectorSize;
+          const distanceFromCurrent = Math.abs(Math.atan2(
+            Math.sin(angle - currentCenter),
+            Math.cos(angle - currentCenter),
+          ));
+          if (magnitude >= 12 && distanceFromCurrent > sectorSize / 2 + Math.PI / 18) {
+            eyeSector = candidateSector;
+          }
+
+          const strongOn = Math.max(70, canvasWidth * 0.16);
+          const strongOff = Math.max(52, canvasWidth * 0.12);
+          if (!eyeStrong && magnitude >= strongOn) eyeStrong = true;
+          if (eyeStrong && magnitude <= strongOff) eyeStrong = false;
+          return eyeDirectionPairs[eyeSector][eyeStrong ? 1 : 0];
+        };
 
         const syncOverlay = () => {
           const activeCharacter = document.querySelector('.character-button.active');
@@ -212,7 +249,7 @@
             defaultEye.style.left = `${imageLeft + defaultEyeCrop.x * sourceScale}px`;
             defaultEye.style.top = `${imageTop + defaultEyeCrop.y * sourceScale}px`;
           };
-          const layoutEyeOverlay = (index = eyeIndex) => {
+          const layoutEyeOverlay = () => {
             if (!overlay || !canvas) return;
             const width = canvas.clientWidth;
             const height = canvas.clientHeight;
@@ -224,7 +261,9 @@
             const targetY = imageTop + reactionEyeBox.y * sourceScale;
             const targetWidth = reactionEyeBox.width * sourceScale;
             const targetHeight = reactionEyeBox.height * sourceScale;
-            const [boxX, boxY, boxWidth, boxHeight] = eyeAlphaBoxes[index] || eyeAlphaBoxes[2];
+            // All variants share the approved eye-5 frame so changing the
+            // expression does not resize or jump the eye layer.
+            const [boxX, boxY, boxWidth, boxHeight] = eyeAlphaBoxes[4];
             const outerWidth = targetWidth * 400 / boxWidth;
             const outerHeight = targetHeight * 170 / boxHeight;
             overlay.style.width = `${outerWidth}px`;
@@ -315,15 +354,20 @@
               canvas.dataset.mobiyanMeshPull = '0';
               setFeedback('そのまま外へ、ぐーっと');
               startX = event.clientX;
+              startY = event.clientY;
               activePointerId = event.pointerId;
               pointerDown = true;
               isPulling = false;
-              eyeIndex = 4;
+              eyeIndex = -1;
+              eyeSector = 0;
+              eyeStrong = false;
               layoutEyeOverlay();
             }, { passive: true });
             interactionTarget.addEventListener('pointermove', (event) => {
               if (!pointerDown || event.pointerId !== activePointerId) return;
-              const dragDistance = Math.abs(event.clientX - startX);
+              const deltaX = event.clientX - startX;
+              const deltaY = event.clientY - startY;
+              const dragDistance = Math.hypot(deltaX, deltaY);
               if (!isPulling && dragDistance < 4) return;
               if (!isPulling) {
                 isPulling = true;
@@ -335,11 +379,13 @@
                 // This first-stage version intentionally changes the eye only.
                 mouthOverlay.style.display = 'none';
               }
-              const distance = Math.abs(event.clientX - startX) / Math.max(canvas.clientWidth, 1);
-              eyeIndex = 4;
-              layoutEyeOverlay(4);
-              overlay.src = eyeFiles[0];
-              // Keep the single eye reaction fixed for this reverted version.
+              const nextEyeIndex = selectEyeIndex(deltaX, deltaY, Math.max(canvas.clientWidth, 1));
+              if (nextEyeIndex !== eyeIndex) {
+                eyeIndex = nextEyeIndex;
+                layoutEyeOverlay();
+                overlay.src = eyeFiles[eyeIndex];
+              }
+              canvas.dataset.mobiyanEyeVariant = String(eyeIndex + 1);
             }, { passive: true });
             const endPull = () => {
               if (!pointerDown && !isPulling) return;
@@ -387,15 +433,20 @@
               overlay.style.display = 'none';
               setFeedback('そのまま外へ、ぐーっと');
               startX = event.clientX;
+              startY = event.clientY;
               activePointerId = 'mouse';
               pointerDown = true;
               isPulling = false;
-              eyeIndex = 4;
+              eyeIndex = -1;
+              eyeSector = 0;
+              eyeStrong = false;
               layoutEyeOverlay();
             }, { passive: true });
             interactionTarget.addEventListener('mousemove', (event) => {
               if (!pointerDown || activePointerId !== 'mouse') return;
-              const dragDistance = Math.abs(event.clientX - startX);
+              const deltaX = event.clientX - startX;
+              const deltaY = event.clientY - startY;
+              const dragDistance = Math.hypot(deltaX, deltaY);
               if (!isPulling && dragDistance < 4) return;
               if (!isPulling) {
                 isPulling = true;
@@ -405,11 +456,13 @@
                 overlay.style.display = 'block';
                 mouthOverlay.style.display = 'none';
               }
-              const distance = Math.abs(event.clientX - startX) / Math.max(canvas.clientWidth, 1);
-              eyeIndex = 4;
-              layoutEyeOverlay(4);
-              overlay.src = eyeFiles[0];
-              // Keep the single eye reaction fixed for this reverted version.
+              const nextEyeIndex = selectEyeIndex(deltaX, deltaY, Math.max(canvas.clientWidth, 1));
+              if (nextEyeIndex !== eyeIndex) {
+                eyeIndex = nextEyeIndex;
+                layoutEyeOverlay();
+                overlay.src = eyeFiles[eyeIndex];
+              }
+              canvas.dataset.mobiyanEyeVariant = String(eyeIndex + 1);
             }, { passive: true });
             interactionTarget.addEventListener('mouseup', endPull, { passive: true });
             interactionTarget.addEventListener('mouseleave', endPull, { passive: true });
