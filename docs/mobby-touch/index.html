@@ -8,13 +8,96 @@
       content="モビーを引っぱる、押す、飛ばす。キャラクターを触って遊べるインタラクティブ体験。"
     />
     <title>モビー ぷにぷに体験</title>
-    <script type="module" crossorigin src="./assets/index-B0UzwmYj.js"></script>
+    <script>
+      (() => {
+        const NativeImage = window.Image;
+        const srcDescriptor = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
+        if (!srcDescriptor?.get || !srcDescriptor?.set) return;
+        function RuntimeImage(width, height) {
+          const image = arguments.length ? new NativeImage(width, height) : new NativeImage();
+          Object.defineProperty(image, '__mobbyRuntimeAsset', { value: true });
+          return image;
+        }
+        RuntimeImage.prototype = NativeImage.prototype;
+        Object.setPrototypeOf(RuntimeImage, NativeImage);
+        window.Image = RuntimeImage;
+        Object.defineProperty(HTMLImageElement.prototype, 'src', {
+          configurable: srcDescriptor.configurable,
+          enumerable: srcDescriptor.enumerable,
+          get: srcDescriptor.get,
+          set(value) {
+            let nextValue = value;
+            if (typeof nextValue === 'string') {
+              const activeMode = document.querySelector('.mode.active')?.textContent || '';
+              const pullMode = activeMode.includes('PULL') || activeMode.includes('ひっぱ') || activeMode.includes('引っ張');
+              if (this.__mobbyRuntimeAsset && /mobby-yanki\.webp(?:$|[?#])/.test(nextValue)) {
+                if (pullMode) {
+                  nextValue = './mobiyan-noneye.png';
+                  document.documentElement.dataset.mobiyanCanvasSource = 'eye-free';
+                } else {
+                  document.documentElement.dataset.mobiyanCanvasSource = 'original';
+                }
+              }
+            }
+            srcDescriptor.set.call(this, nextValue);
+          },
+        });
+      })();
+    </script>
+    <script type="module" crossorigin src="./assets/index-B0UzwmYj.js?v=shared-pull-eye-3"></script>
     <link rel="stylesheet" crossorigin href="./assets/index--hYk2uJk.css">
     <style>
-      /* Main-page embed: keep only the throw interaction from Touch Lab. */
-      .mode-picker,
-      .control-heading {
+      /* Main-page embed can keep the throw-only variant when requested. */
+      .throw-only .mode-picker,
+      .throw-only .control-heading {
         display: none !important;
+      }
+
+      .mobiyan-eye-overlay {
+        position: absolute;
+        /* Keep reaction eyes centered on the same eye anchor as the carousel image. */
+        left: 37%;
+        top: 43%;
+        z-index: 3;
+        display: none;
+        width: 12%;
+        height: auto;
+        pointer-events: none;
+      }
+
+      .mobiyan-eye-default {
+        position: absolute;
+        /* Align the cropped eye to the same source coordinates as mobby-yanki.webp. */
+        left: 37.4%;
+        top: 43.2%;
+        z-index: 3;
+        display: none;
+        width: 11%;
+        height: auto;
+        pointer-events: none;
+      }
+
+      .mobiyan-default-source {
+        position: absolute;
+        z-index: 2;
+        display: none;
+        pointer-events: none;
+      }
+
+      .mobiyan-mouth-overlay,
+      .mobiyan-mouth-default {
+        position: absolute;
+        left: 42.5%;
+        top: 52%;
+        z-index: 3;
+        display: none;
+        width: 14%;
+        height: auto;
+        pointer-events: none;
+      }
+
+      .mobiyan-mouth-default {
+        display: none;
       }
     </style>
   </head>
@@ -22,9 +105,14 @@
     <div id="root"></div>
     <script>
       (() => {
+        const params = new URLSearchParams(window.location.search);
+        const throwOnly = params.get('mode') === 'throw-only' || params.get('v') === 'throw-only';
+        if (!throwOnly) return;
+        document.documentElement.classList.add('throw-only');
+
         const applyThrowOnly = () => {
           const buttons = [...document.querySelectorAll('.mode')];
-          const throwButton = buttons.find((button) => button.textContent.includes('とばす'));
+          const throwButton = buttons.find((button) => button.textContent.includes('FLICK') || button.textContent.includes('とばす'));
           if (!throwButton) return false;
 
           if (!throwButton.classList.contains('active')) throwButton.click();
@@ -40,6 +128,312 @@
         });
         observer.observe(document.getElementById('root'), { childList: true, subtree: true });
         applyThrowOnly();
+      })();
+    </script>
+    <script>
+      (() => {
+        // Keep the currently approved single-eye reaction.
+        const eyeFiles = ['./assets/mobiyan-eye-5.png'];
+        const mouthFiles = Array.from({ length: 10 }, (_, index) => `./assets/mobiyan-mouth-${index + 1}.png`);
+        const defaultEyeFile = './assets/mobiyan-eye-default.png';
+        const defaultMouthFile = mouthFiles[0];
+        // The pull canvas receives this eye-free body so it can use the same
+        // mesh deformation as the other characters. Eyes stay separate.
+        const defaultSourceFile = './mobiyan-noneye.png';
+        let overlay = null;
+        let hitLayer = null;
+        let defaultEye = null;
+        let defaultSource = null;
+        let mouthOverlay = null;
+        let defaultMouth = null;
+        let canvas = null;
+        let startX = 0;
+        let activePointerId = null;
+        let pointerDown = false;
+        let isPulling = false;
+        let reactionVisible = false;
+        let reactionHideTimer = null;
+        // eye-5 corresponds to the fifth source crop in eyeAlphaBoxes.
+        let eyeIndex = 4;
+        const eyeAlphaBoxes = [
+          [58, 24, 283, 121], [58, 29, 283, 112], [57, 40, 286, 89], [62, 43, 276, 82], [64, 22, 271, 124],
+          [89, 17, 222, 136], [62, 19, 274, 125], [49, 23, 302, 122], [63, 33, 273, 102], [93, 18, 213, 136],
+        ];
+        // Coordinates mapped from the canonical 1024px Mobiyan eye crop to
+        // the supplied 1254px eye-free asset.
+        const eyeFreeSourceSize = 1254;
+        const defaultEyeCrop = { x: 366, y: 465, width: 227, height: 166 };
+        const reactionEyeBox = { x: 393, y: 499, width: 171, height: 100 };
+
+        const syncOverlay = () => {
+          const activeCharacter = document.querySelector('.character-button.active');
+          const isMobiyan = activeCharacter?.querySelector('img')?.getAttribute('src')?.includes('mobby-yanki');
+          const nextCanvas = document.querySelector('.canvas-wrap canvas');
+          if (!isMobiyan || !nextCanvas) {
+            if (nextCanvas) nextCanvas.style.opacity = '1';
+            overlay?.remove();
+            hitLayer?.remove();
+            defaultEye?.remove();
+            defaultSource?.remove();
+            mouthOverlay?.remove();
+            defaultMouth?.remove();
+            overlay = null;
+            hitLayer = null;
+            defaultEye = null;
+            defaultSource = null;
+            mouthOverlay = null;
+            defaultMouth = null;
+            canvas = null;
+            isPulling = false;
+            reactionVisible = false;
+            if (reactionHideTimer) {
+              clearTimeout(reactionHideTimer);
+              reactionHideTimer = null;
+            }
+            return;
+          }
+          canvas = nextCanvas;
+          const modeText = document.querySelector('.mode.active')?.textContent || '';
+          const pullMode = modeText.includes('PULL') || modeText.includes('ひっぱ') || modeText.includes('引っ張');
+          const setFeedback = (message) => {
+            const bubble = document.querySelector('.feedback-bubble');
+            if (bubble) bubble.textContent = message;
+          };
+          const layoutDefaultEye = () => {
+            if (!defaultEye || !canvas) return;
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
+            const spriteSize = Math.min(width * 0.82, height * 0.74);
+            const imageLeft = (width - spriteSize) / 2;
+            const imageTop = height * 0.89 - spriteSize * 0.99;
+            const sourceScale = spriteSize / eyeFreeSourceSize;
+            defaultEye.style.width = `${defaultEyeCrop.width * sourceScale}px`;
+            defaultEye.style.height = `${defaultEyeCrop.height * sourceScale}px`;
+            defaultEye.style.left = `${imageLeft + defaultEyeCrop.x * sourceScale}px`;
+            defaultEye.style.top = `${imageTop + defaultEyeCrop.y * sourceScale}px`;
+          };
+          const layoutEyeOverlay = (index = eyeIndex) => {
+            if (!overlay || !canvas) return;
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
+            const spriteSize = Math.min(width * 0.82, height * 0.74);
+            const imageLeft = (width - spriteSize) / 2;
+            const imageTop = height * 0.89 - spriteSize * 0.99;
+            const sourceScale = spriteSize / eyeFreeSourceSize;
+            const targetX = imageLeft + reactionEyeBox.x * sourceScale;
+            const targetY = imageTop + reactionEyeBox.y * sourceScale;
+            const targetWidth = reactionEyeBox.width * sourceScale;
+            const targetHeight = reactionEyeBox.height * sourceScale;
+            const [boxX, boxY, boxWidth, boxHeight] = eyeAlphaBoxes[index] || eyeAlphaBoxes[2];
+            const outerWidth = targetWidth * 400 / boxWidth;
+            const outerHeight = targetHeight * 170 / boxHeight;
+            overlay.style.width = `${outerWidth}px`;
+            overlay.style.height = `${outerHeight}px`;
+            overlay.style.left = `${targetX - outerWidth * boxX / 400}px`;
+            overlay.style.top = `${targetY - outerHeight * boxY / 170}px`;
+          };
+          const updateDefaultSource = () => {
+            if (!defaultSource || !canvas) return;
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
+            const spriteSize = Math.min(width * 0.82, height * 0.74);
+            defaultSource.style.width = `${spriteSize}px`;
+            defaultSource.style.height = `${spriteSize}px`;
+            defaultSource.style.left = `${(width - spriteSize) / 2}px`;
+            defaultSource.style.top = `${height * 0.89 - spriteSize * 0.99}px`;
+            // The eye-free body now renders inside the deforming canvas.
+            // Keep this former fixed fallback hidden and leave the canvas visible.
+            const sourceFile = defaultSourceFile;
+            if (defaultSource.getAttribute('src') !== sourceFile) defaultSource.src = sourceFile;
+            defaultSource.style.display = 'none';
+            canvas.style.opacity = '1';
+            if (defaultEye) defaultEye.style.display = pullMode && !isPulling && !reactionVisible ? 'block' : 'none';
+            layoutDefaultEye();
+            layoutEyeOverlay();
+          };
+          if (!defaultSource) {
+            defaultSource = document.createElement('img');
+            defaultSource.className = 'mobiyan-default-source';
+            defaultSource.alt = '';
+            defaultSource.src = defaultSourceFile;
+            defaultSource.onload = updateDefaultSource;
+            canvas.parentElement?.appendChild(defaultSource);
+          }
+          if (!defaultEye) {
+            defaultEye = document.createElement('img');
+            defaultEye.className = 'mobiyan-eye-default';
+            defaultEye.alt = '';
+            defaultEye.src = defaultEyeFile;
+            canvas.parentElement?.appendChild(defaultEye);
+          }
+          if (!defaultMouth) {
+            defaultMouth = document.createElement('img');
+            defaultMouth.className = 'mobiyan-mouth-default';
+            defaultMouth.alt = '';
+            defaultMouth.src = defaultMouthFile;
+            canvas.parentElement?.appendChild(defaultMouth);
+          }
+          // The touch app can replace its canvas after switching characters.
+          // Rebind the reaction handlers to the current canvas instead of
+          // leaving them attached to the previous (now detached) canvas.
+          if (overlay && canvas.dataset.mobiyanReactionBound !== '1') {
+            overlay.remove();
+            hitLayer?.remove();
+            mouthOverlay?.remove();
+            overlay = null;
+            hitLayer = null;
+            mouthOverlay = null;
+          }
+          if (!overlay || canvas.dataset.mobiyanReactionBound !== '1') {
+            overlay = document.createElement('img');
+            overlay.className = 'mobiyan-eye-overlay';
+            overlay.alt = '';
+            overlay.src = eyeFiles[0];
+            canvas.parentElement?.appendChild(overlay);
+            mouthOverlay = document.createElement('img');
+            mouthOverlay.className = 'mobiyan-mouth-overlay';
+            mouthOverlay.alt = '';
+            mouthOverlay.src = mouthFiles[2];
+            canvas.parentElement?.appendChild(mouthOverlay);
+            hitLayer = document.createElement('div');
+            hitLayer.className = 'mobiyan-pull-hit';
+            hitLayer.style.cssText = 'position:absolute;inset:0;z-index:4;display:none;pointer-events:none;cursor:grab;touch-action:none;';
+            canvas.parentElement?.appendChild(hitLayer);
+            // Share the real canvas with the app's existing mesh handlers.
+            // The eye listener observes the same drag without blocking it.
+            const interactionTarget = canvas;
+            interactionTarget.addEventListener('pointerdown', (event) => {
+              const modeText = document.querySelector('.mode.active')?.textContent || '';
+              const pullMode = modeText.includes('PULL') || modeText.includes('ひっぱ') || modeText.includes('引っ張');
+              if (!pullMode) return;
+              if (reactionHideTimer) {
+                clearTimeout(reactionHideTimer);
+                reactionHideTimer = null;
+              }
+              reactionVisible = false;
+              overlay.style.display = 'none';
+              canvas.dataset.mobiyanMeshPull = '0';
+              setFeedback('そのまま外へ、ぐーっと');
+              startX = event.clientX;
+              activePointerId = event.pointerId;
+              pointerDown = true;
+              isPulling = false;
+              eyeIndex = 4;
+              layoutEyeOverlay();
+            }, { passive: true });
+            interactionTarget.addEventListener('pointermove', (event) => {
+              if (!pointerDown || event.pointerId !== activePointerId) return;
+              const dragDistance = Math.abs(event.clientX - startX);
+              if (!isPulling && dragDistance < 4) return;
+              if (!isPulling) {
+                isPulling = true;
+                reactionVisible = true;
+                canvas.dataset.mobiyanMeshPull = '1';
+                if (defaultEye) defaultEye.style.display = 'none';
+                if (defaultMouth) defaultMouth.style.display = 'none';
+                overlay.style.display = 'block';
+                // This first-stage version intentionally changes the eye only.
+                mouthOverlay.style.display = 'none';
+              }
+              const distance = Math.abs(event.clientX - startX) / Math.max(canvas.clientWidth, 1);
+              eyeIndex = 4;
+              layoutEyeOverlay(4);
+              overlay.src = eyeFiles[0];
+              // Keep the single eye reaction fixed for this reverted version.
+            }, { passive: true });
+            const endPull = () => {
+              if (!pointerDown && !isPulling) return;
+              const didDrag = isPulling;
+              pointerDown = false;
+              activePointerId = null;
+              isPulling = false;
+              reactionVisible = didDrag;
+              mouthOverlay.style.display = 'none';
+              if (defaultMouth) defaultMouth.style.display = 'none';
+              updateDefaultSource();
+              if (didDrag) {
+                // Keep the reaction visible briefly after release so the
+                // eye-only change is easy to see in the embedded page.
+                if (defaultEye) defaultEye.style.display = 'none';
+                overlay.style.display = 'block';
+                if (reactionHideTimer) clearTimeout(reactionHideTimer);
+                reactionHideTimer = setTimeout(() => {
+                  reactionHideTimer = null;
+                  reactionVisible = false;
+                  overlay.style.display = 'none';
+                  updateDefaultSource();
+                }, 550);
+              } else {
+                reactionVisible = false;
+                overlay.style.display = 'none';
+              }
+              if (didDrag) setFeedback('ぷるん');
+            };
+            interactionTarget.addEventListener('pointerup', endPull, { passive: true });
+            interactionTarget.addEventListener('pointercancel', endPull, { passive: true });
+            interactionTarget.addEventListener('lostpointercapture', endPull, { passive: true });
+            // Some embedded-browser mouse drivers expose classic mouse events
+            // without a matching pointer stream. Keep the same real-drag gate
+            // for that path so a hover alone still cannot trigger reactions.
+            interactionTarget.addEventListener('mousedown', (event) => {
+              const modeText = document.querySelector('.mode.active')?.textContent || '';
+              const pullMode = modeText.includes('PULL') || modeText.includes('縺ｲ縺｣縺ｱ') || modeText.includes('蠑輔▲蠑ｵ');
+              if (!pullMode || event.button !== 0 || pointerDown) return;
+              if (reactionHideTimer) {
+                clearTimeout(reactionHideTimer);
+                reactionHideTimer = null;
+              }
+              reactionVisible = false;
+              overlay.style.display = 'none';
+              setFeedback('そのまま外へ、ぐーっと');
+              startX = event.clientX;
+              activePointerId = 'mouse';
+              pointerDown = true;
+              isPulling = false;
+              eyeIndex = 4;
+              layoutEyeOverlay();
+            }, { passive: true });
+            interactionTarget.addEventListener('mousemove', (event) => {
+              if (!pointerDown || activePointerId !== 'mouse') return;
+              const dragDistance = Math.abs(event.clientX - startX);
+              if (!isPulling && dragDistance < 4) return;
+              if (!isPulling) {
+                isPulling = true;
+                reactionVisible = true;
+                if (defaultEye) defaultEye.style.display = 'none';
+                if (defaultMouth) defaultMouth.style.display = 'none';
+                overlay.style.display = 'block';
+                mouthOverlay.style.display = 'none';
+              }
+              const distance = Math.abs(event.clientX - startX) / Math.max(canvas.clientWidth, 1);
+              eyeIndex = 4;
+              layoutEyeOverlay(4);
+              overlay.src = eyeFiles[0];
+              // Keep the single eye reaction fixed for this reverted version.
+            }, { passive: true });
+            interactionTarget.addEventListener('mouseup', endPull, { passive: true });
+            interactionTarget.addEventListener('mouseleave', endPull, { passive: true });
+            canvas.dataset.mobiyanReactionBound = '1';
+          }
+          if (hitLayer) {
+            hitLayer.style.display = 'none';
+            hitLayer.style.pointerEvents = 'none';
+          }
+          if (!isPulling) {
+            defaultEye.style.display = pullMode && !reactionVisible ? 'block' : 'none';
+            defaultMouth.style.display = 'none';
+            updateDefaultSource();
+          }
+        };
+
+        const observer = new MutationObserver(syncOverlay);
+        observer.observe(document.getElementById('root'), {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ['class'],
+        });
+        syncOverlay();
       })();
     </script>
   </body>

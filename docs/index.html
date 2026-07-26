@@ -5712,6 +5712,7 @@
     .gift-fan-action[data-fan-item="vote"] { order: 4; }
     .gift-fan-action[data-fan-item="faq"] { order: 5; }
     .gift-fan-action[data-fan-item="sns"] { order: 6; }
+    .gift-fan-action[data-fan-item="touch"] { order: 7; }
 
     .gift-fan-menu.is-diagnosis-open .gift-fan-action:not([data-fan-item="price"]) {
       opacity: 0;
@@ -5994,6 +5995,20 @@
 
     .footer-btn-icon[data-icon="share"] {
       --footer-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none' stroke='black' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='17' cy='34' r='8'/%3E%3Ccircle cx='47' cy='17' r='8'/%3E%3Ccircle cx='47' cy='49' r='8'/%3E%3Cpath d='M24 30 40 21'/%3E%3Cpath d='M24 38 40 46'/%3E%3C/svg%3E");
+    }
+
+    .footer-touch-glyph {
+      display: grid !important;
+      place-items: center;
+      width: 24px !important;
+      height: 24px !important;
+      color: #c47722;
+      font-size: 1.22rem !important;
+      line-height: 1;
+    }
+
+    .footer-touch-glyph::before {
+      display: none !important;
     }
 
     .gift-fan-diagnosis-action[data-diagnosis-item="school"] {
@@ -8476,6 +8491,63 @@
       right: 22px;
     }
 
+    .gift-fan-action[data-fan-item="touch"] .footer-action-preview {
+      right: 0;
+      width: min(270px, calc(100vw - 24px));
+    }
+
+    .gift-fan-action[data-fan-item="touch"] .footer-action-preview::after {
+      right: 22px;
+    }
+
+    .footer-preview-touch-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 5px;
+    }
+
+    .footer-preview-touch-character {
+      min-width: 0;
+      padding: 4px 3px 5px;
+      border-radius: 10px;
+      background: linear-gradient(145deg, #fff7eb, #f8e3d4);
+      text-align: center;
+    }
+
+    .footer-preview-touch-character img {
+      width: 100%;
+      height: 42px;
+      display: block;
+      object-fit: contain;
+    }
+
+    .footer-preview-touch-character span {
+      display: block;
+      overflow: hidden;
+      color: rgba(93, 59, 32, 0.78);
+      font-size: 0.52rem;
+      font-weight: 900;
+      line-height: 1.1;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .footer-preview-touch-modes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .footer-preview-touch-mode {
+      padding: 4px 7px;
+      border-radius: 999px;
+      background: #f4c5d5;
+      color: #8d3f5d;
+      font-size: 0.56rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
     .footer-action-preview-title {
       display: block;
       font-size: 0.78rem;
@@ -9467,6 +9539,28 @@
       isolation: auto !important;
     }
 
+    @media (max-width: 520px) {
+      /* Keep the six bottom actions reachable after adding the touch lab. */
+      #main-content .popup-buttons-bar #giftFanMenu .gift-fan-actions {
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        gap: 4px !important;
+        padding-left: 6px !important;
+        padding-right: 6px !important;
+        transform: none !important;
+      }
+
+      #main-content .popup-buttons-bar #giftFanMenu .gift-fan-actions .gift-fan-action,
+      #main-content .popup-buttons-bar #giftFanMenu .gift-fan-actions .gift-fan-action[data-fan-item] {
+        min-width: 0 !important;
+        width: calc((100% - 20px) / 6) !important;
+        flex: 1 1 0 !important;
+      }
+    }
+
     #main-content .hero-carousel-shell,
     #main-content .hero-character-row,
     #main-content .hero-model-stage {
@@ -9497,14 +9591,21 @@
     }
 
     .home-manga-feature__head {
-      display: flex;
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto auto;
       align-items: center;
-      gap: 12px;
+      justify-items: center;
+      gap: 6px;
       margin-bottom: 14px;
     }
 
     .home-manga-feature__ribbon {
-      flex: 0 0 auto;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
       padding: 8px 16px;
       border-radius: 8px 18px 8px 18px;
       background: #f24483;
@@ -9512,13 +9613,37 @@
       font-size: 0.9rem;
       font-weight: 900;
       letter-spacing: 0.05em;
+      white-space: nowrap;
       transform: rotate(-2deg);
     }
 
     .home-manga-feature__title {
+      grid-column: 1;
+      grid-row: 1;
+      justify-self: center;
       margin: 0;
       font-size: clamp(1rem, 3.2vw, 1.3rem);
       line-height: 1.4;
+      text-align: center;
+    }
+
+    .home-manga-feature__schedule {
+      grid-column: 1;
+      grid-row: 2;
+      justify-self: center;
+      margin-left: 0;
+      max-width: 100%;
+      padding: 6px 11px;
+      border: 1px solid rgba(242, 68, 131, 0.2);
+      border-radius: 999px;
+      background: rgba(242, 68, 131, 0.08);
+      color: #d63873;
+      font-size: 0.72rem;
+      font-weight: 900;
+      line-height: 1.2;
+      letter-spacing: 0.02em;
+      text-align: center;
+      white-space: normal;
     }
 
     .home-manga-feature__image-link {
@@ -9957,6 +10082,12 @@
         margin-bottom: 10px;
       }
 
+      .home-manga-feature__schedule {
+        margin-left: 0;
+        padding: 5px 9px;
+        font-size: 0.66rem;
+      }
+
       .home-manga-feature__ribbon {
         padding: 7px 11px;
         font-size: 0.78rem;
@@ -10140,6 +10271,7 @@
             <div class="home-manga-feature__head">
               <span class="home-manga-feature__ribbon">今日の4コマ</span>
               <h2 class="home-manga-feature__title" id="homeMangaFeatureTitle">「むにむに」</h2>
+              <span class="home-manga-feature__schedule">毎日20時に最新話配信（無理な日が多い）</span>
             </div>
             <a class="home-manga-feature__image-link" href="manga/com/むにむに.png" target="_blank" rel="noopener" aria-label="今日の4コマを大きく表示">
               <img class="home-manga-feature__image" src="manga/com/むにむに.png" alt="白いモビーと黒いモビーが、むにむに遊ぶ4コマ漫画" fetchpriority="high" decoding="async">
@@ -10795,9 +10927,9 @@
     </div>
 
     <div id="touchPopup" class="popup-overlay" aria-hidden="true">
-      <div class="popup-content touch-popup-content" role="dialog" aria-modal="true" aria-label="モビーをとばす">
+      <div class="popup-content touch-popup-content" role="dialog" aria-modal="true" aria-label="モビーにちょっかい">
         <button class="popup-close" id="closeTouchPopup" aria-label="閉じる">×</button>
-        <iframe class="touch-popup-frame" src="mobby-touch/index.html?v=throw-only" title="モビーをとばす体験" loading="lazy"></iframe>
+        <iframe class="touch-popup-frame" src="mobby-touch/index.html?mode=full&v=mobiyan-mesh-eye-v7" title="モビーにちょっかいする体験" loading="lazy"></iframe>
       </div>
     </div>
 
@@ -10831,11 +10963,11 @@
       </div>
     </div>
     <!-- ポップアップボタン（最下部） -->
-    <div class="popup-buttons-bar" hidden aria-hidden="true">
+    <div class="popup-buttons-bar" aria-hidden="false">
       <div class="container">
         <div class="popup-buttons">
             <div class="gift-fan-menu is-open" id="giftFanMenu">
-            <div class="burn-card-row footer-burn-card-row footer-feature-column-row" aria-label="おすすめメニュー">
+            <div class="burn-card-row footer-burn-card-row footer-feature-column-row" aria-label="おすすめメニュー" hidden style="display:none !important">
               <div class="footer-feature-track">
                 <a class="burn-card footer-ehon-slide" href="ehon/index.html" aria-label="モビーの絵本">
                   <img class="footer-ehon-image" src="ehon/column/ehon-column-pattern-2.png" alt="" loading="lazy" decoding="async">
@@ -10855,11 +10987,12 @@
               </div>
             </div>
             <div class="gift-fan-actions" aria-hidden="false">
-              <a class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openCompositingPopup" data-fan-item="compositing" href="compositing.html"><span class="footer-btn-icon" data-icon="image" aria-hidden="true"></span><span>ポスター<br>作成</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">ポスター作成</span><img class="footer-action-preview-poster" src="compositing/reference/flier-mobby.png" alt=""><span class="footer-action-preview-copy">写真を選んで、モビーのポスターを作れます</span></span></a>
-              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openEncyclopediaPopup" data-fan-item="encyclopedia"><span class="footer-btn-icon" data-icon="book" aria-hidden="true"></span><span>図鑑</span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー図鑑</span><span class="footer-preview-type-grid"><span class="footer-preview-type"><b>📖</b>全112タイプ</span><span class="footer-preview-type"><b>💛</b>キャラ紹介</span><span class="footer-preview-type"><b>✨</b>詳細を見る</span></span><span class="footer-action-preview-copy">気になるモビーを選んでプロフィールをチェック</span></span></button>
-              <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openVotePopup" data-fan-item="vote"><span class="footer-btn-icon" data-icon="vote" aria-hidden="true"></span><span>投票</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー人気投票</span><span class="footer-preview-vote-row"><span>もびりん</span><span class="footer-preview-vote-bar" style="--preview-vote-width:86%"></span><span>1位</span></span><span class="footer-preview-vote-row"><span>ギャル</span><span class="footer-preview-vote-bar" style="--preview-vote-width:68%"></span><span>2位</span></span><span class="footer-preview-vote-row"><span>ヤンキー</span><span class="footer-preview-vote-bar" style="--preview-vote-width:48%"></span><span>3位</span></span><span class="footer-action-preview-copy">好きなキャラを選んで投票できます</span></span></button>
-              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openFaqPopup" data-fan-item="faq"><span class="footer-btn-icon" data-icon="mail" aria-hidden="true"></span><span>お問い合わせ</span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">お問い合わせ</span><span class="footer-preview-form-line">メールアドレス</span><span class="footer-preview-form-line">お問い合わせ内容</span><span class="footer-action-preview-copy">フォームからメッセージを送れます</span></span></button>
-              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openSnsPopup" data-fan-item="sns"><span class="footer-btn-icon" data-icon="share" aria-hidden="true"></span><span>SNS</span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">Mobby公式SNS</span><span class="footer-preview-sns instagram"><span>Instagram</span><span>@mobby.official</span></span><span class="footer-preview-sns tiktok"><span>TikTok</span><span>@mobbyofficial</span></span></span></button>
+              <a class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openCompositingPopup" data-fan-item="compositing" href="compositing.html" hidden style="display:none !important"><span class="footer-btn-icon" data-icon="image" aria-hidden="true"></span><span>ポスター<br>作成</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">ポスター作成</span><img class="footer-action-preview-poster" src="compositing/reference/flier-mobby.png" alt=""><span class="footer-action-preview-copy">写真を選んで、モビーのポスターを作れます</span></span></a>
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openEncyclopediaPopup" data-fan-item="encyclopedia" hidden style="display:none !important"><span class="footer-btn-icon" data-icon="book" aria-hidden="true"></span><span>図鑑</span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー図鑑</span><span class="footer-preview-type-grid"><span class="footer-preview-type"><b>📖</b>全112タイプ</span><span class="footer-preview-type"><b>💛</b>キャラ紹介</span><span class="footer-preview-type"><b>✨</b>詳細を見る</span></span><span class="footer-action-preview-copy">気になるモビーを選んでプロフィールをチェック</span></span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openVotePopup" data-fan-item="vote" hidden style="display:none !important"><span class="footer-btn-icon" data-icon="vote" aria-hidden="true"></span><span>投票</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー人気投票</span><span class="footer-preview-vote-row"><span>もびりん</span><span class="footer-preview-vote-bar" style="--preview-vote-width:86%"></span><span>1位</span></span><span class="footer-preview-vote-row"><span>ギャル</span><span class="footer-preview-vote-bar" style="--preview-vote-width:68%"></span><span>2位</span></span><span class="footer-preview-vote-row"><span>ヤンキー</span><span class="footer-preview-vote-bar" style="--preview-vote-width:48%"></span><span>3位</span></span><span class="footer-action-preview-copy">好きなキャラを選んで投票できます</span></span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openFaqPopup" data-fan-item="faq" hidden style="display:none !important"><span class="footer-btn-icon" data-icon="mail" aria-hidden="true"></span><span>お問い合わせ</span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">お問い合わせ</span><span class="footer-preview-form-line">メールアドレス</span><span class="footer-preview-form-line">お問い合わせ内容</span><span class="footer-action-preview-copy">フォームからメッセージを送れます</span></span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openSnsPopup" data-fan-item="sns" hidden style="display:none !important"><span class="footer-btn-icon" data-icon="share" aria-hidden="true"></span><span>SNS</span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">Mobby公式SNS</span><span class="footer-preview-sns instagram"><span>Instagram</span><span>@mobby.official</span></span><span class="footer-preview-sns tiktok"><span>TikTok</span><span>@mobbyofficial</span></span></span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openTouchPopup" data-fan-item="touch" aria-haspopup="dialog"><span class="footer-btn-icon footer-touch-glyph" aria-hidden="true">✋</span><span>いじめる</span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビーにちょっかい</span><span class="footer-preview-touch-grid"><span class="footer-preview-touch-character"><img src="mobby-touch/mobby-fact-man.webp" alt=""><span>もびりん</span></span><span class="footer-preview-touch-character"><img src="mobby-touch/mobby-yanki.webp" alt=""><span>もびやん</span></span><span class="footer-preview-touch-character"><img src="mobby-touch/mobby-gal.webp" alt=""><span>ギャル</span></span><span class="footer-preview-touch-character"><img src="mobby-touch/mobby-yami.webp" alt=""><span>病み</span></span></span><span class="footer-preview-touch-modes"><span class="footer-preview-touch-mode">ひっぱる</span><span class="footer-preview-touch-mode">おしこむ</span><span class="footer-preview-touch-mode">とばす</span></span><span class="footer-action-preview-copy">引っぱる・押しこむ・飛ばす。モビーにちょっかいして遊べます</span></span></button>
             </div>
           </div>
           <button class="btn btn-secondary" id="openVideoPopup">動画</button>
@@ -13566,6 +13699,7 @@
     document.getElementById('homeOpenFaq')?.addEventListener('click', () => openPopup('faqPopup'));
     document.getElementById('homeOpenSns')?.addEventListener('click', () => openPopup('snsPopup'));
     document.getElementById('homeOpenEncyclopedia')?.addEventListener('click', () => openPopup('encyclopediaPopup'));
+    document.getElementById('openTouchPopup')?.addEventListener('click', () => openPopup('touchPopup'));
     document.getElementById('homeOpenTouch')?.addEventListener('click', () => openPopup('touchPopup'));
     (() => {
       const tabs = Array.from(document.querySelectorAll('[id^="diagnosisPopupTab"]'));
