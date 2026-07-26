@@ -30,12 +30,23 @@
             if (typeof nextValue === 'string') {
               const activeMode = document.querySelector('.mode.active')?.textContent || '';
               const pullMode = activeMode.includes('PULL') || activeMode.includes('ひっぱ') || activeMode.includes('引っ張');
-              if (this.__mobbyRuntimeAsset && /mobby-yanki\.webp(?:$|[?#])/.test(nextValue)) {
-                if (pullMode) {
-                  nextValue = './mobiyan-noneye.png';
-                  document.documentElement.dataset.mobiyanCanvasSource = 'eye-free';
-                } else {
-                  document.documentElement.dataset.mobiyanCanvasSource = 'original';
+              if (this.__mobbyRuntimeAsset) {
+                const sourceByCharacter = [
+                  ['mobby-yanki.webp', './mobiyan-noneye.png', 'mobiyan'],
+                  ['mobby-gal.webp', './mobichi-noneye.png?v=clean-2', 'mobichi'],
+                  ['mobby-yami.webp', './yami-noneye.png?v=clean-2', 'yami'],
+                  ['mobby-fact-man.webp', './mobirin-noneye.png?v=clean-2', 'mobirin'],
+                ];
+                const matched = sourceByCharacter.find(([source]) => nextValue.includes(source));
+                if (matched) {
+                  if (pullMode) {
+                    nextValue = matched[1];
+                    document.documentElement.dataset.mobbyCanvasSource = 'eye-free';
+                    document.documentElement.dataset.mobbyCanvasCharacter = matched[2];
+                  } else {
+                    document.documentElement.dataset.mobbyCanvasSource = 'original';
+                    document.documentElement.dataset.mobbyCanvasCharacter = matched[2];
+                  }
                 }
               }
             }
@@ -132,6 +143,46 @@
     </script>
     <script>
       (() => {
+        const characterDisplayNames = [
+          { display: 'ノーマル', legacy: ['もびち'] },
+          { display: 'もびやん', legacy: ['もびやん'] },
+          { display: 'もびち', legacy: ['ギャルモビー', 'ギャル'] },
+          { display: '病みモビー', legacy: ['病みモビー', '病み'] },
+          { display: 'もびりん', legacy: ['ファクトマン', 'ファクト'] },
+        ];
+        const syncCharacterNames = () => {
+          const buttons = [...document.querySelectorAll('.character-button')];
+          buttons.forEach((button, index) => {
+            const config = characterDisplayNames[index];
+            if (!config) return;
+            const label = button.querySelector('.character-label');
+            if (label && label.textContent !== config.display) label.textContent = config.display;
+            const ariaLabel = `${config.display}に切り替える`;
+            if (button.getAttribute('aria-label') !== ariaLabel) button.setAttribute('aria-label', ariaLabel);
+          });
+
+          const activeIndex = buttons.findIndex((button) => button.classList.contains('active'));
+          const activeConfig = characterDisplayNames[activeIndex];
+          if (!activeConfig) return;
+          const heading = document.querySelector('.character-heading strong');
+          if (heading && heading.textContent !== activeConfig.display) heading.textContent = activeConfig.display;
+          const touchAreaLabel = document.querySelector('.play-card-top > span:not(.live-dot)');
+          const touchAreaText = `TOUCH AREA · ${activeConfig.display}`;
+          if (touchAreaLabel && touchAreaLabel.textContent !== touchAreaText) touchAreaLabel.textContent = touchAreaText;
+          const touchCanvas = document.querySelector('.mobby-canvas');
+          const canvasLabel = `${activeConfig.display}を引っ張ったり、押したり、飛ばしたりできる体験エリア`;
+          if (touchCanvas && touchCanvas.getAttribute('aria-label') !== canvasLabel) {
+            touchCanvas.setAttribute('aria-label', canvasLabel);
+          }
+          const feedback = document.querySelector('.feedback-bubble');
+          if (feedback) {
+            const legacyName = activeConfig.legacy.find((name) => feedback.textContent.includes(name));
+            if (legacyName && legacyName !== activeConfig.display) {
+              feedback.textContent = feedback.textContent.replace(legacyName, activeConfig.display);
+            }
+          }
+        };
+
         const eyeFiles = Array.from({ length: 9 }, (_, index) => `./assets/mobiyan-eye-${index + 1}.png`);
         const mouthFiles = Array.from({ length: 10 }, (_, index) => `./assets/mobiyan-mouth-${index + 1}.png`);
         const defaultEyeFile = './assets/mobiyan-eye-default.png';
@@ -150,6 +201,7 @@
         let startY = 0;
         let activePointerId = null;
         let pointerDown = false;
+        let validCheekHit = false;
         let isPulling = false;
         let reactionVisible = false;
         let reactionHideTimer = null;
@@ -203,6 +255,7 @@
         };
 
         const syncOverlay = () => {
+          syncCharacterNames();
           const activeCharacter = document.querySelector('.character-button.active');
           const isMobiyan = activeCharacter?.querySelector('img')?.getAttribute('src')?.includes('mobby-yanki');
           const nextCanvas = document.querySelector('.canvas-wrap canvas');
@@ -485,8 +538,264 @@
           subtree: true,
           attributes: true,
           attributeFilter: ['class'],
+          characterData: true,
         });
         syncOverlay();
+      })();
+    </script>
+    <script>
+      (() => {
+        const configs = {
+          mobichi: {
+            source: 'mobby-gal.webp',
+            body: './mobichi-noneye.png?v=clean-2',
+            eyes: Array.from({ length: 9 }, (_, index) => `./assets/mobichi-eye-${index + 1}.png`),
+            sourceSize: 1254,
+            frame: { x: 295, y: 270, width: 300, height: 270 },
+          },
+          yami: {
+            source: 'mobby-yami.webp',
+            body: './yami-noneye.png?v=clean-2',
+            eyes: Array.from({ length: 9 }, (_, index) => `./assets/yami-eye-${index + 1}.png`),
+            sourceSize: 1254,
+            // Keep the eye centered on the original anchor while reducing the
+            // rendered frame to 75% of the previous size.
+            frame: { x: 250, y: 380, width: 270, height: 180 },
+          },
+          mobirin: {
+            source: 'mobby-fact-man.webp',
+            body: './mobirin-noneye.png?v=clean-2',
+            eyes: Array.from({ length: 9 }, (_, index) => `./assets/mobirin-eye-${index + 1}.png`),
+            sourceSize: 1254,
+            // Align the generated eye's center with the camera-eye center.
+            frame: { x: 295, y: 280, width: 300, height: 270 },
+          },
+        };
+        const directionPairs = [
+          [1, 5],
+          [2, 6],
+          [3, 7],
+          [4, 8],
+          [0, 1],
+        ];
+        let overlay = null;
+        let defaultEye = null;
+        let canvas = null;
+        let boundCharacter = null;
+        let pointerDown = false;
+        let isPulling = false;
+        let activePointerId = null;
+        let startX = 0;
+        let startY = 0;
+        let eyeIndex = -1;
+        let eyeSector = 0;
+        let eyeStrong = false;
+        let reactionHideTimer = null;
+
+        const activeConfig = () => {
+          const source = document.querySelector('.character-button.active img')?.getAttribute('src') || '';
+          return Object.values(configs).find((config) => source.includes(config.source)) || null;
+        };
+
+        const pullModeActive = () => {
+          const text = document.querySelector('.mode.active')?.textContent || '';
+          return text.includes('PULL') || text.includes('ひっぱる') || text.includes('縺ｲ縺｣縺ｱ');
+        };
+
+        const setFeedback = (text) => {
+          const bubble = document.querySelector('.feedback-bubble');
+          if (bubble) bubble.textContent = text;
+        };
+
+        const cleanup = () => {
+          if (reactionHideTimer) clearTimeout(reactionHideTimer);
+          reactionHideTimer = null;
+          overlay?.remove();
+          defaultEye?.remove();
+          overlay = null;
+          defaultEye = null;
+          canvas = null;
+          boundCharacter = null;
+          pointerDown = false;
+          validCheekHit = false;
+          isPulling = false;
+          activePointerId = null;
+        };
+
+        const layoutEyes = (config) => {
+          if (!canvas || !overlay || !defaultEye) return;
+          const width = canvas.clientWidth;
+          const height = canvas.clientHeight;
+          const spriteSize = Math.min(width * 0.82, height * 0.74);
+          const imageLeft = (width - spriteSize) / 2;
+          const imageTop = height * 0.89 - spriteSize * 0.99;
+          const scale = spriteSize / config.sourceSize;
+          const { x, y, width: frameWidth, height: frameHeight } = config.frame;
+          for (const image of [overlay, defaultEye]) {
+            image.style.width = `${frameWidth * scale}px`;
+            image.style.height = `${frameHeight * scale}px`;
+            image.style.left = `${imageLeft + x * scale}px`;
+            image.style.top = `${imageTop + y * scale}px`;
+          }
+        };
+
+        // Mirror the touch bundle's pull hit-test.  Some embedded browsers do
+        // not expose pointer capture to an observing listener even though the
+        // canvas interaction itself is active, so the eye layer uses the same
+        // cheek geometry as an explicit, local gate instead of relying only on
+        // hasPointerCapture().
+        const isPullCheekPoint = (clientX, clientY) => {
+          if (!canvas) return false;
+          const rect = canvas.getBoundingClientRect();
+          const width = rect.width;
+          const height = rect.height;
+          const spriteSize = Math.min(width * 0.82, height * 0.74, 590);
+          const centerX = width / 2;
+          const floorY = height * 0.89;
+          const centerY = floorY - spriteSize * 0.49;
+          const u = (clientX - rect.left - (centerX - spriteSize / 2)) / spriteSize;
+          const v = (clientY - rect.top - (centerY - spriteSize / 2)) / spriteSize;
+          const body = ((u - 0.5) / 0.47) ** 6 + ((v - 0.48) / 0.49) ** 6 <= 1.14
+            && u >= 0.02 && u <= 0.98 && v >= 0.01 && v <= 0.99;
+          const leftCheek = ((u - 0.18) / 0.11) ** 2 + ((v - 0.5) / 0.19) ** 2 <= 1;
+          const rightCheek = ((u - 0.86) / 0.1) ** 2 + ((v - 0.5) / 0.19) ** 2 <= 1;
+          return body && (leftCheek || rightCheek);
+        };
+
+        const selectEye = (deltaX, deltaY, canvasWidth) => {
+          const magnitude = Math.hypot(deltaX, deltaY);
+          const angle = Math.atan2(deltaY, deltaX);
+          const sectorSize = (Math.PI * 2) / directionPairs.length;
+          const normalized = (angle + Math.PI * 2 + sectorSize / 2) % (Math.PI * 2);
+          const candidateSector = Math.floor(normalized / sectorSize) % directionPairs.length;
+          const currentCenter = eyeSector * sectorSize;
+          const distanceFromCurrent = Math.abs(Math.atan2(
+            Math.sin(angle - currentCenter),
+            Math.cos(angle - currentCenter),
+          ));
+          if (magnitude >= 12 && distanceFromCurrent > sectorSize / 2 + Math.PI / 18) {
+            eyeSector = candidateSector;
+          }
+          const strongOn = Math.max(70, canvasWidth * 0.16);
+          const strongOff = Math.max(52, canvasWidth * 0.12);
+          if (!eyeStrong && magnitude >= strongOn) eyeStrong = true;
+          if (eyeStrong && magnitude <= strongOff) eyeStrong = false;
+          return directionPairs[eyeSector][eyeStrong ? 1 : 0];
+        };
+
+        const bind = (nextCanvas, config) => {
+          cleanup();
+          canvas = nextCanvas;
+          boundCharacter = config.source;
+          overlay = document.createElement('img');
+          overlay.className = 'character-eye-overlay';
+          overlay.alt = '';
+          overlay.src = config.eyes[0];
+          defaultEye = document.createElement('img');
+          defaultEye.className = 'character-eye-default';
+          defaultEye.alt = '';
+          defaultEye.src = config.eyes[0];
+          for (const image of [overlay, defaultEye]) {
+            image.style.cssText = 'position:absolute;z-index:3;display:none;pointer-events:none;object-fit:fill;';
+            canvas.parentElement?.appendChild(image);
+          }
+          const updateLayout = () => layoutEyes(config);
+          new ResizeObserver(updateLayout).observe(canvas);
+          updateLayout();
+
+          canvas.addEventListener('pointerdown', (event) => {
+            // The interaction bundle may call setPointerCapture just after its
+            // own pointerdown listener runs.  Record the press first, then let
+            // pointermove verify that the native cheek hit actually captured
+            // the pointer before showing any eye reaction.
+            if (!pullModeActive()) return;
+            validCheekHit = isPullCheekPoint(event.clientX, event.clientY);
+            if (!validCheekHit) return;
+            if (reactionHideTimer) clearTimeout(reactionHideTimer);
+            reactionHideTimer = null;
+            startX = event.clientX;
+            startY = event.clientY;
+            activePointerId = event.pointerId;
+            pointerDown = true;
+            isPulling = false;
+            eyeIndex = -1;
+            eyeSector = 0;
+            eyeStrong = false;
+            overlay.style.display = 'none';
+            defaultEye.style.display = 'block';
+            setFeedback('そのまま外へ、ぐーっと');
+          }, { passive: true });
+          canvas.addEventListener('pointermove', (event) => {
+            if (!pointerDown || !validCheekHit || activePointerId !== event.pointerId) return;
+            const deltaX = event.clientX - startX;
+            const deltaY = event.clientY - startY;
+            const distance = Math.hypot(deltaX, deltaY);
+            if (!isPulling && distance < 4) return;
+            if (!isPulling) {
+              isPulling = true;
+              defaultEye.style.display = 'none';
+              overlay.style.display = 'block';
+            }
+            const nextEyeIndex = selectEye(deltaX, deltaY, Math.max(canvas.clientWidth, 1));
+            if (nextEyeIndex !== eyeIndex) {
+              eyeIndex = nextEyeIndex;
+              overlay.src = config.eyes[eyeIndex];
+            }
+            canvas.dataset.eyeReactionVariant = String(eyeIndex + 1);
+          }, { passive: true });
+          const end = () => {
+            if (!pointerDown) return;
+            const didPull = isPulling;
+            pointerDown = false;
+            validCheekHit = false;
+            activePointerId = null;
+            isPulling = false;
+            if (!didPull) {
+              overlay.style.display = 'none';
+              defaultEye.style.display = pullModeActive() ? 'block' : 'none';
+              return;
+            }
+            overlay.style.display = 'block';
+            defaultEye.style.display = 'none';
+            setFeedback('ぷるん');
+            if (reactionHideTimer) clearTimeout(reactionHideTimer);
+            reactionHideTimer = setTimeout(() => {
+              reactionHideTimer = null;
+              overlay.style.display = 'none';
+              defaultEye.style.display = pullModeActive() ? 'block' : 'none';
+            }, 550);
+          };
+          canvas.addEventListener('pointerup', end, { passive: true });
+          canvas.addEventListener('pointercancel', end, { passive: true });
+          canvas.addEventListener('lostpointercapture', end, { passive: true });
+          canvas.dataset.eyeReactionBound = config.source;
+        };
+
+        const sync = () => {
+          const config = activeConfig();
+          const nextCanvas = document.querySelector('.canvas-wrap canvas');
+          if (!config || !nextCanvas) {
+            if (boundCharacter) cleanup();
+            return;
+          }
+          if (boundCharacter !== config.source || canvas !== nextCanvas) bind(nextCanvas, config);
+          if (!pullModeActive()) {
+            overlay.style.display = 'none';
+            defaultEye.style.display = 'none';
+          } else if (!pointerDown && !reactionHideTimer) {
+            defaultEye.style.display = 'block';
+            layoutEyes(config);
+          }
+        };
+
+        const observer = new MutationObserver(sync);
+        observer.observe(document.getElementById('root'), {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ['class'],
+        });
+        sync();
       })();
     </script>
   </body>
