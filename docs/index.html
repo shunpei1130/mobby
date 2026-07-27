@@ -4287,7 +4287,8 @@
        the carousel is in its normal throw mode. */
     .hero-model-pull-canvas,
     .hero-model-pull-body,
-    .hero-model-pull-eye {
+    .hero-model-pull-eye,
+    .hero-model-pull-mouth {
       position: absolute;
       display: none;
       pointer-events: none;
@@ -4309,6 +4310,10 @@
       z-index: 3;
     }
 
+    .hero-model-pull-mouth {
+      z-index: 3;
+    }
+
     .hero-model-slide.is-pull-ready .hero-model-pull-canvas,
     .hero-model-slide.is-pull-ready .hero-model-pull-eye {
       display: block;
@@ -4319,6 +4324,10 @@
     }
 
     .hero-model-slide.is-pull-reaction .hero-model-pull-eye {
+      display: block;
+    }
+
+    .hero-model-slide.is-pull-reaction .hero-model-pull-mouth {
       display: block;
     }
 
@@ -11398,6 +11407,7 @@
         eyeIndex: -1,
         eyeSector: 0,
         eyeStrong: false,
+        mouthIndex: -1,
         frame: 0,
         returnTimer: 0
       };
@@ -11409,38 +11419,83 @@
         [4, 8],
         [0, 1],
       ];
+      const PULL_REACTION_EYE_SCALE = 1.5;
+      const PULL_REACTION_MOUTH_SCALE = 1;
+      const PULL_SHARED_MOUTHS = Array.from({ length: 10 }, (_, index) => `mobby-touch/assets/mobiyan-mouth-${index + 1}.png`);
+      const PULL_MOBIYAN_MOUTH_MIX = PULL_SHARED_MOUTHS.map((mouth, index) => {
+        const originalMouthIndices = new Set([0, 1, 2, 5, 6, 7]);
+        return originalMouthIndices.has(index)
+          ? `mobby-touch/assets/mobiyan-mouth-original-${index + 1}.png`
+          : mouth;
+      });
+      const PULL_YANKI_MOUTH_MIX = PULL_MOBIYAN_MOUTH_MIX.map((mouth, index) => (
+        index === 6 ? 'mobby-touch/assets/mobiyan-mouth-yanki-7.png' : mouth
+      ));
       const PULL_CHARACTER_CONFIG = {
         "fact-yellow": {
           body: "mobby-touch/mobirin-noneye.png",
           eyes: Array.from({ length: 9 }, (_, index) => `mobby-touch/assets/mobirin-eye-${index + 1}.png`),
+          mouths: PULL_SHARED_MOUTHS,
           sourceSize: 1254,
           frame: { x: 295, y: 280, width: 300, height: 270 },
+          mouthFrame: { x: 490, y: 610, width: 255, height: 120 },
           defaultEye: 0,
+          defaultMouth: 0,
           eyePairs: PULL_EYE_DIRECTION_PAIRS,
+          mouthPairs: [
+            [0, 1],
+            [2, 3],
+            [4, 5],
+            [6, 7],
+            [8, 9],
+          ],
         },
         gal: {
           body: "mobby-touch/mobichi-noneye.png",
           eyes: Array.from({ length: 9 }, (_, index) => `mobby-touch/assets/mobichi-eye-${index + 1}.png`),
+          mouths: PULL_SHARED_MOUTHS,
           sourceSize: 1254,
           frame: { x: 295, y: 270, width: 300, height: 270 },
+          mouthFrame: { x: 560, y: 550, width: 110, height: 72 },
           defaultEye: 0,
+          defaultMouth: 0,
           eyePairs: PULL_EYE_DIRECTION_PAIRS,
+          mouthPairs: [
+            [0, 1],
+            [2, 3],
+            [4, 5],
+            [6, 7],
+            [8, 9],
+          ],
         },
         "yami-purple": {
           body: "mobby-touch/yami-noneye.png",
           eyes: Array.from({ length: 9 }, (_, index) => `mobby-touch/assets/yami-eye-${index + 1}.png`),
+          mouths: PULL_MOBIYAN_MOUTH_MIX,
           sourceSize: 1254,
           frame: { x: 250, y: 380, width: 270, height: 180 },
+          mouthFrame: { x: 490, y: 610, width: 255, height: 120 },
           defaultEye: 0,
+          defaultMouth: 0,
           eyePairs: PULL_EYE_DIRECTION_PAIRS,
+          mouthPairs: [
+            [0, 1],
+            [2, 3],
+            [4, 5],
+            [6, 7],
+            [8, 9],
+          ],
         },
         yanki: {
           body: "mobby-touch/mobiyan-noneye.png",
           eyes: Array.from({ length: 9 }, (_, index) => `mobby-touch/assets/mobiyan-eye-${index + 1}.png`),
+          mouths: PULL_YANKI_MOUTH_MIX,
           sourceSize: 1254,
           frame: { x: 393, y: 499, width: 171, height: 100 },
+          mouthFrame: { x: 490, y: 610, width: 255, height: 120 },
           defaultFrame: { x: 366, y: 465, width: 227, height: 166 },
           defaultEye: "mobby-touch/assets/mobiyan-eye-default.png",
+          defaultMouth: 0,
           reactionAlphaBox: [64, 22, 271, 124],
           eyePairs: [
             [1, 5],
@@ -11448,6 +11503,13 @@
             [2, 7],
             [0, 4],
             [5, 3],
+          ],
+          mouthPairs: [
+            [0, 1],
+            [2, 3],
+            [4, 5],
+            [6, 7],
+            [8, 9],
           ],
         },
       };
@@ -11698,25 +11760,39 @@
           : parts.config.frame;
         const body = parts.body;
         const eye = parts.eye;
+        const mouth = parts.mouth;
         body.style.width = `${geometry.spriteSize}px`;
         body.style.height = `${geometry.spriteSize}px`;
         body.style.left = `${geometry.imageLeft}px`;
         body.style.top = `${geometry.imageTop}px`;
         if (!parts.isDefault && parts.config.reactionAlphaBox) {
           const [boxX, boxY, boxWidth, boxHeight] = parts.config.reactionAlphaBox;
-          const targetWidth = frame.width * geometry.scale;
-          const targetHeight = frame.height * geometry.scale;
+          const baseTargetWidth = frame.width * geometry.scale;
+          const baseTargetHeight = frame.height * geometry.scale;
+          const targetCenterX = geometry.imageLeft + frame.x * geometry.scale + baseTargetWidth / 2;
+          const targetCenterY = geometry.imageTop + frame.y * geometry.scale + baseTargetHeight / 2;
+          const targetWidth = baseTargetWidth * PULL_REACTION_EYE_SCALE;
+          const targetHeight = baseTargetHeight * PULL_REACTION_EYE_SCALE;
           const outerWidth = targetWidth * 400 / boxWidth;
           const outerHeight = targetHeight * 170 / boxHeight;
           eye.style.width = `${outerWidth}px`;
           eye.style.height = `${outerHeight}px`;
-          eye.style.left = `${geometry.imageLeft + frame.x * geometry.scale - outerWidth * boxX / 400}px`;
-          eye.style.top = `${geometry.imageTop + frame.y * geometry.scale - outerHeight * boxY / 170}px`;
+          eye.style.left = `${targetCenterX - outerWidth * (boxX + boxWidth / 2) / 400}px`;
+          const reactionEyeLift = parts.eyeIndex > 0 ? 4 : 0;
+          eye.style.top = `${targetCenterY - outerHeight * (boxY + boxHeight / 2) / 170 - reactionEyeLift}px`;
         } else {
           eye.style.width = `${frame.width * geometry.scale}px`;
           eye.style.height = `${frame.height * geometry.scale}px`;
           eye.style.left = `${geometry.imageLeft + frame.x * geometry.scale}px`;
           eye.style.top = `${geometry.imageTop + frame.y * geometry.scale}px`;
+        }
+        if (mouth) {
+          const mouthFrame = parts.config.mouthFrame || { x: 0, y: 0, width: 220, height: 100 };
+          const mouthScale = geometry.scale * PULL_REACTION_MOUTH_SCALE;
+          mouth.style.width = `${mouthFrame.width * mouthScale}px`;
+          mouth.style.height = `${mouthFrame.height * mouthScale}px`;
+          mouth.style.left = `${geometry.imageLeft + mouthFrame.x * geometry.scale}px`;
+          mouth.style.top = `${geometry.imageTop + mouthFrame.y * geometry.scale}px`;
         }
       }
 
@@ -11724,7 +11800,11 @@
         const parts = getPullParts(slide);
         if (!parts) return;
         parts.enabled = enabled;
-        if (enabled) parts.isDefault = true;
+        if (enabled) {
+          parts.isDefault = true;
+          parts.eyeIndex = -1;
+          parts.mouthIndex = -1;
+        }
         slide.classList.toggle('is-pull-ready', enabled);
         slide.classList.remove('is-pull-reaction');
         if (!enabled && parts.renderer) {
@@ -11736,6 +11816,9 @@
         if (enabled) {
           layoutPullParts(slide);
           parts.eye.src = parts.config.defaultEye || parts.config.eyes[parts.config.defaultEye || 0];
+          if (parts.mouth && parts.config.mouths) {
+            parts.mouth.src = parts.config.mouths[parts.config.defaultMouth || 0];
+          }
         }
       }
 
@@ -11789,6 +11872,13 @@
         return pairs[pullDrag.eyeSector][pullDrag.eyeStrong ? 1 : 0];
       }
 
+      function selectPullMouth() {
+        const pairs = pullDrag.config?.mouthPairs;
+        if (!pairs?.length) return -1;
+        const pair = pairs[pullDrag.eyeSector] || pairs[0];
+        return pair[pullDrag.eyeStrong ? 1 : 0] ?? pair[0] ?? -1;
+      }
+
       function setPullTransform(slide, x, y, scaleX = 1, scaleY = 1, rotation = 0) {
         if (!slide) return;
         slide.style.setProperty('--hero-pull-x', `${x}px`);
@@ -11827,6 +11917,12 @@
         stopPullAnimation();
         const slide = pullDrag.slide;
         if (slide) resetPullTransform(slide);
+        const parts = getPullParts(slide);
+        if (parts) {
+          parts.isDefault = true;
+          parts.eyeIndex = -1;
+          parts.mouthIndex = -1;
+        }
         const renderer = pullDrag.renderer || getPullParts(slide)?.renderer;
         if (renderer) {
           resetPullMesh(renderer);
@@ -11841,6 +11937,7 @@
         pullDrag.eyeIndex = -1;
         pullDrag.eyeSector = 0;
         pullDrag.eyeStrong = false;
+        pullDrag.mouthIndex = -1;
       }
 
       function beginPullDrag(event, slide) {
@@ -11861,6 +11958,7 @@
         pullDrag.eyeIndex = -1;
         pullDrag.eyeSector = 0;
         pullDrag.eyeStrong = false;
+        pullDrag.mouthIndex = -1;
         pullDrag.lastAt = performance.now();
         if (renderer) {
           resizePullRenderer(renderer);
@@ -11870,8 +11968,13 @@
         }
         if (parts) {
           parts.isDefault = true;
+          parts.eyeIndex = -1;
+          parts.mouthIndex = -1;
           slide.classList.add('is-pull-ready');
           parts.eye.src = config.defaultEye || config.eyes[config.defaultEye || 0];
+          if (parts.mouth && config.mouths) {
+            parts.mouth.src = config.mouths[config.defaultMouth || 0];
+          }
           layoutPullParts(slide);
         }
         setPullTransform(slide, 0, 0, 1, 1, 0);
@@ -11895,10 +11998,17 @@
         }
         if (parts && pullDrag.moved) {
           const nextEyeIndex = selectPullEye(dx, dy, Math.max(pullDrag.slide.clientWidth, 1));
-          if (nextEyeIndex !== pullDrag.eyeIndex) {
+          const nextMouthIndex = selectPullMouth();
+          if (nextEyeIndex !== pullDrag.eyeIndex || nextMouthIndex !== pullDrag.mouthIndex) {
             pullDrag.eyeIndex = nextEyeIndex;
+            pullDrag.mouthIndex = nextMouthIndex;
+            parts.eyeIndex = nextEyeIndex;
+            parts.mouthIndex = nextMouthIndex;
             parts.isDefault = false;
             parts.eye.src = pullDrag.config.eyes[nextEyeIndex];
+            if (parts.mouth && pullDrag.config.mouths && nextMouthIndex >= 0) {
+              parts.mouth.src = pullDrag.config.mouths[nextMouthIndex];
+            }
             pullDrag.slide.classList.add('is-pull-reaction');
             layoutPullParts(pullDrag.slide);
           }
@@ -11946,7 +12056,12 @@
         pullDrag.returnTimer = setTimeout(() => {
           if (parts) {
             parts.isDefault = true;
+            parts.eyeIndex = -1;
+            parts.mouthIndex = -1;
             parts.eye.src = parts.config.defaultEye || parts.config.eyes[parts.config.defaultEye || 0];
+            if (parts.mouth && parts.config.mouths) {
+              parts.mouth.src = parts.config.mouths[parts.config.defaultMouth || 0];
+            }
             slide.classList.remove('is-pull-reaction');
             layoutPullParts(slide);
           }
@@ -12287,11 +12402,30 @@
           eye.className = 'hero-model-pull-eye';
           eye.alt = '';
           eye.src = pullConfig.defaultEye || pullConfig.eyes[pullConfig.defaultEye || 0];
-          slide.append(body, eye);
+          const mouth = pullConfig.mouths ? document.createElement('img') : null;
+          if (mouth) {
+            mouth.className = 'hero-model-pull-mouth';
+            mouth.alt = '';
+            mouth.src = pullConfig.mouths[pullConfig.defaultMouth || 0];
+            slide.append(body, eye, mouth);
+          } else {
+            slide.append(body, eye);
+          }
           const renderer = createPullRenderer(slide, pullConfig, body);
-          slide._pullParts = { config: pullConfig, body, eye, renderer, isDefault: true, enabled: false };
+          slide._pullParts = {
+            config: pullConfig,
+            body,
+            eye,
+            mouth,
+            renderer,
+            isDefault: true,
+            enabled: false,
+            eyeIndex: -1,
+            mouthIndex: -1,
+          };
           body.addEventListener('load', () => layoutPullParts(slide), { once: false });
           eye.addEventListener('load', () => layoutPullParts(slide), { once: false });
+          mouth?.addEventListener('load', () => layoutPullParts(slide), { once: false });
           window.addEventListener('resize', () => {
             layoutPullParts(slide);
             resizePullRenderer(renderer);

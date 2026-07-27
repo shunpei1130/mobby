@@ -240,6 +240,7 @@
         const eyeFreeSourceSize = 1254;
         const defaultEyeCrop = { x: 366, y: 465, width: 227, height: 166 };
         const reactionEyeBox = { x: 393, y: 499, width: 171, height: 100 };
+        const reactionEyeScale = 1.5;
         const eyeDirectionPairs = [
           [1, 5], // right: looking / surprised
           [6, 8], // down-right: blushing / teary
@@ -334,9 +335,17 @@
             const imageTop = height * 0.89 - spriteSize * 0.99;
             const sourceScale = spriteSize / eyeFreeSourceSize;
             const targetX = imageLeft + reactionEyeBox.x * sourceScale;
-            const targetY = imageTop + reactionEyeBox.y * sourceScale;
-            const targetWidth = reactionEyeBox.width * sourceScale;
-            const targetHeight = reactionEyeBox.height * sourceScale;
+            // Eye 1 is the anchor reference. The later reaction assets have
+            // a little more transparent space at the bottom, so lift only
+            // those variants slightly to keep their visible iris aligned.
+            const reactionEyeLift = eyeIndex > 0 ? 4 : 0;
+            const targetY = imageTop + reactionEyeBox.y * sourceScale - reactionEyeLift;
+            const baseTargetWidth = reactionEyeBox.width * sourceScale;
+            const baseTargetHeight = reactionEyeBox.height * sourceScale;
+            const targetCenterX = targetX + baseTargetWidth / 2;
+            const targetCenterY = targetY + baseTargetHeight / 2;
+            const targetWidth = baseTargetWidth * reactionEyeScale;
+            const targetHeight = baseTargetHeight * reactionEyeScale;
             // All variants share the approved eye-5 frame so changing the
             // expression does not resize or jump the eye layer.
             const [boxX, boxY, boxWidth, boxHeight] = eyeAlphaBoxes[4];
@@ -344,8 +353,8 @@
             const outerHeight = targetHeight * 170 / boxHeight;
             overlay.style.width = `${outerWidth}px`;
             overlay.style.height = `${outerHeight}px`;
-            overlay.style.left = `${targetX - outerWidth * boxX / 400}px`;
-            overlay.style.top = `${targetY - outerHeight * boxY / 170}px`;
+            overlay.style.left = `${targetCenterX - outerWidth * (boxX + boxWidth / 2) / 400}px`;
+            overlay.style.top = `${targetCenterY - outerHeight * (boxY + boxHeight / 2) / 170}px`;
           };
           const updateDefaultSource = () => {
             if (!defaultSource || !canvas) return;
