@@ -11409,7 +11409,9 @@
         eyeStrong: false,
         mouthIndex: -1,
         frame: 0,
-        returnTimer: 0
+        returnTimer: 0,
+        inputFrame: 0,
+        pendingEvent: null
       };
 
       const PULL_EYE_DIRECTION_PAIRS = [
@@ -11902,6 +11904,11 @@
       }
 
       function stopPullAnimation() {
+        if (pullDrag.inputFrame) {
+          cancelAnimationFrame(pullDrag.inputFrame);
+          pullDrag.inputFrame = 0;
+        }
+        pullDrag.pendingEvent = null;
         if (pullDrag.frame) {
           cancelAnimationFrame(pullDrag.frame);
           pullDrag.frame = 0;
@@ -11988,7 +11995,7 @@
         return true;
       }
 
-      function updatePullDrag(event) {
+      function applyPullDragUpdate(event) {
         if (!pullDrag.active || pullDrag.pointerId !== event.pointerId) return;
         const dx = event.clientX - pullDrag.startX;
         const dy = event.clientY - pullDrag.startY;
@@ -12027,11 +12034,48 @@
         const scaleY = 1 + verticalStretch - horizontalStretch * 0.18;
         const rotation = pullDrag.renderer ? 0 : clampPull(dx * (parts ? 0.022 : 0.055), parts ? -4 : -9, parts ? 4 : 9);
         setPullTransform(pullDrag.slide, pullX, pullY, scaleX, scaleY, rotation);
+      }
+
+      function flushPullInput() {
+        if (pullDrag.inputFrame) {
+          cancelAnimationFrame(pullDrag.inputFrame);
+          pullDrag.inputFrame = 0;
+        }
+        const pendingEvent = pullDrag.pendingEvent;
+        pullDrag.pendingEvent = null;
+        if (pendingEvent && pullDrag.active && pullDrag.pointerId === pendingEvent.pointerId) {
+          applyPullDragUpdate(pendingEvent);
+        }
+      }
+
+      function updatePullDrag(event) {
+        if (!pullDrag.active || pullDrag.pointerId !== event.pointerId) return;
+        if (!PULL_COARSE_POINTER) {
+          applyPullDragUpdate(event);
+          event.preventDefault();
+          return;
+        }
+        pullDrag.pendingEvent = {
+          pointerId: event.pointerId,
+          clientX: event.clientX,
+          clientY: event.clientY,
+        };
+        if (!pullDrag.inputFrame) {
+          pullDrag.inputFrame = requestAnimationFrame(() => {
+            pullDrag.inputFrame = 0;
+            const pendingEvent = pullDrag.pendingEvent;
+            pullDrag.pendingEvent = null;
+            if (pendingEvent && pullDrag.active && pullDrag.pointerId === pendingEvent.pointerId) {
+              applyPullDragUpdate(pendingEvent);
+            }
+          });
+        }
         event.preventDefault();
       }
 
       function finishPullDrag(event) {
         if (!pullDrag.active) return false;
+        if (PULL_COARSE_POINTER) flushPullInput();
         const slide = pullDrag.slide;
         const moved = pullDrag.moved;
         const parts = getPullParts(slide);
