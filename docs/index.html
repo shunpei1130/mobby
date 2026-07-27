@@ -11421,6 +11421,9 @@
       ];
       const PULL_REACTION_EYE_SCALE = 1.5;
       const PULL_REACTION_MOUTH_SCALE = 1;
+      const PULL_COARSE_POINTER = window.matchMedia('(pointer: coarse)').matches || (navigator.maxTouchPoints || 0) > 0;
+      const PULL_MESH_DIVISIONS = PULL_COARSE_POINTER ? 11 : 17;
+      const PULL_CANVAS_DPR_CAP = PULL_COARSE_POINTER ? 1.25 : 2;
       const PULL_SHARED_MOUTHS = Array.from({ length: 10 }, (_, index) => `mobby-touch/assets/mobiyan-mouth-${index + 1}.png`);
       const PULL_MOBIYAN_MOUTH_MIX = PULL_SHARED_MOUTHS.map((mouth, index) => {
         const originalMouthIndices = new Set([0, 1, 2, 5, 6, 7]);
@@ -11578,8 +11581,8 @@
           body,
           canvas,
           ctx,
-          columns: 17,
-          rows: 17,
+          columns: PULL_MESH_DIVISIONS,
+          rows: PULL_MESH_DIVISIONS,
           vertices: [],
           geometry: null,
           dpr: 1,
@@ -11597,7 +11600,7 @@
       function resizePullRenderer(renderer) {
         if (!renderer?.canvas || !renderer.ctx) return;
         const geometry = getPullGeometry(renderer.slide, renderer.config);
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const dpr = Math.min(window.devicePixelRatio || 1, PULL_CANVAS_DPR_CAP);
         renderer.geometry = geometry;
         renderer.dpr = dpr;
         renderer.canvas.width = Math.max(1, Math.round(geometry.width * dpr));
@@ -11669,7 +11672,7 @@
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.clearRect(0, 0, geometry.width, geometry.height);
         ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
+        ctx.imageSmoothingQuality = PULL_COARSE_POINTER ? 'medium' : 'high';
         if (!renderer.body.complete || !renderer.body.naturalWidth) return;
         const sourcePoint = (vertex) => ({
           x: vertex.u * renderer.body.naturalWidth,
@@ -11726,7 +11729,7 @@
         const tick = (now) => {
           const delta = Math.min((now - renderer.lastAt) / 1000, 0.034);
           renderer.lastAt = now;
-          const subSteps = Math.max(1, Math.ceil(delta / (1 / 120)));
+          const subSteps = PULL_COARSE_POINTER ? 1 : Math.max(1, Math.ceil(delta / (1 / 120)));
           const step = delta / subSteps;
           let settling = false;
           for (let sub = 0; sub < subSteps; sub += 1) {
