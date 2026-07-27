@@ -10416,6 +10416,17 @@
     .home-main-actions > :nth-child(even).is-hovered .footer-action-preview {
       transform: translate(0, 0) scale(1) !important;
     }
+
+    /* Touch previews are controlled by .is-mobile-preview-open.  iOS can
+       retain :focus-visible after a tap, so do not let the desktop focus
+       rules resurrect a stale card after another button is selected. */
+    @media (hover: none), (pointer: coarse) {
+      #main-content :is(#openManga, #giftFanMenu .gift-fan-action, .home-main-action, .home-diagnosis-card > summary):not(.is-mobile-preview-open) > .footer-action-preview {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+      }
+    }
   </style>
 </head>
 
@@ -16153,6 +16164,9 @@
         if (!owner) return;
         owner.classList.remove('is-mobile-preview-open', 'is-hovered');
         owner.querySelector(':scope > .footer-action-preview')?.setAttribute('aria-hidden', 'true');
+        if (owner.contains(document.activeElement) && document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
       };
 
       const closeAllPreviews = (except = null) => {
