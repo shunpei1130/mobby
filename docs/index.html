@@ -13561,6 +13561,13 @@
     function openPopup(popupId) {
       const popup = document.getElementById(popupId);
       if (!popup) return;
+
+      // Only one modal should be active at a time.  Without this reset, a
+      // second trigger could leave the first FAQ/SNS/encyclopedia popup in
+      // the DOM as an additional open overlay.
+      document.querySelectorAll('.popup-overlay.is-open').forEach((openPopupElement) => {
+        if (openPopupElement.id !== popupId) closePopup(openPopupElement.id);
+      });
       popup.classList.add('is-open');
       popup.setAttribute('aria-hidden', 'false');
       lockPageScroll();
@@ -16140,17 +16147,17 @@
       // the first tap opens a preview, and a second tap performs the control's
       // normal action. Include both the footer fan controls and the larger home
       // action cards so FAQ/SNS cannot fall through to an immediate navigation.
-      const previewControlSelector = '#openManga, #giftFanMenu .gift-fan-action, .home-main-action';
+      const previewControlSelector = '#openManga, #giftFanMenu .gift-fan-action, .home-main-action, .home-diagnosis-card > summary';
 
       const closePreview = (owner) => {
         if (!owner) return;
-        owner.classList.remove('is-mobile-preview-open');
+        owner.classList.remove('is-mobile-preview-open', 'is-hovered');
         owner.querySelector(':scope > .footer-action-preview')?.setAttribute('aria-hidden', 'true');
       };
 
       const closeAllPreviews = (except = null) => {
-        document.querySelectorAll('.is-mobile-preview-open').forEach((owner) => {
-          if (owner !== except) closePreview(owner);
+        document.querySelectorAll('.is-mobile-preview-open, .is-hovered').forEach((owner) => {
+          if (owner !== except && owner.matches(previewControlSelector)) closePreview(owner);
         });
       };
 
