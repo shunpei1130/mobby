@@ -10734,6 +10734,109 @@
         pointer-events: none !important;
       }
     }
+
+    /* Desktop home: pair the interactive character with the manga reader.
+       The mobile flow remains a single, comfortable vertical column. */
+    .home-desktop-left,
+    .home-desktop-right {
+      display: contents;
+    }
+
+    @media (min-width: 1024px) {
+      #main-content {
+        grid-template-areas:
+          "title title"
+          "left left"
+          "right right"
+          "legal legal";
+      }
+
+      #main-content .hero-intro .hero {
+        grid-area: left;
+        padding-top: 32px;
+      }
+
+      #main-content .hero-intro .hero .container {
+        width: min(100%, 1040px);
+        max-width: 1040px;
+        display: grid;
+        grid-template-columns: minmax(380px, 420px) minmax(440px, 520px);
+        align-items: start;
+        justify-content: center;
+        column-gap: clamp(34px, 4vw, 58px);
+      }
+
+      #main-content .home-desktop-left,
+      #main-content .home-desktop-right {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      #main-content .home-desktop-left {
+        grid-column: 1;
+        gap: 12px;
+      }
+
+      #main-content .home-desktop-right {
+        grid-column: 2;
+      }
+
+      #main-content .gacha-btn-wrap {
+        margin-bottom: 0;
+      }
+
+      #main-content .hero-carousel-shell {
+        width: 100%;
+        margin: 0 auto !important;
+      }
+
+      #main-content .home-main-actions {
+        width: 100%;
+        margin: 4px auto 0;
+        grid-template-columns: minmax(0, 1fr);
+        grid-auto-rows: 72px;
+        gap: 9px;
+      }
+
+      #main-content .home-main-actions > .home-main-action,
+      #main-content .home-main-actions > .home-diagnosis-card {
+        height: 72px;
+        min-height: 72px;
+        padding: 10px 14px;
+      }
+
+      #main-content .home-main-action__icon {
+        flex-basis: 44px;
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        font-size: 23px;
+      }
+
+      #main-content .home-main-action::after {
+        display: none;
+      }
+
+      #main-content .home-character-peek {
+        right: 8px;
+        bottom: -5px;
+        width: 66px;
+        height: 84px;
+      }
+
+      #main-content .home-manga-feature {
+        width: 100%;
+        margin: 0;
+      }
+
+      #main-content .popup-buttons-bar {
+        grid-area: right;
+        align-self: start;
+        margin-top: 32px;
+      }
+    }
   </style>
 </head>
 
@@ -10769,7 +10872,6 @@
               <span class="home-manga-feature__menu-icon" aria-hidden="true"></span>
             </button>
             <div class="home-manga-feature__menu" id="homeMangaMenu" hidden>
-              <div class="home-manga-feature__menu-heading">話数を選ぶ</div>
               <div class="home-manga-feature__menu-list" id="homeMangaMenuList"></div>
             </div>
             <div class="home-manga-feature__head">
@@ -15022,7 +15124,19 @@
       document.querySelector('.manga-viewer-wrap')
     ].filter(Boolean);
     if (homeMangaFeature) {
-      homeCarouselArea.forEach((element) => homeMangaFeature.before(element));
+      const homeContainer = homeMangaFeature.parentElement;
+      const homeMainActions = document.querySelector('.home-main-actions');
+      if (homeContainer) {
+        const desktopLeft = document.createElement('div');
+        const desktopRight = document.createElement('div');
+        desktopLeft.className = 'home-desktop-left';
+        desktopRight.className = 'home-desktop-right';
+        homeContainer.insertBefore(desktopLeft, homeMangaFeature);
+        homeContainer.insertBefore(desktopRight, homeMangaFeature);
+        homeCarouselArea.forEach((element) => desktopLeft.appendChild(element));
+        if (homeMainActions) desktopLeft.appendChild(homeMainActions);
+        desktopRight.appendChild(homeMangaFeature);
+      }
     }
     giftFanDiagnosisActions.forEach((action) => {
       action.addEventListener('click', () => {
