@@ -1123,6 +1123,44 @@
       isolation: isolate;
     }
 
+    .hero-pull-hint {
+      position: absolute;
+      top: 28px;
+      left: 6px;
+      z-index: 14;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 11px;
+      border: 1px solid rgba(242, 68, 131, 0.2);
+      border-radius: 999px;
+      background: rgba(255, 253, 248, 0.9);
+      box-shadow: 0 8px 20px rgba(92, 68, 48, 0.12);
+      color: #d63873;
+      font-size: 0.78rem;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      pointer-events: none;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .hero-pull-hint::before {
+      content: "↘";
+      font-size: 1rem;
+    }
+
+    @media (max-width: 520px) {
+      .hero-pull-hint {
+        top: 22px;
+        left: 2px;
+        padding: 6px 9px;
+        font-size: 0.68rem;
+      }
+    }
+
     .hero-carousel-mode-picker {
       position: relative;
       top: auto;
@@ -9756,6 +9794,7 @@
 
     /* Featured manga: the first clear action on the home screen. */
     .home-manga-feature {
+      position: relative;
       width: min(760px, calc(100% - 24px));
       margin: 14px auto 30px;
       padding: 18px;
@@ -9765,6 +9804,125 @@
       box-shadow: 0 18px 46px rgba(92, 68, 48, 0.13);
       color: #49372d;
       text-align: left;
+    }
+
+    .home-manga-feature__menu-button {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 12;
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: 1px solid rgba(92, 68, 48, 0.12);
+      border-radius: 13px;
+      background: rgba(255, 255, 255, 0.94);
+      color: #49372d;
+      box-shadow: 0 8px 20px rgba(92, 68, 48, 0.12);
+      cursor: pointer;
+    }
+
+    .home-manga-feature__menu-icon,
+    .home-manga-feature__menu-icon::before,
+    .home-manga-feature__menu-icon::after {
+      width: 19px;
+      height: 2px;
+      display: block;
+      border-radius: 999px;
+      background: currentColor;
+    }
+
+    .home-manga-feature__menu-icon {
+      position: relative;
+    }
+
+    .home-manga-feature__menu-icon::before,
+    .home-manga-feature__menu-icon::after {
+      position: absolute;
+      left: 0;
+      content: "";
+    }
+
+    .home-manga-feature__menu-icon::before {
+      top: -6px;
+    }
+
+    .home-manga-feature__menu-icon::after {
+      top: 6px;
+    }
+
+    .home-manga-feature__menu {
+      position: absolute;
+      top: 66px;
+      right: 16px;
+      z-index: 20;
+      width: min(310px, calc(100% - 32px));
+      padding: 10px;
+      border: 1px solid rgba(92, 68, 48, 0.12);
+      border-radius: 18px;
+      background: rgba(255, 253, 248, 0.98);
+      box-shadow: 0 20px 42px rgba(70, 48, 35, 0.2);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .home-manga-feature__menu[hidden] {
+      display: none !important;
+    }
+
+    .home-manga-feature__menu-heading {
+      margin: 2px 4px 8px;
+      color: #9b6b5b;
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+    }
+
+    .home-manga-feature__menu-list {
+      display: grid;
+      gap: 5px;
+      max-height: min(55vh, 360px);
+      overflow-y: auto;
+    }
+
+    .home-manga-feature__menu-item {
+      display: grid;
+      grid-template-columns: 58px minmax(0, 1fr);
+      align-items: center;
+      gap: 9px;
+      width: 100%;
+      min-height: 46px;
+      padding: 8px 11px;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      color: #49372d;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .home-manga-feature__menu-item:hover,
+    .home-manga-feature__menu-item.is-active {
+      background: rgba(242, 68, 131, 0.1);
+    }
+
+    .home-manga-feature__menu-item.is-active {
+      color: #d63873;
+    }
+
+    .home-manga-feature__menu-item-number {
+      font-size: 0.72rem;
+      font-weight: 900;
+    }
+
+    .home-manga-feature__menu-item-title {
+      overflow: hidden;
+      font-size: 0.92rem;
+      font-weight: 800;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .home-manga-feature__head {
@@ -9840,6 +9998,123 @@
 
     .home-manga-feature__image-link:hover .home-manga-feature__image {
       transform: scale(1.015);
+    }
+
+    .home-manga-feature__viewer {
+      display: grid;
+      gap: 12px;
+    }
+
+    .home-manga-feature__controls {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) 44px;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .home-manga-feature__nav {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: 1px solid rgba(242, 68, 131, 0.22);
+      border-radius: 999px;
+      background: #fff;
+      color: #d63873;
+      font-size: 1.45rem;
+      font-weight: 900;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: 0 7px 18px rgba(92, 68, 48, 0.1);
+    }
+
+    .home-manga-feature__nav:disabled {
+      opacity: 0.32;
+      cursor: default;
+    }
+
+    .home-manga-feature__episode {
+      min-width: 0;
+      text-align: center;
+    }
+
+    .home-manga-feature__episode-number {
+      display: block;
+      color: #d63873;
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+    }
+
+    .home-manga-feature__episode-title {
+      display: block;
+      overflow: hidden;
+      margin-top: 2px;
+      color: #49372d;
+      font-size: clamp(1rem, 3.2vw, 1.25rem);
+      font-weight: 900;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .home-manga-feature__track {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      overscroll-behavior-x: contain;
+      touch-action: pan-x pan-y;
+      border-radius: 18px;
+    }
+
+    .home-manga-feature__track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .home-manga-feature__slide {
+      flex: 0 0 100%;
+      min-width: 0;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+    }
+
+    .home-manga-feature__slide-link {
+      display: block;
+      overflow: hidden;
+      border: 3px solid #3a2720;
+      border-radius: 18px;
+      background: #f8ead8;
+    }
+
+    .home-manga-feature__slide img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .home-manga-feature__dots {
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+    }
+
+    .home-manga-feature__dot {
+      width: 8px;
+      height: 8px;
+      padding: 0;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(214, 56, 115, 0.22);
+      cursor: pointer;
+      transition: width 0.2s ease, background 0.2s ease;
+    }
+
+    .home-manga-feature__dot.is-active {
+      width: 24px;
+      background: #f24483;
     }
 
     .home-manga-feature__cta {
@@ -10254,6 +10529,19 @@
         border-radius: 22px;
       }
 
+      .home-manga-feature__menu-button {
+        top: 10px;
+        right: 10px;
+        width: 38px;
+        height: 38px;
+      }
+
+      .home-manga-feature__menu {
+        top: 56px;
+        right: 10px;
+        width: min(300px, calc(100% - 20px));
+      }
+
       .home-manga-feature__head {
         gap: 8px;
         margin-bottom: 10px;
@@ -10273,6 +10561,25 @@
       .home-manga-feature__image-link {
         border-width: 2px;
         border-radius: 14px;
+      }
+
+      .home-manga-feature__controls {
+        grid-template-columns: 40px minmax(0, 1fr) 40px;
+        gap: 7px;
+      }
+
+      .home-manga-feature__nav {
+        width: 40px;
+        height: 40px;
+      }
+
+      .home-manga-feature__track,
+      .home-manga-feature__slide-link {
+        border-radius: 14px;
+      }
+
+      .home-manga-feature__slide-link {
+        border-width: 2px;
       }
 
       .home-manga-feature__cta {
@@ -10446,12 +10753,8 @@
 
   <div id="main-content">
     <div class="hero-intro">
-      <div class="mobby-title" aria-label="Mobby">
-        <div class="mobby-title-row">
-          <div class="hero-carousel-mode-picker title-mode-picker" role="group" aria-label="カルーセルの操作方法">
-            <button class="hero-carousel-mode-button is-active" type="button" data-carousel-mode="throw" aria-pressed="true">飛ばす</button>
-            <button class="hero-carousel-mode-button" type="button" data-carousel-mode="pull" aria-pressed="false">引っ張る</button>
-          </div>
+        <div class="mobby-title" aria-label="Mobby">
+          <div class="mobby-title-row">
           <img src="mobby-custom/assets/stickers/Logo.webp" alt="Mobby" fetchpriority="high" decoding="async" />
         </div>
         <h1 class="headline reveal delay-200">沈黙に耳を澄ませる</h1>
@@ -10462,19 +10765,37 @@
 
 
           <article class="home-manga-feature" aria-labelledby="homeMangaFeatureTitle">
+            <button class="home-manga-feature__menu-button" id="homeMangaMenuButton" type="button" aria-label="4コマ漫画の話数メニュー" aria-expanded="false" aria-controls="homeMangaMenu">
+              <span class="home-manga-feature__menu-icon" aria-hidden="true"></span>
+            </button>
+            <div class="home-manga-feature__menu" id="homeMangaMenu" hidden>
+              <div class="home-manga-feature__menu-heading">話数を選ぶ</div>
+              <div class="home-manga-feature__menu-list" id="homeMangaMenuList"></div>
+            </div>
             <div class="home-manga-feature__head">
               <span class="home-manga-feature__ribbon">今日の4コマ</span>
-              <h2 class="home-manga-feature__title" id="homeMangaFeatureTitle">「むにむに」</h2>
+              <h2 class="home-manga-feature__title" id="homeMangaFeatureTitle">4コマ漫画</h2>
               <span class="home-manga-feature__schedule">毎日20時に最新話配信（無理な日が多い）</span>
             </div>
-            <a class="home-manga-feature__image-link" href="manga/com/むにむに.png" target="_blank" rel="noopener" aria-label="今日の4コマを大きく表示">
-              <img class="home-manga-feature__image" src="manga/com/むにむに.png" alt="白いモビーと黒いモビーが、むにむに遊ぶ4コマ漫画" fetchpriority="high" decoding="async">
-            </a>
-            <a class="home-manga-feature__cta" href="manga-flow.html?character=mobirin">
-              <span class="home-manga-feature__cta-icon" aria-hidden="true">▣</span>
-              <span>ほかの4コマ漫画を見る</span>
-              <span aria-hidden="true">›</span>
-            </a>
+            <div class="home-manga-feature__viewer" id="homeMangaViewer">
+              <div class="home-manga-feature__controls">
+                <button class="home-manga-feature__nav" id="homeMangaPrev" type="button" aria-label="前の話">‹</button>
+                <div class="home-manga-feature__episode" aria-live="polite">
+                  <span class="home-manga-feature__episode-number" id="homeMangaEpisodeNumber">第1話 / 全6話</span>
+                  <strong class="home-manga-feature__episode-title" id="homeMangaEpisodeTitle">むにむに</strong>
+                </div>
+                <button class="home-manga-feature__nav" id="homeMangaNext" type="button" aria-label="次の話">›</button>
+              </div>
+              <div class="home-manga-feature__track" id="homeMangaTrack" tabindex="0" aria-label="4コマ漫画 全6話">
+                <article class="home-manga-feature__slide" data-manga-title="むにむに"><a class="home-manga-feature__slide-link" href="manga/com/むにむに.png" target="_blank" rel="noopener" aria-label="第1話 むにむにを大きく表示"><img src="manga/com/むにむに.png" alt="第1話 むにむに" fetchpriority="high" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="不注意"><a class="home-manga-feature__slide-link" href="manga/com/不注意.png" target="_blank" rel="noopener" aria-label="第2話 不注意を大きく表示"><img src="manga/com/不注意.png" alt="第2話 不注意" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="蚊"><a class="home-manga-feature__slide-link" href="manga/com/蚊.png" target="_blank" rel="noopener" aria-label="第3話 蚊を大きく表示"><img src="manga/com/蚊.png" alt="第3話 蚊" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="マンジャロ"><a class="home-manga-feature__slide-link" href="manga/com/マンジャロ.png" target="_blank" rel="noopener" aria-label="第4話 マンジャロを大きく表示"><img src="manga/com/マンジャロ.png" alt="第4話 マンジャロ" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="みみず"><a class="home-manga-feature__slide-link" href="manga/com/みみず.png" target="_blank" rel="noopener" aria-label="第5話 みみずを大きく表示"><img src="manga/com/みみず.png" alt="第5話 みみず" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="おじいちゃん"><a class="home-manga-feature__slide-link" href="manga/com/おじいちゃん.png" target="_blank" rel="noopener" aria-label="第6話 おじいちゃんを大きく表示"><img src="manga/com/おじいちゃん.png" alt="第6話 おじいちゃん" loading="lazy" decoding="async"></a></article>
+              </div>
+              <div class="home-manga-feature__dots" id="homeMangaDots" aria-label="話数を選ぶ"></div>
+            </div>
           </article>
 
           <nav class="home-main-actions" aria-label="メインメニュー">
@@ -10501,6 +10822,7 @@
           </div>
           <div class="hero-carousel-shell floating reveal delay-200">
             <div class="hero-model-stage" aria-label="Mobby 3D モデル">
+              <span class="hero-pull-hint">ほっぺを引っ張れるよ</span>
               <div class="hero-model-carousel" id="heroModelCarousel" aria-live="polite"></div>
             </div>
             <div class="hero-character-row">
@@ -11186,7 +11508,7 @@
               <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openVotePopup" data-fan-item="vote" hidden style="display:none !important"><span class="footer-btn-icon" data-icon="vote" aria-hidden="true"></span><span>投票</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー人気投票</span><span class="footer-preview-vote-row"><span>もびりん</span><span class="footer-preview-vote-bar" style="--preview-vote-width:86%"></span><span>1位</span></span><span class="footer-preview-vote-row"><span>ギャル</span><span class="footer-preview-vote-bar" style="--preview-vote-width:68%"></span><span>2位</span></span><span class="footer-preview-vote-row"><span>ヤンキー</span><span class="footer-preview-vote-bar" style="--preview-vote-width:48%"></span><span>3位</span></span><span class="footer-action-preview-copy">好きなキャラを選んで投票できます</span></span></button>
               <button class="btn btn-secondary action-box-btn gift-fan-action" id="openFaqPopup" data-fan-item="faq" hidden style="display:none !important"><span class="footer-btn-icon" data-icon="mail" aria-hidden="true"></span><span>お問い合わせ</span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">お問い合わせ</span><span class="footer-preview-form-line">メールアドレス</span><span class="footer-preview-form-line">お問い合わせ内容</span><span class="footer-action-preview-copy">フォームからメッセージを送れます</span></span></button>
               <button class="btn btn-secondary action-box-btn gift-fan-action" id="openSnsPopup" data-fan-item="sns" hidden style="display:none !important"><span class="footer-btn-icon" data-icon="share" aria-hidden="true"></span><span>SNS</span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">Mobby公式SNS</span><span class="footer-preview-sns instagram"><span>Instagram</span><span>@mobby.official</span></span><span class="footer-preview-sns tiktok"><span>TikTok</span><span>@mobbyofficial</span></span></span></button>
-              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openTouchPopup" data-fan-item="touch" aria-haspopup="dialog"><span class="footer-btn-icon footer-touch-glyph" aria-hidden="true">✋</span><span>いじめる</span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビーにちょっかい</span><span class="footer-preview-touch-grid"><span class="footer-preview-touch-character"><img src="mobby-touch/mobby-fact-man.webp" alt=""><span>もびりん</span></span><span class="footer-preview-touch-character"><img src="mobby-touch/mobby-yanki.webp" alt=""><span>もびやん</span></span><span class="footer-preview-touch-character"><img src="mobby-touch/mobby-gal.webp" alt=""><span>ギャル</span></span><span class="footer-preview-touch-character"><img src="mobby-touch/mobby-yami.webp" alt=""><span>病み</span></span></span><span class="footer-preview-touch-modes"><span class="footer-preview-touch-mode">ひっぱる</span><span class="footer-preview-touch-mode">おしこむ</span><span class="footer-preview-touch-mode">とばす</span></span><span class="footer-action-preview-copy">引っぱる・押しこむ・飛ばす。モビーにちょっかいして遊べます</span></span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openTouchPopup" data-fan-item="touch" aria-haspopup="dialog" hidden style="display:none !important"><span class="footer-btn-icon footer-touch-glyph" aria-hidden="true">✋</span><span>いじめる</span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビーにちょっかい</span><span class="footer-preview-touch-grid"><span class="footer-preview-touch-character"><img src="mobby-touch/mobby-fact-man.webp" alt=""><span>もびりん</span></span><span class="footer-preview-touch-character"><img src="mobby-touch/mobby-yanki.webp" alt=""><span>もびやん</span></span><span class="footer-preview-touch-character"><img src="mobby-touch/mobby-gal.webp" alt=""><span>ギャル</span></span><span class="footer-preview-touch-character"><img src="mobby-touch/mobby-yami.webp" alt=""><span>病み</span></span></span><span class="footer-preview-touch-modes"><span class="footer-preview-touch-mode">ひっぱる</span><span class="footer-preview-touch-mode">おしこむ</span><span class="footer-preview-touch-mode">とばす</span></span><span class="footer-action-preview-copy">引っぱる・押しこむ・飛ばす。モビーにちょっかいして遊べます</span></span></button>
             </div>
           </div>
           <button class="btn btn-secondary" id="openVideoPopup">動画</button>
@@ -16312,39 +16634,109 @@
   </div>
   <script>
     (() => {
-      const stage = document.querySelector('.hero-model-stage');
       const carousel = document.getElementById('heroModelCarousel');
-      const touchPopup = document.getElementById('touchPopup');
-      const touchFrame = touchPopup?.querySelector('.touch-popup-frame');
-      const modeButtons = [...document.querySelectorAll('[data-carousel-mode]')];
-      if (!stage || !carousel || !modeButtons.length) return;
+      if (!carousel) return;
+      carousel.dataset.interactionMode = 'pull';
+      window.dispatchEvent(new CustomEvent('hero-carousel-mode-change', { detail: { mode: 'pull' } }));
+    })();
+    (() => {
+      const track = document.getElementById('homeMangaTrack');
+      const slides = [...document.querySelectorAll('.home-manga-feature__slide')];
+      const prev = document.getElementById('homeMangaPrev');
+      const next = document.getElementById('homeMangaNext');
+      const episodeNumber = document.getElementById('homeMangaEpisodeNumber');
+      const episodeTitle = document.getElementById('homeMangaEpisodeTitle');
+      const dots = document.getElementById('homeMangaDots');
+      const menuButton = document.getElementById('homeMangaMenuButton');
+      const menu = document.getElementById('homeMangaMenu');
+      const menuList = document.getElementById('homeMangaMenuList');
+      if (!track || !slides.length || !prev || !next || !episodeNumber || !episodeTitle || !dots || !menuButton || !menu || !menuList) return;
 
-      const touchVersion = 'touch-carousel-mode-v18';
-      const setMode = (mode) => {
-        carousel.dataset.interactionMode = mode;
-        modeButtons.forEach((button) => {
-          const active = button.dataset.carouselMode === mode;
-          button.classList.toggle('is-active', active);
-          button.setAttribute('aria-pressed', String(active));
-        });
+      let activeIndex = 0;
+      let scrollFrame = 0;
+      dots.innerHTML = slides.map((slide, index) =>
+        `<button class="home-manga-feature__dot${index === 0 ? ' is-active' : ''}" type="button" data-home-manga-index="${index}" aria-label="第${index + 1}話"${index === 0 ? ' aria-current="true"' : ''}></button>`
+      ).join('');
+      menuList.innerHTML = slides.map((slide, index) =>
+        `<button class="home-manga-feature__menu-item${index === 0 ? ' is-active' : ''}" type="button" data-home-manga-menu-index="${index}"${index === 0 ? ' aria-current="true"' : ''}><span class="home-manga-feature__menu-item-number">第${index + 1}話</span><span class="home-manga-feature__menu-item-title">${slide.dataset.mangaTitle || ''}</span></button>`
+      ).join('');
+      const dotButtons = [...dots.querySelectorAll('[data-home-manga-index]')];
+      const menuItems = [...menuList.querySelectorAll('[data-home-manga-menu-index]')];
 
-        if (touchFrame) {
-          touchFrame.src = `mobby-touch/index.html?mode=full&v=${touchVersion}`;
-        }
-        if (touchPopup?.classList.contains('is-open') && typeof closePopup === 'function') {
-          closePopup('touchPopup');
-        }
-        window.dispatchEvent(new CustomEvent('hero-carousel-mode-change', { detail: { mode } }));
+      const closeMenu = () => {
+        menu.hidden = true;
+        menuButton.setAttribute('aria-expanded', 'false');
       };
 
-      modeButtons.forEach((button) => {
-        button.addEventListener('click', (event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          setMode(button.dataset.carouselMode || 'throw');
+      const updateState = (index) => {
+        activeIndex = Math.min(Math.max(index, 0), slides.length - 1);
+        episodeNumber.textContent = `第${activeIndex + 1}話 / 全${slides.length}話`;
+        episodeTitle.textContent = slides[activeIndex].dataset.mangaTitle || '';
+        prev.disabled = activeIndex === 0;
+        next.disabled = activeIndex === slides.length - 1;
+        dotButtons.forEach((dot, dotIndex) => {
+          const active = dotIndex === activeIndex;
+          dot.classList.toggle('is-active', active);
+          if (active) dot.setAttribute('aria-current', 'true');
+          else dot.removeAttribute('aria-current');
+        });
+        menuItems.forEach((item, itemIndex) => {
+          const active = itemIndex === activeIndex;
+          item.classList.toggle('is-active', active);
+          if (active) item.setAttribute('aria-current', 'true');
+          else item.removeAttribute('aria-current');
+        });
+      };
+
+      const showEpisode = (index) => {
+        const safeIndex = Math.min(Math.max(index, 0), slides.length - 1);
+        updateState(safeIndex);
+        track.scrollTo({ left: slides[safeIndex].offsetLeft, behavior: 'smooth' });
+      };
+
+      prev.addEventListener('click', () => showEpisode(activeIndex - 1));
+      next.addEventListener('click', () => showEpisode(activeIndex + 1));
+      dotButtons.forEach((dot) => {
+        dot.addEventListener('click', () => showEpisode(Number(dot.dataset.homeMangaIndex || 0)));
+      });
+      menuButton.addEventListener('click', (event) => {
+        event.stopPropagation();
+        const opening = menu.hidden;
+        menu.hidden = !opening;
+        menuButton.setAttribute('aria-expanded', String(opening));
+      });
+      menuItems.forEach((item) => {
+        item.addEventListener('click', () => {
+          showEpisode(Number(item.dataset.homeMangaMenuIndex || 0));
+          closeMenu();
         });
       });
-      setMode('throw');
+      menu.addEventListener('click', (event) => event.stopPropagation());
+      document.addEventListener('click', closeMenu);
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !menu.hidden) {
+          closeMenu();
+          menuButton.focus();
+        }
+      });
+      track.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          showEpisode(activeIndex - 1);
+        }
+        if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          showEpisode(activeIndex + 1);
+        }
+      });
+      track.addEventListener('scroll', () => {
+        if (scrollFrame) cancelAnimationFrame(scrollFrame);
+        scrollFrame = requestAnimationFrame(() => {
+          const nearestIndex = Math.round(track.scrollLeft / Math.max(track.clientWidth + 12, 1));
+          if (nearestIndex !== activeIndex) updateState(nearestIndex);
+        });
+      }, { passive: true });
+      updateState(0);
     })();
     initPlushStripeButton();
   </script>
