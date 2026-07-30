@@ -10841,7 +10841,9 @@
         margin-top: 32px;
       }
     }
+
   </style>
+  <link rel="stylesheet" href="assets/mobby-guide.css">
 </head>
 
 <body>
@@ -13589,6 +13591,7 @@
         splashElement.remove();
       }
       revealMainContent();
+      window.setTimeout(() => window.dispatchEvent(new CustomEvent('mobby-splash-complete')), 0);
     }
 
     if (!shouldSkipSplash && splashElement) {
@@ -13605,6 +13608,7 @@
         window.setTimeout(() => {
           splashElement.classList.add('hidden');
           revealMainContent();
+          window.dispatchEvent(new CustomEvent('mobby-splash-complete'));
         }, 960);
 
         window.setTimeout(() => {
@@ -16857,6 +16861,7 @@
     })();
     initPlushStripeButton();
   </script>
+  <script src="assets/mobby-guide.js" data-mobby-guide-home="true"></script>
 </body>
 
 </html>
