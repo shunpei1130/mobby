@@ -10776,11 +10776,13 @@
 
       #main-content .home-desktop-left {
         grid-column: 1;
+        grid-row: 1;
         gap: 12px;
       }
 
       #main-content .home-desktop-right {
         grid-column: 2;
+        grid-row: 1 / span 2;
       }
 
       #main-content .gacha-btn-wrap {
@@ -10793,6 +10795,8 @@
       }
 
       #main-content .home-main-actions {
+        grid-column: 1;
+        grid-row: 2;
         width: 100%;
         margin: 4px auto 0;
         grid-template-columns: minmax(0, 1fr);
@@ -15134,7 +15138,6 @@
         homeContainer.insertBefore(desktopLeft, homeMangaFeature);
         homeContainer.insertBefore(desktopRight, homeMangaFeature);
         homeCarouselArea.forEach((element) => desktopLeft.appendChild(element));
-        if (homeMainActions) desktopLeft.appendChild(homeMainActions);
         desktopRight.appendChild(homeMangaFeature);
       }
     }
