@@ -21,7 +21,7 @@
   <meta property="og:url" content="https://www.mobby.online/16school/">
   <meta property="og:title" content="학교 모비 진단 | 학교 캐릭터 진단 - 당신의 성격을 16타입으로 진단">
   <meta property="og:description" content="학교 모비 진단은 40문항으로 학교 캐릭터 타입을 16종류로 진단. 양캐·음캐, 활발·성실 등 4축 성격 분석. 남녀 대응 무료 성격 진단.">
-  <meta property="og:image" content="https://www.mobby.online/16school/logo.jpg">
+  <meta property="og:image" content="https://www.mobby.online/16school/logo.webp">
   <meta property="og:site_name" content="학교 모비 진단">
   <meta property="og:locale" content="ko_KR">
   <meta name="theme-color" content="#fff8e8">
@@ -31,11 +31,11 @@
   <meta name="twitter:url" content="https://www.mobby.online/16school/">
   <meta name="twitter:title" content="학교 모비 진단 | 학교 캐릭터 진단 - 당신의 성격을 16타입으로 진단">
   <meta name="twitter:description" content="학교 모비 진단은 40문항으로 학교 캐릭터 타입을 16종류로 진단. 남녀 대응 무료 성격 진단.">
-  <meta name="twitter:image" content="https://www.mobby.online/16school/logo.jpg">
+  <meta name="twitter:image" content="https://www.mobby.online/16school/logo.webp">
   
   <!-- Favicon -->
-  <link rel="icon" type="image/jpeg" href="favicon/fav.jpg">
-  <link rel="apple-touch-icon" href="logo.jpg">
+  <link rel="icon" type="image/webp" href="favicon/fav.webp">
+  <link rel="apple-touch-icon" href="logo.webp">
   
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
@@ -162,7 +162,7 @@
     .brand { display: flex; align-items: center; gap: 0px; }
     .logo {
       width: 30px; height: 30px; border-radius: 10px;
-      background-image: url('logo.jpg');
+      background-image: url('logo.webp');
       background-size: cover;
       background-position: center;
       box-shadow: 0 4px 10px rgba(0,113,227,0.3);
@@ -3340,20 +3340,20 @@ function renderGate(){
     function getImagePath(code, isFemale) {
       if (isFemale) {
         const imgCode = CODE_TO_IMAGE_FEMALE[code];
-        return imgCode ? `cha/${imgCode}.jpg` : '';
+        return imgCode ? `cha/${imgCode}.webp` : '';
       } else {
         const imgCode = CODE_TO_IMAGE[code];
-        return imgCode ? `cha/${imgCode}.jpg` : '';
+        return imgCode ? `cha/${imgCode}.webp` : '';
       }
     }
 
     function getKeyImagePath(code, isFemale, name) {
       if (isFemale) {
         const keyName = FEMALE_KEY_IMAGE_BY_CODE[code] || name;
-        return keyName ? `/korea/16school/key/${keyName}.jpg` : '';
+        return keyName ? `/korea/16school/key/${keyName}.webp` : '';
       }
       const imgCode = CODE_TO_IMAGE[code];
-      return imgCode ? `/korea/16school/key/男/${imgCode}.jpg` : '';
+      return imgCode ? `/korea/16school/key/男/${imgCode}.webp` : '';
     }
 
     function getSnsImagePaths(isFemale, name) {
@@ -3361,8 +3361,7 @@ function renderGate(){
       if (!name) return null;
       const encoded = encodeURIComponent(name);
       return {
-        webp: `${base}/${encoded}.webp`,
-        jpg: `${base}/${encoded}.jpg`
+        webp: `${base}/${encoded}.webp`
       };
     }
 
@@ -3375,18 +3374,13 @@ function renderGate(){
     }
     function getImageMimeType(path) {
       const cleanPath = String(path || "").split(/[?#]/)[0].toLowerCase();
-      if (cleanPath.endsWith(".jpg") || cleanPath.endsWith(".jpeg")) return "image/jpeg";
-      if (cleanPath.endsWith(".png")) return "image/png";
       if (cleanPath.endsWith(".webp")) return "image/webp";
-      return "image/png";
+      return "image/webp";
     }
-    function getImageFileExtension(path, type) {
+    function getImageFileExtension(path) {
       const cleanPath = String(path || "").split(/[?#]/)[0].toLowerCase();
       const match = cleanPath.match(/\.([a-z0-9]+)$/);
-      if (match) return match[1] === "jpeg" ? "jpg" : match[1];
-      if (type === "image/jpeg") return "jpg";
-      if (type === "image/webp") return "webp";
-      return "png";
+      return match ? match[1] : "webp";
     }
     async function shareImageFileOnIOS(imagePaths, fileBaseName) {
       if (typeof navigator.share !== "function" || typeof File !== "function") return false;
@@ -3944,7 +3938,7 @@ function renderGate(){
                 <div style="width:45%; max-width:140px; position:relative; overflow:hidden;">
                   <img src="${keyImagePath}" alt="アクリルキーホルダー 表面" style="width:100%; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
                 </div>
-                <img src="/korea/16school/key/ura.jpg" alt="アクリルキーホルダー 裏面" style="width:45%; max-width:140px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
+                <img src="/korea/16school/key/ura.webp" alt="アクリルキーホルダー 裏面" style="width:45%; max-width:140px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
               </div>
               <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
                 <span style="font-size:20px; color:#b65174; font-weight:700; letter-spacing:0.04em;">1,900円</span>
@@ -4135,11 +4129,11 @@ function renderGate(){
       const resultProductTabButtons = Array.from(document.querySelectorAll(".result-product-tab[data-result-product-tab]"));
       const resultProductPanels = Array.from(document.querySelectorAll(".result-product-content[data-result-product-panel]"));
       const PLUSH_RESERVATION_IMAGES = [
-        "/img/nui/nui.jpeg",
-        "/img/nui/1.jpg",
-        "/img/nui/2.jpg",
-        "/img/nui/3.jpg",
-        "/img/nui/4.jpg"
+        "/img/nui/nui.webp",
+        "/img/nui/1.webp",
+        "/img/nui/2.webp",
+        "/img/nui/3.webp",
+        "/img/nui/4.webp"
       ];
       let syncPlushReservationGallery = () => {};
 
@@ -4565,7 +4559,7 @@ function renderGate(){
           }
 
           snsSaveHint.textContent = "共有シートを開きます。「画像を保存」を選ぶと写真アプリに保存されます。";
-          const sharedToPhotos = await shareImageFileOnIOS([snsImagePaths.webp, snsImagePaths.jpg], char.name);
+          const sharedToPhotos = await shareImageFileOnIOS([snsImagePaths.webp], char.name);
           if (sharedToPhotos) {
             snsSaveHint.textContent = "共有シートで「画像を保存」を選ぶと写真アプリに保存されます。";
             return;
@@ -4575,10 +4569,7 @@ function renderGate(){
 
           if (
             snsSavePreview.src &&
-            (
-              decodeURIComponent(snsSavePreview.src).endsWith(decodeURIComponent(snsImagePaths.webp)) ||
-              decodeURIComponent(snsSavePreview.src).endsWith(decodeURIComponent(snsImagePaths.jpg))
-            )
+            decodeURIComponent(snsSavePreview.src).endsWith(decodeURIComponent(snsImagePaths.webp))
           ) {
             snsSavePreview.style.display = "block";
             snsSaveFallback.style.display = "none";
@@ -4591,13 +4582,7 @@ function renderGate(){
             snsSaveFallback.style.display = "none";
           };
 
-          let triedJpgFallback = false;
           snsSavePreview.onerror = () => {
-            if (!triedJpgFallback) {
-              triedJpgFallback = true;
-              snsSavePreview.src = snsImagePaths.jpg;
-              return;
-            }
             snsSavePreview.style.display = "none";
             snsSaveFallback.style.display = "block";
             snsSaveHint.textContent = "このタイプのSNS画像は準備中です。結果画面をスクショして投稿してください。";

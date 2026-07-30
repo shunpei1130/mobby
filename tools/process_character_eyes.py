@@ -58,13 +58,13 @@ def export_sheet(character_id: str, sheet_path: Path) -> None:
         y1 = round((row + 1) * sheet.height / 3)
         cell = sheet.crop((x0, y0, x1, y1))
         output = remove_green(fit_on_frame(cell, frame_size))
-        output.save(ASSETS / f"{character_id}-eye-{index + 1}.png", optimize=True)
+        output.save(ASSETS / f"{character_id}-eye-{index + 1}.webp", optimize=True)
         outputs.append(output)
     preview = Image.new("RGBA", (frame_size[0] * 3, frame_size[1] * 3), (239, 225, 201, 255))
     for index, output in enumerate(outputs):
         row, column = divmod(index, 3)
         preview.alpha_composite(output, (column * frame_size[0], row * frame_size[1]))
-    preview.save(ROOT / ".codex-tmp" / "character-eyes" / f"{character_id}-processed-sheet.png")
+    preview.save(ROOT / ".codex-tmp" / "character-eyes" / f"{character_id}-processed-sheet.webp")
 
 
 def main() -> None:

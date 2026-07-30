@@ -18,14 +18,14 @@
     <meta property="og:description" content="40問であなたの夜職適性を16タイプから無料診断！ガールズバー？キャバクラ？ラウンジ？モビーがあなたにピッタリの夜職タイプを教えます✨">
     <meta property="og:url" content="https://www.mobby.online/16night">
     <meta property="og:site_name" content="Mobby - モビー診断">
-    <meta property="og:image" content="https://www.mobby.online/img/mobby/mobby_purple.jpg">
+    <meta property="og:image" content="https://www.mobby.online/img/mobby/mobby_purple.webp">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:locale" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="夜職モビー診断 | あなたに向いてる夜職タイプを16種類で診断">
     <meta name="twitter:description" content="キャバクラ・ガールズバー・ラウンジ、あなたに向いてる夜職は？40問で無料診断🌙">
-    <meta name="twitter:image" content="https://www.mobby.online/img/mobby/mobby_purple.jpg">
+    <meta name="twitter:image" content="https://www.mobby.online/img/mobby/mobby_purple.webp">
     <meta name="theme-color" content="#0f0f15">
     <script type="application/ld+json">
     {
@@ -143,7 +143,7 @@
             width: 30px;
             height: 30px;
             border-radius: 10px;
-            background-image: url('../16school/logo.jpg');
+            background-image: url('../16school/logo.webp');
             background-size: cover;
             background-position: center;
             box-shadow: 0 4px 10px rgba(201, 160, 80, 0.3);
@@ -1158,18 +1158,13 @@
         function isIOSLikeDevice() { return /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1); }
         function getImageMimeType(path) {
             const cleanPath = String(path || "").split(/[?#]/)[0].toLowerCase();
-            if (cleanPath.endsWith(".jpg") || cleanPath.endsWith(".jpeg")) return "image/jpeg";
-            if (cleanPath.endsWith(".png")) return "image/png";
             if (cleanPath.endsWith(".webp")) return "image/webp";
-            return "image/png";
+            return "image/webp";
         }
-        function getImageFileExtension(path, type) {
+        function getImageFileExtension(path) {
             const cleanPath = String(path || "").split(/[?#]/)[0].toLowerCase();
             const match = cleanPath.match(/\.([a-z0-9]+)$/);
-            if (match) return match[1] === "jpeg" ? "jpg" : match[1];
-            if (type === "image/jpeg") return "jpg";
-            if (type === "image/webp") return "webp";
-            return "png";
+            return match ? match[1] : "webp";
         }
         async function shareImageFileOnIOS(imagePaths, fileBaseName) {
             if (typeof navigator.share !== "function" || typeof File !== "function") return false;
@@ -1485,7 +1480,7 @@ requestAnimationFrame(() => render());
             const shareUrl = encodeURIComponent(shareUrlRaw);
             const lineShareHref = getPreferredLineShareUrl(shareTextRaw, shareUrlRaw);
             const lineShareTarget = getPreferredLineShareTarget();
-            app.innerHTML = `<div class="panel fade-in"><div class="result-hero"><p class="kicker">診断結果</p><h2 class="big" style="font-size:28px;">${ch.name}</h2><p class="text-body" style="color:var(--text-main);font-weight:600;font-size:16px;margin-bottom:16px;">${ch.catch}</p><div class="char-image-placeholder"><img src="img/${res.code}.jpg" alt="${ch.name}"></div><div style="display:inline-block;background:var(--surface2);padding:6px 16px;border-radius:20px;font-size:12px;font-family:monospace;color:var(--text-sub);">TYPE: ${res.code}</div></div>
+            app.innerHTML = `<div class="panel fade-in"><div class="result-hero"><p class="kicker">診断結果</p><h2 class="big" style="font-size:28px;">${ch.name}</h2><p class="text-body" style="color:var(--text-main);font-weight:600;font-size:16px;margin-bottom:16px;">${ch.catch}</p><div class="char-image-placeholder"><img src="img/${res.code}.webp" alt="${ch.name}"></div><div style="display:inline-block;background:var(--surface2);padding:6px 16px;border-radius:20px;font-size:12px;font-family:monospace;color:var(--text-sub);">TYPE: ${res.code}</div></div>
   <div style="margin-top:24px;padding:20px;background:linear-gradient(135deg,rgba(201,160,80,0.1),rgba(155,109,255,0.1));border-radius:16px;border:1px solid var(--accent);text-align:center;"><p style="font-size:11px;font-weight:700;color:var(--accent);margin:0 0 8px;">🏆 あなたに向いてる業種</p><p style="font-size:24px;font-weight:700;margin:0;color:var(--accent);">${ch.bestJob}</p></div>
   <div style="margin-top:40px;"><p class="kicker" style="margin-bottom:16px;">4つの軸の傾向</p>${axisHtml}</div>${adjHtml}</div>
   <div class="panel fade-in" style="margin-top:24px;"><p class="kicker" style="margin-bottom:16px;">🎬 あなたの接客スタイル</p><p class="text-body" style="font-size:15px;line-height:1.9;margin:0;color:var(--text-main);">${ch.hook}</p></div>
@@ -1501,7 +1496,7 @@ requestAnimationFrame(() => render());
     <section id="resultProductPanelAcrylic" class="result-product-content is-active">
       <h3 style="font-size:20px;margin:0 0 8px;color:var(--text-main);">アクリルキーホルダー</h3>
       <p style="display:inline-block;font-size:15px;font-weight:700;color:#ff4d8d;background:rgba(255,77,141,0.08);padding:6px 14px;border-radius:999px;margin:0 0 18px;letter-spacing:0.03em;">あなたの診断結果を持ち歩こう</p>
-      <div style="display:flex;gap:12px;justify-content:center;margin-bottom:18px;background:linear-gradient(145deg,#fff7fb,#fff2e2);border-radius:16px;padding:16px;border:1px solid rgba(255,255,255,0.9);"><div style="width:45%;max-width:140px;position:relative;overflow:hidden;"><img src="img/key/${res.code}_keychain_lite.jpg" loading="lazy" decoding="async" alt="アクリルキーホルダー 表面" style="width:100%;border-radius:12px;object-fit:contain;box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';"></div><img src="../16school/key/ura.jpg" alt="アクリルキーホルダー 裏面" style="width:45%;max-width:140px;border-radius:12px;object-fit:contain;box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';"></div>
+      <div style="display:flex;gap:12px;justify-content:center;margin-bottom:18px;background:linear-gradient(145deg,#fff7fb,#fff2e2);border-radius:16px;padding:16px;border:1px solid rgba(255,255,255,0.9);"><div style="width:45%;max-width:140px;position:relative;overflow:hidden;"><img src="img/key/${res.code}_keychain_lite.webp" loading="lazy" decoding="async" alt="アクリルキーホルダー 表面" style="width:100%;border-radius:12px;object-fit:contain;box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';"></div><img src="../16school/key/ura.webp" alt="アクリルキーホルダー 裏面" style="width:45%;max-width:140px;border-radius:12px;object-fit:contain;box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';"></div>
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><span style="font-size:20px;color:#b65174;font-weight:700;letter-spacing:0.04em;">1,900円</span></div>
       <p class="text-body" style="font-size:14px;line-height:1.8;margin:0 0 14px;"><strong>表は${ch.name}、裏にはあなたの診断がいつでも見れるQRコード。このページをそのまま持ち歩けるよ！</strong> 透明感ときらめきで、光を味方にするクリアアクセ。</p>
       <ul style="margin:0 0 18px;padding-left:18px;color:var(--text-sub);line-height:1.8;font-size:13px;"><li>表裏で違う表情が楽しめるデザイン</li><li>日常でも特別感を残すサイズ感</li></ul>
@@ -1589,7 +1584,7 @@ requestAnimationFrame(() => render());
                         snsSaveHint.textContent = "保存を開始しました。うまくいかない場合は結果画面をスクショしてください。";
                         const dl = document.createElement("a");
                         dl.href = snsImagePath;
-                        dl.download = `${sanitizeDownloadName(ch.name)}-sns.png`;
+                        dl.download = `${sanitizeDownloadName(ch.name)}-sns.webp`;
                         dl.rel = "noopener";
                         document.body.appendChild(dl);
                         dl.click();
@@ -1626,13 +1621,13 @@ requestAnimationFrame(() => render());
         }
         function renderCharacters() {
             const keys = Object.keys(CHARACTERS).sort();
-            const html = keys.map(code => { const ch = CHARACTERS[code]; return `<div class="char-card fade-in"><div class="char-card-image"><img src="img/${code}.jpg" alt="${ch.name}" style="width:100%;height:100%;object-fit:cover;"></div><div class="char-card-type">TYPE: ${code}</div><h3 class="char-card-name">${ch.name}</h3><p class="char-card-desc">${ch.catch || ch.summary}</p><button class="primary" style="width:100%;font-size:12px;margin-top:auto;" data-code="${code}">詳細</button></div>`; }).join("");
+            const html = keys.map(code => { const ch = CHARACTERS[code]; return `<div class="char-card fade-in"><div class="char-card-image"><img src="img/${code}.webp" alt="${ch.name}" style="width:100%;height:100%;object-fit:cover;"></div><div class="char-card-type">TYPE: ${code}</div><h3 class="char-card-name">${ch.name}</h3><p class="char-card-desc">${ch.catch || ch.summary}</p><button class="primary" style="width:100%;font-size:12px;margin-top:auto;" data-code="${code}">詳細</button></div>`; }).join("");
             app.innerHTML = `<div class="panel fade-in"><p class="kicker">全16タイプ</p><h2 class="big">キャラクター一覧</h2><p class="text-body" style="margin-bottom:20px;">4つの軸の組み合わせで生まれる、16種類の夜職キャラクタータイプ。</p></div><div class="char-grid">${html}</div>`;
             document.querySelectorAll('button[data-code]').forEach(btn => { btn.onclick = () => showCharDetail(btn.dataset.code); });
         }
         function showCharDetail(code) {
             const ch = CHARACTERS[code];
-            const m = `<div class="char-modal-overlay" id="cmo"><div class="char-modal"><button class="char-modal-close" id="cmc">×</button><div style="text-align:center;margin-bottom:20px;"><div style="width:200px;height:200px;border-radius:16px;overflow:hidden;margin:0 auto 24px;background:var(--surface2);"><img src="img/${code}.jpg" alt="${ch.name}" style="width:100%;height:100%;object-fit:cover;"></div><div style="display:inline-block;background:var(--surface2);padding:6px 16px;border-radius:12px;font-size:12px;font-family:monospace;color:var(--text-sub);margin-bottom:16px;">TYPE: ${code}</div><h2 style="font-size:24px;font-weight:700;margin:0 0 16px;">${ch.name}</h2><p style="font-size:14px;font-weight:600;margin:0;">${ch.catch}</p></div>
+            const m = `<div class="char-modal-overlay" id="cmo"><div class="char-modal"><button class="char-modal-close" id="cmc">×</button><div style="text-align:center;margin-bottom:20px;"><div style="width:200px;height:200px;border-radius:16px;overflow:hidden;margin:0 auto 24px;background:var(--surface2);"><img src="img/${code}.webp" alt="${ch.name}" style="width:100%;height:100%;object-fit:cover;"></div><div style="display:inline-block;background:var(--surface2);padding:6px 16px;border-radius:12px;font-size:12px;font-family:monospace;color:var(--text-sub);margin-bottom:16px;">TYPE: ${code}</div><h2 style="font-size:24px;font-weight:700;margin:0 0 16px;">${ch.name}</h2><p style="font-size:14px;font-weight:600;margin:0;">${ch.catch}</p></div>
   <div style="margin-bottom:20px;padding:12px;background:linear-gradient(135deg,rgba(201,160,80,0.08),transparent);border-radius:12px;border-left:3px solid var(--accent);"><p style="font-size:11px;font-weight:700;color:var(--accent);margin:0 0 6px;">🏆 向いてる業種</p><p style="font-size:18px;font-weight:700;margin:0;color:var(--accent);">${ch.bestJob}</p></div>
   ${ch.hook ? `<div style="margin-bottom:20px;"><h3 style="font-size:14px;font-weight:700;color:var(--accent);margin:0 0 8px;">🎬 接客スタイル</h3><p style="font-size:13px;line-height:1.8;margin:0;">${ch.hook}</p></div>` : ""}
   ${ch.drinkStyle ? `<div style="margin-bottom:20px;padding:12px;background:linear-gradient(135deg,rgba(201,160,80,0.08),transparent);border-radius:12px;border-left:3px solid var(--accent);"><h3 style="font-size:14px;font-weight:700;color:var(--accent);margin:0 0 8px;">🍸 お酒のスタイル</h3><p style="font-size:13px;line-height:1.8;margin:0;">${ch.drinkStyle}</p></div>` : ""}

@@ -16,14 +16,14 @@
     <meta property="og:description" content="40문항으로 당신의 덕질 스타일을 16타입에서 무료 진단! 현장파? 재택파? 발신파? 관망파? 모비가 당신에게 딱 맞는 덕질 타입을 알려드립니다✨">
     <meta property="og:url" content="https://www.mobby.online/16stan">
     <meta property="og:site_name" content="Mobby - 모비 진단">
-    <meta property="og:image" content="https://www.mobby.online/img/mobby/mobby_pink.jpg">
+    <meta property="og:image" content="https://www.mobby.online/img/mobby/mobby_pink.webp">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:locale" content="ko_KR">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="최애 덕질 모비 진단 | 당신의 덕질 스타일을 16종류로 진단">
     <meta name="twitter:description" content="당신의 덕질 스타일은? 40문항으로 무료 진단💖">
-    <meta name="twitter:image" content="https://www.mobby.online/img/mobby/mobby_pink.jpg">
+    <meta name="twitter:image" content="https://www.mobby.online/img/mobby/mobby_pink.webp">
     <meta name="theme-color" content="#0f0f15">
     <script type="application/ld+json">
     {
@@ -119,7 +119,7 @@
             width: 30px;
             height: 30px;
             border-radius: 10px;
-            background-image: url('../16school/logo.jpg');
+            background-image: url('../16school/logo.webp');
             background-size: cover;
             background-position: center;
             box-shadow: 0 4px 10px rgba(232, 106, 175, 0.3);
@@ -1306,11 +1306,11 @@
         }
         function getStanImagePath(code, fallbackName = "") {
             const assetName = getStanAssetName(code, fallbackName);
-            return assetName ? `/korea/16stan/img/${assetName}.jpg` : "";
+            return assetName ? `/korea/16stan/img/${assetName}.webp` : "";
         }
-        function getStanKeyImagePath(code, ext, fallbackName = "") {
+        function getStanKeyImagePath(code, fallbackName = "") {
             const assetName = getStanAssetName(code, fallbackName);
-            return assetName ? `/korea/16stan/img/key/${assetName}.${ext}` : "";
+            return assetName ? `/korea/16stan/img/key/${assetName}.webp` : "";
         }
         const STORAGE_KEY = "stan_char_diag_korea_v1", PAGE_SIZE = 5;
         const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzu8ZWwvtKHWIwqnjqlKkdbPTWN1o7oSxpsBZ-Crdv6zlmCbSeWFlMDZ3sjU9SgCsFOgQ/exec";
@@ -1347,9 +1347,9 @@
             return { code, pcts };
         }
         function getSnsImagePaths(code) {
-            const png = SNS_IMAGE_PATHS[code];
-            if (!png) return null;
-            return { png };
+            const webp = SNS_IMAGE_PATHS[code];
+            if (!webp) return null;
+            return { webp };
         }
         function sanitizeDownloadName(name) {
             return (name || "mobby-result").replace(/[\\/:*?"<>|]/g, "_");
@@ -1359,18 +1359,13 @@
         }
         function getImageMimeType(path) {
             const cleanPath = String(path || "").split(/[?#]/)[0].toLowerCase();
-            if (cleanPath.endsWith(".jpg") || cleanPath.endsWith(".jpeg")) return "image/jpeg";
-            if (cleanPath.endsWith(".png")) return "image/png";
             if (cleanPath.endsWith(".webp")) return "image/webp";
-            return "image/png";
+            return "image/webp";
         }
-        function getImageFileExtension(path, type) {
+        function getImageFileExtension(path) {
             const cleanPath = String(path || "").split(/[?#]/)[0].toLowerCase();
             const match = cleanPath.match(/\.([a-z0-9]+)$/);
-            if (match) return match[1] === "jpeg" ? "jpg" : match[1];
-            if (type === "image/jpeg") return "jpg";
-            if (type === "image/webp") return "webp";
-            return "png";
+            return match ? match[1] : "webp";
         }
         async function shareImageFileOnIOS(imagePaths, fileBaseName) {
             if (typeof navigator.share !== "function" || typeof File !== "function") return false;
@@ -1539,9 +1534,9 @@
             const { code, pcts } = computeResult(); const rawCh = CH[code]; const ch = normalizeStanCharacter(rawCh); if (!ch) { renderIntro(); return; } const app = document.getElementById("app");
             const displayName = ch.displayName || ch.name;
             const imgPath = getStanImagePath(code, ch.name);
-            const keyImageFrontPath = getStanKeyImagePath(code, "png", ch.name);
-            const keyImageFrontWebpPath = getStanKeyImagePath(code, "webp", ch.name);
-            const keyImageBackPath = "/korea/16stan/img/key/ura.jpg";
+            const keyImageFrontPath = getStanKeyImagePath(code, ch.name);
+            const keyImageFrontWebpPath = keyImageFrontPath;
+            const keyImageBackPath = "/korea/16stan/img/key/ura.webp";
             const keyImageBackWebpPath = "/korea/16stan/img/key/ura.webp";
             const snsImagePaths = getSnsImagePaths(code);
             let html = `<div class="fade-in"><div class="panel result-hero">
@@ -1577,7 +1572,7 @@
     <h3 style="font-size:20px;margin:0 0 8px;color:var(--text-main);">폭신폭신 인형 키홀더</h3>
     <p style="display:inline-block;font-size:12px;font-weight:700;color:#ffffff;background:#ff4d8d;padding:6px 12px;border-radius:999px;margin:0 0 12px;letter-spacing:0.03em;">선착순 100개 한정</p>
     <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px;margin-bottom:14px;"><span style="font-size:14px;color:rgba(82,62,62,0.72);text-decoration:line-through;text-decoration-thickness:2px;">일반가 6,000엔</span><span style="font-size:17px;color:#b65174;font-weight:700;letter-spacing:0.04em;background:rgba(255,77,141,0.1);border:1px solid rgba(255,77,141,0.24);padding:6px 12px;border-radius:999px;">특별가 4,800엔</span></div>
-    <div style="margin-bottom:14px;background:linear-gradient(145deg,#fff7fb,#fff2e2);border-radius:16px;padding:16px;border:1px solid rgba(255,255,255,0.9);text-align:center;"><img src="/img/nui/nui.jpeg" alt="인형키홀더" style="width:min(100%,220px);max-height:180px;object-fit:contain;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.12);" onerror="this.style.display='none';"></div>
+    <div style="margin-bottom:14px;background:linear-gradient(145deg,#fff7fb,#fff2e2);border-radius:16px;padding:16px;border:1px solid rgba(255,255,255,0.9);text-align:center;"><img src="/img/nui/nui.webp" alt="인형키홀더" style="width:min(100%,220px);max-height:180px;object-fit:contain;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.12);" onerror="this.style.display='none';"></div>
     <p class="text-body" style="font-size:14px;line-height:1.8;margin:0 0 14px;">폭신하고 가벼운 질감으로, 가방에 달기만 하면 기분이 올라가는 한정 인형 키홀더입니다.</p>
     <ul style="margin:0 0 18px;padding-left:18px;color:var(--text-sub);line-height:1.8;font-size:13px;"><li>사진 잘 나오는 페미닌한 배색</li><li>매일 쓰기 좋은 컴팩트 사이즈</li><li>기간·수량 모두 한정의 특별 사양</li></ul>
     <a id="stripeBuyButtonPlush" data-stripe-product-type="plush_keyholder" data-stripe-product-label="인형키홀더" href="https://buy.stripe.com/28EaEX30Vfqt6SybJJao80b" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border-radius:999px;font-size:14px;font-weight:600;text-decoration:none;background:linear-gradient(135deg,#ff4d8d,#ff7aa8);color:#fff;box-shadow:0 14px 30px rgba(255,77,141,0.3);transition:transform 0.2s ease;">기간 한정 아이템 확인하기 →</a>
@@ -1691,8 +1686,8 @@
                     if (!iosLike) {
                         snsSaveHint.textContent = "저장을 시작했습니다. 잘 안 되는 경우 결과 화면을 스크린샷해주세요.";
                         const dl = document.createElement("a");
-                        dl.href = snsImagePaths.png;
-                        dl.download = `${sanitizeDownloadName(ch.name)}.png`;
+                        dl.href = snsImagePaths.webp;
+                        dl.download = `${sanitizeDownloadName(ch.name)}.webp`;
                         dl.rel = "noopener";
                         document.body.appendChild(dl);
                         dl.click();
@@ -1700,14 +1695,14 @@
                         return;
                     }
                     snsSaveHint.textContent = "공유 시트를 엽니다. 「이미지 저장」을 선택하면 사진 앱에 저장됩니다.";
-                    const sharedToPhotos = await shareImageFileOnIOS(snsImagePaths.png, displayName);
+                    const sharedToPhotos = await shareImageFileOnIOS(snsImagePaths.webp, displayName);
                     if (sharedToPhotos) {
                         snsSaveHint.textContent = "공유 시트에서 「이미지 저장」을 선택하면 사진 앱에 저장됩니다.";
                         return;
                     }
                     snsSaveHint.textContent = "공유 시트를 열 수 없으면 이미지를 길게 눌러서「사진에 저장」을 선택해주세요.";
                     snsSavePreview.alt = `${displayName} SNS 게시용 이미지`;
-                    if (snsSavePreview.src && decodeURIComponent(snsSavePreview.src).endsWith(decodeURIComponent(snsImagePaths.png))) {
+                    if (snsSavePreview.src && decodeURIComponent(snsSavePreview.src).endsWith(decodeURIComponent(snsImagePaths.webp))) {
                         snsSavePreview.style.display = "block";
                         snsSaveFallback.style.display = "none";
                         snsSaveBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -1722,7 +1717,7 @@
                         snsSaveFallback.style.display = "block";
                         snsSaveHint.textContent = "이 타입의 SNS 이미지는 준비 중입니다. 결과 화면을 스크린샷해서 게시해주세요.";
                     };
-                    snsSavePreview.src = snsImagePaths.png;
+                    snsSavePreview.src = snsImagePaths.webp;
                     snsSaveBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
                 };
             }

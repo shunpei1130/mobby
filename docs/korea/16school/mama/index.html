@@ -21,7 +21,7 @@
   <meta property="og:url" content="https://www.mobby.online/16school/mama/">
   <meta property="og:title" content="엄마 모비 진단 | 부모 타입 진단 - 당신의 엄마 타입을16타입으로 진단">
   <meta property="og:description" content="엄마 모비 진단는 40문항의 질문으로 당신의 보호자 타입을 16종류에서 진단. 커뮤니티와의 관여 방식, 자녀에 대한 대응 방법 등 4축으로 분석.">
-  <meta property="og:image" content="https://www.mobby.online/16school/logo.jpg">
+  <meta property="og:image" content="https://www.mobby.online/16school/logo.webp">
   <meta property="og:site_name" content="엄마 모비 진단">
   <meta property="og:locale" content="ko_KR">
   <meta name="theme-color" content="#fff0f5">
@@ -31,11 +31,11 @@
   <meta name="twitter:url" content="https://www.mobby.online/16school/mama/">
   <meta name="twitter:title" content="엄마 모비 진단 | 부모 타입 진단 - 당신의 엄마 타입을16타입으로 진단">
   <meta name="twitter:description" content="엄마 모비 진단는 40문항의 질문으로 당신의 보호자 타입을 16종류에서 진단.">
-  <meta name="twitter:image" content="https://www.mobby.online/16school/logo.jpg">
+  <meta name="twitter:image" content="https://www.mobby.online/16school/logo.webp">
   
   <!-- Favicon -->
-  <link rel="icon" type="image/jpeg" href="../favicon/fav.jpg">
-  <link rel="apple-touch-icon" href="../logo.jpg">
+  <link rel="icon" type="image/webp" href="../favicon/fav.webp">
+  <link rel="apple-touch-icon" href="../logo.webp">
   
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
@@ -87,7 +87,7 @@
     .brand { display: flex; align-items: center; gap: 0px; }
     .logo {
       width: 30px; height: 30px; border-radius: 10px;
-      background-image: url('../logo.jpg');
+      background-image: url('../logo.webp');
       background-size: cover;
       background-position: center;
       box-shadow: 0 4px 10px rgba(236,64,122,0.3);
@@ -2253,12 +2253,12 @@
 
     function getMamaCharacterImagePath(code, fallbackName = "") {
       const assetName = getMamaAssetName(code, fallbackName);
-      return assetName ? `/korea/16school/mama/img/${assetName}.jpg` : "";
+      return assetName ? `/korea/16school/mama/img/${assetName}.webp` : "";
     }
 
     function getKeyImagePath(code, name) {
       const assetName = getMamaAssetName(code, name);
-      return assetName ? `/korea/16school/key/mama/${assetName}.jpg` : "";
+      return assetName ? `/korea/16school/key/mama/${assetName}.webp` : "";
     }
 
     function renderResult(){
@@ -2502,7 +2502,7 @@
               <div style="width:45%; max-width:140px; position:relative; overflow:hidden;">
                 <img src="${keyImagePath}" alt="아크릴키홀더 表面" style="width:100%; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
               </div>
-              <img src="/korea/16school/key/ura.jpg" alt="아크릴키홀더 裏面" style="width:45%; max-width:140px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
+              <img src="/korea/16school/key/ura.webp" alt="아크릴키홀더 裏面" style="width:45%; max-width:140px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
             </div>
             <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
               <span style="font-size:20px; color:#b65174; font-weight:700; letter-spacing:0.04em;">1,900엔</span>
@@ -2675,11 +2675,11 @@
       const resultProductTabButtons = Array.from(document.querySelectorAll(".result-product-tab[data-result-product-tab]"));
       const resultProductPanels = Array.from(document.querySelectorAll(".result-product-content[data-result-product-panel]"));
       const PLUSH_RESERVATION_IMAGES = [
-        "/img/nui/nui.jpeg",
-        "/img/nui/1.jpg",
-        "/img/nui/2.jpg",
-        "/img/nui/3.jpg",
-        "/img/nui/4.jpg"
+        "/img/nui/nui.webp",
+        "/img/nui/1.webp",
+        "/img/nui/2.webp",
+        "/img/nui/3.webp",
+        "/img/nui/4.webp"
       ];
       let syncPlushReservationGallery = () => {};
 

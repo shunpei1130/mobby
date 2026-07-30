@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>🎉 おめでとうございます！ | Mobby 限定ご招待</title>
     <meta name="robots" content="noindex, nofollow" />
-    <link rel="icon" type="image/jpeg" href="img/favicon/fav.jpg">
+    <link rel="icon" type="image/webp" href="img/favicon/fav.webp">
 
     <!-- Fonts -->
     <link
@@ -1958,14 +1958,14 @@
                 <div class="image-carousel">
                     <div class="carousel-track" id="productCarousel" aria-label="Mobby 商品画像ギャラリー" role="region">
                         <div class="carousel-slide">
-                            <img src="img/nui/nui.jpeg" alt="Mobby ぬいぐるみキーホルダー">
+                            <img src="img/nui/nui.webp" alt="Mobby ぬいぐるみキーホルダー">
                             <div class="exclusive-ribbon">限定</div>
                         </div>
                         <div class="carousel-slide">
-                            <img src="img/nui/2.jpg" alt="Mobby イエロー">
+                            <img src="img/nui/2.webp" alt="Mobby イエロー">
                         </div>
                         <div class="carousel-slide">
-                            <img src="img/nui/3.jpg" alt="Mobby ミント">
+                            <img src="img/nui/3.webp" alt="Mobby ミント">
                         </div>
                     </div>
                 </div>
@@ -2018,12 +2018,12 @@
                             </p>
                             <div class="set-preview-images">
                                 <figure class="set-preview-figure">
-                                    <img id="acrylicFrontPreview" src="16school/key/購買前たまり場モビー.jpg"
+                                    <img id="acrylicFrontPreview" src="16school/key/購買前たまり場モビー.webp"
                                         alt="アクリルキーホルダー 表面（サンプル）">
                                     <figcaption>表面（診断タイプ別）</figcaption>
                                 </figure>
                                 <figure class="set-preview-figure">
-                                    <img src="16school/key/ura.jpg" alt="アクリルキーホルダー 裏面">
+                                    <img src="16school/key/ura.webp" alt="アクリルキーホルダー 裏面">
                                     <figcaption>裏面（QRデザイン）</figcaption>
                                 </figure>
                             </div>
@@ -2112,7 +2112,7 @@
                     <p class="set-preview-copy">こちらはぬいぐるみキーホルダーのみの販売です。</p>
                     <div class="set-preview-images">
                         <figure class="set-preview-figure">
-                            <img src="img/nui/nui.jpeg" alt="ぬいぐるみキーホルダー">
+                            <img src="img/nui/nui.webp" alt="ぬいぐるみキーホルダー">
                             <figcaption>ぬいぐるみ単体</figcaption>
                         </figure>
                     </div>
@@ -2839,21 +2839,21 @@
             }
 
             function getDiagnosisAcrylicFrontImage(diagnosisState) {
-                const fallbackPath = '16school/key/購買前たまり場モビー.jpg';
+                const fallbackPath = '16school/key/購買前たまり場モビー.webp';
                 if (!diagnosisState || typeof diagnosisState !== 'object') return fallbackPath;
 
                 const gender = String(diagnosisState.gender || '').trim();
                 const type = String(diagnosisState.type || '').trim();
                 const diagnosisName = String(diagnosisState.diagnosisName || '').trim();
 
-                if (gender === 'female' && diagnosisName) return `16school/key/${diagnosisName}.jpg`;
+                if (gender === 'female' && diagnosisName) return `16school/key/${diagnosisName}.webp`;
 
                 if (gender === 'male') {
                     const imageCode = CODE_TO_IMAGE[type];
-                    if (imageCode) return `16school/key/男/${imageCode}.jpg`;
+                    if (imageCode) return `16school/key/男/${imageCode}.webp`;
                 }
 
-                if (diagnosisName) return `16school/key/${diagnosisName}.jpg`;
+                if (diagnosisName) return `16school/key/${diagnosisName}.webp`;
                 return fallbackPath;
             }
 
@@ -2861,7 +2861,7 @@
                 frontPreview.src = encodeURI(path);
                 frontPreview.onerror = () => {
                     frontPreview.onerror = null;
-                    frontPreview.src = '16school/key/購買前たまり場モビー.jpg';
+                    frontPreview.src = '16school/key/購買前たまり場モビー.webp';
                 };
             }
 

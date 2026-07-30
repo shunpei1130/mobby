@@ -258,7 +258,7 @@
         "同じテンションで継続的に応援する"
       ],
       "color": "#ff4d6d",
-      "image": "assets/cards/01_comment-frontline.png"
+      "image": "assets/cards/01_comment-frontline.webp"
     },
     {
       "id": "first-live",
@@ -281,7 +281,7 @@
         "特典会では「初めて来ました」だけでも伝える"
       ],
       "color": "#ff8fab",
-      "image": "assets/cards/02_first-live-dokidoki.png"
+      "image": "assets/cards/02_first-live-dokidoki.webp"
     },
     {
       "id": "cheki",
@@ -304,7 +304,7 @@
         "印象に残る自然なリアクションを意識する"
       ],
       "color": "#ff5c8a",
-      "image": "assets/cards/03_cheki-impression.png"
+      "image": "assets/cards/03_cheki-impression.webp"
     },
     {
       "id": "spread",
@@ -327,7 +327,7 @@
         "「この子気になるかも」を増やす動きをする"
       ],
       "color": "#e84a5f",
-      "image": "assets/cards/04_spread-craft.png"
+      "image": "assets/cards/04_spread-craft.webp"
     },
     {
       "id": "steady",
@@ -350,7 +350,7 @@
         "応援の記録を自分なりに残していく"
       ],
       "color": "#d6336c",
-      "image": "assets/cards/05_steady-support.png"
+      "image": "assets/cards/05_steady-support.webp"
     },
     {
       "id": "visual",
@@ -373,7 +373,7 @@
         "衣装や世界観ごと楽しむ"
       ],
       "color": "#f06595",
-      "image": "assets/cards/06_visual-save.png"
+      "image": "assets/cards/06_visual-save.webp"
     },
     {
       "id": "red",
@@ -396,7 +396,7 @@
         "“かれんちゃんらしさ”を自分なりに言葉にする"
       ],
       "color": "#c9184a",
-      "image": "assets/cards/07_red-tokimeki.png"
+      "image": "assets/cards/07_red-tokimeki.webp"
     },
     {
       "id": "effort",
@@ -419,7 +419,7 @@
         "“認知されたい”を“楽しく応援したい”に変換する"
       ],
       "color": "#a4133c",
-      "image": "assets/cards/08_recognition-effort.png"
+      "image": "assets/cards/08_recognition-effort.webp"
     }
   ]
 }

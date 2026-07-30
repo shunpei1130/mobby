@@ -21,7 +21,7 @@
   <meta property="og:url" content="https://www.mobby.online/16school/mama/">
   <meta property="og:title" content="ママモビー診断 | 親タイプ診断 - あなたのママタイプを16タイプで診断">
   <meta property="og:description" content="ママモビー診断は40問の質問であなたの保護者タイプを16種類から診断。コミュニティとの関わり方、子どもへの接し方など4軸で分析。">
-  <meta property="og:image" content="https://www.mobby.online/16school/logo.jpg">
+  <meta property="og:image" content="https://www.mobby.online/16school/logo.webp">
   <meta property="og:site_name" content="ママモビー診断（モビー診断）">
   <meta property="og:locale" content="ja_JP">
   <meta name="theme-color" content="#fff0f5">
@@ -31,11 +31,11 @@
   <meta name="twitter:url" content="https://www.mobby.online/16school/mama/">
   <meta name="twitter:title" content="ママモビー診断 | 親タイプ診断 - あなたのママタイプを16タイプで診断">
   <meta name="twitter:description" content="ママモビー診断は40問の質問であなたの保護者タイプを16種類から診断。">
-  <meta name="twitter:image" content="https://www.mobby.online/16school/logo.jpg">
+  <meta name="twitter:image" content="https://www.mobby.online/16school/logo.webp">
   
   <!-- Favicon -->
-  <link rel="icon" type="image/jpeg" href="../favicon/fav.jpg">
-  <link rel="apple-touch-icon" href="../logo.jpg">
+  <link rel="icon" type="image/webp" href="../favicon/fav.webp">
+  <link rel="apple-touch-icon" href="../logo.webp">
   
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
@@ -87,7 +87,7 @@
     .brand { display: flex; align-items: center; gap: 0px; }
     .logo {
       width: 30px; height: 30px; border-radius: 10px;
-      background-image: url('../logo.jpg');
+      background-image: url('../logo.webp');
       background-size: cover;
       background-position: center;
       box-shadow: 0 4px 10px rgba(236,64,122,0.3);
@@ -2144,7 +2144,7 @@ gateSubmitButton.onclick = async () => {
         return `
           <div class="char-card">
             <div class="char-card-image">
-              <img src="img/${char.name}.jpg" alt="${char.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:#86868b;font-size:12px;\'>画像準備中</div>'">
+              <img src="img/${char.name}.webp" alt="${char.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:#86868b;font-size:12px;\'>画像準備中</div>'">
             </div>
             <div class="char-card-code">${code}</div>
             <div class="char-card-name">${char.name}</div>
@@ -2179,7 +2179,7 @@ gateSubmitButton.onclick = async () => {
           <div class="char-modal" style="max-height:85vh; overflow-y:auto;">
             <button class="char-modal-close" id="charModalClose">×</button>
             <div class="char-modal-image">
-              <img src="img/${char.name}.jpg" alt="${char.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:#86868b;\'>画像準備中</div>'">
+              <img src="img/${char.name}.webp" alt="${char.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:#86868b;\'>画像準備中</div>'">
             </div>
             <div style="text-align:center; margin-bottom:20px;">
               <div class="char-modal-type">TYPE: ${code}</div>
@@ -2240,7 +2240,7 @@ gateSubmitButton.onclick = async () => {
     }
 
     function getKeyImagePath(name) {
-      return name ? `../key/mama/${name}.jpg` : "";
+      return name ? `../key/mama/${name}.webp` : "";
     }
 
     function renderResult(){
@@ -2266,7 +2266,7 @@ gateSubmitButton.onclick = async () => {
             </p>` : ``}
 
             <div class="char-image-placeholder">
-              <img src="img/${char.name}.jpg" alt="${char.name}" loading="eager" onerror="this.style.display='none'; var s=this.nextElementSibling; if(s) s.style.display='block';" />
+              <img src="img/${char.name}.webp" alt="${char.name}" loading="eager" onerror="this.style.display='none'; var s=this.nextElementSibling; if(s) s.style.display='block';" />
               <span style="display:none; color:var(--text-sub); font-size:13px;">画像準備中</span>
             </div>
              
@@ -2399,7 +2399,7 @@ gateSubmitButton.onclick = async () => {
               <div style="width:45%; max-width:140px; position:relative; overflow:hidden;">
                 <img src="${keyImagePath}" alt="アクリルキーホルダー 表面" style="width:100%; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
               </div>
-              <img src="../key/ura.jpg" alt="アクリルキーホルダー 裏面" style="width:45%; max-width:140px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
+              <img src="../key/ura.webp" alt="アクリルキーホルダー 裏面" style="width:45%; max-width:140px; border-radius:12px; object-fit:contain; box-shadow:0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none';">
             </div>
             <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
               <span style="font-size:20px; color:#b65174; font-weight:700; letter-spacing:0.04em;">1,900円</span>
@@ -2588,11 +2588,11 @@ gateSubmitButton.onclick = async () => {
       const resultProductTabButtons = Array.from(document.querySelectorAll(".result-product-tab[data-result-product-tab]"));
       const resultProductPanels = Array.from(document.querySelectorAll(".result-product-content[data-result-product-panel]"));
       const PLUSH_RESERVATION_IMAGES = [
-        "../../img/nui/nui.jpeg",
-        "../../img/nui/1.jpg",
-        "../../img/nui/2.jpg",
-        "../../img/nui/3.jpg",
-        "../../img/nui/4.jpg"
+        "../../img/nui/nui.webp",
+        "../../img/nui/1.webp",
+        "../../img/nui/2.webp",
+        "../../img/nui/3.webp",
+        "../../img/nui/4.webp"
       ];
       let syncPlushReservationGallery = () => {};
 

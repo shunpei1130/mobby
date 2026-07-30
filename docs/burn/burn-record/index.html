@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
@@ -61,7 +61,7 @@
   <script>
     (() => {
       const HEART_ICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='none' stroke='%2353463d' stroke-width='5' stroke-linecap='round' stroke-linejoin='round' d='M32 54S8 39 8 22c0-8 6-14 14-14 5 0 9 3 10 7 1-4 5-7 10-7 8 0 14 6 14 14 0 17-24 32-24 32Z'/%3E%3C/svg%3E";
-      const PIN_ICON_SRC = "./assets/reference/pin_toka.png";
+      const PIN_ICON_SRC = "./assets/reference/pin_toka.webp";
       const fixBrokenHeartIcon = (root = document) => {
         root.querySelectorAll?.('img[src$="/image/icon/feature/like.webp"], img[src="image/icon/feature/like.webp"]').forEach((img) => {
           img.src = HEART_ICON;
@@ -1251,12 +1251,12 @@
         {
           title: "場所と感想を入れよう",
           copy: "写真を追加したら、場所と感想を入力します。ページに載せたい一言もここで記録できます。",
-          visual: '<div class="burn-guide-memory-card"><img class="burn-guide-real-photo" src="../reference/splash_photo1.jpg" alt=""><div class="burn-guide-form"><div class="burn-guide-field">◎　代官山</div><div class="burn-guide-field">☵　カフェの雰囲気が素敵だった</div></div></div>'
+          visual: '<div class="burn-guide-memory-card"><img class="burn-guide-real-photo" src="../reference/splash_photo1.webp" alt=""><div class="burn-guide-form"><div class="burn-guide-field">◎　代官山</div><div class="burn-guide-field">☵　カフェの雰囲気が素敵だった</div></div></div>'
         },
         {
           title: "タイトルと配置を選ぼう",
           copy: "写真がそろったら、順番やテンプレートを選びます。ページタイトルもここで決めましょう。",
-          visual: '<div class="burn-guide-template-panel"><div class="burn-guide-mini-photos"><div class="burn-guide-mini-photo"><img class="burn-guide-real-photo" src="../reference/splash_photo1.jpg" alt=""><span>配置順</span><div class="burn-guide-order">↑ 1 ↓</div></div><div class="burn-guide-mini-photo"><img class="burn-guide-real-photo" src="../reference/splash_photo2.jpg" alt=""><span>配置順</span><div class="burn-guide-order">↑ 2 ↓</div></div><div class="burn-guide-mini-photo"><img class="burn-guide-real-photo" src="../reference/splash_photo3.jpg" alt=""><span>配置順</span><div class="burn-guide-order">↑ 3 ↓</div></div></div><p>Template</p><div class="burn-guide-template-row"><div class="burn-guide-template is-selected"><img src="./assets/template/template001-C4MCDSgU.webp" alt="">Template 001</div><div class="burn-guide-template"><img src="./assets/template/template002-BCt9LpnA.webp" alt="">Template 002</div></div><p>Page title</p><input value="菜月とこうきは伝説かも!?" readonly /></div>'
+          visual: '<div class="burn-guide-template-panel"><div class="burn-guide-mini-photos"><div class="burn-guide-mini-photo"><img class="burn-guide-real-photo" src="../reference/splash_photo1.webp" alt=""><span>配置順</span><div class="burn-guide-order">↑ 1 ↓</div></div><div class="burn-guide-mini-photo"><img class="burn-guide-real-photo" src="../reference/splash_photo2.webp" alt=""><span>配置順</span><div class="burn-guide-order">↑ 2 ↓</div></div><div class="burn-guide-mini-photo"><img class="burn-guide-real-photo" src="../reference/splash_photo3.webp" alt=""><span>配置順</span><div class="burn-guide-order">↑ 3 ↓</div></div></div><p>Template</p><div class="burn-guide-template-row"><div class="burn-guide-template is-selected"><img src="./assets/template/template001-C4MCDSgU.webp" alt="">Template 001</div><div class="burn-guide-template"><img src="./assets/template/template002-BCt9LpnA.webp" alt="">Template 002</div></div><p>Page title</p><input value="菜月とこうきは伝説かも!?" readonly /></div>'
         },
         {
           title: "背景を選ぼう",
@@ -1398,8 +1398,8 @@
 
       const sharePreparedFile = async (prepared, title = "Memory page") => {
         if (!prepared?.blob || typeof File === "undefined") return false;
-        const file = new File([prepared.blob], prepared.fileName || "mobby-page.png", {
-          type: prepared.blob.type || "image/png"
+        const file = new File([prepared.blob], prepared.fileName || "mobby-page.webp", {
+          type: prepared.blob.type || "image/webp"
         });
         if (!navigator.canShare?.({ files: [file] })) return false;
         try {
@@ -1698,8 +1698,8 @@
 
       const buildGeneratedPageDataUrl = async (page) => {
         const canvas = await buildGeneratedPageCanvas(page, { mobile: true });
-        const fileName = `mobby-page-${new Date().toISOString().slice(0, 10)}.png`;
-        const dataUrl = canvas.toDataURL("image/png");
+        const fileName = `mobby-page-${new Date().toISOString().slice(0, 10)}.webp`;
+        const dataUrl = canvas.toDataURL("image/webp", 0.92);
         if (!dataUrl || dataUrl === "data:,") throw new Error("Canvas export failed");
 
         return {
@@ -1710,12 +1710,12 @@
 
       const buildGeneratedPageFile = async (page, { mobile = false } = {}) => {
         const canvas = await buildGeneratedPageCanvas(page, { mobile });
-        const fileName = `mobby-page-${new Date().toISOString().slice(0, 10)}.png`;
+        const fileName = `mobby-page-${new Date().toISOString().slice(0, 10)}.webp`;
         const blob = await new Promise((resolve, reject) => {
           canvas.toBlob((result) => {
             if (result) resolve(result);
             else reject(new Error("Canvas export failed"));
-          }, "image/png");
+          }, "image/webp", 0.92);
         });
 
         return {
@@ -1841,11 +1841,18 @@
 
       const saveDraftPhoto = async () => {
         const image = root.querySelector(".record-camera-preview.has-photo img");
-        const blob = dataUrlToBlob(image?.currentSrc || image?.src || "");
+        if (!image?.naturalWidth || !image?.naturalHeight) return;
+        const canvas = document.createElement("canvas");
+        canvas.width = image.naturalWidth;
+        canvas.height = image.naturalHeight;
+        canvas.getContext("2d")?.drawImage(image, 0, 0);
+        const blob = await new Promise((resolve) => {
+          canvas.toBlob(resolve, "image/webp", 0.92);
+        });
         if (!blob) return;
         const prepared = {
           blob,
-          fileName: `mobby-photo-${new Date().toISOString().slice(0, 10)}.jpg`,
+          fileName: `mobby-photo-${new Date().toISOString().slice(0, 10)}.webp`,
           objectUrl: URL.createObjectURL(blob)
         };
         try {

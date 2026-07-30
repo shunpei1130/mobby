@@ -5,11 +5,11 @@
 ## 同梱物
 
 - `index.html`：診断本体。HTML/CSS/JSを内包。
-- `assets/logo.png`：ロゴ画像。
-- `assets/favicon.png`：favicon用画像。
-- `assets/hero.png`：ファーストビュー用ビジュアル。
-- `assets/ogp.png`：SNSシェア用OGP画像。
-- `assets/cards/*.png`：8タイプ分の結果画像。
+- `assets/logo.webp`：ロゴ画像。
+- `assets/favicon.webp`：favicon用画像。
+- `assets/hero.webp`：ファーストビュー用ビジュアル。
+- `assets/ogp.webp`：SNSシェア用OGP画像。
+- `assets/cards/*.webp`：8タイプ分の結果画像。
 - `content/diagnosis-data.json`：設問・結果タイプ・導線設定の元データ。
 - `DEPLOY.md`：Mobbyリポジトリへの設置メモ。
 

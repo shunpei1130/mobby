@@ -32,10 +32,10 @@
               const pullMode = activeMode.includes('PULL') || activeMode.includes('ひっぱ') || activeMode.includes('引っ張');
               if (this.__mobbyRuntimeAsset) {
                 const sourceByCharacter = [
-                  ['mobby-yanki.webp', './mobiyan-noneye.png', 'mobiyan'],
-                  ['mobby-gal.webp', './mobichi-noneye.png?v=clean-2', 'mobichi'],
-                  ['mobby-yami.webp', './yami-noneye.png?v=clean-2', 'yami'],
-                  ['mobby-fact-man.webp', './mobirin-noneye.png?v=clean-2', 'mobirin'],
+                  ['mobby-yanki.webp', './mobiyan-noneye.webp', 'mobiyan'],
+                  ['mobby-gal.webp', './mobichi-noneye.webp?v=clean-2', 'mobichi'],
+                  ['mobby-yami.webp', './yami-noneye.webp?v=clean-2', 'yami'],
+                  ['mobby-fact-man.webp', './mobirin-noneye.webp?v=clean-2', 'mobirin'],
                 ];
                 const matched = sourceByCharacter.find(([source]) => nextValue.includes(source));
                 if (matched) {
@@ -207,13 +207,13 @@
           }
         };
 
-        const eyeFiles = Array.from({ length: 9 }, (_, index) => `./assets/mobiyan-eye-${index + 1}.png`);
-        const mouthFiles = Array.from({ length: 10 }, (_, index) => `./assets/mobiyan-mouth-${index + 1}.png`);
-        const defaultEyeFile = './assets/mobiyan-eye-default.png';
+        const eyeFiles = Array.from({ length: 9 }, (_, index) => `./assets/mobiyan-eye-${index + 1}.webp`);
+        const mouthFiles = Array.from({ length: 10 }, (_, index) => `./assets/mobiyan-mouth-${index + 1}.webp`);
+        const defaultEyeFile = './assets/mobiyan-eye-default.webp';
         const defaultMouthFile = mouthFiles[0];
         // The pull canvas receives this eye-free body so it can use the same
         // mesh deformation as the other characters. Eyes stay separate.
-        const defaultSourceFile = './mobiyan-noneye.png';
+        const defaultSourceFile = './mobiyan-noneye.webp';
         let overlay = null;
         let hitLayer = null;
         let defaultEye = null;
@@ -581,15 +581,15 @@
         const configs = {
           mobichi: {
             source: 'mobby-gal.webp',
-            body: './mobichi-noneye.png?v=clean-2',
-            eyes: Array.from({ length: 9 }, (_, index) => `./assets/mobichi-eye-${index + 1}.png`),
+            body: './mobichi-noneye.webp?v=clean-2',
+            eyes: Array.from({ length: 9 }, (_, index) => `./assets/mobichi-eye-${index + 1}.webp`),
             sourceSize: 1254,
             frame: { x: 295, y: 270, width: 300, height: 270 },
           },
           yami: {
             source: 'mobby-yami.webp',
-            body: './yami-noneye.png?v=clean-2',
-            eyes: Array.from({ length: 9 }, (_, index) => `./assets/yami-eye-${index + 1}.png`),
+            body: './yami-noneye.webp?v=clean-2',
+            eyes: Array.from({ length: 9 }, (_, index) => `./assets/yami-eye-${index + 1}.webp`),
             sourceSize: 1254,
             // Keep the eye centered on the original anchor while reducing the
             // rendered frame to 75% of the previous size.
@@ -597,8 +597,8 @@
           },
           mobirin: {
             source: 'mobby-fact-man.webp',
-            body: './mobirin-noneye.png?v=clean-2',
-            eyes: Array.from({ length: 9 }, (_, index) => `./assets/mobirin-eye-${index + 1}.png`),
+            body: './mobirin-noneye.webp?v=clean-2',
+            eyes: Array.from({ length: 9 }, (_, index) => `./assets/mobirin-eye-${index + 1}.webp`),
             sourceSize: 1254,
             // Align the generated eye's center with the camera-eye center.
             frame: { x: 295, y: 280, width: 300, height: 270 },

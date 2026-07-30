@@ -544,7 +544,7 @@ function initCompositingTool() {
 
   downloadButton.addEventListener("click", () => {
     renderCompositingPreview();
-    const url = canvas.toDataURL("image/png");
+    const url = canvas.toDataURL("image/webp", 0.92);
     const link = document.createElement("a");
     link.href = url;
     link.download = `mobby-compositing-${compositingState.templateId || "image"}.webp`;

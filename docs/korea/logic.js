@@ -73,18 +73,13 @@ function sanitizeDownloadName(name) { return (name || "mobby-result").replace(/[
 function isIOSLikeDevice() { return /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1); }
 function getImageMimeType(path) {
     const cleanPath = String(path || "").split(/[?#]/)[0].toLowerCase();
-    if (cleanPath.endsWith(".jpg") || cleanPath.endsWith(".jpeg")) return "image/jpeg";
-    if (cleanPath.endsWith(".png")) return "image/png";
     if (cleanPath.endsWith(".webp")) return "image/webp";
-    return "image/png";
+    return "image/webp";
 }
-function getImageFileExtension(path, type) {
+function getImageFileExtension(path) {
     const cleanPath = String(path || "").split(/[?#]/)[0].toLowerCase();
     const match = cleanPath.match(/\.([a-z0-9]+)$/);
-    if (match) return match[1] === "jpeg" ? "jpg" : match[1];
-    if (type === "image/jpeg") return "jpg";
-    if (type === "image/webp") return "webp";
-    return "png";
+    return match ? match[1] : "webp";
 }
 async function shareImageFileOnIOS(imagePaths, fileBaseName) {
     if (typeof navigator.share !== "function" || typeof File !== "function") return false;
@@ -236,9 +231,9 @@ function renderResult() {
     const shareText = encodeURIComponent(`연애 멘헤라 모비 진단 결과는 「${ch.name}」이었습니다!😈💜\n연애 멘헤라도：Lv${res.level}（${res.menheraLevel.name}）\n${ch.catch}\n\n좋아하는 사람에 대한 무거움, 당신도 진단해봐👇`);
     const shareUrl = encodeURIComponent(window.location.href.split("?")[0]);
     const keyImageWebpPath = `img/key/${charImgName}.webp`;
-    const keyImagePngPath = `img/key/${charImgName}.png`;
-    const keyImageBackPath = "img/key/ura.jpg";
-    app.innerHTML = `<div class="panel fade-in"><div class="result-hero"><p class="kicker">진단 결과</p><h2 class="big" style="font-size:28px;">${ch.name}</h2><p class="text-body" style="color:var(--text-main);font-weight:600;font-size:16px;margin-bottom:16px;">${ch.catch}</p><div class="char-image-placeholder"><img src="img/${charImgName}.jpg" alt="${ch.name}" onerror="this.parentElement.textContent='이미지 준비 중'"></div><div style="display:inline-block;background:var(--surface2);padding:6px 16px;border-radius:20px;font-size:12px;font-family:monospace;color:var(--text-sub);">TYPE: ${toDisplayTypeCode(res.code)}</div></div>
+    const keyImagePngPath = `img/key/${charImgName}.webp`;
+    const keyImageBackPath = "img/key/ura.webp";
+    app.innerHTML = `<div class="panel fade-in"><div class="result-hero"><p class="kicker">진단 결과</p><h2 class="big" style="font-size:28px;">${ch.name}</h2><p class="text-body" style="color:var(--text-main);font-weight:600;font-size:16px;margin-bottom:16px;">${ch.catch}</p><div class="char-image-placeholder"><img src="img/${charImgName}.webp" alt="${ch.name}" onerror="this.parentElement.textContent='이미지 준비 중'"></div><div style="display:inline-block;background:var(--surface2);padding:6px 16px;border-radius:20px;font-size:12px;font-family:monospace;color:var(--text-sub);">TYPE: ${toDisplayTypeCode(res.code)}</div></div>
   <div style="margin-top:24px;padding:20px;background:linear-gradient(135deg,rgba(167,139,250,0.15),rgba(244,114,182,0.15));border-radius:16px;border:1px solid var(--accent);text-align:center;"><p style="font-size:11px;font-weight:700;color:var(--accent);margin:0 0 8px;">😈💜 연애 멘헤라도</p><p style="font-size:36px;font-weight:700;margin:0 0 4px;color:${gaugeColor};">Lv.${res.level}</p><p style="font-size:18px;font-weight:600;margin:0 0 12px;color:var(--text-main);">${res.menheraLevel.name}</p><p style="font-size:13px;color:var(--text-sub);margin:0 0 16px;">${res.menheraLevel.desc}</p><div class="menhera-gauge-bar"><div class="menhera-gauge-fill" style="width:${res.menheraScore}%;background:linear-gradient(90deg,#4ade80,#facc15,#f472b6);"></div></div><div class="menhera-gauge-labels"><span>멘탈 철벽</span><span>연애 좀비</span></div></div>
   <div style="margin-top:40px;"><p class="kicker" style="margin-bottom:16px;">4가지 축의 경향</p>${axisHtml}</div>${adjHtml}</div>
   <div class="panel fade-in" style="margin-top:24px;"><p class="kicker" style="margin-bottom:16px;">🎭 당신의 타입</p><p class="text-body" style="font-size:15px;line-height:1.9;margin:0;color:var(--text-main);">${ch.hook}</p></div>
@@ -257,7 +252,7 @@ function renderResult() {
       <h3 style="font-size:20px;margin:0 0 8px;color:var(--text-main);">폭신폭신 봉제인형 키홀더</h3>
       <p style="display:inline-block;font-size:12px;font-weight:700;color:#ffffff;background:#f472b6;padding:6px 12px;border-radius:999px;margin:0 0 12px;letter-spacing:0.03em;">선착순 100개 한정</p>
       <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px;margin-bottom:14px;"><span style="font-size:14px;color:rgba(232,230,240,0.7);text-decoration:line-through;text-decoration-thickness:2px;">정가 6,000엔</span><span style="font-size:17px;color:#ffd2ea;font-weight:700;letter-spacing:0.04em;background:rgba(244,114,182,0.14);border:1px solid rgba(244,114,182,0.3);padding:6px 12px;border-radius:999px;">특별가 4,800엔</span></div>
-      <div style="margin-bottom:14px;background:linear-gradient(145deg,#312338,#241b2a);border-radius:16px;padding:16px;border:1px solid rgba(255,255,255,0.08);text-align:center;"><img src="../img/nui/nui.jpeg" alt="봉제인형 키홀더" style="width:min(100%,220px);max-height:180px;object-fit:contain;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.25);" onerror="this.style.display='none';"></div>
+      <div style="margin-bottom:14px;background:linear-gradient(145deg,#312338,#241b2a);border-radius:16px;padding:16px;border:1px solid rgba(255,255,255,0.08);text-align:center;"><img src="../img/nui/nui.webp" alt="봉제인형 키홀더" style="width:min(100%,220px);max-height:180px;object-fit:contain;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.25);" onerror="this.style.display='none';"></div>
       <p class="text-body" style="font-size:14px;line-height:1.8;margin:0 0 14px;">가볍고 폭신한 촉감으로, 가방에 달기만 해도 기분이 좋아지는 한정 봉제인형 키홀더입니다.</p>
       <ul style="margin:0 0 18px;padding-left:18px;color:var(--text-sub);line-height:1.8;font-size:13px;"><li>사진이 잘 받는 페미닌한 배색</li><li>매일 사용하기 좋은 컴팩트 사이즈</li><li>기간·수량 모두 한정된 특별 사양</li></ul>
       <a id="stripeBuyButtonPlush" data-stripe-product-type="plush_keyholder" data-stripe-product-label="봉제인형 키홀더" href="https://buy.stripe.com/28EaEX30Vfqt6SybJJao80b" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border-radius:999px;font-size:14px;font-weight:600;text-decoration:none;background:linear-gradient(135deg,#f472b6,#ec4899);color:#fff;box-shadow:0 14px 30px rgba(244,114,182,0.28);transition:transform 0.2s ease;">기간 한정 아이템 확인하기 →</a>
@@ -333,7 +328,7 @@ function renderResult() {
                 snsSaveHint.textContent = "저장을 시작했습니다. 잘 안 되면 결과 화면을 스크린샷해주세요.";
                 const dl = document.createElement("a");
                 dl.href = snsImagePath;
-                dl.download = `${sanitizeDownloadName(ch.name)}-sns.png`;
+                dl.download = `${sanitizeDownloadName(ch.name)}-sns.webp`;
                 dl.rel = "noopener";
                 document.body.appendChild(dl);
                 dl.click();
@@ -383,7 +378,7 @@ function renderResult() {
 
 function renderCharacters() {
     const keys = Object.keys(CHARACTERS).sort();
-    const html = keys.map(code => { const ch = CHARACTERS[code]; return `<div class="char-card fade-in"><div class="char-card-image"><img src="img/${ch.imgName || ch.name}.jpg" alt="${ch.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';"></div><div class="char-card-type">TYPE: ${toDisplayTypeCode(code)}</div><h3 class="char-card-name">${ch.name}</h3><p class="char-card-desc">${ch.catch}</p><button class="primary" style="width:100%;font-size:12px;margin-top:auto;" data-code="${code}">상세보기</button></div>`; }).join("");
+    const html = keys.map(code => { const ch = CHARACTERS[code]; return `<div class="char-card fade-in"><div class="char-card-image"><img src="img/${ch.imgName || ch.name}.webp" alt="${ch.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';"></div><div class="char-card-type">TYPE: ${toDisplayTypeCode(code)}</div><h3 class="char-card-name">${ch.name}</h3><p class="char-card-desc">${ch.catch}</p><button class="primary" style="width:100%;font-size:12px;margin-top:auto;" data-code="${code}">상세보기</button></div>`; }).join("");
     app.innerHTML = `<div class="panel fade-in"><p class="kicker">전 16타입</p><h2 class="big">캐릭터 목록</h2><p class="text-body" style="margin-bottom:20px;">4개의 연애 축 조합으로 탄생한, 16가지 연애 멘헤라 타입💜</p></div><div class="char-grid">${html}</div>`;
     document.querySelectorAll('button[data-code]').forEach(btn => { btn.onclick = () => showCharDetail(btn.dataset.code); });
 }
@@ -394,7 +389,7 @@ function showCharDetail(code) {
     const strengthsHtml = ch.strengths ? ch.strengths.map(s => `<li style="margin-bottom:4px;">${s}</li>`).join("") : "";
     const cautionsHtml = ch.cautions ? ch.cautions.map(c => `<li style="margin-bottom:4px;">${c}</li>`).join("") : "";
     const adviceHtml = ch.advice ? ch.advice.map(a => `<li style="margin-bottom:4px;">${a}</li>`).join("") : "";
-    const m = `<div class="char-modal-overlay" id="cmo"><div class="char-modal"><button class="char-modal-close" id="cmc">×</button><div style="text-align:center;margin-bottom:20px;"><div style="width:200px;height:200px;border-radius:16px;overflow:hidden;margin:0 auto 24px;background:var(--surface2);"><img src="img/${ch.imgName || ch.name}.jpg" alt="${ch.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';"></div><div style="display:inline-block;background:var(--surface2);padding:6px 16px;border-radius:12px;font-size:12px;font-family:monospace;color:var(--text-sub);margin-bottom:16px;">TYPE: ${toDisplayTypeCode(code)}</div><h2 style="font-size:24px;font-weight:700;margin:0 0 16px;">${ch.name}</h2><p style="font-size:14px;font-weight:600;margin:0;">${ch.catch}</p></div>
+    const m = `<div class="char-modal-overlay" id="cmo"><div class="char-modal"><button class="char-modal-close" id="cmc">×</button><div style="text-align:center;margin-bottom:20px;"><div style="width:200px;height:200px;border-radius:16px;overflow:hidden;margin:0 auto 24px;background:var(--surface2);"><img src="img/${ch.imgName || ch.name}.webp" alt="${ch.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';"></div><div style="display:inline-block;background:var(--surface2);padding:6px 16px;border-radius:12px;font-size:12px;font-family:monospace;color:var(--text-sub);margin-bottom:16px;">TYPE: ${toDisplayTypeCode(code)}</div><h2 style="font-size:24px;font-weight:700;margin:0 0 16px;">${ch.name}</h2><p style="font-size:14px;font-weight:600;margin:0;">${ch.catch}</p></div>
   ${ch.hook ? `<div style="margin-bottom:20px;"><h3 style="font-size:14px;font-weight:700;color:var(--accent);margin:0 0 8px;">🎭 타입의 특징</h3><p style="font-size:13px;line-height:1.8;margin:0;">${ch.hook}</p></div>` : ""}
   ${toughHtml ? `<div style="margin-bottom:20px;padding:12px;background:rgba(255,90,90,0.05);border-radius:12px;border-left:3px solid #ff5a5a;"><h3 style="font-size:14px;font-weight:700;color:#ff5a5a;margin:0 0 8px;">😣 힘들 때</h3><ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.8;">${toughHtml}</ul></div>` : ""}
   ${ch.seen ? `<div style="margin-bottom:20px;padding:12px;background:rgba(77,171,247,0.05);border-radius:12px;border-left:3px solid #4dabf7;"><h3 style="font-size:14px;font-weight:700;color:#4dabf7;margin:0 0 8px;">👀 주변에서 보는 모습</h3><p style="font-size:13px;line-height:1.8;margin:0;">${ch.seen}</p></div>` : ""}
