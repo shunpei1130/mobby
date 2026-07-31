@@ -4357,16 +4357,9 @@
       display: block;
     }
 
-    /* The five newer guide characters already contain their resting face in
-       the finished sprite. Show their reused eye/mouth layers only while a
-       cheek is reacting, so the untouched pose stays exactly as illustrated. */
-    .hero-model-slide.has-reaction-only-overlays.is-pull-ready:not(.is-pull-reaction) .hero-model-pull-eye,
-    .hero-model-slide.has-reaction-only-overlays.is-pull-ready:not(.is-pull-reaction) .hero-model-pull-mouth {
-      display: none;
-    }
-
-    .hero-model-slide.has-reaction-only-overlays .hero-model-pull-eye,
-    .hero-model-slide.has-reaction-only-overlays .hero-model-pull-mouth {
+    /* Trim the one-pixel export edge on the reused guide expression assets. */
+    .hero-model-slide.has-clipped-overlays .hero-model-pull-eye,
+    .hero-model-slide.has-clipped-overlays .hero-model-pull-mouth {
       clip-path: inset(1px);
     }
 
@@ -4375,6 +4368,18 @@
     }
 
     .hero-model-slide.is-pull-reaction .hero-model-pull-eye {
+      display: block;
+    }
+
+    /* Added guide characters rest on their untouched source image. The
+       eye-free mesh and expression layers replace it only while reacting. */
+    .hero-model-slide.uses-original-resting-image.is-pull-ready:not(.is-pull-reaction) .hero-model-pull-canvas,
+    .hero-model-slide.uses-original-resting-image.is-pull-ready:not(.is-pull-reaction) .hero-model-pull-eye,
+    .hero-model-slide.uses-original-resting-image.is-pull-ready:not(.is-pull-reaction) .hero-model-pull-mouth {
+      display: none;
+    }
+
+    .hero-model-slide.uses-original-resting-image.is-pull-ready:not(.is-pull-reaction) .hero-model-viewer {
       display: block;
     }
 
@@ -12028,18 +12033,19 @@
             [8, 9],
           ],
         },
-        // The five guide characters use finished transparent sprites rather
-        // than the four-part eye/mouth assets above.  Pull mode still renders
-        // them through the same mesh so only the cheek area stretches while
-        // the lens, buttons and costume details stay rigid.
+        // These five rest on their untouched source images so the original
+        // eyes remain exact. Pulling swaps in transparent eye-free bodies and
+        // the same reaction pipeline as the original four characters. Only
+        // the cheek mesh stretches; lenses, buttons and costume details stay rigid.
         babu: {
-          body: "assets/mobby-guide/characters/babu-moby.webp",
+          body: "mobby-touch/babu-noneye.webp",
           eyes: pullExpressionAssets('mobichi', 'eye', 9),
           mouths: PULL_GUIDE_MOUTHS,
           sourceSize: 1254,
-          frame: { x: 414, y: 389, width: 188, height: 188 },
+          frame: { x: 379, y: 396, width: 227, height: 213 },
+          useOriginalRestingImage: true,
           mouthFrame: { x: 558, y: 577, width: 150, height: 69 },
-          reactionOnlyOverlays: true,
+          clipOverlays: true,
           cheekRegions: [
             { x: 0.29, y: 0.49, rx: 0.19, ry: 0.18 },
             { x: 0.73, y: 0.49, rx: 0.19, ry: 0.18 },
@@ -12056,13 +12062,14 @@
           mouthPairs: PULL_STANDARD_MOUTH_PAIRS,
         },
         pote: {
-          body: "assets/mobby-guide/characters/pote-moby.webp",
+          body: "mobby-touch/pote-noneye.webp",
           eyes: pullExpressionAssets('mobirin', 'eye', 9),
           mouths: PULL_GUIDE_MOUTHS,
           sourceSize: 1254,
-          frame: { x: 433, y: 307, width: 176, height: 176 },
+          frame: { x: 416, y: 311, width: 199, height: 175 },
+          useOriginalRestingImage: true,
           mouthFrame: { x: 564, y: 477, width: 150, height: 69 },
-          reactionOnlyOverlays: true,
+          clipOverlays: true,
           cheekRegions: [
             { x: 0.27, y: 0.45, rx: 0.2, ry: 0.18 },
             { x: 0.75, y: 0.45, rx: 0.2, ry: 0.18 },
@@ -12079,13 +12086,14 @@
           mouthPairs: PULL_STANDARD_MOUTH_PAIRS,
         },
         yura: {
-          body: "assets/mobby-guide/characters/yura-moby.webp",
+          body: "mobby-touch/yura-noneye.webp",
           eyes: pullExpressionAssets('mobichi', 'eye', 9),
           mouths: PULL_GUIDE_MOUTHS,
           sourceSize: 1254,
-          frame: { x: 420, y: 339, width: 188, height: 188 },
+          frame: { x: 400, y: 339, width: 195, height: 180 },
+          useOriginalRestingImage: true,
           mouthFrame: { x: 558, y: 564, width: 150, height: 75 },
-          reactionOnlyOverlays: true,
+          clipOverlays: true,
           cheekRegions: [
             { x: 0.25, y: 0.5, rx: 0.2, ry: 0.2 },
             { x: 0.76, y: 0.5, rx: 0.2, ry: 0.2 },
@@ -12102,13 +12110,14 @@
           mouthPairs: PULL_DARK_GUIDE_MOUTH_PAIRS,
         },
         reo: {
-          body: "assets/mobby-guide/characters/reo-moby.webp",
+          body: "mobby-touch/reo-noneye.webp",
           eyes: pullExpressionAssets('mobichi', 'eye', 9),
           mouths: PULL_GUIDE_MOUTHS,
           sourceSize: 1254,
-          frame: { x: 414, y: 332, width: 188, height: 188 },
+          frame: { x: 348, y: 334, width: 252, height: 222 },
+          useOriginalRestingImage: true,
           mouthFrame: { x: 558, y: 539, width: 150, height: 69 },
-          reactionOnlyOverlays: true,
+          clipOverlays: true,
           cheekRegions: [
             { x: 0.27, y: 0.49, rx: 0.2, ry: 0.18 },
             { x: 0.75, y: 0.49, rx: 0.2, ry: 0.18 },
@@ -12125,13 +12134,14 @@
           mouthPairs: PULL_STANDARD_MOUTH_PAIRS,
         },
         mobibou: {
-          body: "assets/mobby-guide/characters/mobibou-moby.webp",
+          body: "mobby-touch/mobibou-noneye.webp",
           eyes: pullExpressionAssets('mobirin', 'eye', 9),
           mouths: PULL_GUIDE_MOUTHS,
           sourceSize: 1254,
-          frame: { x: 401, y: 351, width: 201, height: 188 },
+          frame: { x: 326, y: 327, width: 280, height: 235 },
+          useOriginalRestingImage: true,
           mouthFrame: { x: 558, y: 539, width: 150, height: 75 },
-          reactionOnlyOverlays: true,
+          clipOverlays: true,
           cheekRegions: [
             { x: 0.24, y: 0.51, rx: 0.2, ry: 0.2 },
             { x: 0.76, y: 0.51, rx: 0.2, ry: 0.2 },
@@ -13132,7 +13142,8 @@
           const item = currentSet.items[index];
           const pullConfig = PULL_CHARACTER_CONFIG[item?.id];
           if (!pullConfig) return;
-          slide.classList.toggle('has-reaction-only-overlays', Boolean(pullConfig.reactionOnlyOverlays));
+          slide.classList.toggle('has-clipped-overlays', Boolean(pullConfig.clipOverlays));
+          slide.classList.toggle('uses-original-resting-image', Boolean(pullConfig.useOriginalRestingImage));
           const body = document.createElement('img');
           body.className = 'hero-model-pull-body';
           body.alt = '';
