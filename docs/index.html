@@ -11886,6 +11886,11 @@
           sourceSize: 1254,
           frame: { x: 295, y: 280, width: 300, height: 270 },
           mouthFrame: { x: 490, y: 610, width: 255, height: 120 },
+          rigidRegions: [
+            { x: 0.635, y: 0.337, rx: 0.15, ry: 0.135 },
+            { x: 0.36, y: 0.59, rx: 0.13, ry: 0.12 },
+            { x: 0.632, y: 0.558, rx: 0.13, ry: 0.115 },
+          ],
           defaultEye: 0,
           defaultMouth: 0,
           eyePairs: PULL_EYE_DIRECTION_PAIRS,
@@ -11904,6 +11909,11 @@
           sourceSize: 1254,
           frame: { x: 295, y: 270, width: 300, height: 270 },
           mouthFrame: { x: 560, y: 550, width: 110, height: 72 },
+          rigidRegions: [
+            { x: 0.636, y: 0.33, rx: 0.15, ry: 0.14 },
+            { x: 0.355, y: 0.522, rx: 0.12, ry: 0.115 },
+            { x: 0.576, y: 0.515, rx: 0.12, ry: 0.105 },
+          ],
           defaultEye: 0,
           defaultMouth: 0,
           eyePairs: PULL_EYE_DIRECTION_PAIRS,
@@ -11922,6 +11932,11 @@
           sourceSize: 1254,
           frame: { x: 250, y: 380, width: 270, height: 180 },
           mouthFrame: { x: 490, y: 610, width: 255, height: 120 },
+          rigidRegions: [
+            { x: 0.634, y: 0.352, rx: 0.15, ry: 0.135 },
+            { x: 0.352, y: 0.545, rx: 0.125, ry: 0.115 },
+            { x: 0.585, y: 0.535, rx: 0.125, ry: 0.11 },
+          ],
           defaultEye: 0,
           defaultMouth: 0,
           eyePairs: PULL_EYE_DIRECTION_PAIRS,
@@ -11940,6 +11955,11 @@
           sourceSize: 1254,
           frame: { x: 393, y: 499, width: 171, height: 100 },
           mouthFrame: { x: 490, y: 610, width: 255, height: 120 },
+          rigidRegions: [
+            { x: 0.652, y: 0.386, rx: 0.15, ry: 0.13 },
+            { x: 0.401, y: 0.617, rx: 0.11, ry: 0.105 },
+            { x: 0.617, y: 0.588, rx: 0.105, ry: 0.095 },
+          ],
           defaultFrame: { x: 366, y: 465, width: 227, height: 166 },
           defaultEye: "mobby-touch/assets/mobiyan-eye-default.webp",
           defaultMouth: 0,
@@ -11992,21 +12012,14 @@
         return t * t * (3 - 2 * t);
       };
 
-      function pullCheekInfluence(u, v) {
-        const regions = [
-          { x: 0.35, y: 0.27, rx: 0.115, ry: 0.125 },
-          { x: 0.68, y: 0.27, rx: 0.14, ry: 0.145 },
-          { x: 0.6, y: 0.56, rx: 0.068, ry: 0.07 },
-          { x: 0.7, y: 0.5, rx: 0.068, ry: 0.07 },
-        ];
+      function pullCheekInfluence(u, v, config) {
+        const regions = config?.rigidRegions || [];
         let influence = 1;
         for (const region of regions) {
           const distance = Math.sqrt(((u - region.x) / region.rx) ** 2 + ((v - region.y) / region.ry) ** 2);
           influence = Math.min(influence, smoothPull((distance - 0.82) / 0.42));
         }
-        const cheekX = Math.abs(u - 0.36) / 0.12;
-        const cheekY = Math.abs(v - 0.56) / 0.115;
-        return Math.min(influence, smoothPull((Math.max(cheekX, cheekY) - 0.82) / 0.42));
+        return influence;
       }
 
       function isPullBodyPoint(u, v) {
@@ -12142,6 +12155,32 @@
               [destinationPoint(topRight), destinationPoint(bottomRight), destinationPoint(bottomLeft)]);
           }
         }
+        // Redraw the rigid hardware from the untouched source. The mesh is
+        // already anchored around these areas, and this final pass guarantees
+        // that lenses and controller buttons stay perfectly round and crisp.
+        for (const region of renderer.config.rigidRegions || []) {
+          const rigidCore = 0.82;
+          ctx.save();
+          ctx.beginPath();
+          ctx.ellipse(
+            geometry.imageLeft + region.x * geometry.spriteSize,
+            geometry.imageTop + region.y * geometry.spriteSize,
+            region.rx * geometry.spriteSize * rigidCore,
+            region.ry * geometry.spriteSize * rigidCore,
+            0,
+            0,
+            Math.PI * 2,
+          );
+          ctx.clip();
+          ctx.drawImage(
+            renderer.body,
+            geometry.imageLeft,
+            geometry.imageTop,
+            geometry.spriteSize,
+            geometry.spriteSize,
+          );
+          ctx.restore();
+        }
       }
 
       function setPullMeshTarget(renderer, deltaX, deltaY) {
@@ -12154,7 +12193,9 @@
         const offsetY = deltaY * scale;
         for (const vertex of renderer.vertices) {
           const near = smoothPull(1 - Math.hypot(vertex.baseX - pullDrag.origin.x, vertex.baseY - pullDrag.origin.y) / radius);
-          const cheek = isPullBodyPoint(vertex.u, vertex.v) ? pullCheekInfluence(vertex.u, vertex.v) : 0;
+          const cheek = isPullBodyPoint(vertex.u, vertex.v)
+            ? pullCheekInfluence(vertex.u, vertex.v, renderer.config)
+            : 0;
           vertex.targetX = offsetX * near * cheek;
           vertex.targetY = offsetY * near * cheek;
         }
