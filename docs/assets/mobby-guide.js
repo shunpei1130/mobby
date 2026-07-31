@@ -13,6 +13,8 @@
   const characters = {
     mobirin: {
       name: 'もびりん',
+      tagline: '知的なおじ',
+      intro: '落ち着いて考えるのが得意。迷った時は静かに道を示す案内役です。',
       image: assetUrl('carousel/after/mobby_fact_man_toka.webp'),
       runningImage: assetUrl('assets/mobby-guide/mobirin-running.webp'),
       accent: '#d5a733',
@@ -20,6 +22,8 @@
     },
     mobichi: {
       name: 'もびち',
+      tagline: '気ままギャル♡',
+      intro: 'ノリと直感で楽しく進むタイプ。かわいい寄り道も大歓迎です。',
       image: assetUrl('carousel/after/mobby_gal_toka.webp'),
       runningImage: assetUrl('assets/mobby-guide/mobichi-running.webp'),
       accent: '#c972a3',
@@ -27,6 +31,8 @@
     },
     yami: {
       name: '病みモビー',
+      tagline: 'メンヘラちゃん',
+      intro: 'ちょっぴり不安だけど、そばにいると安心できる案内役です。',
       image: assetUrl('carousel/after/mobby_yami_toka.webp'),
       runningImage: assetUrl('assets/mobby-guide/yami-running.webp'),
       accent: '#8b73c8',
@@ -34,10 +40,57 @@
     },
     mobiyan: {
       name: 'もびやん',
+      tagline: 'まっすぐなヤンキー',
+      intro: '曲がったことは苦手。迷ったら正面突破でついてきます。',
       image: assetUrl('carousel/after/mobby_yanki_toak.webp'),
       runningImage: assetUrl('assets/mobby-guide/mobiyan-running.webp'),
       accent: '#d47b3d',
       greeting: 'もびやんや！ ついてきいや！'
+    },
+    babu: {
+      name: 'ばぶもび',
+      tagline: '甘えんぼベビー',
+      intro: 'だっこと安心が大好き。ゆっくり一緒に進む案内役です。',
+      image: assetUrl('assets/mobby-guide/characters/babu-moby.webp'),
+      runningImage: assetUrl('assets/mobby-guide/characters/babu-moby.webp'),
+      accent: '#e7a6bb',
+      greeting: 'ばぶもびだよ〜。だっこしてね。'
+    },
+    pote: {
+      name: 'ぽてもび',
+      tagline: 'ぽてっと癒し系',
+      intro: 'ぽてっと座ってひと休み。焦らずマイペースに案内します。',
+      image: assetUrl('assets/mobby-guide/characters/pote-moby.webp'),
+      runningImage: assetUrl('assets/mobby-guide/characters/pote-moby.webp'),
+      accent: '#c58b5e',
+      greeting: 'ぽてっと参上。ゆるっといこう。'
+    },
+    yura: {
+      name: 'もびゆら',
+      tagline: '夜ふかしアーティスト',
+      intro: '静かな夜と創作が好き。気分に合う場所へふわっと誘います。',
+      image: assetUrl('assets/mobby-guide/characters/yura-moby.webp'),
+      runningImage: assetUrl('assets/mobby-guide/characters/yura-moby.webp'),
+      accent: '#6f64a7',
+      greeting: 'もびゆら。夜までそばにいる。'
+    },
+    reo: {
+      name: 'れおもび',
+      tagline: '気品ある王さま',
+      intro: '優雅さと自信が持ち味。どんな画面も堂々とエスコートします。',
+      image: assetUrl('assets/mobby-guide/characters/reo-moby.webp'),
+      runningImage: assetUrl('assets/mobby-guide/characters/reo-moby.webp'),
+      accent: '#b08a31',
+      greeting: 'れおもびだ。優雅に案内しよう。'
+    },
+    mobibou: {
+      name: 'モビ坊',
+      tagline: 'やんちゃな相棒',
+      intro: '元気と勢いなら負けない。迷ったら一緒に駆け抜けます。',
+      image: assetUrl('assets/mobby-guide/characters/mobibou-moby.webp'),
+      runningImage: assetUrl('assets/mobby-guide/characters/mobibou-moby.webp'),
+      accent: '#cc4d35',
+      greeting: 'モビ坊だ！ 迷ったらついてこい！'
     }
   };
 
@@ -48,19 +101,45 @@
         <div class="mobby-guide-picker__card" role="dialog" aria-modal="true">
           <p class="mobby-guide-picker__eyebrow">Choose your Mobby</p>
           <h2 class="mobby-guide-picker__title" id="mobbyGuidePickerTitle">一緒に歩くモビーを選んでね</h2>
-          <p class="mobby-guide-picker__lead">画面の中を自由に動かせる案内役です。</p>
+          <p class="mobby-guide-picker__lead">画面の中を自由に動かせる案内役です。<br><strong>キャラはあとから自由に変更できるよ。</strong></p>
+          <section class="mobby-guide-picker__preview" id="mobbyGuidePickerPreview" aria-live="polite" hidden>
+            <div class="mobby-guide-picker__preview-image-wrap">
+              <img id="mobbyGuidePickerPreviewImage" src="" alt="">
+            </div>
+            <div class="mobby-guide-picker__preview-copy">
+              <p>YOUR GUIDE MOBBY</p>
+              <h3 id="mobbyGuidePickerPreviewName"></h3>
+              <span id="mobbyGuidePickerPreviewTagline"></span>
+              <button class="mobby-guide-picker__confirm" id="mobbyGuidePickerConfirm" type="button" disabled>このキャラを選択する</button>
+            </div>
+          </section>
           <div class="mobby-guide-picker__grid">
-            <button class="mobby-guide-choice" type="button" data-guide-character="mobirin" style="--guide-choice-bg:#fff2c9;--guide-choice-accent:#d5a733">
+            <button class="mobby-guide-choice" type="button" data-guide-character="mobirin" aria-pressed="false" style="--guide-choice-bg:#fff2c9;--guide-choice-accent:#d5a733">
               <img src="${characters.mobirin.image}" alt=""><strong>もびりん</strong><small>知的なおじ</small>
             </button>
-            <button class="mobby-guide-choice" type="button" data-guide-character="mobichi" style="--guide-choice-bg:#fbe5f2;--guide-choice-accent:#c972a3">
+            <button class="mobby-guide-choice" type="button" data-guide-character="mobichi" aria-pressed="false" style="--guide-choice-bg:#fbe5f2;--guide-choice-accent:#c972a3">
               <img src="${characters.mobichi.image}" alt=""><strong>もびち</strong><small>気ままギャル♡</small>
             </button>
-            <button class="mobby-guide-choice" type="button" data-guide-character="yami" style="--guide-choice-bg:#eee7ff;--guide-choice-accent:#8b73c8">
+            <button class="mobby-guide-choice" type="button" data-guide-character="yami" aria-pressed="false" style="--guide-choice-bg:#eee7ff;--guide-choice-accent:#8b73c8">
               <img src="${characters.yami.image}" alt=""><strong>病みモビー</strong><small>メンヘラちゃん</small>
             </button>
-            <button class="mobby-guide-choice" type="button" data-guide-character="mobiyan" style="--guide-choice-bg:#ffe5cf;--guide-choice-accent:#d47b3d">
+            <button class="mobby-guide-choice" type="button" data-guide-character="mobiyan" aria-pressed="false" style="--guide-choice-bg:#ffe5cf;--guide-choice-accent:#d47b3d">
               <img src="${characters.mobiyan.image}" alt=""><strong>もびやん</strong><small>まっすぐなヤンキー</small>
+            </button>
+            <button class="mobby-guide-choice" type="button" data-guide-character="babu" aria-pressed="false" style="--guide-choice-bg:#ffe8f1;--guide-choice-accent:#e7a6bb">
+              <img src="${characters.babu.image}" alt=""><strong>ばぶもび</strong><small>甘えんぼベビー</small>
+            </button>
+            <button class="mobby-guide-choice" type="button" data-guide-character="pote" aria-pressed="false" style="--guide-choice-bg:#f9e5d2;--guide-choice-accent:#c58b5e">
+              <img src="${characters.pote.image}" alt=""><strong>ぽてもび</strong><small>ぽてっと癒し系</small>
+            </button>
+            <button class="mobby-guide-choice" type="button" data-guide-character="yura" aria-pressed="false" style="--guide-choice-bg:#e8e4ff;--guide-choice-accent:#6f64a7">
+              <img src="${characters.yura.image}" alt=""><strong>もびゆら</strong><small>夜ふかしアーティスト</small>
+            </button>
+            <button class="mobby-guide-choice" type="button" data-guide-character="reo" aria-pressed="false" style="--guide-choice-bg:#fff3c8;--guide-choice-accent:#b08a31">
+              <img src="${characters.reo.image}" alt=""><strong>れおもび</strong><small>気品ある王さま</small>
+            </button>
+            <button class="mobby-guide-choice" type="button" data-guide-character="mobibou" aria-pressed="false" style="--guide-choice-bg:#ffe1d8;--guide-choice-accent:#cc4d35">
+              <img src="${characters.mobibou.image}" alt=""><strong>モビ坊</strong><small>やんちゃな相棒</small>
             </button>
           </div>
         </div>
@@ -73,25 +152,63 @@
         <button class="mobby-guide-pet__character" id="mobbyGuideCharacter" type="button" aria-label="現在地を聞く">
           <img id="mobbyGuideImage" src="" alt="">
         </button>
-      </aside>`;
+      </aside>
+      <section class="mobby-guide-profile" id="mobbyGuideProfile" aria-labelledby="mobbyGuideProfileName" hidden>
+        <div class="mobby-guide-profile__backdrop" data-profile-close></div>
+        <div class="mobby-guide-profile__card" role="dialog" aria-modal="true" aria-labelledby="mobbyGuideProfileName">
+          <button class="mobby-guide-profile__close" id="mobbyGuideProfileClose" type="button" aria-label="キャラ紹介を閉じる">×</button>
+          <p class="mobby-guide-profile__eyebrow">MY GUIDE MOBBY</p>
+          <div class="mobby-guide-profile__hero">
+            <div class="mobby-guide-profile__image-wrap">
+              <img id="mobbyGuideProfileImage" src="" alt="">
+            </div>
+            <div class="mobby-guide-profile__copy">
+              <h2 id="mobbyGuideProfileName"></h2>
+              <p class="mobby-guide-profile__tagline" id="mobbyGuideProfileTagline"></p>
+              <p class="mobby-guide-profile__intro" id="mobbyGuideProfileIntro"></p>
+            </div>
+          </div>
+          <div class="mobby-guide-profile__rail-heading">
+            <strong>案内キャラを選びなおす</strong>
+            <span>横にスワイプしてタップ</span>
+          </div>
+          <div class="mobby-guide-profile__rail" id="mobbyGuideProfileRail" role="listbox" aria-label="案内キャラの切り替え"></div>
+        </div>
+      </section>`;
     document.body.append(...wrapper.children);
   };
 
   createInterface();
 
   const picker = document.getElementById('mobbyGuidePicker');
+  const pickerCard = picker?.querySelector('.mobby-guide-picker__card');
+  const pickerPreview = document.getElementById('mobbyGuidePickerPreview');
+  const pickerPreviewImage = document.getElementById('mobbyGuidePickerPreviewImage');
+  const pickerPreviewName = document.getElementById('mobbyGuidePickerPreviewName');
+  const pickerPreviewTagline = document.getElementById('mobbyGuidePickerPreviewTagline');
+  const pickerConfirm = document.getElementById('mobbyGuidePickerConfirm');
   const pet = document.getElementById('mobbyGuidePet');
   const petButton = document.getElementById('mobbyGuideCharacter');
   const petImage = document.getElementById('mobbyGuideImage');
   const bubble = document.getElementById('mobbyGuideBubble');
   const message = document.getElementById('mobbyGuideMessage');
   const bubbleClose = document.getElementById('mobbyGuideBubbleClose');
+  const profile = document.getElementById('mobbyGuideProfile');
+  const profileClose = document.getElementById('mobbyGuideProfileClose');
+  const profileImage = document.getElementById('mobbyGuideProfileImage');
+  const profileName = document.getElementById('mobbyGuideProfileName');
+  const profileTagline = document.getElementById('mobbyGuideProfileTagline');
+  const profileIntro = document.getElementById('mobbyGuideProfileIntro');
+  const profileRail = document.getElementById('mobbyGuideProfileRail');
   const choices = Array.from(document.querySelectorAll('[data-guide-character]'));
-  if (!picker || !pet || !petButton || !petImage || !bubble || !message) return;
+  if (!picker || !pickerCard || !pickerPreview || !pickerPreviewImage || !pickerPreviewName || !pickerPreviewTagline || !pickerConfirm || !pet || !petButton || !petImage || !bubble || !message || !profile || !profileClose || !profileImage || !profileName || !profileTagline || !profileIntro || !profileRail) return;
 
   let selectedId = '';
+  let pendingSelectedId = '';
   let dragging = false;
   let movedDuringDrag = false;
+  let dragStartX = 0;
+  let dragStartY = 0;
   let dragOffsetX = 0;
   let dragOffsetY = 0;
   let lastPointerX = 0;
@@ -124,6 +241,13 @@
     if (save) safeStorageSet(STORAGE_POSITION, JSON.stringify(next));
   };
 
+  const setInitialPetPosition = (save = false) => {
+    const sideMargin = window.innerWidth <= 640 ? 14 : 24;
+    const topMargin = Math.max(42, Math.min(64, window.innerHeight * 0.07));
+    const width = pet.offsetWidth || (window.innerWidth <= 640 ? 92 : 116);
+    setPetPosition(window.innerWidth - width - sideMargin, topMargin, save);
+  };
+
   const restorePetPosition = () => {
     const raw = safeStorageGet(STORAGE_POSITION);
     if (raw) {
@@ -135,12 +259,50 @@
         }
       } catch (_) {}
     }
-    setPetPosition(18, window.innerHeight - (pet.offsetHeight || 154) - 24);
+    setInitialPetPosition();
   };
 
   const say = (text) => {
     message.textContent = text;
     bubble.hidden = false;
+  };
+
+  const renderProfile = () => {
+    const character = characters[selectedId] || characters.mobirin;
+    profileImage.src = character.image;
+    profileImage.alt = character.name;
+    profileName.textContent = character.name;
+    profileTagline.textContent = character.tagline || '';
+    profileIntro.textContent = character.intro || character.greeting || '';
+    profile.style.setProperty('--guide-profile-accent', character.accent);
+    profileRail.innerHTML = Object.entries(characters).map(([id, item]) => `
+      <button class="mobby-guide-profile__choice${id === selectedId ? ' is-active' : ''}" type="button" role="option" aria-selected="${id === selectedId}" data-profile-id="${id}" style="--guide-profile-choice-accent:${item.accent}">
+        <img src="${item.image}" alt="">
+        <span>${item.name}</span>
+      </button>`).join('');
+    profileRail.querySelectorAll('[data-profile-id]').forEach((choice) => {
+      choice.addEventListener('click', () => {
+        const nextId = choice.dataset.profileId;
+        if (!characters[nextId]) return;
+        selectCharacter(nextId, false);
+        renderProfile();
+      });
+    });
+  };
+
+  const closeProfile = () => {
+    profile.hidden = true;
+    document.body.classList.remove('mobby-guide-profile-open');
+    petButton.focus({ preventScroll: true });
+  };
+
+  const openProfile = () => {
+    if (!selectedId || pet.hidden) return;
+    renderProfile();
+    bubble.hidden = true;
+    profile.hidden = false;
+    document.body.classList.add('mobby-guide-profile-open');
+    window.setTimeout(() => profileClose.focus(), 0);
   };
 
   const characterizeText = (text) => {
@@ -602,7 +764,33 @@
     contextTimer = window.setTimeout(() => updateContext(false), 140);
   };
 
-  const selectCharacter = (id, announce = true) => {
+  const previewPickerCharacter = (id) => {
+    const character = characters[id];
+    if (!character) return;
+    pendingSelectedId = id;
+    pickerPreviewImage.src = character.image;
+    pickerPreviewImage.alt = character.name;
+    pickerPreviewName.textContent = character.name;
+    pickerPreviewTagline.textContent = character.tagline || '';
+    pickerPreview.style.setProperty('--guide-picker-preview-accent', character.accent);
+    pickerConfirm.disabled = false;
+    pickerConfirm.setAttribute('aria-label', `${character.name}を案内キャラに選択する`);
+    pickerPreview.hidden = false;
+    choices.forEach((choice) => {
+      const selected = choice.dataset.guideCharacter === id;
+      choice.classList.toggle('is-selected', selected);
+      choice.setAttribute('aria-pressed', String(selected));
+    });
+    window.requestAnimationFrame(() => {
+      if (typeof pickerCard.scrollTo === 'function') {
+        pickerCard.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        pickerCard.scrollTop = 0;
+      }
+    });
+  };
+
+  const selectCharacter = (id, announce = true, useInitialPosition = false) => {
     const character = characters[id] || characters.mobirin;
     selectedId = characters[id] ? id : 'mobirin';
     pet.style.setProperty('--guide-accent', character.accent);
@@ -615,13 +803,27 @@
     picker.hidden = true;
     pet.hidden = false;
     requestAnimationFrame(() => {
-      restorePetPosition();
+      if (useInitialPosition) setInitialPetPosition(true);
+      else restorePetPosition();
       if (announce) say(character.greeting);
       else updateContext(true);
     });
   };
 
   const openPicker = () => {
+    profile.hidden = true;
+    document.body.classList.remove('mobby-guide-profile-open');
+    pendingSelectedId = '';
+    pickerPreview.hidden = true;
+    pickerPreviewImage.removeAttribute('src');
+    pickerPreviewImage.alt = '';
+    pickerConfirm.disabled = true;
+    pickerConfirm.removeAttribute('aria-label');
+    pickerCard.scrollTop = 0;
+    choices.forEach((choice) => {
+      choice.classList.remove('is-selected');
+      choice.setAttribute('aria-pressed', 'false');
+    });
     picker.hidden = false;
     pet.hidden = true;
     const savedChoice = choices.find((choice) => choice.dataset.guideCharacter === selectedId) || choices[0];
@@ -635,7 +837,12 @@
   };
 
   choices.forEach((choice) => {
-    choice.addEventListener('click', () => selectCharacter(choice.dataset.guideCharacter));
+    choice.addEventListener('click', () => previewPickerCharacter(choice.dataset.guideCharacter));
+  });
+
+  pickerConfirm.addEventListener('click', () => {
+    if (!pendingSelectedId || !characters[pendingSelectedId]) return;
+    selectCharacter(pendingSelectedId, true, true);
   });
 
   bubbleClose?.addEventListener('click', (event) => {
@@ -643,33 +850,50 @@
     bubble.hidden = true;
   });
 
+  profileClose.addEventListener('click', closeProfile);
+  profile.addEventListener('click', (event) => {
+    if (event.target.closest('[data-profile-close]')) closeProfile();
+  });
+  window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !profile.hidden) closeProfile();
+  });
+
   petButton.addEventListener('click', () => {
     if (movedDuringDrag) {
       movedDuringDrag = false;
       return;
     }
-    updateContext(true);
+    openProfile();
   });
 
   petButton.addEventListener('dblclick', () => {
-    openPicker();
+    openProfile();
   });
 
   pet.addEventListener('pointerdown', (event) => {
     if (event.target.closest('.mobby-guide-pet__bubble')) return;
     dragging = true;
     movedDuringDrag = false;
+    dragStartX = event.clientX;
+    dragStartY = event.clientY;
     dragOffsetX = event.clientX - pet.getBoundingClientRect().left;
     dragOffsetY = event.clientY - pet.getBoundingClientRect().top;
     lastPointerX = event.clientX;
-    petImage.src = characters[selectedId]?.runningImage || petImage.src;
-    pet.classList.add('is-dragging');
-    pet.setPointerCapture?.(event.pointerId);
+    // Keep capture on the actual character button. Capturing on the parent
+    // retargeted pointerup away from the button on some touch browsers, so a
+    // normal tap never reached the profile-opening click handler.
+    petButton.setPointerCapture?.(event.pointerId);
   });
 
   pet.addEventListener('pointermove', (event) => {
     if (!dragging) return;
-    movedDuringDrag = true;
+    const distance = Math.hypot(event.clientX - dragStartX, event.clientY - dragStartY);
+    if (!movedDuringDrag && distance < 6) return;
+    if (!movedDuringDrag) {
+      movedDuringDrag = true;
+      petImage.src = characters[selectedId]?.runningImage || petImage.src;
+      pet.classList.add('is-dragging');
+    }
     if (event.clientX < lastPointerX - 1) pet.classList.add('is-running-left');
     if (event.clientX > lastPointerX + 1) pet.classList.remove('is-running-left');
     lastPointerX = event.clientX;
@@ -682,10 +906,12 @@
     pet.classList.remove('is-dragging', 'is-running-left');
     petImage.src = characters[selectedId]?.image || petImage.src;
     if (Number.isInteger(event?.pointerId)) {
-      pet.releasePointerCapture?.(event.pointerId);
+      petButton.releasePointerCapture?.(event.pointerId);
     }
-    const rect = pet.getBoundingClientRect();
-    setPetPosition(rect.left, rect.top, true);
+    if (movedDuringDrag) {
+      const rect = pet.getBoundingClientRect();
+      setPetPosition(rect.left, rect.top, true);
+    }
   };
 
   pet.addEventListener('pointerup', endDrag);
