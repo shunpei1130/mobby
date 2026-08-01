@@ -9802,6 +9802,25 @@
         /* Restore the original compact mobile spacing below the headline. */
         margin-top: -16px !important;
       }
+
+      /* Keep the flex item from expanding to the menu's max-content width.
+         Without this, the manga card can become wider than the mobile viewport. */
+      #main-content .hero-intro .hero .container {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        align-self: stretch;
+      }
+
+      #main-content .home-manga-feature__viewer,
+      #main-content .home-manga-feature__track {
+        width: 100%;
+        min-width: 0;
+      }
+
+      #main-content .home-manga-feature__viewer {
+        grid-template-columns: minmax(0, 1fr);
+      }
     }
 
     .footer-action-preview,
@@ -10925,18 +10944,38 @@
               <div class="home-manga-feature__controls">
                 <button class="home-manga-feature__nav" id="homeMangaPrev" type="button" aria-label="前の話">‹</button>
                 <div class="home-manga-feature__episode" aria-live="polite">
-                  <span class="home-manga-feature__episode-number" id="homeMangaEpisodeNumber">第1話 / 全6話</span>
+                  <span class="home-manga-feature__episode-number" id="homeMangaEpisodeNumber">第1話 / 全26話</span>
                   <strong class="home-manga-feature__episode-title" id="homeMangaEpisodeTitle">むにむに</strong>
                 </div>
                 <button class="home-manga-feature__nav" id="homeMangaNext" type="button" aria-label="次の話">›</button>
               </div>
-              <div class="home-manga-feature__track" id="homeMangaTrack" tabindex="0" aria-label="4コマ漫画 全6話">
+              <div class="home-manga-feature__track" id="homeMangaTrack" tabindex="0" aria-label="4コマ漫画 全26話">
                 <article class="home-manga-feature__slide" data-manga-title="むにむに"><a class="home-manga-feature__slide-link" href="manga/com/むにむに.webp" target="_blank" rel="noopener" aria-label="第1話 むにむにを大きく表示"><img src="manga/com/むにむに.webp" alt="第1話 むにむに" fetchpriority="high" decoding="async"></a></article>
                 <article class="home-manga-feature__slide" data-manga-title="不注意"><a class="home-manga-feature__slide-link" href="manga/com/不注意.webp" target="_blank" rel="noopener" aria-label="第2話 不注意を大きく表示"><img src="manga/com/不注意.webp" alt="第2話 不注意" loading="lazy" decoding="async"></a></article>
                 <article class="home-manga-feature__slide" data-manga-title="蚊"><a class="home-manga-feature__slide-link" href="manga/com/蚊.webp" target="_blank" rel="noopener" aria-label="第3話 蚊を大きく表示"><img src="manga/com/蚊.webp" alt="第3話 蚊" loading="lazy" decoding="async"></a></article>
                 <article class="home-manga-feature__slide" data-manga-title="マンジャロ"><a class="home-manga-feature__slide-link" href="manga/com/マンジャロ.webp" target="_blank" rel="noopener" aria-label="第4話 マンジャロを大きく表示"><img src="manga/com/マンジャロ.webp" alt="第4話 マンジャロ" loading="lazy" decoding="async"></a></article>
                 <article class="home-manga-feature__slide" data-manga-title="みみず"><a class="home-manga-feature__slide-link" href="manga/com/みみず.webp" target="_blank" rel="noopener" aria-label="第5話 みみずを大きく表示"><img src="manga/com/みみず.webp" alt="第5話 みみず" loading="lazy" decoding="async"></a></article>
                 <article class="home-manga-feature__slide" data-manga-title="おじいちゃん"><a class="home-manga-feature__slide-link" href="manga/com/おじいちゃん.webp" target="_blank" rel="noopener" aria-label="第6話 おじいちゃんを大きく表示"><img src="manga/com/おじいちゃん.webp" alt="第6話 おじいちゃん" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="朝"><a class="home-manga-feature__slide-link" href="manga/com/7.webp" target="_blank" rel="noopener" aria-label="第7話 朝を大きく表示"><img src="manga/com/7.webp" alt="第7話 朝" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="腕立て"><a class="home-manga-feature__slide-link" href="manga/com/8.webp" target="_blank" rel="noopener" aria-label="第8話 腕立てを大きく表示"><img src="manga/com/8.webp" alt="第8話 腕立て" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="お菓子禁止"><a class="home-manga-feature__slide-link" href="manga/com/9.webp" target="_blank" rel="noopener" aria-label="第9話 お菓子禁止を大きく表示"><img src="manga/com/9.webp" alt="第9話 お菓子禁止" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="財布"><a class="home-manga-feature__slide-link" href="manga/com/10.webp" target="_blank" rel="noopener" aria-label="第10話 財布を大きく表示"><img src="manga/com/10.webp" alt="第10話 財布" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="ご褒美"><a class="home-manga-feature__slide-link" href="manga/com/11.webp" target="_blank" rel="noopener" aria-label="第11話 ご褒美を大きく表示"><img src="manga/com/11.webp" alt="第11話 ご褒美" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="汚部屋"><a class="home-manga-feature__slide-link" href="manga/com/12.webp" target="_blank" rel="noopener" aria-label="第12話 汚部屋を大きく表示"><img src="manga/com/12.webp" alt="第12話 汚部屋" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="勉強"><a class="home-manga-feature__slide-link" href="manga/com/13.webp" target="_blank" rel="noopener" aria-label="第13話 勉強を大きく表示"><img src="manga/com/13.webp" alt="第13話 勉強" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="近道と景色"><a class="home-manga-feature__slide-link" href="manga/com/14.webp" target="_blank" rel="noopener" aria-label="第14話 近道と景色を大きく表示"><img src="manga/com/14.webp" alt="第14話 近道と景色" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="趣味"><a class="home-manga-feature__slide-link" href="manga/com/15.webp" target="_blank" rel="noopener" aria-label="第15話 趣味を大きく表示"><img src="manga/com/15.webp" alt="第15話 趣味" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="水やり"><a class="home-manga-feature__slide-link" href="manga/com/16.webp" target="_blank" rel="noopener" aria-label="第16話 水やりを大きく表示"><img src="manga/com/16.webp" alt="第16話 水やり" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="スマホ"><a class="home-manga-feature__slide-link" href="manga/com/17.webp" target="_blank" rel="noopener" aria-label="第17話 スマホを大きく表示"><img src="manga/com/17.webp" alt="第17話 スマホ" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="味見"><a class="home-manga-feature__slide-link" href="manga/com/18.webp" target="_blank" rel="noopener" aria-label="第18話 味見を大きく表示"><img src="manga/com/18.webp" alt="第18話 味見" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="かくれんぼ"><a class="home-manga-feature__slide-link" href="manga/com/19.webp" target="_blank" rel="noopener" aria-label="第19話 かくれんぼを大きく表示"><img src="manga/com/19.webp" alt="第19話 かくれんぼ" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="運動"><a class="home-manga-feature__slide-link" href="manga/com/20.webp" target="_blank" rel="noopener" aria-label="第20話 運動を大きく表示"><img src="manga/com/20.webp" alt="第20話 運動" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="貯金"><a class="home-manga-feature__slide-link" href="manga/com/21.webp" target="_blank" rel="noopener" aria-label="第21話 貯金を大きく表示"><img src="manga/com/21.webp" alt="第21話 貯金" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="賞味期限"><a class="home-manga-feature__slide-link" href="manga/com/22.webp" target="_blank" rel="noopener" aria-label="第22話 賞味期限を大きく表示"><img src="manga/com/22.webp" alt="第22話 賞味期限" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="洗濯"><a class="home-manga-feature__slide-link" href="manga/com/23.webp" target="_blank" rel="noopener" aria-label="第23話 洗濯を大きく表示"><img src="manga/com/23.webp" alt="第23話 洗濯" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="未来の私から？"><a class="home-manga-feature__slide-link" href="manga/com/24.webp" target="_blank" rel="noopener" aria-label="第24話 未来の私から？を大きく表示"><img src="manga/com/24.webp" alt="第24話 未来の私から？" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="映画"><a class="home-manga-feature__slide-link" href="manga/com/25.webp" target="_blank" rel="noopener" aria-label="第25話 映画を大きく表示"><img src="manga/com/25.webp" alt="第25話 映画" loading="lazy" decoding="async"></a></article>
+                <article class="home-manga-feature__slide" data-manga-title="レシピ通り"><a class="home-manga-feature__slide-link" href="manga/com/26.webp" target="_blank" rel="noopener" aria-label="第26話 レシピ通りを大きく表示"><img src="manga/com/26.webp" alt="第26話 レシピ通り" loading="lazy" decoding="async"></a></article>
               </div>
               <div class="home-manga-feature__dots" id="homeMangaDots" aria-label="話数を選ぶ"></div>
             </div>
@@ -15299,7 +15338,27 @@
         ['蚊', '蚊.webp'],
         ['マンジャロ', 'マンジャロ.webp'],
         ['みみず', 'みみず.webp'],
-        ['おじいちゃん', 'おじいちゃん.webp']
+        ['おじいちゃん', 'おじいちゃん.webp'],
+        ['朝', '7.webp'],
+        ['腕立て', '8.webp'],
+        ['お菓子禁止', '9.webp'],
+        ['財布', '10.webp'],
+        ['ご褒美', '11.webp'],
+        ['汚部屋', '12.webp'],
+        ['勉強', '13.webp'],
+        ['近道と景色', '14.webp'],
+        ['趣味', '15.webp'],
+        ['水やり', '16.webp'],
+        ['スマホ', '17.webp'],
+        ['味見', '18.webp'],
+        ['かくれんぼ', '19.webp'],
+        ['運動', '20.webp'],
+        ['貯金', '21.webp'],
+        ['賞味期限', '22.webp'],
+        ['洗濯', '23.webp'],
+        ['未来の私から？', '24.webp'],
+        ['映画', '25.webp'],
+        ['レシピ通り', '26.webp']
       ].map(([title, filename], index) => ({
         label: `第${index + 1}話`,
         title,
@@ -15309,7 +15368,7 @@
         character: 'モビー',
         episodes: sharedComicEpisodes
       };
-      // 4コマ漫画は添付の manga/com フォルダにある6本だけを使用します。
+      // 1〜6話は既存の名前付きWebP、7〜26話は manga/com の番号付きWebPを使用します。
       const MANGA_LIBRARY = {
         'mobby_fact_man_toka.webp': sharedComic,
         'mobby_gal_toka.webp': sharedComic,
@@ -17048,7 +17107,7 @@
         `<button class="home-manga-feature__dot${index === 0 ? ' is-active' : ''}" type="button" data-home-manga-index="${index}" aria-label="第${index + 1}話"${index === 0 ? ' aria-current="true"' : ''}></button>`
       ).join('');
       menuList.innerHTML = slides.map((slide, index) =>
-        `<button class="home-manga-feature__menu-item${index === 0 ? ' is-active' : ''}" type="button" data-home-manga-menu-index="${index}"${index === 0 ? ' aria-current="true"' : ''}><span class="home-manga-feature__menu-item-number">第${index + 1}話</span><span class="home-manga-feature__menu-item-title">${slide.dataset.mangaTitle || ''}</span></button>`
+        `<button class="home-manga-feature__menu-item${index === 0 ? ' is-active' : ''}" type="button" data-home-manga-menu-index="${index}"${index === 0 ? ' aria-current="true"' : ''}><span class="home-manga-feature__menu-item-number">第${index + 1}話</span><span class="home-manga-feature__menu-item-title">${slide.dataset.mangaTitle ? ` ${slide.dataset.mangaTitle}` : ''}</span></button>`
       ).join('');
       const dotButtons = [...dots.querySelectorAll('[data-home-manga-index]')];
       const menuItems = [...menuList.querySelectorAll('[data-home-manga-menu-index]')];

@@ -950,9 +950,9 @@
 
   if (isHome) {
     if (document.getElementById('splash-screen')) {
-      window.addEventListener('mobby-splash-complete', () => startGuide({ alwaysChoose: true }), { once: true });
+      window.addEventListener('mobby-splash-complete', () => startGuide({ alwaysChoose: false }), { once: true });
     } else {
-      startGuide({ alwaysChoose: true });
+      startGuide({ alwaysChoose: false });
     }
   } else {
     startGuide({ alwaysChoose: false });

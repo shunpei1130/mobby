@@ -12,14 +12,34 @@
 </head>
 <body><main class="shell"><a class="back" href="javascript:history.back()">← 戻る</a><header class="hero"><p>選んだモビーの物語</p><h1 id="title">4コマ漫画</h1></header><div class="episode-tabs" id="episodeTabs" role="tablist" aria-label="4コマ漫画の話数"></div><div id="episodes"></div></main>
 <script>
-  // 4コマ漫画は、manga/com にある6本だけを表示します。
+  // 1〜6話は既存の名前付きWebP、7〜26話は manga/com の番号付きWebPを表示します。
   const comics = [
     ['むにむに', 'むにむに.webp'],
     ['不注意', '不注意.webp'],
     ['蚊', '蚊.webp'],
     ['マンジャロ', 'マンジャロ.webp'],
     ['みみず', 'みみず.webp'],
-    ['おじいちゃん', 'おじいちゃん.webp']
+    ['おじいちゃん', 'おじいちゃん.webp'],
+    ['朝', '7.webp'],
+    ['腕立て', '8.webp'],
+    ['お菓子禁止', '9.webp'],
+    ['財布', '10.webp'],
+    ['ご褒美', '11.webp'],
+    ['汚部屋', '12.webp'],
+    ['勉強', '13.webp'],
+    ['近道と景色', '14.webp'],
+    ['趣味', '15.webp'],
+    ['水やり', '16.webp'],
+    ['スマホ', '17.webp'],
+    ['味見', '18.webp'],
+    ['かくれんぼ', '19.webp'],
+    ['運動', '20.webp'],
+    ['貯金', '21.webp'],
+    ['賞味期限', '22.webp'],
+    ['洗濯', '23.webp'],
+    ['未来の私から？', '24.webp'],
+    ['映画', '25.webp'],
+    ['レシピ通り', '26.webp']
   ].map(([title, filename], index) => ({
     label: `第${index + 1}話`,
     title,
