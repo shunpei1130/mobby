@@ -1125,21 +1125,23 @@
 
     .hero-pull-hint {
       position: absolute;
-      top: 28px;
-      left: 6px;
+      top: 18px;
+      left: 50%;
       z-index: 14;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 7px 11px;
-      border: 1px solid rgba(242, 68, 131, 0.2);
-      border-radius: 999px;
-      background: rgba(255, 253, 248, 0.9);
+      gap: 8px;
+      max-width: calc(100% - 28px);
+      padding: 7px 13px 8px 9px;
+      border: 2px solid rgba(242, 68, 131, 0.34);
+      border-radius: 18px;
+      background: rgba(255, 253, 248, 0.96);
       box-shadow: 0 8px 20px rgba(92, 68, 48, 0.12);
       color: #d63873;
-      font-size: 0.78rem;
-      font-weight: 900;
-      line-height: 1;
+      transform: translateX(-50%);
+      animation: heroPullHintFloat 2.4s ease-in-out infinite;
+      font-size: 0.76rem;
+      line-height: 1.2;
       letter-spacing: 0.02em;
       white-space: nowrap;
       pointer-events: none;
@@ -1147,17 +1149,105 @@
       -webkit-backdrop-filter: blur(8px);
     }
 
-    .hero-pull-hint::before {
-      content: "↘";
-      font-size: 1rem;
+    .hero-pull-hint::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -9px;
+      width: 15px;
+      height: 15px;
+      border-right: 2px solid rgba(242, 68, 131, 0.34);
+      border-bottom: 2px solid rgba(242, 68, 131, 0.34);
+      background: rgba(255, 253, 248, 0.96);
+      transform: translateX(-50%) rotate(45deg);
+    }
+
+    .hero-pull-hint__gesture {
+      position: relative;
+      display: grid;
+      width: 36px;
+      height: 36px;
+      flex: 0 0 36px;
+      place-items: center;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #fff0f6, #ffd9e7);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+
+    .hero-pull-hint__arrows {
+      color: #ef4d87;
+      font-size: 1.35rem;
+      font-weight: 900;
+      line-height: 1;
+      animation: heroPullHintNudge 1.1s ease-in-out infinite;
+    }
+
+    .hero-pull-hint__hand {
+      position: absolute;
+      right: -2px;
+      bottom: -7px;
+      font-size: 1.1rem;
+      line-height: 1;
+      filter: drop-shadow(0 2px 2px rgba(120, 58, 81, 0.16));
+    }
+
+    .hero-pull-hint__copy {
+      display: grid;
+      gap: 2px;
+      text-align: left;
+    }
+
+    .hero-pull-hint__copy strong {
+      font-size: 0.78rem;
+      font-weight: 900;
+    }
+
+    .hero-pull-hint__copy small {
+      color: #8d5a70;
+      font-size: 0.68rem;
+      font-weight: 800;
+    }
+
+    @keyframes heroPullHintNudge {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(4px); }
+    }
+
+    @keyframes heroPullHintFloat {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-3px); }
     }
 
     @media (max-width: 520px) {
       .hero-pull-hint {
-        top: 22px;
-        left: 2px;
-        padding: 6px 9px;
-        font-size: 0.68rem;
+        top: 16px;
+        gap: 6px;
+        padding: 6px 10px 7px 7px;
+      }
+
+      .hero-pull-hint__gesture {
+        width: 32px;
+        height: 32px;
+        flex-basis: 32px;
+        border-radius: 10px;
+      }
+
+      .hero-pull-hint__arrows {
+        font-size: 1.15rem;
+      }
+
+      .hero-pull-hint__hand {
+        right: -4px;
+        bottom: -6px;
+        font-size: 0.95rem;
+      }
+
+      .hero-pull-hint__copy strong {
+        font-size: 0.7rem;
+      }
+
+      .hero-pull-hint__copy small {
+        font-size: 0.62rem;
       }
     }
 
@@ -1212,11 +1302,11 @@
       width: 100%;
       height: 360px;
       z-index: 1;
-      overflow: hidden;
-      clip-path: inset(var(--hero-carousel-safe-clip, 0px) 0 0 0);
+      overflow: visible;
+      clip-path: none;
       touch-action: pan-y;
-      -webkit-mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, 0.9) 5%, #000 11%, #000 89%, rgba(0, 0, 0, 0.9) 95%, transparent 100%);
-      mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, 0.9) 5%, #000 11%, #000 89%, rgba(0, 0, 0, 0.9) 95%, transparent 100%);
+      -webkit-mask-image: none;
+      mask-image: none;
     }
 
     .hero-model-carousel.is-hero-throwing {
@@ -1704,9 +1794,6 @@
 
       .hero-model-carousel {
         height: 300px;
-        clip-path: inset(var(--hero-carousel-safe-clip, 0px) 0 0 0);
-        -webkit-mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, 0.84) 10%, #000 20%, #000 80%, rgba(0, 0, 0, 0.84) 90%, transparent 100%);
-        mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, 0.84) 10%, #000 20%, #000 80%, rgba(0, 0, 0, 0.84) 90%, transparent 100%);
       }
 
       .hero-model-viewer {
@@ -10192,7 +10279,6 @@
     }
 
     .home-gacha-action {
-      grid-column: 1 / -1;
       background:
         radial-gradient(circle at 88% 18%, rgba(255, 224, 124, 0.4), transparent 28%),
         linear-gradient(145deg, rgba(255, 253, 246, 0.96), rgba(255, 238, 226, 0.9));
@@ -10265,18 +10351,7 @@
     }
 
     .home-main-action::after {
-      content: "›";
-      display: grid;
-      flex: 0 0 32px;
-      width: 32px;
-      height: 32px;
-      margin-left: auto;
-      place-items: center;
-      border-radius: 50%;
-      background: rgba(245, 63, 127, 0.12);
-      color: #ed4c82;
-      font-size: 1.45rem;
-      font-weight: 800;
+      content: none;
     }
 
     .home-main-action::before,
@@ -11000,7 +11075,10 @@
           <!-- 9種カルーセル -->
           <div class="hero-carousel-shell floating reveal delay-200">
             <div class="hero-model-stage" aria-label="Mobby 3D モデル">
-              <span class="hero-pull-hint">ほっぺを引っ張れるよ</span>
+              <span class="hero-pull-hint" aria-label="ほっぺを引っ張って遊べるよ">
+                <span class="hero-pull-hint__gesture" aria-hidden="true"><span class="hero-pull-hint__arrows">↔</span><span class="hero-pull-hint__hand">🤏</span></span>
+                <span class="hero-pull-hint__copy"><strong>ほっぺを引っ張って</strong><small>遊べるよ</small></span>
+              </span>
               <div class="hero-model-carousel" id="heroModelCarousel" aria-live="polite"></div>
             </div>
             <div class="hero-character-row">
@@ -11555,7 +11633,7 @@
         <div style="padding:28px 24px 24px;">
           <div style="text-align:center;margin-bottom:20px;">
             <h2 style="font-size:22px;font-weight:800;margin:0 0 6px;color:#4a3728;">📖 モビー図鑑</h2>
-            <p style="font-size:13px;color:#8a7a6a;margin:0;">全112タイプのモビーを見てみよう！</p>
+            <p style="font-size:13px;color:#8a7a6a;margin:0;">全121タイプのモビーを見てみよう！</p>
           </div>
           <div id="encyclopediaTabs"
             style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;"></div>
@@ -11682,7 +11760,7 @@
             </div>
             <div class="gift-fan-actions" aria-hidden="false">
               <a class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openCompositingPopup" data-fan-item="compositing" href="compositing.html" hidden style="display:none !important"><span class="footer-btn-icon" data-icon="image" aria-hidden="true"></span><span>ポスター<br>作成</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">ポスター作成</span><img class="footer-action-preview-poster" src="compositing/reference/flier-mobby.webp" alt=""><span class="footer-action-preview-copy">写真を選んで、モビーのポスターを作れます</span></span></a>
-              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openEncyclopediaPopup" data-fan-item="encyclopedia" hidden style="display:none !important"><span class="footer-btn-icon" data-icon="book" aria-hidden="true"></span><span>図鑑</span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー図鑑</span><span class="footer-preview-type-grid"><span class="footer-preview-type"><b>📖</b>全112タイプ</span><span class="footer-preview-type"><b>💛</b>キャラ紹介</span><span class="footer-preview-type"><b>✨</b>詳細を見る</span></span><span class="footer-action-preview-copy">気になるモビーを選んでプロフィールをチェック</span></span></button>
+              <button class="btn btn-secondary action-box-btn gift-fan-action" id="openEncyclopediaPopup" data-fan-item="encyclopedia" hidden style="display:none !important"><span class="footer-btn-icon" data-icon="book" aria-hidden="true"></span><span>図鑑</span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー図鑑</span><span class="footer-preview-type-grid"><span class="footer-preview-type"><b>📖</b>全121タイプ</span><span class="footer-preview-type"><b>💛</b>キャラ紹介</span><span class="footer-preview-type"><b>✨</b>詳細を見る</span></span><span class="footer-action-preview-copy">気になるモビーを選んでプロフィールをチェック</span></span></button>
               <button class="btn btn-secondary action-box-btn gift-fan-action has-new-badge" id="openVotePopup" data-fan-item="vote" hidden style="display:none !important"><span class="footer-btn-icon" data-icon="vote" aria-hidden="true"></span><span>投票</span><span class="gift-fan-new-badge" aria-hidden="true"><span class="badge-n">N</span><span class="badge-e">E</span><span class="badge-w">W</span><span class="badge-mark">!</span></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー人気投票</span><span class="footer-preview-vote-row"><span>もびりん</span><span class="footer-preview-vote-bar" style="--preview-vote-width:86%"></span><span>1位</span></span><span class="footer-preview-vote-row"><span>ギャル</span><span class="footer-preview-vote-bar" style="--preview-vote-width:68%"></span><span>2位</span></span><span class="footer-preview-vote-row"><span>ヤンキー</span><span class="footer-preview-vote-bar" style="--preview-vote-width:48%"></span><span>3位</span></span><span class="footer-action-preview-copy">好きなキャラを選んで投票できます</span></span></button>
               <button class="btn btn-secondary action-box-btn gift-fan-action" id="openFaqPopup" data-fan-item="faq" hidden style="display:none !important"><span class="footer-btn-icon" data-icon="mail" aria-hidden="true"></span><span>お問い合わせ</span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">お問い合わせ</span><span class="footer-preview-form-line">メールアドレス</span><span class="footer-preview-form-line">お問い合わせ内容</span><span class="footer-action-preview-copy">フォームからメッセージを送れます</span></span></button>
               <button class="btn btn-secondary action-box-btn gift-fan-action" id="openSnsPopup" data-fan-item="sns" hidden style="display:none !important"><span class="footer-btn-icon" data-icon="share" aria-hidden="true"></span><span>SNS</span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">Mobby公式SNS</span><span class="footer-preview-sns instagram"><span>Instagram</span><span>@mobby.official</span></span><span class="footer-preview-sns tiktok"><span>TikTok</span><span>@mobbyofficial</span></span></span></button>
@@ -12221,7 +12299,24 @@
         const floorY = height;
         const centerX = width / 2;
         const centerY = imageTop + spriteSize / 2;
-        return { width, height, spriteSize, imageLeft, imageTop, scale, floorY, centerX, centerY };
+        // The mesh moves cheek vertices by up to 36% of the sprite.  Give the
+        // canvas a generous transparent gutter so those vertices are not
+        // clipped at the canvas' own left/right/top/bottom edges.
+        const canvasPadding = Math.max(24, spriteSize * 0.4);
+        return {
+          width,
+          height,
+          spriteSize,
+          imageLeft,
+          imageTop,
+          scale,
+          floorY,
+          centerX,
+          centerY,
+          canvasPadding,
+          canvasWidth: width + canvasPadding * 2,
+          canvasHeight: height + canvasPadding * 2,
+        };
       }
 
       const smoothPull = (value) => {
@@ -12293,10 +12388,12 @@
         const dpr = Math.min(window.devicePixelRatio || 1, PULL_CANVAS_DPR_CAP);
         renderer.geometry = geometry;
         renderer.dpr = dpr;
-        renderer.canvas.width = Math.max(1, Math.round(geometry.width * dpr));
-        renderer.canvas.height = Math.max(1, Math.round(geometry.height * dpr));
-        renderer.canvas.style.width = `${geometry.width}px`;
-        renderer.canvas.style.height = `${geometry.height}px`;
+        renderer.canvas.width = Math.max(1, Math.round(geometry.canvasWidth * dpr));
+        renderer.canvas.height = Math.max(1, Math.round(geometry.canvasHeight * dpr));
+        renderer.canvas.style.width = `${geometry.canvasWidth}px`;
+        renderer.canvas.style.height = `${geometry.canvasHeight}px`;
+        renderer.canvas.style.left = `${-geometry.canvasPadding}px`;
+        renderer.canvas.style.top = `${-geometry.canvasPadding}px`;
         renderer.vertices = [];
         for (let row = 0; row <= renderer.rows; row += 1) {
           for (let column = 0; column <= renderer.columns; column += 1) {
@@ -12360,7 +12457,8 @@
         if (!renderer?.ctx || !renderer.geometry) return;
         const { ctx, geometry, dpr } = renderer;
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        ctx.clearRect(0, 0, geometry.width, geometry.height);
+        ctx.clearRect(0, 0, geometry.canvasWidth, geometry.canvasHeight);
+        ctx.translate(geometry.canvasPadding, geometry.canvasPadding);
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = PULL_COARSE_POINTER ? 'medium' : 'high';
         if (!renderer.body.complete || !renderer.body.naturalWidth) return;
@@ -14376,6 +14474,16 @@
 
     /* ===== Encyclopedia (図鑑) ===== */
     const ENCYCLOPEDIA_DATA = [
+      // Main characters (9)
+      { name: "もびりん", img: "mobby-touch/mobby-fact-man.webp", cat: "main", summary: "静かに場を見つめ、モビーたちをそっと見守るメインキャラ。", catch: "「まあ、そういう日もあるよ」。静かな観察力で、みんなのそばにいる。" },
+      { name: "もびち", img: "mobby-touch/mobby-gal.webp", cat: "main", summary: "気ままで気さく。思いついたらすぐ動く自由人。", catch: "「それ、楽しそうじゃん！」軽やかなノリで、空気を明るくする。" },
+      { name: "病みモビー", img: "mobby-touch/mobby-yami.webp", cat: "main", summary: "繊細で考え深く、心の奥にたくさんの気持ちを抱えている。", catch: "「大丈夫って言ったけど、本当は気づいてほしい」。静かな痛みに寄り添う。" },
+      { name: "もびやん", img: "mobby-touch/mobby-yanki.webp", cat: "main", summary: "信念は曲げない。まっすぐな気持ちで仲間を守るタイプ。", catch: "「自分の道は自分で決める」。不器用でも、筋は最後まで通す。" },
+      { name: "ばぶもび", img: "assets/mobby-guide/characters/babu-moby.webp", cat: "main", summary: "甘え上手で、見ているだけで守りたくなる末っ子タイプ。", catch: "「だっこして？」無邪気なかわいさで、みんなの心をつかむ。" },
+      { name: "ぽてもび", img: "assets/mobby-guide/characters/pote-moby.webp", cat: "main", summary: "ゆったりマイペース。小さな幸せを大事にする癒やし系。", catch: "「いっしょに、のんびりしよ」。急がず焦らず、自分のリズムで進む。" },
+      { name: "もびゆら", img: "assets/mobby-guide/characters/yura-moby.webp", cat: "main", summary: "ふわっとした雰囲気と好奇心で、場に新しい風を運ぶ。", catch: "「ねえねえ、これ見て！」無邪気なひらめきで毎日を楽しくする。" },
+      { name: "れおもび", img: "assets/mobby-guide/characters/reo-moby.webp", cat: "main", summary: "落ち着いた目線で周りを見ている、頼れるクールタイプ。", catch: "「任せて」。静かな自信とやさしさで、みんなを支える。" },
+      { name: "モビ坊", img: "assets/mobby-guide/characters/mobibou-moby.webp", cat: "main", summary: "ちょっと不思議で愛嬌たっぷり。いるだけで空気が和む。", catch: "「なんとかなるよ」。ゆるい存在感で、みんなの緊張をほどく。" },
       // School Male (16)
       { name: "文化祭センターステージモビー", img: "16school/cha/ortp.webp", cat: "school_m", summary: "場の空気を読むのが早く、自然と前に立っているタイプ。", catch: "「盛り上がってる？」が合言葉。場の空気を一瞬で読んで、自分から動けるタイプ。" },
       { name: "体育祭モビー", img: "16school/cha/orti.webp", cat: "school_m", summary: "盛り上がりを作るタイプ。", catch: "「全力で行こうぜ！」仲間と一緒なら、何でも全力で楽しめる。" },
@@ -14499,6 +14607,7 @@
 
     const ENCYCLOPEDIA_CATEGORIES = [
       { key: "all", label: "📋 一覧", color: "#6b7280" },
+      { key: "main", label: "メイン", color: "#f59e0b" },
       { key: "school_m", label: "🏫 学校♂", color: "#4a90d9" },
       { key: "school_f", label: "🏫 学校♀", color: "#e9748d" },
       { key: "stan", label: "🎤 推し活", color: "#9b6dff" },
@@ -14569,13 +14678,14 @@
 
       if (encyclopediaActiveTab === 'all') {
         // Group by category with section headers
-        const catOrder = ['school_m', 'school_f', 'mama', 'night', 'stan', 'love', 'romance'];
+        const catOrder = ['main', 'school_m', 'school_f', 'mama', 'night', 'stan', 'love', 'romance'];
         let html = '';
         let globalIdx = 0;
         catOrder.forEach(catKey => {
           const catItems = ENCYCLOPEDIA_DATA.filter(d => d.cat === catKey);
           const ci = ENCYCLOPEDIA_CATEGORIES.find(c => c.key === catKey);
           if (!ci || catItems.length === 0) return;
+          html += `<div class="ency-section-header" style="grid-column:1/-1;padding:8px 12px;margin:14px 0 0;border-radius:10px;background:${ci.color}18;color:${ci.color};font-size:13px;font-weight:800;letter-spacing:0.04em;">${ci.label}</div>`;
           catItems.forEach((item, i) => {
             const itemIndex = ENCYCLOPEDIA_DATA.indexOf(item);
             html += `

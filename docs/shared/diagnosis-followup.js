@@ -3,10 +3,15 @@
     { id: "mobirin", name: "もびりん", image: "mobby_fact_man_toka.webp" },
     { id: "mobichi", name: "もびち", image: "mobby_gal_toka.webp" },
     { id: "yami", name: "病みモビー", image: "mobby_yami_toka.webp" },
-    { id: "mobiyan", name: "もびやん", image: "mobby_yanki_toak.webp" }
+    { id: "mobiyan", name: "もびやん", image: "mobby_yanki_toak.webp" },
+    { id: "babu", name: "ばぶもび", image: "assets/mobby-guide/characters/babu-moby.webp" },
+    { id: "pote", name: "ぽてもび", image: "assets/mobby-guide/characters/pote-moby.webp" },
+    { id: "yura", name: "もびゆら", image: "assets/mobby-guide/characters/yura-moby.webp" },
+    { id: "reo", name: "れおもび", image: "assets/mobby-guide/characters/reo-moby.webp" },
+    { id: "mobibou", name: "モビ坊", image: "assets/mobby-guide/characters/mobibou-moby.webp" }
   ];
   const base = new URL("../", document.currentScript.src);
-  const imageUrl = file => new URL(`carousel/after/${file}`, base).href;
+  const imageUrl = file => new URL(file.includes("/") ? file : `carousel/after/${file}`, base).href;
   const pageUrl = (path, character) => {
     const url = new URL(path, base);
     if (character) url.searchParams.set("character", character);
