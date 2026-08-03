@@ -553,6 +553,58 @@
       min-width: 0;
     }
 
+    /* Shared styling for the prominent diagnosis CTA. */
+    .title-diagnosis-button {
+      --title-diagnosis-gap: clamp(8px, 2vw, 18px);
+      position: absolute;
+      top: 50%;
+      left: calc(50% + min(17vw, 110px) + var(--title-diagnosis-gap));
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: min(132px, calc(50vw - min(17vw, 110px) - var(--title-diagnosis-gap) - 8px));
+      min-height: 56px;
+      padding: 9px 12px;
+      border: 2px solid rgba(245, 63, 127, 0.32);
+      border-radius: 18px;
+      background: linear-gradient(145deg, #fff3c8, #ffdce9 75%);
+      box-shadow: 0 10px 24px rgba(214, 74, 119, 0.22), inset 0 1px 0 #fff;
+      color: #a94367;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+      transform: translateY(-50%);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .title-diagnosis-button:hover,
+    .title-diagnosis-button:focus-visible {
+      background: linear-gradient(145deg, #ffe9a7, #ffcbdc 75%);
+      box-shadow: 0 14px 28px rgba(214, 74, 119, 0.3), inset 0 1px 0 #fff;
+      transform: translateY(calc(-50% - 2px));
+    }
+
+    .title-diagnosis-button__copy {
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+      text-align: left;
+    }
+
+    .title-diagnosis-button__copy strong {
+      font-size: clamp(0.86rem, 1.8vw, 1rem);
+      line-height: 1.15;
+      white-space: nowrap;
+    }
+
+    .title-diagnosis-button__copy small {
+      color: #865c68;
+      font-size: clamp(0.58rem, 1.2vw, 0.68rem);
+      line-height: 1.25;
+      white-space: nowrap;
+    }
+
     .mobby-title-row .hero-carousel-mode-button {
       width: 100%;
       min-width: 0;
@@ -585,6 +637,23 @@
         left: max(0px, calc(50% - min(22vw, 90px) - var(--mode-picker-gap) - var(--mode-picker-width)));
         right: auto;
         width: var(--mode-picker-width);
+      }
+
+      .title-diagnosis-button {
+        --title-diagnosis-gap: clamp(6px, 2vw, 12px);
+        left: calc(50% + min(22vw, 90px) + var(--title-diagnosis-gap));
+        width: min(108px, calc(50vw - min(22vw, 90px) - var(--title-diagnosis-gap) - 8px));
+        min-height: 50px;
+        padding: 7px 9px;
+        border-radius: 16px;
+      }
+
+      .title-diagnosis-button__copy strong {
+        font-size: 0.78rem;
+      }
+
+      .title-diagnosis-button__copy small {
+        font-size: 0.56rem;
       }
 
       .mobby-title-row .hero-carousel-mode-button {
@@ -1248,6 +1317,103 @@
 
       .hero-pull-hint__copy small {
         font-size: 0.62rem;
+      }
+    }
+
+    /* Guide users from the character carousel straight into the diagnosis. */
+    .carousel-diagnosis-cta {
+      position: relative;
+      z-index: 12;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      width: min(520px, calc(100% - 24px));
+      margin: clamp(14px, 2.5vw, 24px) auto;
+    }
+
+    .carousel-diagnosis-cta .title-diagnosis-button {
+      position: relative;
+      top: auto;
+      left: auto;
+      display: inline-flex;
+      width: min(360px, 100%);
+      min-height: 68px;
+      padding: 10px 70px;
+      border-radius: 20px;
+      transform: none;
+    }
+
+    .carousel-diagnosis-cta__character {
+      position: absolute;
+      bottom: 2px;
+      z-index: 1;
+      width: 62px;
+      height: 68px;
+      pointer-events: none;
+    }
+
+    .carousel-diagnosis-cta__character--left {
+      left: 4px;
+    }
+
+    .carousel-diagnosis-cta__character--right {
+      right: 4px;
+    }
+
+    .carousel-diagnosis-cta__character img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 4px rgba(75, 48, 36, 0.18));
+      transition: transform 0.18s ease;
+    }
+
+    .carousel-diagnosis-cta .title-diagnosis-button:hover .carousel-diagnosis-cta__character--left img,
+    .carousel-diagnosis-cta .title-diagnosis-button:focus-visible .carousel-diagnosis-cta__character--left img {
+      transform: translateY(-3px) rotate(-3deg) scale(1.04);
+    }
+
+    .carousel-diagnosis-cta .title-diagnosis-button:hover .carousel-diagnosis-cta__character--right img,
+    .carousel-diagnosis-cta .title-diagnosis-button:focus-visible .carousel-diagnosis-cta__character--right img {
+      transform: translateY(-3px) rotate(3deg) scale(1.04);
+    }
+
+    .carousel-diagnosis-cta .title-diagnosis-button__copy {
+      width: 100%;
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .carousel-diagnosis-cta .title-diagnosis-button:hover,
+    .carousel-diagnosis-cta .title-diagnosis-button:focus-visible {
+      transform: translateY(-3px);
+    }
+
+    @media (max-width: 768px) {
+      .carousel-diagnosis-cta {
+        width: min(520px, calc(100% - 20px));
+        margin: 16px auto 20px;
+      }
+
+      .carousel-diagnosis-cta .title-diagnosis-button {
+        width: min(360px, 100%);
+        min-height: 64px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .carousel-diagnosis-cta {
+        gap: 7px;
+        margin: 14px auto 18px;
+      }
+
+      .carousel-diagnosis-cta .title-diagnosis-button {
+        width: min(340px, 100%);
+        min-height: 62px;
+        padding-inline: 70px;
       }
     }
 
@@ -10418,16 +10584,14 @@
     .home-main-action__copy {
       display: grid;
       gap: 4px;
+      min-width: 0;
+      flex: 1 1 auto;
+      /* Reserve the absolute character peek so labels never sit underneath it. */
+      max-width: calc(100% - 166px);
     }
 
     .home-main-action__copy strong {
       font-size: clamp(1.05rem, 3.4vw, 1.3rem);
-    }
-
-    .home-main-action__copy small {
-      color: #816d62;
-      font-size: 0.78rem;
-      line-height: 1.45;
     }
 
     .home-diagnosis-card {
@@ -10737,19 +10901,25 @@
       }
 
       .home-main-action__icon {
-        flex-basis: 44px;
-        width: 44px;
-        height: 44px;
-        border-radius: 14px;
-        font-size: 23px;
+        flex-basis: 38px;
+        width: 38px;
+        height: 38px;
+        border-radius: 13px;
+        font-size: 20px;
       }
-
-      .home-main-action__copy small { display: none; }
 
       .home-character-peek {
         right: 4px;
-        width: 88px;
-        height: 118px;
+        width: 64px;
+        height: 92px;
+      }
+
+      .home-main-action__copy {
+        max-width: calc(100% - 108px);
+      }
+
+      .home-main-action__copy strong {
+        font-size: clamp(0.92rem, 3.2vw, 1.12rem);
       }
 
       .home-main-action::after {
@@ -10773,20 +10943,22 @@
       }
 
       .home-main-action__icon {
-        flex-basis: 38px;
-        width: 38px;
-        height: 38px;
-        border-radius: 12px;
-        font-size: 19px;
+        flex-basis: 34px;
+        width: 34px;
+        height: 34px;
+        border-radius: 11px;
+        font-size: 18px;
       }
 
       .home-main-action__copy strong { font-size: 0.92rem; }
-      .home-main-action__copy small { display: none; }
-
       .home-character-peek {
         right: 3px;
-        width: 68px;
-        height: 92px;
+        width: 60px;
+        height: 84px;
+      }
+
+      .home-main-action__copy {
+        max-width: calc(100% - 100px);
       }
 
       .home-character-peek img { transform: translateY(8px); }
@@ -10815,15 +10987,19 @@
       }
 
       .home-main-action__icon {
-        flex-basis: 32px;
-        width: 32px;
-        height: 32px;
-        border-radius: 10px;
-        font-size: 16px;
+        flex-basis: 30px;
+        width: 30px;
+        height: 30px;
+        border-radius: 9px;
+        font-size: 15px;
       }
 
       .home-main-action__copy strong { font-size: 0.82rem; }
-      .home-character-peek { right: 2px; width: 56px; height: 76px; }
+      .home-character-peek { right: 2px; width: 52px; height: 72px; }
+
+      .home-main-action__copy {
+        max-width: calc(100% - 89px);
+      }
     }
 
     /* Keep the desktop-style hover feedback available in compact browser
@@ -11067,16 +11243,16 @@
           <nav class="home-main-actions" aria-label="メインメニュー">
             <button class="home-main-action home-diagnosis-card" id="homeOpenDiagnosis" type="button" data-preview="学校・メンヘラ・推し活・恋愛&#10;コラボ診断もこちら" aria-haspopup="dialog" aria-controls="diagnosisPopup">
                 <span class="home-main-action__icon" aria-hidden="true">♡</span>
-                <span class="home-main-action__copy"><strong>診断</strong><small>あなたにぴったりのモビーを見つけよう</small></span>
+                <span class="home-main-action__copy"><strong>診断</strong></span>
                 <span class="home-character-peek" aria-hidden="true"><img src="carousel/after/mobby_fact_man_toka.webp" alt=""></span>
                 <span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー診断</span><span class="home-preview-image-grid"><img src="carousel/diagnosis-peeks/school-stage.webp" alt=""><img src="carousel/diagnosis-peeks/menhera-dependent.webp" alt=""><img src="carousel/diagnosis-peeks/oshi-live.webp" alt=""><img src="carousel/diagnosis-peeks/renai-bouquet-transparent.webp" alt=""></span><span class="footer-action-preview-copy">学校・メンヘラ・推し活・恋愛などから選べます</span></span>
             </button>
-            <a class="home-main-action" id="homePosterAction" href="compositing.html" data-preview="写真を選んで&#10;オリジナルのモビーポスターを作れます"><span class="home-main-action__icon" aria-hidden="true">▧</span><span class="home-main-action__copy"><strong>ポスター</strong><small>写真でオリジナルポスターを作る</small></span><span class="home-character-peek" aria-hidden="true"><img src="carousel/after/mobby_yami_toka.webp" alt=""></span></a>
-            <button class="home-main-action" id="homeOpenEncyclopedia" type="button" data-preview="全タイプのモビーを収録&#10;プロフィールや特徴をチェック"><span class="home-main-action__icon" aria-hidden="true">▤</span><span class="home-main-action__copy"><strong>図鑑</strong><small>モビーのプロフィールを見る</small></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー図鑑・代表キャラクター</span><span class="encyclopedia-preview-grid"><span class="encyclopedia-preview-card"><img src="16school/cha/ortp.webp" alt=""><span>文化祭センター<br>ステージモビー</span></span><span class="encyclopedia-preview-card"><img src="16school/cha/ojtp2.webp" alt=""><span>カップル自撮り<br>モビー</span></span><span class="encyclopedia-preview-card"><img src="16renai/image/lovemobby/花束の主人公モビー.webp" alt=""><span>恋愛モビー<br>花束の主人公</span></span><span class="encyclopedia-preview-card"><img src="16renai/image/lovemobby/胸奥のロマンモビー.webp" alt=""><span>恋愛モビー<br>胸奥のロマン</span></span></span><span class="footer-action-preview-copy">学校モビーと恋愛モビーから代表4タイプを紹介</span></span></button>
-            <button class="home-main-action" id="homeOpenFaq" type="button" data-preview="質問やご相談はこちら&#10;フォームからメッセージを送れます"><span class="home-main-action__icon" aria-hidden="true">✉</span><span class="home-main-action__copy"><strong>お問い合わせ</strong><small>フォームからメッセージを送る</small></span><span class="home-character-peek" aria-hidden="true"><img src="carousel/after/mobby_gal_toka.webp" alt=""></span></button>
-            <button class="home-main-action" id="homeOpenSns" type="button" data-preview="Instagram・TikTok・公式LINEで&#10;Mobbyの最新情報をチェック"><span class="home-main-action__icon" aria-hidden="true">♧</span><span class="home-main-action__copy"><strong>SNS</strong><small>Mobby公式アカウントを見る</small></span><span class="home-character-peek" aria-hidden="true"><img src="assets/mobby-guide/characters/reo-moby.webp" alt=""></span></button>
-            <a class="home-main-action" href="ehon/index.html" data-preview="モビーたちの物語を&#10;全32ページで楽しめます"><span class="home-main-action__icon" aria-hidden="true">▢</span><span class="home-main-action__copy"><strong>絵本</strong><small>モビーの物語を読む</small></span><span class="home-character-peek" aria-hidden="true"><img src="assets/mobby-guide/characters/babu-moby.webp" alt=""></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビーの絵本</span><img class="home-preview-cover" src="ehon/column/ehon-column-pattern-2.webp" alt=""><span class="footer-action-preview-copy">モビーたちの物語を全32ページで楽しめます</span></span></a>
-            <a class="home-main-action home-gacha-action" id="homeGachaAction" href="gacha/index.html" data-preview="モビーのシールを集めるガチャ&#10;レアな1枚が出るかも"><span class="home-main-action__icon" aria-hidden="true">🎰</span><span class="home-main-action__copy"><strong>シールガチャ</strong><small>モビーのシールを集めよう</small></span><span class="home-character-peek" aria-hidden="true"><img src="assets/mobby-guide/characters/yura-moby.webp" alt=""></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビーシールガチャ</span><img class="home-preview-cover home-gacha-preview" src="gacha-new/ref/mobby-gacha-ticket.webp" alt=""><span class="footer-action-preview-copy">お気に入りのモビーシールを引いてコレクション</span></span></a>
+            <a class="home-main-action" id="homePosterAction" href="compositing.html" data-preview="写真を選んで&#10;オリジナルのモビーポスターを作れます"><span class="home-main-action__icon" aria-hidden="true">▧</span><span class="home-main-action__copy"><strong>ポスター</strong></span><span class="home-character-peek" aria-hidden="true"><img src="carousel/after/mobby_yami_toka.webp" alt=""></span></a>
+            <button class="home-main-action" id="homeOpenEncyclopedia" type="button" data-preview="全タイプのモビーを収録&#10;プロフィールや特徴をチェック"><span class="home-main-action__icon" aria-hidden="true">▤</span><span class="home-main-action__copy"><strong>図鑑</strong></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビー図鑑・代表キャラクター</span><span class="encyclopedia-preview-grid"><span class="encyclopedia-preview-card"><img src="16school/cha/ortp.webp" alt=""><span>文化祭センター<br>ステージモビー</span></span><span class="encyclopedia-preview-card"><img src="16school/cha/ojtp2.webp" alt=""><span>カップル自撮り<br>モビー</span></span><span class="encyclopedia-preview-card"><img src="16renai/image/lovemobby/花束の主人公モビー.webp" alt=""><span>恋愛モビー<br>花束の主人公</span></span><span class="encyclopedia-preview-card"><img src="16renai/image/lovemobby/胸奥のロマンモビー.webp" alt=""><span>恋愛モビー<br>胸奥のロマン</span></span></span><span class="footer-action-preview-copy">学校モビーと恋愛モビーから代表4タイプを紹介</span></span></button>
+            <button class="home-main-action" id="homeOpenFaq" type="button" data-preview="質問やご相談はこちら&#10;フォームからメッセージを送れます"><span class="home-main-action__icon" aria-hidden="true">✉</span><span class="home-main-action__copy"><strong>お問い合わせ</strong></span><span class="home-character-peek" aria-hidden="true"><img src="carousel/after/mobby_gal_toka.webp" alt=""></span></button>
+            <button class="home-main-action" id="homeOpenSns" type="button" data-preview="Instagram・TikTok・公式LINEで&#10;Mobbyの最新情報をチェック"><span class="home-main-action__icon" aria-hidden="true">♧</span><span class="home-main-action__copy"><strong>SNS</strong></span><span class="home-character-peek" aria-hidden="true"><img src="assets/mobby-guide/characters/reo-moby.webp" alt=""></span></button>
+            <a class="home-main-action" href="ehon/index.html" data-preview="モビーたちの物語を&#10;全32ページで楽しめます"><span class="home-main-action__icon" aria-hidden="true">▢</span><span class="home-main-action__copy"><strong>絵本</strong></span><span class="home-character-peek" aria-hidden="true"><img src="assets/mobby-guide/characters/babu-moby.webp" alt=""></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビーの絵本</span><img class="home-preview-cover" src="ehon/column/ehon-column-pattern-2.webp" alt=""><span class="footer-action-preview-copy">モビーたちの物語を全32ページで楽しめます</span></span></a>
+            <a class="home-main-action home-gacha-action" id="homeGachaAction" href="gacha/index.html" data-preview="モビーのシールを集めるガチャ&#10;レアな1枚が出るかも"><span class="home-main-action__icon" aria-hidden="true">🎰</span><span class="home-main-action__copy"><strong>シールガチャ</strong></span><span class="home-character-peek" aria-hidden="true"><img src="assets/mobby-guide/characters/yura-moby.webp" alt=""></span><span class="footer-action-preview" aria-hidden="true"><span class="footer-action-preview-title">モビーシールガチャ</span><img class="home-preview-cover home-gacha-preview" src="gacha-new/ref/mobby-gacha-ticket.webp" alt=""><span class="footer-action-preview-copy">お気に入りのモビーシールを引いてコレクション</span></span></a>
           </nav>
 
 
@@ -11092,6 +11268,13 @@
             <div class="hero-character-row">
               <div class="hero-character-name" id="heroCharacterName">もびりん</div>
             </div>
+          </div>
+          <div class="carousel-diagnosis-cta" aria-label="モビー診断へ">
+            <button class="title-diagnosis-button" id="titleOpenDiagnosis" type="button" aria-label="診断メニューを開く" aria-haspopup="dialog" aria-controls="diagnosisPopup">
+              <span class="carousel-diagnosis-cta__character carousel-diagnosis-cta__character--left" aria-hidden="true"><img src="assets/mobby-guide/characters/babu-moby.webp" alt=""></span>
+              <span class="title-diagnosis-button__copy"><strong>モビー診断はこちら</strong></span>
+              <span class="carousel-diagnosis-cta__character carousel-diagnosis-cta__character--right" aria-hidden="true"><img src="carousel/after/mobby_yanki_toak.webp" alt=""></span>
+            </button>
           </div>
           <div class="manga-viewer-wrap">
             <div class="manga-inline" id="mangaInline" hidden>
@@ -15582,10 +15765,11 @@
       });
     });
     const homeMangaFeature = document.querySelector('.home-manga-feature');
-    const homeCarouselArea = [
-      document.querySelector('.hero-carousel-shell'),
-      document.querySelector('.manga-viewer-wrap')
-    ].filter(Boolean);
+      const homeCarouselArea = [
+        document.querySelector('.hero-carousel-shell'),
+        document.querySelector('.carousel-diagnosis-cta'),
+        document.querySelector('.manga-viewer-wrap')
+      ].filter(Boolean);
     if (homeMangaFeature) {
       const homeContainer = homeMangaFeature.parentElement;
       const homeMainActions = document.querySelector('.home-main-actions');
@@ -15612,6 +15796,7 @@
       openPopup('diagnosisPopup');
     });
     document.getElementById('homeOpenDiagnosis')?.addEventListener('click', () => openPopup('diagnosisPopup'));
+    document.getElementById('titleOpenDiagnosis')?.addEventListener('click', () => openPopup('diagnosisPopup'));
     document.getElementById('openFaqPopup')?.addEventListener('click', () => openPopup('faqPopup'));
     document.getElementById('openSnsPopup')?.addEventListener('click', () => openPopup('snsPopup'));
     document.getElementById('openEncyclopediaPopup')?.addEventListener('click', () => openPopup('encyclopediaPopup'));
