@@ -2,6 +2,8 @@
 <html lang="ja">
 
 <head>
+    <link rel="stylesheet" href="../shared/diagnosis-followup.css?v=20260725-2">
+    <script src="../shared/diagnosis-followup.js?v=20260725-2" defer></script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>推し活モビー診断 | あなたの推し活スタイルを16種類で診断【無料】</title>
@@ -16,14 +18,14 @@
     <meta property="og:description" content="40問であなたの推し活スタイルを16タイプから無料診断！現場派？在宅派？発信派？静観派？モビーがあなたにピッタリの推し活タイプを教えます✨">
     <meta property="og:url" content="https://www.mobby.online/16stan">
     <meta property="og:site_name" content="Mobby - モビー診断">
-    <meta property="og:image" content="https://www.mobby.online/img/mobby/mobby_pink.jpg">
+    <meta property="og:image" content="https://www.mobby.online/img/mobby/mobby_pink.webp">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:locale" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="推し活モビー診断 | あなたの推し活スタイルを16種類で診断">
     <meta name="twitter:description" content="あなたの推し活スタイルは？40問で無料診断💖">
-    <meta name="twitter:image" content="https://www.mobby.online/img/mobby/mobby_pink.jpg">
+    <meta name="twitter:image" content="https://www.mobby.online/img/mobby/mobby_pink.webp">
     <meta name="theme-color" content="#0f0f15">
     <script type="application/ld+json">
     {
@@ -121,7 +123,7 @@
             width: 30px;
             height: 30px;
             border-radius: 10px;
-            background-image: url('../16school/logo.jpg');
+            background-image: url('../16school/logo.webp');
             background-size: cover;
             background-position: center;
             box-shadow: 0 4px 10px rgba(232, 106, 175, 0.3);
@@ -1025,6 +1027,8 @@
             }
         }
     </style>
+  <link rel="stylesheet" href="../assets/diagnosis-poster-promo.css?v=3">
+  <link rel="stylesheet" href="../assets/mobby-guide.css?v=4">
 </head>
 
 <body>
@@ -1418,9 +1422,9 @@
             return { code, pcts };
         }
         function getSnsImagePaths(code) {
-            const png = SNS_IMAGE_PATHS[code];
-            if (!png) return null;
-            return { png };
+            const webp = SNS_IMAGE_PATHS[code];
+            if (!webp) return null;
+            return { webp };
         }
         function sanitizeDownloadName(name) {
             return (name || "mobby-result").replace(/[\\/:*?"<>|]/g, "_");
@@ -1430,18 +1434,13 @@
         }
         function getImageMimeType(path) {
             const cleanPath = String(path || "").split(/[?#]/)[0].toLowerCase();
-            if (cleanPath.endsWith(".jpg") || cleanPath.endsWith(".jpeg")) return "image/jpeg";
-            if (cleanPath.endsWith(".png")) return "image/png";
             if (cleanPath.endsWith(".webp")) return "image/webp";
-            return "image/png";
+            return "image/webp";
         }
-        function getImageFileExtension(path, type) {
+        function getImageFileExtension(path) {
             const cleanPath = String(path || "").split(/[?#]/)[0].toLowerCase();
             const match = cleanPath.match(/\.([a-z0-9]+)$/);
-            if (match) return match[1] === "jpeg" ? "jpg" : match[1];
-            if (type === "image/jpeg") return "jpg";
-            if (type === "image/webp") return "webp";
-            return "png";
+            return match ? match[1] : "webp";
         }
         async function shareImageFileOnIOS(imagePaths, fileBaseName) {
             if (typeof navigator.share !== "function" || typeof File !== "function") return false;
@@ -1672,10 +1671,10 @@ state.profile = { name, email, age }; const { code, pcts } = computeResult(); co
         function renderResult() {
             const { code, pcts } = computeResult(); const ch = CH[code]; if (!ch) { renderIntro(); return; } const app = document.getElementById("app");
             const displayName = ch.displayName || ch.name;
-            const imgPath = `img/${ch.name}.jpg`;
-            const keyImageFrontPath = `img/key/${ch.name}.png`;
+            const imgPath = `img/${ch.name}.webp`;
+            const keyImageFrontPath = `img/key/${ch.name}.webp`;
             const keyImageFrontWebpPath = `img/key/${ch.name}.webp`;
-            const keyImageBackPath = "img/key/ura.jpg";
+            const keyImageBackPath = "img/key/ura.webp";
             const keyImageBackWebpPath = "img/key/ura.webp";
             const snsImagePaths = getSnsImagePaths(code);
             const shareXText = `推し活モビー診断の結果は「${displayName}」でした！🎤✨\n${ch.catch}\n`;
@@ -1847,8 +1846,8 @@ state.profile = { name, email, age }; const { code, pcts } = computeResult(); co
                     if (!iosLike) {
                         snsSaveHint.textContent = "保存を開始しました。うまくいかない場合は結果画面をスクショしてください。";
                         const dl = document.createElement("a");
-                        dl.href = snsImagePaths.png;
-                        dl.download = `${sanitizeDownloadName(ch.name)}.png`;
+                        dl.href = snsImagePaths.webp;
+                        dl.download = `${sanitizeDownloadName(ch.name)}.webp`;
                         dl.rel = "noopener";
                         document.body.appendChild(dl);
                         dl.click();
@@ -1856,14 +1855,14 @@ state.profile = { name, email, age }; const { code, pcts } = computeResult(); co
                         return;
                     }
                     snsSaveHint.textContent = "共有シートを開きます。「画像を保存」を選ぶと写真アプリに保存されます。";
-                    const sharedToPhotos = await shareImageFileOnIOS(snsImagePaths.png, displayName);
+                    const sharedToPhotos = await shareImageFileOnIOS(snsImagePaths.webp, displayName);
                     if (sharedToPhotos) {
                         snsSaveHint.textContent = "共有シートで「画像を保存」を選ぶと写真アプリに保存されます。";
                         return;
                     }
                     snsSaveHint.textContent = "共有シートを開けない場合は、画像を長押しして「写真に保存」を選んでください。";
                     snsSavePreview.alt = `${displayName} SNS投稿用画像`;
-                    if (snsSavePreview.src && decodeURIComponent(snsSavePreview.src).endsWith(decodeURIComponent(snsImagePaths.png))) {
+                    if (snsSavePreview.src && decodeURIComponent(snsSavePreview.src).endsWith(decodeURIComponent(snsImagePaths.webp))) {
                         snsSavePreview.style.display = "block";
                         snsSaveFallback.style.display = "none";
                         snsSaveBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -1878,7 +1877,7 @@ state.profile = { name, email, age }; const { code, pcts } = computeResult(); co
                         snsSaveFallback.style.display = "block";
                         snsSaveHint.textContent = "このタイプのSNS画像は準備中です。結果画面をスクショして投稿してください。";
                     };
-                    snsSavePreview.src = snsImagePaths.png;
+                    snsSavePreview.src = snsImagePaths.webp;
                     snsSaveBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
                 };
             }
@@ -1890,7 +1889,7 @@ state.profile = { name, email, age }; const { code, pcts } = computeResult(); co
                 const c = CH[code];
                 const displayName = c.displayName || c.name;
                 html += `<div class="char-card" onclick="showCharDetail('${code}')">
-    <div class="char-card-image"><img src="img/${c.name}.jpg" alt="${displayName}" onerror="this.style.display='none'"></div>
+    <div class="char-card-image"><img src="img/${c.name}.webp" alt="${displayName}" onerror="this.style.display='none'"></div>
     <div class="char-card-name">${displayName}</div>
     <span class="char-card-type">${code}</span>
     <p class="char-card-desc">${c.catch}</p></div>`;
@@ -1905,7 +1904,7 @@ state.profile = { name, email, age }; const { code, pcts } = computeResult(); co
             overlay.innerHTML = `<div class="char-modal">
     <button class="char-modal-close" onclick="this.closest('.char-modal-overlay').remove()">✕</button>
     <div style="text-align:center;margin-bottom:20px;">
-    <div class="char-image-placeholder" style="max-width:240px;"><img src="img/${c.name}.jpg" alt="${displayName}" onerror="this.parentElement.innerHTML='Image'"></div>
+    <div class="char-image-placeholder" style="max-width:240px;"><img src="img/${c.name}.webp" alt="${displayName}" onerror="this.parentElement.innerHTML='Image'"></div>
     <h2 style="margin:12px 0 4px;font-size:22px;">${displayName}</h2>
     <p style="font-family:monospace;color:var(--text-sub);font-size:12px;">${code}</p></div>
     <p style="color:var(--accent);font-weight:600;margin-bottom:8px;">${c.catch}</p>
@@ -2011,6 +2010,8 @@ state.profile = { name, email, age }; const { code, pcts } = computeResult(); co
   });
 })();
 </script>
+  <script src="../assets/diagnosis-poster-promo.js?v=3"></script>
+  <script src="../assets/mobby-guide.js?v=9"></script>
 </body>
 
 </html>

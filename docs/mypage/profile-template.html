@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ja">
 <head>
   <meta charset="utf-8">
@@ -439,6 +439,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="../assets/mobby-guide.css?v=4">
 </head>
 <body>
   <main class="wrap">
@@ -705,7 +706,7 @@
         ctx.fillText("mobby.online", canvas.width - 220, canvas.height - 54);
 
         const a = document.createElement("a");
-        a.href = canvas.toDataURL("image/png");
+        a.href = canvas.toDataURL("image/webp", 0.92);
         a.download = `mobby-profile-${Date.now()}.webp`;
         a.click();
       });
@@ -804,5 +805,6 @@
       }
     })();
   </script>
+  <script src="../assets/mobby-guide.js?v=9"></script>
 </body>
 </html>

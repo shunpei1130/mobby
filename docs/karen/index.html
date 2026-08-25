@@ -9,19 +9,19 @@
   <meta name="author" content="Mobby" />
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
   <link rel="canonical" href="https://www.mobby.online/karen-oshi/" />
-  <link rel="icon" type="image/png" href="assets/favicon.png" />
-  <link rel="apple-touch-icon" href="assets/logo.png" />
+  <link rel="icon" type="image/webp" href="assets/favicon.webp" />
+  <link rel="apple-touch-icon" href="assets/logo.webp" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="かれんちゃんに見つかる推し活診断 | Mobby" />
   <meta property="og:description" content="あなたはどんな推し方でかれんちゃんに印象に残りやすい？10問で推し活タイプをチェック。" />
   <meta property="og:url" content="https://www.mobby.online/karen-oshi/" />
   <meta property="og:site_name" content="Mobby - モビー診断" />
-  <meta property="og:image" content="https://www.mobby.online/karen-oshi/assets/ogp.png" />
+  <meta property="og:image" content="https://www.mobby.online/karen-oshi/assets/ogp.webp" />
   <meta property="og:locale" content="ja_JP" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="かれんちゃんに見つかる推し活診断 | Mobby" />
   <meta name="twitter:description" content="10問であなたの推し活タイプを診断。結果をシェアしてかれんちゃんへの推し方を見つけよう。" />
-  <meta name="twitter:image" content="https://www.mobby.online/karen-oshi/assets/ogp.png" />
+  <meta name="twitter:image" content="https://www.mobby.online/karen-oshi/assets/ogp.webp" />
   <meta name="theme-color" content="#ff4d6d" />
   <script type="application/ld+json">{
     "@context": "https://schema.org",
@@ -85,7 +85,7 @@
     .wrap { width: min(100%, 900px); margin: 0 auto; padding: 26px 18px 90px; position: relative; }
     header { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 26px; }
     .brand { display: flex; align-items: center; gap: 14px; cursor: pointer; }
-    .logo { width: 46px; height: 46px; border-radius: 16px; background: url("assets/logo.png") center/cover; box-shadow: 0 8px 22px rgba(255, 77, 109, 0.30); }
+    .logo { width: 46px; height: 46px; border-radius: 16px; background: url("assets/logo.webp") center/cover; box-shadow: 0 8px 22px rgba(255, 77, 109, 0.30); }
     .title h1 { margin: 0; font-family: var(--font-display); font-size: 17px; color: var(--accent-2); letter-spacing: 0.04em; }
     .title p { margin: 2px 0 0; font-size: 12px; color: var(--text-sub); }
     .nav { display: flex; gap: 6px; flex-wrap: nowrap; align-items: center; margin-left: auto; }
@@ -162,6 +162,7 @@
       .type-no { width: 70px; height: 70px; }
     }
   </style>
+  <link rel="stylesheet" href="../assets/mobby-guide.css?v=4">
 </head>
 <body>
   <div class="wrap">
@@ -263,7 +264,7 @@ ${DIAG.title}
       const hasProgress = done > 0;
       return `
         <section class="panel hero stack">
-          <img class="hero-img" src="assets/anime.png" alt="かれんちゃんに見つかる推し活診断 メインビジュアル">
+          <img class="hero-img" src="assets/anime.webp" alt="かれんちゃんに見つかる推し活診断 メインビジュアル">
           <div>
             <span class="kicker">Mobby Collaboration</span>
             <h2 class="big">あなたは、どんな推し方？</h2>
@@ -326,7 +327,7 @@ ${DIAG.title}
           <div class="result-title">
             <span class="kicker">Your Oshi Type</span>
             <div class="result-sample">
-              <img src="assets/kekka.png" alt="${esc(type.name)}の結果サンプル画像">
+              <img src="assets/kekka.webp" alt="${esc(type.name)}の結果サンプル画像">
             </div>
             <h2>あなたは<br>「${esc(type.name)}」</h2>
             <p>${esc(type.description)}</p>
@@ -355,7 +356,7 @@ ${DIAG.title}
           <a href="${shareUrl(type)}" target="_blank" rel="noopener">Xでシェア</a>
           <button type="button" onclick="nativeShare('${type.id}')">共有する</button>
           <button type="button" onclick="copyResult('${type.id}')">シェア文コピー</button>
-          <a href="assets/kekka.png" download>結果画像を保存</a>
+          <a href="assets/kekka.webp" download>結果画像を保存</a>
         </div>
         <div class="actions">
           ${karenCta}${liveCta}
@@ -372,7 +373,7 @@ ${DIAG.title}
             <details class="type-item">
               <summary>
                 <div class="type-sample">
-                  <img src="assets/kekka.png" alt="${esc(type.name)}のサンプル結果画像">
+                  <img src="assets/kekka.webp" alt="${esc(type.name)}のサンプル結果画像">
                 </div>
                 <div class="type-head"><div><h3>${esc(type.number)}｜${esc(type.name)}</h3><p>${esc(type.short)}</p></div></div>
               </summary>
@@ -398,5 +399,6 @@ ${DIAG.title}
     document.getElementById('navTypes').addEventListener('click', (e) => { e.preventDefault(); setStep('types'); });
     loadState(); render();
   </script>
+  <script src="../assets/mobby-guide.js?v=9"></script>
 </body>
 </html>

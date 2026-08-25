@@ -133,36 +133,36 @@
   ];
 
   const secretStickers = [
-    { title: "もびち", variant: "full", fileName: "もびち-full.png" },
-    { title: "もびやん", variant: "full", fileName: "もびやん-full.png" },
-    { title: "もびりん", variant: "full", fileName: "もびりん-full.png" },
-    { title: "病みモビー", variant: "full", fileName: "病みモビー-full.png" },
-    { title: "もびち", variant: "half", fileName: "もびち-half.png" },
-    { title: "もびやん", variant: "half", fileName: "もびやん-half.png" },
-    { title: "もびりん", variant: "half", fileName: "もびりん-half.png" },
-    { title: "病みモビー", variant: "half", fileName: "病みモビー-half.png" }
+    { title: "もびち", variant: "full", fileName: "もびち-full.webp" },
+    { title: "もびやん", variant: "full", fileName: "もびやん-full.webp" },
+    { title: "もびりん", variant: "full", fileName: "もびりん-full.webp" },
+    { title: "病みモビー", variant: "full", fileName: "病みモビー-full.webp" },
+    { title: "もびち", variant: "half", fileName: "もびち-half.webp" },
+    { title: "もびやん", variant: "half", fileName: "もびやん-half.webp" },
+    { title: "もびりん", variant: "half", fileName: "もびりん-half.webp" },
+    { title: "病みモビー", variant: "half", fileName: "病みモビー-half.webp" }
   ];
 
   const results = [
     ...rNames.map((name) => ({
       rarity: "R",
       title: name,
-      src: `../gacha-new/assets/r/${encodeURIComponent(name)}.png`
+      src: `../gacha-new/assets/r/${encodeURIComponent(name)}.webp`
     })),
     ...srNames.map((name) => ({
       rarity: "SR",
       title: name,
-      src: `../gacha-new/assets/sr/${encodeURIComponent(name)}-sr.png`
+      src: `../gacha-new/assets/sr/${encodeURIComponent(name)}-sr.webp`
     })),
     ...urNames.map((name) => ({
       rarity: "UR",
       title: name,
-      src: `../gacha-new/assets/ur/${encodeURIComponent(name)}-ur.png`
+      src: `../gacha-new/assets/ur/${encodeURIComponent(name)}-ur.webp`
     })),
     ...galNames.map((name) => ({
       rarity: "プリ",
       title: name,
-      src: `../gacha-new/assets/gal/${encodeURIComponent(name)}-gal.png`
+      src: `../gacha-new/assets/gal/${encodeURIComponent(name)}-gal.webp`
     }))
   ];
 
@@ -195,8 +195,8 @@
   const CODE_USAGE_STORAGE_KEY = "mobbySealGachaUsedCodes";
   const VALID_GACHA_CODES = new Set(["mobby-gacha!", "mobby-gachagacha"]);
 
-  const sheetSrc = "../gacha-new/assets/gacha/gachasheet.png";
-  const secretSheetSrc = "../gacha-new/assets/gacha/gacha-sheet-mobby-4.png";
+  const sheetSrc = "../gacha-new/assets/gacha/gachasheet.webp";
+  const secretSheetSrc = "../gacha-new/assets/gacha/gacha-sheet-mobby-4.webp";
   const sheetSlots = [
     { x: 102, y: 102, width: 386, height: 386 },
     { x: 537, y: 102, width: 386, height: 386 },
@@ -363,7 +363,7 @@
   }
 
   function dataUrlToAttachment(dataUrl, fileName) {
-    const match = String(dataUrl || "").match(/^data:(image\/png);base64,(.+)$/);
+    const match = String(dataUrl || "").match(/^data:(image\/webp);base64,(.+)$/);
     if (!match) return null;
     return {
       fileName,
@@ -501,7 +501,7 @@
 
   function canvasToBlob(canvas) {
     return new Promise((resolve) => {
-      canvas.toBlob((blob) => resolve(blob), "image/png");
+      canvas.toBlob((blob) => resolve(blob), "image/webp", 0.92);
     });
   }
 
@@ -540,7 +540,7 @@
       }
     });
 
-    const dataUrl = canvas.toDataURL("image/png");
+    const dataUrl = canvas.toDataURL("image/webp", 0.92);
     return {
       dataUrl,
       blob: await canvasToBlob(canvas) || await dataUrlToBlob(dataUrl)
@@ -924,9 +924,9 @@
     if (sheetIndex !== null && sheetTotal !== null) {
       const indexText = String(sheetIndex + 1).padStart(2, "0");
       const totalText = String(sheetTotal).padStart(2, "0");
-      return `mobby-sticker-sheet-${indexText}of${totalText}-${stamp}.png`;
+      return `mobby-sticker-sheet-${indexText}of${totalText}-${stamp}.webp`;
     }
-    return `mobby-sticker-sheet-${stamp}.png`;
+    return `mobby-sticker-sheet-${stamp}.webp`;
   }
 
   function refreshDownloadLink() {
@@ -999,8 +999,8 @@
     const handle = await window.showSaveFilePicker({
       suggestedName: fileName,
       types: [{
-        description: "PNG image",
-        accept: { "image/png": [".png"] }
+        description: "WebP image",
+        accept: { "image/webp": [".webp"] }
       }]
     });
     const writable = await handle.createWritable();
@@ -1016,7 +1016,7 @@
   async function shareSheetImage(blob, fileName) {
     if (!navigator.share) return false;
 
-    const file = new File([blob], fileName, { type: blob.type || "image/png" });
+    const file = new File([blob], fileName, { type: blob.type || "image/webp" });
     const payload = {
       files: [file],
       title: "Mobbyシールガチャ",
@@ -1036,7 +1036,7 @@
 
     const files = slides.map((slide, index) => {
       const fileName = buildSheetFileName(index, slides.length, stamp);
-      return new File([slide.blob], fileName, { type: slide.blob?.type || "image/png" });
+      return new File([slide.blob], fileName, { type: slide.blob?.type || "image/webp" });
     });
     const payload = {
       files,

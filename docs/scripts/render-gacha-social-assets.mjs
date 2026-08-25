@@ -1,13 +1,15 @@
-﻿import { readdir } from "node:fs/promises";
+import { readdir } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
 
 const assetDir = path.resolve("gacha/assets/social");
-const files = (await readdir(assetDir)).filter((file) => file.endsWith(".svg"));
+const files = (await readdir(assetDir)).filter((file) => file.endsWith(".webp"));
 
 for (const file of files) {
   const inputPath = path.join(assetDir, file);
-  const outputPath = path.join(assetDir, file.replace(/\.svg$/u, ".webp"));
-  await sharp(inputPath).webp().toFile(outputPath);
-  console.log(`rendered ${path.basename(outputPath)}`);
+  const metadata = await sharp(inputPath).metadata();
+  if (metadata.format !== "webp") {
+    throw new Error(`${file} is not a valid WebP image`);
+  }
+  console.log(`validated ${path.basename(inputPath)}`);
 }

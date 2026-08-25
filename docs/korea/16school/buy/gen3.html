@@ -22,7 +22,7 @@
   <meta property="og:url" content="https://www.mobby.online/16school/buy/gen.html">
   <meta property="og:title" content="学校モビー診断 | 学校キャラ診断（モビー診断）- あなたの性格を16タイプで診断">
   <meta property="og:description" content="学校モビー診断は40問の質問であなたの学校でのキャラクタータイプを16種類から診断。陽キャラ・陰キャラ、やんちゃ・真面目など4軸で性格を分析。男子版・女子版対応の無料性格診断。">
-  <meta property="og:image" content="https://www.mobby.online/16school/logo.jpg">
+  <meta property="og:image" content="https://www.mobby.online/16school/logo.webp">
   <meta property="og:site_name" content="学校モビー診断（モビー診断）">
   <meta property="og:locale" content="ja_JP">
   <meta name="theme-color" content="#fff8e8">
@@ -32,11 +32,11 @@
   <meta name="twitter:url" content="https://www.mobby.online/16school/buy/gen.html">
   <meta name="twitter:title" content="学校モビー診断 | 学校キャラ診断（モビー診断）- あなたの性格を16タイプで診断">
   <meta name="twitter:description" content="学校モビー診断は40問の質問であなたの学校でのキャラクタータイプを16種類から診断。男子版・女子版対応の無料性格診断。">
-  <meta name="twitter:image" content="https://www.mobby.online/16school/logo.jpg">
+  <meta name="twitter:image" content="https://www.mobby.online/16school/logo.webp">
   
   <!-- Favicon -->
-  <link rel="icon" type="image/jpeg" href="../favicon/fav.jpg">
-  <link rel="apple-touch-icon" href="../logo.jpg">
+  <link rel="icon" type="image/webp" href="../favicon/fav.webp">
+  <link rel="apple-touch-icon" href="../logo.webp">
   
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Yomogi&display=swap" rel="stylesheet">
@@ -163,7 +163,7 @@
     .brand { display: flex; align-items: center; gap: 0px; }
     .logo {
       width: 30px; height: 30px; border-radius: 10px;
-      background-image: url('../logo.jpg');
+      background-image: url('../logo.webp');
       background-size: cover;
       background-position: center;
       box-shadow: 0 4px 10px rgba(0,113,227,0.3);
@@ -1169,6 +1169,7 @@
     }
   </style>
   <script src="/korea/ko-localize.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/mobby-guide.css?v=4">
 </head>
 <body class="is-splash">
 
@@ -1231,7 +1232,7 @@
       <p class="kicker">無料で更新</p>
       <h2 class="big" style="font-size:22px; margin-bottom:10px;">診断マイページの更新はこちら</h2>
       <p class="text-body" style="margin:0 0 14px;">既存のQRコードでOK。下のQRからLINEを追加すると、診断マイページを更新できます。</p>
-      <img src="img/QR.jpg" alt="LINE追加用QRコード" style="width:min(260px,72vw); height:auto; border-radius:16px; border:1px solid var(--line); box-shadow:var(--shadow-sm); background:#fff;" />
+      <img src="img/QR.webp" alt="LINE追加用QRコード" style="width:min(260px,72vw); height:auto; border-radius:16px; border:1px solid var(--line); box-shadow:var(--shadow-sm); background:#fff;" />
       <p class="text-body" style="margin:14px 0 0; font-size:13px;">更新できる内容: 名前の変更・診断結果</p>
     </section>    <footer>
       &copy; 2026 Mobby. All rights reserved.
@@ -3207,19 +3208,19 @@ function renderGate(){
     function getImagePath(code, isFemale) {
       if (isFemale) {
         const imgCode = CODE_TO_IMAGE_FEMALE[code];
-        return imgCode ? `../cha/${imgCode}.jpg` : '';
+        return imgCode ? `../cha/${imgCode}.webp` : '';
       } else {
         const imgCode = CODE_TO_IMAGE[code];
-        return imgCode ? `../cha/${imgCode}.jpg` : '';
+        return imgCode ? `../cha/${imgCode}.webp` : '';
       }
     }
 
     function getKeyImagePath(code, isFemale, name) {
       if (isFemale) {
-        return name ? `../key/${name}.jpg` : '';
+        return name ? `../key/${name}.webp` : '';
       }
       const imgCode = CODE_TO_IMAGE[code];
-      return imgCode ? `../key/男/${imgCode}.jpg` : '';
+      return imgCode ? `../key/男/${imgCode}.webp` : '';
     }
 
     function renderCharacters(){
@@ -4177,5 +4178,6 @@ function renderGate(){
   });
 })();
 </script>
+  <script src="../../../assets/mobby-guide.js?v=9"></script>
 </body>
 </html>

@@ -1,0 +1,632 @@
+.mobby-guide-picker {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255, 232, 239, 0.96), transparent 42%),
+    radial-gradient(circle at 85% 80%, rgba(225, 242, 255, 0.94), transparent 44%),
+    rgba(255, 252, 247, 0.94);
+  backdrop-filter: blur(14px);
+  font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", sans-serif;
+}
+
+.mobby-guide-picker[hidden],
+.mobby-guide-pet[hidden],
+.mobby-guide-pet__bubble[hidden],
+.mobby-guide-profile[hidden],
+.mobby-guide-picker__preview[hidden] {
+  display: none !important;
+}
+
+body.mobby-guide-profile-open {
+  overflow: hidden;
+}
+
+.mobby-guide-profile {
+  --guide-profile-accent: #d58b99;
+  position: fixed;
+  inset: 0;
+  z-index: 13000;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", sans-serif;
+}
+
+.mobby-guide-profile__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(55, 38, 44, 0.48);
+  backdrop-filter: blur(8px);
+}
+
+.mobby-guide-profile__card {
+  position: relative;
+  z-index: 1;
+  width: min(94vw, 680px);
+  max-height: min(92vh, 760px);
+  overflow: auto;
+  box-sizing: border-box;
+  padding: clamp(20px, 4vw, 32px);
+  border: 2px solid color-mix(in srgb, var(--guide-profile-accent) 28%, white);
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 90% 8%, color-mix(in srgb, var(--guide-profile-accent) 18%, white), transparent 34%),
+    #fffaf5;
+  box-shadow: 0 28px 90px rgba(35, 21, 28, 0.34);
+}
+
+.mobby-guide-profile__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--guide-profile-accent) 30%, white);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.86);
+  color: #6b5951;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mobby-guide-profile__close:hover,
+.mobby-guide-profile__close:focus-visible {
+  background: color-mix(in srgb, var(--guide-profile-accent) 16%, white);
+  outline: 2px solid color-mix(in srgb, var(--guide-profile-accent) 48%, white);
+  outline-offset: 2px;
+}
+
+.mobby-guide-profile__eyebrow {
+  margin: 0 42px 6px 0;
+  color: color-mix(in srgb, var(--guide-profile-accent) 72%, #68534e);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.mobby-guide-profile__hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  align-items: center;
+  gap: clamp(14px, 3vw, 28px);
+}
+
+.mobby-guide-profile__image-wrap {
+  display: grid;
+  place-items: center;
+  min-height: 250px;
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--guide-profile-accent) 13%, white);
+}
+
+.mobby-guide-profile__image-wrap img {
+  display: block;
+  width: 100%;
+  height: min(42vh, 360px);
+  object-fit: contain;
+}
+
+.mobby-guide-profile__copy {
+  padding-right: 8px;
+}
+
+.mobby-guide-profile__copy h2 {
+  margin: 0;
+  color: #44352f;
+  font-size: clamp(1.7rem, 5vw, 2.5rem);
+  line-height: 1.2;
+}
+
+.mobby-guide-profile__tagline {
+  display: inline-flex;
+  margin: 10px 0 12px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--guide-profile-accent) 18%, white);
+  color: color-mix(in srgb, var(--guide-profile-accent) 72%, #5d4844);
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.mobby-guide-profile__intro {
+  margin: 0;
+  color: #6f5b54;
+  font-size: 0.92rem;
+  line-height: 1.75;
+}
+
+.mobby-guide-profile__rail-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 22px 0 9px;
+  color: #59453f;
+}
+
+.mobby-guide-profile__rail-heading strong {
+  font-size: 0.9rem;
+}
+
+.mobby-guide-profile__rail-heading span {
+  color: #9a847b;
+  font-size: 0.72rem;
+}
+
+.mobby-guide-profile__rail {
+  display: flex;
+  gap: 9px;
+  overflow-x: auto;
+  padding: 4px 2px 8px;
+  scroll-snap-type: x proximity;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+
+.mobby-guide-profile__choice {
+  flex: 0 0 88px;
+  display: grid;
+  gap: 4px;
+  place-items: center;
+  padding: 7px 6px 6px;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  background: #fff;
+  color: #5d4842;
+  font: inherit;
+  cursor: pointer;
+  scroll-snap-align: start;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.mobby-guide-profile__choice:hover,
+.mobby-guide-profile__choice:focus-visible,
+.mobby-guide-profile__choice.is-active {
+  transform: translateY(-2px);
+  border-color: var(--guide-profile-choice-accent, var(--guide-profile-accent));
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--guide-profile-choice-accent, var(--guide-profile-accent)) 22%, transparent);
+  outline: none;
+}
+
+.mobby-guide-profile__choice.is-active {
+  background: color-mix(in srgb, var(--guide-profile-choice-accent, var(--guide-profile-accent)) 10%, white);
+}
+
+.mobby-guide-profile__choice img {
+  display: block;
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.mobby-guide-profile__choice span {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mobby-guide-picker__card {
+  position: relative;
+  width: min(94vw, 680px);
+  max-height: min(92dvh, 800px);
+  overflow: auto;
+  box-sizing: border-box;
+  padding: clamp(22px, 5vw, 38px);
+  border: 2px solid rgba(122, 86, 68, 0.18);
+  border-radius: 34px;
+  background-color: #fff8e9;
+  background-image: url("mobby-guide/mobby-picker-bg.webp");
+  background-position: center;
+  background-size: cover;
+  box-shadow:
+    0 28px 90px rgba(110, 65, 78, 0.2),
+    inset 0 0 0 5px rgba(255, 253, 246, 0.45);
+  text-align: center;
+}
+
+.mobby-guide-picker__eyebrow {
+  margin: 0 0 7px;
+  color: #a56a77;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.mobby-guide-picker__title {
+  margin: 0;
+  color: #4b3c35;
+  font-size: clamp(1.45rem, 5.5vw, 2.25rem);
+  line-height: 1.25;
+}
+
+.mobby-guide-picker__lead {
+  margin: 10px 0 20px;
+  color: #74635b;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.mobby-guide-picker__lead strong {
+  display: inline-block;
+  margin-top: 3px;
+  color: #a56a77;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.mobby-guide-picker__preview {
+  --guide-picker-preview-accent: #d58b99;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  align-items: center;
+  gap: clamp(14px, 3vw, 24px);
+  margin: 0 0 18px;
+  padding: clamp(12px, 2.5vw, 18px);
+  border: 2px solid color-mix(in srgb, var(--guide-picker-preview-accent) 36%, white);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 18% 20%, color-mix(in srgb, var(--guide-picker-preview-accent) 18%, white), transparent 52%),
+    rgba(255, 255, 255, 0.8);
+  box-shadow: 0 16px 38px color-mix(in srgb, var(--guide-picker-preview-accent) 18%, transparent);
+  text-align: left;
+}
+
+.mobby-guide-picker__preview-image-wrap {
+  display: grid;
+  place-items: center;
+  min-height: 230px;
+  overflow: hidden;
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--guide-picker-preview-accent) 12%, white);
+}
+
+.mobby-guide-picker__preview-image-wrap img {
+  display: block;
+  width: 100%;
+  height: min(36vh, 280px);
+  object-fit: contain;
+  filter: drop-shadow(0 12px 15px rgba(70, 48, 38, 0.16));
+}
+
+.mobby-guide-picker__preview-copy > p {
+  margin: 0 0 5px;
+  color: color-mix(in srgb, var(--guide-picker-preview-accent) 78%, #68534e);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+.mobby-guide-picker__preview-copy h3 {
+  margin: 0;
+  color: #493a34;
+  font-size: clamp(1.7rem, 4.6vw, 2.45rem);
+  line-height: 1.18;
+}
+
+.mobby-guide-picker__preview-copy > span {
+  display: inline-flex;
+  margin: 9px 0 16px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--guide-picker-preview-accent) 17%, white);
+  color: color-mix(in srgb, var(--guide-picker-preview-accent) 78%, #5d4844);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.mobby-guide-picker__confirm {
+  width: 100%;
+  min-height: 48px;
+  padding: 11px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--guide-picker-preview-accent);
+  color: #fff;
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--guide-picker-preview-accent) 32%, transparent);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.mobby-guide-picker__confirm:hover,
+.mobby-guide-picker__confirm:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px color-mix(in srgb, var(--guide-picker-preview-accent) 38%, transparent);
+  outline: 3px solid color-mix(in srgb, var(--guide-picker-preview-accent) 34%, white);
+  outline-offset: 3px;
+}
+
+.mobby-guide-picker__confirm:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.mobby-guide-picker__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.mobby-guide-choice {
+  position: relative;
+  min-width: 0;
+  padding: 12px 8px 10px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: 24px;
+  background: var(--guide-choice-bg, #fff4f6);
+  color: #4b3c35;
+  font: inherit;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mobby-guide-choice:hover,
+.mobby-guide-choice:focus-visible,
+.mobby-guide-choice.is-selected {
+  transform: translateY(-4px);
+  border-color: var(--guide-choice-accent, #c68190);
+  box-shadow: 0 14px 30px rgba(70, 48, 38, 0.13);
+  outline: none;
+}
+
+.mobby-guide-choice.is-selected {
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--guide-choice-accent, #c68190) 24%, white),
+    0 14px 30px rgba(70, 48, 38, 0.15);
+}
+
+.mobby-guide-choice img {
+  display: block;
+  width: 100%;
+  height: clamp(92px, 18vw, 132px);
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.mobby-guide-choice strong,
+.mobby-guide-choice small {
+  display: block;
+}
+
+.mobby-guide-choice strong {
+  margin-top: 3px;
+  font-size: 1rem;
+}
+
+.mobby-guide-choice small {
+  margin-top: 3px;
+  color: #806e65;
+  font-size: 0.72rem;
+}
+
+.mobby-guide-pet {
+  --guide-accent: #d58b99;
+  position: fixed;
+  z-index: 11000;
+  left: 18px;
+  top: calc(100dvh - 190px);
+  width: 116px;
+  height: 154px;
+  box-sizing: border-box;
+  touch-action: none;
+  user-select: none;
+  filter: drop-shadow(0 12px 14px rgba(55, 38, 29, 0.2));
+  cursor: grab;
+  font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", sans-serif;
+}
+
+.mobby-guide-pet.is-dragging {
+  cursor: grabbing;
+  filter: drop-shadow(0 18px 18px rgba(55, 38, 29, 0.26));
+}
+
+.mobby-guide-pet.is-dragging .mobby-guide-pet__character img {
+  transform: translateY(-3px) scale(1.08);
+}
+
+.mobby-guide-pet.is-dragging.is-running-left .mobby-guide-pet__character img {
+  transform: translateY(-3px) scaleX(-1) scale(1.08);
+}
+
+.mobby-guide-pet__character {
+  position: absolute;
+  inset: 28px 0 0;
+  width: 100%;
+  height: calc(100% - 28px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: inherit;
+}
+
+.mobby-guide-pet__character img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  transition: transform 0.2s ease;
+}
+
+.mobby-guide-pet:hover .mobby-guide-pet__character img,
+.mobby-guide-pet:focus-within .mobby-guide-pet__character img {
+  transform: translateY(-4px) rotate(-2deg);
+}
+
+.mobby-guide-pet.is-dragging:hover .mobby-guide-pet__character img,
+.mobby-guide-pet.is-dragging:focus-within .mobby-guide-pet__character img {
+  transform: translateY(-3px) scale(1.08);
+}
+
+.mobby-guide-pet.is-dragging.is-running-left:hover .mobby-guide-pet__character img,
+.mobby-guide-pet.is-dragging.is-running-left:focus-within .mobby-guide-pet__character img {
+  transform: translateY(-3px) scaleX(-1) scale(1.08);
+}
+
+.mobby-guide-pet__bubble {
+  position: absolute;
+  left: 78px;
+  bottom: 108px;
+  width: min(230px, calc(100vw - 126px));
+  box-sizing: border-box;
+  padding: 12px 38px 12px 14px;
+  border: 2px solid color-mix(in srgb, var(--guide-accent) 55%, white);
+  border-radius: 18px 18px 18px 5px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #4b3c35;
+  box-shadow: 0 14px 36px rgba(58, 41, 32, 0.17);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.55;
+  pointer-events: auto;
+}
+
+.mobby-guide-pet.is-right-side .mobby-guide-pet__bubble {
+  right: 78px;
+  left: auto;
+  border-radius: 18px 18px 5px 18px;
+}
+
+.mobby-guide-pet__close {
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  width: 25px;
+  height: 25px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--guide-accent) 16%, white);
+  color: #6b5951;
+  font: inherit;
+  cursor: pointer;
+}
+
+@media (max-width: 540px) {
+  .mobby-guide-picker {
+    padding: 12px;
+  }
+
+  .mobby-guide-profile {
+    padding: 10px;
+  }
+
+  .mobby-guide-profile__card {
+    max-height: 94vh;
+    padding: 18px 14px 14px;
+    border-radius: 24px;
+  }
+
+  .mobby-guide-profile__hero {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .mobby-guide-profile__image-wrap {
+    min-height: 205px;
+  }
+
+  .mobby-guide-profile__image-wrap img {
+    height: min(34vh, 248px);
+  }
+
+  .mobby-guide-profile__copy {
+    padding: 0 4px;
+    text-align: center;
+  }
+
+  .mobby-guide-profile__tagline {
+    margin-bottom: 8px;
+  }
+
+  .mobby-guide-profile__rail-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 16px;
+  }
+
+  .mobby-guide-picker__card {
+    max-height: 94dvh;
+    padding: 20px 14px;
+    border-radius: 26px;
+  }
+
+  .mobby-guide-picker__lead {
+    margin-bottom: 14px;
+  }
+
+  .mobby-guide-picker__preview {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding: 12px;
+    border-radius: 22px;
+    text-align: center;
+  }
+
+  .mobby-guide-picker__preview-image-wrap {
+    min-height: 180px;
+  }
+
+  .mobby-guide-picker__preview-image-wrap img {
+    height: min(28vh, 215px);
+  }
+
+  .mobby-guide-picker__preview-copy > span {
+    margin-bottom: 11px;
+  }
+
+  .mobby-guide-picker__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .mobby-guide-choice {
+    padding: 8px 5px;
+    border-radius: 19px;
+  }
+
+  .mobby-guide-choice img {
+    height: clamp(86px, 25vw, 122px);
+  }
+
+  .mobby-guide-pet {
+    width: 92px;
+    height: 126px;
+    top: calc(100dvh - 150px);
+  }
+
+  .mobby-guide-pet__bubble {
+    left: 62px;
+    bottom: 88px;
+    width: min(210px, calc(100vw - 100px));
+  }
+
+  .mobby-guide-pet.is-right-side .mobby-guide-pet__bubble {
+    right: 62px;
+    left: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobby-guide-choice,
+  .mobby-guide-pet__character img {
+    transition: none;
+  }
+}

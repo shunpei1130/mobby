@@ -1236,7 +1236,7 @@
 
   function dataUrlToBlob(dataUrl) {
     const [meta, encoded] = dataUrl.split(",");
-    const mime = (meta.match(/data:([^;]+)/) || [])[1] || "image/png";
+    const mime = (meta.match(/data:([^;]+)/) || [])[1] || "image/webp";
     const binary = atob(encoded);
     const len = binary.length;
     const bytes = new Uint8Array(len);
@@ -1244,7 +1244,7 @@
     return new Blob([bytes], { type: mime });
   }
 
-  async function exportPngBlob(options = {}) {
+  async function exportWebpBlob(options = {}) {
     const hideUi = !!options.hideUi;
     const prevSelectedId = selectedId;
     const prevViewScale = viewScale;
@@ -1263,9 +1263,9 @@
     markCanvas.height = canvas.height;
     const markCtx = markCanvas.getContext("2d");
     markCtx.drawImage(canvas, 0, 0);
-    let blob = await new Promise((resolve) => markCanvas.toBlob(resolve, "image/png", 1.0));
+    let blob = await new Promise((resolve) => markCanvas.toBlob(resolve, "image/webp", 0.92));
     if (!blob) {
-      const dataUrl = markCanvas.toDataURL("image/png");
+      const dataUrl = markCanvas.toDataURL("image/webp", 0.92);
       blob = dataUrlToBlob(dataUrl);
     }
     if (hideUi) {
@@ -1808,7 +1808,7 @@
     addText,
     clearAll,
     draw,
-    exportPngBlob,
+    exportWebpBlob,
     getUsedAssetNames,
     getState,
     getViewScale,

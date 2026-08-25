@@ -6,7 +6,7 @@
 - api/lead.js: 診断登録（リード）送信API。Resendでメール送信。
 - api/share.js: 共有・紹介イベント送信API。Resendでメール送信。
 - cha/: キャラクター画像（男子版/女子版）一式。
-- logo.jpg / favicon/fav.jpg: OG/ファビコン用画像。
+- logo.webp / favicon/fav.webp: OG/ファビコン用画像。
 - sample.html: 旧版/試作のHTML（index.htmlと近い構成）。
 - package.json: Resend, @vercel/blob など依存。
 - vercel.json: SPAリライト（/api以外はindex.html）。
@@ -130,7 +130,7 @@
 
 12. 画像とコードの対応
 - CODE_TO_IMAGE / CODE_TO_IMAGE_FEMALE がコード→画像名を解決。
-- 画像は cha/ 配下（例: ortp.jpg, ortp2.jpg など）。
+- 画像は cha/ 配下（例: ortp.webp, ortp2.webp など）。
 
 13. デプロイ設定
 - vercel.json で /api を除く全ルートを index.html にリライト。

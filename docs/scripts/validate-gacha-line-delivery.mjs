@@ -109,8 +109,8 @@ function assertCheckoutSessionSourceContract() {
 
 async function assertLinePushSplitting() {
   const imageItems = Array.from({ length: 10 }, (_, index) => ({
-    url: `https://mobby.public.blob.vercel-storage.com/result-images/sheet-${index + 1}.png`,
-    previewUrl: `https://mobby.public.blob.vercel-storage.com/result-images/sheet-${index + 1}_preview.jpg`
+    url: `https://mobby.public.blob.vercel-storage.com/result-images/sheet-${index + 1}.webp`,
+    previewUrl: `https://mobby.public.blob.vercel-storage.com/result-images/sheet-${index + 1}_preview.webp`
   }));
   const batches = lineModule.buildGachaResultLineMessageBatches(imageItems);
   assert.deepEqual(batches.map((batch) => batch.length), [5, 5, 1]);
