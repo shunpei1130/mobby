@@ -761,11 +761,11 @@ const _='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800
         </div>
         <div class="love-keyholder-card__images">
           <figure class="love-keyholder-card__image">
-            <img src="../16school/key/カップル自撮りモビー.jpg" alt="アクリルキーホルダー 表面サンプル" loading="lazy" decoding="async" />
+            <img src="../16school/key/カップル自撮りモビー.webp" alt="アクリルキーホルダー 表面サンプル" loading="lazy" decoding="async" />
             <figcaption>表面サンプル</figcaption>
           </figure>
           <figure class="love-keyholder-card__image">
-            <img src="../16school/key/ura.jpg" alt="アクリルキーホルダー 裏面サンプル" loading="lazy" decoding="async" />
+            <img src="../16school/key/ura.webp" alt="アクリルキーホルダー 裏面サンプル" loading="lazy" decoding="async" />
             <figcaption>裏面サンプル</figcaption>
           </figure>
         </div>

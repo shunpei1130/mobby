@@ -1,4 +1,4 @@
-﻿import crypto from "crypto";
+import crypto from "crypto";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -22,8 +22,8 @@ const LINE_QUEUE_PREFIX = process.env.GACHA_LINE_QUEUE_PREFIX || "line-queue/";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const assetsRoot = path.resolve(__dirname, "../gacha-new/assets");
-const sheetTemplatePath = path.join(assetsRoot, "gacha/gachasheet.png");
-const secretSheetTemplatePath = path.join(assetsRoot, "gacha/gacha-sheet-mobby-4.png");
+const sheetTemplatePath = path.join(assetsRoot, "gacha/gachasheet.webp");
+const secretSheetTemplatePath = path.join(assetsRoot, "gacha/gacha-sheet-mobby-4.webp");
 
 const sheetSlots = [
   { x: 102, y: 102, width: 386, height: 386 },
@@ -78,7 +78,7 @@ function pickRarity() {
 function listFiles(dir) {
   const fullPath = path.join(assetsRoot, dir);
   return fs.readdirSync(fullPath)
-    .filter((fileName) => fileName.toLowerCase().endsWith(".png"))
+    .filter((fileName) => fileName.toLowerCase().endsWith(".webp"))
     .sort((a, b) => a.localeCompare(b, "ja"));
 }
 
@@ -97,7 +97,7 @@ function buildSecretSheet(secretPools, indexStart, dir) {
     rarity: "SECRET",
     dir,
     fileName,
-    title: fileName.replace(/\.png$/i, "").replace(/-(full|half)$/i, "")
+    title: path.parse(fileName).name.replace(/-(full|half)$/i, "")
   }));
   while (sheet.length < SHEET_SIZE) {
     sheet.push({
@@ -131,7 +131,7 @@ function pickResults(count) {
         rarity: rarity.key,
         dir: rarity.dir,
         fileName,
-        title: fileName.replace(/\.png$/i, "").replace(/-(sr|ur|gal)$/i, "")
+        title: path.parse(fileName).name.replace(/-(sr|ur|gal)$/i, "")
       });
     }
   }
@@ -195,11 +195,11 @@ function lineQueueKey(drawId, scheduledAt) {
 }
 
 function resultImageKey(drawId, index, total) {
-  return `${ensurePrefix(RESULT_IMAGE_PREFIX)}${drawId}_sheet_${String(index + 1).padStart(2, "0")}of${String(total).padStart(2, "0")}.png`;
+  return `${ensurePrefix(RESULT_IMAGE_PREFIX)}${drawId}_sheet_${String(index + 1).padStart(2, "0")}of${String(total).padStart(2, "0")}.webp`;
 }
 
 function previewImageKey(drawId, index, total) {
-  return `${ensurePrefix(RESULT_IMAGE_PREFIX)}${drawId}_sheet_${String(index + 1).padStart(2, "0")}of${String(total).padStart(2, "0")}_preview.jpg`;
+  return `${ensurePrefix(RESULT_IMAGE_PREFIX)}${drawId}_sheet_${String(index + 1).padStart(2, "0")}of${String(total).padStart(2, "0")}_preview.webp`;
 }
 
 function chunkSheetResults(selectedResults) {
@@ -232,11 +232,11 @@ function toClientResult(result) {
 async function resizeStickerForSlot(result, slot, fit) {
   return sharp(assetPath(result))
     .resize(slot.width, slot.height, { fit })
-    .png()
+    .webp({ lossless: true, effort: 6 })
     .toBuffer();
 }
 
-async function composeSheetPng(chunk) {
+async function composeSheetWebp(chunk) {
   const drawableResults = chunk.filter((result) => !result.isSpacer);
   const isSecretOnlySheet = drawableResults.length > 0 && drawableResults.every((result) => result.rarity === "SECRET");
   const templatePath = isSecretOnlySheet ? secretSheetTemplatePath : sheetTemplatePath;
@@ -255,30 +255,30 @@ async function composeSheetPng(chunk) {
     });
   }
 
-  return sharp(templatePath).composite(composites).png().toBuffer();
+  return sharp(templatePath).composite(composites).webp({ lossless: true, effort: 6 }).toBuffer();
 }
 
-async function composePreviewJpeg(pngBuffer) {
+async function composePreviewWebp(webpBuffer) {
   let quality = 78;
   let width = 800;
-  let output = await sharp(pngBuffer)
+  let output = await sharp(webpBuffer)
     .resize({ width, withoutEnlargement: true })
-    .jpeg({ quality, mozjpeg: true })
+    .webp({ quality, effort: 5 })
     .toBuffer();
 
   while (output.length > 950_000 && quality > 52) {
     quality -= 8;
-    output = await sharp(pngBuffer)
+    output = await sharp(webpBuffer)
       .resize({ width, withoutEnlargement: true })
-      .jpeg({ quality, mozjpeg: true })
+      .webp({ quality, effort: 5 })
       .toBuffer();
   }
 
   while (output.length > 950_000 && width > 560) {
     width -= 100;
-    output = await sharp(pngBuffer)
+    output = await sharp(webpBuffer)
       .resize({ width, withoutEnlargement: true })
-      .jpeg({ quality: 58, mozjpeg: true })
+      .webp({ quality: 58, effort: 5 })
       .toBuffer();
   }
 
@@ -289,19 +289,19 @@ async function uploadResultSheets(drawId, selectedResults) {
   const chunks = chunkSheetResults(selectedResults);
   const images = [];
   for (let index = 0; index < chunks.length; index += 1) {
-    const png = await composeSheetPng(chunks[index]);
+    const webp = await composeSheetWebp(chunks[index]);
     const key = resultImageKey(drawId, index, chunks.length);
-    const preview = await composePreviewJpeg(png);
+    const preview = await composePreviewWebp(webp);
     const previewKey = previewImageKey(drawId, index, chunks.length);
-    const uploaded = await putStorageObject(key, png, "image/png");
-    const uploadedPreview = await putStorageObject(previewKey, preview, "image/jpeg");
+    const uploaded = await putStorageObject(key, webp, "image/webp");
+    const uploadedPreview = await putStorageObject(previewKey, preview, "image/webp");
     images.push({
       index: index + 1,
       key,
       url: uploaded.url,
       preview_key: previewKey,
       preview_url: uploadedPreview.url,
-      size: png.length,
+      size: webp.length,
       preview_size: preview.length
     });
   }

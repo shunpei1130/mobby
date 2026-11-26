@@ -1,4 +1,4 @@
-﻿import { createEditor } from "../js/editor.js";
+import { createEditor } from "../js/editor.js";
 
 const TYPE_LIST = [
   "カップル自撮りモビィ",
@@ -122,7 +122,7 @@ function populateSelect(select, items) {
 }
 
 function getStickerSrc(typeName) {
-  return `./assets/stickers/${typeName}.jpg`;
+  return `./assets/stickers/${typeName}.webp`;
 }
 
 function getDecoSrc(decoId) {
@@ -305,13 +305,13 @@ async function createAvatarDataUrlFromBlob(blob, size = 320) {
   } finally {
     URL.revokeObjectURL(url);
   }
-  return canvas.toDataURL("image/jpeg", 0.85);
+  return canvas.toDataURL("image/webp", 0.85);
 }
 
 useBtn?.addEventListener("click", async () => {
   try {
     await applySelections(false);
-    const blob = await editor.exportPngBlob({ hideUi: true });
+    const blob = await editor.exportWebpBlob({ hideUi: true });
     const dataUrl = await createAvatarDataUrlFromBlob(blob, 320);
     const origin = window.location.origin;
     const target = origin === "null" ? "*" : origin;

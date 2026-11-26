@@ -20,9 +20,9 @@ function isValidEmail(value) {
 }
 
 function safeFileName(value, index) {
-  const fallback = `mobby-sticker-sheet-${String(index + 1).padStart(2, "0")}.png`;
+  const fallback = `mobby-sticker-sheet-${String(index + 1).padStart(2, "0")}.webp`;
   const fileName = String(value || fallback).replace(/[\\/:*?"<>|]/g, "_").slice(0, 120);
-  return fileName.endsWith(".png") ? fileName : `${fileName}.png`;
+  return fileName.endsWith(".webp") ? fileName : `${fileName}.webp`;
 }
 
 function formatFrom(value) {
@@ -68,7 +68,7 @@ export default async function handler(req, res) {
       return {
         filename: safeFileName(item?.fileName, index),
         content: Buffer.from(content, "base64"),
-        contentType: item?.contentType === "image/png" ? "image/png" : "image/png"
+        contentType: "image/webp"
       };
     });
 

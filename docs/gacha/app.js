@@ -1358,7 +1358,7 @@
   function createShareFile(blob, fileName) {
     if (typeof File !== 'function') return null;
     try {
-      return new File([blob], fileName, { type: blob.type || 'image/png' });
+      return new File([blob], fileName, { type: blob.type || 'image/webp' });
     } catch {
       return null;
     }
@@ -1515,7 +1515,7 @@
   }
 
   function canvasToBlob(canvas) {
-    return new Promise((resolve) => canvas.toBlob((blob) => resolve(blob), 'image/png'));
+    return new Promise((resolve) => canvas.toBlob((blob) => resolve(blob), 'image/webp', 0.92));
   }
 
   function loadImage(src) {

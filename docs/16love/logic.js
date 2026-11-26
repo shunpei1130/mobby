@@ -81,18 +81,13 @@ function sanitizeDownloadName(name) { return (name || "mobby-result").replace(/[
 function isIOSLikeDevice() { return /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1); }
 function getImageMimeType(path) {
     const cleanPath = String(path || "").split(/[?#]/)[0].toLowerCase();
-    if (cleanPath.endsWith(".jpg") || cleanPath.endsWith(".jpeg")) return "image/jpeg";
-    if (cleanPath.endsWith(".png")) return "image/png";
     if (cleanPath.endsWith(".webp")) return "image/webp";
-    return "image/png";
+    return "image/webp";
 }
-function getImageFileExtension(path, type) {
+function getImageFileExtension(path) {
     const cleanPath = String(path || "").split(/[?#]/)[0].toLowerCase();
     const match = cleanPath.match(/\.([a-z0-9]+)$/);
-    if (match) return match[1] === "jpeg" ? "jpg" : match[1];
-    if (type === "image/jpeg") return "jpg";
-    if (type === "image/webp") return "webp";
-    return "png";
+    return match ? match[1] : "webp";
 }
 async function shareImageFileOnIOS(imagePaths, fileBaseName) {
     if (typeof navigator.share !== "function" || typeof File !== "function") return false;
@@ -347,8 +342,8 @@ function renderResult() {
     const lineShareHref = getPreferredLineShareUrl(shareTextRaw, shareUrlRaw);
     const lineShareTarget = getPreferredLineShareTarget();
     const keyImageWebpPath = `img/key/${ch.name}.webp`;
-    const keyImagePngPath = `img/key/${ch.name}.png`;
-    const keyImageBackPath = "img/key/ura.jpg";
+    const keyImagePngPath = `img/key/${ch.name}.webp`;
+    const keyImageBackPath = "img/key/ura.webp";
     const lineAiAxisSummary = ["A", "B", "C", "D"].map(k => `${AXES[k].name}: ${res.hard[k] === "L" ? AXES[k].left : AXES[k].right}`).join(" / ");
     const lineAiDiagnosisPayload = {
         source: "16love",
@@ -372,7 +367,7 @@ function renderResult() {
         pagePath: "/16love/",
         createdAt: new Date().toISOString()
     };
-    app.innerHTML = `<div class="panel fade-in"><div class="result-hero"><p class="kicker">診断結果</p><h2 class="big" style="font-size:28px;">${ch.name}</h2><p class="text-body" style="color:var(--text-main);font-weight:600;font-size:16px;margin-bottom:16px;">${ch.catch}</p><div class="char-image-placeholder"><img src="img/${ch.name}.jpg" alt="${ch.name}" onerror="this.parentElement.textContent='画像準備中'"></div><div style="display:inline-block;background:var(--surface2);padding:6px 16px;border-radius:20px;font-size:12px;font-family:monospace;color:var(--text-sub);">TYPE: ${res.code}</div></div>
+    app.innerHTML = `<div class="panel fade-in"><div class="result-hero"><p class="kicker">診断結果</p><h2 class="big" style="font-size:28px;">${ch.name}</h2><p class="text-body" style="color:var(--text-main);font-weight:600;font-size:16px;margin-bottom:16px;">${ch.catch}</p><div class="char-image-placeholder"><img src="img/${ch.name}.webp" alt="${ch.name}" onerror="this.parentElement.textContent='画像準備中'"></div><div style="display:inline-block;background:var(--surface2);padding:6px 16px;border-radius:20px;font-size:12px;font-family:monospace;color:var(--text-sub);">TYPE: ${res.code}</div></div>
   <div id="line-ai-mobby-cta" data-line-ai-mobby-cta data-diagnosis="${encodeURIComponent(JSON.stringify(lineAiDiagnosisPayload))}"></div>
   <div style="margin-top:24px;padding:20px;background:linear-gradient(135deg,rgba(167,139,250,0.15),rgba(244,114,182,0.15));border-radius:16px;border:1px solid var(--accent);text-align:center;"><p style="font-size:11px;font-weight:700;color:var(--accent);margin:0 0 8px;">😈💜 恋愛メンヘラ度</p><p style="font-size:36px;font-weight:700;margin:0 0 4px;color:${gaugeColor};">Lv.${res.level}</p><p style="font-size:18px;font-weight:600;margin:0 0 12px;color:var(--text-main);">${res.menheraLevel.name}</p><p style="font-size:13px;color:var(--text-sub);margin:0 0 16px;">${res.menheraLevel.desc}</p><div class="menhera-gauge-bar"><div class="menhera-gauge-fill" style="width:${res.menheraScore}%;background:linear-gradient(90deg,#4ade80,#facc15,#f472b6);"></div></div><div class="menhera-gauge-labels"><span>メンタル鉄壁</span><span>恋愛ゾンビ</span></div></div>
   <div style="margin-top:40px;"><p class="kicker" style="margin-bottom:16px;">4つの軸の傾向</p>${axisHtml}</div>${adjHtml}</div>
@@ -466,7 +461,7 @@ function renderResult() {
                 snsSaveHint.textContent = "保存を開始しました。うまくいかない場合は結果画面をスクショしてください。";
                 const dl = document.createElement("a");
                 dl.href = snsImagePath;
-                dl.download = `${sanitizeDownloadName(ch.name)}-sns.png`;
+                dl.download = `${sanitizeDownloadName(ch.name)}-sns.webp`;
                 dl.rel = "noopener";
                 document.body.appendChild(dl);
                 dl.click();
@@ -516,7 +511,7 @@ function renderResult() {
 
 function renderCharacters() {
     const keys = Object.keys(CHARACTERS).sort();
-    const html = keys.map(code => { const ch = CHARACTERS[code]; return `<div class="char-card fade-in"><div class="char-card-image"><img src="img/${ch.name}.jpg" alt="${ch.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';"></div><div class="char-card-type">TYPE: ${code}</div><h3 class="char-card-name">${ch.name}</h3><p class="char-card-desc">${ch.catch}</p><button class="primary" style="width:100%;font-size:12px;margin-top:auto;" data-code="${code}">詳細</button></div>`; }).join("");
+    const html = keys.map(code => { const ch = CHARACTERS[code]; return `<div class="char-card fade-in"><div class="char-card-image"><img src="img/${ch.name}.webp" alt="${ch.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';"></div><div class="char-card-type">TYPE: ${code}</div><h3 class="char-card-name">${ch.name}</h3><p class="char-card-desc">${ch.catch}</p><button class="primary" style="width:100%;font-size:12px;margin-top:auto;" data-code="${code}">詳細</button></div>`; }).join("");
     app.innerHTML = `<div class="panel fade-in"><p class="kicker">全16タイプ</p><h2 class="big">キャラクター一覧</h2><p class="text-body" style="margin-bottom:20px;">4つの恋愛軸の組み合わせで生まれる、16種類の恋愛メンヘラタイプ💜</p></div><div class="char-grid">${html}</div>`;
     document.querySelectorAll('button[data-code]').forEach(btn => { btn.onclick = () => showCharDetail(btn.dataset.code); });
 }
@@ -527,7 +522,7 @@ function showCharDetail(code) {
     const strengthsHtml = ch.strengths ? ch.strengths.map(s => `<li style="margin-bottom:4px;">${s}</li>`).join("") : "";
     const cautionsHtml = ch.cautions ? ch.cautions.map(c => `<li style="margin-bottom:4px;">${c}</li>`).join("") : "";
     const adviceHtml = ch.advice ? ch.advice.map(a => `<li style="margin-bottom:4px;">${a}</li>`).join("") : "";
-    const m = `<div class="char-modal-overlay" id="cmo"><div class="char-modal"><button class="char-modal-close" id="cmc">×</button><div style="text-align:center;margin-bottom:20px;"><div style="width:200px;height:200px;border-radius:16px;overflow:hidden;margin:0 auto 24px;background:var(--surface2);"><img src="img/${ch.name}.jpg" alt="${ch.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';"></div><div style="display:inline-block;background:var(--surface2);padding:6px 16px;border-radius:12px;font-size:12px;font-family:monospace;color:var(--text-sub);margin-bottom:16px;">TYPE: ${code}</div><h2 style="font-size:24px;font-weight:700;margin:0 0 16px;">${ch.name}</h2><p style="font-size:14px;font-weight:600;margin:0;">${ch.catch}</p></div>
+    const m = `<div class="char-modal-overlay" id="cmo"><div class="char-modal"><button class="char-modal-close" id="cmc">×</button><div style="text-align:center;margin-bottom:20px;"><div style="width:200px;height:200px;border-radius:16px;overflow:hidden;margin:0 auto 24px;background:var(--surface2);"><img src="img/${ch.name}.webp" alt="${ch.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';"></div><div style="display:inline-block;background:var(--surface2);padding:6px 16px;border-radius:12px;font-size:12px;font-family:monospace;color:var(--text-sub);margin-bottom:16px;">TYPE: ${code}</div><h2 style="font-size:24px;font-weight:700;margin:0 0 16px;">${ch.name}</h2><p style="font-size:14px;font-weight:600;margin:0;">${ch.catch}</p></div>
   ${ch.hook ? `<div style="margin-bottom:20px;"><h3 style="font-size:14px;font-weight:700;color:var(--accent);margin:0 0 8px;">🎭 タイプの特徴</h3><p style="font-size:13px;line-height:1.8;margin:0;">${ch.hook}</p></div>` : ""}
   ${toughHtml ? `<div style="margin-bottom:20px;padding:12px;background:rgba(255,90,90,0.05);border-radius:12px;border-left:3px solid #ff5a5a;"><h3 style="font-size:14px;font-weight:700;color:#ff5a5a;margin:0 0 8px;">😣 しんどい時</h3><ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.8;">${toughHtml}</ul></div>` : ""}
   ${ch.seen ? `<div style="margin-bottom:20px;padding:12px;background:rgba(77,171,247,0.05);border-radius:12px;border-left:3px solid #4dabf7;"><h3 style="font-size:14px;font-weight:700;color:#4dabf7;margin:0 0 8px;">👀 周りからの見え方</h3><p style="font-size:13px;line-height:1.8;margin:0;">${ch.seen}</p></div>` : ""}

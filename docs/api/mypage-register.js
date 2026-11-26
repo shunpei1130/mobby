@@ -259,6 +259,7 @@ function renderRegisterPageHtml() {
       .chips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
   </style>
+  <link rel="stylesheet" href="/shared/no-scrollbar.css">
 </head>
 <body>
   <main class="wrap">

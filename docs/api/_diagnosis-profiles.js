@@ -16,6 +16,7 @@ const SOURCE_META = {
   "miyake-yuko": { label: "三宅裕子さん beauty mood診断", shortLabel: "三宅裕子", accent: "#d8a15f" },
   "imagen-luca": { label: "Lucaさん 水彩ストーリー診断", shortLabel: "Luca", accent: "#86b7d9" },
   meeco: { label: "meeco様 『魔女の空想コスメ』キャラタイプ診断", shortLabel: "meeco", accent: "#d96a7f" },
+  "16nyako": { label: "にゃん恋モビー診断", shortLabel: "にゃん恋", accent: "#d9591a" },
   unknown: { label: "未分類", shortLabel: "未分類", accent: "#9e9e9e" }
 };
 
@@ -37,6 +38,7 @@ const SOURCE_ALIASES = {
   oshi: "16stan",
   "16night": "16night",
   night: "16night",
+  "16nyako": "16nyako",
   "hinata-aoi": "hinata-aoi",
   hinata: "hinata-aoi",
   "miyake-yuko": "miyake-yuko",

@@ -83,14 +83,14 @@ def extend_image_916(img_path, dst_path):
     canvas.paste(bot_fill, (0, top_pad + h))
     
     # Save
-    canvas.save(dst_path, "JPEG", quality=95)
+    canvas.save(dst_path, "WEBP", quality=95, method=6)
     print(f"  Saved: {dst_path} ({w}x{new_h})")
 
 def main():
     os.makedirs(DST_DIR, exist_ok=True)
     
     images = sorted([f for f in os.listdir(SRC_DIR) 
-                     if f.lower().endswith(('.jpg', '.jpeg', '.png')) 
+                     if f.lower().endswith('.webp')
                      and f != 'extend_to_916.py'])
     
     print(f"Found {len(images)} images to process")

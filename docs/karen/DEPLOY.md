@@ -8,12 +8,12 @@
 docs/karen-oshi/
   index.html
   assets/
-    logo.png
-    favicon.png
-    hero.png
-    ogp.png
+    logo.webp
+    favicon.webp
+    hero.webp
+    ogp.webp
     cards/
-      01_comment-frontline.png
+      01_comment-frontline.webp
       ...
   content/
     diagnosis-data.json
